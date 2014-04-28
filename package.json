@@ -27,17 +27,19 @@
     ],
     "repository": {
         "type": "git",
-        "url": "ssh://git@openaccel.win.tue.nl:40555/opt/git/OpenACELL"
+        "url": "https://github.com/OpenACCEL/OpenACCEL.git"
     },
     "license": "???",
     "engines": {
         "node": ">=0.10.25"
     },
+    "scripts": {
+        "test": "mocha"
+    },
     "dependencies": {
         "jade": "1.3.x",
         "mocha": "1.18.x",
         "selenium-webdriver": "2.41.x",
-        "mongodb": "1.4.x",
-        "strider": "1.4.x"
+        "mongodb": "1.4.x"
     }
 }
