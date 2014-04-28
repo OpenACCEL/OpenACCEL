@@ -34,12 +34,14 @@
         "node": ">=0.10.25"
     },
     "scripts": {
-        "test": "mocha"
+        "test": "mocha",
+        "doc": "jsdoc -d doc/ src/"
     },
     "dependencies": {
         "jade": "1.3.x",
         "mocha": "1.18.x",
         "selenium-webdriver": "2.41.x",
-        "mongodb": "1.4.x"
+        "mongodb": "1.4.x",
+        "jsdoc": "3.3.x"
     }
 }
