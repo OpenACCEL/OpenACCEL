@@ -1,0 +1,43 @@
+{
+    "name": "open-accel",
+    "preferGlobal": false,
+    "author": "Kees van Overveld <k.van.overveld@wxs.nl>",
+    "description": "???",
+    "contributors": [
+        {
+            "name": "Roy Stoof",
+            "email": "contact@protoman.net"
+        },
+        {
+            "name": "Loc Tran",
+            "email": "accel@loct.co"
+        },
+        {
+            "name": "Jacco Snoeren",
+            "email": "j.p.h.snoeren@student.tue.nl"
+        },
+        {
+            "name": "Roel Jacobs",
+            "email": "r.jacobs@student.tue.nl"
+        },
+        {
+            "name": "Edward Brinkmann",
+            "email": "e.k.brinkmann@student.tue.nl"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "ssh://git@openaccel.win.tue.nl:40555/opt/git/OpenACELL"
+    },
+    "license": "???",
+    "engines": {
+        "node": ">=0.10.25"
+    },
+    "dependencies": {
+        "jade": "1.3.x",
+        "mocha": "1.18.x",
+        "selenium-webdriver": "2.41.x",
+        "mongodb": "1.4.x",
+        "strider": "1.4.x"
+    }
+}
