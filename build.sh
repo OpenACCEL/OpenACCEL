@@ -24,6 +24,7 @@ cp node_modules/sweet.js/macros/stxcase.js                                      
 cp node_modules/sweet.js/node_modules/escodegen/escodegen.browser.min.js             bin/scripts/escodegen.js
 cp node_modules/sweet.js/node_modules/escope/escope.js                               bin/scripts/escope.js
 cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
+find src/ -type f -name "*.js" -exec cp {} bin/scripts \;
 
 # We are done!
 echo "If everything went successful, all files are now in the bin/ directory."
