@@ -4,4 +4,4 @@ npm run build
 
 # Actual testing using mocha.
 echo "Testing..."
-mocha -u tdd
+mocha test test/model -u tdd
