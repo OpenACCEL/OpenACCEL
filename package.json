@@ -34,7 +34,7 @@
         "node": ">=0.10.25"
     },
     "scripts": {
-        "test": "mocha",
+        "test": "mocha -u tdd",
         "doc": "jsdoc -d doc/ src/",
         "docpp": "jsdoc -c prepost/conf.json"
     },
