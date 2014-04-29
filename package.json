@@ -38,7 +38,7 @@
         "doc": "jsdoc -c prepost/conf.json -d doc/ src/",
         "build": "./build.sh",
         "test": "./test.sh",
-        "start": "http-server -c-1 bin/"
+        "start": "http-server bin/ -c-1"
     },
     "dependencies": {
         "jade": "1.3.x",
