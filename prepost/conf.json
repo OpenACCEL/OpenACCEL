@@ -3,20 +3,19 @@
         "allowUnknownTags": true
     },
     "source": {
-        "include": ["./src/"],
+        "include": [],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
     "plugins": ["prepost/prepost.js"],
     "templates": {
         "cleverLinks": false,
-        "monospaceLinks": false,
+        "monospaceLinks": true,
         "default": {
             "outputSourceFiles": true
         }
     },
     "opts": {
-    "template": "prepost/default_prepost",
-    "destination": "./doc/"
+    "template": "prepost/default_prepost"
     }
 }

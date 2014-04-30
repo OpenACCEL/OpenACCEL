@@ -35,9 +35,11 @@
     },
     "scripts": {
         "jade": "jade -o bin/ src/",
-        "doc": "jsdoc -c prepost/conf.json -d doc/ src/",
+        "doc": "jsdoc -c prepost/conf.json -d doc/ src/ -r",
         "build": "./build.sh",
+        "build-win": "build.bat",
         "test": "./test.sh",
+        "test-win": "test.bat",
         "start": "http-server bin/ -c-1"
     },
     "dependencies": {

@@ -26,6 +26,10 @@ cp node_modules/sweet.js/node_modules/escope/escope.js                          
 cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
 find src/ -type f -name "*.js" -exec cp {} bin/scripts \;
 
+touch doc/.gitignore
+touch bin/.gitignore
+
+
 # We are done!
 echo "If everything went successful, all files are now in the bin/ directory."
 echo "Type 'npm start' to start a local HTTP server and test the program out at 'http://localhost:8080'."

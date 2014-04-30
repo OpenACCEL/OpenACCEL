@@ -1,3 +1,7 @@
+/**
+ * @author Blah
+ */
+
 requirejs.config({
     shim: {
         'underscore': {
@@ -32,3 +36,10 @@ require(["sweet", "jquery"], function(sweet) {
         
     }
 });
+
+/**
+ * Dummy function
+ * @return {Number} Roy
+ */
+function dummy()
+{}
