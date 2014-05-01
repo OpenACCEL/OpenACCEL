@@ -43,9 +43,11 @@ The follow scripts can all be invoked using `npm run`:
 ## FAQ ##
 
 **Q**: How does the ACCEL language work? How is it compiled?
+
 **A**: The ACCEL language is actual a superset of JavaScript. ACCEL scripts get fed through a compiler, which first invokes a pre-processor on the script. This pre-processor is pipeline of different passes, where each pass may have different functionalities, varying from script analysis to preparing the script for macro expansion. After the pre-processor has done its work, the entire script gets fed into the Sweet.js compiler, which expands all macros defined for the ACCEL modelling language. After all macros have been expanded, we end up with pure javascript that can be evaluated and executed.
 
 **Q**: Why use Jade?
+
 **A**: With Jade we are able to split the view into different modules. By creating a view for each tab, it is possible to combine all tabs into a single HTML page, such that the user does not have to crawl through different URLs, and to remain as close as possible to the implementation of ACCEL of which this library is based.
 
 ## License ##
