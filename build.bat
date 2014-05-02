@@ -27,7 +27,11 @@ copy node_modules\sweet.js\node_modules\escope\escope.js                        
 copy node_modules\sweet.js\node_modules\escope\node_modules\estraverse\estraverse.js   bin\scripts\estraverse.js
 
 cd src
+
 for /r %%d in (*.js) do copy "%%d" "..\bin\scripts"
+
+copy accelstyle.css ..\bin\
+
 cd ..
 
 echo Creating .gitignore files.
