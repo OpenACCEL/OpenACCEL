@@ -17,8 +17,8 @@ The ACCEL-system is a light-weight, general purpose modelling environment for ma
 
 ### Windows ###
 1. Install Node with the installer from the official [Node](http://nodejs.org/download/) website.
-2. Start the Node.js command prompt from Start Menu -> All Programs.
-3. From the command prompt, go to your local cloned reposity using `cd.`
+2. Start the Node.js command prompt (not Node itself!) from Start Menu -> All Programs.
+3. From the command prompt, go to your local cloned reposity using the `cd` command.
 4. Install all dependencies using the command `npm install`.
 5. To build and test OpenACCEL, type the following command: `npm run test-win`.
 6. Start a local HTTP server: `npm start`.
