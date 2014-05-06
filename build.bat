@@ -16,6 +16,8 @@ REM Deployment.
 echo Deploying all files, such that it is ready for production.
 
 mkdir                                                                                  bin\scripts
+mkdir                                                                                  bin\img
+
 xcopy lib                                                                              bin\scripts\ /S
 copy node_modules\underscore\underscore-min.js                                         bin\scripts\underscore.js
 copy node_modules\jquery\dist\jquery.min.js                                            bin\scripts\jquery.js
@@ -29,7 +31,7 @@ copy node_modules\sweet.js\node_modules\escope\node_modules\estraverse\estravers
 cd src
 
 for /r %%d in (*.js) do copy "%%d" "..\bin\scripts"
-
+for /r %%d in (*.png) do copy "%%d" "..\bin\img"
 copy accelstyle.css ..\bin\
 
 cd ..
