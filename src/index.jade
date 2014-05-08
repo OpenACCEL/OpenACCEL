@@ -1,7 +1,42 @@
+doctype html
 html
-    head
-        title Accel Test
-        script(data-main="scripts/accel" src="scripts/require.js")
+	head
+		title OpenACCEL
+		//<link rel="stylesheet" type="text/css" href="libs/ui-lightness/jquery-ui.1.10.4.min.css"> 
+		script(src='scripts/jquery.js')
+		script(src='scripts/jquery-ui.js')
+		link(rel='stylesheet', type='text/css', href='accelstyle.css')
+		script
+			| $(function() {$("#main").tabs();});
+	body
+		#container
+			#top
+				#logo
+				#ccel CCEL
+			#main
+				ul
+					li
+						a(href='#intro') Intro
+					li
+						a(href='#editrun') Edit / Run script
+					li
+						a(href='#helpdemo') Help / Demo
+					li
+						a(href='#ioedit') IO / Edit
+					li
+						a(href='#analysis') Analysis
+					li
+						a(href='#optimisation') Genetic Optimisation
+					li
+						a(href='#simulation') Simulation
+					li
+						a(href='#network') Network
 
-    body
-        h1 Woop woop!
+				include view/tabs/intro.jade
+				include view/tabs/editrun.jade
+				include view/tabs/helpdemo.jade
+				include view/tabs/ioedit.jade
+				include view/tabs/analysis.jade
+				include view/tabs/optimisation.jade
+				include view/tabs/simulation.jade
+				include view/tabs/network.jade

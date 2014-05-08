@@ -2,7 +2,7 @@
     "name": "open-accel",
     "preferGlobal": false,
     "author": "Kees van Overveld <k.van.overveld@wxs.nl>",
-    "description": "???",
+    "description": "The ACCEL-system is a light-weight, general purpose modelling environment for mathematical modelling. It combines some ideas from spreadsheets, Matlab, and traditional highschool mathematics.",
     "contributors": [
         {
             "name": "Roy Stoof",

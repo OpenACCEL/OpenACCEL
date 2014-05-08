@@ -1,0 +1,106 @@
+html {
+	height: 100%;
+}
+
+body {
+	background: #FFFFFF;
+	background: #FFDDFF;
+	background: linear-gradient(#FFDDFF, #FFFFFF);
+	font-family: "Verdana";
+}
+
+body div {
+	margin: 0px;
+}
+
+#container {
+	position: absolute;
+	left: calc(50% - 1000px / 2);
+	width: 1000px;
+}
+
+#top {
+	padding-left: 30px;
+}
+
+#top #ccel{
+	position: relative;
+	top: -16px;
+	left: -16px;
+	display: inline-block;
+	font-size: 50px;
+	font-style: italic;
+}
+
+#logo {
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	background-image: url("img/logo.png");
+	background-size: 100%;
+}
+
+#main ul{
+	/*display: block;*/
+	margin-left: -40px;
+}
+
+#main ul li {
+	display: inline;
+	margin-right: 4px;
+}
+
+#main ul li a:hover {
+	background: #9933CC;
+}
+
+.ui-state-focus:focus {
+	border: 0px solid black;
+}
+
+#main ul li a {
+	padding: 5px;
+	border-radius: 5px;
+	-webkit-border: 5px;
+	-moz-border: 5px;
+	font-size: 16px;
+	background: #993399;
+	color: #FFFFFF;
+	/*background: #FFDDFF;
+	border: 1px solid #9933CC;
+	color: #000000;*/
+	text-decoration: none;
+}
+
+#main div {
+	z-index: -1;
+	position: relative;
+	top: -25px;
+	padding: 10px;
+	padding-bottom: 40px;
+	border-top-right-radius: 60px;
+	-webkit-border-top-right-radius: 60px;
+	-moz-border-radius-topright: 60px;
+	border-bottom-left-radius: 60px;
+	-webkit-border-bottom-left-radius: 60px;
+	-moz-border-radius-bottomleft: 60px;
+	background: #9933CC;
+	/*optional*/
+  	box-shadow: 3px 3px 20px #993399;
+    -webkit-box-shadow: 3px 3px 20px #993399;
+	-moz-box-shadow: 3px 3px 20px #993399;
+
+}
+
+#main h1 {
+	padding-left: 20px;
+	color: #ffffff;
+	font-size: 40px;
+	font-style: italic;
+	text-shadow: 2px 2px 2px #000000;
+}
+
+#main p {
+	color: #FFFFFF;
+	font-size: 14px;
+}
