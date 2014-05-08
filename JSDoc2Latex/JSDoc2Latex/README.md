@@ -1,0 +1,1 @@
+Converts JSDoc to Latex format which can be included in a Latex Document

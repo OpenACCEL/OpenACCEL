@@ -36,6 +36,7 @@
     "scripts": {
         "jade": "jade -o bin/ src/",
         "doc": "jsdoc -c prepost/conf.json -d doc/ src/ -r",
+        "doc-latex": "jsdoc -c JSDoc2Latex/conf.json -d doc-latex/ src/ -r",
         "build": "./build.sh",
         "build-win": "build.bat",
         "test": "./test.sh",

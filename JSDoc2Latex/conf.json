@@ -1,0 +1,14 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": [],
+        "includePattern": ".+\\.js(doc)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": ["prepost/prepost.js"],
+    "opts": {
+    "template": "JSDoc2Latex/JSDoc2Latex"
+    }
+}

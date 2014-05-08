@@ -65,6 +65,26 @@ var self = this;
         <li><?js= self.linkto(f) ?></li>
     <?js }); ?></ul>
     <?js } ?>
+    
+        <?js if (data.pre && pre.length) { ?>
+    <h5>Pre-conditions:</h5>
+    <ul>
+    <?js
+        pre.forEach(function(r) { ?>
+            <li><?js=r.valueOf() ?></li>
+        <?js });
+    ?>
+    </ul>
+    <?js } ?>
+
+    <?js if (data.post && post.length) { ?>
+    <h5>Post-conditions:</h5>
+    <ul>
+    <?js
+        post.forEach(function(r) { ?>
+            <li><?js=r.valueOf() ?></li>
+        <?js });?>
+    </ul>
 
     <?js if (data.exceptions && exceptions.length) { ?>
     <h5>Throws:</h5>
@@ -78,25 +98,7 @@ var self = this;
         <?js });
     } } ?>
 
-    <?js if (data.pre && pre.length) { ?>
-    <h5>Pre-conditions:</h5>
-    <ul>
-    <?js
-        pre.forEach(function(r) { ?>
-            <li><?js=r.valueOf() ?></li>
-        <?js });
-    ?>
-    </ul>
-    <?js } ?>
 
-    <?js if (data.post && pre.length) { ?>
-    <h5>Post-conditions:</h5>
-    <ul>
-    <?js
-        post.forEach(function(r) { ?>
-            <li><?js=r.valueOf() ?></li>
-        <?js });?>
-    </ul>
     <?js } ?>
 
     <?js if (data.returns && returns.length) { ?>

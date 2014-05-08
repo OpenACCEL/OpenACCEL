@@ -38,8 +38,63 @@ require(["sweet", "jquery"], function(sweet) {
 });
 
 /**
+ * Dummy number
+ * @type {Number}
+ */
+var dummy2;
+
+/**
+ * @class
+ * @classdesc Super duper class
+ */
+var MyClass = function() {
+    /**
+     * Some inner var
+     * @type {Number}
+     */
+    var x;
+
+    /**
+     * Some constant
+     * @const
+     * @type {Number}
+     */
+    const Q = 38;
+
+    /**
+     * Some fancy thing
+     * @pre a
+     * @pre b
+     * @post c
+     * @param  {Number} a aaaaaaa
+     * @param  {Number} b bbbbbbb
+     * @return {Number}   something
+     */
+    function somefunction(a,b)
+    {
+
+    }
+
+
+    /**
+     * Some other fancy thing
+     * @post c
+     * @param  {Number} a aaaaaaa
+     * @param  {Number} b bbbbbbb
+     * @return {String}   something else
+     * @throws {DummyException} Help
+     */
+    function somefunction2(a,b)
+    {
+
+    }
+};
+
+/**
  * Dummy function
  * @return {Number} Roy
  */
 function dummy()
-{}
+{
+    
+}
