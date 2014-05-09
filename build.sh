@@ -11,6 +11,7 @@ npm run jade
 # Documentation.
 echo "Generating documentation."
 npm run doc
+npm run doc-latex
 
 # Deployment.
 echo "Deploying all files, such that it is ready for production."
