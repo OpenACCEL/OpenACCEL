@@ -25,7 +25,8 @@ cp node_modules/sweet.js/macros/stxcase.js                                      
 cp node_modules/sweet.js/node_modules/escodegen/escodegen.browser.min.js             bin/scripts/escodegen.js
 cp node_modules/sweet.js/node_modules/escope/escope.js                               bin/scripts/escope.js
 cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
-find src/ -type f -name "*.js" -exec cp {} bin/scripts \;
+cp -r src/* bin/scripts
+find bin/ -type f ! -regex ".*\.js" -exec rm {} \;
 
 touch doc/.gitignore
 touch bin/.gitignore
