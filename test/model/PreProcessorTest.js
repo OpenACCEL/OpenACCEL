@@ -104,11 +104,15 @@ suite("PreProcessorTest.js", function() {
 
         /**
          * Test case for translateLine().
-         * Checks that an error is thrown for invalit arguments
+         * Checks that an error is thrown for invalid arguments
          */
         test("translateLine(): Errors", function() {
-            assert.throws(preprocessor.translateLine(null));
-            assert.throws(preprocessor.translateLine());
+            assert.throws(function() {
+                preprocessor.translateLine(null);
+            });
+            assert.throws(function() {
+                preprocessor.translateLine();
+            });
         });
     });
 });
