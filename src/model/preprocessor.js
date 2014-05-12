@@ -50,9 +50,17 @@ define([sweetModule, "jquery"], function(sweet) {
         },
 
         /**
-         * translateLine description
-         * @param  {type} line description
-         * @return {type}      description
+         * Translates a line of Accel script to a line that can be expanded using macros.
+         * Examples:
+         * x = 5 becomes func(x = 5)
+         * x = 5 ; kg becomes func(x = 5 ; {'kg' : 1})
+         * z = 2 + sin(y + sin(x)) + 4 + sin(2) becomes func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))
+         * 
+         * 
+         * @param  {String} a line of Accell script
+         * @pre line != null
+         * @pre line != undefined
+         * @return {String}      Translated line
          */
         translateLine: function(line) {
 
