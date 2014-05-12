@@ -7,12 +7,12 @@
 
 /** Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
-inNode    = !inBrowser;
-if (inNode) { 
-	require = require('requirejs');
-	sweetModule = "sweet.js";
+inNode = !inBrowser;
+if (inNode) {
+    require = require('requirejs');
+    sweetModule = "sweet.js";
 } else {
-	sweetModule = "sweet";
+    sweetModule = "sweet";
 }
 
 require.config({
@@ -26,27 +26,35 @@ require.config({
 
 // If all requirements are loaded, we may create our 'class'.
 define([sweetModule, "jquery"], function(sweet) {
-	/**
-	 * @class
-	 * @classdesc First pass in compiling. Translates an Accel script to a script that can be expanded by macros.
-	 */
-	var Preprocessor = {
-		/**
-		 * parse description
-		 * @param  {type} script description
-		 * @return {type}        description
-		 */
+    /**
+     * @class
+     * @classdesc First pass in compiling. Translates an Accel script to a script that can be expanded by macros.
+     */
+    var Preprocessor = {
+        /**
+         * parse description
+         * @param  {type} script description
+         * @return {type}        description
+         */
         parse: function(script) {
 
         },
 
         /**
-         * scriptToLines description
-         * @param  {type} script description
-         * @return {type}        description
+         * Transforms the input {@code script} to an array of strings,
+         * each representing a line.
+         * @param  {String} script the input script given as a String
+         * @pre script != null
+         * @pre script != undefined
+         * @return {Array[String]} an array containing all lines in {@code script}
          */
         scriptToLines: function(script) {
-
+            if (script) {
+                throw "PreProcessor.scriptToLines.pre violated :
+                script is null or undefined";
+            } else {
+                return resultArray = script.split("\n");
+            }
         },
 
         /**
@@ -66,13 +74,13 @@ define([sweetModule, "jquery"], function(sweet) {
 
         }
 
-	}
+    }
 
-	// If we are in the browser, we want to execute the compile function at the start.
-	if (inBrowser) {
-    	Preprocessor.compile();
-	}
+    // If we are in the browser, we want to execute the compile function at the start.
+    if (inBrowser) {
+        Preprocessor.compile();
+    }
 
-	// Exports are needed, such that other modules may invoke methods from this module file.
-	return Preprocessor;
+    // Exports are needed, such that other modules may invoke methods from this module file.
+    return Preprocessor;
 });
