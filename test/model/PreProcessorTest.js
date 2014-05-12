@@ -17,13 +17,34 @@ suite("PreProcessorTest.js", function() {
     });
 
     suite("Pre Processor", function() {
+        /**
+         * Example script to compile.
+         * @type {String}
+         */
         var exScript = "x = 5 \n" +
-            "y = sin(x)" +
-            "z = 2 + sin(y + sin(x)) + sin(2)" +
+            "y = sin(x)\n" +
+            "z = 2 + sin(y + sin(x)) + sin(2)\n" +
             "u = x + y";
 
-        test("scriptToLines()", function() {
-            assert.equal(6, preprocessor.scriptToLines());
+        /**
+         * An array of lines corresponding to {@code exScript}
+         * @type {Array[String]}
+         */
+        var exScriptInLines = ["x = 5",
+            "y = sin(x)",
+            "z = 2 + sin(y + sin(x)) + sin(2)",
+            "u = x + y"
+        ];
+
+        /** Robustness test for scriptToLines() */
+        test('Robustness scriptToLines()', function() {
+            assert.throws(preprocessor.scriptToLines(null));
+            assert.throws(preprocessor.scriptToLines(undefined));
+        });
+
+        /** Tests the scriptToLines() method. */
+        test('scriptToLines()', function() {
+            assert.equal(exScriptInLines, preprocessor.scriptToLines(exScript));
         });
     });
 });
