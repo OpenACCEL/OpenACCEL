@@ -22,8 +22,8 @@ suite("PreProcessorTest.js", function() {
             "z = 2 + sin(y + sin(x)) + sin(2)" +
             "u = x + y";
 
-        test("should equal 6", function() {
-            assert.equal(6, preprocessor.compile());
+        test("scriptToLines()", function() {
+            assert.equal(6, preprocessor.scriptToLines());
         });
     });
 });
