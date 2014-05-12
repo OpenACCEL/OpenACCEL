@@ -77,8 +77,6 @@ define([sweetModule, "jquery"], function(sweet) {
     	TemplateClass.compile();
 	}
 
-	// Exports are needed in Node, such that other modules may invoke methods from this module file.
-	if (inNode) {
-	    return TemplateClass;
-	}
+	// Exports are needed, such that other modules may invoke methods from this module file.
+	return TemplateClass;
 });
