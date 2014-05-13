@@ -32,14 +32,14 @@ suite("UnitPass.js", function() {
          * Unit kg squared.
          */
         test('translateUnits() kg2', function() {
-            assert.equal(UnitPass.translateUnits('kg2'), '{\'kg\': 2}');
+            assert.deepEqual(UnitPass.translateUnits('kg2'), '{\'kg\': 2}');
         });
 
         /** Test translateUnits().
          * Unit m/s.
          */
         test('translateUnits() m/s', function() {
-            assert.equal(UnitPass.translateUnits('m/s'), '{\'m\': 1 , \'s\' : -1}');
+            assert.deepEqual(UnitPass.translateUnits('m/s'), '{\'m\': 1, \'s\': -1}');
         });
         test('translateUnits() robustness', function() {
             assert.throws(function() {
@@ -48,11 +48,15 @@ suite("UnitPass.js", function() {
         });
 
         test('splitUnitTest()', function() {
-            assert.deepEqual(UnitPass.splitUnits('kg2'), ['kg', '2']);
+            assert.deepEqual(UnitPass.splitUnits('kg2'), ['kg', 2]);
         });
 
         test('splitUnitTest()', function() {
-            assert.deepEqual(UnitPass.splitUnits('m/s'), ['m', '/', 's']);
+            assert.deepEqual(UnitPass.splitUnits('m/s'), ['m', 1, '/', 's', 1]);
+        });
+
+        test('addDimensionOne()', function() {
+            assert.deepEqual(UnitPass.addDimensionOne(['kg', '/', 's']), ['kg', 1, '/', 's', 1]);
         });
     });
 });

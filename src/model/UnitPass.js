@@ -71,9 +71,9 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
         var inverted = false; //true when a / has occurred. All dimensions are inversed when true {@type boolean}
         for (var i = 0; i < unitsArray.length; i++) {
             if (unitsArray[i].match(/[a-zA-Z]/)) {
-                result += '\'' + unitsArray[i] + '\':';
+                result += '\'' + unitsArray[i] + '\': ';
             } else if (unitsArray[i].match(/[0-9]/)) {
-                if (inversed) {
+                if (inverted) {
                     result += '-';
                 }
                 result += unitsArray[i];
@@ -95,7 +95,6 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
      * @return {String[]} all components of the units
      */
     UnitPass.prototype.splitUnits = function(units) {
-        console.log(units);
         var result = [];
         var regex = /(([a-zA-Z]*)([0-9]*)([.\/]?)([a-zA-Z]*)([0-9]*))/g;
         var match = units.match(regex);
@@ -103,6 +102,29 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
         for (var i = 0; i < split.length; i++) {
             if (split[i] !== '' && !(match.indexOf(split[i]) > -1)) {
                 result.push(split[i]);
+            }
+        }
+        result = this.addDimensionOne(result);
+        return result;
+    };
+
+    /**
+     * Adds the dimension one to the array of units where it is explicit.
+     * @pre unitArray != null
+     * @pre unitArray != undefined
+     * @param {String[]} unitArray the elements of the units
+     * @return {String[]} the same unit array, with implicit dimension one added
+     */
+    UnitPass.prototype.addDimensionOne = function(unitArray) {
+        if (!unitArray) {
+            throw new Error('PreProcessor.translateUnits.pre violated' +
+                'units is null or undefined');
+        }
+        var result = [];
+        for (var i = 0; i < unitArray.length; i++) {
+            result.push(unitArray[i]);
+            if (unitArray[i].match(/[a-zA-Z]/) && ((i === unitArray.length - 1) || !unitArray[i + 1].match(/[0-9]/))) {
+                result.push('1');
             }
         }
         return result;
