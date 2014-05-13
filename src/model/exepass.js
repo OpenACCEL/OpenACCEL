@@ -2,7 +2,7 @@
  * We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
  * If we are in node, we should not and instead should just export the various modules for testing purpose.
  *
- * @author Roy Stoof
+ * @author Roel Jacobs
  */
 
 /* Browser vs. Node ***********************************************/
