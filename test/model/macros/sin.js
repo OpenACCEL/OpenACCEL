@@ -8,12 +8,12 @@ suite("Sin Macro", function() {
         requirejs(["assert", "model/macroexpander"], function(assertModule, module) {
             console.log("Loaded 'MacroExpander' module.");
             assert = assertModule;
-            macroExpander = module;
+            macroExpander = new module();
             done();
         });
     });
 
-    suite("Func expansion.", function() {
+    suite("expansion", function() {
         test("should expand for 'x = 5'", function() {
             macroExpander.load("func");
             macroExpander.load("sin");
@@ -21,9 +21,7 @@ suite("Sin Macro", function() {
             var output = macroExpander.compile(input);
             assert.equal(Math.sin(5), eval(output)());
         });
-    });
 
-    suite("Func expansion.", function() {
         test("should expand for 'x = 5, y = x + 2, z = sin(sin(x) + sin(y))'", function() {
             macroExpander.load("func");
             macroExpander.load("sin");

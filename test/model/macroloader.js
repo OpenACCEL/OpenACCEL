@@ -8,24 +8,24 @@ suite("Macro Loader", function() {
         requirejs(["assert", "model/macroloader"], function(assertModule, module) {
             console.log("Loaded 'MacroLoader' module.");
             assert = assertModule;
-            macroLoader = module;
+            macroLoader = new module();
             done();
         });
     });
 
-	suite("Loading of macro files.", function() {
+	suite("loading of macro files", function() {
 		test("should equal true", function() {
 			assert.equal(true, macroLoader.load("func"));
 		});
 
-        test("content of macro file should match", function() {
+        test("should match content of macro file", function() {
             var content = "// This macro is for testing purpose only.\nmacro add {\n    rule { ($x) } => { $x + 1 }\n}";
             macroLoader.load("testAdd");
             assert.equal(content, macroLoader.macros["testAdd"]);
         });
 	});
 
-    suite("Utility functions.", function() {
+    suite("utility functions", function() {
         test("clear", function() {
             macroLoader.load("testAdd");
             macroLoader.clear();

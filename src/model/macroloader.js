@@ -32,12 +32,14 @@ define(["module", fileModule], function(module, fs) {
      * @class
      * @classdesc Classes can be defined as objects. Indiciate this using the @class param.
      */
-    var MacroLoader = {
+    function MacroLoader() {
         /**
          * List of loaded and available macros.
          */
-        macros: {},
-
+        this.macros = {};
+    }
+    
+    MacroLoader.prototype = {
         /**
          * Tries to load a macro by its filename.
          *

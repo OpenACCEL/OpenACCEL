@@ -8,12 +8,12 @@ suite("Macro Expander", function() {
         requirejs(["assert", "model/macroexpander"], function(assertModule, module) {
             console.log("Loaded 'MacroExpander' module.");
             assert = assertModule;
-            macroExpander = module;
+            macroExpander = new module();
             done();
         });
     });
 
-	suite("Test pure sweet compilation.", function() {
+	suite("pure sweet compilation", function() {
 		test("should equal 6", function() {
 			var code = "macro add { rule { ($x) } => { $x + 1 } } (function() { var test = function() { return add(5); }; x = {}; x.test1 = test; return x; })();";
 			var output = eval(macroExpander.compile(code));

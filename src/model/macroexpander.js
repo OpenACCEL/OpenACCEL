@@ -33,12 +33,14 @@ define([sweetModule, "model/macroloader"], function(sweet, ml) {
 	 *            and returns a piece of executable javascript code. That is, this is the code that should be
 	 *            eval()'d and return an executable.
 	 */
-	var MacroExpander = {
+	function MacroExpander() {
 		/**
 		 * Helper class that loads and stores all macros.
 		 */
-		macroLoader: ml,
+		this.macroLoader = new ml();
+	}
 
+	MacroExpander.prototype = {
         /**
          * Main and testable compilation function.
          * 
@@ -46,7 +48,7 @@ define([sweetModule, "model/macroloader"], function(sweet, ml) {
          * @return Returns the number 6 if compilation and execution of the code with Sweet.js macro has all been succesful.
          */
         compile: function(code) {
-        	code = ml.getMacros().concat(code);
+        	code = this.macroLoader.getMacros().concat(code);
 	        var output;
 
 	        try {
