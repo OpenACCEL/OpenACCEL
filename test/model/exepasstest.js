@@ -20,7 +20,7 @@ suite("exepass.js", function() {
          */
         test("parse", function() {
             var lines = [
-                "x = 5; kg", // Constant assignment with unit
+                "x = 5 ; kg", // Constant assignment with unit
                 "y = sin(x)", // simple function
                 "z = 2 + sin(y + sin(x)) + sin(2)" // complex function
             ];
