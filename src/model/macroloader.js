@@ -34,6 +34,11 @@ define(["module", fileModule], function(module, fs) {
      */
     var MacroLoader = {
         /**
+         * List of loaded and available macros.
+         */
+        macros: {},
+
+        /**
          * Tries to load a macro by its filename.
          *
          * @param file The macro file to load.
@@ -83,10 +88,33 @@ define(["module", fileModule], function(module, fs) {
 
             // If the contents have been read, we can store them and return true, else we failed and return false.
             if (content) {
+                this.macros[file] = content.toString();
                 return true;
             } else {
                 return false;
             }
+        },
+
+        /**
+         * Concatenates all loaded macros into a single string for Sweet.
+         *
+         * @returns A string of all loaded macros.
+         */
+        getMacros: function() {
+            var output = "";
+
+            for (var key in this.macros) {
+                output = output.concat(this.macros[key]);
+            }
+
+            return output;
+        },
+
+        /**
+         * Clears, and thus unloads all macros currently loaded.
+         */
+        clear: function() {
+            this.macros = {};
         }
     }
 
