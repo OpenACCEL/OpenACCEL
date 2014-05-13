@@ -43,6 +43,8 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
      * exe.<varname>().
      *
      * @param  {String[]} scriptLines Array with script lines
+     * @pre scriptLines != null
+     * @pre scriptLines != undefined
      * @return {String[]}             Array of translated lines
      */
     ExePass.prototype.parse = function(scriptLines) {
