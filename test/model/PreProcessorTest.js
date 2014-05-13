@@ -64,7 +64,21 @@ suite("PreProcessorTest.js", function() {
         test('scriptToLines() trim', function() {
             assert.deepEqual(exScriptInLines,
                 preprocessor.scriptToLines(exScriptWithTrailingSpaces))
-        })
+        });
+
+        /**
+         * Tests the trimLines() method for robustness.
+         */
+        test('Robustness trimLines()', function() {
+            assert.throws(
+                function() {
+                    preprocessor.trimLines(null);
+                });
+            assert.throws(
+                function() {
+                    preprocessor.trimLines();
+                });
+        });
 
         /**
          * Test case for translateLine().
