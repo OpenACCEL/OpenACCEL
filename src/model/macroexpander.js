@@ -26,7 +26,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([sweetModule, "model/macroloader"], function(sweet, macroLoader) {
+define([sweetModule, "model/macroloader"], function(sweet, ml) {
 	/**
 	 * @class
 	 * @classdesc The macro expander takes as input a bunch of defined macros, runs them through the Sweet compiler
@@ -34,6 +34,11 @@ define([sweetModule, "model/macroloader"], function(sweet, macroLoader) {
 	 *            eval()'d and return an executable.
 	 */
 	var MacroExpander = {
+		/**
+		 * Helper class that loads and stores all macros.
+		 */
+		macroLoader: ml,
+
         /**
          * Main and testable compilation function.
          * 
@@ -41,6 +46,7 @@ define([sweetModule, "model/macroloader"], function(sweet, macroLoader) {
          * @return Returns the number 6 if compilation and execution of the code with Sweet.js macro has all been succesful.
          */
         compile: function(code) {
+        	code = ml.getMacros().concat(code);
 	        var output;
 
 	        try {
@@ -56,7 +62,17 @@ define([sweetModule, "model/macroloader"], function(sweet, macroLoader) {
 	        	// TODO: Handle error nicely.
 	            throw new Error(err);
         	}
-	    }
+	    },
+
+	    /**
+         * Tries to load a macro by its filename.
+         *
+         * @param file The macro file to load.
+         * @return Whether the file has been succesfully loaded or not.
+         */
+        load: function(file) {
+        	this.macroLoader.load(file);
+        }
 	}
 
 	// Export the MacroExpander class.
