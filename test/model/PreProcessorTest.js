@@ -1,5 +1,3 @@
-requirejs = require("requirejs");
-
 suite("PreProcessorTest.js", function() {
     // Template module.
     var preprocessor;
