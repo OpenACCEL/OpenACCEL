@@ -38,9 +38,9 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
     FuncPass.prototype = new Pass();
 
     /**
-     * [parse description]
-     * @param  {[type]} scriptLines [description]
-     * @return {[type]}             [description]
+     * Wraps each line of script in a "func(...)" statement.
+     * @param  {String[]} scriptLines Array of script lines
+     * @return {String[]}             Array in which each line of the input is wrapped in a "func(...)" statement.
      */
     FuncPass.prototype.parse = function(scriptLines) {
         // Precondition check
