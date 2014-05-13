@@ -26,7 +26,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([sweetModule, "model/macroloader"], function(sweet, macros) {
+define([sweetModule, "model/macroloader"], function(sweet, macroLoader) {
 	/**
 	 * @class
 	 * @classdesc The macro expander takes as input a bunch of defined macros, runs them through the Sweet compiler

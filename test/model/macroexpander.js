@@ -1,5 +1,4 @@
 suite("Macro Expander", function() {
-	// Template module.
 	var macroExpander;
 	var assert;
 
