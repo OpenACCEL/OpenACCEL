@@ -207,6 +207,7 @@ body div {
 	display: table;
 	padding-left: 0px;
 	padding-right: 0px;
+	min-width: 256px;
 	border: 1px #331144 solid;
 	background: #FFFFFF;
 	font-size: 14px;
@@ -253,6 +254,7 @@ body div {
 	text-decoration: none;
 	padding-left: 2px;
 	padding-right: 2px;
+	cursor: pointer;
 }
 
 /* JQUERY SLIDER CSS */
@@ -260,6 +262,8 @@ body div {
 .ui-slider {
 	position: relative;
 	text-align: left;
+	margin-left: 5px;
+	margin-right: 5px;
 
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -281,34 +285,28 @@ body div {
 	background: linear-gradient(#993399, #662266);
 }
 
-/*.ui-slider .ui-slider-range {
+.ui-slider .ui-slider-range {
 	position: absolute;
 	z-index: 1;
-	font-size: .7em;
 	display: block;
 	border: 0;
-	background-position: 0 0;
-}*/
+	background: #331144;
+}
 
 .ui-slider-horizontal {
 	height: 5px;
 }
+
 .ui-slider-horizontal .ui-slider-handle {
 	top: -8px;
 	margin-left: -5px;
 }
 
-/*.ui-slider-horizontal .ui-slider-range {
+.ui-slider-horizontal .ui-slider-range {
 	top: 0;
 	height: 100%;
-}*/
+}
 
 .ui-slider-horizontal .ui-slider-range-min {
 	left: 0;
 }
-
-/*
-.ui-slider-horizontal .ui-slider-range-max {
-	right: 0;
-}
-*/

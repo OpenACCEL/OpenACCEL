@@ -1,69 +1,98 @@
 #editrun
-	div
-		.inline
-			.label Script line
-			input(type = 'text')#selectedline.textin
-		.inline
-			.label &nbsp;
-			input(type = 'button', value = 'Enter')#enterline.buttonin
-		#scriptoptions
-			.inline
-				.label &nbsp;
-				input(type = 'button', value = 'Run')#runscript.buttonin
-			.inline
-				.label &nbsp;
-				input(type = 'button', value = 'New')#newscript.buttonin
-	.inline
-		.label Listing
-		#scriptlist.textin
-			input(type = 'radio', name = 'script', id = 'line1', value = '1')
-			label(for = 'line1') 
-				.inline c
-				.inline.operator =
-				.inline 16
-				.inline.comment (cat.=2)
-				a(href = '#del').inline.lineoption delete
-			input(type = 'radio', name = 'script', id = 'line2', value = '2')
-			label(for = 'line2') 
-				.inline b
-				.inline.operator =
-				.inline c
-				.inline.comment (cat.=2)
-				a(href = '#del').inline.lineoption delete
-			input(type = 'radio', name = 'script', id = 'line3', value = '3')
-			label(for = 'line3') 
-				.inline aaaah
-				.inline.operator =
-				.inline b
-				.inline.comment (cat.=2)
-				a(href = '#del').inline.lineoption delete
-	.inline
-		.label User input
-		.group
-			#sliderdiv1
-				.inline slider3
-				script.
-					$("#sliderdiv1").append('<div id = "userslider1"></div>')
-					$("#userslider1").slider();
-			#sliderdiv2
-				.inline slider3
-				script.
-					$("#sliderdiv2").append('<div id = "userslider2"></div>')
-					$("#userslider2").slider();
-			#sliderdiv3
-				.inline slider3
-				script.
-					$("#sliderdiv3").append('<div id = "userslider3"></div>')
-					$("#userslider3").slider();
-	.inline
-		.label To do:
-		.group
-			#tododiv
-	.inline
-		.label Results
-		.group
-			#resultsdiv
-	.inline
-		.label Plot:
-		.group
-			#tododiv
+    script.
+        function remLine(line) {
+            $('label[for = "line' + line + '"]').remove();
+            $('#line' + line).remove();
+            console.log('Removed ' + line);
+        }
+
+        function addLine(line, left, right, category) {
+            $('#scriptlist').append('\
+                <input type="radio" name="script" id="line' + line + '" value="' + line + '">\
+                <label for="line' + line + '">\
+                    <div class="inline">' + left + '</div>\
+                    <div class="inline operator">=</div>\
+                    <div class="inline">' + right + '</div>\
+                    <div class="inline comment">(cat.=' + category + ')</div>\
+                    <a onclick="remLine(' + line + ')" class="inline lineoption">delete</a>\
+                </label>\
+            ');
+        }
+
+        /*
+         * Dynamic input elements to be generated according to ACCEL script requirements
+         */
+
+        /*
+         * Dynamic slider to be generated according to ACCEL script requirements
+         */
+        function SliderInput(val, min, max) {
+            this.val = val;
+            this.min = min;
+            this.max = max;
+
+            this.appendHTML = function(div, name, identifier) {
+                $(div).append('\
+                    <div id = "userinputdiv' + identifier + '">\
+                        <div class = "inline">' + name + '</div>\
+                        <div id = "userslider' + identifier + '"></div>\
+                    </div>\
+                ');
+                $('#userslider' + identifier).slider({
+                    range: "min",
+                    value: this.val,
+                    min: this.min,
+                    max: this.max,
+                    slide: function(event, ui) {
+                        $('#userinputdiv' + identifier).val(ui.value);
+                    }
+                });
+            }
+        }
+
+        function addInput(element, name, identifier) {
+            element.appendHTML('#userinput', name, identifier)
+        }
+
+    div
+        .inline
+            .label Script line
+            input(type = 'text')#selectedline.textin
+        .inline
+            .label &nbsp;
+            input(type = 'button', value = 'Enter')#enterline.buttonin
+        #scriptoptions
+            .inline
+                .label &nbsp;
+                input(type = 'button', value = 'Run')#runscript.buttonin
+            .inline
+                .label &nbsp;
+                input(type = 'button', value = 'New')#newscript.buttonin
+    .inline
+        .label Listing
+        #scriptlist.textin
+            script.
+                addLine(1,'a','56',2);
+                addLine(2,'b','948546687',2);
+                addLine(3,'c','887',2);
+                addLine(4,'d','94887',2);
+    .inline
+        .label User input
+        #userinput.group
+            script.
+                addInput(new SliderInput(2,0,10), 'Slider', 0);
+                addInput(new SliderInput(2,0,10), 'Slider', 1);
+                addInput(new SliderInput(2,0,10), 'Slider', 2);
+            
+    .inline
+        .label To do:
+        .group
+            #tododiv
+    .inline
+        .label Results
+        .group
+            #resultsdiv
+    .inline
+        .label Plot:
+        .group
+            #tododiv
