@@ -51,7 +51,37 @@ define([sweetModule, "jquery"], function(sweet) {
                 'scriptLines is null or undefined');
         }
         return scriptLines;
-    }
+    };
+
+
+    Pass.prototype.getLHS = function(line) {
+        var equalsIndex = line.indexOf("=");
+
+        return lhs = line.substring(0, equalsIndex).trim(); // Left hand side of the definition
+    };
+
+    Pass.prototype.getRHS = function(line) {
+        var equalsIndex = line.indexOf("=");
+        var unitStart = line.indexOf(";");
+
+        // Is a unit defined?
+        if (unitStart == -1) {
+            return line.substring(equalsIndex + 1).trim();
+        } else {
+            return line.substring(equalsIndex + 1, unitStart).trim();
+        }
+    };
+
+    Pass.prototype.getUnits = function(line) {
+        var unitStart = line.indexOf(";");
+
+        // Is a unit defined?
+        if (unitStart == -1) {
+            return "";
+        } else {
+            return line.substring(unitStart + 1).trim();
+        }
+    };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Pass;
