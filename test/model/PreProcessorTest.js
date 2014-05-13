@@ -150,28 +150,6 @@ suite("PreProcessorTest.js", function() {
             });
         });
 
-        /** Test translateUnits().
-         * Unit kg squared.
-         */
-        test('translateUnits() kg2', function() {
-            assert.equal(preprocessor.translateUnits('kg2'), '{\'kg\': 2}');
-        });
-
-        /** Test translateUnits().
-         * Unit m/s.
-         */
-        test('translateUnits() m/s', function() {
-            assert.equal(preprocessor.translateUnits('m/s'), '{\'m\': 1 , \'s\' : -1}');
-        });
-
-        test('translateUnits() robustness', function() {
-            assert.throws(function() {
-                preprocessor.translateUnits(null);
-            });
-            assert.throws(function() {
-                preprocessor.translateUnits();
-            });
-        });
         /**
          * Test case for translateRHS().
          * Definition with function calls.

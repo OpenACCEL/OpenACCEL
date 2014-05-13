@@ -52,7 +52,7 @@ define([sweetModule, "jquery"], function(sweet) {
             }
 
             // Create output.
-            var result  = "(function () { \n var exe = {}; \n";
+            var result = "(function () { \n var exe = {}; \n";
             for (var i = 0; i > lines.length; i++) {
                 result += lines[i] + "\n";
             }
@@ -138,57 +138,7 @@ define([sweetModule, "jquery"], function(sweet) {
             return result;
         },
 
-        /**
-         * Translate the units of a certain line into our format, such
-         * that it is an object in the executable code.
-         * @param  {String} units the units in a String format
-         * @pre units != null
-         * @pre units != undefined
-         * @return {String} a String to be used in our executable code, containing the units.
-         */
-        translateUnits: function(units) {
-            if (!units) {
-                throw new Error('PreProcessor.translateUnits.pre violated' +
-                    'units is null or undefined');
-            }
-            var result = '{'; //the result of this function {@type String}
-            var unitsArray = this.splitUnits(units); //the elements of the units {@type String[]}
-            var inversed = false; //true when a / has occurred. All dimensions are inversed when true {@type boolean}
-            for (var i = 0; i < unitsArray.length; i++) {
-                if (unitsArray[i].match(/[a-zA-Z]/)) {
-                    result += '\'' + unitsArray[i] + '\':';
-                } else if (unitsArray[i].match(/[0-9]/)) {
-                    if (inversed) {
-                        result += '-';
-                    }
-                    result += unitsArray[i];
-                } else if (unitsArray[i] === '.') {
-                    result += ', ';
-                } else if (unitsArray[i] === '/') {
-                    inversed = true;
-                    result += ', ';
-                }
-            }
-        },
 
-        /**
-         * Splits the string units into different components, which consists of only
-         * letters, digits or symbols.
-         * @param  {String} units the units in a String format
-         * @return {String[]} all components of the units
-         */
-        splitUnits: function(units) {
-            var result = [];
-            var regex = /([a-zA-Z]*)([0-9]*)?(.|\/)?/g;
-            var match = units.match(regex);
-            var split = units.split(regex);
-            for (var i = 0; i < split.length; i++) {
-                if (split[i] !== '' && !(match.indexOf(split[i]) > -1)) {
-                    result.push(split[i]);
-                }
-            }
-            return result;
-        },
 
         /**
          * Translates the right hand side of an Accel definition to a macro compatible string.
