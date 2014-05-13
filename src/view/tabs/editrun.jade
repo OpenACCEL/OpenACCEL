@@ -1,3 +1,69 @@
 #editrun
-	h1 Edit / Run script
-		p Hello world
+	div
+		.inline
+			.label Script line
+			input(type = 'text')#selectedline.textin
+		.inline
+			.label &nbsp;
+			input(type = 'button', value = 'Enter')#enterline.buttonin
+		#scriptoptions
+			.inline
+				.label &nbsp;
+				input(type = 'button', value = 'Run')#runscript.buttonin
+			.inline
+				.label &nbsp;
+				input(type = 'button', value = 'New')#newscript.buttonin
+	.inline
+		.label Listing
+		#scriptlist.textin
+			input(type = 'radio', name = 'script', id = 'line1', value = '1')
+			label(for = 'line1') 
+				.inline c
+				.inline.operator =
+				.inline 16
+				.inline.comment (cat.=2)
+				a(href = '#del').inline.lineoption delete
+			input(type = 'radio', name = 'script', id = 'line2', value = '2')
+			label(for = 'line2') 
+				.inline b
+				.inline.operator =
+				.inline c
+				.inline.comment (cat.=2)
+				a(href = '#del').inline.lineoption delete
+			input(type = 'radio', name = 'script', id = 'line3', value = '3')
+			label(for = 'line3') 
+				.inline aaaah
+				.inline.operator =
+				.inline b
+				.inline.comment (cat.=2)
+				a(href = '#del').inline.lineoption delete
+	.inline
+		.label User input
+		.group
+			#sliderdiv1
+				.inline slider3
+				script.
+					$("#sliderdiv1").append('<div id = "userslider1"></div>')
+					$("#userslider1").slider();
+			#sliderdiv2
+				.inline slider3
+				script.
+					$("#sliderdiv2").append('<div id = "userslider2"></div>')
+					$("#userslider2").slider();
+			#sliderdiv3
+				.inline slider3
+				script.
+					$("#sliderdiv3").append('<div id = "userslider3"></div>')
+					$("#userslider3").slider();
+	.inline
+		.label To do:
+		.group
+			#tododiv
+	.inline
+		.label Results
+		.group
+			#resultsdiv
+	.inline
+		.label Plot:
+		.group
+			#tododiv

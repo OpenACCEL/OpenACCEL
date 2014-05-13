@@ -6,8 +6,12 @@ html
 		script(src='scripts/jquery.js')
 		script(src='scripts/jquery-ui.js')
 		link(rel='stylesheet', type='text/css', href='accelstyle.css')
-		script
-			| $(function() {$("#main").tabs();});
+		script.
+			$(document).ready(
+				function() {
+					$("#main").tabs();
+				}
+			);
 	body
 		#container
 			#top
