@@ -1,4 +1,4 @@
-suite("funcpass.js", function() {
+suite('funcpass.js', function() {
 	// Template module.
 	var instance;
 	var assert;
@@ -6,30 +6,30 @@ suite("funcpass.js", function() {
     setup(function (done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(["assert", "model/funcpass"], function(assertModule, module) {
-            console.log("Loaded 'funcpass' module.");
+        requirejs(['assert', 'model/funcpass'], function(assertModule, module) {
+            console.log('Loaded \'funcpass\' module.');
             assert = assertModule;
             instance = new module();
             done();
         });
     });
 
-	suite("FuncPass", function() {
+	suite('FuncPass', function() {
 
 
 		/**
          * Test case for parse()
          */
-        test("parse", function() {
+        test('parse', function() {
             var lines = [
-                "x = 5 ; {'kg' : 1}", // Constant assignment with unit
-                "y = sin(exe.x())", // simple function
-                "z = 2 + sin(exe.y() + sin(exe.x())) + sin(2)" // complex function
+                'x = 5 ; {\'kg\' : 1}', // Constant assignment with unit
+                'y = sin(exe.x())', // simple function
+                'z = 2 + sin(exe.y() + sin(exe.x())) + sin(2)' // complex function
             ];
             var expResult = [
-                "func(x = 5 ; {'kg' : 1})",
-                "func(y = sin(exe.x()))",
-                "func(z = 2 + sin(exe.y() + sin(exe.x())) + sin(2))"
+                'func(x = 5 ; {\'kg\' : 1})',
+                'func(y = sin(exe.x()))',
+                'func(z = 2 + sin(exe.y() + sin(exe.x())) + sin(2))'
             ];
             assert.deepEqual(instance.parse(lines), expResult);
         });

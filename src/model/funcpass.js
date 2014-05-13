@@ -1,6 +1,5 @@
 /**
- * We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
- * If we are in node, we should not and instead should just export the various modules for testing purpose.
+ * File containing the FuncPass class
  *
  * @author Roel Jacobs
  */
@@ -11,9 +10,9 @@ inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
-    sweetModule = "sweet.js";
+    sweetModule = 'sweet.js';
 } else {
-    sweetModule = "sweet";
+    sweetModule = 'sweet';
 
     require.config({
         shim: {
@@ -21,16 +20,16 @@ if (inNode) {
                 exports: '_'
             }
         },
-        baseUrl: "scripts"
+        baseUrl: 'scripts'
     });
 }
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([sweetModule, "model/pass"], function(sweet, Pass) {
+define(['model/pass'], function(Pass) {
     /**
      * @class
-     * @classdesc Pass that wraps each line of script in a "func(...)" statement.
+     * @classdesc Pass that wraps each line of script in a 'func(...)' statement.
      */
     function FuncPass() {}
 
@@ -38,18 +37,20 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
     FuncPass.prototype = new Pass();
 
     /**
-     * Wraps each line of script in a "func(...)" statement.
+     * Wraps each line of script in a 'func(...)' statement.
      * @param  {String[]} scriptLines Array of script lines
-     * @return {String[]}             Array in which each line of the input is wrapped in a "func(...)" statement.
+     * @pre scriptLines != null
+     * @pre scriptLines != undefined
+     * @return {String[]}             Array in which each line of the input is wrapped in a 'func(...)' statement.
      */
     FuncPass.prototype.parse = function(scriptLines) {
         // Precondition check
         Pass.prototype.parse.call(this, scriptLines);
 
         return scriptLines.map(function(line) {
-            return "func(" + line + ")";
+            return 'func(' + line + ')';
         });
-    }
+    };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return FuncPass;

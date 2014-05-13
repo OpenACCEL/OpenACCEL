@@ -1,6 +1,5 @@
 /**
- * We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
- * If we are in node, we should not and instead should just export the various modules for testing purpose.
+ * File containing the ExePass class
  *
  * @author Roel Jacobs
  */
@@ -11,9 +10,9 @@ inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
-    sweetModule = "sweet.js";
+    sweetModule = 'sweet.js';
 } else {
-    sweetModule = "sweet";
+    sweetModule = 'sweet';
 
     require.config({
         shim: {
@@ -21,13 +20,13 @@ if (inNode) {
                 exports: '_'
             }
         },
-        baseUrl: "scripts"
+        baseUrl: 'scripts'
     });
 }
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([sweetModule, "model/pass"], function(sweet, Pass) {
+define(['model/pass'], function(Pass) {
     /**
      * @class
      * @classdesc Pass that replaces every reference to variable on the right
@@ -51,7 +50,7 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
         // Precondition check
         Pass.prototype.parse.call(this, scriptLines);
 
-        var lines = []
+        var lines = [];
         for (var i = 0; i < scriptLines.length; i++) {
             var line = scriptLines[i];
             var units = this.getUnits(line);
@@ -59,12 +58,12 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
             var result = this.getLHS(line) + // left hand side
             	' = ' +
                 this.translateRHS(this.getRHS(line)) + // translated right hand side
-            	((units) ? ' ; ' + units : '') // units if needed
+            	((units) ? ' ; ' + units : ''); // units if needed
 
             lines.push(result);
         }
         return lines;
-    }
+    };
 
     /**
      * Translates the right hand side of an Accel definition to a macro compatible string.
@@ -84,7 +83,7 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
         return trimmed.replace(/\w*[a-zA-Z]\w*\b(?!\()/g, function(s) {
             return 'exe.' + s + '()';
         });
-    }
+    };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return ExePass;

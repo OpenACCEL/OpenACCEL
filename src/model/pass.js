@@ -1,19 +1,18 @@
 /**
- * We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
- * If we are in node, we should not and instead should just export the various modules for testing purpose.
+ * File containing the Pass class
  *
  * @author Roel Jacobs
  */
 
-/** Browser vs. Node ***********************************************/
+/* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
-    sweetModule = "sweet.js";
+    sweetModule = 'sweet.js';
 } else {
-    sweetModule = "sweet";
+    sweetModule = 'sweet';
 
     require.config({
         shim: {
@@ -21,13 +20,13 @@ if (inNode) {
                 exports: '_'
             }
         },
-        baseUrl: "scripts"
+        baseUrl: 'scripts'
     });
 }
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([sweetModule, "jquery"], function(sweet) {
+define([], function() {
     /**
      * @class
      * @classdesc Base class for passes of the preprocessor.
@@ -53,16 +52,43 @@ define([sweetModule, "jquery"], function(sweet) {
         return scriptLines;
     };
 
-
+    /**
+     * Returns the left hand side of a definition,
+     * that is, the part before the '=' sign.
+     * 
+     * @param  {String} line String containing the definition
+     * @pre line != null
+     * @pre line != undefined
+     * @return {String}      Left hand side of the definition
+     */
     Pass.prototype.getLHS = function(line) {
-        var equalsIndex = line.indexOf("=");
+        if (!line) {
+            throw new Error('Pass.getLHS.pre violated :' +
+                'line is null or undefined');
+        }
+
+        var equalsIndex = line.indexOf('=');
 
         return line.substring(0, equalsIndex).trim(); // Left hand side of the definition
     };
 
+    /**
+     * Returns the right hand side of a definition,
+     * that is, the part after the '=' sign and before the ';' (if present).
+     * 
+     * @param  {String} line String containing the definition
+     * @pre line != null
+     * @pre line != undefined
+     * @return {String}      Right hand side of the definition
+     */
     Pass.prototype.getRHS = function(line) {
-        var equalsIndex = line.indexOf("=");
-        var unitStart = line.indexOf(";");
+        if (!line) {
+            throw new Error('Pass.getRHS.pre violated :' +
+                'line is null or undefined');
+        }
+
+        var equalsIndex = line.indexOf('=');
+        var unitStart = line.indexOf(';');
 
         // Is a unit defined?
         if (unitStart == -1) {
@@ -72,8 +98,22 @@ define([sweetModule, "jquery"], function(sweet) {
         }
     };
 
+     /**
+     * Returns the units of a definition,
+     * that is, the part after the ';'
+     * 
+     * @param  {String} line String containing the definition
+     * @pre line != null
+     * @pre line != undefined
+     * @return {String}      Units of the definitions, empty String if no unit is present. 
+     */
     Pass.prototype.getUnits = function(line) {
-        var unitStart = line.indexOf(";");
+        if (!line) {
+            throw new Error('Pass.getUnits.pre violated :' +
+                'line is null or undefined');
+        }
+
+        var unitStart = line.indexOf(';');
 
         // Is a unit defined?
         if (unitStart == -1) {
