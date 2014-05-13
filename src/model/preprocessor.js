@@ -100,7 +100,9 @@ define([sweetModule, "jquery"], function(sweet) {
                 rhs = line.substring(equalsIndex + 1, unitStart);
                 units = line.substring(unitStart + 1);
             }
-        }
+
+
+        },
 
         /**
          * [translateUnit description]
@@ -109,10 +111,10 @@ define([sweetModule, "jquery"], function(sweet) {
          */
         translateUnits: function(units) {
 
-        }
+        },
 
         /**
-         * [translateRHS description]
+         * Tr
          * @param  {[type]} rhs [description]
          * @return {[type]}     [description]
          */
