@@ -53,17 +53,20 @@ define([sweetModule, "jquery"], function(sweet) {
             if (!script) {
                 throw new Error('PreProcessor.scriptToLines.pre violated :' +
                     'script is null or undefined');
-            } else {
-                var scriptInLines = script.split('\n');
-                //line represents a line in the script
-                //@type {String}
-                var result;
-                for (var line in scriptInLines) {
-                    line.trim();
-
-                }
-                return result;
             }
+            var scriptInLines = script.split('\n'); // the script in lines @type {String[]}
+            return this.trimLines(scriptInLines);
+        },
+
+        trimLines: function(scriptArray) {
+            if (!scriptArray) {
+                throw new Error('Preprocessor.trimLines.pre violated:' +
+                    'scriptArray is null or undefined');
+            }
+            for (var i = 0; i < scriptArray.length; i++) {
+                scriptArray[i] = scriptArray[i].trim();
+            }
+            return scriptArray;
         },
 
         /**
