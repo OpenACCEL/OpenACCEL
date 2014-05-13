@@ -2,7 +2,7 @@
  * We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
  * If we are in node, we should not and instead should just export the various modules for testing purpose.
  *
- * @author Roy Stoof
+ * @author Jacco Snoeren
  */
 
 /** Browser vs. Node ***********************************************/
@@ -38,11 +38,19 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
 
     UnitPass.prototype.parse = function(scriptLines) {
         Pass.prototype.parse.call(this, scriptLines);
-        var result = []; //The result of this function {@type String[]}
+        var lines = []; //The result of this function {@type String[]}
         for (var i = 0; i < scriptLines; i++) {
-            var units = Pass.prototype.getUnits.call(this, scriptLines[i]);
-            this.translateUnits(units);
+            var line = scriptLines[i];
+            var units = Pass.prototype.getUnits.call(this, line);
+            units = this.translateUnits(units);
+            var result = this.getLHS(line) + // left hand side
+            ' = ' +
+                this.getRHS(this.getRHS(line)) + // translated right hand side
+            ((units) ? ' ; ' + units : ''); // units if needed
+
+            lines.push(result);
         }
+        return lines;
     };
 
     /**
