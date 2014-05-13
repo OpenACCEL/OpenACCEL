@@ -52,11 +52,11 @@ define([sweetModule, "jquery"], function(sweet) {
             }
 
             // Create output.
-            var result  = "(function () { \n var exe = {}; \n";
+            var result  = "(function () {\nvar exe = {};\n";
             for (var i = 0; i > lines.length; i++) {
                 result += lines[i] + "\n";
             }
-            result += "return exe; \n })()";
+            result += "return exe;\n})()";
 
             return result;
         },

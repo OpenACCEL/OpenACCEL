@@ -39,6 +39,8 @@ suite("PreProcessorTest.js", function() {
             'u = x + y'
         ];
 
+
+
         /** Robustness test for scriptToLines() */
         test('Robustness scriptToLines()', function() {
             assert.throws(
@@ -55,15 +57,15 @@ suite("PreProcessorTest.js", function() {
          * Basic test.
          */
         test('scriptToLines() basic test', function() {
-            assert.deepEqual(exScriptInLines, preprocessor.scriptToLines(exScript));
+            assert.deepEqual(preprocessor.scriptToLines(exScript), exScriptInLines);
         });
 
         /** Tests the scriptToLines() method.
          * Tests whether trailing spaces are handled correctly.
          */
         test('scriptToLines() trim', function() {
-            assert.deepEqual(exScriptInLines,
-                preprocessor.scriptToLines(exScriptWithTrailingSpaces))
+            assert.deepEqual(preprocessor.scriptToLines(exScriptWithTrailingSpaces),
+                exScriptInLines)
         });
 
         /**
@@ -88,7 +90,7 @@ suite("PreProcessorTest.js", function() {
             var line = "x = 5";
             var expResult = "func(x = 5)";
 
-            assert.equal(expResult, preprocessor.translateLine(line));
+            assert.equal(preprocessor.translateLine(line), expResult);
         });
 
         /**
@@ -99,7 +101,7 @@ suite("PreProcessorTest.js", function() {
             var line = "x = 5; kg";
             var expResult = "func(x = 5 ; {'kg' : 1})";
 
-            assert.equal(expResult, preprocessor.translateLine(line));
+            assert.equal(preprocessor.translateLine(line), expResult);
         });
 
         /**
@@ -110,7 +112,7 @@ suite("PreProcessorTest.js", function() {
             var line = "x = 5; kg2";
             var expResult = "func(x = 5 ; {'kg' : 2})";
 
-            assert.equal(expResult, preprocessor.translateLine(line));
+            assert.equal(preprocessor.translateLine(line), expResult);
         });
 
         /**
@@ -121,7 +123,7 @@ suite("PreProcessorTest.js", function() {
             var line = "u = x + y";
             var expResult = "func(u = exe.x() + exe.y())";
 
-            assert.equal(expResult, preprocessor.translateLine(line));
+            assert.equal(preprocessor.translateLine(line), expResult);
         });
 
         /**
@@ -132,7 +134,7 @@ suite("PreProcessorTest.js", function() {
             var line = "z = 2 + sin(y + sin(x)) + sin(2)";
             var expResult = "func(z = 2 + sin(exe.y() + sin(exe.x())) + sin(2))";
 
-            assert.equal(expResult, preprocessor.translateLine(line));
+            assert.equal(preprocessor.translateLine(line), expResult);
         });
 
         /**
@@ -152,14 +154,14 @@ suite("PreProcessorTest.js", function() {
          * Unit kg squared.
          */
         test('translateUnits() kg2', function() {
-            assert.equal('{\'kg\': 2}', preprocessor.translateUnits('kg2'));
+            assert.equal(preprocessor.translateUnits('kg2'), '{\'kg\': 2}');
         });
 
         /** Test translateUnits().
          * Unit m/s.
          */
         test('translateUnits() m/s', function() {
-            assert.equal('{\'m\': 1 , \'s\' : -1}', preprocessor.translateUnits('m/s'));
+            assert.equal(preprocessor.translateUnits('m/s'), '{\'m\': 1 , \'s\' : -1}');
         });
 
         test('translateUnits() robustness', function() {
@@ -178,7 +180,7 @@ suite("PreProcessorTest.js", function() {
             var line = "2 + sin(y + sin(x)) + sin(2)";
             var expResult = "2 + sin(exe.y() + sin(exe.x())) + sin(2)";
 
-            assert.equal(expResult, preprocessor.translateRHS(line));
+            assert.equal(preprocessor.translateRHS(line), expResult);
         });
 
         /**
@@ -192,6 +194,26 @@ suite("PreProcessorTest.js", function() {
             assert.throws(function() {
                 preprocessor.translateRHS();
             });
+        });
+
+        /**
+         * Test case for parse()
+         */
+        test("parse()", function() {
+            var input = "x = 5 ; kg\n" +
+                "y = sin(x)\n" +
+                "z = 2 + sin(y + sin(x)) + 4 + sin(2)\n" +
+                "u = x + y\n";
+            var expResult = "(function () {\n" +
+                "var exe = {};\n" +
+                "func(x = 5 ; {'kg' : 1})\n" +
+                "func(y = sin(exe.x()))\n" +
+                "func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))\n" +
+                "func(u = exe.x() + exe.y())\n" +
+                "return exe;\n" +
+                "})()";
+
+            assert.equal(preprocessor.parse(input), expResult);
         });
     });
 });
