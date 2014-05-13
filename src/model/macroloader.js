@@ -104,7 +104,7 @@ define(["module", fileModule], function(module, fs) {
             var output = "";
 
             for (var key in this.macros) {
-                output = output.concat(this.macros[key]);
+                output += this.macros[key];
             }
 
             return output;

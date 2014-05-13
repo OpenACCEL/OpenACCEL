@@ -41,7 +41,7 @@ suite("Macro Loader", function() {
             var content2 = "// This macro is for testing purpose only.\nmacro add {\n    rule { ($x) } => { $x + 2 }\n}";
             macroLoader.load("testAdd2");
 
-            assert.equal(content.concat(content2), macroLoader.getMacros());
+            assert.equal(content + content2, macroLoader.getMacros());
         });
     });
 });
