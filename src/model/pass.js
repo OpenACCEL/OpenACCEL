@@ -2,7 +2,7 @@
  * We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
  * If we are in node, we should not and instead should just export the various modules for testing purpose.
  *
- * @author Roy Stoof
+ * @author Roel Jacobs
  */
 
 /** Browser vs. Node ***********************************************/
@@ -57,7 +57,7 @@ define([sweetModule, "jquery"], function(sweet) {
     Pass.prototype.getLHS = function(line) {
         var equalsIndex = line.indexOf("=");
 
-        return lhs = line.substring(0, equalsIndex).trim(); // Left hand side of the definition
+        return line.substring(0, equalsIndex).trim(); // Left hand side of the definition
     };
 
     Pass.prototype.getRHS = function(line) {
@@ -77,7 +77,7 @@ define([sweetModule, "jquery"], function(sweet) {
 
         // Is a unit defined?
         if (unitStart == -1) {
-            return "";
+            return '';
         } else {
             return line.substring(unitStart + 1).trim();
         }

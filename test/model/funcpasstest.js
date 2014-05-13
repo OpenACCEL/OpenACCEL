@@ -1,6 +1,6 @@
 suite("funcpass.js", function() {
 	// Template module.
-	var funcpass;
+	var instance;
 	var assert;
 
     setup(function (done) {
@@ -9,23 +9,29 @@ suite("funcpass.js", function() {
         requirejs(["assert", "model/funcpass"], function(assertModule, module) {
             console.log("Loaded 'funcpass' module.");
             assert = assertModule;
-            funcpass = new module();
+            instance = new module();
             done();
         });
     });
 
-	suite("funcpass", function() {
+	suite("FuncPass", function() {
 
 
-		test("parse() robustness", function() {
-			assert.throws(
-                function() {
-                    funcpass.parse(null);
-                });
-            assert.throws(
-                function() {
-                    funcpass.parse();
-                });
-		});
+		/**
+         * Test case for parse()
+         */
+        test("parse", function() {
+            var lines = [
+                "x = 5 ; {'kg' : 1}", // Constant assignment with unit
+                "y = sin(exe.x())", // simple function
+                "z = 2 + sin(exe.y() + sin(exe.x())) + sin(2)" // complex function
+            ];
+            var expResult = [
+                "func(x = 5 ; {'kg' : 1})",
+                "func(y = sin(exe.x()))",
+                "func(z = 2 + sin(exe.y() + sin(exe.x())) + sin(2))"
+            ];
+            assert.deepEqual(instance.parse(lines), expResult);
+        });
 	});
 });
