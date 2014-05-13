@@ -128,13 +128,13 @@ define([sweetModule, "jquery"], function(sweet) {
             }
 
             // Format the output
-            var result = "func("
+            var result = "func(";
             result += lhs + " = " +  this.translateRHS(rhs);
             if (units)
             {
                 result += " ; " + this.translateUnits(units);
             }
-            result += ")"
+            result += ")";
 
             return result;
         },
@@ -154,6 +154,7 @@ define([sweetModule, "jquery"], function(sweet) {
             }
             var pattern = /[[\D]\d?(.|\/)?]*/; // a regexp for the units
             console.log(pattern.exec(units));
+        },
 
         /**
          * Translates the right hand side of an Accel definition to a macro compatible string.
@@ -170,7 +171,7 @@ define([sweetModule, "jquery"], function(sweet) {
             var trimmed = rhs.trim();
 
             return trimmed.replace(/\w*[a-zA-Z]\w*\b(?!\()/g, function(s) {
-                return "exe." + s + "()"
+                return "exe." + s + "()";
             });
         }
 
