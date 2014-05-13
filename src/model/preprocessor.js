@@ -86,7 +86,7 @@ define([sweetModule, "jquery"], function(sweet) {
             if (!line) {
                 throw new Error("Preprocessor.translateLine.pre failed. line is null or undefined");
             }
-           
+
             var equalsIndex = line.indexOf("=");
             var unitStart = line.indexOf(";");
 
@@ -105,21 +105,29 @@ define([sweetModule, "jquery"], function(sweet) {
         },
 
         /**
-         * [translateUnit description]
-         * @param  {[type]} units [description]
-         * @return {[type]}       [description]
+         * translateUnit description
+         * @param  {type} units description
+         * @return {type}       escription
          */
         translateUnits: function(units) {
 
         },
 
         /**
-         * Tr
-         * @param  {[type]} rhs [description]
-         * @return {[type]}     [description]
+         * Translates the right hand side of an Accel definition to a macro compatible string.
+         * @param  {String} rhs Right hand side of an Accel definitions
+         * @pre rhs != null
+         * @pre rhs != undefined
+         * @return {String}     a macro compatible string.
          */
         translateRHS: function(rhs) {
+            if (!rhs) {
+                throw new Error("Preprocessor.translateRHS.pre failed. rhs is null or undefined");
+            }
 
+            return rhs.replace(/\w*[a-zA-Z]\w*\b(?!\()/g, function(s) {
+                return "exe." + s + "()"
+            });
         }
 
     }
