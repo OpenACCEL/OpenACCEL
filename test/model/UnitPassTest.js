@@ -41,7 +41,6 @@ suite("UnitPass.js", function() {
         test('translateUnits() m/s', function() {
             assert.equal(UnitPass.translateUnits('m/s'), '{\'m\': 1 , \'s\' : -1}');
         });
-
         test('translateUnits() robustness', function() {
             assert.throws(function() {
                 UnitPass.translateUnits(null);
