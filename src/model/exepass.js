@@ -78,7 +78,7 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
 
         var trimmed = rhs.trim();
 
-
+        // The regex we use here extracts the definition-variables from the string.
         return trimmed.replace(/\w*[a-zA-Z]\w*\b(?!\()/g, function(s) {
             return 'exe.' + s + '()';
         });
