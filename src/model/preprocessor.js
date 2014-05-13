@@ -80,6 +80,40 @@ define([sweetModule, "jquery"], function(sweet) {
          * @return {String}      Translated line
          */
         translateLine: function(line) {
+            if (!line) {
+                throw new Error("Preprocessor.translateLine.pre failed. line is null or undefined");
+            }
+           
+            var equalsIndex = line.indexOf("=");
+            var unitStart = line.indexOf(";");
+
+            var lhs = line.substring(0, equalsIndex); // Left hand side of the definition
+            var rhs; // right hand side of the definition
+            var units; // unit definition
+
+            if (unitStart == -1) {
+                rhs = line.substring(equalsIndex + 1);
+            } else {
+                rhs = line.substring(equalsIndex + 1, unitStart);
+                units = line.substring(unitStart + 1);
+            }
+        }
+
+        /**
+         * [translateUnit description]
+         * @param  {[type]} units [description]
+         * @return {[type]}       [description]
+         */
+        translateUnits: function(units) {
+
+        }
+
+        /**
+         * [translateRHS description]
+         * @param  {[type]} rhs [description]
+         * @return {[type]}     [description]
+         */
+        translateRHS: function(rhs) {
 
         }
 
