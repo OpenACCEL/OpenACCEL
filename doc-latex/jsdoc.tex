@@ -2,14 +2,588 @@
 \subsection{Members} 
 \subsubsection{inBrowser} 
 \begin{description} 
-\item[Description:]We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
-If we are in node, we should not and instead should just export the various modules for testing purpose.
+\item[Description:]Browser vs. Node
+\end{description} 
+\subsubsection{inBrowser} 
+\begin{description} 
+\item[Description:]Browser vs. Node
+\end{description} 
+\subsubsection{inBrowser} 
+\begin{description} 
+\item[Description:]Browser vs. Node
+\end{description} 
+\subsubsection{inBrowser} 
+\begin{description} 
+\item[Description:]Browser vs. Node
 \end{description} 
 \subsection{Methods} 
+\section{FuncPass} 
+\textbf{Description: }Classes can be defined as objects. Indiciate this using the @class param.
+\subsection{Members} 
+\subsection{Methods} 
+\subsubsection{parse(scriptlines)} 
+\paragraph{Description:} \hfill \\ 
+Parse the given lines of script.Should be overridden by subclasses.The base class only contains precondition checking and returns the given input.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{scriptlines} & String[] & Lines of script that need to be parsed.\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  scriptLines != null
+\item  scriptLines != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+the input\\ 
+\underline{Type:} String[]
+\subsubsection{parse(script)} 
+\paragraph{Description:} \hfill \\ 
+Parses the input script to a script thar can be expanded by macros.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{script} & String & input (Accel) scrpit\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  script != null
+\item  script != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+exmpandable script.\\ 
+\underline{Type:} String
+\subsubsection{scriptToLines(script)} 
+\paragraph{Description:} \hfill \\ 
+Transforms the input {@code script} to an array of strings,each representing a line.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{script} & String & the input script given as a String\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  script != null
+\item  script != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+an array containing all lines in {@code script}\\ 
+\underline{Type:} String[]
+\subsubsection{translateLine(a)} 
+\paragraph{Description:} \hfill \\ 
+Translates a line of Accel script to a line that can be expanded using macros.Examples:x = 5 becomes func(x = 5)x = 5 ; kg becomes func(x = 5 ; {'kg' : 1})z = 2 + sin(y + sin(x)) + 4 + sin(2) becomes func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{a} & String & line of Accell script\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  line != null
+\item  line != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+Translated line\\ 
+\underline{Type:} String
+\subsubsection{translateRHS(rhs)} 
+\paragraph{Description:} \hfill \\ 
+Translates the right hand side of an Accel definition to a macro compatible string.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{rhs} & String & Right hand side of an Accel definitions\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  rhs != null
+\item  rhs != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+a macro compatible string.\\ 
+\underline{Type:} String
+\subsubsection{translateUnits(units)} 
+\paragraph{Description:} \hfill \\ 
+Translate the units of a certain line into our format, suchthat it is an object in the executable code.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{units} & String & the units in a String format\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  units != null
+\item  units != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+a String to be used in our executable code.\\ 
+\underline{Type:} String
+\subsubsection{trimLines(scriptArray)} 
+\paragraph{Description:} \hfill \\ 
+Trims the lines in {@code scriptArray}.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{scriptArray} & String[] & the script formatted in a number of lines\\ 
+\hline
+\end{tabular}
+\paragraph{Returns:} \hfill \\ 
+the trimmed script in the format of a number of lines\\ 
+\underline{Type:} String[]
+\subsubsection{compile(sweet)} 
+\paragraph{Description:} \hfill \\ 
+Main and testable compilation function.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{sweet} &  & A possible reference to the sweet library.\\ 
+\hline
+\end{tabular}
+\paragraph{Returns:} \hfill \\ 
+Returns the number 6 if compilation and execution of the code with Sweet.js macro has all been succesful.\\ 
+\section{Pass} 
+\textbf{Description: }Base class for passes of the preprocessor.
+\subsection{Members} 
+\subsection{Methods} 
+\subsubsection{parse(scriptlines)} 
+\paragraph{Description:} \hfill \\ 
+Parse the given lines of script.Should be overridden by subclasses.The base class only contains precondition checking and returns the given input.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{scriptlines} & String[] & Lines of script that need to be parsed.\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  scriptLines != null
+\item  scriptLines != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+the input\\ 
+\underline{Type:} String[]
+\subsubsection{parse(script)} 
+\paragraph{Description:} \hfill \\ 
+Parses the input script to a script thar can be expanded by macros.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{script} & String & input (Accel) scrpit\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  script != null
+\item  script != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+exmpandable script.\\ 
+\underline{Type:} String
+\subsubsection{scriptToLines(script)} 
+\paragraph{Description:} \hfill \\ 
+Transforms the input {@code script} to an array of strings,each representing a line.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{script} & String & the input script given as a String\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  script != null
+\item  script != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+an array containing all lines in {@code script}\\ 
+\underline{Type:} String[]
+\subsubsection{translateLine(a)} 
+\paragraph{Description:} \hfill \\ 
+Translates a line of Accel script to a line that can be expanded using macros.Examples:x = 5 becomes func(x = 5)x = 5 ; kg becomes func(x = 5 ; {'kg' : 1})z = 2 + sin(y + sin(x)) + 4 + sin(2) becomes func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{a} & String & line of Accell script\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  line != null
+\item  line != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+Translated line\\ 
+\underline{Type:} String
+\subsubsection{translateRHS(rhs)} 
+\paragraph{Description:} \hfill \\ 
+Translates the right hand side of an Accel definition to a macro compatible string.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{rhs} & String & Right hand side of an Accel definitions\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  rhs != null
+\item  rhs != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+a macro compatible string.\\ 
+\underline{Type:} String
+\subsubsection{translateUnits(units)} 
+\paragraph{Description:} \hfill \\ 
+Translate the units of a certain line into our format, suchthat it is an object in the executable code.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{units} & String & the units in a String format\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  units != null
+\item  units != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+a String to be used in our executable code.\\ 
+\underline{Type:} String
+\subsubsection{trimLines(scriptArray)} 
+\paragraph{Description:} \hfill \\ 
+Trims the lines in {@code scriptArray}.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{scriptArray} & String[] & the script formatted in a number of lines\\ 
+\hline
+\end{tabular}
+\paragraph{Returns:} \hfill \\ 
+the trimmed script in the format of a number of lines\\ 
+\underline{Type:} String[]
+\subsubsection{compile(sweet)} 
+\paragraph{Description:} \hfill \\ 
+Main and testable compilation function.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{sweet} &  & A possible reference to the sweet library.\\ 
+\hline
+\end{tabular}
+\paragraph{Returns:} \hfill \\ 
+Returns the number 6 if compilation and execution of the code with Sweet.js macro has all been succesful.\\ 
+\section{Preprocessor} 
+\textbf{Description: }First pass in compiling. Translates an Accel script to a script that can be expanded by macros.
+\subsection{Members} 
+\subsection{Methods} 
+\subsubsection{parse(scriptlines)} 
+\paragraph{Description:} \hfill \\ 
+Parse the given lines of script.Should be overridden by subclasses.The base class only contains precondition checking and returns the given input.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{scriptlines} & String[] & Lines of script that need to be parsed.\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  scriptLines != null
+\item  scriptLines != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+the input\\ 
+\underline{Type:} String[]
+\subsubsection{parse(script)} 
+\paragraph{Description:} \hfill \\ 
+Parses the input script to a script thar can be expanded by macros.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{script} & String & input (Accel) scrpit\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  script != null
+\item  script != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+exmpandable script.\\ 
+\underline{Type:} String
+\subsubsection{scriptToLines(script)} 
+\paragraph{Description:} \hfill \\ 
+Transforms the input {@code script} to an array of strings,each representing a line.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{script} & String & the input script given as a String\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  script != null
+\item  script != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+an array containing all lines in {@code script}\\ 
+\underline{Type:} String[]
+\subsubsection{translateLine(a)} 
+\paragraph{Description:} \hfill \\ 
+Translates a line of Accel script to a line that can be expanded using macros.Examples:x = 5 becomes func(x = 5)x = 5 ; kg becomes func(x = 5 ; {'kg' : 1})z = 2 + sin(y + sin(x)) + 4 + sin(2) becomes func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{a} & String & line of Accell script\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  line != null
+\item  line != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+Translated line\\ 
+\underline{Type:} String
+\subsubsection{translateRHS(rhs)} 
+\paragraph{Description:} \hfill \\ 
+Translates the right hand side of an Accel definition to a macro compatible string.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{rhs} & String & Right hand side of an Accel definitions\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  rhs != null
+\item  rhs != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+a macro compatible string.\\ 
+\underline{Type:} String
+\subsubsection{translateUnits(units)} 
+\paragraph{Description:} \hfill \\ 
+Translate the units of a certain line into our format, suchthat it is an object in the executable code.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{units} & String & the units in a String format\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  units != null
+\item  units != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+a String to be used in our executable code.\\ 
+\underline{Type:} String
+\subsubsection{trimLines(scriptArray)} 
+\paragraph{Description:} \hfill \\ 
+Trims the lines in {@code scriptArray}.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{scriptArray} & String[] & the script formatted in a number of lines\\ 
+\hline
+\end{tabular}
+\paragraph{Returns:} \hfill \\ 
+the trimmed script in the format of a number of lines\\ 
+\underline{Type:} String[]
+\subsubsection{compile(sweet)} 
+\paragraph{Description:} \hfill \\ 
+Main and testable compilation function.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{sweet} &  & A possible reference to the sweet library.\\ 
+\hline
+\end{tabular}
+\paragraph{Returns:} \hfill \\ 
+Returns the number 6 if compilation and execution of the code with Sweet.js macro has all been succesful.\\ 
 \section{TemplateClass} 
 \textbf{Description: }Classes can be defined as objects. Indiciate this using the @class param.
 \subsection{Members} 
 \subsection{Methods} 
+\subsubsection{parse(scriptlines)} 
+\paragraph{Description:} \hfill \\ 
+Parse the given lines of script.Should be overridden by subclasses.The base class only contains precondition checking and returns the given input.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{scriptlines} & String[] & Lines of script that need to be parsed.\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  scriptLines != null
+\item  scriptLines != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+the input\\ 
+\underline{Type:} String[]
+\subsubsection{parse(script)} 
+\paragraph{Description:} \hfill \\ 
+Parses the input script to a script thar can be expanded by macros.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{script} & String & input (Accel) scrpit\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  script != null
+\item  script != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+exmpandable script.\\ 
+\underline{Type:} String
+\subsubsection{scriptToLines(script)} 
+\paragraph{Description:} \hfill \\ 
+Transforms the input {@code script} to an array of strings,each representing a line.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{script} & String & the input script given as a String\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  script != null
+\item  script != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+an array containing all lines in {@code script}\\ 
+\underline{Type:} String[]
+\subsubsection{translateLine(a)} 
+\paragraph{Description:} \hfill \\ 
+Translates a line of Accel script to a line that can be expanded using macros.Examples:x = 5 becomes func(x = 5)x = 5 ; kg becomes func(x = 5 ; {'kg' : 1})z = 2 + sin(y + sin(x)) + 4 + sin(2) becomes func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{a} & String & line of Accell script\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  line != null
+\item  line != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+Translated line\\ 
+\underline{Type:} String
+\subsubsection{translateRHS(rhs)} 
+\paragraph{Description:} \hfill \\ 
+Translates the right hand side of an Accel definition to a macro compatible string.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{rhs} & String & Right hand side of an Accel definitions\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  rhs != null
+\item  rhs != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+a macro compatible string.\\ 
+\underline{Type:} String
+\subsubsection{translateUnits(units)} 
+\paragraph{Description:} \hfill \\ 
+Translate the units of a certain line into our format, suchthat it is an object in the executable code.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{units} & String & the units in a String format\\ 
+\hline
+\end{tabular}
+\paragraph{Preconditions:} 
+\begin{itemize}  
+\item  units != null
+\item  units != undefined
+\end{itemize}  
+\paragraph{Returns:} \hfill \\ 
+a String to be used in our executable code.\\ 
+\underline{Type:} String
+\subsubsection{trimLines(scriptArray)} 
+\paragraph{Description:} \hfill \\ 
+Trims the lines in {@code scriptArray}.
+\paragraph{Parameters:} \hfill \\ 
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Name} & \textbf{Type} & \textbf{Description} \\ 
+\hline
+\texttt{scriptArray} & String[] & the script formatted in a number of lines\\ 
+\hline
+\end{tabular}
+\paragraph{Returns:} \hfill \\ 
+the trimmed script in the format of a number of lines\\ 
+\underline{Type:} String[]
 \subsubsection{compile(sweet)} 
 \paragraph{Description:} \hfill \\ 
 Main and testable compilation function.
