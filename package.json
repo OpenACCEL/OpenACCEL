@@ -34,11 +34,12 @@
         "node": ">=0.10.25"
     },
     "scripts": {
-        "jade": "jade -o bin/ src/",
+        "jade": "jade -o bin/ src/index.jade",
         "doc": "jsdoc -c prepost/conf.json -d doc/ src/ -r",
         "doc-latex": "jsdoc -c JSDoc2Latex/conf.json -d doc-latex/ src/ -r",
         "build": "./build.sh",
         "build-win": "build.bat",
+		"build-win-dirty": "builddirty.bat",
         "test": "./test.sh",
         "test-win": "test.bat",
         "start": "http-server bin/ -c-1"
