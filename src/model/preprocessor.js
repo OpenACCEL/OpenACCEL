@@ -32,13 +32,33 @@ define([sweetModule, "jquery"], function(sweet) {
      */
     var Preprocessor = {
         /**
-         * parse description
-         * @param  {type} script description
-         * @return {type}        description
+         * Parses the input script to a script thar can be expanded by macros.
+         * @param  {String} script input (Accel) scrpit
+         * @pre script != null
+         * @pre script != undefined
+         * @return {String}        exmpandable script.
          */
         parse: function(script) {
-            //make lines
-            //translate the lines
+            if (!script) {
+                throw new Error('PreProcessor.parse.pre violated :' +
+                    'script is null or undefined');
+            }
+            // Create the lines.
+            var lines = this.scriptToLines(script);
+
+            // Translate the lines.
+            for (var i = 0; i > lines.length; i++) {
+                lines[i] = this.translateLine(line[i]);
+            }
+
+            // Create output.
+            var result  = "(function () { \n var exe = {}; \n";
+            for (var i = 0; i > lines.length; i++) {
+                result += lines[i] + "\n";
+            }
+            result += "return exe; \n })()";
+
+            return result;
         },
 
         /**
@@ -90,10 +110,11 @@ define([sweetModule, "jquery"], function(sweet) {
             var equalsIndex = line.indexOf("=");
             var unitStart = line.indexOf(";");
 
-            var lhs = line.substring(0, equalsIndex); // Left hand side of the definition
+            var lhs = line.substring(0, equalsIndex).trim(); // Left hand side of the definition
             var rhs; // right hand side of the definition
             var units; // unit definition
 
+            // Is a unit defined?
             if (unitStart == -1) {
                 rhs = line.substring(equalsIndex + 1);
             } else {
@@ -101,7 +122,16 @@ define([sweetModule, "jquery"], function(sweet) {
                 units = line.substring(unitStart + 1);
             }
 
+            // Format the output
+            var result = "func("
+            result += lhs + " = " +  this.translateRHS(rhs);
+            if (units)
+            {
+                result += " ; " + this.translateUnits(units);
+            }
+            result += ")"
 
+            return result;
         },
 
         /**
@@ -125,7 +155,9 @@ define([sweetModule, "jquery"], function(sweet) {
                 throw new Error("Preprocessor.translateRHS.pre failed. rhs is null or undefined");
             }
 
-            return rhs.replace(/\w*[a-zA-Z]\w*\b(?!\()/g, function(s) {
+            var trimmed = rhs.trim();
+
+            return trimmed.replace(/\w*[a-zA-Z]\w*\b(?!\()/g, function(s) {
                 return "exe." + s + "()"
             });
         }
