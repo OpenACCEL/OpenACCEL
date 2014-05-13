@@ -37,7 +37,8 @@ define([sweetModule, "jquery"], function(sweet) {
          * @return {type}        description
          */
         parse: function(script) {
-
+            //make lines
+            //translate the lines
         },
 
         /**
@@ -46,14 +47,22 @@ define([sweetModule, "jquery"], function(sweet) {
          * @param  {String} script the input script given as a String
          * @pre script != null
          * @pre script != undefined
-         * @return {Array[String]} an array containing all lines in {@code script}
+         * @return {String[]} an array containing all lines in {@code script}
          */
         scriptToLines: function(script) {
-            if (script) {
-                throw "PreProcessor.scriptToLines.pre violated :
-                script is null or undefined";
+            if (!script) {
+                throw new Error('PreProcessor.scriptToLines.pre violated :' +
+                    'script is null or undefined');
             } else {
-                return resultArray = script.split("\n");
+                var scriptInLines = script.split('\n');
+                //line represents a line in the script
+                //@type {String}
+                var result;
+                for (var line in scriptInLines) {
+                    line.trim();
+
+                }
+                return result;
             }
         },
 
@@ -63,8 +72,8 @@ define([sweetModule, "jquery"], function(sweet) {
          * x = 5 becomes func(x = 5)
          * x = 5 ; kg becomes func(x = 5 ; {'kg' : 1})
          * z = 2 + sin(y + sin(x)) + 4 + sin(2) becomes func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))
-         * 
-         * 
+         *
+         *
          * @param  {String} a line of Accell script
          * @pre line != null
          * @pre line != undefined

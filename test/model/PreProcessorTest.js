@@ -21,31 +21,52 @@ suite("PreProcessorTest.js", function() {
          * Example script to compile.
          * @type {String}
          */
-        var exScript = "x = 5 \n" +
-            "y = sin(x)\n" +
-            "z = 2 + sin(y + sin(x)) + sin(2)\n" +
-            "u = x + y";
+        var exScript = 'x = 5\n' +
+            'y = sin(x)\n' +
+            'z = 2 + sin(y + sin(x)) + sin(2)\n' +
+            'u = x + y';
+
+        var exScriptWithTrailingSpaces = 'x = 5 \n' +
+            ' y = sin(x)\n' +
+            ' z = 2 + sin(y + sin(x)) + sin(2)\n' +
+            'u = x + y ';
 
         /**
          * An array of lines corresponding to {@code exScript}
-         * @type {Array[String]}
+         * @type {String[]}
          */
-        var exScriptInLines = ["x = 5",
-            "y = sin(x)",
-            "z = 2 + sin(y + sin(x)) + sin(2)",
-            "u = x + y"
+        var exScriptInLines = ['x = 5',
+            'y = sin(x)',
+            'z = 2 + sin(y + sin(x)) + sin(2)',
+            'u = x + y'
         ];
 
         /** Robustness test for scriptToLines() */
         test('Robustness scriptToLines()', function() {
-            assert.throws(preprocessor.scriptToLines(null));
-            assert.throws(preprocessor.scriptToLines(undefined));
+            assert.throws(
+                function() {
+                    preprocessor.scriptToLines(null);
+                });
+            assert.throws(
+                function() {
+                    preprocessor.scriptToLines();
+                });
         });
 
-        /** Tests the scriptToLines() method. */
-        test('scriptToLines()', function() {
-            assert.equal(exScriptInLines, preprocessor.scriptToLines(exScript));
+        /** Tests the scriptToLines() method.
+         * Basic test.
+         */
+        test('scriptToLines() basic test', function() {
+            assert.deepEqual(exScriptInLines, preprocessor.scriptToLines(exScript));
         });
+
+        /** Tests the scriptToLines() method.
+         * Tests whether trailing spaces are handled correctly.
+         */
+        test('scriptToLines() trim', function() {
+            assert.deepEqual(exScriptInLines,
+                preprocessor.scriptToLines(exScriptWithTrailingSpaces))
+        })
 
         /**
          * Test case for translateLine().
