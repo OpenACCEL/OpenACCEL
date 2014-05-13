@@ -170,5 +170,28 @@ suite("PreProcessorTest.js", function() {
                 preprocessor.translateUnits();
             });
         });
+        /**
+         * Test case for translateRHS().
+         * Definition with function calls.
+         */
+        test("translateRHS():  Definition with function calls", function() {
+            var line = "2 + sin(y + sin(x)) + sin(2)";
+            var expResult = "2 + sin(exe.y() + sin(exe.x())) + sin(2)";
+
+            assert.equal(expResult, preprocessor.translateRHS(line));
+        });
+
+        /**
+         * Test case for translateLine().
+         * Robustness
+         */
+        test("translateRHS(): Robustness", function() {
+            assert.throws(function() {
+                preprocessor.translateRHS(null);
+            });
+            assert.throws(function() {
+                preprocessor.translateRHS();
+            });
+        });
     });
 });
