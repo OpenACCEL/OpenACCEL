@@ -147,5 +147,28 @@ suite("PreProcessorTest.js", function() {
                 preprocessor.translateLine();
             });
         });
+
+        /** Test translateUnits().
+         * Unit kg squared.
+         */
+        test('translateUnits() kg2', function() {
+            assert.equal('{\'kg\': 2}', preprocessor.translateUnits('kg2'));
+        });
+
+        /** Test translateUnits().
+         * Unit m/s.
+         */
+        test('translateUnits() m/s', function() {
+            assert.equal('{\'m\': 1 , \'s\' : -1}', preprocessor.translateUnits('m/s'));
+        });
+
+        test('translateUnits() robustness', function() {
+            assert.throws(function() {
+                preprocessor.translateUnits(null);
+            });
+            assert.throws(function() {
+                preprocessor.translateUnits();
+            });
+        });
     });
 });

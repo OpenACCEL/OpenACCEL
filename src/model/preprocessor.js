@@ -58,6 +58,11 @@ define([sweetModule, "jquery"], function(sweet) {
             return this.trimLines(scriptInLines);
         },
 
+        /**
+         * Trims the lines in {@code scriptArray}.
+         * @param  {String[]} scriptArray the script formatted in a number of lines
+         * @return {String[]} the trimmed script in the format of a number of lines
+         */
         trimLines: function(scriptArray) {
             if (!scriptArray) {
                 throw new Error('Preprocessor.trimLines.pre violated:' +
@@ -86,7 +91,7 @@ define([sweetModule, "jquery"], function(sweet) {
             if (!line) {
                 throw new Error("Preprocessor.translateLine.pre failed. line is null or undefined");
             }
-           
+
             var equalsIndex = line.indexOf("=");
             var unitStart = line.indexOf(";");
 
@@ -103,12 +108,20 @@ define([sweetModule, "jquery"], function(sweet) {
         }
 
         /**
-         * [translateUnit description]
-         * @param  {[type]} units [description]
-         * @return {[type]}       [description]
+         * Translate the units of a certain line into our format, such
+         * that it is an object in the executable code.
+         * @param  {String} units the units in a String format
+         * @pre units != null
+         * @pre units != undefined
+         * @return {String} a String to be used in our executable code.
          */
         translateUnits: function(units) {
-
+            if (!units) {
+                throw new Error('PreProcessor.translateUnits.pre violated' +
+                    'units is null or undefined');
+            }
+            var pattern = /[[\D]\d?(.|\/)?]*/; // a regexp for the units
+            console.log(pattern.exec(units));
         }
 
         /**
