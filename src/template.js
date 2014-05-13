@@ -8,20 +8,22 @@
 /** Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode    = !inBrowser;
+
 if (inNode) { 
 	require = require('requirejs');
 	sweetModule = "sweet.js";
 } else {
 	sweetModule = "sweet";
-}
 
-require.config({
-    shim: {
-        'underscore': {
-            exports: '_'
-        }
-    }
-});
+	require.config({
+	    shim: {
+	        'underscore': {
+	            exports: '_'
+	        }
+	    },
+	    baseUrl: "scripts"
+	});
+}
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
