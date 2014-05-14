@@ -42,12 +42,12 @@ define([sweetModule, "model/macroloader"], function(sweet, MacroLoader) {
 
 	MacroExpander.prototype = {
         /**
-         * Main and testable compilation function.
+         * Expands the loaded macros.
          * 
-         * @param sweet A possible reference to the sweet library.
-         * @return Returns the number 6 if compilation and execution of the code with Sweet.js macro has all been succesful.
+         * @param code Input code that has to be expanded.
+         * @return Expanded code, ready for evaluation.
          */
-        compile: function(code) {
+        expand: function(code) {
         	code = this.macroLoader.getMacros().concat(code);
 	        var output;
 
