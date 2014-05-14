@@ -9,7 +9,7 @@ suite("template.js", function() {
         requirejs(["assert", "template"], function(assertModule, module) {
             console.log("Loaded 'Template' module.");
             assert = assertModule;
-            template = module;
+            template = new module();
             done();
         });
     });

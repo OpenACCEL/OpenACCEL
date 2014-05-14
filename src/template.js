@@ -1,4 +1,4 @@
-/**
+/*
  * We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
  * If we are in node, we should not and instead should just export the various modules for testing purpose.
  *
@@ -14,26 +14,24 @@ if (inNode) {
 	sweetModule = "sweet.js";
 } else {
 	sweetModule = "sweet";
-
 	require.config({
-	    shim: {
-	        'underscore': {
-	            exports: '_'
-	        }
-	    },
 	    baseUrl: "scripts"
 	});
 }
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([sweetModule, "jquery"], function(sweet) {
+define([sweetModule, "jquery"], /**@lends TemplateClass*/ function(sweet) {
 	/**
 	 * @class
 	 * @classdesc Classes can be defined as objects. Indiciate this using the @class param.
 	 */
-	var TemplateClass = {
-        /**
+	function TemplateClass() {
+		this.myMember = 5;
+	}
+
+	TemplateClass.prototype = {
+		/**
          * Main and testable compilation function.
          * 
          * @param sweet A possible reference to the sweet library.
@@ -76,7 +74,8 @@ define([sweetModule, "jquery"], function(sweet) {
 
 	// If we are in the browser, we want to execute the compile function at the start.
 	if (inBrowser) {
-    	TemplateClass.compile();
+		var tc = new TemplateClass();
+    	tc.compile();
 	}
 
 	// Exports are needed, such that other modules may invoke methods from this module file.
