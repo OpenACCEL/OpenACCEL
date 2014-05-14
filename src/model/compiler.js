@@ -1,4 +1,4 @@
-/**
+/*
  * Central compiling point. Code goes in, executable and report go out.
  *
  * @author Roy Stoof
@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/preprocessor", "model/macroexpander"], function(PreProcessor, MacroExpander) {
+define(["model/preprocessor", "model/macroexpander"], /**@lends Compiler*/ function(PreProcessor, MacroExpander) {
     /**
      * @class
      * @classdesc The compiler takes code as input, and outputs an executable and report when compiling.

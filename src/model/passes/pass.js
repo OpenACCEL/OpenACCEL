@@ -1,4 +1,4 @@
-/**
+/*
  * File containing the Pass class
  *
  * @author Roel Jacobs
@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], function() {
+define([], /**@lends Pass*/ function() {
     /**
      * @class
      * @classdesc Base class for passes of the preprocessor.

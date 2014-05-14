@@ -1,4 +1,4 @@
-/**
+/*
  * The pre-processor performs passes on some input code.
  *
  * @author Roy Stoof
@@ -27,6 +27,7 @@ define(["model/passes/unitpass",
         "model/passes/funcpass",
         "model/passes/packagepass"
     ],
+    /**@lends PreProcessor*/
     function(UnitPass,
         ExePass,
         FuncPass,

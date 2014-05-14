@@ -1,7 +1,7 @@
 suite("template.js", function() {
-	// Template module.
-	var template;
-	var assert;
+    // Template module.
+    var template;
+    var assert;
 
     setup(function (done) {
         // This saves the module for use in tests. You have to use
@@ -9,14 +9,14 @@ suite("template.js", function() {
         requirejs(["assert", "template"], function(assertModule, module) {
             console.log("Loaded 'Template' module.");
             assert = assertModule;
-            template = module;
+            template = new module();
             done();
         });
     });
 
-	suite("sweet compilation", function() {
-		test("should equal 6", function() {
-			assert.equal(6, template.compile());
-		});
-	});
+    suite("sweet compilation", function() {
+        test("should equal 6", function() {
+            assert.equal(6, template.compile());
+        });
+    });
 });

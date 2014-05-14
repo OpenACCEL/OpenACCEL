@@ -1,4 +1,4 @@
-/**
+/*
  * Central point where we load all of our macros.
  *
  * @author Roy Stoof
@@ -20,7 +20,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["module", fileModule], function(module, fs) {
+define(["module", fileModule], /**@lends MacroLoader*/ function(module, fs) {
     /**
      * @class
      * @classdesc Classes can be defined as objects. Indiciate this using the @class param.
