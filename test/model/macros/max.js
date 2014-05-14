@@ -1,4 +1,4 @@
-suite("Cos Macro", function() {
+suite("Max Macro", function() {
     var macroExpander;
     var assert;
 
@@ -14,20 +14,20 @@ suite("Cos Macro", function() {
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = 5'", function() {
+        test("should expand for 'x = max(5, 2, 3, 7, 1, 0, -8)'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(y = cos(5))";
+            macroExpander.load("max");
+            var input = "exe = {};func(y = max(5, 2, 3, 7, 1, 0, -8))";
             var output = macroExpander.compile(input);
-            assert.equal(Math.cos(5), eval(output)());
+            assert.equal(Math.max(5, 2, 3, 7, 1, 0, -8), eval(output)());
         });
 
-        test("should expand for 'x = 5, y = x + 2, z = cos(cos(x) + cos(y))'", function() {
+        test("should expand for 'x = 5, y = max(x,4) + 2, z = max(max(x,2),y)'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(x = 5)func(y = cos(exe.x()) + 2)func(z = cos(cos(exe.x()) + cos(exe.y())))";
+            macroExpander.load("max");
+            var input = "exe = {};func(x = 5)func(y = max(x,4) + 2)func(z = max(max(exe.x(), 2), exe.y()))";
             var output = macroExpander.compile(input);
-            assert.equal(Math.cos(Math.cos(5) + Math.cos(Math.cos(5) + 2)), eval(output)());
+            assert.equal(Math.max(Math.max(5, 2), max(x, 4) + 2), eval(output)());
         });
     });
 });

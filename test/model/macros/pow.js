@@ -1,4 +1,4 @@
-suite("Cos Macro", function() {
+suite("Pow Macro", function() {
     var macroExpander;
     var assert;
 
@@ -14,20 +14,20 @@ suite("Cos Macro", function() {
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = 5'", function() {
+        test("should expand for 'x = pow(5,2)'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(y = cos(5))";
+            macroExpander.load("pow");
+            var input = "exe = {};func(x = pow(5, 2))";
             var output = macroExpander.compile(input);
-            assert.equal(Math.cos(5), eval(output)());
+            assert.equal(Math.pow(5, 2), eval(output)());
         });
 
-        test("should expand for 'x = 5, y = x + 2, z = cos(cos(x) + cos(y))'", function() {
+        test("should expand for 'x = 5, y = pow(x, 3), z = pow(y, pow(x,2))'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(x = 5)func(y = cos(exe.x()) + 2)func(z = cos(cos(exe.x()) + cos(exe.y())))";
+            macroExpander.load("pow");
+            var input = "exe = {};func(x = 5)func(y = pow(exe.x(), 3))func(z = pow(exe.y(), pow(exe.x(), 2)))";
             var output = macroExpander.compile(input);
-            assert.equal(Math.cos(Math.cos(5) + Math.cos(Math.cos(5) + 2)), eval(output)());
+            assert.equal(Math.pow(Math.pow(x, 3), Math.pow(5, 2)), eval(output)());
         });
     });
 });
