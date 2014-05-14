@@ -1,4 +1,4 @@
-suite("Cos Macro", function() {
+suite("Modulo Macro", function() {
     var macroExpander;
     var assert;
 
@@ -14,20 +14,20 @@ suite("Cos Macro", function() {
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = 5'", function() {
+        test("should expand for 'x = modulo(5,4)'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(y = cos(5))";
+            macroExpander.load("modulo");
+            var input = "exe = {};func(y = modulo(5, 4))";
             var output = macroExpander.compile(input);
-            assert.equal(Math.cos(5), eval(output)());
+            assert.equal(5 % 4, eval(output)());
         });
 
-        test("should expand for 'x = 5, y = x + 2, z = cos(cos(x) + cos(y))'", function() {
+        test("should expand for 'x = 5, y = modulo(x,4) + 2, z = modulo(modulo(x,2),y)'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(x = 5)func(y = cos(exe.x()) + 2)func(z = cos(cos(exe.x()) + cos(exe.y())))";
+            macroExpander.load("modulo");
+            var input = "exe = {};func(x = 5)func(y = modulo(x,4) + 2)func(z = modulo(modulo(exe.x(), 2), exe.y()))";
             var output = macroExpander.compile(input);
-            assert.equal(Math.cos(Math.cos(5) + Math.cos(Math.cos(5) + 2)), eval(output)());
+            assert.equal((5 % 2) % (x % 4 + 2), eval(output)());
         });
     });
 });

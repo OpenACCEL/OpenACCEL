@@ -1,4 +1,4 @@
-suite("Cos Macro", function() {
+suite("Atan2 Macro", function() {
     var macroExpander;
     var assert;
 
@@ -14,20 +14,20 @@ suite("Cos Macro", function() {
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = 5'", function() {
+        test("should expand for 'x = atan2(1,1)'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(y = cos(5))";
+            macroExpander.load("atan2");
+            var input = "exe = {};func(y = atan2(1,1))";
             var output = macroExpander.compile(input);
-            assert.equal(Math.cos(5), eval(output)());
+            assert.equal(Math.atan2(1, 1), eval(output)());
         });
 
-        test("should expand for 'x = 5, y = x + 2, z = cos(cos(x) + cos(y))'", function() {
+        test("should expand for 'x = 5, y = atan2(x, 7) + 2, z = atan2(3, atan2(x, y))'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(x = 5)func(y = cos(exe.x()) + 2)func(z = cos(cos(exe.x()) + cos(exe.y())))";
+            macroExpander.load("atan2");
+            var input = "exe = {};func(x = 5)func(y = atan2(exe.x(), 7) + 2)func(z = atan2(3, atan2(exe.x(), exe.y())))";
             var output = macroExpander.compile(input);
-            assert.equal(Math.cos(Math.cos(5) + Math.cos(Math.cos(5) + 2)), eval(output)());
+            assert.equal(Math.atan2(3, Math.atan2(5, Math.atan2(5, 7))), eval(output)());
         });
     });
 });
