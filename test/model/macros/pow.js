@@ -18,7 +18,7 @@ suite("Pow Macro", function() {
             macroExpander.load("func");
             macroExpander.load("pow");
             var input = "exe = {};func(x = pow(5, 2))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             assert.equal(Math.pow(5, 2), eval(output)());
         });
 
@@ -26,8 +26,8 @@ suite("Pow Macro", function() {
             macroExpander.load("func");
             macroExpander.load("pow");
             var input = "exe = {};func(x = 5)func(y = pow(exe.x(), 3))func(z = pow(exe.y(), pow(exe.x(), 2)))";
-            var output = macroExpander.compile(input);
-            assert.equal(Math.pow(Math.pow(x, 3), Math.pow(5, 2)), eval(output)());
+            var output = macroExpander.expand(input);
+            assert.equal(Math.pow(Math.pow(5, 3), Math.pow(5, 2)), eval(output)());
         });
     });
 });
