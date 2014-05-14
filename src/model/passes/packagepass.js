@@ -1,4 +1,4 @@
-/**
+/*
  * The package pass packs all lines together into a function such that it can be evaluated with eval().
  *
  * @author Roy Stoof
@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/passes/pass"], function(Pass) {
+define(["model/passes/pass"], /**@lends PackagePass*/ function(Pass) {
     /**
      * @class
      * @classdesc Pass that wraps the lines in an executable for eval().

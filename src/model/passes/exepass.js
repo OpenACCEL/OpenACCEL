@@ -1,4 +1,4 @@
-/**
+/*
  * File containing the ExePass class
  *
  * @author Roel Jacobs
@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/pass'], function(Pass) {
+define(['model/passes/pass'], /**@lends ExePass*/function(Pass) {
     /**
      * @class
      * @classdesc Pass that replaces every reference to variable on the right

@@ -1,4 +1,4 @@
-/**
+/*
  * This class inherits from Pass. It performs a pass on the script to be compiled.
  * This pass processes the units.
  *
@@ -19,7 +19,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/passes/pass"], function(Pass) {
+define(["model/passes/pass"], /**@lends UnitPass*/ function(Pass) {
     /**
      * @class
      * @classdesc Classes can be defined as objects. Indiciate this using the @class param.

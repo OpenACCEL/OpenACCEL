@@ -1,4 +1,4 @@
-/**
+/*
  * The macro expander takes as input a bunch of defined macros, runs them through the Sweet compiler and returns 
  * a piece of executable javascript code. That is, this is the code that should be eval()'d and return an executable.
  *
@@ -26,7 +26,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([sweetModule, "model/macroloader"], function(sweet, MacroLoader) {
+define([sweetModule, "model/macroloader"], /**@lends MacroExpander*/ function(sweet, MacroLoader) {
 	/**
 	 * @class
 	 * @classdesc The macro expander takes as input a bunch of defined macros, runs them through the Sweet compiler

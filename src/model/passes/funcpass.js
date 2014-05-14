@@ -1,4 +1,4 @@
-/**
+/*
  * File containing the FuncPass class
  *
  * @author Roel Jacobs
@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/pass'], function(Pass) {
+define(['model/passes/pass'], /**@lends FuncPass*/ function(Pass) {
     /**
      * @class
      * @classdesc Pass that wraps each line of script in a 'func(...)' statement.
