@@ -26,7 +26,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(['model/pass'], function(Pass) {
+define(['model/passes/pass'], function(Pass) {
     /**
      * @class
      * @classdesc Pass that replaces every reference to variable on the right

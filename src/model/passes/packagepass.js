@@ -25,7 +25,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/pass"], function(Pass) {
+define(["model/passes/pass"], function(Pass) {
     /**
      * @class
      * @classdesc Pass that wraps the lines in an executable for eval().

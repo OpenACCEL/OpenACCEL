@@ -6,8 +6,8 @@ suite('pass.js', function() {
     setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/pass'], function(assertModule, module) {
-            console.log('Loaded \'pass\' module.');
+        requirejs(['assert', 'model/passes/pass'], function(assertModule, module) {
+            console.log('Loaded \'Pass\' module.');
             assert = assertModule;
             instance = new module();
             done();

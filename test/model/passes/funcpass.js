@@ -6,8 +6,8 @@ suite('funcpass.js', function() {
     setup(function (done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/funcpass'], function(assertModule, module) {
-            console.log('Loaded \'funcpass\' module.');
+        requirejs(['assert', 'model/passes/funcpass'], function(assertModule, module) {
+            console.log('Loaded \'FuncPass\' module.');
             assert = assertModule;
             instance = new module();
             done();

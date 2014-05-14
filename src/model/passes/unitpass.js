@@ -27,7 +27,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([sweetModule, "model/pass"], function(sweet, Pass) {
+define([sweetModule, "model/passes/pass"], function(sweet, Pass) {
     /**
      * @class
      * @classdesc Classes can be defined as objects. Indiciate this using the @class param.
