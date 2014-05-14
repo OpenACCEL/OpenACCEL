@@ -1,13 +1,13 @@
 let max = macro {
-    rule { ($x, $y) } => {
+    rule { ($x (,) ...) } => {
         (function() {
-            return Math.max($x, $y);
+            return Math.max($x (,) ...);
         })()
     }
 
-    rule { ($x:expr, $y:expr) } => {
+    rule { ($x:expr (,) ...) } => {
         (function() {
-            return Math.max($x, $y);
+            return Math.max($x (,) ...);
         })()
     }
 }
