@@ -11,7 +11,6 @@ call npm run jade
 REM Documentation.
 echo Generating documentation.
 call npm run doc
-call npm run doc-latex
 
 REM Deployment.
 echo Deploying all files, such that it is ready for production.
