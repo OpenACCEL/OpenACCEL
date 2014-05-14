@@ -31,15 +31,16 @@ define(["model/passes/pass"], function(Pass) {
     UnitPass.prototype.parse = function(scriptLines) {
         Pass.prototype.parse.call(this, scriptLines);
         var lines = []; //The result of this function {@type String[]}
-        for (var i = 0; i < scriptLines; i++) {
+        for (var i = 0; i < scriptLines.length; i++) {
             var line = scriptLines[i];
             var units = Pass.prototype.getUnits.call(this, line);
-            units = this.translateUnits(units);
+            if (units) {
+                units = this.translateUnits(units);
+            }
             var result = this.getLHS(line) + // left hand side
             ' = ' +
                 this.getRHS(this.getRHS(line)) + // translated right hand side
             ((units) ? ' ; ' + units : ''); // units if needed
-
             lines.push(result);
         }
         return lines;
@@ -88,11 +89,10 @@ define(["model/passes/pass"], function(Pass) {
      */
     UnitPass.prototype.splitUnits = function(units) {
         var result = [];
-        var regex = /(([a-zA-Z]*)([0-9]*)([.\/]?)([a-zA-Z]*)([0-9]*))/g;
-        var match = units.match(regex);
+        var regex = /(?:([a-zA-Z]+)(\d*)(?:(\.)([a-zA-Z]+)(\d*))*(?:(\/)([a-zA-Z]+)(\d*)(?:(\.)([a-zA-Z]+)(\d*))*)*)/;
         var split = units.split(regex);
         for (var i = 0; i < split.length; i++) {
-            if (split[i] !== '' && !(match.indexOf(split[i]) > -1)) {
+            if (split[i] !== '' && split[i] !== undefined) {
                 result.push(split[i]);
             }
         }
@@ -112,6 +112,7 @@ define(["model/passes/pass"], function(Pass) {
             throw new Error('PreProcessor.translateUnits.pre violated' +
                 'units is null or undefined');
         }
+        console.log(unitArray);
         var result = [];
         for (var i = 0; i < unitArray.length; i++) {
             result.push(unitArray[i]);

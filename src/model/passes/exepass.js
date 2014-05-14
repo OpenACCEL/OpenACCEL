@@ -47,9 +47,9 @@ define(['model/passes/pass'], function(Pass) {
             var units = this.getUnits(line);
 
             var result = this.getLHS(line) + // left hand side
-            	' = ' +
+            ' = ' +
                 this.translateRHS(this.getRHS(line)) + // translated right hand side
-            	((units) ? ' ; ' + units : ''); // units if needed
+            ((units) ? ' ; ' + units : ''); // units if needed
 
             lines.push(result);
         }
