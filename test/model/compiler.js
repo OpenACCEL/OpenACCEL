@@ -20,5 +20,12 @@ suite("Compiler", function() {
             var expected = 2 + Math.sin(Math.sin(5) + Math.sin(5)) + 4 + Math.sin(2);
             assert.equal(output.exe.z(), expected);
         });
+
+        test("default settings, with units", function() {
+            var code = "x = 5 ; kg\ny = sin(x) ; kg2.s/m\nz = 2 + sin(y + sin(x)) + 4 + sin(2)\nu = x + y";
+            var output = compiler.compile(code);
+            var expected = 2 + Math.sin(Math.sin(5) + Math.sin(5)) + 4 + Math.sin(2);
+            assert.equal(output.exe.z(), expected);
+        });
     });
 });
