@@ -1,5 +1,15 @@
+# Node modules
 node_modules/
+
+# Documentation
 doc/
 doc-latex/
+
+# Binaries
 bin/
+
+# NPM debug log
 npm-debug.log
+
+# Sublime Text personal workspace
+openaccel.sublime-workspace

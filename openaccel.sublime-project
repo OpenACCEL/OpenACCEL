@@ -1,0 +1,26 @@
+{
+	"build_systems":
+	[
+		{
+			"cmd":
+			[
+				"node",
+				"$file"
+			],
+			"name": "Node",
+			"selector": "source.js"
+		}
+	],
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"ensure_newline_at_eof_on_save": true,
+		"tab_size": 4
+	}
+}
