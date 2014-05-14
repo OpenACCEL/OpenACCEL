@@ -4,7 +4,7 @@
  * @author Roy Stoof
  */
 
-/** Browser vs. Node ***********************************************/
+/* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode    = !inBrowser;
 
