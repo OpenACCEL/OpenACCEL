@@ -1,4 +1,4 @@
-let mod = macro {
+let modulo = macro {
     rule { ($x, $y) } => {
         (function() {
             return $x % $y;

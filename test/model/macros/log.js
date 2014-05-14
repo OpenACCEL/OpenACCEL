@@ -14,20 +14,20 @@ suite("Log Macro", function() {
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = log(5'", function() {
+        test("should expand for 'x = log(5)'", function() {
             macroExpander.load("func");
             macroExpander.load("log");
-            var input = "exe = {};func(y = cos(5))";
-            var output = macroExpander.compile(input);
-            assert.equal(Math.cos(5), eval(output)());
+            var input = "exe = {};func(y = log(5))";
+            var output = macroExpander.expand(input);
+            assert.equal(Math.log(5) / Math.log(10), eval(output)());
         });
 
         test("should expand for 'x = 5, y = log(x) + 2, z = log(log(x) + log(y))'", function() {
             macroExpander.load("func");
             macroExpander.load("log");
             var input = "exe = {};func(x = 5)func(y = log(exe.x()) + 2)func(z = log(log(exe.x()) + log(exe.y())))";
-            var output = macroExpander.compile(input);
-            assert.equal(Math.log(Math.log(5) + Math.log(Math.log(5) + 2)), eval(output)());
+            var output = macroExpander.expand(input);
+            assert.equal(Math.log(Math.log(5) / Math.log(10) + Math.log(Math.log(5) / Math.log(10) + 2) / Math.log(10)) / Math.log(10), eval(output)());
         });
     });
 });

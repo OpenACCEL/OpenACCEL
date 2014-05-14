@@ -25,9 +25,9 @@ suite("Min Macro", function() {
         test("should expand for 'x = 5, y = min(x,4) + 2, z = min(min(x,2),y)'", function() {
             macroExpander.load("func");
             macroExpander.load("min");
-            var input = "exe = {};func(x = 5)func(y = min(x,4) + 2)func(z = min(min(exe.x(), 2), exe.y()))";
+            var input = "exe = {};func(x = 5)func(y = min(exe.x(),4) + 2)func(z = min(min(exe.x(), 2), exe.y()))";
             var output = macroExpander.expand(input);
-            assert.equal(Math.min(Math.min(5, 2), Math.min(x, 4) + 2), eval(output)());
+            assert.equal(Math.min(Math.min(5, 2), Math.min(5, 4) + 2), eval(output)());
         });
     });
 });

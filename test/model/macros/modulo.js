@@ -18,16 +18,16 @@ suite("Modulo Macro", function() {
             macroExpander.load("func");
             macroExpander.load("modulo");
             var input = "exe = {};func(y = modulo(5, 4))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             assert.equal(5 % 4, eval(output)());
         });
 
         test("should expand for 'x = 5, y = modulo(x,4) + 2, z = modulo(modulo(x,2),y)'", function() {
             macroExpander.load("func");
             macroExpander.load("modulo");
-            var input = "exe = {};func(x = 5)func(y = modulo(x,4) + 2)func(z = modulo(modulo(exe.x(), 2), exe.y()))";
-            var output = macroExpander.compile(input);
-            assert.equal((5 % 2) % (x % 4 + 2), eval(output)());
+            var input = "exe = {};func(x = 5)func(y = modulo(exe.x(),4) + 2)func(z = modulo(modulo(exe.x(), 2), exe.y()))";
+            var output = macroExpander.expand(input);
+            assert.equal((5 % 2) % (5 % 4 + 2), eval(output)());
         });
     });
 });

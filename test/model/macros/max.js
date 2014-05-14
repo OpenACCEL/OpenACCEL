@@ -27,7 +27,7 @@ suite("Max Macro", function() {
             macroExpander.load("max");
             var input = "exe = {};func(x = 5)func(y = max(exe.x(),4) + 2)func(z = max(max(exe.x(), 2), exe.y()))";
             var output = macroExpander.expand(input);
-            assert.equal(Math.max(Math.max(5, 2), Math.max(x, 4) + 2), eval(output)());
+            assert.equal(Math.max(Math.max(5, 2), Math.max(5, 4) + 2), eval(output)());
         });
     });
 });
