@@ -1,6 +1,6 @@
 /**
- * We have two environments: the browser and Node. If we are in the browser we should use requirejs and call our functions that way.
- * If we are in node, we should not and instead should just export the various modules for testing purpose.
+ * This class inherits from Pass. It performs a pass on the script to be compiled.
+ * This pass processes the units.
  *
  * @author Jacco Snoeren
  */
@@ -123,6 +123,7 @@ define([sweetModule, "model/pass"], function(sweet, Pass) {
         var result = [];
         for (var i = 0; i < unitArray.length; i++) {
             result.push(unitArray[i]);
+            //if the current character is a letter and we are either at the end or the next character is not a number, we add dimension one
             if (unitArray[i].match(/[a-zA-Z]/) && ((i === unitArray.length - 1) || !unitArray[i + 1].match(/[0-9]/))) {
                 result.push('1');
             }
