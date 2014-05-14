@@ -36,7 +36,7 @@ define(["model/passes/pass"], function(Pass) {
         // Precondition check
         Pass.prototype.parse.call(this, scriptLines);
 
-        scriptLines.unshift("(function () { var exe = {}; ");
+        scriptLines.unshift("(function () { exe = {}; ");
         scriptLines.push("return exe; })()");
 
         return scriptLines;
