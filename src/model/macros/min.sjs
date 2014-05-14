@@ -1,13 +1,13 @@
 let min = macro {
-    rule { ($x, $y) } => {
+    rule { ($x (,) ...) } => {
         (function() {
-            return Math.min($x, $y);
+            return Math.min($x (,) ...);
         })()
     }
 
-    rule { ($x:expr, $y:expr) } => {
+    rule { ($x:expr (,) ...) } => {
         (function() {
-            return Math.min($x, $y);
+            return Math.min($x (,) ...);
         })()
     }
 }
