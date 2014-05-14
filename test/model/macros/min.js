@@ -18,7 +18,7 @@ suite("Min Macro", function() {
             macroExpander.load("func");
             macroExpander.load("min");
             var input = "exe = {};func(y = min(5, 2, 3, 7, 1, 0, -8))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             assert.equal(Math.min(5, 2, 3, 7, 1, 0, -8), eval(output)());
         });
 

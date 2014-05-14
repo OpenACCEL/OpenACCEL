@@ -18,7 +18,7 @@ suite("Max Macro", function() {
             macroExpander.load("func");
             macroExpander.load("max");
             var input = "exe = {};func(y = max(5, 2, 3, 7, 1, 0, -8))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             assert.equal(Math.max(5, 2, 3, 7, 1, 0, -8), eval(output)());
         });
 
