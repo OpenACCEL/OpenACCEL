@@ -17,7 +17,7 @@ suite("PreProcessor", function() {
         test("default settings, no units", function() {
             var code = "x = 5\ny = sin(x)\nz = 2 + sin(y + sin(x)) + 4 + sin(2)\nu = x + y";
             var output = preProcessor.process(code);
-            var expected = "(function () { exe = {}; func(x = 5)func(y = sin(exe.x()))func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))func(u = exe.x() + exe.y())return exe; })()"
+            var expected = "(function () { var exe = {}; func(x = 5)func(y = sin(exe.x()))func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))func(u = exe.x() + exe.y())return exe; })()"
             assert.equal(output, expected);
         });
 

@@ -39,7 +39,7 @@ function(UnitPass,
          * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
          */
         this.passes = [];
-        this.passes.push(new UnitPass());
+        //this.passes.push(new UnitPass());
         this.passes.push(new ExePass());
         this.passes.push(new FuncPass());
         this.passes.push(new PackagePass());
