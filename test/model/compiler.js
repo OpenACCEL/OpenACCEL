@@ -43,5 +43,12 @@ suite("Compiler", function() {
             var expected = Math.sin(9);
             assert.equal(output.exe.y(4), expected);
         });
+
+        test("default settings, shadowing, no units", function() {
+            var code = "a = 100\nx(a) = 5 + a\ny(a) = sin(x(a))";
+            var output = compiler.compile(code);
+            var expected = Math.sin(9);
+            assert.equal(output.exe.y(4), expected);
+        });
     });
 });
