@@ -11,23 +11,15 @@ inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
-    sweetModule = "sweet.js";
 } else {
-    sweetModule = "sweet";
-
     require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
         baseUrl: "scripts"
     });
 }
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([sweetModule, "model/passes/pass"], function(sweet, Pass) {
+define(["model/passes/pass"], function(Pass) {
     /**
      * @class
      * @classdesc Classes can be defined as objects. Indiciate this using the @class param.

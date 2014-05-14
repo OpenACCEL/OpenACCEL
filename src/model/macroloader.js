@@ -10,18 +10,11 @@ inNode    = !inBrowser;
 
 if (inNode) { 
     require = require('requirejs');
-    sweetModule = "sweet.js";
     fileModule = "fs";
 } else {
-    sweetModule = "sweet";
     fileModule = "jquery";
 
     require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
         baseUrl: "scripts"
     });
 }
