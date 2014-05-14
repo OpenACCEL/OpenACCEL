@@ -39,13 +39,19 @@ function(UnitPass,
          * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
          */
         this.passes = [];
-        //this.passes.push(new UnitPass());
+        this.passes.push(new UnitPass());
         this.passes.push(new ExePass());
         this.passes.push(new FuncPass());
         this.passes.push(new PackagePass());
     }
     
     PreProcessor.prototype = {
+        /**
+         * Transforms a piece of code with the configured order of passes.
+         *
+         * @param code A single line of input code.
+         * @return A single line of processed code.
+         */
         process: function(code) {
             // Perform all passes on the code and return its output.
             var lines = code.split("\n");
