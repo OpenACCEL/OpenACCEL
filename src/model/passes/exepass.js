@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/pass'], /**@lends ExePass*/function(Pass) {
+define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
     /**
      * @class
      * @classdesc Pass that replaces every reference to variable on the right

@@ -1,7 +1,7 @@
 suite('funcpass.js', function() {
-	// Template module.
-	var instance;
-	var assert;
+    // Template module.
+    var instance;
+    var assert;
 
     setup(function (done) {
         // This saves the module for use in tests. You have to use
@@ -14,10 +14,10 @@ suite('funcpass.js', function() {
         });
     });
 
-	suite('FuncPass', function() {
+    suite('FuncPass', function() {
 
 
-		/**
+        /**
          * Test case for parse()
          */
         test('parse', function() {
@@ -33,5 +33,5 @@ suite('funcpass.js', function() {
             ];
             assert.deepEqual(instance.parse(lines), expResult);
         });
-	});
+    });
 });
