@@ -17,7 +17,7 @@ suite("Func Macro", function() {
 		test("should expand for 'x = 5'", function() {
             macroExpander.load("func");
 			var input = "func(x = 5)";
-			var output = macroExpander.compile(input);
+			var output = macroExpander.expand(input);
             var expected = "x = function () {\n    return 5;\n};\nexe.x = x;";
 			assert.equal(expected, output);
 		});
@@ -25,7 +25,7 @@ suite("Func Macro", function() {
         test("should expand for 'func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))'", function() {
             macroExpander.load("func");
             var input = "func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             var expected = "var z = function () {\n    return 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);\n};\nexe.z = z;";
             assert.equal(expected, output);
         });

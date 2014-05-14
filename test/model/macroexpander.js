@@ -16,14 +16,14 @@ suite("Macro Expander", function() {
 	suite("pure sweet compilation", function() {
 		test("should equal 6", function() {
 			var code = "macro add { rule { ($x) } => { $x + 1 } } (function() { var test = function() { return add(5); }; x = {}; x.test1 = test; return x; })();";
-			var output = eval(macroExpander.compile(code));
+			var output = eval(macroExpander.expand(code));
 			assert.equal(6, output.test1());
 		});
 
 		test("should equal 6", function() {
 			var code = "(function() { var test = function() { return add(5); }; x = {}; x.test1 = test; return x; })();";
 			macroExpander.load("testAdd");
-			var output = eval(macroExpander.compile(code));
+			var output = eval(macroExpander.expand(code));
 			assert.equal(6, output.test1());
 		});
 	});

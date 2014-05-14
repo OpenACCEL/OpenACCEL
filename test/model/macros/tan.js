@@ -18,7 +18,7 @@ suite("Tan Macro", function() {
             macroExpander.load("func");
             macroExpander.load("tan");
             var input = "exe = {};func(y = tan(5))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             assert.equal(Math.tan(5), eval(output)());
         });
 
@@ -26,7 +26,7 @@ suite("Tan Macro", function() {
             macroExpander.load("func");
             macroExpander.load("tan");
             var input = "exe = {};func(x = 5)func(y = tan(exe.x()) + 2)func(z = tan(tan(exe.x()) + tan(exe.y())))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             assert.equal(Math.tan(Math.tan(5) + Math.tan(Math.tan(5) + 2)), eval(output)());
         });
     });

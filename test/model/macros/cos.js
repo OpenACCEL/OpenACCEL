@@ -18,7 +18,7 @@ suite("Cos Macro", function() {
             macroExpander.load("func");
             macroExpander.load("cos");
             var input = "exe = {};func(y = cos(5))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             assert.equal(Math.cos(5), eval(output)());
         });
 
@@ -26,7 +26,7 @@ suite("Cos Macro", function() {
             macroExpander.load("func");
             macroExpander.load("cos");
             var input = "exe = {};func(x = 5)func(y = cos(exe.x()) + 2)func(z = cos(cos(exe.x()) + cos(exe.y())))";
-            var output = macroExpander.compile(input);
+            var output = macroExpander.expand(input);
             assert.equal(Math.cos(Math.cos(5) + Math.cos(Math.cos(5) + 2)), eval(output)());
         });
     });
