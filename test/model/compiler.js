@@ -13,7 +13,7 @@ suite("Compiler", function() {
         });
     });
 
-    suite("compiling", function() {
+    suite("variables", function() {
         test("default settings, no units", function() {
             var code = "x = 5\ny = sin(x)\nz = 2 + sin(y + sin(x)) + 4 + sin(2)\nu = x + y";
             var output = compiler.compile(code);
@@ -26,6 +26,22 @@ suite("Compiler", function() {
             var output = compiler.compile(code);
             var expected = 2 + Math.sin(Math.sin(5) + Math.sin(5)) + 4 + Math.sin(2);
             assert.equal(output.exe.z(), expected);
+        });
+    });
+
+    suite("user-defined functions", function() {
+        test("default settings, single function, no units", function() {
+            var code = "x = 5\ny = sin(x)\nz(a, b) = a + 2 + sin(y + sin(x(a))) + 4 + sin(2)\nu = x + y";
+            var output = compiler.compile(code);
+            var expected = 4 + 2 + Math.sin(Math.sin(5) + Math.sin(5)) + 4 + Math.sin(2);
+            assert.equal(output.exe.z(4), expected);
+        });
+
+        test("default settings, function chaining, no units", function() {
+            var code = "x(a) = 5 + a\ny(a) = sin(x(a))";
+            var output = compiler.compile(code);
+            var expected = Math.sin(9);
+            assert.equal(output.exe.y(4), expected);
         });
     });
 });

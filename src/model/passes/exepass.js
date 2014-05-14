@@ -48,7 +48,7 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
 
             var result = this.getLHS(line) + // left hand side
             ' = ' +
-                this.translateRHS(this.getRHS(line)) + // translated right hand side
+                this.translateRHS(this.getRHS(line), this.getLHS(line)) + // translated right hand side
             ((units) ? ' ; ' + units : ''); // units if needed
 
             lines.push(result);
@@ -59,19 +59,42 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
     /**
      * Translates the right hand side of an Accel definition to a macro compatible string.
      * @param  {String} rhs Right hand side of an Accel definitions
+     * @param  {String} lhs Left hand side of an Accel definitions
      * @pre rhs != null
      * @pre rhs != undefined
      * @return {String}     a macro compatible string.
      */
-    ExePass.prototype.translateRHS = function(rhs) {
+    ExePass.prototype.translateRHS = function(rhs, lhs) {
         if (!rhs) {
             throw new Error('Preprocessor.translateRHS.pre failed. rhs is null or undefined');
         }
 
         var trimmed = rhs.trim();
+        var varRegex = /\w*[a-zA-Z]\w*\b(?!\()/g;
+
+        /*
+         * For user defined functions, like 'f(a) = 2 + a + x', we want dont want this pass to modify the 'a' on the rhs.
+         * So what we do, is we first detect if the left hand side is a user defined function. If this is the case, we
+         * use the same regex to find the local variables (like 'a'), and skip those regex matches on the rhs transformation.
+         */
+
+        // Fuction definition.
+        var funcVars = [];
+
+        // A function definition contains either a ( or a ), usually both ;D
+        if (lhs && lhs.match(/[()]/)) {
+            funcVars = lhs.match(varRegex);
+        }
 
         // The regex we use here extracts the definition-variables from the string.
-        return trimmed.replace(/\w*[a-zA-Z]\w*\b(?!\()/g, function(s) {
+        return trimmed.replace(varRegex, function(s) {
+            // Check if this variable is not a local function variable.
+            for (var i = 0; i < funcVars.length; i++ ) {
+                if (s == funcVars[i]) {
+                    return s;
+                }
+            }
+
             return 'exe.' + s + '()';
         });
     };
