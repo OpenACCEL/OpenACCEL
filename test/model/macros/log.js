@@ -1,4 +1,4 @@
-suite("Cos Macro", function() {
+suite("Log Macro", function() {
     var macroExpander;
     var assert;
 
@@ -14,20 +14,20 @@ suite("Cos Macro", function() {
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = 5'", function() {
+        test("should expand for 'x = log(5'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
+            macroExpander.load("log");
             var input = "exe = {};func(y = cos(5))";
-            var output = macroExpander.expand(input);
+            var output = macroExpander.compile(input);
             assert.equal(Math.cos(5), eval(output)());
         });
 
-        test("should expand for 'x = 5, y = x + 2, z = cos(cos(x) + cos(y))'", function() {
+        test("should expand for 'x = 5, y = log(x) + 2, z = log(log(x) + log(y))'", function() {
             macroExpander.load("func");
-            macroExpander.load("cos");
-            var input = "exe = {};func(x = 5)func(y = cos(exe.x()) + 2)func(z = cos(cos(exe.x()) + cos(exe.y())))";
-            var output = macroExpander.expand(input);
-            assert.equal(Math.cos(Math.cos(5) + Math.cos(Math.cos(5) + 2)), eval(output)());
+            macroExpander.load("log");
+            var input = "exe = {};func(x = 5)func(y = log(exe.x()) + 2)func(z = log(log(exe.x()) + log(exe.y())))";
+            var output = macroExpander.compile(input);
+            assert.equal(Math.log(Math.log(5) + Math.log(Math.log(5) + 2)), eval(output)());
         });
     });
 });
