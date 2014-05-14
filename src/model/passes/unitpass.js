@@ -112,7 +112,6 @@ define(["model/passes/pass"], function(Pass) {
             throw new Error('PreProcessor.translateUnits.pre violated' +
                 'units is null or undefined');
         }
-        console.log(unitArray);
         var result = [];
         for (var i = 0; i < unitArray.length; i++) {
             result.push(unitArray[i]);
