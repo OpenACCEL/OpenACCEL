@@ -24,29 +24,10 @@ define([], /**@lends Pass*/ function() {
      */
     function Pass() {}
 
-
-    /**
-     * Parse the given lines of script.
-     * Should be overridden by subclasses.
-     * The base class only contains precondition checking and returns the given input.
-     *
-     * @param {String[]} scriptlines Lines of script that need to be parsed.
-     * @pre scriptLines != null
-     * @pre scriptLines != undefined
-     * @return {String[]} the input
-     */
-    Pass.prototype.parse = function(scriptLines) {
-        if (!scriptLines) {
-            throw new Error('Pass.parse.pre violated :' +
-                'scriptLines is null or undefined');
-        }
-        return scriptLines;
-    };
-
     /**
      * Returns the left hand side of a definition,
      * that is, the part before the '=' sign.
-     * 
+     *
      * @param  {String} line String containing the definition
      * @pre line != null
      * @pre line != undefined
@@ -66,7 +47,7 @@ define([], /**@lends Pass*/ function() {
     /**
      * Returns the right hand side of a definition,
      * that is, the part after the '=' sign and before the ';' (if present).
-     * 
+     *
      * @param  {String} line String containing the definition
      * @pre line != null
      * @pre line != undefined
@@ -89,14 +70,14 @@ define([], /**@lends Pass*/ function() {
         }
     };
 
-     /**
+    /**
      * Returns the units of a definition,
      * that is, the part after the ';'
-     * 
+     *
      * @param  {String} line String containing the definition
      * @pre line != null
      * @pre line != undefined
-     * @return {String}      Units of the definitions, empty String if no unit is present. 
+     * @return {String}      Units of the definitions, empty String if no unit is present.
      */
     Pass.prototype.getUnits = function(line) {
         if (!line) {
