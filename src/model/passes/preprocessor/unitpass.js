@@ -22,7 +22,7 @@ if (inNode) {
 define(["model/passes/preprocessor/compilerpass"], /**@lends UnitPass*/ function(CompilerPass) {
     /**
      * @class
-     * @classdesc Classes can be defined as objects. Indiciate this using the @class param.
+     * @classdesc Classes can be defined as objects. Indicate this using the @class param.
      */
     function UnitPass() {}
 
