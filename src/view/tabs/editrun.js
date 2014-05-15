@@ -1,6 +1,8 @@
+define([], /**@lends View*/ function() {
+
 /**
  * Object containing methods to modify the contents of the #scriptline element
- * 
+ *
  * @type {Object}
  */
 var objectScriptline = {
@@ -212,3 +214,5 @@ var report = {
         $('#result').append(this.getEquationHTML(quantity, result));
     }
 };
+
+});

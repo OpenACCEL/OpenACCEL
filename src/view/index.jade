@@ -5,7 +5,7 @@ html
 		//<link rel="stylesheet" type="text/css" href="libs/ui-lightness/jquery-ui.1.10.4.min.css"> 
 		script(src='scripts/jquery.js')
 		script(src='scripts/jquery-ui.js')
-		link(rel='stylesheet', type='text/css', href='accelstyle.css')
+		link(rel='stylesheet', type='text/css', href='css/accelstyle.css')
 		script.
 			$(document).ready(
 				function() {
@@ -36,11 +36,11 @@ html
 					li
 						a(href='#network') Network
 
-				include view/tabs/intro.jade
-				include view/tabs/editrun.jade
-				include view/tabs/helpdemo.jade
-				include view/tabs/ioedit.jade
-				include view/tabs/analysis.jade
-				include view/tabs/optimisation.jade
-				include view/tabs/simulation.jade
-				include view/tabs/network.jade
+				include tabs/intro.jade
+				include tabs/editrun.jade
+				include tabs/helpdemo.jade
+				include tabs/ioedit.jade
+				include tabs/analysis.jade
+				include tabs/optimisation.jade
+				include tabs/simulation.jade
+				include tabs/network.jade
