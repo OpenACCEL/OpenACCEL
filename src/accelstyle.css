@@ -3,12 +3,12 @@ html {
 }
 
 body {
-	background: #FFFFFF;
+	/*background: #FFFFFF;*/
 	background: #FFDDFF;
 	background: linear-gradient(#FFDDFF, #FFFFFF);
 	font-family: "Verdana";
+	color: #FFFFFF;
 }
-
 body div {
 	margin: 0px;
 }
@@ -22,7 +22,6 @@ body div {
 #top {
 	padding-left: 30px;
 }
-
 #top #ccel{
 	position: relative;
 	top: -16px;
@@ -46,7 +45,6 @@ body div {
 	/*display: block;*/
 	margin-left: -40px;
 }
-
 #main ul li {
 	display: inline;
 	margin-right: 4px;
@@ -57,15 +55,12 @@ body div {
 	background: #662266;
 	background: linear-gradient(#993399, #662266);
 }
-
 #main ul li:hover {
 	background: #9933CC;
 }
-
 #main ul li.ui-tabs-active {
 	background: #9933CC;
 }
-
 #main ul li a{
 	padding: 5px;
 	font-size: 16px;
@@ -75,7 +70,6 @@ body div {
 	color: #000000;*/
 	text-decoration: none;
 }
-
 #main > div {
 	position: relative;
 	top: -25px;
@@ -95,7 +89,6 @@ body div {
     -webkit-box-shadow: 3px 3px 20px #993399;
 	-moz-box-shadow: 3px 3px 20px #993399;
 }
-
 #main h1 {
 	padding-left: 20px;
 	color: #ffffff;
@@ -103,7 +96,6 @@ body div {
 	font-style: italic;
 	text-shadow: 2px 2px 2px #000000; 
 }
-
 #main p {
 	color: #FFFFFF;
 	font-size: 14px;
@@ -112,6 +104,21 @@ body div {
 .inline {
 	display: inline-block;
 	vertical-align: top;
+}
+
+.report {
+	position: relative;
+	z-index: 1;
+	min-width: 100px;
+	margin: 2px;
+	padding: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	border-top: 1px #331144 solid;
+	/*background: #FFDDFF;*/
+	background: #882288;
+	/*background: linear-gradient(#882288, #9933CC);*/
 }
 
 .textin {
@@ -140,12 +147,10 @@ body div {
 	background: linear-gradient(#993399, #662266);
 	color: #FFFFFF;
 }
-
 .buttonin:hover {
 	background: #882288;
 	background: linear-gradient(#882288, #662266);
 }
-
 .buttonin:active {
 	background: #331144;
 	background: linear-gradient(#331144, #662266);
@@ -184,17 +189,44 @@ body div {
 	color: #FFFFFF;
 }
 
+.divtable {
+	display: table;
+}
+.divtable > div {
+	display: table-row;
+}
+.divtable > div > div {
+	display: table-cell;
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.max256w{
+	max-width: 256px;
+}
+
 *:focus {
 	outline: none;
 }
 
-/* EDIT / RUN */
+/**
+ * 
+ * EDIT / RUN 
+ * 
+ */
 
 #editrun {
 	padding-top: 60px;
 }
+#editrun > .inline {
+	margin-right: 4px;
+}
 
-#selectedline {
+#scriptline {
 	width: 768px;
 }
 
@@ -208,33 +240,26 @@ body div {
 	padding-left: 0px;
 	padding-right: 0px;
 	min-width: 256px;
-	border: 1px #331144 solid;
-	background: #FFFFFF;
-	font-size: 14px;
+	color: black;
+	/*font-size: 14px;*/
 }
-
 #scriptlist input {
 	display: none;
 }
-
 #scriptlist label {
 
 }
-
 #scriptlist label:hover {
 	color: #9933CC;
 	background: #DDDDDD;
 }
-
 #scriptlist input + label {
 	display: table-row;
 }
-
 #scriptlist input:checked + label {
 	color: #EEEEEE;
 	background: #331144;
 }
-
 #scriptlist label div {
 	display: table-cell;
 	padding-left: 2px;
@@ -245,8 +270,10 @@ body div {
 	color: #AA00AA;
 }
 
-.comment {
+.comment, .property {
 	color: #AAAAAA;
+	font-size: 10px;
+	vertical-align: 2px;
 }
 
 .lineoption {
@@ -262,8 +289,11 @@ body div {
 .ui-slider {
 	position: relative;
 	text-align: left;
-	margin-left: 5px;
+	margin: 8px;
+	/*margin-left: 5px;
 	margin-right: 5px;
+	margin-top: 8px;
+	margin-bottom: 8px;*/
 
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -284,7 +314,6 @@ body div {
 	background: #662266;
 	background: linear-gradient(#993399, #662266);
 }
-
 .ui-slider .ui-slider-range {
 	position: absolute;
 	z-index: 1;
@@ -296,17 +325,14 @@ body div {
 .ui-slider-horizontal {
 	height: 5px;
 }
-
 .ui-slider-horizontal .ui-slider-handle {
 	top: -8px;
 	margin-left: -5px;
 }
-
 .ui-slider-horizontal .ui-slider-range {
 	top: 0;
 	height: 100%;
 }
-
 .ui-slider-horizontal .ui-slider-range-min {
 	left: 0;
 }

@@ -1,63 +1,9 @@
 #editrun
-    script.
-        function remLine(line) {
-            $('label[for = "line' + line + '"]').remove();
-            $('#line' + line).remove();
-            console.log('Removed ' + line);
-        }
-
-        function addLine(line, left, right, category) {
-            $('#scriptlist').append('\
-                <input type="radio" name="script" id="line' + line + '" value="' + line + '">\
-                <label for="line' + line + '">\
-                    <div class="inline">' + left + '</div>\
-                    <div class="inline operator">=</div>\
-                    <div class="inline">' + right + '</div>\
-                    <div class="inline comment">(cat.=' + category + ')</div>\
-                    <a onclick="remLine(' + line + ')" class="inline lineoption">delete</a>\
-                </label>\
-            ');
-        }
-
-        /*
-         * Dynamic input elements to be generated according to ACCEL script requirements
-         */
-
-        /*
-         * Dynamic slider to be generated according to ACCEL script requirements
-         */
-        function SliderInput(val, min, max) {
-            this.val = val;
-            this.min = min;
-            this.max = max;
-
-            this.appendHTML = function(div, name, identifier) {
-                $(div).append('\
-                    <div id = "userinputdiv' + identifier + '">\
-                        <div class = "inline">' + name + '</div>\
-                        <div id = "userslider' + identifier + '"></div>\
-                    </div>\
-                ');
-                $('#userslider' + identifier).slider({
-                    range: "min",
-                    value: this.val,
-                    min: this.min,
-                    max: this.max,
-                    slide: function(event, ui) {
-                        $('#userinputdiv' + identifier).val(ui.value);
-                    }
-                });
-            }
-        }
-
-        function addInput(element, name, identifier) {
-            element.appendHTML('#userinput', name, identifier)
-        }
-
+    script(src = "scripts/editrun.js")
     div
         .inline
             .label Script line
-            input(type = 'text')#selectedline.textin
+            input(type = 'text')#scriptline.textin
         .inline
             .label &nbsp;
             input(type = 'button', value = 'Enter')#enterline.buttonin
@@ -72,27 +18,56 @@
         .label Listing
         #scriptlist.textin
             script.
-                addLine(1,'a','56',2);
-                addLine(2,'b','948546687',2);
-                addLine(3,'c','887',2);
-                addLine(4,'d','94887',2);
+                objectScriptlist.addLine(1,'a','56',2);
+                objectScriptlist.addLine(2,'b','948546687',2);
+                objectScriptlist.addLine(3,'c','887',2);
+                objectScriptlist.addLine(4,'d','94887',2);
+                objectScriptlist.addLine(5,'ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd','94887',2);
+
+    .inline
+        div
+            .label To do
+            #todolist.report.report
+                script.
+                    report.addTodo('c');
+                    report.addTodo('d');
+                    report.addTodo('efgh');
+
+            .label Arg. of
+                .inline.quantityname
+            #arglist.report
+                script.
+                    report.addArg('c','dummy');
+                    report.addArg('d','regular');
+                    report.addArg('efgh','std func.');
+
+            .label
+                .inline.quantityname
+                | is Arg. to
+            #argtolist.report
+                script.
+                    report.addArgto('c','dummy');
+                    report.addArgto('d','regular');
+                    report.addArgto('efgh','std func.');
+
+
     .inline
         .label User input
         #userinput.group
             script.
-                addInput(new SliderInput(2,0,10), 'Slider', 0);
-                addInput(new SliderInput(2,0,10), 'Slider', 1);
-                addInput(new SliderInput(2,0,10), 'Slider', 2);
-            
-    .inline
-        .label To do:
-        .group
-            #tododiv
+                for (var i = 0; i < 4; i++) {
+                    objectUserinput.addInput(new objectUserinput.SliderInput(i%4,0,10), 'Slider', i);
+                }
+
     .inline
         .label Results
         .group
-            #resultsdiv
+            #result.divtable
+            script.
+                report.addResult('c', 5);
+                report.addResult('d', 89);
+                report.addResult('efgh', 4);
+            
     .inline
         .label Plot:
-        .group
-            #tododiv
+        #plot.group
