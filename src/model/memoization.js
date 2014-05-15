@@ -45,8 +45,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-// If all requirements are loaded, we may create our 'class'.
-define([], /** @lands memoization */ function() {
+define([], /** @lends Memoization */ function() {
 
     /**
      * @class Memoization
@@ -81,11 +80,6 @@ define([], /** @lands memoization */ function() {
             return cachedfunc;
         }
     };
-
-    // If we are in the browser, we want to execute the compile function at the start.
-    if (inBrowser) {
-        Memoization.memoize();
-    }
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Memoization;
