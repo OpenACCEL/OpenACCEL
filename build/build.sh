@@ -14,4 +14,4 @@ echo "Generating documentation."
 npm run doc
 
 # Deployment.
-sh deploy.sh
+sh build/deploy.sh

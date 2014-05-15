@@ -6,7 +6,7 @@ rm -rf doc/
 rm -rf bin/
 
 # Deployment.
-sh deploy.sh
+sh build/deploy.sh
 
 # Actual testing using mocha.
 echo "Testing..."
