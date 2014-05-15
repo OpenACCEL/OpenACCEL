@@ -17,10 +17,10 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/passes/unitpass",
-        "model/passes/exepass",
-        "model/passes/funcpass",
-        "model/passes/packagepass"
+define(["model/passes/preprocessor/unitpass",
+        "model/passes/preprocessor/exepass",
+        "model/passes/preprocessor/funcpass",
+        "model/passes/preprocessor/packagepass"
     ],
     /**@lends PreProcessor*/
     function(UnitPass,
