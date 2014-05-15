@@ -45,8 +45,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-// If all requirements are loaded, we may create our 'class'.
-define([], /** @lands memoization */ function() {
+define([], /** @lands Memoization */ function() {
 
     /**
      * @class Memoization
