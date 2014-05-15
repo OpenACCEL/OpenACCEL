@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
+define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
     /**
      * @class
      * @classdesc Abstract Pass that is part of compiling the script.
