@@ -1,12 +1,12 @@
 function deleteQuantity(line) {
-//    controller.deleteQuantity(line);
+    controller.deleteQuantity(line);
     objectScriptlist.removeLine(line);
 }
 
 var linenr = 1;
 
 function addQuantity(string) {
-//    controller.addQuantity(string);
+    controller.addQuantity(string);
     objectScriptlist.addLine(linenr++, string, "5", 3);
 }
 

@@ -1,5 +1,5 @@
 #editrun
-    script(src = "scripts/editrun.js")
+    script(src = "scripts/view/tabs/editrun.js")
     div
         .inline
             .label Script line
@@ -18,55 +18,55 @@
         .label Listing
         #scriptlist.textin
             script.
-                objectScriptlist.addLine(1,'a','56',2);
-                objectScriptlist.addLine(2,'b','948546687',2);
-                objectScriptlist.addLine(3,'c','887',2);
-                objectScriptlist.addLine(4,'d','94887',2);
-                objectScriptlist.addLine(5,'ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd','94887',2);
+                //- objectScriptlist.addLine(1,'a','56',2);
+                //- objectScriptlist.addLine(2,'b','948546687',2);
+                //- objectScriptlist.addLine(3,'c','887',2);
+                //- objectScriptlist.addLine(4,'d','94887',2);
+                //- objectScriptlist.addLine(5,'ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd','94887',2);
 
     .inline
         div
             .label To do
             #todolist.report.report
                 script.
-                    report.addTodo('c');
-                    report.addTodo('d');
-                    report.addTodo('efgh');
+                    //- report.addTodo('c');
+                    //- report.addTodo('d');
+                    //- report.addTodo('efgh');
 
             .label Arg. of
                 .inline.quantityname
             #arglist.report
                 script.
-                    report.addArg('c','dummy');
-                    report.addArg('d','regular');
-                    report.addArg('efgh','std func.');
+                    //- report.addArg('c','dummy');
+                    //- report.addArg('d','regular');
+                    //- report.addArg('efgh','std func.');
 
             .label
                 .inline.quantityname
                 | is Arg. to
             #argtolist.report
                 script.
-                    report.addArgto('c','dummy');
-                    report.addArgto('d','regular');
-                    report.addArgto('efgh','std func.');
+                    //- report.addArgto('c','dummy');
+                    //- report.addArgto('d','regular');
+                    //- report.addArgto('efgh','std func.');
 
 
     .inline
         .label User input
         #userinput.group
             script.
-                for (var i = 0; i < 4; i++) {
-                    objectUserinput.addInput(new objectUserinput.SliderInput(i%4,0,10), 'Slider', i);
-                }
+                //- for (var i = 0; i < 4; i++) {
+                //-     objectUserinput.addInput(new objectUserinput.SliderInput(i%4,0,10), 'Slider', i);
+                //- }
 
     .inline
         .label Results
         .group
             #result.divtable
             script.
-                report.addResult('c', 5);
-                report.addResult('d', 89);
-                report.addResult('efgh', 4);
+                //- report.addResult('c', 5);
+                //- report.addResult('d', 89);
+                //- report.addResult('efgh', 4);
             
     .inline
         .label Plot:
