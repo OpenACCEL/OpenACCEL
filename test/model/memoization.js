@@ -2,13 +2,11 @@ suite("memoization.js", function() {
 
     // Memoization module.
     var assert;
-    var microtime;
     var memoization;
 
     setup(function (done) {
-        requirejs(["assert", "microtime", "model/memoization"], function(assertModule, microtimeModule, memoizationModule) {
+        requirejs(["assert", "model/memoization"], function(assertModule, memoizationModule) {
             assert = assertModule;
-            microtime = microtimeModule;
             memoization = memoizationModule;
             console.log("Loaded 'Memoization' module.");
             done();
@@ -24,21 +22,6 @@ suite("memoization.js", function() {
             var fib_memo = fibonacci_memoize(10);
             // Test
             assert.equal(fib, fib_memo);
-        });
-        test("non-memoized fibonacci should be slower than memoized fibonacci", function() {
-            var fibonacci_memoize = memoization.memoize(fibonacci);
-            // Fibonacci
-            var start = microtime.now();
-            var fib = fibonacci(10);
-            var end = microtime.now();
-            var fib_time = end - start;
-            // Fibonacci with memoization
-            var start_memo = microtime.now();
-            var fib_memo = fibonacci_memoize(10);
-            var end_memo = microtime.now();
-            var fib_memo_time = end_memo - start_memo;
-            // Test
-            assert.equal(fib_time > fib_memo_time, true);
         });
     });
 });
