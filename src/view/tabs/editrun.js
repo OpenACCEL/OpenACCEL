@@ -1,8 +1,18 @@
-define([], /**@lends View*/ function() {
+function deleteQuantity(line) {
+//    controller.deleteQuantity(line);
+    objectScriptlist.removeLine(line);
+}
+
+var linenr = 1;
+
+function addQuantity(string) {
+//    controller.addQuantity(string);
+    objectScriptlist.addLine(linenr++, string, "5", 3);
+}
 
 /**
  * Object containing methods to modify the contents of the #scriptline element
- *
+ * 
  * @type {Object}
  */
 var objectScriptline = {
@@ -60,7 +70,7 @@ var objectScriptlist = {
                 <div class="inline operator">=</div>\
                 <div class="inline ellipsis max256w">' + right + '</div>\
                 <div class="inline comment">(cat.=' + category + ')</div>\
-                <a onclick="objectScriptlist.removeLine(' + line + ')" class="inline lineoption">delete</a>\
+                <a onclick="deleteQuantity(' + line + ')" class="inline lineoption">delete</a>\
             </label>\
         ');
     }
@@ -214,5 +224,3 @@ var report = {
         $('#result').append(this.getEquationHTML(quantity, result));
     }
 };
-
-});
