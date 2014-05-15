@@ -1,3 +1,4 @@
+/*
 var assert    = require("assert");
 var test      = require("selenium-webdriver/testing")
 var webdriver = require("selenium-webdriver");
@@ -11,3 +12,4 @@ test.describe("Sweet.js output test", function() {
         driver.quit();
     });
 });
+*/

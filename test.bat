@@ -44,4 +44,4 @@ echo Type 'npm start' to start a local HTTP server and test the program out at '
 
 REM Actual testing using mocha.
 echo "Testing..."
-mocha test test/model test/model/macros test/model/passes -u tdd
+mocha test/ -u tdd --recursive
