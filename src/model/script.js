@@ -31,6 +31,11 @@ define(["model/compiler"], function(Compiler) {
         source: '',
 
         /**
+         *
+         */
+        exe: null,
+
+        /**
          * Contains the quantities that together make up this script.
          * @type {Quantity[]}
          */
@@ -45,11 +50,15 @@ define(["model/compiler"], function(Compiler) {
         addQuantity: function(source) {
             // TODO: quantities should be updated.
             this.source = source;
-            scriptChanged();
+            this.scriptChanged();
         },
 
         scriptChanged: function() {
-            this.compiler.compile(this.source);
+            exe = this.compiler.compile(this.source).exe;
+        },
+
+        getQuantity: function(name) {
+            return eval("this.exe." + name + "();");
         }
     };
 
