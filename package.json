@@ -57,7 +57,6 @@
         "underscore": "1.6.x",
         "jquery": "2.1.x",
         "sweet.js": "0.6.x",
-        "http-server": "0.6.x",
-        "microtime": "0.5.x"
+        "http-server": "0.6.x"
     }
 }
