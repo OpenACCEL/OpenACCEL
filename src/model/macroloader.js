@@ -36,8 +36,8 @@ define(["module", fileModule], /**@lends MacroLoader*/ function(module, fs) {
         /**
          * Tries to load a macro by its filename.
          *
-         * @param file The macro file to load.
-         * @return Whether the file has been succesfully loaded or not.
+         * @param {String} file     The macro file to load.
+         * @return {Bool}           Whether the file has been succesfully loaded or not.
          */
         load: function(file) {
             var content;
@@ -93,7 +93,7 @@ define(["module", fileModule], /**@lends MacroLoader*/ function(module, fs) {
         /**
          * Concatenates all loaded macros into a single string for Sweet.
          *
-         * @returns A string of all loaded macros.
+         * @returns {String} A string of all loaded macros.
          */
         getMacros: function() {
             var output = "";

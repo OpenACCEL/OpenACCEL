@@ -44,8 +44,8 @@ define([sweetModule, "model/macroloader"], /**@lends MacroExpander*/ function(sw
         /**
          * Expands the loaded macros.
          * 
-         * @param code Input code that has to be expanded.
-         * @return Expanded code, ready for evaluation.
+         * @param {String} code Input code that has to be expanded.
+         * @return {String}     Expanded code, ready for evaluation.
          */
         expand: function(code) {
             code = this.macroLoader.getMacros().concat(code);
@@ -69,8 +69,8 @@ define([sweetModule, "model/macroloader"], /**@lends MacroExpander*/ function(sw
         /**
          * Tries to load a macro by its filename.
          *
-         * @param file The macro file to load.
-         * @return Whether the file has been succesfully loaded or not.
+         * @param {String} file The macro file to load.
+         * @return {Bool}       Whether the file has been succesfully loaded or not.
          */
         load: function(file) {
             this.macroLoader.load(file);

@@ -51,8 +51,8 @@ define(["model/passes/unitpass",
             /**
              * Transforms a piece of code with the configured order of passes.
              *
-             * @param code A single line of input code.
-             * @return A single line of processed code.
+             * @param {String} code     A single line of input code.
+             * @return {String} A single line of processed code.
              */
             process: function(code) {
                 // Perform all passes on the code and return its output.

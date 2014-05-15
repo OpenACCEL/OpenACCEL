@@ -42,8 +42,8 @@ define(["model/preprocessor", "model/macroexpander"], /**@lends Compiler*/ funct
         /**
          * Compiles a piece of ACCEL code and outputs an object, containing an executable.
          *
-         * @param code A string of ACCEL code to be compiled.
-         * @return An object, containing an executable and information.
+         * @param {String} code     A string of ACCEL code to be compiled.
+         * @return {Object}         An object, containing an executable and information.
          */
         compile: function(code) {
             code = this.preProcessor.process(code);
