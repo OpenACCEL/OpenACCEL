@@ -6,7 +6,7 @@
             input(type = 'text')#scriptline.textin
         .inline
             .label &nbsp;
-            input(type = 'button', value = 'Enter')#enterline.buttonin
+            input(type = 'button', value = 'Enter', onclick = 'addQuantity($("#scriptline").val())')#enterline.buttonin
         #scriptoptions
             .inline
                 .label &nbsp;
