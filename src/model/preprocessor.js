@@ -12,11 +12,6 @@ if (inNode) {
     require = require('requirejs');
 } else {
     require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
         baseUrl: "scripts"
     });
 }
