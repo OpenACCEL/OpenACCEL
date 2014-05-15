@@ -7,7 +7,7 @@ suite("Operator precedence", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler"], function(assertModule, Compiler) {
-            console.log("Loaded 'compiler' module.");
+            console.log("Loaded 'Compiler' module.");
             assert = assertModule;
             compiler = new Compiler();
             done();
@@ -248,7 +248,7 @@ suite("Operator precedence", function() {
             "b = 4\n" +
             "c = 2";
             var exe = compiler.compile(code).exe;
-            assert.equal(exe.x(), 41);
+            assert.equal(exe.x(), 400);
         });
 
         /**
@@ -260,7 +260,7 @@ suite("Operator precedence", function() {
             "b = 8\n" +
             "c = 1";
             var exe = compiler.compile(code).exe;
-            assert.equal(exe.x(), 27);
+            assert.equal(exe.x(), 30);
         });
 
 
