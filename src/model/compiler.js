@@ -36,6 +36,22 @@ define(["model/preprocessor", "model/macroexpander"], /**@lends Compiler*/ funct
         this.macroExpander.load("cos");
         this.macroExpander.load("sin");
         this.macroExpander.load("tan");
+        this.macroExpander.load("pow");
+        this.macroExpander.load("sqrt");
+        this.macroExpander.load("abs");
+        this.macroExpander.load("ceil");
+        this.macroExpander.load("floor");
+        this.macroExpander.load("max");
+        this.macroExpander.load("min");
+        this.macroExpander.load("round");
+        this.macroExpander.load("acos");
+        this.macroExpander.load("asin");
+        this.macroExpander.load("atan");
+        this.macroExpander.load("atan2");
+        this.macroExpander.load("exp");
+        this.macroExpander.load("ln");
+        this.macroExpander.load("log");
+        this.macroExpander.load("modulo");
     }
     
     Compiler.prototype = {
