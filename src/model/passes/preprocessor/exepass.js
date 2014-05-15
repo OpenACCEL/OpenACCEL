@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
+define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Pass that replaces every reference to variable on the right
@@ -25,7 +25,7 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
      */
     function ExePass() {}
 
-    ExePass.prototype = new Pass();
+    ExePass.prototype = new CompilerPass();
 
     /**
      * Translates the right hand side of a definition,
@@ -39,7 +39,7 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
      */
     ExePass.prototype.parse = function(scriptLines) {
         // Precondition check
-        Pass.prototype.parse.call(this, scriptLines);
+        CompilerPass.prototype.parse.call(this, scriptLines);
 
         var lines = [];
         for (var i = 0; i < scriptLines.length; i++) {
@@ -89,7 +89,7 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
         // The regex we use here extracts the definition-variables from the string.
         return trimmed.replace(varRegex, function(s) {
             // Check if this variable is not a local function variable.
-            for (var i = 0; i < funcVars.length; i++ ) {
+            for (var i = 0; i < funcVars.length; i++) {
                 if (s == funcVars[i]) {
                     return s;
                 }

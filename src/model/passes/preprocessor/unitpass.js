@@ -19,21 +19,21 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/passes/pass"], /**@lends UnitPass*/ function(Pass) {
+define(["model/passes/preprocessor/compilerpass"], /**@lends UnitPass*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Classes can be defined as objects. Indiciate this using the @class param.
      */
     function UnitPass() {}
 
-    UnitPass.prototype = new Pass();
+    UnitPass.prototype = new CompilerPass();
 
     UnitPass.prototype.parse = function(scriptLines) {
-        Pass.prototype.parse.call(this, scriptLines);
+        CompilerPass.prototype.parse.call(this, scriptLines);
         var lines = []; //The result of this function {@type String[]}
         for (var i = 0; i < scriptLines.length; i++) {
             var line = scriptLines[i];
-            var units = Pass.prototype.getUnits.call(this, line);
+            var units = this.getUnits.call(this, line);
             if (units) {
                 units = this.translateUnits(units);
             }

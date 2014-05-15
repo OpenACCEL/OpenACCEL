@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/passes/pass"], /**@lends PackagePass*/ function(Pass) {
+define(["model/passes/preprocessor/compilerpass"], /**@lends PackagePass*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Pass that wraps the lines in an executable for eval().
@@ -25,7 +25,7 @@ define(["model/passes/pass"], /**@lends PackagePass*/ function(Pass) {
     function PackagePass() {}
 
     // Inheritance
-    PackagePass.prototype = new Pass();
+    PackagePass.prototype = new CompilerPass();
 
     /**
      * Wraps the lines inside a package, ready to be evalled by eval() such that you get a executable javascript object.
@@ -34,7 +34,7 @@ define(["model/passes/pass"], /**@lends PackagePass*/ function(Pass) {
      */
     PackagePass.prototype.parse = function(scriptLines) {
         // Precondition check
-        Pass.prototype.parse.call(this, scriptLines);
+        CompilerPass.prototype.parse.call(this, scriptLines);
 
         scriptLines.unshift("(function () { exe = {}; ");
         scriptLines.push("return exe; })()");
