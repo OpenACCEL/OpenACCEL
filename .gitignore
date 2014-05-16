@@ -12,4 +12,4 @@ bin/
 npm-debug.log
 
 # Sublime Text personal workspace
-.sublime/*.sublime-workspace
+*.sublime-workspace
