@@ -31,9 +31,10 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
      * Determines the quantities that are present in the script
      */
     QuantityPass.prototype.parse = function(scriptLines, report) {
+        // Handle each line of script
         scriptLines.forEach(function(line) {
             // left hand side of the definitions
-            var lhs = this.getLHS(line);
+            var lhs = QuantityPass.prototype.getLHS(line);
 
             // regex that selects all variable names from the left hand side
             var regex = /([a-zA-Z]\w*)/g;
@@ -54,7 +55,8 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
             report[qtyName].parameters = vars.slice(1);
 
         });
-    }
+        return report;
+    };
 
 
     // Exports are needed, such that other modules may invoke methods from this module file.

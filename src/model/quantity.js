@@ -87,7 +87,7 @@ define([], /**@lends Quantity*/ function() {
      * as provided by the user in the ACCEL script.
      * @return {String} the line corresponding to this quantity
      */
-    Quantity.protoype.toString = function() {
+    Quantity.prototype.toString = function() {
 
     };
 
