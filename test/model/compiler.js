@@ -31,7 +31,7 @@ suite("Compiler", function() {
 
     suite("user-defined functions", function() {
         test("default settings, single function, no units", function() {
-            var code = "x = 5\ny = sin(x)\nz(a, b) = a + 2 + sin(y + sin(x(a))) + 4 + sin(2)\nu = x + y";
+            var code = "x = 5\ny = sin(x)\nz(a, b) = a + 2 + sin(y + sin(x)) + 4 + sin(2)\nu = x + y";
             var output = compiler.compile(code);
             var expected = 4 + 2 + Math.sin(Math.sin(5) + Math.sin(5)) + 4 + Math.sin(2);
             assert.equal(output.exe.z(4), expected);

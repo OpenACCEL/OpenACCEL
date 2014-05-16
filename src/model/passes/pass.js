@@ -27,8 +27,8 @@ define([], /**@lends Pass*/ function() {
          * Various utility regexes which may be usefull when performing passes.
          */
         this.regexes = {};
-        this.regexes.identifier = /\w*[a-zA-Z]\w*\b(?!\()/g;
-        this.regexes.function   = /\w+(?=[(])/g;
+        this.regexes.identifier = /(\w*[a-zA-Z]\w*\b(?!\())/g;
+        this.regexes.function   = /(\w+)(?=[(])/g;
     }
 
     /**
