@@ -82,7 +82,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * 
      * @return {Object} List of quantities
      */
-    Controller.prototype.getQuantitities = function() {
+    Controller.prototype.getquantities = function() {
         //TODO Implementation
         //TODO Tests
     } 
@@ -106,7 +106,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         //TODO Precondition, syntax checking
         //TODO Implementation
         //TODO Tests
-        return this.getQuantitities;
+        return this.getquantities;
     } 
 
     /**
@@ -125,17 +125,16 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.addQuantity.pre violated :' +
                 'quantity is null or undefined')
         }
-        this.script.addQuantity(quantity);
         //TODO Precondition, removing quantity
         //TODO Implementation
         //TODO Tests
         this.script.deleteQuantity(quantity);
-        return this.getQuantitities;
+        return this.getquantities;
     }     
 
     /**
      * Retrieves, if possible, a quantity from the model
-     *
+     * NOTE: For sake of the demo, this functions is a duplicate of getValue
      * @param quantity {String} quantity name
      * @pre quantity != null
      * @pre quantity != undefined
@@ -154,7 +153,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
     /**
      * Retrieves, if possible, a value of a quantity
-     *
+     * NOTE: For sake of the demo, this functions is a duplicate of quantity
      * @param quantity = {String} quantity 
      * @pre quantity != null
      * @pre quantity != undefined
@@ -328,7 +327,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} List Quantities
      */
     Controller.prototype.generate = function(iterations) {
-        if(!quantity1) {
+        if(!iterations) {
             throw new Error('Controller.prototype.generate.pre :' +
                 'quantity1 is null or undefined')
         }
