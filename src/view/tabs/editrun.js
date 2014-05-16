@@ -1,21 +1,33 @@
 function deleteQuantity(line) {
     controller.deleteQuantity(line);
-    objectScriptlist.removeLine(line);
-}
+    Scriptlist.removeLine(line);
+};
 
-var linenr = 1;
+var linenr = 0;
 
 function addQuantity(string) {
+    var split = string.split("=");
+    split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
+    Scriptlist.addLine(linenr++, split[0], split[1], "?");
+    console.log("Added line: " + string);
+    
     controller.addQuantity(string);
-    objectScriptlist.addLine(linenr++, string, "5", 3);
-}
+    console.log("Compiled script.");
+
+    console.log(split[0]);
+    console.log(split[1]);
+    if (split[0] == "out") {
+        console.log("output variable found");
+        Report.addResult(split[0], controller.getValue(split[0]));
+    }
+};
 
 /**
  * Object containing methods to modify the contents of the #scriptline element
  * 
  * @type {Object}
  */
-var objectScriptline = {
+var Scriptline = {
     /**
      * Selects indicated line and puts it's contents in the #scriptline element
      * 
@@ -36,7 +48,7 @@ var objectScriptline = {
  * 
  * @type {Object}
  */
-var objectScriptlist = {
+var Scriptlist = {
     /**
      * Removes a line of ACCEL code from the listing in the #scriptlist element
      * 
@@ -65,7 +77,7 @@ var objectScriptlist = {
     addLine: function(line, left, right, category) {
         $('#scriptlist').append('\
             <input type="radio" name="script" id="line' + line + '" value="' + left + ' = ' + right + '">\
-            <label for="line' + line + '" onclick = "objectScriptline.selectLine(' + line + ', \'' + left + ' = ' + right + '\');">\
+            <label for="line' + line + '" onclick = "Scriptline.selectLine(' + line + ', \'' + left + ' = ' + right + '\');">\
                 <div class="inline ellipsis max256w">' + left + '</div>\
                 <div class="inline operator">=</div>\
                 <div class="inline ellipsis max256w">' + right + '</div>\
@@ -81,7 +93,7 @@ var objectScriptlist = {
  * 
  * @type {Object}
  */
-var objectUserinput = {
+var Userinput = {
     /**
      * Constructs a dynamic slider object
      * 
@@ -92,6 +104,9 @@ var objectUserinput = {
      * @classdesc Dynamic slider class to be generated according to ACCEL script requirements
      */
     SliderInput: function(val, min, max) {
+        this.identifier = 0;
+        this.quantity = null;
+
         this.val = val;
         this.min = min;
         this.max = max;
@@ -113,13 +128,36 @@ var objectUserinput = {
                     <div id = "userslider' + identifier + '"></div>\
                 </div>\
             ';
-        },
+        };
 
         this.appendHTML = function(div, label, identifier) {
             $(div).append(this.getHTML(label, identifier));
             this.identifier = identifier;
             $('#userslider' + identifier).slider(this.properties);
-        }
+        };
+    },
+
+    CheckboxInput: function() {
+        this.identifier = 0;
+        this.quantity = null;
+
+        this.update = function () {
+            controller.setValue(this.identifier, $('usercheck' + this.identifier).prop('checked'));
+        };
+
+        this.getHTML = function(label, identifier) {
+            return '\
+                <div id = "userinput' + identifier + '">\
+                    <div class = "inline">' + label + '</div>\
+                    <input type = "checkbox" id = "usercheck' + identifier + '" onclick = "">\
+                </div>\
+            ';
+        };
+
+        this.appendHTML = function(div, label, identifier) {
+            $(div).append(this.getHTML(label, identifier));
+            this.identifier = identifier;
+        };
     },
 
     /*
@@ -134,6 +172,8 @@ var objectUserinput = {
      * Dynamic Button to be generated according to ACCEL script requirements
      */
     
+    inputs: [],
+
     /**
      * Add dynamic input element to the #userinput element
      * 
@@ -142,32 +182,9 @@ var objectUserinput = {
      * @param {Number} identifier  A unique number to identify the element later on
      */
     addInput: function(element, label, identifier) {
+        this.inputs.push(element);
         element.appendHTML('#userinput', label, identifier)
-    }
-};
-
-/**
- * Object containing methods to modify the contents of the #todo element
- * 
- * @type {Object}
- */
-var objectResults = {
-    /**
-     * Adds a variable to be defined to the #todo element
-     * 
-     * @param {String} left     Left-hand of the equation
-     * @param {String} right    Right-hand side of the equation
-     */
-    addLine: function(left, right) {
-        $('#todo').append('\
-            <div>\
-                <div class="inline ellipsis max256w">' + left + '</div>\
-                <div class="inline operator">=</div>\
-                <div class="inline ellipsis max256w">' + right + '</div>\
-                <div class="inline property">(cat.=' + category + ')</div>\
-                <a onclick="objectScriptlist.removeLine(' + line + ')" class="inline lineoption">delete</a>\
-            </div>\
-        ');
+        console.log(this.inputs);
     }
 };
 
@@ -176,7 +193,7 @@ var objectResults = {
  * 
  * @type {Object}
  */
-var report = {
+var Report = {
     getEquationHTML: function(left, right) {
         return '\
             <div>\
