@@ -18,7 +18,7 @@ suite("Func Macro", function() {
             macroExpander.load("func");
             var input = "func(x = 5)";
             var output = macroExpander.expand(input);
-            var expected = "var x = function () {\n    return 5;\n};\nexe.x = x;";
+            var expected = "exe.x = function () {\n    return 5;\n};";
             assert.equal(expected, output);
         });
 
@@ -26,7 +26,7 @@ suite("Func Macro", function() {
             macroExpander.load("func");
             var input = "func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))";
             var output = macroExpander.expand(input);
-            var expected = "var z = function () {\n    return 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);\n};\nexe.z = z;";
+            var expected = "exe.z = function () {\n    return 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);\n};";
             assert.equal(expected, output);
         });
     });
@@ -36,7 +36,7 @@ suite("Func Macro", function() {
             macroExpander.load("func");
             var input = "func(x(a, b) = 5)";
             var output = macroExpander.expand(input);
-            var expected = "var x = function (a, b) {\n    return 5;\n};\nexe.x = x;";
+            var expected = "exe.x = function (a, b) {\n    return 5;\n};";
             assert.equal(expected, output);
         });
 
@@ -44,7 +44,7 @@ suite("Func Macro", function() {
             macroExpander.load("func");
             var input = "func(z(a, b) = a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))";
             var output = macroExpander.expand(input);
-            var expected = "var z = function (a, b) {\n    return a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);\n};\nexe.z = z;";
+            var expected = "exe.z = function (a, b) {\n    return a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);\n};";
             assert.equal(expected, output);
         });
     });
