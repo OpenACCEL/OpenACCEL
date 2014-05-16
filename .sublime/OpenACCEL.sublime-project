@@ -1,0 +1,28 @@
+{
+    "folders":
+    [
+        {
+            "path": "../",
+            "name": "OpenACCEL",
+            "folder_exclude_patterns": [".sublime", "JSDoc2Latex", "lib", "node_modules", "prepost"],
+            "follow_symlinks": true
+        },
+    ],
+    "build_systems":
+    [
+        {
+            "cmd":
+            [
+                "node",
+                "$file"
+            ],
+            "name": "Node",
+            "selector": "source.js"
+        }
+    ],
+    "settings":
+    {
+        "ensure_newline_at_eof_on_save": true,
+        "tab_size": 4
+    }
+}
