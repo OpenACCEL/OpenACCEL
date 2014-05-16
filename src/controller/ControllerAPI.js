@@ -39,7 +39,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     }
     
     /**
-     * Main execution loop of the script
+     * Main execution loop of the script.
      */
     Controller.prototype.execution = function() {
         //TODO Implementation
@@ -47,8 +47,9 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * Pauses execution of the script
-     * @post controller.Execute == false
+     * Pauses execution of the script.
+     * 
+     * @post controller.execute == false
      */
     Controller.prototype.pause = function() {
         this.execute = false;    
@@ -56,13 +57,13 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * Sets the number of executions of the script
+     * Sets the number of executions of the script.
      *
      * @param iteration {Number} number of iterations
      * @pre iterations != null
      * @pre iterations != undefined
      * @pre iterations >= 0
-     * @post controller.Iterations == iteration
+     * @post controller.iterations == iteration
      */
     Controller.prototype.setIterations = function(iterations) {
         if(!iterations) {
@@ -78,7 +79,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * Retrieves list of Quantities
+     * Retrieves list of quantities.
      * 
      * @return {Object} List of quantities
      */
@@ -88,9 +89,9 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * Adds a Quantity to a model
+     * Adds a quantity to a model.
      *
-     * @param definition {String} Contains a quantity on the LHS and a defitions on the RHS
+     * @param definition {String} Contains a quantity on the LHS and a defition on the RHS
      * @pre definition != null
      * @pre definition != undefined
      * @pre model.ScriptAnalyzer() == true
@@ -102,15 +103,15 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.addQuantity.pre violated :' +
                 'definition is null or undefined')
         }
-        this.script.addQuantity(definition);
         //TODO Precondition, syntax checking
         //TODO Implementation
         //TODO Tests
+        this.script.addQuantity(definition);
         return this.getQuantities;
     } 
 
     /**
-     * Deletes a quantity from a model
+     * Deletes a quantity from a model.
      *
      * @param quantity {String} Quantity name
      * @pre quantity != null
@@ -133,8 +134,8 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     }     
 
     /**
-     * Retrieves, if possible, a quantity from the model
-     * NOTE: For sake of the demo, this functions is a duplicate of getValue
+     * Retrieves, if possible, a quantity from the model.
+     * NOTE: For sake of the demo, this function is a duplicate of getValue.
      * @param quantity {String} quantity name
      * @pre quantity != null
      * @pre quantity != undefined
@@ -151,9 +152,10 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         //TODO Tests
         return this.script.getQuantity(quantity);
     } 
+
     /**
-     * Retrieves, if possible, a value of a quantity
-     * NOTE: For sake of the demo, this functions is a duplicate of quantity
+     * Retrieves, if possible, a value of a quantity.
+     * NOTE: For sake of the demo, this function is a duplicate of getQuantity.
      * @param quantity = {String} quantity 
      * @pre quantity != null
      * @pre quantity != undefined
@@ -171,7 +173,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         return this.script.getQuantity(quantity);
     } 
     /**
-     * Sets the value of a quantity
+     * Sets the value of a quantity.
      *
      * @param quantity = {Object} quantity
      * @param value = {Number} value
@@ -197,7 +199,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * gets Email address from the model
+     * Gets Email address from the model.
      *
      * @pre model.EmailAddress != null
      * @return {String} Email address
@@ -209,7 +211,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * gets help files from the model
+     * Gets help files from the model.
      *
      * @pre model.HelpFiles != null
      * @return {Object} List Help filenames
@@ -221,7 +223,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * gets demo scripts from the model
+     * Gets demo scripts from the model.
      *
      * @pre model.DemoScripts != null
      * @return {Object} List Demo Scriptnames
@@ -233,7 +235,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     }
 
     /**
-     * loads demo script from the model
+     * Loads demo script from the model.
      *
      * @param name = {String} name of demo script
      * @pre name != null
@@ -252,7 +254,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * Saves script on server and, returns a link to the script
+     * Saves script on server and, returns a link to the script.
      *
      * @param name = {String} name of script
      * @pre name != null
@@ -271,7 +273,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * Retrieves the currently loaded script from the model
+     * Retrieves the currently loaded script from the model.
      *
      * @return {Object} script
      */
@@ -281,7 +283,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * sets the script to the model
+     * Sets the script to the model.
 
      * @param script = {String} list of quantity definitions
      * @post model.Script == script
@@ -292,10 +294,10 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     }
 
     /**
-     * Plots the relation between two Quantities
+     * Plots the relation between two Quantities.
      * 
-     * @param quantity1 = {Object} quantity
-     * @param quantity2 = {Object} quantity
+     * @param quantity1 {Object} quantity
+     * @param quantity2 {Object} quantity
      * @pre quantity1, quantity2 = category 3, category 4 quantity
      * @pre quantity1 != null
      * @pre quantity1 != undefined
@@ -318,9 +320,9 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     }
 
     /**
-     * Generates a number of iterations of SPEA
+     * Generates a number of iterations of SPEA.
      * 
-     * @param iterations = {Number} number of iterations
+     * @param iterations {Number} number of iterations
      * @pre model.Script contains pareto definitions
      * @pre iterations != null
      * @pre iterations != undefined
@@ -347,9 +349,9 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     }
 
     /**
-     * Sets the position of a quantity in the network
+     * Sets the position of a quantity in the network.
      * 
-     * @param quantity = {Object} Quantity
+     * @param quantity {Object} Quantity
      * @param x = {Number} Horizontal coordinate of the quantity
      * @param y = {Number }Vertical coordinate of the quantity
      * @pre name, x, y != null
