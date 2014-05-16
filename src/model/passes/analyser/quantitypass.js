@@ -1,7 +1,7 @@
 /*
  * File containing the QuantityPass class
  *
- * @author Jacco Snoeren
+ * @author Roel Jacobs
  */
 
 /* Browser vs. Node ***********************************************/
@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(AnalyserPass) {
+define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePass*/ function(AnalyserPass, Quantity) {
     /**
      * @class
      * @classdesc Abstract Pass that is part of compiling the script.
@@ -30,8 +30,19 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
      * @Override
      * Determines the quantities that are present in the script
      */
-    QuantityPass.prototype.parse = function(scriptLines) {
+    QuantityPass.prototype.parse = function(scriptLines, report) {
+        scriptLines.forEach(function(line) {
+            // left hand side of the definitions
+            var lhs = this.getLHS(line);
 
+            // regex that selects all variable names from the left hand side
+            var regex = /([a-zA-Z]+[0-9]*)/g;
+
+            // get all variable names from the left hand side
+            var vars = lhs.match(regex);
+
+
+        });
     }
 
 
