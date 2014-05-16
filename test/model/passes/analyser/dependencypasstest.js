@@ -20,10 +20,11 @@ suite('dependencypass.js', function() {
         /**
          * The script that we take as example for this pass.
          */
-        var script = 'a = b + c \n' +
-            'b = 3\n' +
-            'c = 5\n' +
-            'f(x) = b - x';
+        var script = ['a = b + c \n',
+            'b = 3\n',
+            'c = 5\n',
+            'f(x) = b - x'
+        ];
 
         /**
          * The starting point from this Pass, starting from the script.
