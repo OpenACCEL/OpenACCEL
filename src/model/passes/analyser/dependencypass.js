@@ -27,6 +27,42 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
 
     DependencyPass.prototype = new DependencyPass();
 
+    /**
+     * @Override
+     * Determines the dependencies for each quantity
+     */
+    QuantityPass.prototype.analyse = function(scriptLines, report) {
+        // Handle each line of script
+        scriptLines.forEach(function(line) {
+            // left and right hand side of the definitions
+            var lhs = QuantityPass.prototype.getLHS(line);
+            var rhs = QuantityPass.prototype.getRHS(line);
+
+            // regex that selects all variable names from a definition
+            var regex = /([a-zA-Z]\w*)/g;
+
+            // get the quantity for which we determine the dependencies
+            var qty = lhs.match(/([a-zA-Z]\w*)/)[0];
+
+            // get all variable names from the right hand side
+            var dep = rhs.match(regex);
+
+            if (!report[qty].parameters) {
+                report[qty].parameters = [];
+            }
+
+            // add all dependencies
+            dep.forEach(function(d) {
+                if (report[d]) {
+                    report[qty].parameters.push(d);
+                }
+            });
+
+
+        });
+        return report;
+
+    };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return DependencyPass;

@@ -30,7 +30,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
      * @Override
      * Determines the quantities that are present in the script
      */
-    QuantityPass.prototype.parse = function(scriptLines, report) {
+    QuantityPass.prototype.analyse = function(scriptLines, report) {
         // Handle each line of script
         scriptLines.forEach(function(line) {
             // left hand side of the definitions

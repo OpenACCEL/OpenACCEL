@@ -18,7 +18,7 @@ suite('quantitypass.js', function() {
         test('one single character quantity', function() {
             var input = ['x = 5'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.x);
             assert.equal(result.x.name, 'x');
@@ -28,7 +28,7 @@ suite('quantitypass.js', function() {
         test('one single character function, one parameter', function() {
             var input = ['f(x) = x'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.f);
             assert.equal(result.f.name, 'f');
@@ -38,7 +38,7 @@ suite('quantitypass.js', function() {
         test('one single character function, multiple parameters', function() {
             var input = ['f(x,y,z) = x + y + z'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.f);
             assert.equal(result.f.name, 'f');
@@ -50,7 +50,7 @@ suite('quantitypass.js', function() {
         test('one multi character quantity', function() {
             var input = ['r2d2 = 5'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.r2d2);
             assert.equal(result.r2d2.name, 'r2d2');
@@ -60,7 +60,7 @@ suite('quantitypass.js', function() {
         test('one multi character function, one parameter', function() {
             var input = ['r2d2(x) = x'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.r2d2);
             assert.equal(result.r2d2.name, 'r2d2');
@@ -70,7 +70,7 @@ suite('quantitypass.js', function() {
         test('one multi character function, multiple parameters', function() {
             var input = ['r2d2(x,y,z) = x + y + z'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.r2d2);
             assert.equal(result.r2d2.name, 'r2d2');
@@ -82,7 +82,7 @@ suite('quantitypass.js', function() {
         test('two quantities', function() {
             var input = ['x = 5', 'y = 6'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.x);
             assert(result.y);
@@ -95,7 +95,7 @@ suite('quantitypass.js', function() {
         test('two functions', function() {
             var input = ['f(x) = x', 'g(x, y) = x + y'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.f);
             assert(result.g);
@@ -109,7 +109,7 @@ suite('quantitypass.js', function() {
         test('one quantity, one function', function() {
             var input = ['x = 4', 'f(x, y) = x + y'];
 
-            var result = quantitypass.parse(input);
+            var result = quantitypass.analyse(input);
 
             assert(result.x);
             assert(result.f);
