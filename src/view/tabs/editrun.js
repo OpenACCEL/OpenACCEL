@@ -6,20 +6,25 @@ function deleteQuantity(line) {
 var linenr = 0;
 
 function addQuantity(string) {
-    var split = string.split("=");
+    var split = string.split('=');
     split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
-    Scriptlist.addLine(linenr++, split[0], split[1], "?");
-    console.log("Added line: " + string);
+    Scriptlist.addLine(linenr++, split[0], split[1], '?');
+    console.log('Added line: ' + string);
     
-    controller.addQuantity(string);
-    console.log("Compiled script.");
+    setTimeout(
+        function() {
+            controller.addQuantity(string);
+            console.log('Compiled script.');
 
-    console.log(split[0]);
-    console.log(split[1]);
-    if (split[0] == "out") {
-        console.log("output variable found");
-        Report.addResult(split[0], controller.getValue(split[0]));
-    }
+            console.log(split[0]);
+            console.log(split[1]);
+            if (split[0] == 'out' || split[0] == 'out2') {
+                console.log('output variable found');
+                Report.addResult(split[0], controller.getValue(split[0]));
+            }
+        },
+        10
+    );
 };
 
 /**
@@ -148,7 +153,7 @@ var Userinput = {
         this.getHTML = function(label, identifier) {
             return '\
                 <div id = "userinput' + identifier + '">\
-                    <div class = "inline">' + label + '</div>\
+                    <label for = "usercheck' + identifier + '">' + label + '</label>\
                     <input type = "checkbox" id = "usercheck' + identifier + '" onclick = "">\
                 </div>\
             ';
@@ -197,9 +202,9 @@ var Report = {
     getEquationHTML: function(left, right) {
         return '\
             <div>\
-                <div class="inline ellipsis max256w">' + left + '</div>\
-                <div class="inline operator">=</div>\
-                <div class="inline ellipsis max256w">' + right + '</div>\
+                <div class="ellipsis max256w">' + left + '</div>\
+                <div class="operator"> = </div>\
+                <div class="ellipsis max256w">' + right + '</div>\
             </div>\
         ';
     },
@@ -207,8 +212,8 @@ var Report = {
     getPropertyListHTML: function(x, property) {
         return '\
             <div>\
-                <div class="inline ellipsis max256w">' + x + '</div>\
-                <div class="inline property">' + property + '</div>\
+                <div class="ellipsis max256w">' + x + '</div>\
+                <div class="property">' + property + '</div>\
             </div>\
         ';
     },

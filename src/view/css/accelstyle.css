@@ -266,6 +266,32 @@ body div {
 	padding-right: 2px;
 }
 
+/*input[type="checkbox"] {
+    display:none;
+}
+label + input[type="checkbox"]{
+    display:inline-block;
+    width:19px;
+    height:19px;
+    margin:-1px 4px 0 0;
+    vertical-align:middle;
+    cursor:pointer;
+
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	border: 1px #331144 solid;
+	background: #FFFFFF;
+}
+label + input[type="checkbox"]:checked {
+	border: 1px #FFDDFF solid;
+	background: #331144;
+}*/
+
+#result .operator {
+	color: #FFDDFF;
+}
+
 .operator {
 	color: #AA00AA;
 }
