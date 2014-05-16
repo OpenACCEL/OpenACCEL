@@ -81,11 +81,6 @@ define([], /**@lends Quantity*/ function() {
 
     }
 
-    /**
-     * Constructor
-     * @type {Quantity}
-     */
-    Quantity.prototype = new Quantity();
 
     /**
      * Returns a String representation of the line corresponding to this quantity
@@ -97,5 +92,5 @@ define([], /**@lends Quantity*/ function() {
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
-    return DependencyPass;
+    return Quantity;
 });

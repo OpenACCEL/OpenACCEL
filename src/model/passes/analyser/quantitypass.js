@@ -36,11 +36,22 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
             var lhs = this.getLHS(line);
 
             // regex that selects all variable names from the left hand side
-            var regex = /([a-zA-Z]+[0-9]*)/g;
+            var regex = /([a-zA-Z]\w*)/g;
 
             // get all variable names from the left hand side
             var vars = lhs.match(regex);
 
+            if (!report) {
+                report = {};
+            }
+
+            // first entry in vars is the quantity name
+            var qtyName = vars[0];
+            report[qtyName] = new Quantity();
+            report[qtyName].name = qtyName;
+
+            // If there are other items left in vars, then this are the parameters.
+            report[qtyName].parameters = vars.slice(1);
 
         });
     }
