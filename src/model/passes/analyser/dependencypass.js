@@ -25,7 +25,7 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
      */
     function DependencyPass() {}
 
-    DependencyPass.prototype = new DependencyPass();
+    DependencyPass.prototype = new AnalyserPass();
 
     /**
      * @Override
@@ -52,11 +52,13 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
             }
 
             // add all dependencies
-            dep.forEach(function(d) {
-                if (report[d]) {
-                    report[qty].parameters.push(d);
-                }
-            });
+            if (dep) {
+                dep.forEach(function(d) {
+                    if (report[d]) {
+                        report[qty].parameters.push(d);
+                    }
+                });
+            }
 
 
         });
