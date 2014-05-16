@@ -22,7 +22,13 @@ define([], /**@lends Pass*/ function() {
      * @class
      * @classdesc Base class for passes of the preprocessor.
      */
-    function Pass() {}
+    function Pass() {
+        /**
+         * Various utility regexes which may be usefull when performing passes.
+         */
+        this.regexes = {};
+        this.regexes.identifier = /\w*[a-zA-Z]\w*\b(?!\()/g;
+    }
 
     /**
      * Returns the left hand side of a definition,

@@ -31,7 +31,7 @@ suite('funcpass.js', function() {
                 'func(y = sin(exe.x()))',
                 'func(z = 2 + sin(exe.y() + sin(exe.x())) + sin(2))'
             ];
-            assert.deepEqual(instance.parse(lines), expResult);
+            assert.deepEqual(instance.parse(lines, {}), expResult);
         });
     });
 });

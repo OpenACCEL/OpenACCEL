@@ -33,6 +33,11 @@ define(["model/passes/preprocessor/unitpass",
          */
         function PreProcessor() {
             /**
+             * The Pre-Processor holds an analysis report for the passes.
+             */
+            this.report = null;
+
+            /**
              * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
              */
             this.passes = [];
@@ -54,7 +59,7 @@ define(["model/passes/preprocessor/unitpass",
                 var lines = code.split("\n");
 
                 for (var i = 0; i < this.passes.length; i++) {
-                    lines = this.passes[i].parse(lines);
+                    lines = this.passes[i].parse(lines, this.report);
                 }
 
                 return lines.join("");

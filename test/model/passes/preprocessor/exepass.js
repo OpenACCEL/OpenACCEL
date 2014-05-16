@@ -29,7 +29,7 @@ suite('exepass.js', function() {
                 'y = sin(exe.x())',
                 'z = 2 + sin(exe.y() + sin(exe.x())) + sin(2)'
             ];
-            assert.deepEqual(instance.parse(lines), expResult);
+            assert.deepEqual(instance.parse(lines, {}), expResult);
         });
 
 
@@ -41,7 +41,7 @@ suite('exepass.js', function() {
             var line = '2 + sin(y + sin(x)) + sin(2)';
             var expResult = '2 + sin(exe.y() + sin(exe.x())) + sin(2)';
 
-            assert.equal(instance.translateRHS(line), expResult);
+            assert.equal(instance.translateRHS(line, null, {}), expResult);
         });
 
         /**
