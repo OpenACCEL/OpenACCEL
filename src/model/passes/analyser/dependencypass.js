@@ -1,7 +1,8 @@
 /*
- * File containing the DependencyPass class
+ * The dependency Pass retrieves the dependencies from the script for each of the
+ * quantities.
  *
- * @author
+ * @author Jacco Snoeren
  */
 
 /* Browser vs. Node ***********************************************/
@@ -24,7 +25,7 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
      */
     function DependencyPass() {}
 
-    DependencyPass.prototype = new AnalyserPass();
+    DependencyPass.prototype = new DependencyPass();
 
 
     // Exports are needed, such that other modules may invoke methods from this module file.

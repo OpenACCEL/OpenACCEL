@@ -45,7 +45,7 @@ define([], /**@lends Quantity*/ function() {
          * An array containing all quantities on which this quantity is dependent.
          * Example: If the script contains a line 'a = b + c,'
          * then a, b, and c are quantities and quantity a is dependent on b and c.
-         * @type {Quantity[]}
+         * @type {String[]}
          */
         this.dependencies = [];
 
@@ -69,7 +69,7 @@ define([], /**@lends Quantity*/ function() {
          * The parameters of this quantity. If the quantity is not a function, this will be
          * the empty array []. Example: If the script contains a line 'f(x,y) = x + y'
          * then the parameters of quantity f are [x,y].
-         * @type {Quantity[]}
+         * @type {String[]}
          */
         this.parameters = [];
 
