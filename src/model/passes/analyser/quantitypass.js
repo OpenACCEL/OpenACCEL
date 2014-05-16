@@ -1,7 +1,7 @@
 /*
  * File containing the QuantityPass class
  *
- * @author
+ * @author Jacco Snoeren
  */
 
 /* Browser vs. Node ***********************************************/
@@ -25,6 +25,14 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
     function QuantityPass() {}
 
     QuantityPass.prototype = new AnalyserPass();
+
+    /**
+     * @Override
+     * Determines the quantities that are present in the script
+     */
+    QuantityPass.prototype.parse = function(scriptLines) {
+
+    }
 
 
     // Exports are needed, such that other modules may invoke methods from this module file.
