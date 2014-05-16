@@ -32,17 +32,24 @@ define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
      * The base class only contains precondition checking and returns the given input.
      *
      * @param {String[]} scriptlines Lines of script that need to be analysed.
+     * @param {Quantity[]} report the quantities of this script with their attributes
      * @pre scriptLines != null
      * @pre scriptLines != undefined
+     * @pre report != null
+     * @pre report != undefined
      * @return {Quantity[]} a list of quantities with their attributes such as
      * parameters and dependencies.
      */
-    AnalyserPass.prototype.parse = function(scriptLines) {
+    AnalyserPass.prototype.analyse = function(scriptLines, report) {
         if (!scriptLines) {
-            throw new Error('CompilerPass.parse.pre violated :' +
+            throw new Error('AnalyserPass.analyse.pre violated :' +
                 'scriptLines is null or undefined');
         }
-        return scriptLines;
+        if (!report) {
+            throw new Error('AnalyserPass.analyse.pre violated:' +
+                'report is null or undefined');
+        }
+        return report;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
