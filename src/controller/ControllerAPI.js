@@ -82,7 +82,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * 
      * @return {Object} List of quantities
      */
-    Controller.prototype.getquantities = function() {
+    Controller.prototype.getQuantities = function() {
         //TODO Implementation
         //TODO Tests
     } 
@@ -106,7 +106,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         //TODO Precondition, syntax checking
         //TODO Implementation
         //TODO Tests
-        return this.getquantities;
+        return this.getQuantities;
     } 
 
     /**
@@ -129,7 +129,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         //TODO Implementation
         //TODO Tests
         this.script.deleteQuantity(quantity);
-        return this.getquantities;
+        return this.getQuantities;
     }     
 
     /**
@@ -329,7 +329,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     Controller.prototype.generate = function(iterations) {
         if(!iterations) {
             throw new Error('Controller.prototype.generate.pre :' +
-                'quantity1 is null or undefined')
+                'iterations is null or undefined')
         }
         //TODO 
         //TODO Implementation
@@ -339,7 +339,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     /**
      * Gets list of quantities and their position in the network
      * 
-     * @return {Object} List Quantities
+     * @return {Object} List Quantities and their position
      */
     Controller.prototype.getNetwork = function() {
         //TODO Implementation
