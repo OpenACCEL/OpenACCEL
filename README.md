@@ -7,9 +7,11 @@ The ACCEL-system is a light-weight, general purpose modelling environment for ma
 [![Build Status](https://travis-ci.org/OpenACCEL/OpenACCEL.svg?branch=master)](https://travis-ci.org/OpenACCEL/OpenACCEL)
 
 1. Install Node.
-1.1.1. `Linux:` Install `node` from your repository.
-1.2.1. `Windows` Install Node with the installer from the official [Node](http://nodejs.org/download/) website.
-1.2.2. `Windows` Install [Git Bash](http://git-scm.com/) and start the Git Bash terminal.
+    1. `Linux`
+        1. Install `node` from your repository.
+    2. `Windows`
+        1. Install Node with the installer from the official [Node](http://nodejs.org/download/) website.
+        2. Install [Git Bash](http://git-scm.com/) and start the Git Bash terminal.
 2. Clone a copy of the repository on your pc: `git clone https://github.com/OpenACCEL/OpenACCEL.git`.
 3. Go to the OpenACCEL directory: `cd OpenACCEL`.
 4. Install all dependencies using the command `npm install`.
