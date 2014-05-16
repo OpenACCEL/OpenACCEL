@@ -24,9 +24,14 @@ suite("ControllerAPI", function() {
             assert.equal(output, expected);
         });
 
-        test("Adding valid definition", function() {
-            var code = "a = b";
-            controller.addQuantity(code);
+        test("Set value in model", function() {
+            var input = "a = b + 2";
+            controller.addQuantity(input);
+            var input = "b = 10";
+            controller.addQuantity(input);
+            var output = controller.getValue('a');
+            var expected = 12;
+            assert.equal(output, expected);
         });
 
     });

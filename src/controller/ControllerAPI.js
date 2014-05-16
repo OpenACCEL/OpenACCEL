@@ -121,11 +121,11 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} list of quantities
      */
     Controller.prototype.deleteQuantity = function(quantity) {
-        if(!definition) {
+        if(!quantity) {
             throw new Error('Controller.prototype.addQuantity.pre violated :' +
-                'definition is null or undefined')
+                'quantity is null or undefined')
         }
-        this.script.addQuantity(definition);
+        this.script.addQuantity(quantity);
         //TODO Precondition, removing quantity
         //TODO Implementation
         //TODO Tests
@@ -169,7 +169,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         //TODO Precondition name \in Script 
         //TODO Implementation
         //TODO Tests
-        return this.script.getValue("a");
+        return this.script.getQuantity(quantity);
     } 
     /**
      * Sets the value of a quantity

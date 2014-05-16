@@ -49,12 +49,17 @@ define(["model/compiler"], function(Compiler) {
          */
         addQuantity: function(source) {
             // TODO: quantities should be updated.
-            this.source = source;
+            if(this.source){
+                this.source = this.source + "\n" + source ;  
+          } else {
+                this.source = source;
+          }
+            
             this.scriptChanged();
         },
 
         scriptChanged: function() {
-            exe = this.compiler.compile(this.source).exe;
+            this.exe = this.compiler.compile(this.source).exe;
         },
 
         getQuantity: function(name) {
