@@ -47,15 +47,15 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
             // get all variable names from the right hand side
             var dep = rhs.match(regex);
 
-            if (!report[qty].parameters) {
-                report[qty].parameters = [];
+            if (!report[qty].dependencies) {
+                report[qty].dependencies = [];
             }
 
             // add all dependencies
             if (dep) {
                 dep.forEach(function(d) {
                     if (report[d]) {
-                        report[qty].parameters.push(d);
+                        report[qty].dependencies.push(d);
                     }
                 });
             }
