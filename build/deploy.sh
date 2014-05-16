@@ -1,6 +1,7 @@
 # Deployment.
 echo "Deploying all files, such that it is ready for production."
 mkdir -p                                                                             bin/scripts
+
 # Copy library files.
 cp lib/*                                                                             bin/scripts/
 cp node_modules/underscore/underscore-min.js                                         bin/scripts/underscore.js
@@ -11,11 +12,17 @@ cp node_modules/sweet.js/macros/stxcase.js                                      
 cp node_modules/sweet.js/node_modules/escodegen/escodegen.browser.min.js             bin/scripts/escodegen.js
 cp node_modules/sweet.js/node_modules/escope/escope.js                               bin/scripts/escope.js
 cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
+
+# Generating monofunc macros.
+node ./utils/monofuncgenerator.js ./src/model/macros
+
 # Copy scripts.
 cp -r src/* bin/scripts
 find bin/scripts -type f ! -regex ".*\.s?js" -exec rm {} \;
+
 # Copy images.
 cp -r src/view/img bin/img/
+
 # Copy style sheets.
 cp -r src/view/css bin/css/
 

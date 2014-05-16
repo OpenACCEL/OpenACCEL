@@ -56,7 +56,7 @@ var functionsDiff = [{
  * Template, read from macrotemplate.txt
  * @type {String}
  */
-var template = fs.readFileSync('macrotemplate.txt', 'utf8');
+var template = fs.readFileSync('./utils/macrotemplate.txt', 'utf8');
 
 /**
  * Extension for macro files
