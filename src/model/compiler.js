@@ -73,7 +73,7 @@ define(["model/analyser",
          */
         compile: function(code) {
             // Cleaning up.
-            code = code.trim();
+            //code = code.trim();
 
             // Generate report for pre-processor.
             var report = this.analyser.analyse(code);

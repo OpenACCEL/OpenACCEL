@@ -6,7 +6,7 @@ suite('dependencypass.js', function() {
     setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/passes/preprocessor/dependencypass'], function(assertModule, module) {
+        requirejs(['assert', 'model/passes/analyser/dependencypass'], function(assertModule, module) {
             console.log('Loaded \'DependencyPass\' module.');
             assert = assertModule;
             instance = new module();
