@@ -226,12 +226,46 @@ exports.publish = function(taffydata) {
     // First handle all global definitions
     output += handleGlobals();
 
-    var namespaces = getData();
-
-    // Extract all classes from this data
-    var classes = getData().filter({
-        kind: "class"
+    var namespaces = getData().filter({
+        kind: "namespace"
     });
+
+    var nsNames = [''];
+
+    namespaces.each(function(n) {
+        output += "\\section{" + replaceSpecial(n.longname) + "}\n";
+        if (n.description) {
+            output += "\\paragraph{Description}" + replaceSpecial(n.description);
+        }
+
+        nsNames.push(n.longname);
+
+        // Extract all classes for this namespace
+        var nsclasses = getData().filter({
+            kind: "class",
+            memberof: n.longname
+        });
+
+        // Handle each class
+        nsclasses.each(function(c) {
+            if (!c.comment) {
+                return;
+            }
+            output += handleClass(c);
+        });
+
+    });
+
+    // Extract all classes without namespace
+    var classes = getData().filter({
+        kind: "class",
+        memberof:{"!is":nsNames}
+    });
+
+    if(classes.count()  > 0)
+    {
+        output += "\\section{$\\langle$ No Namespace $\\rangle$}\n";
+    }
 
     // Handle each class
     classes.each(function(c) {
