@@ -28,8 +28,8 @@ define(["model/passes/preprocessor/compilerpass"], /**@lends UnitPass*/ function
 
     UnitPass.prototype = new CompilerPass();
 
-    UnitPass.prototype.parse = function(scriptLines) {
-        CompilerPass.prototype.parse.call(this, scriptLines);
+    UnitPass.prototype.parse = function(scriptLines, report) {
+        CompilerPass.prototype.parse.call(this, scriptLines, report);
         var lines = []; //The result of this function {@type String[]}
         for (var i = 0; i < scriptLines.length; i++) {
             var line = scriptLines[i];
@@ -49,7 +49,7 @@ define(["model/passes/preprocessor/compilerpass"], /**@lends UnitPass*/ function
     /**
      * Translate the units of a certain line into our format, such
      * that it is an object in the executable code.
-     * @param  {String} units the units in a String format
+     * @param  {String} units the units in a String format.
      * @pre units != null
      * @pre units != undefined
      * @return {String} a String to be used in our executable code, containing the units.

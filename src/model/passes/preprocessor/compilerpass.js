@@ -32,16 +32,25 @@ define(['model/passes/pass'], /**@lends CompilerPass*/ function(Pass) {
      * Should be overridden by subclasses.
      * The base class only contains precondition checking and returns the given input.
      *
-     * @param {String[]} scriptlines Lines of script that need to be parsed.
+     * @param {String[]}    scriptlines Lines of script that need to be parsed.
+     * @param {Report}      report A full report containing script information.
      * @pre scriptLines != null
      * @pre scriptLines != undefined
-     * @return {String[]} the input
+     * @pre report != null
+     * @pre report != undefined
+     * @return {String[]}   the input
      */
-    CompilerPass.prototype.parse = function(scriptLines) {
+    CompilerPass.prototype.parse = function(scriptLines, report) {
         if (!scriptLines) {
             throw new Error('CompilerPass.parse.pre violated :' +
                 'scriptLines is null or undefined');
         }
+
+        if (!report) {
+            throw new Error('CompilerPass.parse.pre violated :' +
+                'report is null or undefined');
+        }
+        
         return scriptLines;
     };
 

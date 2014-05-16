@@ -32,14 +32,17 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(
      * by replacing each references to a variable by
      * exe.<varname>().
      *
-     * @param  {String[]} scriptLines Array with script lines
+     * @param {String[]}    scriptLines Array with script lines.
+     * @param {Report}      report A full report containing script information.
      * @pre scriptLines != null
      * @pre scriptLines != undefined
+     * @pre report != null
+     * @pre report != undefined
      * @return {String[]}             Array of translated lines
      */
-    ExePass.prototype.parse = function(scriptLines) {
+    ExePass.prototype.parse = function(scriptLines, report) {
         // Precondition check
-        CompilerPass.prototype.parse.call(this, scriptLines);
+        CompilerPass.prototype.parse.call(this, scriptLines, report);
 
         var lines = [];
         for (var i = 0; i < scriptLines.length; i++) {
@@ -48,7 +51,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(
 
             var result = this.getLHS(line) + // left hand side
             ' = ' +
-                this.translateRHS(this.getRHS(line), this.getLHS(line)) + // translated right hand side
+                this.translateRHS(this.getRHS(line), this.getLHS(line), report) + // translated right hand side
             ((units) ? ' ; ' + units : ''); // units if needed
 
             lines.push(result);
@@ -58,19 +61,21 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(
 
     /**
      * Translates the right hand side of an Accel definition to a macro compatible string.
-     * @param  {String} rhs Right hand side of an Accel definitions
-     * @param  {String} lhs Left hand side of an Accel definitions
+     * @param  {String} rhs Right hand side of an Accel definitions.
+     * @param  {String} lhs Left hand side of an Accel definitions.
+     * @param {Report}      report A full report containing script information.
      * @pre rhs != null
      * @pre rhs != undefined
+     * @pre report != null
+     * @pre report != undefined
      * @return {String}     a macro compatible string.
      */
-    ExePass.prototype.translateRHS = function(rhs, lhs) {
+    ExePass.prototype.translateRHS = function(rhs, lhs, report) {
         if (!rhs) {
             throw new Error('Preprocessor.translateRHS.pre failed. rhs is null or undefined');
         }
 
         var trimmed = rhs.trim();
-        var varRegex = /\w*[a-zA-Z]\w*\b(?!\()/g;
 
         /*
          * For user defined functions, like 'f(a) = 2 + a + x', we want dont want this pass to modify the 'a' on the rhs.
@@ -83,11 +88,11 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(
 
         // A function definition contains either a ( or a ), usually both ;D
         if (lhs && lhs.match(/[()]/)) {
-            funcVars = lhs.match(varRegex);
+            funcVars = lhs.match(this.regexes.identifier);
         }
 
         // The regex we use here extracts the definition-variables from the string.
-        return trimmed.replace(varRegex, function(s) {
+        return trimmed.replace(this.regexes.identifier, function(s) {
             // Check if this variable is not a local function variable.
             for (var i = 0; i < funcVars.length; i++) {
                 if (s == funcVars[i]) {
