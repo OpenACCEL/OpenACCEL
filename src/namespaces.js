@@ -3,3 +3,14 @@
  * Use the @namespace in a _new_ comment block to decclare a new namespace.
  * Hierachy in namespaces is possible by using the '.''character, eg A.B
  */
+
+/**
+ * Passes for the compiler.
+ * 
+ * @namespace Passes
+ */
+
+/**
+ * Passes for the preprocessor.
+ * @namespace Passes.Preprocesses
+ */
