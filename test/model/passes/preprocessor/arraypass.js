@@ -1,4 +1,4 @@
-suite("ArrayPass.js", function() {
+suite("arraypass.js", function() {
     // Template module.
     var ArrayPass;
     var assert;
@@ -6,7 +6,7 @@ suite("ArrayPass.js", function() {
     setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(["assert", "model/passes/preprocessor/ArrayPass"], function(assertModule, module) {
+        requirejs(["assert", "model/passes/preprocessor/arraypass"], function(assertModule, module) {
             console.log("Loaded 'ArrayPass' module.");
             assert = assertModule;
             ArrayPass = new module();
@@ -27,6 +27,15 @@ suite("ArrayPass.js", function() {
                     ArrayPass.parse();
                 });
         });
+        
+        /** Test dotPass().
+         * transform basic array a.0 to a[0]
+         */
+        test('dotPass() a[0]', function() {
+            assert.equal(ArrayPass.dotPass('y = a.0'), 'y = a[0]');
+        });
+
+        
 
         
     });
