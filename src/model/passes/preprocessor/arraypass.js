@@ -42,12 +42,12 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      */
     ArrayPass.prototype.parse = function(scriptLines, report) {
         CompilerPass.prototype.parse.call(this, scriptLines, report);
-        return scriptLines.map(function(line) {
+        return scriptLines.map((function(line) {
             // matches var1[var2] where var2 != 0
-            line = this.prototype.dotPass(line);
-            line = this.prototype.bracketPass(line);
+            line = this.dotPass(line);
+            line = this.bracketPass(line);
             return line;
-        });
+        }).bind(this));
     };
 
     /**
@@ -58,19 +58,12 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      * @return {String[]} thes cript where var1[var2] is transformed in var1.var2
      */
     ArrayPass.prototype.bracketPass = function(line) {
-<<<<<<< HEAD
         line = line.replace(this.regexes.squareBrackets, function(rhs) {
             if (rhs) {
                 rhs = rhs.replace('[', '.').replace(']', '');
             }
             return rhs;
-    });
-=======
-        var rline = line.match(this.regexes.squareBrackets).toString();
-        if (rline) {
-            line = rline.replace('[', '.').replace(']', '');
-        }
->>>>>>> f5482e9d34bd2dac399d8430ee51c96750934679
+        });
         return line;
     };
 
@@ -90,7 +83,8 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
                     return s;
                 });
                 return rhs;
-        }});
+            }
+        });
         return line;
     };
 

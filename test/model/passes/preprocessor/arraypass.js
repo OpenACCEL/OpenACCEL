@@ -26,7 +26,7 @@ suite("arraypass.js", function() {
                     ArrayPass.parse();
                 });
         });
-        
+
         /** Test dotPass().
          * transform basic array a.0 to a[0]
          */
@@ -34,19 +34,13 @@ suite("arraypass.js", function() {
             assert.equal(ArrayPass.dotPass('y = a.0'), 'y = a[0]');
         });
 
-        
+
 
         test('parse()', function() {
-            var exScript = 'a = [1,2,x:3] \n' +
-                'y = a.0 + a[x]' +
-                'z = a.1' +
-                'p = a[x]';
+            var exScript = ['a = [1,2,x:3]', 'y = a.0 + a[x]', 'z = a.1', 'p = a[x]'];
 
-            var resultScript = 'a = [1,2,x:3] \n' +
-                'y = a[0] + a.x' +
-                'z = a[1]' +
-                'p = a.x';
-            assert.equal(ArrayPass.parse(exScript), resultScript);
+            var resultScript = ['a = [1,2,x:3]', 'y = a[0] + a.x', 'z = a[1]', 'p = a.x']
+            assert.equal(ArrayPass.parse(exScript, {}), resultScript);
         })
 
         /**
