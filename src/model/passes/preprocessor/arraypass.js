@@ -40,10 +40,11 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      * @return {String} Line where var1[var2] is transformed in var1.var2
      */
     ArrayPass.prototype.parse = function(scriptLines, report) {
+        CompilerPass.prototype.parse.call(this, scriptLines, report);
         return scriptLines.map(function(line) {
             // matches var1[var2] where var2 != 0
-            line = this.prototype.dotPass;
-            line = this.prototype.bracketPass;
+            line = this.prototype.dotPass(scriptLines);
+            line = this.prototype.bracketPass(scriptLines);
             return line;
         }
     });
