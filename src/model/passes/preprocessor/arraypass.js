@@ -58,7 +58,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      * @return {String[]} thes cript where var1[var2] is transformed in var1.var2
      */
     ArrayPass.prototype.bracketPass = function(line) {
-        var rline = line.match(this.regexes.squareBrackets);
+        var rline = line.match(this.regexes.squareBrackets).toString();
         if (rline) {
             line = rline.replace('[', '.').replace(']', '');
         }
