@@ -22,7 +22,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Passes.Preprocessor
     /**
      * @class
      * @classdesc Class that replaces a binary operator in the right hand side of a definitions 
-     * by '!operator!', so it can be processed properly by sweet.
+     * by ' _operator_ ' (including spaces), so it can be processed properly by sweet.
      */
     function OperatorPass() {
         /**
@@ -34,6 +34,19 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Passes.Preprocessor
 
     OperatorPass.prototype = new CompilerPass();
 
+
+     /**
+     * Replaces a binary operator in the right hand side of a definitions 
+     * by ' _operator_ ' (including spaces).
+     *
+     * @param {String[]}    scriptLines Array with script lines.
+     * @param {Report}      report A full report containing script information.
+     * @pre scriptLines != null
+     * @pre scriptLines != undefined
+     * @pre report != null
+     * @pre report != undefined
+     * @return {String[]}             Array of translated lines
+     */
     OperatorPass.prototype.parse = function(scriptLines, report) {
         // Preconsition checking.
         CompilerPass.prototype.parse.call(this, scriptLines, report);
