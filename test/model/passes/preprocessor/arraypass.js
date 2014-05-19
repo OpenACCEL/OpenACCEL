@@ -16,7 +16,6 @@ suite("arraypass.js", function() {
 
     suite("ArrayPass", function() {
 
-
         test("parse() robustness", function() {
             assert.throws(
                 function() {
@@ -37,6 +36,39 @@ suite("arraypass.js", function() {
 
         
 
-        
+        test('parse()', function() {
+            var exScript = 'a = [1,2,x:3] \n' +
+                'y = a.0 + a[x]' +
+                'z = a.1' +
+                'p = a[x]';
+
+            var resultScript = 'a = [1,2,x:3] \n' +
+                'y = a[0] + a.x' +
+                'z = a[1]' +
+                'p = a.x';
+            assert.equal(ArrayPass.parse(exScript), resultScript);
+        })
+
+        /**
+         * Simple test for bracketPass().
+         */
+        test("bracketPass() y = a[x] + a[b]", function() {
+            assert.equal(ArrayPass.bracketPass('y = a[x] + a[b]'), 'y = a.x + a.b');
+        });
+
+        /**
+         * Robustness tests for bracketPass()
+         */
+        test('bracketPass() robustness', function() {
+            assert.throws(
+                function() {
+                    ArrayPass.bracketPass(null);
+                });
+            assert.throws(
+                function() {
+                    ArrayPass.bracketPass();
+                });
+        });
+
     });
 });
