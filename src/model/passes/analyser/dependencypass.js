@@ -23,7 +23,10 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
      * @class
      * @classdesc Abstract Pass that is part of compiling the script.
      */
-    function DependencyPass() {}
+    function DependencyPass() {
+        // regex that selects all variable names from a definition
+        this.varsRegex = /([a-zA-Z]\w*)/g;
+    }
 
     DependencyPass.prototype = new AnalyserPass();
 
@@ -38,14 +41,11 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
             var lhs = DependencyPass.prototype.getLHS(line);
             var rhs = DependencyPass.prototype.getRHS(line);
 
-            // regex that selects all variable names from a definition
-            var regex = /([a-zA-Z]\w*)/g;
-
             // get the quantity for which we determine the dependencies
-            var qty = lhs.match(/([a-zA-Z]\w*)/)[0];
+            var qty = lhs.match(varsRegex)[0];
 
             // get all variable names from the right hand side
-            var dep = rhs.match(regex);
+            var dep = rhs.match(varsRegex);
 
             if (!report[qty].dependencies) {
                 report[qty].dependencies = [];
