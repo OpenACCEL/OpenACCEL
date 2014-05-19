@@ -47,23 +47,21 @@ define(["model/passes/preprocessor/unitpass",
             this.passes.push(new PackagePass());
         }
 
-        PreProcessor.prototype = {
-            /**
-             * Transforms a piece of code with the configured order of passes.
-             *
-             * @param {String} code     A single line of input code.
-             * @return {String} A single line of processed code.
-             */
-            process: function(code) {
-                // Perform all passes on the code and return its output.
-                var lines = code.split("\n");
+        /**
+         * Transforms a piece of code with the configured order of passes.
+         *
+         * @param {String} code     A single line of input code.
+         * @return {String} A single line of processed code.
+         */
+        PreProcessor.prototype.process = function(code) {
+            // Perform all passes on the code and return its output.
+            var lines = code.split("\n");
 
-                for (var i = 0; i < this.passes.length; i++) {
-                    lines = this.passes[i].parse(lines, this.report);
-                }
-
-                return lines.join("");
+            for (var i = 0; i < this.passes.length; i++) {
+                lines = this.passes[i].parse(lines, this.report);
             }
+
+            return lines.join("");
         }
 
         // Exports all macros.

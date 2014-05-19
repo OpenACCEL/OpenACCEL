@@ -40,41 +40,39 @@ define([sweetModule, "model/macroloader"], /**@lends MacroExpander*/ function(sw
         this.macroLoader = new MacroLoader();
     }
 
-    MacroExpander.prototype = {
-        /**
-         * Expands the loaded macros.
-         * 
-         * @param {String} code Input code that has to be expanded.
-         * @return {String}     Expanded code, ready for evaluation.
-         */
-        expand: function(code) {
-            code = this.macroLoader.getMacros().concat(code);
-            var output;
+    /**
+     * Expands the loaded macros.
+     * 
+     * @param {String} code Input code that has to be expanded.
+     * @return {String}     Expanded code, ready for evaluation.
+     */
+    MacroExpander.prototype.expand = function(code) {
+        code = this.macroLoader.getMacros().concat(code);
+        var output;
 
-            try {
-                // We do not compile with source maps at all. I don't even know for 100% what they are lol.
-                output = sweet.compile(code, {
-                    sourceMap: false,
-                    readableNames: true
-                });
+        try {
+            // We do not compile with source maps at all. I don't even know for 100% what they are lol.
+            output = sweet.compile(code, {
+                sourceMap: false,
+                readableNames: true
+            });
 
-                // We return the code that can be evalled.
-                return output.code;
-            } catch (err) {
-                // TODO: Handle error nicely.
-                throw new Error(err);
-            }
-        },
-
-        /**
-         * Tries to load a macro by its filename.
-         *
-         * @param {String} file The macro file to load.
-         * @return {Bool}       Whether the file has been succesfully loaded or not.
-         */
-        load: function(file) {
-            this.macroLoader.load(file);
+            // We return the code that can be evalled.
+            return output.code;
+        } catch (err) {
+            // TODO: Handle error nicely.
+            throw new Error(err);
         }
+    }
+
+    /**
+     * Tries to load a macro by its filename.
+     *
+     * @param {String} file The macro file to load.
+     * @return {Bool}       Whether the file has been succesfully loaded or not.
+     */
+    MacroExpander.prototype.load =  function(file) {
+            this.macroLoader.load(file);
     }
 
     // Export the MacroExpander class.

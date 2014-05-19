@@ -36,23 +36,21 @@ define(["model/passes/analyser/quantitypass",
             this.passes.push(new DependencyPass());
         }
 
-        Analyser.prototype = {
             /**
              * Generated a report by invoking analyses passes on intermediate reports.
              *
              * @param {String} code     A single line of input code.
              * @return {Report}         A full report.
              */
-            analyse: function(code) {
-                var lines = code.split("\n");
-                var report = {};
+        Analyser.prototype.analyse = function(code) {
+            var lines = code.split("\n");
+            var report = {};
 
-                for (var i = 0; i < this.passes.length; i++) {
-                    report = this.passes[i].analyse(lines, report);
-                }
-
-                return report;
+            for (var i = 0; i < this.passes.length; i++) {
+                report = this.passes[i].analyse(lines, report);
             }
+
+            return report;
         }
 
         // Exports all macros.

@@ -43,6 +43,8 @@ define(["model/analyser",
          */
         this.macroExpander = new MacroExpander();
         this.macroExpander.load("func");
+        //this.macroExpander.load("operators");
+
         this.macroExpander.load("cos");
         this.macroExpander.load("sin");
         this.macroExpander.load("tan");
@@ -64,29 +66,29 @@ define(["model/analyser",
         this.macroExpander.load("modulo");
     }
     
-    Compiler.prototype = {
-        /**
-         * Compiles a piece of ACCEL code and outputs an object, containing an executable.
-         *
-         * @param {String} code     A string of ACCEL code to be compiled.
-         * @return {Object}         An object, containing an executable and information.
-         */
-        compile: function(code) {
-            // Cleaning up.
-            //code = code.trim();
+    /**
+     * Compiles a piece of ACCEL code and outputs an object, containing an executable.
+     *
+     * @param {String} code     A string of ACCEL code to be compiled.
+     * @return {Object}         An object, containing an executable and information.
+     */
+    Compiler.prototype.compile = function(code) {
+        // Cleaning up.
+        //code = code.trim();
 
-            // Generate report for pre-processor.
-            var report = this.analyser.analyse(code);
-            this.preProcessor.report = report;
+        // Generate report for pre-processor.
+        var report = this.analyser.analyse(code);
+        this.preProcessor.report = report;
 
-            // Pre-process and expand.
-            code = this.preProcessor.process(code);
-            code = this.macroExpander.expand(code);
+        // Pre-process and expand.
+        code = this.preProcessor.process(code);
+        //code = this.library.install(code);
+        code = "function add(x, y) { return x + y }function subtract(x, y) { return x - y }function multiply(x, y) { return x * y }function divide(x, y) { return x / y }" + code;
+        code = this.macroExpander.expand(code);
 
-            return {
-                report: report,
-                exe: eval(code)
-            }
+        return {
+            report: report,
+            exe: eval(code)
         }
     }
 
