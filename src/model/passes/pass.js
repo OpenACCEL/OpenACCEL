@@ -29,7 +29,7 @@ define([], /**@lends Pass*/ function() {
         this.regexes                = {};
         this.regexes.identifier     = /(\w*[a-zA-Z]\w*\b(?!\())/g;
         this.regexes.function       = /(\w+)(?=[(])/g;
-        this.regexes.squareBrackets = /(\d*[a-zA-Z]+\w*)(\[\d*[a-zA-Z]+\w*\])/g
+        this.regexes.squareBrackets = /(\d*[a-zA-Z]+\w*)(\[\d*[a-zA-Z]+\w*\])/g;
 
     }
 
