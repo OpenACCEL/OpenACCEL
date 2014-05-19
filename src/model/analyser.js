@@ -51,7 +51,7 @@ define(["model/passes/analyser/quantitypass",
             }
 
             return report;
-        }
+        };
 
         // Exports all macros.
         return Analyser;

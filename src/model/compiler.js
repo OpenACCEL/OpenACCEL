@@ -97,7 +97,7 @@ define(["model/fileloader",
             report: report,
             exe: eval(code)
         }
-    }
+    };
 
     // Exports all macros.
     return Compiler;

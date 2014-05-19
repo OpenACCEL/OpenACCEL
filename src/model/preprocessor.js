@@ -62,7 +62,7 @@ define(["model/passes/preprocessor/unitpass",
             }
 
             return lines.join("");
-        }
+        };
 
         // Exports all macros.
         return PreProcessor;

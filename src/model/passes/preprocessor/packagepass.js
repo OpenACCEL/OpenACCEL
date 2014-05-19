@@ -41,7 +41,7 @@ define(["model/passes/preprocessor/compilerpass"], /**@lends PackagePass*/ funct
         scriptLines.push("return exe; })()");
 
         return scriptLines;
-    }
+    };
 
     // Export.
     return PackagePass;

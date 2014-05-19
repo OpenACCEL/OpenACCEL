@@ -60,7 +60,7 @@ define([sweetModule], /**@lends MacroExpander*/ function(sweet) {
             // TODO: Handle error nicely.
             throw new Error(err);
         }
-    }
+    };
 
     // Export the MacroExpander class.
     return MacroExpander;

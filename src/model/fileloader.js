@@ -109,7 +109,7 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
         } else {
             return false;
         }
-    }
+    };
 
     /**
      * Concatenates all loaded macros into a single string for Sweet.
@@ -124,7 +124,7 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
         }
 
         return output;
-    }
+    };
 
     /**
      * Concatenates all loaded macros into a single string for Sweet.
@@ -139,7 +139,7 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
         }
 
         return output;
-    }
+    };
 
     /**
      * Clears, and thus unloads all macros currently loaded.
@@ -147,7 +147,7 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
     FileLoader.prototype.clear = function() {
         this.macros = {};
         this.library = {};
-    }
+    };
 
     // Exports all macros.
     return FileLoader;
