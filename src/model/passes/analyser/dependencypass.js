@@ -42,10 +42,10 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
             var rhs = DependencyPass.prototype.getRHS(line);
 
             // get the quantity for which we determine the dependencies
-            var qty = lhs.match(varsRegex)[0];
+            var qty = lhs.match(this.varsRegex)[0];
 
             // get all variable names from the right hand side
-            var dep = rhs.match(varsRegex);
+            var dep = rhs.match(this.varsRegex);
 
             if (!report[qty].dependencies) {
                 report[qty].dependencies = [];
