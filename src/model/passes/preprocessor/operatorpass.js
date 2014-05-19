@@ -22,7 +22,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Passes.Preprocessor
     /**
      * @class
      * @classdesc Class that replaces a binary operator in the right hand side of a definitions 
-     * by '_operator_', so it can be processed properly by sweet.
+     * by '!operator!', so it can be processed properly by sweet.
      */
     function OperatorPass() {
         /**
@@ -44,9 +44,10 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Passes.Preprocessor
             // Modfied RHS
             var newrhs = this.getRHS(line);
 
-            // Replace the operators
+            // Replace the operators.
+            // We *need* to add spaces, because sweet otherwise gives an error.
             newrhs = newrhs.replace(this.operatorRegex, function(op) {
-                return '_' + op + '_';
+                return ' _' + op + '_ ';
             });
 
             return line.replace(this.getRHS(line), newrhs);

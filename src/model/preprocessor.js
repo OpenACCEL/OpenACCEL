@@ -18,12 +18,14 @@ if (inNode) {
 /*******************************************************************/
 
 define(["model/passes/preprocessor/unitpass",
+        "model/passes/preprocessor/operatorpass",
         "model/passes/preprocessor/exepass",
         "model/passes/preprocessor/funcpass",
         "model/passes/preprocessor/packagepass"
     ],
     /**@lends PreProcessor*/
     function(UnitPass,
+        OperatorPass,
         ExePass,
         FuncPass,
         PackagePass) {
@@ -44,6 +46,7 @@ define(["model/passes/preprocessor/unitpass",
             this.passes.push(new UnitPass());
             this.passes.push(new ExePass());
             this.passes.push(new FuncPass());
+            this.passes.push(new OperatorPass());
             this.passes.push(new PackagePass());
         }
 
