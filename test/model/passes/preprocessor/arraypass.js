@@ -35,17 +35,18 @@ suite("arraypass.js", function() {
         })
 
         /** Test dotPass().
-         * transform basic array a.0 to a[0]
+         * Basic transformation
+         * y = a.0 == y = a[0]
          */
-        test('dotPass() a[0]', function() {
+        test('dotPass() y = a.0', function() {
             assert.equal(ArrayPass.dotPass('y = a.0'), 'y = a[0]');
         });
 
         /** Test dotPass().
-         * transform basic array containing multiple changes
+         * Basic transformation multiple changes
          * y = a.0 + b.0 == y = a[0] + b[0]
          */
-        test('dotPass() y = a[0] + b[0]', function() {
+        test('dotPass() y = a.0 + b.0', function() {
             assert.equal(ArrayPass.dotPass('y = a.0 + b.0'), 'y = a[0] + b[0]');
         });
 
@@ -61,8 +62,24 @@ suite("arraypass.js", function() {
          * Selective transformation
          * y = a.x + b.0  == y = a.x + b[0]
          */
-        test('dotPass() y = a.x + b[0]', function() {
+        test('dotPass() y = a.x + b.0 ', function() {
             assert.equal(ArrayPass.dotPass('y = a.x + b.0'), 'y = a.x + b[0]');
+        });
+
+
+        /** Test bracketPass().
+         * Basic transformation
+         * y = a[x] == y = a.x
+         */
+        test("bracketPass() y = a[x]", function() {
+            assert.equal(ArrayPass.bracketPass('y = a[x]'), 'y = a.x');
+        });
+
+        /**
+         * Simple test for bracketPass().
+         */
+        test("bracketPass() y = a[x] + a[b]", function() {
+            assert.equal(ArrayPass.bracketPass('y = a[x] + a[b]'), 'y = a.x + a.b');
         });
 
         /** Test bracketPass().
@@ -75,18 +92,13 @@ suite("arraypass.js", function() {
 
         /** Test bracketPass().
          * Selective transformation
-         * y = a[x] + b.y  == y = a.x + b.y
+         * y = a[x] + a.b  == y = a.x + a.b
          */
-        test('bracketPass() y = a.x + b.y', function() {
-            assert.equal(ArrayPass.bracketPass('y = a[x] + b.y'), 'y = a.x + b.y');
+        test('bracketPass() y = a[x] + a.b', function() {
+            assert.equal(ArrayPass.bracketPass('y = a[x] + a.b'), 'y = a.x + a.b');
         });
 
-        /**
-         * Simple test for bracketPass().
-         */
-        test("bracketPass() y = a[x] + a[b]", function() {
-            assert.equal(ArrayPass.bracketPass('y = a[x] + a[b]'), 'y = a.x + a.b');
-        });
+
 
         /**
          * Robustness tests for bracketPass()
