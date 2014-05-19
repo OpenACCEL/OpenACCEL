@@ -12,5 +12,5 @@
 
 /**
  * Passes for the preprocessor.
- * @namespace Passes.Preprocesses
+ * @namespace Passes.Preprocessor
  */
