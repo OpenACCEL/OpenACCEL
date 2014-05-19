@@ -17,12 +17,22 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/preprocessor", "model/macroexpander"], /**@lends Compiler*/ function(PreProcessor, MacroExpander) {
+define(["model/analyser",
+        "model/preprocessor",
+        "model/macroexpander"], /**@lends Compiler*/
+        function(Analyser,
+                 PreProcessor,
+                 MacroExpander) {
     /**
      * @class
      * @classdesc The compiler takes code as input, and outputs an executable and report when compiling.
      */
     function Compiler() {
+        /**
+         * The analyser extracts information of the script, which is also needed for the pre-processor.
+         */
+        this.analyser = new Analyser();
+
         /**
          * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
          */
@@ -62,9 +72,19 @@ define(["model/preprocessor", "model/macroexpander"], /**@lends Compiler*/ funct
          * @return {Object}         An object, containing an executable and information.
          */
         compile: function(code) {
+            // Cleaning up.
+            //code = code.trim();
+
+            // Generate report for pre-processor.
+            var report = this.analyser.analyse(code);
+            this.preProcessor.report = report;
+
+            // Pre-process and expand.
             code = this.preProcessor.process(code);
             code = this.macroExpander.expand(code);
+
             return {
+                report: report,
                 exe: eval(code)
             }
         }

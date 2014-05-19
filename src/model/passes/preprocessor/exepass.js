@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
+define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Pass that replaces every reference to variable on the right
@@ -25,21 +25,24 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
      */
     function ExePass() {}
 
-    ExePass.prototype = new Pass();
+    ExePass.prototype = new CompilerPass();
 
     /**
      * Translates the right hand side of a definition,
      * by replacing each references to a variable by
      * exe.<varname>().
      *
-     * @param  {String[]} scriptLines Array with script lines
+     * @param {String[]}    scriptLines Array with script lines.
+     * @param {Report}      report A full report containing script information.
      * @pre scriptLines != null
      * @pre scriptLines != undefined
+     * @pre report != null
+     * @pre report != undefined
      * @return {String[]}             Array of translated lines
      */
-    ExePass.prototype.parse = function(scriptLines) {
+    ExePass.prototype.parse = function(scriptLines, report) {
         // Precondition check
-        Pass.prototype.parse.call(this, scriptLines);
+        CompilerPass.prototype.parse.call(this, scriptLines, report);
 
         var lines = [];
         for (var i = 0; i < scriptLines.length; i++) {
@@ -48,7 +51,7 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
 
             var result = this.getLHS(line) + // left hand side
             ' = ' +
-                this.translateRHS(this.getRHS(line), this.getLHS(line)) + // translated right hand side
+                this.translateRHS(this.getRHS(line), this.getLHS(line), report) + // translated right hand side
             ((units) ? ' ; ' + units : ''); // units if needed
 
             lines.push(result);
@@ -64,13 +67,12 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
      * @pre rhs != undefined
      * @return {String}     a macro compatible string.
      */
-    ExePass.prototype.translateRHS = function(rhs, lhs) {
+    ExePass.prototype.translateRHS = function(rhs, lhs, report) {
         if (!rhs) {
             throw new Error('Preprocessor.translateRHS.pre failed. rhs is null or undefined');
         }
 
-        var trimmed = rhs.trim();
-        var varRegex = /\w*[a-zA-Z]\w*\b(?!\()/g;
+        var output = rhs.trim();
 
         /*
          * For user defined functions, like 'f(a) = 2 + a + x', we want dont want this pass to modify the 'a' on the rhs.
@@ -78,21 +80,31 @@ define(['model/passes/pass'], /**@lends ExePass*/ function(Pass) {
          * use the same regex to find the local variables (like 'a'), and skip those regex matches on the rhs transformation.
          */
 
-        // Fuction definition.
-        var funcVars = [];
-
-        // A function definition contains either a ( or a ), usually both ;D
-        if (lhs && lhs.match(/[()]/)) {
-            funcVars = lhs.match(varRegex);
+        // Get a list of all user defined functions.
+        var userDefinedFunctions = [];
+        for (var key in report) {
+            if (report[key].name && report[key].parameters.length > 0) {
+                userDefinedFunctions.push(report[key].name);
+            }
         }
 
+        // Put .exe before any user-defined function.
+        output = output.replace(this.regexes.function, function(s) {
+            // If a found function is a user-defined function, put .exe in front of it.
+            if (userDefinedFunctions.indexOf(s) > -1) {
+                return 'exe.' + s;
+            }
+
+            return s;
+        });
+
         // The regex we use here extracts the definition-variables from the string.
-        return trimmed.replace(varRegex, function(s) {
+        return output.replace(this.regexes.identifier, function(s) {
             // Check if this variable is not a local function variable.
-            for (var i = 0; i < funcVars.length; i++ ) {
-                if (s == funcVars[i]) {
-                    return s;
-                }
+            var parameters = report[lhs.match(/([a-zA-Z]\w*)/)[0]].parameters;
+
+            if (parameters.indexOf(s) > -1 || s == "exe") {
+                return s;
             }
 
             return 'exe.' + s + '()';
