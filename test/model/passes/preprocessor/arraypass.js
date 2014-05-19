@@ -27,6 +27,13 @@ suite("arraypass.js", function() {
                 });
         });
 
+        test('parse()', function() {
+            var exScript = ['a = [1,2,x:3]', 'y = a.0 + a[x]', 'z = a.1', 'p = a[x]'];
+
+            var resultScript = ['a = [1,2,x:3]', 'y = a[0] + a.x', 'z = a[1]', 'p = a.x']
+            assert.deepEqual(ArrayPass.parse(exScript, {}), resultScript);
+        })
+
         /** Test dotPass().
          * transform basic array a.0 to a[0]
          */
@@ -58,12 +65,21 @@ suite("arraypass.js", function() {
             assert.equal(ArrayPass.dotPass('y = a.x + b.0'), 'y = a.x + b[0]');
         });
 
-        test('parse()', function() {
-            var exScript = ['a = [1,2,x:3]', 'y = a.0 + a[x]', 'z = a.1', 'p = a[x]'];
+        /** Test bracketPass().
+         * No transformation
+         * y = a.x == y = a.x
+         */
+        test('bracketPass() y = a.x', function() {
+            assert.equal(ArrayPass.bracketPass('y = a.x'), 'y = a.x');
+        });
 
-            var resultScript = ['a = [1,2,x:3]', 'y = a[0] + a.x', 'z = a[1]', 'p = a.x']
-            assert.deepEqual(ArrayPass.parse(exScript, {}), resultScript);
-        })
+        /** Test bracketPass().
+         * Selective transformation
+         * y = a[x] + b.y  == y = a.x + b.y
+         */
+        test('bracketPass() y = a.x + b.y', function() {
+            assert.equal(ArrayPass.bracketPass('y = a[x] + b.y'), 'y = a.x + b.y');
+        });
 
         /**
          * Simple test for bracketPass().
