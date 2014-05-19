@@ -43,6 +43,7 @@
         "doc-latex": "jsdoc -c JSDoc2Latex/conf.json -d doc-latex/ src/ -r",
         "build": "sh build/build.sh",
         "test": "sh build/test.sh",
+        "benchmark": "sh build/benchmark.sh",
         "start": "http-server bin/ -c-1",
         "build-start": "npm run build && npm run start"
     },
@@ -55,6 +56,7 @@
         "underscore": "1.6.x",
         "jquery": "2.1.x",
         "sweet.js": "0.6.x",
-        "http-server": "0.6.x"
+        "http-server": "0.6.x",
+        "benchmark": "1.0.x"
     }
 }

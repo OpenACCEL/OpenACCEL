@@ -8,6 +8,6 @@ rm -rf bin/
 # Deployment.
 sh build/deploy.sh
 
-# Actual testing using mocha.
-echo "Testing..."
-mocha test/ -u tdd --recursive --grep @benchmark --invert
+# Actual benchmarking using mocha.
+echo "Benchmarking..."
+mocha test/ -u tdd --recursive --grep @benchmark
