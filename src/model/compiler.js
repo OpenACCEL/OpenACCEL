@@ -50,7 +50,7 @@ define(["model/fileloader",
          */
         this.fileLoader = new FileLoader();
         this.fileLoader.load("func");
-        //this.fileLoader.load("operators");
+        this.fileLoader.load("operators");
 
         this.fileLoader.load("cos");
         this.fileLoader.load("sin");
@@ -71,6 +71,11 @@ define(["model/fileloader",
         this.fileLoader.load("ln");
         this.fileLoader.load("log");
         this.fileLoader.load("modulo");
+
+        this.fileLoader.load("add", "library");
+        this.fileLoader.load("subtract", "library");
+        this.fileLoader.load("multiply", "library");
+        this.fileLoader.load("divide", "library");
     }
     
     /**
@@ -89,8 +94,7 @@ define(["model/fileloader",
 
         // Pre-process and expand.
         code = this.preProcessor.process(code);
-        //code = this.library.install(code);
-        code = "function add(x, y) { return x + y }function subtract(x, y) { return x - y }function multiply(x, y) { return x * y }function divide(x, y) { return x / y }" + code;
+        code = this.fileLoader.getLibrary() + code;
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
         return {
