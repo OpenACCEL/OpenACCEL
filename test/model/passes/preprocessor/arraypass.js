@@ -34,13 +34,35 @@ suite("arraypass.js", function() {
             assert.equal(ArrayPass.dotPass('y = a.0'), 'y = a[0]');
         });
 
+        /** Test dotPass().
+         * transform basic array containing multiple changes
+         * y = a.0 + b.0 == y = a[0] + b[0]
+         */
+        test('dotPass() y = a[0] + b[0]', function() {
+            assert.equal(ArrayPass.dotPass('y = a.0 + b.0'), 'y = a[0] + b[0]');
+        });
 
+        /** Test dotPass().
+         * No transformation
+         * y = a[0]  == y = a[0]
+         */
+        test('dotPass() y = a[0]', function() {
+            assert.equal(ArrayPass.dotPass('y = a[0]'), 'y = a[0]');
+        });
+
+        /** Test dotPass().
+         * Selective transformation
+         * y = a.x + b.0  == y = a.x + b[0]
+         */
+        test('dotPass() y = a.x + b[0]', function() {
+            assert.equal(ArrayPass.dotPass('y = a.x + b.0'), 'y = a.x + b[0]');
+        });
 
         test('parse()', function() {
             var exScript = ['a = [1,2,x:3]', 'y = a.0 + a[x]', 'z = a.1', 'p = a[x]'];
 
             var resultScript = ['a = [1,2,x:3]', 'y = a[0] + a.x', 'z = a[1]', 'p = a.x']
-            assert.equal(ArrayPass.parse(exScript, {}), resultScript);
+            assert.deepEqual(ArrayPass.parse(exScript, {}), resultScript);
         })
 
         /**
