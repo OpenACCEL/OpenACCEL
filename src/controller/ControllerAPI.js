@@ -127,7 +127,6 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         //TODO Implementation
         //TODO Tests
         this.script.addQuantity(definition);
-        return this.getQuantities;
     } 
 
     /**
