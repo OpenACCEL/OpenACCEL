@@ -58,10 +58,12 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      * @return {String[]} thes cript where var1[var2] is transformed in var1.var2
      */
     ArrayPass.prototype.bracketPass = function(line) {
-        var rline = line.match(this.regexes.squareBrackets);
-        if (rline) {
-            line = rline.replace('[', '.').replace(']', '');
-        }
+        line = line.replace(this.regexes.squareBrackets, function(rhs) {
+            if (rhs) {
+                rhs = rhs.replace('[', '.').replace(']', '');
+            }
+            return rhs;
+    });
         return line;
     };
 
@@ -73,14 +75,15 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      * @return {String[]} the script where var1[var2] is transformed in var1.var2
      */
     ArrayPass.prototype.dotPass = function(line) {
-        var rline = line.match(this.regexes.dots);
-        if (rline) {
-            line = rline.replace(/\.\d+/, function(s) {
-                s = s.replace('.', '[');
-                s += ']';
-                return s;
-            });
-        }
+        line = line.replace(this.regexes.dots, function(rhs) {
+            if (rhs) {
+                rhs = rhs.replace(/\.\d+/, function(s) {
+                    s = s.replace('.', '[');
+                    s += ']';
+                    return s;
+                });
+                return rhs;
+        }});
         return line;
     };
 
