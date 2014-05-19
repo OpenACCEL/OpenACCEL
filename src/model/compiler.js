@@ -17,10 +17,12 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/analyser",
+define(["model/fileloader",
+        "model/analyser",
         "model/preprocessor",
         "model/macroexpander"], /**@lends Compiler*/
-        function(Analyser,
+        function(FileLoader,
+                 Analyser,
                  PreProcessor,
                  MacroExpander) {
     /**
@@ -42,28 +44,33 @@ define(["model/analyser",
          * The macro expander will expand all macros, such that the code can be eval()'d.
          */
         this.macroExpander = new MacroExpander();
-        this.macroExpander.load("func");
-        //this.macroExpander.load("operators");
 
-        this.macroExpander.load("cos");
-        this.macroExpander.load("sin");
-        this.macroExpander.load("tan");
-        this.macroExpander.load("pow");
-        this.macroExpander.load("sqrt");
-        this.macroExpander.load("abs");
-        this.macroExpander.load("ceil");
-        this.macroExpander.load("floor");
-        this.macroExpander.load("max");
-        this.macroExpander.load("min");
-        this.macroExpander.load("round");
-        this.macroExpander.load("acos");
-        this.macroExpander.load("asin");
-        this.macroExpander.load("atan");
-        this.macroExpander.load("atan2");
-        this.macroExpander.load("exp");
-        this.macroExpander.load("ln");
-        this.macroExpander.load("log");
-        this.macroExpander.load("modulo");
+        /**
+         * The file loader is reponsible for loading all files, like macros and library functions.
+         */
+        this.fileLoader = new FileLoader();
+        this.fileLoader.load("func");
+        //this.fileLoader.load("operators");
+
+        this.fileLoader.load("cos");
+        this.fileLoader.load("sin");
+        this.fileLoader.load("tan");
+        this.fileLoader.load("pow");
+        this.fileLoader.load("sqrt");
+        this.fileLoader.load("abs");
+        this.fileLoader.load("ceil");
+        this.fileLoader.load("floor");
+        this.fileLoader.load("max");
+        this.fileLoader.load("min");
+        this.fileLoader.load("round");
+        this.fileLoader.load("acos");
+        this.fileLoader.load("asin");
+        this.fileLoader.load("atan");
+        this.fileLoader.load("atan2");
+        this.fileLoader.load("exp");
+        this.fileLoader.load("ln");
+        this.fileLoader.load("log");
+        this.fileLoader.load("modulo");
     }
     
     /**
@@ -84,7 +91,7 @@ define(["model/analyser",
         code = this.preProcessor.process(code);
         //code = this.library.install(code);
         code = "function add(x, y) { return x + y }function subtract(x, y) { return x - y }function multiply(x, y) { return x * y }function divide(x, y) { return x / y }" + code;
-        code = this.macroExpander.expand(code);
+        code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
         return {
             report: report,

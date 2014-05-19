@@ -1,5 +1,5 @@
 /*
- * Central point where we load all of our macros.
+ * Central point where we load all of our macros and library functions, and possibly more!
  *
  * @author Roy Stoof
  */
@@ -20,33 +20,51 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["module", fileModule], /**@lends MacroLoader*/ function(module, fs) {
+define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
     /**
      * @class
      * @classdesc Classes can be defined as objects. Indiciate this using the @class param.
      */
-    function MacroLoader() {
+    function FileLoader() {
         /**
          * List of loaded and available macros.
          */
         this.macros = {};
+
+        /**
+         * List of loaded utility functions. At the moment of writing, this could for exmaple contain the zip function.
+         */
+        this.library = {};
     }
     
     /**
-     * Tries to load a macro by its filename.
+     * Tries to load a file by its filename.
+     * By default, it will try and load macros.
      *
      * @param {String} file     The macro file to load.
+     * @param {FileType} type   The type of the file, wheter it's a macro, or a library function etc.
      * @return {Bool}           Whether the file has been succesfully loaded or not.
      */
-    MacroLoader.prototype.load = function(file) {
+    FileLoader.prototype.load = function(file, type) {
         var content;
+        var location;
+        var extension;
+
+        if (type && type == "library") {
+            location = "library";
+            extension = ".js";
+        } else {
+            type = "macros";
+            location = "macros";
+            extension = ".sjs";
+        }
 
         // TODO: Write test cases for the browser. This is now being tested manually.
         if (inBrowser) {
             // Try to read the file synchronously using jQuery's Ajax API.
             fs.ajax({
                 type: "GET",
-                url: "scripts/model/macros/" + file + ".sjs",
+                url: "scripts/model/" + location + "/" + file + extension,
                 success: function(result) {
                     if (!result) {
                         console.log("Macro " + file + " was not ok? Help!?");
@@ -69,7 +87,7 @@ define(["module", fileModule], /**@lends MacroLoader*/ function(module, fs) {
         } else {
             // Variables needed to locate the file.
             var dirname = require("path").dirname(module.uri);
-            var filename = dirname + "/macros/" + file + ".sjs";
+            var filename = dirname + "/" + location + "/" + file + extension;
             
             // We need to *synchronously* load the file.
             try {
@@ -82,7 +100,11 @@ define(["module", fileModule], /**@lends MacroLoader*/ function(module, fs) {
 
         // If the contents have been read, we can store them and return true, else we failed and return false.
         if (content) {
-            this.macros[file] = content.toString();
+            if (type == "macros") {
+                this.macros[file] = content.toString();
+            } else {
+                this.library[file] = content.toString();
+            }
             return true;
         } else {
             return false;
@@ -94,7 +116,7 @@ define(["module", fileModule], /**@lends MacroLoader*/ function(module, fs) {
      *
      * @returns {String} A string of all loaded macros.
      */
-    MacroLoader.prototype.getMacros = function() {
+    FileLoader.prototype.getMacros = function() {
         var output = "";
 
         for (var key in this.macros) {
@@ -105,12 +127,28 @@ define(["module", fileModule], /**@lends MacroLoader*/ function(module, fs) {
     }
 
     /**
+     * Concatenates all loaded macros into a single string for Sweet.
+     *
+     * @returns {String} A string of all loaded macros.
+     */
+    FileLoader.prototype.getLibrary = function() {
+        var output = "";
+
+        for (var key in this.library) {
+            output += this.library[key];
+        }
+
+        return output;
+    }
+
+    /**
      * Clears, and thus unloads all macros currently loaded.
      */
-    MacroLoader.prototype.clear = function() {
+    FileLoader.prototype.clear = function() {
         this.macros = {};
+        this.library = {};
     }
 
     // Exports all macros.
-    return MacroLoader;
+    return FileLoader;
 });
