@@ -86,6 +86,26 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     Controller.prototype.getQuantities = function() {
         //TODO Implementation
         //TODO Tests
+    }
+
+    /**
+     * Retrieves, if possible, a quantity from the model.
+     * NOTE: For sake of the demo, this function is a duplicate of getValue.
+     * @param quantity {String} quantity name
+     * @pre quantity != null
+     * @pre quantity != undefined
+     * @pre quantity \in Script
+     * @return {Object} the Quantity
+     */
+    Controller.prototype.getQuantity = function(quantity) {
+        if(!quantity) {
+            throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity is null or undefined')
+        }
+        //TODO Precondition quantity \in Script 
+        //TODO Implementation
+        //TODO Tests
+        return this.script.getQuantity(quantity);
     } 
 
     /**
@@ -107,7 +127,6 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         //TODO Implementation
         //TODO Tests
         this.script.addQuantity(definition);
-        return this.getQuantities;
     } 
 
     /**
@@ -134,26 +153,6 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     }     
 
     /**
-     * Retrieves, if possible, a quantity from the model.
-     * NOTE: For sake of the demo, this function is a duplicate of getValue.
-     * @param quantity {String} quantity name
-     * @pre quantity != null
-     * @pre quantity != undefined
-     * @pre quantity \in Script
-     * @return {Object} the Quantity
-     */
-    Controller.prototype.getQuantity = function(quantity) {
-        if(!quantity) {
-            throw new Error('Controller.prototype.getQuantity.pre :' +
-                'quantity is null or undefined')
-        }
-        //TODO Precondition quantity \in Script 
-        //TODO Implementation
-        //TODO Tests
-        return this.script.getQuantity(quantity);
-    } 
-
-    /**
      * Retrieves, if possible, a value of a quantity.
      * NOTE: For sake of the demo, this function is a duplicate of getQuantity.
      * @param quantity = {String} quantity 
@@ -171,7 +170,8 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         //TODO Implementation
         //TODO Tests
         return this.script.getQuantity(quantity);
-    } 
+    }
+
     /**
      * Sets the value of a quantity.
      *

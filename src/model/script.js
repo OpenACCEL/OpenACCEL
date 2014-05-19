@@ -50,10 +50,10 @@ define(["model/compiler"], function(Compiler) {
         addQuantity: function(source) {
             // TODO: quantities should be updated.
             if(this.source){
-                this.source = this.source + "\n" + source ;  
-          } else {
+                this.source += "\n" + source ;  
+            } else {
                 this.source = source;
-          }
+            }
             
             this.scriptChanged();
         },
