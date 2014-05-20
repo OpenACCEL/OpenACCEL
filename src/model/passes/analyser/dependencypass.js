@@ -50,12 +50,14 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
                 report[qty].dependencies = [];
             }
 
-            // add all dependencies
+            // Add all dependencies
             if (dep) {
                 dep.forEach(function(d) {
-                    if (report[d]) {
-                        report[qty].dependencies.push(d);
-                    }
+                	// If the variable is not local to the function but a defined
+                	// quantity, add it to the dependencies of this quantity
+                	if (report[d]) {
+                		report[qty].dependencies.push(d);
+                	}
                 });
             }
 

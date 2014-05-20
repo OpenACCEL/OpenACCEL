@@ -37,10 +37,12 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
         scriptLines.forEach((function(line) {
             // left hand side of the definitions
             var lhs = QuantityPass.prototype.getLHS(line);
+            var rhs = QuantityPass.prototype.getRHS(line);
 
             // get all variable names from the left hand side
             var vars = lhs.match(this.regexes.varNames);
 
+			// Create report if it doesn't already exist
             if (!report) {
                 report = {};
             }
@@ -52,6 +54,10 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
 
             // If there are other items left in vars, then this are the parameters.
             report[qtyName].parameters = vars.slice(1);
+            report[qtyName].definition = rhs;
+            if (rhs == '') {
+            	report[qtyName].todo = true;
+            }
 
         }).bind(this));
         return report;

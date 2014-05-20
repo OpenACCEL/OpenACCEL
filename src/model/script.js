@@ -54,7 +54,11 @@ define(["model/compiler"], function(Compiler) {
                 this.source = source;
             }
             
+            // Notify self of script change to update quantities and recompile
             this.scriptChanged();
+            
+            // Return compiler/analyser report
+            return this.report;
         },
 
 		/**
@@ -64,7 +68,6 @@ define(["model/compiler"], function(Compiler) {
 		 */
         scriptChanged: function() {
             compileResult = this.compiler.compile(this.source);
-            
             this.updateQuantities(compileResult);
         },
         
@@ -76,6 +79,7 @@ define(["model/compiler"], function(Compiler) {
          */
         updateQuantities: function(compileResult) {
         	this.exe = compileResult.exe;
+        	this.quantities = compileResult.report;
         },
 
         getQuantity: function(name) {

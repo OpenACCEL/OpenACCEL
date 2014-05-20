@@ -78,7 +78,22 @@ define([], /**@lends Quantity*/ function() {
          * @type {String}
          */
         this.comment = '';
+        
+        /**
+         * Whether this quantity has an empty definition. If true, it should be displayed
+         * in the todo list.
+         *
+         * @type {Boolean}
+         */
+        this.todo = true;
 
+		/**
+         * The current value of the quantity, as evaluated in the executable.
+         * Default value is zero.
+         *
+         * @type {Number}
+         */
+		this.currentValue = 0;
     }
 
 
