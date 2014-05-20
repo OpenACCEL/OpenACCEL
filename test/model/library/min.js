@@ -27,12 +27,10 @@ suite("Min Library", function() {
             assert.equal(Math.min(Math.min(5, 2), Math.min(5, 4) + 2), output.exe.z());
         });
 
-        /* TODO: Fix, this crashes.
         test("should expand for 'x = min([1,2], [3,4])'", function() {
             var input = "x = min([1,2], [3,4])";
             var output = compiler.compile(input);
-            assert.equal([Math.min(1,2), Math.min(3,4)], output.exe.x());
+            assert.deepEqual([Math.min(1, 3), Math.min(2, 4)], output.exe.x());
         });
-        */
     });
 });
