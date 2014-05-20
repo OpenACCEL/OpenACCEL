@@ -53,7 +53,7 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
             // add all dependencies
             if (dep) {
                 dep.forEach(function(d) {
-                    if (report[d]) {
+                    if (report[d] && !(d in report[qty].parameters)) {
                         report[qty].dependencies.push(d);
                     }
                 });

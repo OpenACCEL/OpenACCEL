@@ -23,7 +23,8 @@ suite('dependencypass.js', function() {
         var script = ['a = b + c \n',
             'b = 3\n',
             'c = 5\n',
-            'f(x) = b - x'
+            'f(x) = b - x\n',
+            'g = [2, b, x:c]'
         ];
 
         /**
@@ -45,6 +46,10 @@ suite('dependencypass.js', function() {
             f: {
                 name: 'f',
                 parameters: ['x']
+            },
+            g: {
+                name: 'g',
+                parameters: []
             }
         };
 
@@ -71,6 +76,11 @@ suite('dependencypass.js', function() {
                 name: 'f',
                 parameters: ['x'],
                 dependencies: ['b']
+            },
+            g: {
+                name: 'g',
+                parameters: [],
+                dependencies: ['b','c']
             }
         };
 
