@@ -115,5 +115,5 @@ functions1to1.forEach(function(func) {
 functionsDiff.forEach(function(func) {
     var output = template.replace(/(__a__)/g, func.accel).replace(/(__j__)/g, func.js);
     outputFile(func.accel, output);
-    fs.appendFile(path.join(outputdir, ".gitignore"), func + ext + "\n", function (err) { });
+    fs.appendFile(path.join(outputdir, ".gitignore"), func.accel + ext + "\n", function (err) { });
 });
