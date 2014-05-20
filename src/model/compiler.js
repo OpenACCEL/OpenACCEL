@@ -54,6 +54,7 @@ define(["model/fileloader",
         this.fileLoader.load("max");
         this.fileLoader.load("min");
 
+        this.fileLoader.load("map", "library");
         this.fileLoader.load("add", "library");
         this.fileLoader.load("subtract", "library");
         this.fileLoader.load("multiply", "library");
@@ -76,6 +77,7 @@ define(["model/fileloader",
         this.fileLoader.load("ln", "library");
         this.fileLoader.load("log", "library");
         this.fileLoader.load("modulo", "library");
+
     }
     
     /**
