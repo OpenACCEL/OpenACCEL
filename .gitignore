@@ -13,3 +13,6 @@ npm-debug.log
 
 # Sublime Text personal workspace
 *.sublime-workspace
+
+# XCode files
+*.DS_Store

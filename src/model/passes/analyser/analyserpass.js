@@ -22,7 +22,9 @@ define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
      * @class
      * @classdesc Abstract Pass that is part of compiling the script.
      */
-    function AnalyserPass() {}
+    function AnalyserPass() {
+    	this.regexes.varNames = /([a-zA-Z]\w*)/g;
+    }
 
     AnalyserPass.prototype = new Pass();
 
