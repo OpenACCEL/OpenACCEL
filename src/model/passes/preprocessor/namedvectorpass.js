@@ -42,13 +42,24 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
      */
     NamedVectorPass.prototype.parse = function(scriptLines, report) {
         CompilerPass.prototype.parse.call(this, scriptLines, report);
-        return scriptLines.map((function(line) {
-            // matches var1[var2] where var2 != 0
-            line = this.dotToBrackets(line);
-            line = this.bracketsToDot(line);
-            return line;
-        }).bind(this));
+        for (var i = 0; i < scriptLines.length; i++) {
+            var line = scriptLines[i];
+            NamedVectorPass.prototype.replaceBrackets(line);
+        }
+
     };
+
+    /**
+     * Replaces some brackets([]) in line by curly braces ({}). The brackets that are replaced
+     * are the ones that indicate creation of vectors, not of calling a vector.
+     * @param  {String} line some line of the script
+     * @pre line != null && line != undefined
+     * @return {String} the same line with all brackets replaced by curly braces.
+     */
+    NamedVectorPass.prototype.replaceBrackets = function(line) {
+
+    }
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return NamedVectorPass;
 });
