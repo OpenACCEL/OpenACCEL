@@ -1,9 +1,9 @@
 /**
- * Applies the given function on the given array. The function is aplied recursively,
+ * Applies the given function on the given array or scalar. The function is aplied recursively,
  * so also to nested arrays.
- * @param  {Array}   a        array to which the given function should be applied
+ * @param  {Array | Number}   a        array or scalar to which the given function should be applied
  * @param  {Function} func function that should be applied
- * @return {Array}            Resulting array.
+ * @return {Array | Number}            Result of applying operator.
  */
 function map(a, func) {
 	if (a instanceof Array) {
