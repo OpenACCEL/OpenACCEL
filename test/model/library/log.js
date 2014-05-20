@@ -1,4 +1,4 @@
-suite("Log Macro", function() {
+suite("Log Library", function() {
     var macroExpander;
     var macros;
     var assert;
@@ -12,8 +12,8 @@ suite("Log Macro", function() {
             macroExpander = new module();
             var fileLoader = new FileLoader();
             fileLoader.load("func");
-            fileLoader.load("log");
-            macros = fileLoader.getMacros();
+            fileLoader.load("log", "library");
+            macros = fileLoader.getContent();
             done();
         });
     });

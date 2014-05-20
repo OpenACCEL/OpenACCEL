@@ -1,0 +1,3 @@
+function __a__(x) {
+    return Math.__j__(x);
+}

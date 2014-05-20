@@ -1,4 +1,4 @@
-suite("Tan Macro", function() {
+suite("Pow Library", function() {
     var macroExpander;
     var macros;
     var assert;
@@ -12,23 +12,23 @@ suite("Tan Macro", function() {
             macroExpander = new module();
             var fileLoader = new FileLoader();
             fileLoader.load("func");
-            fileLoader.load("tan");
-            macros = fileLoader.getMacros();
+            fileLoader.load("pow", "library");
+            macros = fileLoader.getContent();
             done();
         });
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = 5'", function() {
-            var input = "exe = {};func(y = tan(5))";
+        test("should expand for 'x = pow(5,2)'", function() {
+            var input = "exe = {};func(x = pow(5, 2))";
             var output = macroExpander.expand(input, macros);
-            assert.equal(Math.tan(5), eval(output)());
+            assert.equal(Math.pow(5, 2), eval(output)());
         });
 
-        test("should expand for 'x = 5, y = x + 2, z = tan(tan(x) + tan(y))'", function() {
-            var input = "exe = {};func(x = 5)func(y = tan(exe.x()) + 2)func(z = tan(tan(exe.x()) + tan(exe.y())))";
+        test("should expand for 'x = 5, y = pow(x, 3), z = pow(y, pow(x,2))'", function() {
+            var input = "exe = {};func(x = 5)func(y = pow(exe.x(), 3))func(z = pow(exe.y(), pow(exe.x(), 2)))";
             var output = macroExpander.expand(input, macros);
-            assert.equal(Math.tan(Math.tan(5) + Math.tan(Math.tan(5) + 2)), eval(output)());
+            assert.equal(Math.pow(Math.pow(5, 3), Math.pow(5, 2)), eval(output)());
         });
     });
 });
