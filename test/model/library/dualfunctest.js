@@ -65,5 +65,12 @@ suite("Dualfunc", function() {
             var expected = [6,[7,8],9];
             assert.deepEqual(output, expected);
         });
+
+        test("Add: arrays different length", function() {
+            var input = "x = [1,2,3] - [4,5]";
+            var output = compiler.compile(input).exe.x();
+            var expected = [-3,-3];
+            assert.deepEqual(output, expected);
+        });
     });
 });
