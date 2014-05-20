@@ -32,19 +32,27 @@ suite('dependencypass.js', function() {
         var beginReport = {
             a: {
                 name: 'a',
-                parameters: []
+                parameters: [],
+                definition: 'b + c',
+                todo: false
             },
             b: {
                 name: 'b',
-                parameters: []
+                parameters: [],
+                definition: '3',
+                todo: false
             },
             c: {
                 name: 'c',
-                parameters: []
+                parameters: [],
+                definition: '5',
+                todo: false
             },
             f: {
                 name: 'f',
-                parameters: ['x']
+                parameters: ['x'],
+                definition: 'b - x',
+                todo: false
             }
         };
 
@@ -55,22 +63,30 @@ suite('dependencypass.js', function() {
             a: {
                 name: 'a',
                 parameters: [],
-                dependencies: ['b', 'c']
+                definition: 'b + c',
+                dependencies: ['b', 'c'],
+                todo: false
             },
             b: {
                 name: 'b',
                 parameters: [],
-                dependencies: []
+                definition: '3',
+                dependencies: [],
+                todo: false
             },
             c: {
                 name: 'c',
                 parameters: [],
-                dependencies: []
+                definition: '5',
+                dependencies: [],
+                todo: false
             },
             f: {
                 name: 'f',
                 parameters: ['x'],
-                dependencies: ['b']
+                definition: 'b - x',
+                dependencies: ['b'],
+                todo: false
             }
         };
 

@@ -34,26 +34,24 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      */
     function Controller() {
         this.script = new Script();
-        this.execute = true;
-        this.iterations = 0;
+        this.numIterations = 0;
+        this.executing = false;
     }
     
     /**
      * Main execution loop of the script.
      */
-    Controller.prototype.execution = function() {
-        //TODO Implementation
-        //TODO Tests
+    Controller.prototype.execute = function() {
+    	this.executing = true;
     } 
 
     /**
-     * Pauses execution of the script.
+     * Stops script execution
      * 
-     * @post controller.execute == false
+     * @post controller.executing == false
      */
-    Controller.prototype.pause = function() {
-        this.execute = false;    
-        //TODO Tests
+    Controller.prototype.stop = function() {
+        this.executing = false;  
     } 
 
     /**
@@ -74,7 +72,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.setIteration.pre :' +
                 'iterations is not greater or equal to 0')
         }
-        this.iterations = iterations;
+        this.numIterations = iterations;
         //TODO Tests
     } 
 
@@ -84,8 +82,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} List of quantities
      */
     Controller.prototype.getQuantities = function() {
-        //TODO Implementation
-        //TODO Tests
+        
     }
 
     /**
@@ -119,14 +116,17 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} list of quantities
      */
     Controller.prototype.addQuantity = function(definition) {
+        //TODO Precondition, syntax checking
         if(!definition) {
             throw new Error('Controller.prototype.addQuantity.pre violated :' +
                 'definition is null or undefined')
         }
-        //TODO Precondition, syntax checking
-        //TODO Implementation
-        //TODO Tests
-        this.script.addQuantity(definition);
+        
+        // Stop script execution, add quantity, recompile, and 
+        // start again if todo list is empty
+        this.stop();
+        report = this.script.addQuantity(definition);
+        this.execute()
     } 
 
     /**
