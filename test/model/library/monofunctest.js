@@ -1,4 +1,4 @@
-suite("Sin Library", function() {
+suite("Monofunc", function() {
     var compiler;
     var macros;
     var assert;
@@ -18,7 +18,7 @@ suite("Sin Library", function() {
         });
     });
 
-    suite("Calling functions", function() {
+    suite("Calling functions with single argument", function() {
         test("Sin: scalar value", function() {
             var input = "y = sin(5)";
             var output = compiler.compile(input).exe.y();
