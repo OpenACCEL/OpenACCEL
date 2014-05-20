@@ -18,10 +18,13 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(AnalyserPass) {
+define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePass*/ function(AnalyserPass, Quantity) {
     /**
      * @class
-     * @classdesc Abstract Pass that is part of compiling the script.
+     * @classdesc This pass is part of the Script Analyser and extracts:
+     * 	-Dependencies of quantities: on which quantities the value of a 
+     *	 certain quantity depends
+     *	-Whether a quantity has been given a definition already, or is a 'todo-item'
      */
     function DependencyPass() {
 
@@ -50,13 +53,22 @@ define(['model/passes/analyser/analyserpass'], /**@lends ExePass*/ function(Anal
                 report[qty].dependencies = [];
             }
 
-            // Add all dependencies
+            // Identify all dependencies and add them to the quantities
             if (dep) {
                 dep.forEach(function(d) {
-                	// If the variable is not local to the function but a defined
-                	// quantity, add it to the dependencies of this quantity
-                	if (report[d]) {
+                	// It could be that the dependent variable is not yet in the report because
+                	// it has not been defined yet. Therefore, instead test whether the variable
+                	// is local to this definition and if not, add it as dependency
+                	if (lhs.indexOf(d) == -1) {
                 		report[qty].dependencies.push(d);
+                		
+                		// It could be that it is used in multiple definitions while being
+                		// undefined. Therefore only add it if it's not already there 
+                		if (!report[d]) {
+                			report[d] = new Quantity();
+                			report[d].name = d;
+                			report[d].todo = true;
+                		}
                 	}
                 });
             }
