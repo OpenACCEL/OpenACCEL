@@ -40,5 +40,12 @@ suite("Monofunc", function() {
             var expected = [Math.sin(1), [Math.sin(2), [Math.sin(3),Math.sin(4)]], Math.sin(5)];
             assert.deepEqual(output, expected);
         });
+
+        test("Sin: simple function", function() {
+            var input = "x = 1 + sin([1,[2,[3,4]],5]) * 2";
+            var output = compiler.compile(input).exe.x();
+            var expected = [1 + Math.sin(1) * 2, [1 + Math.sin(2) * 2, [1 + Math.sin(3) * 2, 1 + Math.sin(4) * 2]], 1 + Math.sin(5) * 2];
+            assert.deepEqual(output, expected);
+        });
     });
 });
