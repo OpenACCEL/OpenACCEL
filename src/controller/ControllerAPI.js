@@ -82,7 +82,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} List of quantities
      */
     Controller.prototype.getQuantities = function() {
-        
+        return this.script.quantities;
     }
 
     /**
