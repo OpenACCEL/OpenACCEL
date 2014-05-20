@@ -20,7 +20,10 @@ if (inNode) {
 define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePass*/ function(AnalyserPass, Quantity) {
     /**
      * @class
-     * @classdesc Abstract Pass that is part of compiling the script.
+     * @classdesc This pass is part of the Script Analyser and extracts:
+     * 	-Quantity names
+     *	-Parameters of user-defined functions
+     *	-Whether quantities have a definition or not
      */
     function QuantityPass() {
 
@@ -55,6 +58,9 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
             // If there are other items left in vars, then this are the parameters.
             report[qtyName].parameters = vars.slice(1);
             report[qtyName].definition = rhs;
+            
+            // Straightforward check for empty definitions of quantities. Further 
+            // identification of todo-items is done in the dependency pass.
             if (rhs == '') {
             	report[qtyName].todo = true;
             }
