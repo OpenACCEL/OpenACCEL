@@ -7,7 +7,7 @@ suite("operatorpass.js", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/passes/preprocessor/operatorpass"], function(assertModule, module) {
-            console.log("Loaded 'operatorpass' module.");
+            console.log("Loaded 'OperatorPass' module.");
             assert = assertModule;
             operatorpass = new module();
             done();
@@ -58,6 +58,24 @@ suite("operatorpass.js", function() {
 
             assert.deepEqual(result, expresult);
         });
+
+        /**
+         * Test unary operation.
+         */
+        test('OperatorPass: unary negation', function() {
+            var input = ['x = -5'];
+            var expresult = ['x =  _-_ 5'];
+            var result = operatorpass.parse(input, {});
+
+            assert.deepEqual(result, expresult);
+
+            // Test compilation as well.
+            requirejs(["model/compiler"], function(Compiler) {
+                compiler = new Compiler();
+                assert.equal(-5, compiler.compile(input[0]).exe.x());
+            });
+        });
+
 
 
         
