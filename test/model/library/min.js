@@ -1,4 +1,4 @@
-suite("Max Macro", function() {
+suite("Min Library", function() {
     var macroExpander;
     var macros;
     var assert;
@@ -12,23 +12,23 @@ suite("Max Macro", function() {
             macroExpander = new module();
             var fileLoader = new FileLoader();
             fileLoader.load("func");
-            fileLoader.load("max");
-            macros = fileLoader.getMacros();
+            fileLoader.load("min", "library");
+            macros = fileLoader.getContent();
             done();
         });
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = max(5, 2, 3, 7, 1, 0, -8)'", function() {
-            var input = "exe = {};func(y = max(5, 2, 3, 7, 1, 0, -8))";
+        test("should expand for 'x = min(5, 2, 3, 7, 1, 0, -8)'", function() {
+            var input = "exe = {};func(y = min(5, 2, 3, 7, 1, 0, -8))";
             var output = macroExpander.expand(input, macros);
-            assert.equal(Math.max(5, 2, 3, 7, 1, 0, -8), eval(output)());
+            assert.equal(Math.min(5, 2, 3, 7, 1, 0, -8), eval(output)());
         });
 
-        test("should expand for 'x = 5, y = max(x,4) + 2, z = max(max(x,2),y)'", function() {
-            var input = "exe = {};func(x = 5)func(y = max(exe.x(),4) + 2)func(z = max(max(exe.x(), 2), exe.y()))";
+        test("should expand for 'x = 5, y = min(x,4) + 2, z = min(min(x,2),y)'", function() {
+            var input = "exe = {};func(x = 5)func(y = min(exe.x(),4) + 2)func(z = min(min(exe.x(), 2), exe.y()))";
             var output = macroExpander.expand(input, macros);
-            assert.equal(Math.max(Math.max(5, 2), Math.max(5, 4) + 2), eval(output)());
+            assert.equal(Math.min(Math.min(5, 2), Math.min(5, 4) + 2), eval(output)());
         });
     });
 });

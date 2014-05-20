@@ -51,8 +51,6 @@ define(["model/fileloader",
         this.fileLoader = new FileLoader();
         this.fileLoader.load("func");
         this.fileLoader.load("operators");
-        this.fileLoader.load("max");
-        this.fileLoader.load("min");
 
         this.fileLoader.load("map", "library");
         this.fileLoader.load("zip", "library");
@@ -70,6 +68,8 @@ define(["model/fileloader",
         this.fileLoader.load("ceil", "library");
         this.fileLoader.load("floor", "library");
         this.fileLoader.load("round", "library");
+        this.fileLoader.load("max", "library");
+        this.fileLoader.load("min", "library");
         this.fileLoader.load("acos", "library");
         this.fileLoader.load("asin", "library");
         this.fileLoader.load("atan", "library");
