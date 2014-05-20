@@ -100,10 +100,15 @@ function mkPath(p) {
     }
 }
 
+// Create a new .gitignore file.
+var gitignore = fs.openSync(path.join(outputdir, ".gitignore"), 'w');
+fs.appendFile(path.join(outputdir, ".gitignore"), ".gitignore\n", function (err) { });
+
 // Handle all functions that need no translation
 functions1to1.forEach(function(func) {
     var output = template.replace(/(__a__|__j__)/g, func);
     outputFile(func, output);
+    fs.appendFile(path.join(outputdir, ".gitignore"), func + ext + "\n", function (err) { });
 });
 
 // Handle all functions that need translation
