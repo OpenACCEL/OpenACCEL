@@ -23,8 +23,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
      * @classdesc Abstract Pass that is part of compiling the script.
      */
     function QuantityPass() {
-        // regex that selects all variable names from a definition
-        this.varsRegex = /([a-zA-Z]\w*)/g;
+
     }
 
     QuantityPass.prototype = new AnalyserPass();
@@ -35,12 +34,12 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
      */
     QuantityPass.prototype.analyse = function(scriptLines, report) {
         // Handle each line of script
-        scriptLines.forEach(function(line) {
+        scriptLines.forEach((function(line) {
             // left hand side of the definitions
             var lhs = QuantityPass.prototype.getLHS(line);
 
             // get all variable names from the left hand side
-            var vars = lhs.match(this.varsRegex);
+            var vars = lhs.match(this.regexes.varNames);
 
             if (!report) {
                 report = {};
@@ -54,7 +53,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
             // If there are other items left in vars, then this are the parameters.
             report[qtyName].parameters = vars.slice(1);
 
-        });
+        }).bind(this));
         return report;
     };
 
