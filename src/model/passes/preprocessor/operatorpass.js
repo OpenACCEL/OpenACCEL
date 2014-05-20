@@ -29,7 +29,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Passes.Preprocessor
          * Regex to extract binary operators.
          * @type {RegExp}
          */
-        this.operatorRegex = /([\+\-\*\/])/g;
+        this.operatorRegex = /([\+\-\*\/%])/g;
     }
 
     OperatorPass.prototype = new CompilerPass();
