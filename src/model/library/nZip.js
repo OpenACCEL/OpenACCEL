@@ -17,7 +17,7 @@ function nZip(x, func) {
         // Base: all elements in x are scalar
         return func.apply(this, x);
     } else {
-        var result;
+        var result = [];
         // Return variable.
         var referenceIndex;
         // Index of the element that will serve as a base for zipping its keys
