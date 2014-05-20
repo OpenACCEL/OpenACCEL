@@ -54,6 +54,8 @@ define(["model/fileloader",
 
         this.fileLoader.load("map", "library");
         this.fileLoader.load("zip", "library");
+        this.fileLoader.load("nZip", "library");
+
         this.fileLoader.load("add", "library");
         this.fileLoader.load("subtract", "library");
         this.fileLoader.load("multiply", "library");
