@@ -6,14 +6,10 @@ suite("Monofunc", function() {
     setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader"], function(assertModule, module, FileLoader) {
+        requirejs(["assert", "model/compiler"], function(assertModule, module) {
             console.log("Loaded 'compiler & FileLoader' module.");
             assert = assertModule;
             compiler = new module();
-            var fileLoader = new FileLoader();
-            fileLoader.load("func");
-            fileLoader.load("sin", "library");
-            macros = fileLoader.getContent();
             done();
         });
     });
