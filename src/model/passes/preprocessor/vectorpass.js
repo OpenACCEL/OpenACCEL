@@ -58,6 +58,10 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends VectorPass*/ functi
      * @return {String[]} thes cript where var1[var2] is transformed in var1.var2
      */
     VectorPass.prototype.bracketsToDot = function(line) {
+        if (!line) {
+            throw new Error('ArrayPass.bracketsToDot.pre violated:' +
+                'line is null or undefined');
+        }
         line = line.replace(this.regexes.squareBrackets, function(rhs) {
             if (rhs) {
                 rhs = rhs.replace('[', '.').replace(']', '');
@@ -75,6 +79,10 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends VectorPass*/ functi
      * @return {String[]} the script where var1[var2] is transformed in var1.var2
      */
     VectorPass.prototype.dotToBrackets = function(line) {
+        if (!line) {
+            throw new Error('ArrayPass.dotToBrackets.pre violated:' +
+                'line is null or undefined');
+        }
         line = line.replace(this.regexes.dots, function(rhs) {
             if (rhs) {
                 rhs = rhs.replace(/\.\d+/, function(s) {
@@ -87,7 +95,6 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends VectorPass*/ functi
         });
         return line;
     };
-
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return VectorPass;

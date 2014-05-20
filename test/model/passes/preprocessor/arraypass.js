@@ -109,8 +109,6 @@ suite("arraypass.js", function() {
             assert.equal(ArrayPass.bracketsToDot('y = a[x] + a.b'), 'y = a.x + a.b');
         });
 
-
-
         /**
          * Robustness tests for bracketsToDot()
          */
@@ -124,6 +122,5 @@ suite("arraypass.js", function() {
                     ArrayPass.bracketsToDot();
                 });
         });
-
     });
 });
