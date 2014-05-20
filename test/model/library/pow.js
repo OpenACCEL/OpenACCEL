@@ -1,4 +1,4 @@
-suite("Modulo Macro", function() {
+suite("Pow Library", function() {
     var macroExpander;
     var macros;
     var assert;
@@ -12,23 +12,23 @@ suite("Modulo Macro", function() {
             macroExpander = new module();
             var fileLoader = new FileLoader();
             fileLoader.load("func");
-            fileLoader.load("modulo");
-            macros = fileLoader.getMacros();
+            fileLoader.load("pow", "library");
+            macros = fileLoader.getContent();
             done();
         });
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = modulo(5,4)'", function() {
-            var input = "exe = {};func(y = modulo(5, 4))";
+        test("should expand for 'x = pow(5,2)'", function() {
+            var input = "exe = {};func(x = pow(5, 2))";
             var output = macroExpander.expand(input, macros);
-            assert.equal(5 % 4, eval(output)());
+            assert.equal(Math.pow(5, 2), eval(output)());
         });
 
-        test("should expand for 'x = 5, y = modulo(x,4) + 2, z = modulo(modulo(x,2),y)'", function() {
-            var input = "exe = {};func(x = 5)func(y = modulo(exe.x(),4) + 2)func(z = modulo(modulo(exe.x(), 2), exe.y()))";
+        test("should expand for 'x = 5, y = pow(x, 3), z = pow(y, pow(x,2))'", function() {
+            var input = "exe = {};func(x = 5)func(y = pow(exe.x(), 3))func(z = pow(exe.y(), pow(exe.x(), 2)))";
             var output = macroExpander.expand(input, macros);
-            assert.equal((5 % 2) % (5 % 4 + 2), eval(output)());
+            assert.equal(Math.pow(Math.pow(5, 3), Math.pow(5, 2)), eval(output)());
         });
     });
 });

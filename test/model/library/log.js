@@ -1,4 +1,4 @@
-suite("Tan Macro", function() {
+suite("Log Library", function() {
     var macroExpander;
     var macros;
     var assert;
@@ -12,23 +12,23 @@ suite("Tan Macro", function() {
             macroExpander = new module();
             var fileLoader = new FileLoader();
             fileLoader.load("func");
-            fileLoader.load("tan");
-            macros = fileLoader.getMacros();
+            fileLoader.load("log", "library");
+            macros = fileLoader.getContent();
             done();
         });
     });
 
     suite("expansion", function() {
-        test("should expand for 'x = 5'", function() {
-            var input = "exe = {};func(y = tan(5))";
+        test("should expand for 'x = log(5)'", function() {
+            var input = "exe = {};func(y = log(5))";
             var output = macroExpander.expand(input, macros);
-            assert.equal(Math.tan(5), eval(output)());
+            assert.equal(Math.log(5) / Math.log(10), eval(output)());
         });
 
-        test("should expand for 'x = 5, y = x + 2, z = tan(tan(x) + tan(y))'", function() {
-            var input = "exe = {};func(x = 5)func(y = tan(exe.x()) + 2)func(z = tan(tan(exe.x()) + tan(exe.y())))";
+        test("should expand for 'x = 5, y = log(x) + 2, z = log(log(x) + log(y))'", function() {
+            var input = "exe = {};func(x = 5)func(y = log(exe.x()) + 2)func(z = log(log(exe.x()) + log(exe.y())))";
             var output = macroExpander.expand(input, macros);
-            assert.equal(Math.tan(Math.tan(5) + Math.tan(Math.tan(5) + 2)), eval(output)());
+            assert.equal(Math.log(Math.log(5) / Math.log(10) + Math.log(Math.log(5) / Math.log(10) + 2) / Math.log(10)) / Math.log(10), eval(output)());
         });
     });
 });

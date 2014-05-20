@@ -51,31 +51,33 @@ define(["model/fileloader",
         this.fileLoader = new FileLoader();
         this.fileLoader.load("func");
         this.fileLoader.load("operators");
-
-        this.fileLoader.load("cos");
-        this.fileLoader.load("sin");
-        this.fileLoader.load("tan");
-        this.fileLoader.load("pow");
-        this.fileLoader.load("sqrt");
-        this.fileLoader.load("abs");
-        this.fileLoader.load("ceil");
-        this.fileLoader.load("floor");
         this.fileLoader.load("max");
         this.fileLoader.load("min");
-        this.fileLoader.load("round");
-        this.fileLoader.load("acos");
-        this.fileLoader.load("asin");
-        this.fileLoader.load("atan");
-        this.fileLoader.load("atan2");
-        this.fileLoader.load("exp");
-        this.fileLoader.load("ln");
-        this.fileLoader.load("log");
-        this.fileLoader.load("modulo");
 
+        this.fileLoader.load("map", "library");
         this.fileLoader.load("add", "library");
         this.fileLoader.load("subtract", "library");
         this.fileLoader.load("multiply", "library");
         this.fileLoader.load("divide", "library");
+
+        this.fileLoader.load("sin", "library");
+        this.fileLoader.load("cos", "library");
+        this.fileLoader.load("tan", "library");
+        this.fileLoader.load("pow", "library");
+        this.fileLoader.load("sqrt", "library");
+        this.fileLoader.load("abs", "library");
+        this.fileLoader.load("ceil", "library");
+        this.fileLoader.load("floor", "library");
+        this.fileLoader.load("round", "library");
+        this.fileLoader.load("acos", "library");
+        this.fileLoader.load("asin", "library");
+        this.fileLoader.load("atan", "library");
+        this.fileLoader.load("atan2", "library");
+        this.fileLoader.load("exp", "library");
+        this.fileLoader.load("ln", "library");
+        this.fileLoader.load("log", "library");
+        this.fileLoader.load("modulo", "library");
+
     }
     
     /**

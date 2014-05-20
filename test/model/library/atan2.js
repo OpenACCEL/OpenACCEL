@@ -2,7 +2,7 @@
 // Assume you had a point with the (x,y) coordinates of (4,8), you could calculate the angle in radians between that point and the positive X axis as follows:
 // Math.atan2(8, 4);
 
-suite("Atan2 Macro", function() {
+suite("Atan2 Library", function() {
     var macroExpander;
     var macros;
     var assert;
@@ -16,8 +16,8 @@ suite("Atan2 Macro", function() {
             macroExpander = new module();
             var fileLoader = new FileLoader();
             fileLoader.load("func");
-            fileLoader.load("atan2");
-            macros = fileLoader.getMacros();
+            fileLoader.load("atan2", "library");
+            macros = fileLoader.getContent();
             done();
         });
     });

@@ -13,8 +13,8 @@ cp node_modules/sweet.js/node_modules/escodegen/escodegen.browser.min.js        
 cp node_modules/sweet.js/node_modules/escope/escope.js                               bin/scripts/escope.js
 cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
 
-# Generating monofunc macros.
-node ./utils/monofuncgenerator.js ./src/model/macros
+# Generating monofunc library functions.
+node ./utils/monofuncgenerator.js ./src/model/library
 
 # Copy scripts.
 cp -r src/* bin/scripts
