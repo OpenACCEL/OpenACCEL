@@ -48,7 +48,6 @@ define(["model/compiler"], function(Compiler) {
          * @modifies quantities
          */
         addQuantity: function(source) {
-            // TODO: quantities should be updated.
             if(this.source){
                 this.source += "\n" + source ;  
             } else {
@@ -58,8 +57,25 @@ define(["model/compiler"], function(Compiler) {
             this.scriptChanged();
         },
 
+		/**
+		 * Compiles the script and updates the quantities array.
+		 *
+		 * Call this method when the source property has been modified.
+		 */
         scriptChanged: function() {
-            this.exe = this.compiler.compile(this.source).exe;
+            compileResult = this.compiler.compile(this.source);
+            
+            this.updateQuantities(compileResult);
+        },
+        
+        /**
+         * Updates the quantities array based on the report in the compiler
+         * result.
+         *
+         * @param compileResult The object returned by compiler.compile(source)
+         */
+        updateQuantities: function(compileResult) {
+        	this.exe = compileResult.exe;
         },
 
         getQuantity: function(name) {
