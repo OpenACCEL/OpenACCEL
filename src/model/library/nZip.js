@@ -15,7 +15,7 @@ function nZip(x, func) {
     }
     if (allScalar) {
         // Base: all elements in x are scalar
-        return func(x);
+        return func.apply(this, x);
     } else {
         var result;
         // Return variable.
