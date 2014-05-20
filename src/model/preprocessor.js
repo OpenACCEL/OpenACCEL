@@ -20,13 +20,15 @@ if (inNode) {
 define(["model/passes/preprocessor/unitpass",
         "model/passes/preprocessor/exepass",
         "model/passes/preprocessor/funcpass",
-        "model/passes/preprocessor/packagepass"
+        "model/passes/preprocessor/packagepass",
+        "model/passes/preprocessor/arraypass"
     ],
     /**@lends PreProcessor*/
     function(UnitPass,
         ExePass,
         FuncPass,
-        PackagePass) {
+        PackagePass,
+        ArrayPass) {
         /**
          * @class
          * @classdesc The pre-processor performs multiple passes over the code for transformation and analysation.
@@ -45,6 +47,7 @@ define(["model/passes/preprocessor/unitpass",
             this.passes.push(new ExePass());
             this.passes.push(new FuncPass());
             this.passes.push(new PackagePass());
+            this.passes.push(new ArrayPass());
         }
 
         PreProcessor.prototype = {
