@@ -149,6 +149,13 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
     };
 
     /**
+     * @returns {String} A string containing both the library functions and macros.
+     */
+    FileLoader.prototype.getContent = function() {
+        return this.getLibrary() + this.getMacros();
+    };
+
+    /**
      * Clears, and thus unloads all macros currently loaded.
      */
     FileLoader.prototype.clear = function() {
