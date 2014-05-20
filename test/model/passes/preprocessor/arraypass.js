@@ -40,7 +40,7 @@ suite("arraypass.js", function() {
             var exScript = ['a = [1,2,x:3]', 'y = a.0 + a[x]', 'z = a.1', 'p = a[x]'];
 
             var resultScript = ['a = [1,2,x:3]', 'y = a[0] + a.x', 'z = a[1]', 'p = a.x']
-            assert.equal(ArrayPass.parse(exScript, {}), resultScript);
+            assert.deepEqual(ArrayPass.parse(exScript, {}), resultScript);
         })
 
         /**
