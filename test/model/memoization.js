@@ -13,13 +13,12 @@ suite("memoization.js", function() {
         });
     });
 
-    suite("#Memoization: ", function() {
+    suite("Memoization: ", function() {
         test("non-memoized and memoized fibonacci should return equal results", function() {
-            var fibonacci_memoize = memoization.memoize(fibonacci);
             // Fibonacci
             var fib = fibonacci(10);
             // Fibonacci with memoization
-            var fib_memo = fibonacci_memoize(10);
+            var fib_memo = memoization.memoize(fibonacci)(10);
             // Test
             assert.equal(fib, fib_memo);
         });
