@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * This script automatically creates macro files for each Accel function that
+ * This script automatically creates library files for each Accel function that
  * just takes a single argument, and which can be converted to a javascript Math-function
  * with the same argument.
  *
@@ -53,16 +53,16 @@ var functionsDiff = [{
 }];
 
 /**
- * Template, read from macrotemplate.txt
+ * Template, read from librarytemplate.txt
  * @type {String}
  */
-var template = fs.readFileSync('./utils/macrotemplate.txt', 'utf8');
+var template = fs.readFileSync('./utils/librarytemplate.txt', 'utf8');
 
 /**
- * Extension for macro files
+ * Extension for library files
  * @type {String}
  */
-var ext = '.sjs';
+var ext = '.js';
 
 /**
  * Output directory for the macro files.
