@@ -26,6 +26,8 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
     function NamedVectorPass() {
         this.begin = "\u261E";
         this.end = "\u261C";
+        this.otherBegin = '\u261B';
+        this.otherEnd = '\u261A';
     }
 
     NamedVectorPass.prototype = new CompilerPass();
@@ -64,33 +66,29 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
         // This way, we can identify when we go 'a level deeper'.
         line = this.getRHS(line);
 
-        var replace = '';
-        line = line.replace(this.regexes.vectorCall, replace);
-        line = line.split("[").join('{');
-        line = line.split("]").join('}');
-        /*        
-SHIT VAN ROY
-console.log('first' + line);
-        while ((result = this.regexes.closingBracket.exec(line)) != null) {
-            console.log(result);
-            line = line.replace(result[0], (function(s) {
-                return s.split("]").join(this.end);
-            }).bind(this));
-        };
+        line = line.replace(this.regexes.vectorCall, (function(s) {
+            return s.split("[").join(this.otherBegin);
+        }).bind(this));
 
-        line = line.replace(this.regexes.closingBracket, this.end);
-
-        console.log('closing replaced' + line);
+        line = line.replace(this.regexes.vectorCall, (function(s) {
+            return s.split("]").join(this.otherEnd);
+        }).bind(this));
+        console.log(line);
         line = line.replace(this.regexes.openingBracket, (function(s) {
             return s.split("[").join(this.begin);
         }).bind(this));
 
-        console.log('opening replaced' + line);
-*/
+        line = line.replace(this.regexes.closingBracket, (function(s) {
+            return s.split("]").join(this.end);
+        }).bind(this));
+
         line = this.translate(line, true);
         line = line.split("\u2603").join(",");
         line = line.split(this.begin).join("{");
         line = line.split(this.end).join("}");
+        line = line.split(this.otherBegin).join('[');
+        line = line.split(this.otherEnd).join(']');
+
 
         return line
     };
