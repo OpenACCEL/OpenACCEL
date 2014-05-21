@@ -20,8 +20,8 @@ if (inNode) {
 define(['model/passes/preprocessor/compilerpass'], /**@lends VectorPass*/ function(CompilerPass) {
     /**
      * @class
-     * @classdesc Pass that replaces every reference to variable on the right
-     * hand side of a definition by exe.<varname>().
+     * @classdesc Pass that replaces every dot notation and bracket notation to its javascript
+     * equivalent
      */
     function VectorPass() {}
 
