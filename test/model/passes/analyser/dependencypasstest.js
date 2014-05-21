@@ -136,7 +136,11 @@ suite('dependencypass.js', function() {
          * Test case for analyse()
          */
         test('analyze()', function() {
-            var result = instance.analyse(script, beginReport);
+            var result = beginReport;
+            script.forEach(function(line) {
+                result = instance.analyse(line, result);
+            })
+            
             assert.deepEqual(result, endReport);
         });
     });
