@@ -97,8 +97,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
                 this.quantities[qtyName].markAsTodo();
             }
 
-            // Re-determine quantity categories
-            this.analyser.determineCategories(this.quantities);
+            this.scriptChanged();
         },
 
 
@@ -114,7 +113,6 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         scriptChanged: function() {
             // Determine categories of all quantities
             this.analyser.determineCategories(this.quantities);
-            this.exe = this.compiler.compile(this).exe;
         },
 
 
