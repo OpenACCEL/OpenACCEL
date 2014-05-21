@@ -23,7 +23,10 @@ suite('dependencypass.js', function() {
         var script = ['a = b + c \n',
             'b = 3\n',
             'c = 5\n',
-            'f(x) = b - x'
+            'f(x) = b - x\n',
+            'g = [2, b, x:c]\n',
+            'h = [b, x:[1, y:c, b], 3]\n',
+            'i = b * b'
         ];
 
         /**
@@ -53,6 +56,18 @@ suite('dependencypass.js', function() {
                 parameters: ['x'],
                 definition: 'b - x',
                 todo: false
+            },
+            g: {
+                name: 'g',
+                parameters: []
+            },
+            h: {
+                name: 'h',
+                parameters: []
+            },
+            i: {
+                name: 'i',
+                parameters: []
             }
         };
 
@@ -87,6 +102,21 @@ suite('dependencypass.js', function() {
                 definition: 'b - x',
                 dependencies: ['b'],
                 todo: false
+            },
+            g: {
+                name: 'g',
+                parameters: [],
+                dependencies: ['b','c']
+            },
+            h: {
+                name: 'h',
+                parameters: [],
+                dependencies: ['b','c']
+            },
+            i: {
+                name: 'i',
+                parameters: [],
+                dependencies: ['b']
             }
         };
 
@@ -94,7 +124,8 @@ suite('dependencypass.js', function() {
          * Test case for analyse()
          */
         test('analyze()', function() {
-            assert.deepEqual(instance.analyse(script, beginReport), endReport);
+            var result = instance.analyse(script, beginReport);
+            assert.deepEqual(result, endReport);
         });
     });
 });
