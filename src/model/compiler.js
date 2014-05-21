@@ -89,9 +89,9 @@ define(["model/fileloader",
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
         return {
-            report: report,
+            report: script.getQuantities(),
             exe: eval(code)
-        }
+        };
     };
 
     // Exports all macros.

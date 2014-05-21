@@ -67,7 +67,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          * @return qtyName in quantities
          */
         hasQuantity: function(qtyName) {
-            return qtyName in quantities;
+            return qtyName in this.quantities;
         },
 
         /**
@@ -79,7 +79,6 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         addQuantity: function(source) {
             // Analyse the added line of code and add the defined quantity to the model
             this.quantities = this.analyser.analyse(source, this.quantities);
-            console.log(this.quantities);
 
             // Notify self of script change to recompile script
             this.scriptChanged();
