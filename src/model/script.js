@@ -31,12 +31,14 @@ define(["model/compiler"], function(Compiler) {
         source: '',
 
         /**
-         *
+         * The executable javascript code representing the ACCEL model
+         * as stored in the source attribute.
+         * @type {String}
          */
         exe: null,
 
         /**
-         * Contains the quantities that together make up this script.
+         * Contains the quantities that together make up the ACCEL script.
          * @type {Quantity[]}
          */
         quantities: [],
@@ -59,6 +61,10 @@ define(["model/compiler"], function(Compiler) {
             
             // Return compiler/analyser report
             return this.report;
+        },
+
+        deleteQuantity: function(quantity) {
+            
         },
 
 		/**

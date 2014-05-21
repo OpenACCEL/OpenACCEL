@@ -93,7 +93,7 @@ define([], /**@lends Quantity*/ function() {
          *
          * @type {Number}
          */
-		this.currentValue = 0;
+		this.value = 0;
     }
 
 

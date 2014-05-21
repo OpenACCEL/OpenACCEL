@@ -43,6 +43,8 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      */
     Controller.prototype.execute = function() {
     	this.executing = true;
+
+    	// TODO initiate runloop of script
     } 
 
     /**
@@ -126,7 +128,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         // start again if todo list is empty
         this.stop();
         report = this.script.addQuantity(definition);
-        this.execute()
+        this.execute();
     } 
 
     /**
@@ -193,9 +195,6 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.setValue.pre :' +
                 'quantity is null or undefined')
         }
-        //TODO Precondition quantiy \in Script
-        //TODO Implementation
-        //TODO Tests
     } 
 
     /**
