@@ -1,5 +1,5 @@
 /*
- * File containing the ArrayPass class
+ * File containing the VectorPass class
  *
  * @author Jacco Snoeren & Loc Tran
  */
@@ -17,15 +17,15 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ function(CompilerPass) {
+define(['model/passes/preprocessor/compilerpass'], /**@lends VectorPass*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Pass that replaces every dot notation and bracket notation to its javascript
      * equivalent
      */
-    function ArrayPass() {}
+    function VectorPass() {}
 
-    ArrayPass.prototype = new CompilerPass();
+    VectorPass.prototype = new CompilerPass();
 
     /**
      * Translate var1[var2] where var1 & var2 are not numbers
@@ -40,14 +40,14 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      * @pre report != undefined
      * @return {String} Line where var1[var2] is transformed in var1.var2
      */
-    ArrayPass.prototype.parse = function(scriptLines, report) {
+    VectorPass.prototype.parse = function(scriptLines, report) {
         CompilerPass.prototype.parse.call(this, scriptLines, report);
-        return scriptLines.map(function(line) {
+        return scriptLines.map((function(line) {
             // matches var1[var2] where var2 != 0
-            line = this.prototype.dotPass(line);
-            line = this.prototype.bracketPass(line);
+            line = this.dotToBrackets(line);
+            line = this.bracketsToDot(line);
             return line;
-        });
+        }).bind(this));
     };
 
     /**
@@ -57,11 +57,17 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      * @pre line != null && line != undefined
      * @return {String[]} thes cript where var1[var2] is transformed in var1.var2
      */
-    ArrayPass.prototype.bracketPass = function(line) {
-        var rline = line.match(this.regexes.squareBrackets).toString();
-        if (rline) {
-            line = rline.replace('[', '.').replace(']', '');
+    VectorPass.prototype.bracketsToDot = function(line) {
+        if (!line) {
+            throw new Error('ArrayPass.bracketsToDot.pre violated:' +
+                'line is null or undefined');
         }
+        line = line.replace(this.regexes.squareBrackets, function(rhs) {
+            if (rhs) {
+                rhs = rhs.replace('[', '.').replace(']', '');
+            }
+            return rhs;
+        });
         return line;
     };
 
@@ -72,19 +78,24 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ArrayPass*/ functio
      * @pre line != null && line != undefined
      * @return {String[]} the script where var1[var2] is transformed in var1.var2
      */
-    ArrayPass.prototype.dotPass = function(line) {
-        var rline = line.match(this.regexes.dots);
-        if (rline) {
-            line = rline.replace(/\.\d+/, function(s) {
-                s = s.replace('.', '[');
-                s += ']';
-                return s;
-            });
+    VectorPass.prototype.dotToBrackets = function(line) {
+        if (!line) {
+            throw new Error('ArrayPass.dotToBrackets.pre violated:' +
+                'line is null or undefined');
         }
+        line = line.replace(this.regexes.dots, function(rhs) {
+            if (rhs) {
+                rhs = rhs.replace(/\.\d+/, function(s) {
+                    s = s.replace('.', '[');
+                    s += ']';
+                    return s;
+                });
+                return rhs;
+            }
+        });
         return line;
     };
 
-
     // Exports are needed, such that other modules may invoke methods from this module file.
-    return ArrayPass;
+    return VectorPass;
 });
