@@ -41,8 +41,8 @@ suite("namedvectorpass.js", function() {
         });
 
         test("replaceBrackets: [4, 5, c: [1, 2]]", function() {
-            var input = "[4, 5, c: [1, 2]]";
-            var expected = "{'0':4,'1': 5, c: {'0':1, '1':2}}";
+            var input = "[4,5,c:[1,2]]";
+            var expected = "{'0':4,'1':5,c:{'0':1,'1':2}}";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
