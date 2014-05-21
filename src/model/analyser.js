@@ -18,11 +18,12 @@ if (inNode) {
 /*******************************************************************/
 
 define(["model/passes/analyser/quantitypass",
-        "model/passes/analyser/dependencypass"
+        "model/passes/analyser/dependencypass",
     ],
     /**@lends Analyser*/
     function(QuantityPass,
-             DependencyPass) {
+             DependencyPass,
+             CategoryPass) {
         /**
          * @class
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
@@ -34,14 +35,16 @@ define(["model/passes/analyser/quantitypass",
             this.passes = [];
             this.passes.push(new QuantityPass());
             this.passes.push(new DependencyPass());
+
+            this.scriptComplete = true;
         }
 
-            /**
-             * Returns a new object with quantities, containing the newly defined one.
-             *
-             * @param {String} line         A single line of input code.
-             * @return {quantities{} }      An object containing all the quantities in the script.
-             */
+        /**
+         * Returns a new object with quantities, containing the newly defined one.
+         *
+         * @param {String} line         A single line of input code.
+         * @return {Quantities{} }      An object containing all the quantities in the script.
+         */
         Analyser.prototype.analyse = function(line, quantities) {
             for (var i = 0; i < this.passes.length; i++) {
                 quantities = this.passes[i].analyse(line, quantities);
@@ -49,6 +52,48 @@ define(["model/passes/analyser/quantitypass",
 
             return quantities;
         };
+
+        /**
+         * Determines the categories of all quantities and checks whether the script is
+         * complete (no todo-items).
+         *
+         * @param {Quantity{} } quantities The set of quantities to analyse
+         * @return quantities, with category attribute set
+         * @modifies quantities
+         */
+        Analyser.prototype.determineCategories = function(quantities) {
+            this.scriptComplete = true;
+
+            // Loop through all quantities
+            for (var qtyName in quantities) {
+                var qty = quantities[qtyName];
+
+                // If the quantity has not been defined yet, set category to 0
+                if (qty.todo) {
+                    // Flag script as incomplete
+                    this.scriptComplete = false;
+                    quantities[qtyName].category = 0;
+                    continue;
+                }
+
+                // If the quantity has no dependencies, it is a category 3 (input) quantity
+                if (qty.dependencies.length == 0) {
+                    // TODO check whether it's a category 1 user input
+                    quantities[qtyName].category = 3;
+                } else {
+                    // If there are no quantities that depend on this quantity, it is category
+                    // 2 (output)
+                    if (qty.reverseDeps.length == 0) {
+                        quantities[qtyName].category = 2;
+                    } else {
+                        // Has both dependencies and quantities that depend on this quantity: category 4
+                        quantities[qtyName].category = 4;
+                    }
+                }
+            }
+
+            return quantities;
+        }
 
         // Exports all macros.
         return Analyser;

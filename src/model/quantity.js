@@ -111,6 +111,23 @@ define([], /**@lends Quantity*/ function() {
         this.source = '';
     }
 
+    /**
+     * Marks this quantity as todo and resets all nessecary fields.
+     *
+     * @post All fields except name have been reset to their default values.
+     *      source has been updated.
+     */
+    Quantity.prototype.markAsTodo = function() {
+        this.todo = true;
+        this.definition = '';
+        this.dependencies = [];
+        this.category = 0;
+        this.unit = '';
+        this.parameters = [];
+        this.comment = '';
+        this.value = 0;
+        this.source = qtyName + '=';
+    }
 
     /**
      * Returns a String representation of the line corresponding to this quantity

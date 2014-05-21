@@ -39,13 +39,6 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          */
         this.quantities = {};
 
-        /**
-         * Whether the model is complete in the sense that all quantities
-         * have definitions. The script can only be compiled if true.
-         * @type {Boolean}
-         */
-        this.todo = false;
-
         this.compiler = new Compiler();
         this.analyser = new Analyser();
 
@@ -80,21 +73,32 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
             // Analyse the added line of code and add the defined quantity to the model
             this.quantities = this.analyser.analyse(source, this.quantities);
 
-            // Notify self of script change to recompile script
             this.scriptChanged();
             
-            // Return compiler/analyser report
             return this.quantities;
         },
 
         /**
-         * Deletes the given quantity from the script if it's in there.
+         * Deletes the given quantity from the script if it's in there,
+         * or sets it as todo-item if nessecary
          *
          * @param qtyName The name of the quantity to delete
          * @modifies quantities
          */
         deleteQuantity: function(qtyName) {
-            // delete quantities.qtyName;
+            if (!this.hasQuantity(qtyName)) {
+                throw new Error('Script.prototype.deleteQuantity.pre :' +
+                'quantity does not exist')
+            }
+
+            // If other quantities depend on this quantity, set it as
+            // todo and delete it's definition.
+            if (this.quantities[qtyName].reverseDeps.length > 0) {
+                this.quantities[qtyName].markAsTodo();
+            }
+
+            // Re-determine quantity categories
+            this.analyser.determineCategories(this.quantities);
         },
 
 
@@ -103,14 +107,14 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         },
 
 		/**
-		 * Compiles the script
+		 * Does all things that should be done when the script has changed.
 		 *
-		 * Call this method when the source property has been modified.
+		 * Call this method when quantities has been modified.
 		 */
         scriptChanged: function() {
-            if (!this.todo) {
-                this.exe = this.compiler.compile(this).exe;
-            }
+            // Determine categories of all quantities
+            this.analyser.determineCategories(this.quantities);
+            this.exe = this.compiler.compile(this).exe;
         },
 
 
