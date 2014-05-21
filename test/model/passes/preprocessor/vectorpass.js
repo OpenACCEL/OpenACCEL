@@ -1,29 +1,29 @@
-suite("arraypass.js", function() {
+suite("vectorpass.js", function() {
     // Template module.
-    var ArrayPass;
+    var VectorPass;
     var assert;
 
     setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(["assert", "model/passes/preprocessor/arraypass"], function(assertModule, module) {
-            console.log("Loaded 'ArrayPass' module.");
+        requirejs(["assert", "model/passes/preprocessor/vectorpass"], function(assertModule, module) {
+            console.log("Loaded 'VectorPass' module.");
             assert = assertModule;
-            ArrayPass = new module();
+            VectorPass = new module();
             done();
         });
     });
 
-    suite("ArrayPass", function() {
+    suite("VectorPass", function() {
 
         test("parse() robustness", function() {
             assert.throws(
                 function() {
-                    ArrayPass.parse(null);
+                    VectorPass.parse(null);
                 });
             assert.throws(
                 function() {
-                    ArrayPass.parse();
+                    VectorPass.parse();
                 });
         });
 
@@ -31,7 +31,7 @@ suite("arraypass.js", function() {
             var exScript = ['a = [1,2,x:3]', 'y = a.0 + a[x]', 'z = a.1', 'p = a[x]'];
 
             var resultScript = ['a = [1,2,x:3]', 'y = a[0] + a.x', 'z = a[1]', 'p = a.x']
-            assert.deepEqual(ArrayPass.parse(exScript, {}), resultScript);
+            assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
         })
 
         /** Test dotToBrackets().
@@ -39,7 +39,7 @@ suite("arraypass.js", function() {
          * y = a.0 == y = a[0]
          */
         test('dotToBrackets() y = a.0', function() {
-            assert.equal(ArrayPass.dotToBrackets('y = a.0'), 'y = a[0]');
+            assert.equal(VectorPass.dotToBrackets('y = a.0'), 'y = a[0]');
         });
 
         /** Test dotToBrackets().
@@ -47,7 +47,7 @@ suite("arraypass.js", function() {
          * y = a.0 + b.0 == y = a[0] + b[0]
          */
         test('dotToBrackets() y = a.0 + b.0', function() {
-            assert.equal(ArrayPass.dotToBrackets('y = a.0 + b.0'), 'y = a[0] + b[0]');
+            assert.equal(VectorPass.dotToBrackets('y = a.0 + b.0'), 'y = a[0] + b[0]');
         });
 
         /** Test dotToBrackets().
@@ -55,7 +55,7 @@ suite("arraypass.js", function() {
          * y = a[0]  == y = a[0]
          */
         test('dotToBrackets() y = a[0]', function() {
-            assert.equal(ArrayPass.dotToBrackets('y = a[0]'), 'y = a[0]');
+            assert.equal(VectorPass.dotToBrackets('y = a[0]'), 'y = a[0]');
         });
 
         /** Test dotToBrackets().
@@ -63,17 +63,17 @@ suite("arraypass.js", function() {
          * y = a.x + b.0  == y = a.x + b[0]
          */
         test('dotToBrackets() y = a.x + b.0 ', function() {
-            assert.equal(ArrayPass.dotToBrackets('y = a.x + b.0'), 'y = a.x + b[0]');
+            assert.equal(VectorPass.dotToBrackets('y = a.x + b.0'), 'y = a.x + b[0]');
         });
 
         test('dotToBrackets() robustness', function() {
             assert.throws(
                 function() {
-                    ArrayPass.dotToBrackets(null);
+                    VectorPass.dotToBrackets(null);
                 });
             assert.throws(
                 function() {
-                    ArrayPass.dotToBrackets();
+                    VectorPass.dotToBrackets();
                 });
         })
 
@@ -83,14 +83,14 @@ suite("arraypass.js", function() {
          * y = a[x] == y = a.x
          */
         test("bracketsToDot() y = a[x]", function() {
-            assert.equal(ArrayPass.bracketsToDot('y = a[x]'), 'y = a.x');
+            assert.equal(VectorPass.bracketsToDot('y = a[x]'), 'y = a.x');
         });
 
         /**
          * Simple test for bracketsToDot().
          */
         test("bracketsToDot() y = a[x] + a[b]", function() {
-            assert.equal(ArrayPass.bracketsToDot('y = a[x] + a[b]'), 'y = a.x + a.b');
+            assert.equal(VectorPass.bracketsToDot('y = a[x] + a[b]'), 'y = a.x + a.b');
         });
 
         /** Test bracketsToDot().
@@ -98,7 +98,7 @@ suite("arraypass.js", function() {
          * y = a.x == y = a.x
          */
         test('bracketsToDot() y = a.x', function() {
-            assert.equal(ArrayPass.bracketsToDot('y = a.x'), 'y = a.x');
+            assert.equal(VectorPass.bracketsToDot('y = a.x'), 'y = a.x');
         });
 
         /** Test bracketsToDot().
@@ -106,7 +106,7 @@ suite("arraypass.js", function() {
          * y = a[x] + a.b  == y = a.x + a.b
          */
         test('bracketsToDot() y = a[x] + a.b', function() {
-            assert.equal(ArrayPass.bracketsToDot('y = a[x] + a.b'), 'y = a.x + a.b');
+            assert.equal(VectorPass.bracketsToDot('y = a[x] + a.b'), 'y = a.x + a.b');
         });
 
         /**
@@ -115,11 +115,11 @@ suite("arraypass.js", function() {
         test('bracketsToDot() robustness', function() {
             assert.throws(
                 function() {
-                    ArrayPass.bracketsToDot(null);
+                    VectorPass.bracketsToDot(null);
                 });
             assert.throws(
                 function() {
-                    ArrayPass.bracketsToDot();
+                    VectorPass.bracketsToDot();
                 });
         });
     });

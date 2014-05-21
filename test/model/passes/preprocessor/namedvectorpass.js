@@ -9,7 +9,7 @@ suite("namedvectorpass.js", function() {
         requirejs(["assert", "model/passes/preprocessor/namedVectorPass"], function(assertModule, module) {
             console.log("Loaded 'namedVectorPass' module.");
             assert = assertModule;
-            namedVectorPass = new module();
+            instance = new module();
             done();
         });
     });
