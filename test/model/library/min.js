@@ -4,12 +4,10 @@ suite("Min Library", function() {
     var assert;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader"], function(assertModule, module, FileLoader) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
+        requirejs(["assert", "model/compiler"], function(assertModule, compilerModule) {
+            console.log("Loaded 'Compiler' module.");
             assert = assertModule;
-            compiler = new module();
+            compiler = new compilerModule();
             done();
         });
     });

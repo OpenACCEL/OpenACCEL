@@ -1,15 +1,13 @@
-suite("Min Library", function() {
+suite("Max Library", function() {
     var compiler;
     var macros;
     var assert;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler"], function(assertModule, module) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
+        requirejs(["assert", "model/compiler"], function(assertModule, compilerModule) {
+            console.log("Loaded 'Compiler' module.");
             assert = assertModule;
-            compiler = new module();
+            compiler = new compilerModule();
             done();
         });
     });
