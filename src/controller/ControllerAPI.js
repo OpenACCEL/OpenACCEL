@@ -132,7 +132,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         // Stop script execution, add quantity, recompile, and 
         // start again if todo list is empty
         this.stop();
-        report = this.script.addQuantity(definition);
+        this.script.addQuantity(definition);
         this.compileScript(this.script);
         this.execute();
     } 
@@ -160,11 +160,13 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         this.compileScript(this.script);
     }
     /**
-     * Compiles the given script.
+     * Compiles the given script if the todo-list is empty.
      * @param  {Script} script script to compile
      */
     Controller.prototype.compileScript = function(script) {
-        script.exe = this.compiler.compile(script).exe;
+    	if (this.script.isComplete()) {
+        	script.exe = this.compiler.compile(script).exe;
+    	}
     }     
 
     /**

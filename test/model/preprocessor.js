@@ -6,7 +6,7 @@ suite("PreProcessor", function() {
     setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(["assert", "model/preprocessor", "model/Script"], function(assertModule, module, scriptModule) {
+        requirejs(["assert", "model/preprocessor", "model/script"], function(assertModule, module, scriptModule) {
             console.log("Loaded 'PreProcessor' module.");
             assert = assertModule;
             preProcessor = new module();

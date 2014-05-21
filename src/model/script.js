@@ -53,6 +53,10 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
 
     Script.prototype = {
 
+        isComplete: function() {
+            return this.analyser.scriptComplete;
+        },
+
         /**
          * Returns whether the quantity is in the script.
          *
