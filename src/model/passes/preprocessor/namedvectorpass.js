@@ -65,8 +65,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
         line = line.replace(this.regexes.openingBracket, (function (s) { return s.split("[").join(this.begin); }).bind(this));
         line = line.replace(this.regexes.closingBracket, (function (s) { return s.split("]").join(this.end);  }).bind(this));
 
-        console.log(line);
-        line = this.translate(line);
+        line = this.translate(line, true);
         line = line.split("\u2603").join(",");
         line = line.split(this.begin).join("{");
         line = line.split(this.end).join("}");
@@ -74,54 +73,55 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
         return line
     }
 
-    NamedVectorPass.prototype.translate = function(content) {
+    NamedVectorPass.prototype.translate = function(content, parent) {
         // Final translated string.
         var output = content;
-        var stepCase = false;
 
         // Find first begin token.
         var x = 0;
-        for (var i = 0; i < content.length; i++) {
-            if (content[i] == this.begin) { x = i; stepCase = true; break; }
-        }
+        for (var i = x; i < content.length; i++) {
+            // We have found a begin token, thus we have to find an end token.
+            if (content[i] == this.begin) { 
+                x = i;
+                var level = 1;
+                // Update the deepness level accordingly.
+                for (var j = x + 1; j < content.length; j++) {
+                    if (content[j] == this.begin) {
+                        level++;
+                    }
+                    else if (content[j] == this.end) {
+                        level--;
 
-        // We have found a begin token, thus we have to find an end token.
-        if (stepCase) {
-            var level = 1;
-            // Update the deepness level accordingly.
-            for (var i = x + 1; i < content.length; i++) {
-                if (content[i] == this.begin) {
-                    level++;
-                }
-                else if (content[i] == this.end) {
-                    level--;
+                        // If level is 0, we have found the matching end token.
+                        // We then need to recursively replace this substring with a translated substring.
+                        if (level == 0) {
+                            var substring = content.substring(x + 1, j);
+                            output = output.replace(substring, this.translate(substring, false));
 
-                    // If level is 0, we have found the matching end token.
-                    // We then need to recursively replace this substring with a translated substring.
-                    if (level == 0) {
-                        var substring = content.substring(x + 1, i);
-                        console.log(substring);
-                        output = output.replace(substring, this.translate(substring));
+                            i = j; // When we want to look for a next begin token, thus we start where we have now ended.
+                            break;
+                        }
                     }
                 }
             }
         }
 
-        // We have not found a begin token at all, thus we are dealing with a base case and can start translating.
-        var count       = 0;
-        var elements    = output.split(",");
+        if (!parent) {
+            // We have not found a begin token at all, thus we are dealing with a base case and can start translating.
+            var count       = 0;
+            var elements    = output.split(",");
 
-        // If an element does *not* contain a ':', it is unnamed and thus needs an index identifier.
-        for (var i = 0; i < elements.length; i++) {
-            if (elements[i].indexOf(":") == -1) { elements[i] = "'" + count++ + "':" + elements[i]; }
+            // If an element does *not* contain a ':', it is unnamed and thus needs an index identifier.
+            for (var i = 0; i < elements.length; i++) {
+                var key = elements[i].split(this.begin);
+                if (key[0].indexOf(":") == -1) { elements[i] = "'" + count++ + "':" + elements[i]; }
+            }
+
+            output = elements.join("\u2603");
         }
-
-        output = elements.join("\u2603");
 
         return output;
     }
-
-
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return NamedVectorPass;

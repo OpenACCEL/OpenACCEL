@@ -1,5 +1,5 @@
 // Set up various shit so require works with Mocha.
-
+/*
 requirejs = require("requirejs");
 requirejs.config({
     shim: {
@@ -9,6 +9,7 @@ requirejs.config({
     },
     baseUrl: __dirname + "/../../../../src"
 });
+*/
 
 suite("namedvectorpass.js", function() {
     // Template module.
@@ -46,58 +47,76 @@ suite("namedvectorpass.js", function() {
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-    //     //TODO: TEST MORE PARSE
-    //     /**
-    //     /**
-    //      * Tests replaceBrackets(). Simple definition of vector.
-    //      */
-    //     test('replaceBrackets() simple definition', function() {
-    //         assert.equal(instance.replaceBrackets('y = [1,2]'), 'y = {1,2}');
-    //     });
+        test("replaceBrackets: [4, 5, c: [1, 2], [3, 4]]", function() {
+            var input = "[4,5,c:[1,2],[3, 4]]";
+            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{'0':3,'1': 4}}";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
 
-    //     /**
-    //      * Tests replaceBrackets(). Includes a nested vector.
-    //      */
-    //     test('replaceBrackets() nested vector', function() {
-    //         assert.equal(instance.replaceBrackets('y = [1,2,[3,4]]'), 'y = {1,2,{3,4}}');
-    //     })
-    //     ';'
+        test("replaceBrackets: [4, 5, c: [1, 2], [d: 3, 4]]", function() {
+            var input = "[4,5,c:[1,2],[d: 3, 4]]";
+            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{d: 3,'0': 4}}";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
 
-    //     /**
-    //      * Tests replaceBrackets(). Calls a vector. Should not do anything.
-    //      */
-    //     test('replaceBrackets() calling vector', function() {
-    //         assert.equal(instance.replaceBrackets('y = b[0]'), 'y = b[0]');
-    //     });
+        test("replaceBrackets: [4, 5, c: [1, 2], [d: [5], 4]]", function() {
+            var input = "[4,5,c:[1,2],[d: [5], 4]]";
+            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}}";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
 
-    //     /**
-    //      * Tests replaceBrackets(). Calls a named attribute of a vector. Should not do anything.
-    //      */
-    //     test('replaceBrackets() calling named vector', function() {
-    //         assert.equal(instance.replaceBrackets('y = b[\'x\']'), 'y = b[\'x\']');
-    //     });
+        test("replaceBrackets: [4, 5, c: [1, 2], [d: [5], 4]] + sin(x)", function() {
+            var input = "[4,5,c:[1,2],[d: [5], 4]] + sin(x)";
+            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}} + sin(x)";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
 
-    //     /**
-    //      * Tests replaceBrackets(). Calls a vector in the vector definition. The brackets of the
-    //      * definition should be translated in curly braces, while the called ones should not.
-    //      */
-    //     test('replaceBrackets() calling vector in vector definition', function() {
-    //         assert.equal(instance.replaceBrackets('y = [1, b[0]]'), 'y = {1, b[0]}');
-    //     })
+        test("replaceBrackets: [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
+            var input = "[4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
+            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
 
-    //     /**
-    //      * replaceBrackets() robustness tests.
-    //      */
-    //     test('replaceBrackets() robustness', function() {
-    //         assert.throws(
-    //             function() {
-    //                 namedVectorPass.replaceBrackets(null);
-    //             });
-    //         assert.throws(
-    //             function() {
-    //                 namedVectorPass.replaceBrackets();
-    //             });
-    //     });
+        test("replaceBrackets: [f: 2] + [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
+            var input = "[f: 2] + [4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
+            var expected = "{f: 2} + {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
+
+        test("replaceBrackets: 3 + [f: 2] + [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
+            var input = "3 + [f: 2] + [4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
+            var expected = "3 + {f: 2} + {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
+
+        /**
+         * Tests replaceBrackets(). Calls a vector. Should not do anything.
+         */
+        test('replaceBrackets() calling vector', function() {
+            assert.equal(instance.replaceBrackets('y = b[0]'), 'y = b[0]');
+        });
+
+        /**
+         * Tests replaceBrackets(). Calls a vector in the vector definition. The brackets of the
+         * definition should be translated in curly braces, while the called ones should not.
+         */
+        test('replaceBrackets() calling vector in vector definition', function() {
+            assert.equal(instance.replaceBrackets("y = [1, b[0]]"), "y = {'0':1,'1': b[0]}");
+        })
+
+        /**
+         * replaceBrackets() robustness tests.
+         */
+        test('replaceBrackets() robustness', function() {
+            assert.throws(
+                function() {
+                    namedVectorPass.replaceBrackets(null);
+                });
+            assert.throws(
+                function() {
+                    namedVectorPass.replaceBrackets();
+                });
+        });
 
     });
 });
