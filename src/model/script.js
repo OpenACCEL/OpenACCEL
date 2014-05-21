@@ -18,31 +18,40 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler, Analyser, Quantity) {
-    function Script() {
-        this.compiler = new Compiler();
-        this.analyser = new Analyser();
-    }
+    function Script(source) {
 
-    Script.prototype = {
         /**
          * The source of the ACCEL script, as provided by the user.
          * @type {String}
          */
-        source: '',
+        this.source = '';
 
         /**
          * The executable javascript code representing the ACCEL model
          * as stored in the source attribute.
          * @type {String}
          */
-        exe: null,
+        this.exe = null;
 
         /**
          * Contains the quantities that together make up the ACCEL script.
          * @type {Quantity[]}
          */
-        quantities: {},
+        this.quantities = {};
 
+        this.compiler = new Compiler();
+        this.analyser = new Analyser();
+
+        if (typeof source !== 'undefined') {
+            // Source code is given, initialize.
+            var lines = source.split("\n");
+            lines.forEach((function(line) {
+                this.addQuantity(line);
+            }).bind(this));
+        }
+    }
+
+    Script.prototype = {
 
         /**
          * Returns whether the quantity is in the script.
@@ -62,7 +71,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          */
         addQuantity: function(source) {
             // Analyse the added line of code and add the defined quantity to the model
-            this.quantities = this.analyser.analyse(this.source, this.quantities);
+            this.quantities = this.analyser.analyse(source, this.quantities);
 
             // Notify self of script change to recompile script
             this.scriptChanged();
@@ -112,11 +121,14 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          */
         toSource: function() {
             // Iterate through all quantities and append their string representation to the source code
+            var lines = [];
             for (var qtyName in this.quantities) {
-                qty = this.quantities[qtyName];
+                var qty = this.quantities[qtyName];
 
-                this.source += qty.toString() + '\n';
+                lines.push(qty.toString());
             }
+            this.source = lines.join("\n");
+            return this.source;
         }
     };
 
