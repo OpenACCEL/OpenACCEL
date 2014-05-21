@@ -51,6 +51,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
         // first entry in vars is the quantity name
         var qtyName = vars[0];
         quantities[qtyName] = new Quantity();
+        quantities[qtyName].source = line;
         quantities[qtyName].name = qtyName;
 
         // If there are other items left in vars, then this are the parameters.

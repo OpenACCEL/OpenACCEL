@@ -24,6 +24,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
      * @classdesc This pass is part of the Script Analyser and extracts:
      * 	-Dependencies of quantities: on which quantities the value of a 
      *	 certain quantity depends
+     *  -Reverse dependencies: which quantities depend on the quantity being defined
      *	-Whether a quantity has been given a definition already, or is a 'todo-item'
      */
     function DependencyPass() {
@@ -56,7 +57,9 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
             dep.forEach(function(d) {
             	// It could be that the dependent variable is not yet in the quantities because
             	// it has not been defined yet. Therefore, instead test whether the variable
-            	// is local to this definition and if not, add it as dependency
+            	// is local to this definition and if not, add it as a dependency. Also, a single
+                // variable can occur multiple times in the rhs of a definition. Check this
+                // as well.
             	if (lhs.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1) {
             		quantities[qty].dependencies.push(d);
             		
@@ -66,7 +69,18 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
             			quantities[d] = new Quantity();
             			quantities[d].name = d;
             			quantities[d].todo = true;
+                        quantities[d].source = d + '=';
             		}
+
+                    // Add the quantity being defined as a reverse dependency of this quantity
+                    if (!quantities[d].reverseDeps) {
+                        quantities[d].reverseDeps = [];
+                        quantities[d].reverseDeps.push(qty);
+                    } else {
+                        if (!quantities[d].reverseDeps[qty]) {
+                            quantities[d].reverseDeps.push(qty);
+                        }
+                    }
             	}
             });
         }

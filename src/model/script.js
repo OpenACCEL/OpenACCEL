@@ -39,6 +39,13 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          */
         this.quantities = {};
 
+        /**
+         * Whether the model is complete in the sense that all quantities
+         * have definitions. The script can only be compiled if true.
+         * @type {Boolean}
+         */
+        this.todo = false;
+
         this.compiler = new Compiler();
         this.analyser = new Analyser();
 
@@ -101,8 +108,9 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
 		 * Call this method when the source property has been modified.
 		 */
         scriptChanged: function() {
-            // TODO Only compile model if there are no todo items!
-            this.exe = this.compiler.compile(this).exe;
+            if (!this.todo) {
+                this.exe = this.compiler.compile(this).exe;
+            }
         },
 
 
@@ -117,17 +125,22 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         /**
          * Returns the code of the script as a single string.
          *
+         * @param {Boolean} includeUnits Whether to include the units in the string representation
          * @modifies source
          */
-        toSource: function() {
+        toSource: function(includeUnits) {
             // Iterate through all quantities and append their string representation to the source code
             var lines = [];
             for (var qtyName in this.quantities) {
                 var qty = this.quantities[qtyName];
 
-                lines.push(qty.toString());
+                // Do not include quantities in the script string that are undefined!
+                if (!qty.todo) {
+                    lines.push(qty.toString(includeUnits));
+                }
             }
             this.source = lines.join("\n");
+            
             return this.source;
         }
     };

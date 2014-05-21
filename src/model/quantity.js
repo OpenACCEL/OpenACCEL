@@ -25,7 +25,7 @@ define([], /**@lends Quantity*/ function() {
      * @classdesc Abstract Pass that is part of compiling the script.
      */
 
-    function Quantity() {
+    function Quantity(source) {
 
         /**
          * The name of the quantity as defined in the left hand side of a line.
@@ -53,7 +53,7 @@ define([], /**@lends Quantity*/ function() {
          * An array containing all quantities that depend on this quantity.
          * @type {String[]}
          */
-        this.reverseDependencies = [];
+        this.reverseDeps = [];
 
         /**
          * The category of this quantity. The category is I if the quantity is variable(input
@@ -100,16 +100,27 @@ define([], /**@lends Quantity*/ function() {
          * @type {Number}
          */
 		this.value = 0;
+
+
+        /**
+         * The script line as it was originally entered by the user, or filled in by the system for
+         * todo items.
+         *
+         * @type {String}
+         */
+        this.source = '';
     }
 
 
     /**
      * Returns a String representation of the line corresponding to this quantity
      * as provided by the user in the ACCEL script.
+     *
+     * @param {Boolean} includeUnits Whether to include the unit in the string representation
      * @return {String} The script line corresponding to this quantity
      */
-    Quantity.prototype.toString = function() {
-        return this.name + '=' + this.definition + ' ;' + this.unit;
+    Quantity.prototype.toString = function(includeUnits) {
+        return this.source;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
