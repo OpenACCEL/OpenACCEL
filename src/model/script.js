@@ -17,13 +17,13 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/compiler"], function(Compiler) {
+define(["model/compiler", "model/analyser"], function(Compiler, Analyser) {
     function Script() {
         this.compiler = new Compiler();
+        this.analyser = new Analyser();
     }
 
     Script.prototype = {
-
         /**
          * The source of the ACCEL script, as provided by the user.
          * @type {String}
@@ -41,7 +41,18 @@ define(["model/compiler"], function(Compiler) {
          * Contains the quantities that together make up the ACCEL script.
          * @type {Quantity[]}
          */
-        quantities: [],
+        quantities: {},
+
+
+        /**
+         * Returns whether the quantity is in the script.
+         *
+         * @param qtyname The name of the quantity
+         * @return qtyName in quantities
+         */
+        hasQuantity: function(qtyName) {
+            return qtyName in quantities;
+        },
 
         /**
          * Add quantity to quantities and recompiles the script.
@@ -50,46 +61,49 @@ define(["model/compiler"], function(Compiler) {
          * @modifies quantities
          */
         addQuantity: function(source) {
-            if(this.source){
-                this.source += "\n" + source ;  
-            } else {
-                this.source = source;
-            }
-            
-            // Notify self of script change to update quantities and recompile
+            // Analyse the added line of code and add the defined quantity to the model
+            this.quantities = this.analyser.analyse(this.source, this.quantities);
+
+            // Notify self of script change to recompile script
             this.scriptChanged();
             
             // Return compiler/analyser report
-            return this.report;
+            return this.quantities;
         },
 
-        deleteQuantity: function(quantity) {
-            
+        /**
+         * Deletes the given quantity from the script if it's in there.
+         *
+         * @param qtyName The name of the quantity to delete
+         * @modifies quantities
+         */
+        deleteQuantity: function(qtyName) {
+            // delete quantities.qtyName;
         },
+
+
+        setValue: function(qtyName, value) {
+
+        },
+
+        
 
 		/**
-		 * Compiles the script and updates the quantities array.
+		 * Compiles the script
 		 *
 		 * Call this method when the source property has been modified.
 		 */
         scriptChanged: function() {
-            compileResult = this.compiler.compile(this.source);
-            this.updateQuantities(compileResult);
-        },
-        
-        /**
-         * Updates the quantities array based on the report in the compiler
-         * result.
-         *
-         * @param compileResult The object returned by compiler.compile(source)
-         */
-        updateQuantities: function(compileResult) {
-        	this.exe = compileResult.exe;
-        	this.quantities = compileResult.report;
+            this.exe = this.compiler.compile(this).exe;
         },
 
-        getQuantity: function(name) {
-            return eval("this.exe." + name + "();");
+
+        getQuantity: function(qtyName) {
+            return eval("this.exe." + qtyName + "();");
+        },
+
+        toSource: function() {
+
         }
     };
 

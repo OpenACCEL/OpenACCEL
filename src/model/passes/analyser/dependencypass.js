@@ -36,47 +36,42 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
      * @Override
      * Determines the dependencies for each quantity
      */
-    DependencyPass.prototype.analyse = function(scriptLines, report) {
-        // Handle each line of script
-        scriptLines.forEach((function(line) {
-            // left and right hand side of the definitions
-            var lhs = DependencyPass.prototype.getLHS(line);
-            var rhs = DependencyPass.prototype.getRHS(line);
+    DependencyPass.prototype.analyse = function(line, quantities) {
+        // left and right hand side of the definitions
+        var lhs = this.getLHS(line);
+        var rhs = this.getRHS(line);
 
-            // get the quantity for which we determine the dependencies
-            var qty = lhs.match(this.regexes.varNames)[0];
+        // get the quantity for which we determine the dependencies
+        var qty = lhs.match(this.regexes.varNames)[0];
 
-            // get all variable names from the right hand side
-            var dep = rhs.match(this.regexes.varNames);
+        // get all variable names from the right hand side
+        var dep = rhs.match(this.regexes.varNames);
 
-            if (!report[qty].dependencies) {
-                report[qty].dependencies = [];
-            }
+        if (!quantities[qty].dependencies) {
+            quantities[qty].dependencies = [];
+        }
 
-            // Identify all dependencies and add them to the quantities
-            if (dep) {
-                dep.forEach(function(d) {
-                	// It could be that the dependent variable is not yet in the report because
-                	// it has not been defined yet. Therefore, instead test whether the variable
-                	// is local to this definition and if not, add it as dependency
-                	if (lhs.indexOf(d) == -1 && report[qty].dependencies.indexOf(d) == -1) {
-                		report[qty].dependencies.push(d);
-                		
-                		// It could be that it is used in multiple definitions while being
-                		// undefined. Therefore only add it if it's not already there 
-                		if (!report[d]) {
-                			report[d] = new Quantity();
-                			report[d].name = d;
-                			report[d].todo = true;
-                		}
-                	}
-                });
-            }
+        // Identify all dependencies and add them to the quantities
+        if (dep) {
+            dep.forEach(function(d) {
+            	// It could be that the dependent variable is not yet in the quantities because
+            	// it has not been defined yet. Therefore, instead test whether the variable
+            	// is local to this definition and if not, add it as dependency
+            	if (lhs.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1) {
+            		quantities[qty].dependencies.push(d);
+            		
+            		// It could be that it is used in multiple definitions while being
+            		// undefined. Therefore only add it if it's not already there 
+            		if (!quantities[d]) {
+            			quantities[d] = new Quantity();
+            			quantities[d].name = d;
+            			quantities[d].todo = true;
+            		}
+            	}
+            });
+        }
 
-
-        }).bind(this));
-        return report;
-
+        return quantities;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

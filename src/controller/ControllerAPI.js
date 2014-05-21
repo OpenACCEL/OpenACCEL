@@ -101,6 +101,10 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
+        if (!this.script.hasQuantity(quantity)) {
+        	throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
         //TODO Precondition quantity \in Script 
         //TODO Implementation
         //TODO Tests
@@ -132,26 +136,25 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
     } 
 
     /**
-     * Deletes a quantity from a model.
+     * Deletes a quantity from the model.
      *
-     * @param quantity {String} Quantity name
-     * @pre quantity != null
-     * @pre quantity != undefined
-     * @pre model.ScriptAnalyzer() == true
-     * @pre definition \in Script
-     * @post definition removed from Script
-     * @return {Object} list of quantities
+     * @param qtyName {String} The name of the quantity to delete
+     * @pre qtyName != null
+     * @pre qtyName != undefined
+     * @pre qtyName \in Script
+     * @post quantity removed from Script
      */
-    Controller.prototype.deleteQuantity = function(quantity) {
-        if(!quantity) {
-            throw new Error('Controller.prototype.addQuantity.pre violated :' +
-                'quantity is null or undefined')
+    Controller.prototype.deleteQuantity = function(qtyName) {
+        if(!qtyName) {
+            throw new Error('Controller.prototype.addQuantityuantity.pre violated :' +
+                'qtyName is null or undefined')
         }
-        //TODO Precondition, removing quantity
-        //TODO Implementation
-        //TODO Tests
-        this.script.deleteQuantity(quantity);
-        return this.getQuantities;
+        if (!this.script.hasQuantity(qtyName)) {
+        	throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        this.script.deleteQuantity(qtyName);
     }     
 
     /**
@@ -168,10 +171,12 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
-        //TODO Precondition name \in Script 
-        //TODO Implementation
-        //TODO Tests
-        return this.script.getQuantity(quantity);
+        if (!this.script.hasQuantity(quantity)) {
+        	throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        return this.script.getQuantity(quantity).value;
     }
 
     /**
@@ -195,6 +200,12 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.setValue.pre :' +
                 'quantity is null or undefined')
         }
+        if (!this.script.hasQuantity(quantity)) {
+        	throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        this.script.setValue(quantity, value);
     } 
 
     /**
@@ -277,8 +288,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} script
      */
     Controller.prototype.getScript = function() {
-        //TODO Implementation
-        //TODO Tests
+        return this.script;
     } 
 
     /**

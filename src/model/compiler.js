@@ -18,11 +18,9 @@ if (inNode) {
 /*******************************************************************/
 
 define(["model/fileloader",
-        "model/analyser",
         "model/preprocessor",
         "model/macroexpander"], /**@lends Compiler*/
         function(FileLoader,
-                 Analyser,
                  PreProcessor,
                  MacroExpander) {
     /**
@@ -30,11 +28,6 @@ define(["model/fileloader",
      * @classdesc The compiler takes code as input, and outputs an executable and report when compiling.
      */
     function Compiler() {
-        /**
-         * The analyser extracts information of the script, which is also needed for the pre-processor.
-         */
-        this.analyser = new Analyser();
-
         /**
          * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
          */
@@ -86,19 +79,12 @@ define(["model/fileloader",
     /**
      * Compiles a piece of ACCEL code and outputs an object, containing an executable.
      *
-     * @param {String} code     A string of ACCEL code to be compiled.
+     * @param {Script} script   The ACCEL script to be compiled.
      * @return {Object}         An object, containing an executable and information.
      */
-    Compiler.prototype.compile = function(code) {
-        // Cleaning up.
-        //code = code.trim();
-
-        // Generate report for pre-processor.
-        var report = this.analyser.analyse(code);
-        this.preProcessor.report = report;
-
+    Compiler.prototype.compile = function(script) {
         // Pre-process and expand.
-        code = this.preProcessor.process(code);
+        var code = this.preProcessor.process(script);
         code = this.fileLoader.getLibrary() + code;
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 

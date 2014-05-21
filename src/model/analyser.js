@@ -25,7 +25,7 @@ define(["model/passes/analyser/quantitypass",
              DependencyPass) {
         /**
          * @class
-         * @classdesc The analyser extracts information of the script.
+         * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
          */
         function Analyser() {
             /**
@@ -37,20 +37,17 @@ define(["model/passes/analyser/quantitypass",
         }
 
             /**
-             * Generated a report by invoking analyses passes on intermediate reports.
+             * Returns a new object with quantities, containing the newly defined one.
              *
-             * @param {String} code     A single line of input code.
-             * @return {Report}         A full report.
+             * @param {String} line         A single line of input code.
+             * @return {quantities{} }      An object containing all the quantities in the script.
              */
-        Analyser.prototype.analyse = function(code) {
-            var lines = code.split("\n");
-            var report = {};
-
+        Analyser.prototype.analyse = function(line, quantities) {
             for (var i = 0; i < this.passes.length; i++) {
-                report = this.passes[i].analyse(lines, report);
+                quantities = this.passes[i].analyse(line, quantities);
             }
 
-            return report;
+            return quantities;
         };
 
         // Exports all macros.

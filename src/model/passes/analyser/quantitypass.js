@@ -20,7 +20,7 @@ if (inNode) {
 define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePass*/ function(AnalyserPass, Quantity) {
     /**
      * @class
-     * @classdesc This pass is part of the Script Analyser and extracts:
+     * @classdesc This pass is part of the Analyser and extracts:
      * 	-Quantity names
      *	-Parameters of user-defined functions
      *	-Whether quantities have a definition or not
@@ -35,38 +35,34 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
      * @Override
      * Determines the quantities that are present in the script
      */
-    QuantityPass.prototype.analyse = function(scriptLines, report) {
-        // Handle each line of script
-        scriptLines.forEach((function(line) {
-            // left hand side of the definitions
-            var lhs = QuantityPass.prototype.getLHS(line);
-            var rhs = QuantityPass.prototype.getRHS(line);
+    QuantityPass.prototype.analyse = function(line, quantities) {
+        // left hand side of the definitions
+        var lhs = this.getLHS(line);
+        var rhs = this.getRHS(line);
 
-            // get all variable names from the left hand side
-            var vars = lhs.match(this.regexes.varNames);
+        // get all variable names from the left hand side
+        var vars = lhs.match(this.regexes.varNames);
 
-			// Create report if it doesn't already exist
-            if (!report) {
-                report = {};
-            }
+		// Create quantities if it doesn't already exist
+        if (!quantities) {
+            quantities = {};
+        }
 
-            // first entry in vars is the quantity name
-            var qtyName = vars[0];
-            report[qtyName] = new Quantity();
-            report[qtyName].name = qtyName;
+        // first entry in vars is the quantity name
+        var qtyName = vars[0];
+        quantities[qtyName] = new Quantity();
+        quantities[qtyName].name = qtyName;
 
-            // If there are other items left in vars, then this are the parameters.
-            report[qtyName].parameters = vars.slice(1);
-            report[qtyName].definition = rhs;
-            
-            // Straightforward check for empty definitions of quantities. Further 
-            // identification of todo-items is done in the dependency pass.
-            if (rhs == '') {
-            	report[qtyName].todo = true;
-            }
-
-        }).bind(this));
-        return report;
+        // If there are other items left in vars, then this are the parameters.
+        quantities[qtyName].parameters = vars.slice(1);
+        quantities[qtyName].definition = rhs;
+        
+        // Straightforward check for empty definitions of quantities. Further 
+        // identification of todo-items is done in the dependency pass.
+        if (rhs == '') {
+        	quantities[qtyName].todo = true;
+        }
+        return quantities;
     };
 
 
