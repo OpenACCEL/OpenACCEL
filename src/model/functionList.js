@@ -44,7 +44,6 @@ define(['model/compiler'], /**@lends */ function(Compiler) {
             while (match = pattern.exec(macro)) {
                 this.list.push(match[1]);
             }
-            console.log(this.list);
         },
 
         /**
@@ -56,7 +55,7 @@ define(['model/compiler'], /**@lends */ function(Compiler) {
                 this.generateList();
             }
             return this.list;
-        },
+        }
     };
 
 

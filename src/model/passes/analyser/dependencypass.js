@@ -77,7 +77,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionl
                         quantities[d].reverseDeps = [];
                         quantities[d].reverseDeps.push(qty);
                     } else {
-                        if (!quantities[d].reverseDeps[qty]) {
+                        if (quantities[d].reverseDeps.indexOf(qty) == -1) {
                             quantities[d].reverseDeps.push(qty);
                         }
                     }
