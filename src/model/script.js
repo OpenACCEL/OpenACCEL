@@ -17,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/compiler", "model/analyser"], function(Compiler, Analyser) {
+define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler, Analyser, Quantity) {
     function Script() {
         this.compiler = new Compiler();
         this.analyser = new Analyser();
@@ -86,14 +86,13 @@ define(["model/compiler", "model/analyser"], function(Compiler, Analyser) {
 
         },
 
-        
-
 		/**
 		 * Compiles the script
 		 *
 		 * Call this method when the source property has been modified.
 		 */
         scriptChanged: function() {
+            // TODO Only compile model if there are no todo items!
             this.exe = this.compiler.compile(this).exe;
         },
 
@@ -102,8 +101,22 @@ define(["model/compiler", "model/analyser"], function(Compiler, Analyser) {
             return eval("this.exe." + qtyName + "();");
         },
 
-        toSource: function() {
+        getQuantities: function() {
+            return this.quantities;
+        },
 
+        /**
+         * Returns the code of the script as a single string.
+         *
+         * @modifies source
+         */
+        toSource: function() {
+            // Iterate through all quantities and append their string representation to the source code
+            for (var qtyName in this.quantities) {
+                qty = this.quantities[qtyName];
+
+                this.source += qty.toString() + '\n';
+            }
         }
     };
 

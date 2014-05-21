@@ -50,6 +50,12 @@ define([], /**@lends Quantity*/ function() {
         this.dependencies = [];
 
         /**
+         * An array containing all quantities that depend on this quantity.
+         * @type {String[]}
+         */
+        this.reverseDependencies = [];
+
+        /**
          * The category of this quantity. The category is I if the quantity is variable(input
          * is given by the user), II if the quantity is an output variable, III if the
          * quantity is a constant and the category is IV if it is neither of the preceding.
@@ -100,10 +106,10 @@ define([], /**@lends Quantity*/ function() {
     /**
      * Returns a String representation of the line corresponding to this quantity
      * as provided by the user in the ACCEL script.
-     * @return {String} the line corresponding to this quantity
+     * @return {String} The script line corresponding to this quantity
      */
     Quantity.prototype.toString = function() {
-
+        return this.name + '=' + this.definition + ' ;' + this.unit;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
