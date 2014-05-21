@@ -18,7 +18,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePass*/ function(AnalyserPass, Quantity) {
+define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionlist'], /**@lends ExePass*/ function(AnalyserPass, Quantity, FunctionList) {
     /**
      * @class
      * @classdesc This pass is part of the Script Analyser and extracts:
@@ -28,7 +28,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
      *	-Whether a quantity has been given a definition already, or is a 'todo-item'
      */
     function DependencyPass() {
-
+        this.functionlist = FunctionList.getList();
     }
 
     DependencyPass.prototype = new AnalyserPass();
@@ -54,13 +54,13 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
 
         // Identify all dependencies and add them to the quantities
         if (dep) {
-            dep.forEach(function(d) {
+            dep.forEach((function(d) {
             	// It could be that the dependent variable is not yet in the quantities because
             	// it has not been defined yet. Therefore, instead test whether the variable
             	// is local to this definition and if not, add it as a dependency. Also, a single
                 // variable can occur multiple times in the rhs of a definition. Check this
                 // as well.
-            	if (lhs.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1) {
+            	if (lhs.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1 && this.functionlist.indexOf(d) == -1) {
             		quantities[qty].dependencies.push(d);
             		
             		// It could be that it is used in multiple definitions while being
@@ -82,7 +82,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
                         }
                     }
             	}
-            });
+            }).bind(this));
         }
 
         return quantities;
