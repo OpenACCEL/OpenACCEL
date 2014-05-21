@@ -1,31 +1,50 @@
+// Set up various shit so require works with Mocha.
+
+requirejs = require("requirejs");
+requirejs.config({
+    shim: {
+        'underscore': {
+            exports: '_'
+        }
+    },
+    baseUrl: __dirname + "/../../../../src"
+});
+
 suite("namedvectorpass.js", function() {
     // Template module.
-    var namedVectorPass;
+    var instance;
     var assert;
 
-    // setup(function(done) {
-    //     // This saves the module for use in tests. You have to use
-    //     // the done callback because this is asynchronous.
-    //     requirejs(["assert", "model/passes/preprocessor/namedvectorpass"], function(assertModule, module) {
-    //         console.log("Loaded 'namedVectorPass' module.");
-    //         assert = assertModule;
-    //         instance = new module();
-    //         done();
-    //     });
-    // });
+    setup(function(done) {
+        // This saves the module for use in tests. You have to use
+        // the done callback because this is asynchronous.
+        requirejs(["assert", "model/passes/preprocessor/namedvectorpass"], function(assertModule, module) {
+            console.log("Loaded 'namedVectorPass' module.");
+            assert = assertModule;
+            instance = new module();
+            done();
+        });
+    });
 
-    // suite("namedVectorPass", function() {
+    suite("namedVectorPass", function() {
 
-    //     test("parse() robustness", function() {
-    //         assert.throws(
-    //             function() {
-    //                 namedVectorPass.parse(null);
-    //             });
-    //         assert.throws(
-    //             function() {
-    //                 namedVectorPass.parse();
-    //             });
-    //     });
+        test("replaceBrackets: [4, 5]", function() {
+            var input = "[4, 5]";
+            var expected = "{'0':4,'1': 5}";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
+
+        test("replaceBrackets: [4, 5, c: 5]", function() {
+            var input = "[4, 5, c: 5]";
+            var expected = "{'0':4,'1': 5, c: 5}";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
+
+        test("replaceBrackets: [4, 5, c: [1, 2]]", function() {
+            var input = "[4, 5, c: [1, 2]]";
+            var expected = "{'0':4,'1': 5, c: {'0':1, '1':2}}";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
 
     //     //TODO: TEST MORE PARSE
     //     /**
@@ -80,5 +99,5 @@ suite("namedvectorpass.js", function() {
     //             });
     //     });
 
-    // });
+    });
 });
