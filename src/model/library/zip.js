@@ -12,21 +12,21 @@ function zip(a, b, func) {
         var result = [];
         if (!(a instanceof Array)) {
             // Case, a is a scalar, b is an array
-            for (key in b) {
+            for (var key in b) {
                 result[key] = zip(a, b[key], func);
             }
             return result;
         }
         if (!(b instanceof Array)) {
             // Case, b is a scalar, a is an array
-            for (key in a) {
+            for (var key in a) {
                 result[key] = zip(a[key], b, func);
             }
             return result;
         }
         // Case, a and b are both arrays
-        for (key in a) {
-            if (b.key !== undefined) {
+        for (var key in a) {
+            if (b[key] !== undefined) {
                 result[key] = zip(a[key], b[key], func);
             }
         }

@@ -6,10 +6,12 @@
  * @return {Array}            Resulting array.
  */
 function nZip(x, func) {
+    var numArgs = x.length;
     var allScalar = true;
-    for (var inKey in x) {
+    for (var inKey = numArgs; inKey >= 0; inKey--) {
         if (x[inKey] instanceof Array) {
             allScalar = false;
+            // Determine if there is an array in the input.
             break;
         }
     }
@@ -19,12 +21,16 @@ function nZip(x, func) {
     } else {
         var result = [];
         // Return variable.
-        var referenceIndex;
-        // Index of the element that will serve as a base for zipping its keys
-        for (var inKey in x) {
+        var referenceKeys;
+        // Set of keys that are valid candidates for matching with the rest of the input,
+        // thus having a potential place in the output.
+        var numKeys;
+        // Number of keys in the set of referenceKeys.
+        for (var inKey = numArgs; inKey >= 0; inKey--) {
             if (x[inKey] instanceof Array) {
-                referenceIndex = inKey;
-                // Contender for input of reference found.
+                referenceKeys = Object.keys(x[inKey]);
+                // Keys of contender for input of reference found.
+                numKeys = referenceKeys.length;
                 break;
                 // Cut off the loop as soon as possible
             }
@@ -33,15 +39,15 @@ function nZip(x, func) {
         // True if resultKey occurs in every input in x.
         var recursiveInput;
         // Input to be used for the recursive call.
-        for (var resultKey in x[referenceIndex]) {
+        for (var resultKey = numKeys; resultKey >= 0; resultKey--) {
             recursiveInput = [];
             // Start with empty input
             isCommonKey = true;
             // Key occurs in every input until proven otherwise.
-            for (var inKey in x) {
+            for (var inKey = numArgs; inKey >= 0; inKey--) {
                 // Loop over all inputs in x.
                 if (x[inKey] instanceof Array) {
-                    if (resultKey in x[inKey]) {
+                    if (x[inKey][resultKey] !== undefined) {
                         // Loop over all keys in our input of reference
                         recursiveInput[inKey] = x[inKey][resultKey];
                     } else {
