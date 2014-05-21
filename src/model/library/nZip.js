@@ -8,7 +8,7 @@
 function nZip(x, func) {
     var numArgs = x.length;
     var allScalar = true;
-    for (var inKey = numArgs; inKey >= 0; inKey--) {
+    for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
         if (x[inKey] instanceof Array) {
             allScalar = false;
             // Determine if there is an array in the input.
@@ -26,7 +26,7 @@ function nZip(x, func) {
         // thus having a potential place in the output.
         var numKeys;
         // Number of keys in the set of referenceKeys.
-        for (var inKey = numArgs; inKey >= 0; inKey--) {
+        for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
             if (x[inKey] instanceof Array) {
                 referenceKeys = Object.keys(x[inKey]);
                 // Keys of contender for input of reference found.
@@ -39,17 +39,17 @@ function nZip(x, func) {
         // True if resultKey occurs in every input in x.
         var recursiveInput;
         // Input to be used for the recursive call.
-        for (var resultKey = numKeys; resultKey >= 0; resultKey--) {
+        for (var resultKey = numKeys - 1; resultKey >= 0; resultKey--) {
             recursiveInput = [];
             // Start with empty input
             isCommonKey = true;
             // Key occurs in every input until proven otherwise.
-            for (var inKey = numArgs; inKey >= 0; inKey--) {
+            for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
                 // Loop over all inputs in x.
                 if (x[inKey] instanceof Array) {
-                    if (x[inKey][resultKey] !== undefined) {
+                    if (x[inKey][referenceKeys[resultKey]] !== undefined) {
                         // Loop over all keys in our input of reference
-                        recursiveInput[inKey] = x[inKey][resultKey];
+                        recursiveInput[inKey] = x[inKey][referenceKeys[resultKey]];
                     } else {
                         isCommonKey = false;
                         // Key does not occur in this array.
@@ -63,7 +63,7 @@ function nZip(x, func) {
             }
             if (isCommonKey) {
                 // Key occurs in all non-scalar inputs.
-                result[resultKey] = nZip(recursiveInput, func);
+                result[referenceKeys[resultKey]] = nZip(recursiveInput, func);
                 // Put the recursive result in the representative key.
             }
         }
