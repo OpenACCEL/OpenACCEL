@@ -59,12 +59,8 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
                 	// It could be that the dependent variable is not yet in the report because
                 	// it has not been defined yet. Therefore, instead test whether the variable
                 	// is local to this definition and if not, add it as dependency
-                	if (lhs.indexOf(d) == -1) {
-                        // The same variable can also occur multiple times in the rhs of an expression
-                        // (e.g. x=b*b). Therefore, only add if it's not already there
-                        if (report[qty].dependencies.indexOf(d) == -1) {
-                		    report[qty].dependencies.push(d);
-                        }
+                	if (lhs.indexOf(d) == -1 && report[qty].dependencies.indexOf(d) == -1) {
+                		report[qty].dependencies.push(d);
                 		
                 		// It could be that it is used in multiple definitions while being
                 		// undefined. Therefore only add it if it's not already there 
