@@ -26,7 +26,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/script"], /**@lends Controller*/ function(Script) {
+define(["model/script", "model/compiler"], /**@lends Controller*/ function(Script, Compiler) {
 
     /**
      * @class
@@ -36,6 +36,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         this.script = new Script();
         this.numIterations = 0;
         this.executing = false;
+        this.compiler = new Compiler();
     }
     
     /**
@@ -132,6 +133,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         // start again if todo list is empty
         this.stop();
         report = this.script.addQuantity(definition);
+        this.compileScript(this.script);
         this.execute();
     } 
 
@@ -155,6 +157,14 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         }
 
         this.script.deleteQuantity(qtyName);
+        this.compileScript(this.script);
+    }
+    /**
+     * Compiles the given script.
+     * @param  {Script} script script to compile
+     */
+    Controller.prototype.compileScript = function(script) {
+        script.exe = this.compiler.compile(script).exe;
     }     
 
     /**

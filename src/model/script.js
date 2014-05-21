@@ -103,14 +103,10 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         },
 
 		/**
-		 * Compiles the script
-		 *
 		 * Call this method when the source property has been modified.
 		 */
         scriptChanged: function() {
-            if (!this.todo) {
-                this.exe = this.compiler.compile(this).exe;
-            }
+           
         },
 
 

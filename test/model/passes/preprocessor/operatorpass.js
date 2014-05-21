@@ -70,9 +70,10 @@ suite("operatorpass.js", function() {
             assert.deepEqual(result, expresult);
 
             // Test compilation as well.
-            requirejs(["model/compiler"], function(Compiler) {
-                compiler = new Compiler();
-                assert.equal(-5, compiler.compile(input[0]).exe.x());
+            requirejs(["model/compiler", "model/script"], function(Compiler, Script) {
+                var compiler = new Compiler();
+                var script = new Script(input[0]);
+                assert.equal(-5, compiler.compile(script).exe.x());
             });
         });
 
