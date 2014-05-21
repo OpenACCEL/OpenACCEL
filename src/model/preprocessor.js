@@ -22,7 +22,8 @@ define(["model/passes/preprocessor/unitpass",
         "model/passes/preprocessor/exepass",
         "model/passes/preprocessor/funcpass",
         "model/passes/preprocessor/packagepass",
-        "model/passes/preprocessor/vectorpass"
+        "model/passes/preprocessor/vectorpass",
+        "model/passes/preprocessor/namedvectorpass"
     ],
     /**@lends PreProcessor*/
     function(UnitPass,
@@ -30,7 +31,8 @@ define(["model/passes/preprocessor/unitpass",
         ExePass,
         FuncPass,
         PackagePass,
-        VectorPass) {
+        VectorPass,
+        NamedVectorPass) {
         /**
          * @class
          * @classdesc The pre-processor performs multiple passes over the code for transformation and analysation.
