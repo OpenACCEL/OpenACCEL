@@ -20,13 +20,14 @@ suite('dependencypass.js', function() {
         /**
          * The script that we take as example for this pass.
          */
-        var script = ['a = b + c \n',
-            'b = 3\n',
-            'c = 5\n',
-            'f(x) = b - x\n',
-            'g = [2, b, x:c]\n',
-            'h = [b, x:[1, y:c, b], 3]\n',
-            'i = b * b'
+        var script = ['a = b + c ',
+            'b = 3',
+            'c = 5',
+            'f(x) = b - x',
+            'g = [2, b, x:c]',
+            'h = [b, x:[1, y:c, b], 3]',
+            'i = b * b',
+            'j = f(a) + sin(1)'
         ];
 
         /**
@@ -81,6 +82,13 @@ suite('dependencypass.js', function() {
                 definition: 'i = b * b',
                 todo: false,
                 reverseDeps: []
+            },
+            j: {
+                name: 'j',
+                parameters: [],
+                definition: 'j = f(a) + sin(1)',
+                todo: false,
+                reverseDeps: []
             }
         };
 
@@ -94,7 +102,7 @@ suite('dependencypass.js', function() {
                 definition: 'b + c',
                 dependencies: ['b', 'c'],
                 todo: false,
-                reverseDeps: []
+                reverseDeps: ['j']
             },
             b: {
                 name: 'b',
@@ -118,7 +126,7 @@ suite('dependencypass.js', function() {
                 definition: 'b - x',
                 dependencies: ['b'],
                 todo: false,
-                reverseDeps: []
+                reverseDeps: ['j']
             },
             g: {
                 name: 'g',
@@ -141,6 +149,14 @@ suite('dependencypass.js', function() {
                 parameters: [],
                 dependencies: ['b'],
                 definition: 'i = b * b',
+                todo: false,
+                reverseDeps: []
+            },
+            j: {
+                name: 'j',
+                parameters: [],
+                dependencies: ['f','a'],
+                definition: 'j = f(a) + sin(1)',
                 todo: false,
                 reverseDeps: []
             }
