@@ -59,15 +59,21 @@ suite('dependencypass.js', function() {
             },
             g: {
                 name: 'g',
-                parameters: []
+                parameters: [],
+                definition: '[2, b, x:c]',
+                todo: false
             },
             h: {
                 name: 'h',
-                parameters: []
+                parameters: [],
+                definition: '[b, x:[1, y:c, b], 3]',
+                todo: false
             },
             i: {
                 name: 'i',
-                parameters: []
+                parameters: [],
+                definition: 'i = b * b',
+                todo: false
             }
         };
 
@@ -106,17 +112,23 @@ suite('dependencypass.js', function() {
             g: {
                 name: 'g',
                 parameters: [],
-                dependencies: ['b','c']
+                dependencies: ['b','c'],
+                definition: '[2, b, x:c]',
+                todo: false
             },
             h: {
                 name: 'h',
                 parameters: [],
-                dependencies: ['b','c']
+                dependencies: ['b','c'],
+                definition: '[b, x:[1, y:c, b], 3]',
+                todo: false
             },
             i: {
                 name: 'i',
                 parameters: [],
-                dependencies: ['b']
+                dependencies: ['b'],
+                definition: 'i = b * b',
+                todo: false
             }
         };
 
