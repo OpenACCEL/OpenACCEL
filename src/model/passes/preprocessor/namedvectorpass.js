@@ -64,15 +64,14 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
     NamedVectorPass.prototype.replaceBrackets = function(line) {
         // First, we replace all '[' by '{' and ']' by '}', such that it becomes an object.
         // This way, we can identify when we go 'a level deeper'.
+        var lhs = this.getLHS(line);
         line = this.getRHS(line);
 
         line = line.replace(this.regexes.vectorCall, (function(s) {
-            return s.split("[").join(this.otherBegin);
-        }).bind(this));
-
-        line = line.replace(this.regexes.vectorCall, (function(s) {
+            s = s.split("[").join(this.otherBegin);
             return s.split("]").join(this.otherEnd);
         }).bind(this));
+
         console.log(line);
         line = line.replace(this.regexes.openingBracket, (function(s) {
             return s.split("[").join(this.begin);
@@ -90,7 +89,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
         line = line.split(this.otherEnd).join(']');
 
 
-        return line
+        return lhs + " = " + line;
     };
 
     NamedVectorPass.prototype.translate = function(content, parent) {

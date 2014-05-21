@@ -33,7 +33,7 @@ define([], /**@lends Pass*/ function() {
         this.regexes.squareBrackets = /(\d*[a-zA-Z]+\w*)(\[\d*[a-zA-Z]+\w*\])/g;
         this.regexes.dots = /(\d*[a-zA-Z]+\w*)(\.\d+)/g;
         this.regexes.openingBracket = /(?:\W*)([(\[)])/g;
-        this.regexes.closingBracket = /(?:\W*)([(\])])/g;
+        this.regexes.closingBracket = /\]/g;
         this.regexes.vectorCall = /((\d*[a-zA-Z0-9]+\w*)(\[\d*[a-zA-Z0-9]+\w*\]))/g;
     }
 

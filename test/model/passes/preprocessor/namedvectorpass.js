@@ -29,63 +29,63 @@ suite("namedvectorpass.js", function() {
 
     suite("namedVectorPass", function() {
 
-        test("replaceBrackets: [4, 5]", function() {
-            var input = "[4, 5]";
-            var expected = "{'0':4,'1': 5}";
-            assert.equal(instance.replaceBrackets(input), expected);
-        });
-        /*
-        test("replaceBrackets: [4, 5, c: 5]", function() {
-            var input = "[4, 5, c: 5]";
-            var expected = "{'0':4,'1': 5, c: 5}";
+        test("replaceBrackets:y = [4, 5]", function() {
+            var input = "y = [4, 5]";
+            var expected = "y = {'0':4,'1': 5}";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-        test("replaceBrackets: [4, 5, c: [1, 2]]", function() {
-            var input = "[4,5,c:[1,2]]";
-            var expected = "{'0':4,'1':5,c:{'0':1,'1':2}}";
+        test("replaceBrackets: y = [4, 5, c: 5]", function() {
+            var input = "y = [4, 5, c: 5]";
+            var expected = "y = {'0':4,'1': 5, c: 5}";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-        test("replaceBrackets: [4, 5, c: [1, 2], [3, 4]]", function() {
-            var input = "[4,5,c:[1,2],[3, 4]]";
-            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{'0':3,'1': 4}}";
+        test("replaceBrackets:y =  [4, 5, c: [1, 2]]", function() {
+            var input = "y = [4,5,c:[1,2]]";
+            var expected = "y = {'0':4,'1':5,c:{'0':1,'1':2}}";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-        test("replaceBrackets: [4, 5, c: [1, 2], [d: 3, 4]]", function() {
-            var input = "[4,5,c:[1,2],[d: 3, 4]]";
-            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{d: 3,'0': 4}}";
+        test("replaceBrackets:y = [4, 5, c: [1, 2], [3, 4]]", function() {
+            var input = "y = [4,5,c:[1,2],[3, 4]]";
+            var expected = "y = {'0':4,'1':5,c:{'0':1,'1':2},'2':{'0':3,'1': 4}}";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-        test("replaceBrackets: [4, 5, c: [1, 2], [d: [5], 4]]", function() {
-            var input = "[4,5,c:[1,2],[d: [5], 4]]";
-            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}}";
+        test("replaceBrackets: y = [4, 5, c: [1, 2], [d: 3, 4]]", function() {
+            var input = "y = [4,5,c:[1,2],[d: 3, 4]]";
+            var expected = "y = {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: 3,'0': 4}}";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-        test("replaceBrackets: [4, 5, c: [1, 2], [d: [5], 4]] + sin(x)", function() {
-            var input = "[4,5,c:[1,2],[d: [5], 4]] + sin(x)";
-            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}} + sin(x)";
+        test("replaceBrackets: y = [4, 5, c: [1, 2], [d: [5], 4]]", function() {
+            var input = "y = [4,5,c:[1,2],[d: [5], 4]]";
+            var expected = "y = {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}}";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-        test("replaceBrackets: [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
-            var input = "[4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
-            var expected = "{'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
+        test("replaceBrackets: y = [4, 5, c: [1, 2], [d: [5], 4]] + sin(x)", function() {
+            var input = "y = [4,5,c:[1,2],[d: [5], 4]] + sin(x)";
+            var expected = "y = {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}} + sin(x)";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-        test("replaceBrackets: [f: 2] + [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
-            var input = "[f: 2] + [4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
-            var expected = "{f: 2} + {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
+        test("replaceBrackets: y = [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
+            var input = "y = [4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
+            var expected = "y = {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
-        test("replaceBrackets: 3 + [f: 2] + [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
-            var input = "3 + [f: 2] + [4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
-            var expected = "3 + {f: 2} + {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
+        test("replaceBrackets: y = [f: 2] + [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
+            var input = "y = [f: 2] + [4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
+            var expected = "y = {f: 2} + {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
+
+        test("replaceBrackets: y = 3 + [f: 2] + [4, 5, c: [1, 2], [d: [5], 4], e: 4, [10, 12]] + sin(x)", function() {
+            var input = "y = 3 + [f: 2] + [4,5,c:[1,2],[d: [5], 4], e: 4, [10, 12]] + sin(x)";
+            var expected = "y = 3 + {f: 2} + {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
