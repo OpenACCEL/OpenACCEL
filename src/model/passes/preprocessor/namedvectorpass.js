@@ -24,8 +24,8 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
      * hand side of a definition by exe.<varname>().
      */
     function NamedVectorPass() {
-        this.begin  = "\u261E";
-        this.end    = "\u261C";
+        this.begin = "\u261E";
+        this.end = "\u261C";
     }
 
     NamedVectorPass.prototype = new CompilerPass();
@@ -62,16 +62,38 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
     NamedVectorPass.prototype.replaceBrackets = function(line) {
         // First, we replace all '[' by '{' and ']' by '}', such that it becomes an object.
         // This way, we can identify when we go 'a level deeper'.
-        line = line.replace(this.regexes.openingBracket, (function (s) { return s.split("[").join(this.begin); }).bind(this));
-        line = line.replace(this.regexes.closingBracket, (function (s) { return s.split("]").join(this.end);  }).bind(this));
+        line = this.getRHS(line);
 
+        var replace = '';
+        line = line.replace(this.regexes.vectorCall, replace);
+        line = line.split("[").join('{');
+        line = line.split("]").join('}');
+        /*        
+SHIT VAN ROY
+console.log('first' + line);
+        while ((result = this.regexes.closingBracket.exec(line)) != null) {
+            console.log(result);
+            line = line.replace(result[0], (function(s) {
+                return s.split("]").join(this.end);
+            }).bind(this));
+        };
+
+        line = line.replace(this.regexes.closingBracket, this.end);
+
+        console.log('closing replaced' + line);
+        line = line.replace(this.regexes.openingBracket, (function(s) {
+            return s.split("[").join(this.begin);
+        }).bind(this));
+
+        console.log('opening replaced' + line);
+*/
         line = this.translate(line, true);
         line = line.split("\u2603").join(",");
         line = line.split(this.begin).join("{");
         line = line.split(this.end).join("}");
 
         return line
-    }
+    };
 
     NamedVectorPass.prototype.translate = function(content, parent) {
         // Final translated string.
@@ -81,15 +103,14 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
         var x = 0;
         for (var i = x; i < content.length; i++) {
             // We have found a begin token, thus we have to find an end token.
-            if (content[i] == this.begin) { 
+            if (content[i] == this.begin) {
                 x = i;
                 var level = 1;
                 // Update the deepness level accordingly.
                 for (var j = x + 1; j < content.length; j++) {
                     if (content[j] == this.begin) {
                         level++;
-                    }
-                    else if (content[j] == this.end) {
+                    } else if (content[j] == this.end) {
                         level--;
 
                         // If level is 0, we have found the matching end token.
@@ -108,13 +129,15 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
 
         if (!parent) {
             // We have not found a begin token at all, thus we are dealing with a base case and can start translating.
-            var count       = 0;
-            var elements    = output.split(",");
+            var count = 0;
+            var elements = output.split(",");
 
             // If an element does *not* contain a ':', it is unnamed and thus needs an index identifier.
             for (var i = 0; i < elements.length; i++) {
                 var key = elements[i].split(this.begin);
-                if (key[0].indexOf(":") == -1) { elements[i] = "'" + count++ + "':" + elements[i]; }
+                if (key[0].indexOf(":") == -1) {
+                    elements[i] = "'" + count+++"':" + elements[i];
+                }
             }
 
             output = elements.join("\u2603");
