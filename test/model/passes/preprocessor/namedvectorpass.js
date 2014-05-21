@@ -89,6 +89,12 @@ suite("namedvectorpass.js", function() {
             assert.equal(instance.replaceBrackets(input), expected);
         });
 
+        test("replaceBrackets: y = 3 + [f: 2] + [4, 5, c: [1, 2], [d: [5, foo[5]], 4], e: 4, [10, 12]] + sin(x)", function() {
+            var input = "y = 3 + [f: 2] + [4,5,c:[1,2],[d: [5, foo[5]], 4], e: 4, [10, 12]] + sin(x)";
+            var expected = "y = 3 + {f: 2} + {'0':4,'1':5,c:{'0':1,'1':2},'2':{d: {'0':5,'1': foo[5]},'0': 4}, e: 4,'3': {'0':10,'1': 12}} + sin(x)";
+            assert.equal(instance.replaceBrackets(input), expected);
+        });
+
         /**
          * Tests replaceBrackets(). Calls a vector. Should not do anything.
          */
