@@ -62,6 +62,8 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends ExePa
         // identification of todo-items is done in the dependency pass.
         if (rhs == '') {
         	quantities[qtyName].todo = true;
+        } else {
+            quantities[qtyName].todo = false;
         }
         return quantities;
     };
