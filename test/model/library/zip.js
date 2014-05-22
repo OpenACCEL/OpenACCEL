@@ -13,7 +13,7 @@ suite("Zip", function() {
             fileLoader = new FileLoader();
             fileLoader.load("add", "library");
             fileLoader.load("zip", "library");
-            fileLoader.load("nZip", "library");
+            fileLoader.load("nzip", "library");
             console.log("Loaded 'MacroExpander & FileLoader' module.");
             done();
         });
@@ -28,17 +28,17 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
-        test("nZip(): add two arrays", function() {
+        test("nzip(): add two arrays", function() {
             eval(fileLoader.getContent());
             setUpAddTwoArrays();
-            output = nZip([input1, input2], add);
+            output = nzip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
-        test("nZipCees(): add two arrays", function() {
+        test("nzipcees(): add two arrays", function() {
             eval(fileLoader.getContent());
             setUpAddTwoArrays();
-            output = nZipCees([input1, input2], addCees);
+            output = nzipcees([input1, input2], addCees);
             assert.deepEqual(output, expected);
         });
 
@@ -51,17 +51,17 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
-        test("nZip(): add scalar to array", function() {
+        test("nzip(): add scalar to array", function() {
             eval(fileLoader.getContent());
             setUpAddTwoScalars();
-            output = nZip([input1, input2], add);
+            output = nzip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
-        test("nZipCees(): add scalar to array", function() {
+        test("nzipcees(): add scalar to array", function() {
             eval(fileLoader.getContent());
             setUpAddTwoScalars();
-            output = nZipCees([input1, input2], addCees);
+            output = nzipcees([input1, input2], addCees);
             assert.deepEqual(output, expected);
         });
 
@@ -125,11 +125,11 @@ suite("Zip", function() {
         .add('zip()', function() {
             zip(input1, input2, add);
         })
-        .add('nZip()', function() {
-            nZip([input1, input2], add);
+        .add('nzip()', function() {
+            nzip([input1, input2], add);
         })
-        .add('nZipCees()', function() {
-            nZipCees([input1, input2], addCees);
+        .add('nzipcees()', function() {
+            nzipcees([input1, input2], addCees);
         })
         // add listeners
         .on('cycle', function(event) {
@@ -178,7 +178,7 @@ function RandomNumberArrayNested(min, max, numElements, numBranches, depth) {
     }
 }
 
-function nZipCees(x, f) {
+function nzipcees(x, f) {
     // x= array of arguments, starting with 0
     // f=Jensen's device, that is: the pointer to the actual function that is to be evaluated
     // first see if any of the arguments is an array
@@ -211,7 +211,7 @@ function nZipCees(x, f) {
                     xx[i]=x[i][j];
                 }
             }
-            rr[j] = nZipCees(xx, f);
+            rr[j] = nzipcees(xx, f);
         }
         // perhaps there are also non-integer indices. These are not seen
         // by the length-operator; we need to use the for(var in array)-construction.
@@ -242,7 +242,7 @@ function nZipCees(x, f) {
                 }
             }
             if (occursInAll) {
-                rr[keys[k]] = nZipCees(xx, f);
+                rr[keys[k]] = nzipcees(xx, f);
             }
         }
         return rr;

@@ -5,7 +5,7 @@
  * @param  {Function} func    function that should be applied
  * @return {Array}            Resulting array.
  */
-function nZip(x, func) {
+function nzip(x, func) {
     var numArgs = x.length;
     var allScalar = true;
     for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
@@ -63,7 +63,7 @@ function nZip(x, func) {
             }
             if (isCommonKey) {
                 // Key occurs in all non-scalar inputs.
-                result[referenceKeys[resultKey]] = nZip(recursiveInput, func);
+                result[referenceKeys[resultKey]] = nzip(recursiveInput, func);
                 // Put the recursive result in the representative key.
             }
         }
@@ -73,14 +73,14 @@ function nZip(x, func) {
 
 
 /**
- * This is the original implementation of nZip(), it has more overview than the nZip() we use, but less efficiency.
+ * This is the original implementation of nzip(), it has more overview than the nzip() we use, but less efficiency.
  * Applies the given function on the given array of arrays. The function is aplied recursively,
  * so also to nested arrays.
  * @param  {Array}   x        array of inputs used in the function of interest, each of which may be an array itself
  * @param  {Function} func    function that should be applied
  * @return {Array}            Resulting array.
  */
-function nZip_original(x, func) {
+function nzip_original(x, func) {
     var allScalar = true;
     for (var inKey in x) {
         if (x[inKey] instanceof Array) {
@@ -132,7 +132,7 @@ function nZip_original(x, func) {
             }
             if (isCommonKey) {
                 // Key occurs in all non-scalar inputs.
-                result[resultKey] = nZip_original(recursiveInput, func);
+                result[resultKey] = nzip_original(recursiveInput, func);
                 // Put the recursive result in the representative key.
             }
         }
