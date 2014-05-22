@@ -12,8 +12,8 @@ suite("Zip", function() {
             macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
             fileLoader.load("add", "library");
-            fileLoader.load("nZip", "library");
             fileLoader.load("zip", "library");
+            fileLoader.load("nZip", "library");
             console.log("Loaded 'MacroExpander & FileLoader' module.");
             done();
         });
@@ -42,21 +42,23 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
-        test("zip(): add two scalars", function() {
+        //----------------------------------------------------------------------
+
+        test("zip(): add scalar to array", function() {
             eval(fileLoader.getContent());
             setUpAddTwoScalars();
             output = zip(input1, input2, add);
             assert.deepEqual(output, expected);
         });
 
-        test("nZip(): add two scalars", function() {
+        test("nZip(): add scalar to array", function() {
             eval(fileLoader.getContent());
             setUpAddTwoScalars();
             output = nZip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
-        test("nZipCees(): add two scalars", function() {
+        test("nZipCees(): add scalar to array", function() {
             eval(fileLoader.getContent());
             setUpAddTwoScalars();
             output = nZipCees([input1, input2], addCees);
@@ -67,160 +69,83 @@ suite("Zip", function() {
 
         var testAddTwoArraysLength1 = "@benchmark: add two arrays of length 1";
         test(testAddTwoArraysLength1, function () {
-            console.log(testAddTwoArraysLength1);
             var input1 = RandomNumberArray(1, 1000, 1);
             var input2 = RandomNumberArray(1, 1000, 1);
-            eval(fileLoader.getContent());
-            new benchmark.Suite()
-            // add tests
-            .add('zip()', function() {
-                zip(input1, input2, add);
-            })
-            .add('nZip()', function() {
-                nZip([input1, input2], add);
-            })
-            .add('nZipCees()', function() {
-                nZipCees([input1, input2], addCees);
-            })
-            // add listeners
-            .on('cycle', function(event) {
-                console.log(String(event.target));
-            })
-            .on('complete', function() {
-                console.log('Fastest is %s', this.filter('fastest').pluck('name'));
-            })
-            // run async
-            .run({'async': false});
+            setUpBenchmark(testAddTwoArraysLength1, input1, input2);
         });
 
         var testAddTwoArraysLength10 = "@benchmark: add two arrays of length 10";
         test(testAddTwoArraysLength10, function () {
-            console.log(testAddTwoArraysLength10);
             var input1 = RandomNumberArray(1, 1000, 10);
             var input2 = RandomNumberArray(1, 1000, 10);
-            eval(fileLoader.getContent());
-            new benchmark.Suite()
-            // add tests
-            .add('zip()', function() {
-                zip(input1, input2, add);
-            })
-            .add('nZip()', function() {
-                nZip([input1, input2], add);
-            })
-            .add('nZipCees()', function() {
-                nZipCees([input1, input2], addCees);
-            })
-            // add listeners
-            .on('cycle', function(event) {
-                console.log(String(event.target));
-            })
-            .on('complete', function() {
-                console.log('Fastest is %s', this.filter('fastest').pluck('name'));
-            })
-            // run async
-            .run({'async': false});
+            setUpBenchmark(testAddTwoArraysLength10, input1, input2);
         });
 
         var testAddTwoArraysLength100 = "@benchmark: add two arrays of length 100";
         test(testAddTwoArraysLength100, function () {
-            console.log(testAddTwoArraysLength100);
             var input1 = RandomNumberArray(1, 1000, 100);
             var input2 = RandomNumberArray(1, 1000, 100);
-            eval(fileLoader.getContent());
-            new benchmark.Suite()
-            // add tests
-            .add('zip()', function() {
-                zip(input1, input2, add);
-            })
-            .add('nZip()', function() {
-                nZip([input1, input2], add);
-            })
-            .add('nZipCees()', function() {
-                nZipCees([input1, input2], addCees);
-            })
-            // add listeners
-            .on('cycle', function(event) {
-                console.log(String(event.target));
-            })
-            .on('complete', function() {
-                console.log('Fastest is %s', this.filter('fastest').pluck('name'));
-            })
-            // run async
-            .run({'async': false});
+            setUpBenchmark(testAddTwoArraysLength100, input1, input2);
         });
 
         //----------------------------------------------------------------------
 
         var testAddTwoNestedArraysLength1 = "@benchmark: add two nested arrays of length 1";
         test(testAddTwoNestedArraysLength1, function () {
-            console.log(testAddTwoNestedArraysLength1);
             var input1 = RandomNumberArrayNested(1, 1000, 1, 1, 1);
             var input2 = RandomNumberArrayNested(1, 1000, 1, 1, 1);
-            eval(fileLoader.getContent());
-            new benchmark.Suite()
-            // add tests
-            .add('zip()', function() {
-                zip(input1, input2, add);
-            })
-            .add('nZip()', function() {
-                nZip([input1, input2], add);
-            })
-            .add('nZipCees()', function() {
-                nZipCees([input1, input2], addCees);
-            })
-            // add listeners
-            .on('cycle', function(event) {
-                console.log(String(event.target));
-            })
-            .on('complete', function() {
-                console.log('Fastest is %s', this.filter('fastest').pluck('name'));
-            })
-            // run async
-            .run({'async': false});
+            setUpBenchmark(testAddTwoNestedArraysLength1, input1, input2);
         });
 
         var testAddTwoNestedArraysLength5 = "@benchmark: add two nested arrays of length 5";
         test(testAddTwoNestedArraysLength5, function () {
-            console.log(testAddTwoNestedArraysLength5);
             var input1 = RandomNumberArrayNested(1, 1000, 5, 5, 5);
             var input2 = RandomNumberArrayNested(1, 1000, 5, 5, 5);
-            eval(fileLoader.getContent());
-            new benchmark.Suite()
-            // add tests
-            .add('zip()', function() {
-                zip(input1, input2, add);
-            })
-            .add('nZip()', function() {
-                nZip([input1, input2], add);
-            })
-            .add('nZipCees()', function() {
-                nZipCees([input1, input2], addCees);
-            })
-            // add listeners
-            .on('cycle', function(event) {
-                console.log(String(event.target));
-            })
-            .on('complete', function() {
-                console.log('Fastest is %s', this.filter('fastest').pluck('name'));
-            })
-            // run async
-            .run({'async': false});
+            setUpBenchmark(testAddTwoNestedArraysLength5, input1, input2);
         });
     });
+
+    function setUpAddTwoArrays() {
+        input1 = [1, 2, 3];
+        input2 = [4, 5, 6];
+        expected = [5, 7, 9];
+    }
+
+    function setUpAddTwoScalars() {
+        input1 = [1, 1, [1, 1, [1, 1]]];
+        input2 = 1;
+        expected = [2, 2, [2, 2, [2, 2]]];
+    }
+
+    function setUpBenchmark(name, input1, input2) {
+        console.log(name);
+        eval(fileLoader.getContent());
+        new benchmark.Suite()
+        // add tests
+        .add('zip()', function() {
+            zip(input1, input2, add);
+        })
+        .add('nZip()', function() {
+            nZip([input1, input2], add);
+        })
+        .add('nZipCees()', function() {
+            nZipCees([input1, input2], addCees);
+        })
+        // add listeners
+        .on('cycle', function(event) {
+            console.log(String(event.target));
+        })
+        .on('complete', function() {
+            console.log('Fastest is %s', this.filter('fastest').pluck('name'));
+        })
+        // run async
+        .run({'async': false});
+    }
 });
 
-function setUpAddTwoArrays() {
-    input1 = [1, 2, 3];
-    input2 = [4, 5, 6];
-    expected = [5, 7, 9];
-}
-
-function setUpAddTwoScalars() {
-    input1 = [1, 1, [1, 1, [1, 1]]];
-    input2 = 1;
-    expected = [2, 2, [2, 2, [2, 2]]];
-}
-
+/*
+ * Return a random number between min and max.
+ */
 function RandomNumber(min, max) {
     return (Math.round((max - min) * Math.random() + min));
 }
