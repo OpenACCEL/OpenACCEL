@@ -55,6 +55,38 @@ suite("Zip", function() {
 
         //----------------------------------------------------------------------
 
+        test("zip(): add vector to nested vector", function() {
+            eval(fileLoader.getContent());
+            setUpAddVectorToNestedVector();
+            output = zip(input1, input2, add);
+            assert.deepEqual(output, expected);
+        });
+
+        test("nzip(): add vector to nested vector", function() {
+            eval(fileLoader.getContent());
+            setUpAddVectorToNestedVector();
+            output = nzip([input1, input2], add);
+            assert.deepEqual(output, expected);
+        });
+
+        //----------------------------------------------------------------------
+
+        test("zip(): add two nested vectors", function() {
+            eval(fileLoader.getContent());
+            setUpAddTwoNestedVectors();
+            output = zip(input1, input2, add);
+            assert.deepEqual(output, expected);
+        });
+
+        test("nzip(): add two nested vectors", function() {
+            eval(fileLoader.getContent());
+            setUpAddTwoNestedVectors();
+            output = nzip([input1, input2], add);
+            assert.deepEqual(output, expected);
+        });
+
+        //----------------------------------------------------------------------
+
         var testAddTwoVectorsLength1 = "@benchmark: add two vectors of length 1";
         test(testAddTwoVectorsLength1, function () {
             var input1 = RandomNumberArray(1, 1000, 1);
@@ -133,6 +165,18 @@ suite("Zip", function() {
     function setUpAddScalarToVector() {
         input1 = [1, 1, [1, 1, [1, 1]]];
         input2 = 1;
+        expected = [2, 2, [2, 2, [2, 2]]];
+    }
+
+    function setUpAddVectorToNestedVector() {
+        input1 = [1, 1, [1, 1, [1, 1, 1]]];
+        input2 = [1, 1, 1, 1];
+        expected = [2, 2, [2, 2, [2, 2, 2]]];
+    }
+
+    function setUpAddTwoNestedVectors() {
+        input1 = [1, 1, [1, 1, [1, 1, 1]]];
+        input2 = [1, 1, [1, 1, [1, 1]], 1];
         expected = [2, 2, [2, 2, [2, 2]]];
     }
 
