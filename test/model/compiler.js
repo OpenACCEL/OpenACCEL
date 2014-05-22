@@ -52,13 +52,21 @@ suite("Compiler", function() {
         });
     });
 
-    // suite("vector tests", function() {
-    //     test("default settings, y = 1 + [2, x: 4]", function() {
-    //         var code = "y = 1 + [2, x: 4]";
-    //         var output = compiler.compile(code);
-    //         var expected = [3];
-    //         expected.x = 5;
-    //         assert.deepEqual(output.exe.y(), expected);
-    //     });
-    // });
+    suite("vector tests", function() {
+        test("default settings, y = 1 + [2, x: 4]", function() {
+            var code = "y = 1 + [2, x: 4]";
+            var output = compiler.compile(code);
+            var expected = [3];
+            expected.x = 5;
+            assert.deepEqual(output.exe.y(), expected);
+        });
+
+        test("default settings, y = 1 + [2, x: 4] * [x: 4, 3, y: 2]", function() {
+            var code = "y = 1 + [2, x: 4] * [x: 4, 3, y: 2]";
+            var output = compiler.compile(code);
+            var expected = [7];
+            expected.x = 17;
+            assert.deepEqual(output.exe.y(), expected);
+        });
+    });
 });
