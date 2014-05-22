@@ -176,7 +176,6 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         this.stop();
         this.script.addQuantity(definition);
         this.compileScript(this.script);
-        this.execute();
     } 
 
     /**
@@ -201,14 +200,13 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         this.stop();
         this.script.deleteQuantity(qtyName);
         this.compileScript(this.script);
-        this.execute();
     }
     /**
      * Compiles the given script if the todo-list is empty.
      * @param  {Script} script script to compile
      */
     Controller.prototype.compileScript = function(script) {
-    	if (this.script.isComplete()) {
+    	if (script.isComplete()) {
         	script.exe = this.compiler.compile(script).exe;
         	return true;
     	} else {
@@ -235,7 +233,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
                 'quantity does not exist')
         }
 
-        return this.script.getQuantityValue(quantity).value;
+        return this.script.getQuantityValue(quantity);
     }
 
     /**

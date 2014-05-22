@@ -57,7 +57,7 @@ suite("ControllerAPI", function() {
             controller.addQuantity(input);
             var input = "b = 10";
             controller.addQuantity(input);
-            var output = controller.getQuantity('a');
+            var output = controller.getQuantityValue('a');
             var expected = 20;
             assert.equal(output, expected);
         });

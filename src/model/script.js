@@ -73,7 +73,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
         isComplete: function() {
-            return this.analyser.isScriptComplete() && this.quantities.length > 0;
+            return this.analyser.isScriptComplete() && Object.keys(this.quantities).length > 0;
         },
 
         /**
