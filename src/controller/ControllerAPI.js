@@ -33,10 +33,10 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * @classdesc Base controller class.
      */
     function Controller() {
+    	this.compiler = new Compiler();
         this.script = new Script();
         this.numIterations = 0;
         this.executing = false;
-        this.compiler = new Compiler();
     }
     
     /**
@@ -44,6 +44,11 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      */
     Controller.prototype.execute = function() {
     	this.executing = true;
+    	
+    	if (script.isComplete()) {
+
+    	}
+    	
 
     	// TODO initiate runloop of script
     } 
@@ -156,8 +161,10 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
                 'quantity does not exist')
         }
 
+        this.stop();
         this.script.deleteQuantity(qtyName);
         this.compileScript(this.script);
+        this.execute();
     }
     /**
      * Compiles the given script if the todo-list is empty.
@@ -166,6 +173,9 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
     Controller.prototype.compileScript = function(script) {
     	if (this.script.isComplete()) {
         	script.exe = this.compiler.compile(script).exe;
+        	return true;
+    	} else {
+    		return false;
     	}
     }     
 

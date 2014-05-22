@@ -27,6 +27,12 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         this.source = '';
 
         /**
+         * Whether the source attribute is up to date.
+         * Used for caching purposes.
+         */
+        this.scriptModified = false;
+
+        /**
          * The executable javascript code representing the ACCEL model
          * as stored in the source attribute.
          * @type {String}
@@ -53,14 +59,19 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
 
     Script.prototype = {
 
+        /**
+         * Returns whether the script can be compiled and executed.
+         *
+         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         */
         isComplete: function() {
-            return this.analyser.scriptComplete;
+            return this.analyser.scriptComplete && this.quantities.length > 0;
         },
 
         /**
          * Returns whether the quantity is in the script.
          *
-         * @param qtyname The name of the quantity
+         * @param {String} qtyname The name of the quantity
          * @return qtyName in quantities
          */
         hasQuantity: function(qtyName) {
@@ -68,18 +79,62 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         },
 
         /**
-         * Add quantity to quantities and recompiles the script.
-         * @param {String} source a line in the script as provided by the user
-         * @pre source is in the format x(a) = 'definition', where a can be empty.
+         * Returns an object with quantity names as keys and the corresponding
+         * Quantity objects as values
+         *
+         * @return this.quantities
+         */
+        getQuantities: function() {
+            return this.quantities;
+        },
+
+        /**
+         * Returns the quantity with the given name.
+         *
+         * @param {String} qtyName The name of the quantity to return.
+         * @pre this.hasQuantity(qtyName)
+         * @return this.quantities[qtyName]
+         */
+        getQuantity: function(qtyName) {
+            if (!this.hasQuantity(qtyName)) {
+                throw new Error('Script.prototype.getQuantity.pre :' +
+                'no Quantity named qtyName')
+            }
+
+            return this.quantities[qtyName];
+        },
+
+        /**
+         * Returns the value of the quantity with the given name, as .
+         *
+         * @param {String} qtyName The name of the quantity of which to return the value
+         * @pre this.hasQuantity(qtyName)
+         * @return this.quantities[qtyName]
+         */
+        getQuantityValue: function(qtyName) {
+            if (!this.hasQuantity(qtyName)) {
+                throw new Error('Script.prototype.getQuantityValue.pre :' +
+                'no Quantity named qtyName')
+            }
+
+            return eval("this.exe." + qtyName + "();");
+        },
+        
+
+        /**
+         * Adds the quantity defined in source to the script. If the quantity already exists,
+         * it's definition is updated.
+         *
+         * @param {String} source The definition of the quantity to be added, as specified by the user
+         * @pre true
          * @modifies quantities
+         * @post The quantity defined in source has been added to the script, the category of all
+         * quantities has been re-evaluated and the script has been recompiled if complete.
          */
         addQuantity: function(source) {
             // Analyse the added line of code and add the defined quantity to the model
             this.quantities = this.analyser.analyse(source, this.quantities);
-
             this.scriptChanged();
-            
-            return this.quantities;
         },
 
         /**
@@ -88,6 +143,9 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          *
          * @param qtyName The name of the quantity to delete
          * @modifies quantities
+         * @post The quantity named qtyName has been deleted from the script or set as todo, 
+         * the category of all quantities has been re-evaluated and the script has
+         * been recompiled if complete.
          */
         deleteQuantity: function(qtyName) {
             if (!this.hasQuantity(qtyName)) {
@@ -104,37 +162,60 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
             this.scriptChanged();
         },
 
+        /**
+         * Sets the value of a category 1 user input quantity.
+         *
+         * @param {String} qtyName The name of the category 1 quantity to set the value of
+         * @param {Number} value The value to give to the Quantity with name qtyName
+         * @pre qtyName in this.quantities && this.quantities[qtyName].category == 1
+         */
+        setConstant: function(qtyName, value) {
+            if(!this.hasQuantity(qtyName)) {
+                throw new Error('Script.prototype.setConstant.pre :' +
+                'no Quantity named qtyName')
+            }
+            if(this.quantities[qtyName].category != 1) {
+                throw new Error('Script.prototype.setConstant.pre :' +
+                'Quantity qtyName is not of category 1')
+            }
 
-        setValue: function(qtyName, value) {
-
+            // TODO implementation
         },
 
 		/**
-		 * Does all things that should be done when the script has changed.
+		 * Does all things that should be done when the script has changed:
+         * - Re-evaluates the category of all quantities
 		 *
-		 * Call this method when quantities has been modified.
+		 * Call this method when this.quantities has been modified.
+         *
+         * @modifies this.quantities
+         * @post The categories of all quantities have been determined and set.
 		 */
         scriptChanged: function() {
+            this.scriptModified = true;
+            
             // Determine categories of all quantities
             this.analyser.determineCategories(this.quantities);
-        },
-
-
-        getQuantity: function(qtyName) {
-            return eval("this.exe." + qtyName + "();");
-        },
-
-        getQuantities: function() {
-            return this.quantities;
         },
 
         /**
          * Returns the code of the script as a single string.
          *
-         * @param {Boolean} includeUnits Whether to include the units in the string representation
+         * @param {Boolean} includeUnits (optional) Whether to include the units in the string representation
          * @modifies source
          */
         toSource: function(includeUnits) {
+            // Make parameter optional by setting value if undefined
+            if (typeof includeUnits === 'undefined') {
+                includeUnits = false;
+            }
+
+            // If the script has not been modified since the last call to toSource, return
+            // the cached value instead of re-evaluating
+            if (!this.scriptModified) {
+                return this.source;
+            }
+
             // Iterate through all quantities and append their string representation to the source code
             var lines = [];
             for (var qtyName in this.quantities) {
@@ -145,7 +226,9 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
                     lines.push(qty.toString(includeUnits));
                 }
             }
+
             this.source = lines.join("\n");
+            this.scriptModified = false;
             
             return this.source;
         }
