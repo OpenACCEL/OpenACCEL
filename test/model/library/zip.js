@@ -87,6 +87,54 @@ suite("Zip", function() {
 
         //----------------------------------------------------------------------
 
+        test("nzip(): sum three vectors", function() {
+            eval(fileLoader.getContent());
+            input1 = [1, 2, 3];
+            input2 = [4, 5, 6];
+            input3 = [7, 8, 9];
+            expected = [12, 15, 18];
+            output = nzip([input1, input2, input3], sum);
+            assert.deepEqual(output, expected);
+        });
+
+        //----------------------------------------------------------------------
+
+        test("nzip(): sum scalar to two nested vectors", function() {
+            eval(fileLoader.getContent());
+            input1 = [1, 1, [1, 1, [1, 1, 1]]];
+            input2 = [1, 1, [1, 1, [1, 1]], 1];
+            input3 = 2;
+            expected = [4, 4, [4, 4, [4, 4]]];
+            output = nzip([input1, input2, input3], sum);
+            assert.deepEqual(output, expected);
+        });
+
+        //----------------------------------------------------------------------
+
+        test("nzip(): sum vector to two nested vectors", function() {
+            eval(fileLoader.getContent());
+            input1 = [1, 1, [1, 1, [1, 1, 1]]];
+            input2 = [1, 1, [1, 1, [1, 1]], 1];
+            input3 = [2, 2, 2, 2];
+            expected = [4, 4, [4, 4, [4, 4]]];
+            output = nzip([input1, input2, input3], sum);
+            assert.deepEqual(output, expected);
+        });
+
+        //----------------------------------------------------------------------
+
+        test("nzip(): sum vector to two nested vectors", function() {
+            eval(fileLoader.getContent());
+            input1 = [1, 1, [1, 1, [1, 1, 1]]];
+            input2 = [1, 1, [1, 1, [1, 1]], 1];
+            input3 = [2, 2, [2, 2]];
+            expected = [4, 4, [4, 4]];
+            output = nzip([input1, input2, input3], sum);
+            assert.deepEqual(output, expected);
+        });
+
+        //----------------------------------------------------------------------
+
         var testAddTwoVectorsLength1 = "@benchmark: add two vectors of length 1";
         test(testAddTwoVectorsLength1, function () {
             var input1 = RandomNumberArray(1, 1000, 1);
