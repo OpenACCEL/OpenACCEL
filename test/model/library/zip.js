@@ -23,128 +23,128 @@ suite("Zip", function() {
 
     suite("-- zip vs nzip --", function() {
 
-        test("zip(): add two arrays", function() {
+        test("zip(): add two vectors", function() {
             eval(fileLoader.getContent());
-            setUpAddTwoArrays();
+            setUpAddTwoVectors();
             output = zip(input1, input2, add);
             assert.deepEqual(output, expected);
         });
 
-        test("nzip(): add two arrays", function() {
+        test("nzip(): add two vectors", function() {
             eval(fileLoader.getContent());
-            setUpAddTwoArrays();
+            setUpAddTwoVectors();
             output = nzip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
-        test("nzipcees(): add two arrays", function() {
+        test("nzipcees(): add two vectors", function() {
             eval(fileLoader.getContent());
-            setUpAddTwoArrays();
+            setUpAddTwoVectors();
             output = nzipcees([input1, input2], addCees);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
 
-        test("zip(): add scalar to array", function() {
+        test("zip(): add scalar to vector", function() {
             eval(fileLoader.getContent());
-            setUpAddTwoScalars();
+            setUpAddScalarToVector();
             output = zip(input1, input2, add);
             assert.deepEqual(output, expected);
         });
 
-        test("nzip(): add scalar to array", function() {
+        test("nzip(): add scalar to vector", function() {
             eval(fileLoader.getContent());
-            setUpAddTwoScalars();
+            setUpAddScalarToVector();
             output = nzip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
-        test("nzipcees(): add scalar to array", function() {
+        test("nzipcees(): add scalar to vector", function() {
             eval(fileLoader.getContent());
-            setUpAddTwoScalars();
+            setUpAddScalarToVector();
             output = nzipcees([input1, input2], addCees);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
 
-        var testAddTwoArraysLength1 = "@benchmark: add two arrays of length 1";
-        test(testAddTwoArraysLength1, function () {
+        var testAddTwoVectorsLength1 = "@benchmark: add two vectors of length 1";
+        test(testAddTwoVectorsLength1, function () {
             var input1 = RandomNumberArray(1, 1000, 1);
             var input2 = RandomNumberArray(1, 1000, 1);
             var args = [input1, input2];
-            setUpBenchmark(testAddTwoArraysLength1, args);
+            setUpBenchmark(testAddTwoVectorsLength1, args);
         });
 
-        var testAddTwoArraysLength10 = "@benchmark: add two arrays of length 10";
-        test(testAddTwoArraysLength10, function () {
+        var testAddTwoVectorsLength10 = "@benchmark: add two vectors of length 10";
+        test(testAddTwoVectorsLength10, function () {
             var input1 = RandomNumberArray(1, 1000, 10);
             var input2 = RandomNumberArray(1, 1000, 10);
             var args = [input1, input2];
-            setUpBenchmark(testAddTwoArraysLength10, args);
+            setUpBenchmark(testAddTwoVectorsLength10, args);
         });
 
-        var testAddTwoArraysLength100 = "@benchmark: add two arrays of length 100";
-        test(testAddTwoArraysLength100, function () {
+        var testAddTwoVectorsLength100 = "@benchmark: add two vectors of length 100";
+        test(testAddTwoVectorsLength100, function () {
             var input1 = RandomNumberArray(1, 1000, 100);
             var input2 = RandomNumberArray(1, 1000, 100);
             var args = [input1, input2];
-            setUpBenchmark(testAddTwoArraysLength100, args);
+            setUpBenchmark(testAddTwoVectorsLength100, args);
         });
 
         //----------------------------------------------------------------------
 
-        var testAddTwoNestedArraysLength1 = "@benchmark: add two nested arrays of length 1";
-        test(testAddTwoNestedArraysLength1, function () {
+        var testAddTwoNestedVectorsLength1 = "@benchmark: add two nested vectors of length 1";
+        test(testAddTwoNestedVectorsLength1, function () {
             var input1 = RandomNumberArrayNested(1, 1000, 1, 1, 1);
             var input2 = RandomNumberArrayNested(1, 1000, 1, 1, 1);
             var args = [input1, input2];
-            setUpBenchmark(testAddTwoNestedArraysLength1, args);
+            setUpBenchmark(testAddTwoNestedVectorsLength1, args);
         });
 
-        var testAddTwoNestedArraysLength5 = "@benchmark: add two nested arrays of length 5";
-        test(testAddTwoNestedArraysLength5, function () {
+        var testAddTwoNestedVectorsLength5 = "@benchmark: add two nested vectors of length 5";
+        test(testAddTwoNestedVectorsLength5, function () {
             var input1 = RandomNumberArrayNested(1, 1000, 5, 5, 5);
             var input2 = RandomNumberArrayNested(1, 1000, 5, 5, 5);
             var args = [input1, input2];
-            setUpBenchmark(testAddTwoNestedArraysLength5, args);
+            setUpBenchmark(testAddTwoNestedVectorsLength5, args);
         });
 
         //----------------------------------------------------------------------
 
-        var testAddOneNestedArraysLength1 = "@benchmark: add one nested arrays of length 1";
-        test(testAddOneNestedArraysLength1, function () {
+        var testAddOneNestedVectorsLength1 = "@benchmark: add one nested vectors of length 1";
+        test(testAddOneNestedVectorsLength1, function () {
             var args = RandomNumberArrayNested(1, 1000, 1, 1, 1);
-            setUpBenchmark(testAddOneNestedArraysLength1, args);
+            setUpBenchmark(testAddOneNestedVectorsLength1, args);
         });
 
-        var testAddFourNestedArraysLength5 = "@benchmark: add four nested arrays of length 5";
-        test(testAddFourNestedArraysLength5, function () {
+        var testAddFourNestedVectorsLength5 = "@benchmark: add four nested vectors of length 5";
+        test(testAddFourNestedVectorsLength5, function () {
             var args = RandomNumberArrayNested(1, 1000, 5, 4, 3);
-            setUpBenchmark(testAddFourNestedArraysLength5, args);
+            setUpBenchmark(testAddFourNestedVectorsLength5, args);
         });
 
-        var testAddFiveNestedArraysLength5 = "@benchmark: add five nested arrays of length 5";
-        test(testAddFiveNestedArraysLength5, function () {
+        var testAddFiveNestedVectorsLength5 = "@benchmark: add five nested vectors of length 5";
+        test(testAddFiveNestedVectorsLength5, function () {
             var args = RandomNumberArrayNested(1, 1000, 5, 5, 1);
-            setUpBenchmark(testAddFiveNestedArraysLength5, args);
+            setUpBenchmark(testAddFiveNestedVectorsLength5, args);
         });
 
-        var testAddTenNestedArraysLength10 = "@benchmark: add ten nested arrays of length 10";
-        test(testAddTenNestedArraysLength10, function () {
+        var testAddTenNestedVectorsLength10 = "@benchmark: add ten nested vectors of length 10";
+        test(testAddTenNestedVectorsLength10, function () {
             var args = RandomNumberArrayNested(1, 1000, 10, 10, 1);
-            setUpBenchmark(testAddTenNestedArraysLength10, args);
+            setUpBenchmark(testAddTenNestedVectorsLength10, args);
         });
     });
 
-    function setUpAddTwoArrays() {
+    function setUpAddTwoVectors() {
         input1 = [1, 2, 3];
         input2 = [4, 5, 6];
         expected = [5, 7, 9];
     }
 
-    function setUpAddTwoScalars() {
+    function setUpAddScalarToVector() {
         input1 = [1, 1, [1, 1, [1, 1]]];
         input2 = 1;
         expected = [2, 2, [2, 2, [2, 2]]];
@@ -194,7 +194,7 @@ function RandomNumber(min, max) {
 
 /*
  * Total elements:
- * numelements
+ * numElements
  */
 function RandomNumberArray(min, max, numElements) {
     var _array = [];
