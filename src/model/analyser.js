@@ -36,7 +36,19 @@ define(["model/passes/analyser/quantitypass",
             this.passes.push(new QuantityPass());
             this.passes.push(new DependencyPass());
 
+            /**
+             * Whether there are no todo quantities in the script.
+             *
+             * @type {Boolean}
+             */
             this.scriptComplete = true;
+
+            /**
+             * Object containing all category 2 (output) quantities, keyed by name.
+             *
+             * @type {map<String, Quantity>}
+             */
+            this.outputQuantities = {};
         }
 
         /**
@@ -54,15 +66,33 @@ define(["model/passes/analyser/quantitypass",
         };
 
         /**
+         * Returns whether there are no todo-items.
+         *
+         * @return this.scriptComplete
+         */
+        Analyser.prototype.isScriptComplete = function() {
+            return this.scriptComplete;
+        };
+
+        /**
+         * Returns an object containing all category 2 quantities,
+         * keyed by quantity name.
+         */
+        Analyser.prototype.getOutputQuantities = function() {
+            return this.outputQuantities;
+        };
+
+        /**
          * Determines the categories of all quantities and checks whether the script is
          * complete (no todo-items).
          *
          * @param {Quantity{} } quantities The set of quantities to analyse
          * @return quantities, with category attribute set
-         * @modifies quantities
+         * @modifies quantities, this.scriptComplete
          */
         Analyser.prototype.determineCategories = function(quantities) {
             this.scriptComplete = true;
+            this.outputQuantities = {};
 
             // Loop through all quantities
             for (var qtyName in quantities) {
@@ -85,6 +115,7 @@ define(["model/passes/analyser/quantitypass",
                     // 2 (output)
                     if (qty.reverseDeps.length == 0) {
                         quantities[qtyName].category = 2;
+                        this.outputQuantities[qtyName] = qty;
                     } else {
                         // Has both dependencies and quantities that depend on this quantity: category 4
                         quantities[qtyName].category = 4;
@@ -93,7 +124,7 @@ define(["model/passes/analyser/quantitypass",
             }
 
             return quantities;
-        }
+        };
 
         // Exports all macros.
         return Analyser;

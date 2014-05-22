@@ -20,33 +20,41 @@ if (inNode) {
 define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler, Analyser, Quantity) {
     function Script(source) {
 
+        this.compiler = new Compiler();
+        this.analyser = new Analyser();
+
         /**
          * The source of the ACCEL script, as provided by the user.
+         *
          * @type {String}
          */
         this.source = '';
 
         /**
-         * Whether the source attribute is up to date.
-         * Used for caching purposes.
+         * Whether the script has been modified since the
+         * last time that this.toSource() was called.
+         *
+         * @type {Boolean}
          */
         this.scriptModified = false;
 
         /**
          * The executable javascript code representing the ACCEL model
          * as stored in the source attribute.
+         *
          * @type {String}
          */
         this.exe = null;
 
         /**
          * Contains the quantities that together make up the ACCEL script.
-         * @type {Quantity[]}
+         *
+         * @type {map<String, Quantity>}
          */
         this.quantities = {};
 
-        this.compiler = new Compiler();
-        this.analyser = new Analyser();
+        // TODO store array of quantity names to preserve the order in which
+        // they were defined
 
         if (typeof source !== 'undefined') {
             // Source code is given, initialize.
@@ -65,7 +73,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
         isComplete: function() {
-            return this.analyser.scriptComplete && this.quantities.length > 0;
+            return this.analyser.isScriptComplete() && this.quantities.length > 0;
         },
 
         /**
@@ -86,6 +94,26 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          */
         getQuantities: function() {
             return this.quantities;
+        },
+
+        /**
+         * Returns an object containing all category 2 quantities, keyed
+         * by quantity name, and containing their current values if the script
+         * can be executed.
+         *
+         * @return this.analyser.getOutputQuantities()
+         */
+        getOutputQuantities: function() {
+            var cat2quantities = this.analyser.getOutputQuantities();
+
+            // Populate object with quantity values if script can be evaluated
+            if (this.isComplete()) {
+                for (q in cat2quantities) {
+                    cat2quantities[q].value = this.getQuantityValue(q);
+                }
+            }
+
+            return cat2quantities;
         },
 
         /**
