@@ -69,10 +69,18 @@ function nzipcees(x, f) {
     }
 }
 
+function isNumeric (o) {
+    return ! isNaN (o-0);
+}
+
 function addCees(x) {
     return x[0] + x[1];
 }
 
-function isNumeric (o) {
-    return ! isNaN (o-0);
+function sumCees(x) {
+    var _sum = 0;
+    for (var i = x.length - 1; i >= 0; i--) {
+        _sum += x[i];
+    }
+    return _sum;
 }
