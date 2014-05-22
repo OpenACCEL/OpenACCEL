@@ -2,7 +2,7 @@ doctype html
 html
     head
         title OpenACCEL
-        script(data-main="scripts/view/main" src="scripts/require.js")
+        script(data-main='scripts/view/main' src='scripts/require.js')
         script(src='scripts/jquery.js')
         script(src='scripts/jquery-ui.js')
         link(rel='stylesheet', type='text/css', href='css/accelstyle.css')
@@ -10,20 +10,12 @@ html
             $(document).ready(
                 function() {
                     $('#main').tabs();
-                    $('#scriptline').keypress(
-                        function(e) {
-                            if (e.which == 13) {
-                                $('#enterline').click();
-                            }
-                        }
-                    );
                 }
             );
     body
         #container
             #top
                 #logo
-                #ccel CCEL
             #main
                 ul
                     li
