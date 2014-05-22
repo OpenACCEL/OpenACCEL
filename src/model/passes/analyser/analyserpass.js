@@ -23,7 +23,11 @@ define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
      * @classdesc Abstract Pass that is part of compiling the script.
      */
     function AnalyserPass() {
-    	this.regexes.varNames = /([a-zA-Z]\w*)/g;
+        /**
+         * Regex that extracts quantity references from a definition
+         * @type {RegExp}
+         */
+        this.regexes.varNames = /(\w*[a-zA-Z_]\w*(?!\w*\s*:))/g;
     }
 
     AnalyserPass.prototype = new Pass();

@@ -31,12 +31,14 @@ define(["model/compiler"], function(Compiler) {
         source: '',
 
         /**
-         *
+         * The executable javascript code representing the ACCEL model
+         * as stored in the source attribute.
+         * @type {String}
          */
         exe: null,
 
         /**
-         * Contains the quantities that together make up this script.
+         * Contains the quantities that together make up the ACCEL script.
          * @type {Quantity[]}
          */
         quantities: [],
@@ -61,11 +63,15 @@ define(["model/compiler"], function(Compiler) {
             return this.report;
         },
 
-		/**
-		 * Compiles the script and updates the quantities array.
-		 *
-		 * Call this method when the source property has been modified.
-		 */
+        deleteQuantity: function(quantity) {
+            
+        },
+
+        /**
+         * Compiles the script and updates the quantities array.
+         *
+         * Call this method when the source property has been modified.
+         */
         scriptChanged: function() {
             compileResult = this.compiler.compile(this.source);
             this.updateQuantities(compileResult);
@@ -78,8 +84,8 @@ define(["model/compiler"], function(Compiler) {
          * @param compileResult The object returned by compiler.compile(source)
          */
         updateQuantities: function(compileResult) {
-        	this.exe = compileResult.exe;
-        	this.quantities = compileResult.report;
+            this.exe = compileResult.exe;
+            this.quantities = compileResult.report;
         },
 
         getQuantity: function(name) {

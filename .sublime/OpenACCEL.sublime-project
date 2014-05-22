@@ -4,7 +4,7 @@
         {
             "path": "../",
             "name": "OpenACCEL",
-            "folder_exclude_patterns": [".sublime", "JSDoc2Latex", "lib", "node_modules", "prepost"],
+            "folder_exclude_patterns": [".sublime", "bin", "JSDoc2Latex", "lib", "node_modules", "prepost"],
             "follow_symlinks": true
         },
     ],
