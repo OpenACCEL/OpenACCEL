@@ -51,4 +51,14 @@ suite("Compiler", function() {
             assert.equal(output.exe.y(4), expected);
         });
     });
+
+    // suite("vector tests", function() {
+    //     test("default settings, y = 1 + [2, x: 4]", function() {
+    //         var code = "y = 1 + [2, x: 4]";
+    //         var output = compiler.compile(code);
+    //         var expected = [3];
+    //         expected.x = 5;
+    //         assert.deepEqual(output.exe.y(), expected);
+    //     });
+    // });
 });
