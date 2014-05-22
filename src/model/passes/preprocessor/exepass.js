@@ -102,12 +102,21 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(
         return output.replace(this.regexes.identifier, function(s) {
             // Check if this variable is not a local function variable.
             var parameters = report[lhs.match(/([a-zA-Z]\w*)/)[0]].parameters;
-
             if (parameters.indexOf(s) > -1 || s == "exe") {
                 return s;
             }
 
-            return 'exe.' + s + '()';
+            // We may have the case where the regex matches 'myVar.myKey'.
+            // We only want to modify the first part, thus we split by . and only edit the first element.
+
+            var split = s.split(".");
+            var newQuantityName = 'exe.' + split[0] + '()';
+
+            if (split.slice(1).length > 0) {
+                newQuantityName += "." + split.slice(1).join(".");
+            }
+            
+            return newQuantityName;
         });
     };
 

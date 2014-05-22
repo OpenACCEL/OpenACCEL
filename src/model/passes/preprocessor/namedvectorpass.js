@@ -47,11 +47,11 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
      */
     NamedVectorPass.prototype.parse = function(scriptLines, report) {
         CompilerPass.prototype.parse.call(this, scriptLines, report);
-        for (var i = 0; i < scriptLines.length; i++) {
-            var line = scriptLines[i];
-            NamedVectorPass.prototype.replaceBrackets(line);
-        }
-
+        return scriptLines.map((function(line) {
+            // matches var1[var2] where var2 != 0
+            line = this.replaceBrackets(line);
+            return line;
+        }).bind(this));
     };
 
     /**
@@ -72,7 +72,6 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
             return s.split("]").join(this.otherEnd);
         }).bind(this));
 
-        console.log(line);
         line = line.replace(this.regexes.openingBracket, (function(s) {
             return s.split("[").join(this.begin);
         }).bind(this));
@@ -87,7 +86,6 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
         line = line.split(this.end).join("}");
         line = line.split(this.otherBegin).join('[');
         line = line.split(this.otherEnd).join(']');
-
 
         return lhs + " = " + line;
     };

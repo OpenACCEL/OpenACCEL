@@ -65,6 +65,14 @@ suite('exepass.js', function() {
             assert.equal(instance.translateRHS(line, "x", report), expResult);
         });
 
+        test('parse(): Vector dot notation test: myVar.myKey', function() {
+            var lines = ['x = myVar.myKey'];
+            var expResult = ['x = exe.myVar().myKey'];
+            var report = analyser.analyse(lines.join("\n"));
+
+            assert.deepEqual(instance.parse(lines, report), expResult);
+        });
+
         /**
          * Test case for translateLine().
          * Robustness

@@ -112,6 +112,11 @@ suite("namedvectorpass.js", function() {
             assert.equal(instance.replaceBrackets("y = [[1],[1],[1],[1],[1]]"), "y = {'0':{'0':1},'1':{'0':1},'2':{'0':1},'3':{'0':1},'4':{'0':1}}");
         })
 
+        test('replaceBrackets() y = [[[[1]]], [[1]]]', function() {
+            assert.equal(instance.replaceBrackets("y = [[[[1]]], [[1]]]"), "y = {'0':{'0':{'0':{'0':1}}},'1': {'0':{'0':1}}}");
+        });
+
+
         /**
          * replaceBrackets() robustness tests.
          */
