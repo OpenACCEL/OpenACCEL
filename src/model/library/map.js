@@ -6,7 +6,7 @@
  * @return {Array | Number}            Result of applying operator.
  */
 function map(a, func) {
-	if (a instanceof Array) {
+	if (a instanceof Object) {
 		// Recursive step, a is an array
 		var result = [];
 		for (var key in a) {
