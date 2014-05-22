@@ -113,8 +113,8 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
                         // If level is 0, we have found the matching end token.
                         // We then need to recursively replace this substring with a translated substring.
                         if (level == 0) {
-                            var substring = content.substring(x + 1, j);
-                            output = output.replace(substring, this.translate(substring, false));
+                            var substring = content.substring(x, j);
+                            output = output.replace(substring,  this.begin + this.translate(substring.substring(1, substring.length), false));
 
                             i = j; // When we want to look for a next begin token, thus we start where we have now ended.
                             break;
@@ -136,10 +136,9 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
                     elements[i] = "'" + count+++"':" + elements[i];
                 }
             }
-
             output = elements.join("\u2603");
-        }
 
+        }
         return output;
     }
 

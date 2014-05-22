@@ -96,12 +96,20 @@ suite("namedvectorpass.js", function() {
             assert.equal(instance.replaceBrackets('y = b[0]'), 'y = b[0]');
         });
 
+        test('replaceBrackets() y = [1,2,[1,2]]', function() {
+            assert.equal(instance.replaceBrackets("y = [1,2,[1,2]]"), "y = {'0':1,'1':2,'2':{'0':1,'1':2}}");
+        });
+
         /**
          * Tests replaceBrackets(). Calls a vector in the vector definition. The brackets of the
          * definition should be translated in curly braces, while the called ones should not.
          */
         test('replaceBrackets() calling vector in vector definition', function() {
             assert.equal(instance.replaceBrackets("y = [1, b[0]]"), "y = {'0':1,'1': b[0]}");
+        })
+
+        test('replaceBrackets() y = [[1],[2],[3],[4],[5]]', function() {
+            assert.equal(instance.replaceBrackets("y = [[1],[1],[1],[1],[1]]"), "y = {'0':{'0':1},'1':{'0':1},'2':{'0':1},'3':{'0':1},'4':{'0':1}}");
         })
 
         /**
