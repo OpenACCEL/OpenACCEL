@@ -21,7 +21,7 @@ suite("Zip", function() {
         });
     });
 
-    suite("-- zip vs nzip --", function() {
+    suite("zip and nzip", function() {
 
         test("zip(): add two vectors", function() {
             eval(fileLoader.getContent());
@@ -34,13 +34,6 @@ suite("Zip", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
             output = nzip([input1, input2], add);
-            assert.deepEqual(output, expected);
-        });
-
-        test("nzipcees(): add two vectors", function() {
-            eval(fileLoader.getContent());
-            setUpAddTwoVectors();
-            output = nzipcees([input1, input2], addCees);
             assert.deepEqual(output, expected);
         });
 
@@ -57,13 +50,6 @@ suite("Zip", function() {
             eval(fileLoader.getContent());
             setUpAddScalarToVector();
             output = nzip([input1, input2], add);
-            assert.deepEqual(output, expected);
-        });
-
-        test("nzipcees(): add scalar to vector", function() {
-            eval(fileLoader.getContent());
-            setUpAddScalarToVector();
-            output = nzipcees([input1, input2], addCees);
             assert.deepEqual(output, expected);
         });
 
