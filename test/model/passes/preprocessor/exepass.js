@@ -4,19 +4,17 @@ suite('exepass.js', function() {
     var instance;
     var assert;
     var Script;
-    var compiler;
 
     setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/passes/preprocessor/exepass', "model/analyser", "model/script", 'model/compiler'],
-                                                            function(assertModule, module, analyserModule, scriptModule, Compiler) {
+        requirejs(['assert', 'model/passes/preprocessor/exepass', "model/analyser", "model/script"],
+                                                            function(assertModule, module, analyserModule, scriptModule) {
             console.log('Loaded \'ExePass\' module.');
             assert = assertModule;
             instance = new module();
             analyser = new analyserModule();
             Script = scriptModule;
-            compiler = new Compiler();
             done();
         });
     });
@@ -46,16 +44,15 @@ suite('exepass.js', function() {
             var lines = [
                 'b = 5',
                 'x(a) = a ; kg', // Constant assignment with unit
-                'y(a) = sin(x(4)) + x(a)) + a + b' // simple function
+                'y(a) = sin(x(4) + x(a)) + a + b' // simple function
             ];
             var expResult = [
                 'b = 5',
                 'x(a) = a ; kg',
-                'y(a) = sin(exe.x(4)) + exe.x(a)) + a + exe.b()'
+                'y(a) = sin(exe.x(4) + exe.x(a)) + a + exe.b()'
             ];
 
             var script = new Script(lines.join("\n"));
-            compiler.compile(script) // FIXME: ROY dit FAALT!
             var report = script.getQuantities();
 
             assert.deepEqual(instance.parse(lines, report), expResult);

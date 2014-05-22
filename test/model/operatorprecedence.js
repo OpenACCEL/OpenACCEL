@@ -24,7 +24,6 @@ suite("Operator precedence", function() {
         test("Operator precedence: no operator", function() {
             var code = "x = 5";
             var exe = compiler.compile(new Script(code)).exe;
-            console.log(exe);
 			assert.equal(exe.x(), 5);
 		});
 
