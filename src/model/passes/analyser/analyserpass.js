@@ -20,7 +20,7 @@ if (inNode) {
 define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
     /**
      * @class
-     * @classdesc Abstract Pass that is part of compiling the script.
+     * @classdesc Analyses a single line of code and updates the quantities in the script.
      */
     function AnalyserPass() {
         /**
@@ -33,29 +33,30 @@ define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
     AnalyserPass.prototype = new Pass();
 
     /**
-     * Analyse the given lines of script.
+     * Analyse the given line of script.
      * Should be overridden by subclasses.
      * The base class only contains precondition checking and returns the given input.
      *
-     * @param {String[]} scriptlines Lines of script that need to be analysed.
-     * @param {Quantity[]} report the quantities of this script with their attributes
-     * @pre scriptLines != null
-     * @pre scriptLines != undefined
-     * @pre report != null
-     * @pre report != undefined
-     * @return {Quantity[]} a list of quantities with their attributes such as
-     * parameters and dependencies.
+     * @param {String} line The line of code that needs to be analysed.
+     * @param {Quantity{}} quantities The quantities of this script with their attributes
+     * @pre line != null
+     * @pre line != undefined
+     * @pre quantities != null
+     * @pre quantities != undefined
+     * @return {Quantity{}} An object containing all the  quantities in the script with their 
+     * attributes such as parameters and dependencies.
      */
-    AnalyserPass.prototype.analyse = function(scriptLines, report) {
-        if (!scriptLines) {
+    AnalyserPass.prototype.analyse = function(line, quantities) {
+        if (!line) {
             throw new Error('AnalyserPass.analyse.pre violated :' +
-                'scriptLines is null or undefined');
+                'line is null or undefined');
         }
-        if (!report) {
+        if (!quantities) {
             throw new Error('AnalyserPass.analyse.pre violated:' +
-                'report is null or undefined');
+                'quantities is null or undefined');
         }
-        return report;
+        
+        return quantities;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

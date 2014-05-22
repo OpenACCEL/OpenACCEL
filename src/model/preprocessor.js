@@ -37,11 +37,6 @@ define(["model/passes/preprocessor/unitpass",
          */
         function PreProcessor() {
             /**
-             * The Pre-Processor holds an analysis report for the passes.
-             */
-            this.report = null;
-
-            /**
              * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
              */
             this.passes = [];
@@ -59,12 +54,13 @@ define(["model/passes/preprocessor/unitpass",
          * @param {String} code     A single line of input code.
          * @return {String} A single line of processed code.
          */
-        PreProcessor.prototype.process = function(code) {
+        PreProcessor.prototype.process = function(script) {
             // Perform all passes on the code and return its output.
-            var lines = code.split("\n");
+            var report = script.getQuantities();
+            var lines = script.toSource().split("\n");
 
             for (var i = 0; i < this.passes.length; i++) {
-                lines = this.passes[i].parse(lines, this.report);
+                lines = this.passes[i].parse(lines, report);
             }
 
             return lines.join("");

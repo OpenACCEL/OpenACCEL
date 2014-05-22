@@ -20,13 +20,14 @@ suite('dependencypass.js', function() {
         /**
          * The script that we take as example for this pass.
          */
-        var script = ['a = b + c \n',
-            'b = 3\n',
-            'c = 5\n',
-            'f(x) = b - x\n',
-            'g = [2, b, x:c]\n',
-            'h = [b, x:[1, y:c, b], 3]\n',
-            'i = b * b'
+        var script = ['a = b + c ',
+            'b = 3',
+            'c = 5',
+            'f(x) = b - x',
+            'g = [2, b, x:c]',
+            'h = [b, x:[1, y:c, b], 3]',
+            'i = b * b',
+            'j = f(a) + sin(1)'
         ];
 
         /**
@@ -37,43 +38,57 @@ suite('dependencypass.js', function() {
                 name: 'a',
                 parameters: [],
                 definition: 'b + c',
-                todo: false
+                todo: false,
+                reverseDeps: []
             },
             b: {
                 name: 'b',
                 parameters: [],
                 definition: '3',
-                todo: false
+                todo: false,
+                reverseDeps: []
             },
             c: {
                 name: 'c',
                 parameters: [],
                 definition: '5',
-                todo: false
+                todo: false,
+                reverseDeps: []
             },
             f: {
                 name: 'f',
                 parameters: ['x'],
                 definition: 'b - x',
-                todo: false
+                todo: false,
+                reverseDeps: []
             },
             g: {
                 name: 'g',
                 parameters: [],
                 definition: '[2, b, x:c]',
-                todo: false
+                todo: false,
+                reverseDeps: []
             },
             h: {
                 name: 'h',
                 parameters: [],
                 definition: '[b, x:[1, y:c, b], 3]',
-                todo: false
+                todo: false,
+                reverseDeps: []
             },
             i: {
                 name: 'i',
                 parameters: [],
                 definition: 'i = b * b',
-                todo: false
+                todo: false,
+                reverseDeps: []
+            },
+            j: {
+                name: 'j',
+                parameters: [],
+                definition: 'j = f(a) + sin(1)',
+                todo: false,
+                reverseDeps: []
             }
         };
 
@@ -86,49 +101,64 @@ suite('dependencypass.js', function() {
                 parameters: [],
                 definition: 'b + c',
                 dependencies: ['b', 'c'],
-                todo: false
+                todo: false,
+                reverseDeps: ['j']
             },
             b: {
                 name: 'b',
                 parameters: [],
                 definition: '3',
                 dependencies: [],
-                todo: false
+                todo: false,
+                reverseDeps: ['a', 'f', 'g', 'h', 'i']
             },
             c: {
                 name: 'c',
                 parameters: [],
                 definition: '5',
                 dependencies: [],
-                todo: false
+                todo: false,
+                reverseDeps: ['a','g','h']
             },
             f: {
                 name: 'f',
                 parameters: ['x'],
                 definition: 'b - x',
                 dependencies: ['b'],
-                todo: false
+                todo: false,
+                reverseDeps: ['j']
             },
             g: {
                 name: 'g',
                 parameters: [],
                 dependencies: ['b','c'],
                 definition: '[2, b, x:c]',
-                todo: false
+                todo: false,
+                reverseDeps: []
             },
             h: {
                 name: 'h',
                 parameters: [],
                 dependencies: ['b','c'],
                 definition: '[b, x:[1, y:c, b], 3]',
-                todo: false
+                todo: false,
+                reverseDeps: []
             },
             i: {
                 name: 'i',
                 parameters: [],
                 dependencies: ['b'],
                 definition: 'i = b * b',
-                todo: false
+                todo: false,
+                reverseDeps: []
+            },
+            j: {
+                name: 'j',
+                parameters: [],
+                dependencies: ['f','a'],
+                definition: 'j = f(a) + sin(1)',
+                todo: false,
+                reverseDeps: []
             }
         };
 
@@ -136,7 +166,10 @@ suite('dependencypass.js', function() {
          * Test case for analyse()
          */
         test('analyze()', function() {
-            var result = instance.analyse(script, beginReport);
+            var result = beginReport;
+            script.forEach(function(line) {
+                result = instance.analyse(line, result);
+            });
             assert.deepEqual(result, endReport);
         });
     });

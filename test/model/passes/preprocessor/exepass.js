@@ -3,16 +3,18 @@ suite('exepass.js', function() {
     var analyser;
     var instance;
     var assert;
+    var Script;
 
     setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/passes/preprocessor/exepass', "model/analyser"],
-                                                            function(assertModule, module, analyserModule) {
+        requirejs(['assert', 'model/passes/preprocessor/exepass', "model/analyser", "model/script"],
+                                                            function(assertModule, module, analyserModule, scriptModule) {
             console.log('Loaded \'ExePass\' module.');
             assert = assertModule;
             instance = new module();
             analyser = new analyserModule();
+            Script = scriptModule;
             done();
         });
     });
@@ -32,7 +34,8 @@ suite('exepass.js', function() {
                 'y = sin(exe.x())',
                 'z = 2 + sin(exe.y() + sin(exe.x())) + sin(2)'
             ];
-            var report = analyser.analyse(lines.join("\n"));
+            var script = new Script(lines.join("\n"));
+            var report = script.getQuantities();
 
             assert.deepEqual(instance.parse(lines, report), expResult);
         });
@@ -41,14 +44,16 @@ suite('exepass.js', function() {
             var lines = [
                 'b = 5',
                 'x(a) = a ; kg', // Constant assignment with unit
-                'y(a) = sin(x(4)) + x(a)) + a + b', // simple function
+                'y(a) = sin(x(4) + x(a)) + a + b' // simple function
             ];
             var expResult = [
                 'b = 5',
                 'x(a) = a ; kg',
-                'y(a) = sin(exe.x(4)) + exe.x(a)) + a + exe.b()',
+                'y(a) = sin(exe.x(4) + exe.x(a)) + a + exe.b()'
             ];
-            var report = analyser.analyse(lines.join("\n"));
+
+            var script = new Script(lines.join("\n"));
+            var report = script.getQuantities();
 
             assert.deepEqual(instance.parse(lines, report), expResult);
         });
@@ -60,7 +65,9 @@ suite('exepass.js', function() {
         test('translateRHS(): Definition with function calls', function() {
             var line = '2 + sin(y + sin(x)) + sin(2)';
             var expResult = '2 + sin(exe.y() + sin(exe.x())) + sin(2)';
-            var report = analyser.analyse("x = " + line);
+
+            var script = new Script("x = " + line);
+            var report = script.getQuantities();
 
             assert.equal(instance.translateRHS(line, "x", report), expResult);
         });

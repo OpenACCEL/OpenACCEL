@@ -26,35 +26,78 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/script"], /**@lends Controller*/ function(Script) {
+define(["model/script", "model/compiler"], /**@lends Controller*/ function(Script, Compiler) {
 
     /**
-     * @class
+     * @class Controller
      * @classdesc Base controller class.
      */
     function Controller() {
+    	this.compiler = new Compiler();
         this.script = new Script();
+
+        /**
+         * The number of iterations that the script should perform
+         * before presenting the result.
+         *
+         * @type {Number}
+         */
         this.numIterations = 0;
+
+        /**
+         * Whether the script _should_ be executing. If false, the script
+         * has already stopped or will abort in the next call to the
+         * run() method.
+         *
+         * @type {Boolean}
+         */
         this.executing = false;
+
+        /**
+         * Unique id for the runloop interval.
+         *
+         * @type {Integer}
+         */
+        this.runloop = null;
     }
-    
+
     /**
-     * Main execution loop of the script.
+     * Starts execution of the script.
+     *
+     * @post The script is being executed in a loop if the
+     * script is complete and non-empty
      */
     Controller.prototype.execute = function() {
-    	this.executing = true;
-
-    	// TODO initiate runloop of script
-    } 
+    	if (this.script.isComplete()) {
+    		this.executing = true;
+    		this.runloop = setInterval(this.run, 5);
+    	}
+    };
 
     /**
-     * Stops script execution
+     * Evaluates the values of all category 2 quantities and provides 
+     * them to the view.
+     *
+     * @pre this.script.isComplete(). NOTE: not checked for performance reasons!
+     * @post The view has received the current values of all output quantities.
+     */ 
+    Controller.prototype.run = function() {
+    	cat2quantities = this.script.getOutputQuantities();
+
+    	// TODO give quantities to view!
+    };
+
+    /**
+     * Stops script execution, if currently executing.
      * 
      * @post controller.executing == false
      */
     Controller.prototype.stop = function() {
-        this.executing = false;  
-    } 
+    	if (this.executing) {
+	    	clearInterval(this.runloop);
+	        this.executing = false;  
+    	}
+    }; 
 
     /**
      * Sets the number of executions of the script.
@@ -101,6 +144,10 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
+        if (!this.script.hasQuantity(quantity)) {
+        	throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
         //TODO Precondition quantity \in Script 
         //TODO Implementation
         //TODO Tests
@@ -127,31 +174,44 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
         // Stop script execution, add quantity, recompile, and 
         // start again if todo list is empty
         this.stop();
-        report = this.script.addQuantity(definition);
-        this.execute();
+        this.script.addQuantity(definition);
+        this.compileScript(this.script);
     } 
 
     /**
-     * Deletes a quantity from a model.
+     * Deletes a quantity from the model.
      *
-     * @param quantity {String} Quantity name
-     * @pre quantity != null
-     * @pre quantity != undefined
-     * @pre model.ScriptAnalyzer() == true
-     * @pre definition \in Script
-     * @post definition removed from Script
-     * @return {Object} list of quantities
+     * @param qtyName {String} The name of the quantity to delete
+     * @pre qtyName != null
+     * @pre qtyName != undefined
+     * @pre qtyName \in Script
+     * @post quantity removed from Script
      */
-    Controller.prototype.deleteQuantity = function(quantity) {
-        if(!quantity) {
-            throw new Error('Controller.prototype.addQuantity.pre violated :' +
-                'quantity is null or undefined')
+    Controller.prototype.deleteQuantity = function(qtyName) {
+        if(!qtyName) {
+            throw new Error('Controller.prototype.addQuantityuantity.pre violated :' +
+                'qtyName is null or undefined')
         }
-        //TODO Precondition, removing quantity
-        //TODO Implementation
-        //TODO Tests
-        this.script.deleteQuantity(quantity);
-        return this.getQuantities;
+        if (!this.script.hasQuantity(qtyName)) {
+        	throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        this.stop();
+        this.script.deleteQuantity(qtyName);
+        this.compileScript(this.script);
+    }
+    /**
+     * Compiles the given script if the todo-list is empty.
+     * @param  {Script} script script to compile
+     */
+    Controller.prototype.compileScript = function(script) {
+    	if (script.isComplete()) {
+        	script.exe = this.compiler.compile(script).exe;
+        	return true;
+    	} else {
+    		return false;
+    	}
     }     
 
     /**
@@ -163,15 +223,17 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @pre quantity \in Script
      * @return {Number} value of quantity
      */
-    Controller.prototype.getValue = function(quantity) {
+    Controller.prototype.getQuantityValue = function(quantity) {
         if(!quantity) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
-        //TODO Precondition name \in Script 
-        //TODO Implementation
-        //TODO Tests
-        return this.script.getQuantity(quantity);
+        if (!this.script.hasQuantity(quantity)) {
+        	throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        return this.script.getQuantityValue(quantity);
     }
 
     /**
@@ -195,6 +257,12 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.setValue.pre :' +
                 'quantity is null or undefined')
         }
+        if (!this.script.hasQuantity(quantity)) {
+        	throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        //this.script.setValue(quantity, value);
     } 
 
     /**
@@ -277,8 +345,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} script
      */
     Controller.prototype.getScript = function() {
-        //TODO Implementation
-        //TODO Tests
+        return this.script;
     } 
 
     /**
