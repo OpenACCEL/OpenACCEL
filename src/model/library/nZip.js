@@ -8,7 +8,7 @@
 function nZip(x, func) {
     var allScalar = true;
     for (var inKey in x) {
-        if (x[inKey] instanceof Array) {
+        if (x[inKey] instanceof Object) {
             allScalar = false;
             break;
         }
@@ -22,7 +22,7 @@ function nZip(x, func) {
         var referenceIndex;
         // Index of the element that will serve as a base for zipping its keys
         for (var inKey in x) {
-            if (x[inKey] instanceof Array) {
+            if (x[inKey] instanceof Object) {
                 referenceIndex = inKey;
                 // Contender for input of reference found.
                 break;
@@ -40,7 +40,7 @@ function nZip(x, func) {
             // Key occurs in every input until proven otherwise.
             for (var inKey in x) {
                 // Loop over all inputs in x.
-                if (x[inKey] instanceof Array) {
+                if (x[inKey] instanceof Object) {
                     if (resultKey in x[inKey]) {
                         // Loop over all keys in our input of reference
                         recursiveInput[inKey] = x[inKey][resultKey];

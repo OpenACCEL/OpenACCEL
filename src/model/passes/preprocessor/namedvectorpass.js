@@ -47,11 +47,11 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
      */
     NamedVectorPass.prototype.parse = function(scriptLines, report) {
         CompilerPass.prototype.parse.call(this, scriptLines, report);
-        for (var i = 0; i < scriptLines.length; i++) {
-            var line = scriptLines[i];
-            NamedVectorPass.prototype.replaceBrackets(line);
-        }
-
+        return scriptLines.map((function(line) {
+            // matches var1[var2] where var2 != 0
+            line = this.replaceBrackets(line);
+            return line;
+        }).bind(this));
     };
 
     /**
@@ -64,6 +64,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
     NamedVectorPass.prototype.replaceBrackets = function(line) {
         // First, we replace all '[' by '{' and ']' by '}', such that it becomes an object.
         // This way, we can identify when we go 'a level deeper'.
+        var units = this.getUnits(line);
         var lhs = this.getLHS(line);
         line = this.getRHS(line);
 
@@ -72,7 +73,6 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
             return s.split("]").join(this.otherEnd);
         }).bind(this));
 
-        console.log(line);
         line = line.replace(this.regexes.openingBracket, (function(s) {
             return s.split("[").join(this.begin);
         }).bind(this));
@@ -88,8 +88,11 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
         line = line.split(this.otherBegin).join('[');
         line = line.split(this.otherEnd).join(']');
 
-
-        return lhs + " = " + line;
+        if (units) {
+            return lhs + " = " + line + " ; " + units;
+        } else {
+            return lhs + " = " + line;
+        }
     };
 
     NamedVectorPass.prototype.translate = function(content, parent) {
@@ -113,8 +116,8 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
                         // If level is 0, we have found the matching end token.
                         // We then need to recursively replace this substring with a translated substring.
                         if (level == 0) {
-                            var substring = content.substring(x + 1, j);
-                            output = output.replace(substring, this.translate(substring, false));
+                            var substring = content.substring(x, j);
+                            output = output.replace(substring,  this.begin + this.translate(substring.substring(1, substring.length), false));
 
                             i = j; // When we want to look for a next begin token, thus we start where we have now ended.
                             break;
@@ -136,10 +139,9 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends NamedVectorPass*/ f
                     elements[i] = "'" + count+++"':" + elements[i];
                 }
             }
-
             output = elements.join("\u2603");
-        }
 
+        }
         return output;
     }
 

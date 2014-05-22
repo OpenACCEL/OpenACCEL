@@ -7,17 +7,20 @@
  * @return {Array}            Resulting array.
  */
 function zip(a, b, func) {
-    if (a instanceof Array || b instanceof Array) {
+    var isScalarA = !(a instanceof Array || a instanceof Object);
+    var isScalarB = !(b instanceof Array || b instanceof Object);
+
+    if (!isScalarA || !isScalarB) {
         // Recursive step, a or b is an array
         var result = [];
-        if (!(a instanceof Array)) {
+        if (isScalarA) {
             // Case, a is a scalar, b is an array
             for (var key in b) {
                 result[key] = zip(a, b[key], func);
             }
             return result;
         }
-        if (!(b instanceof Array)) {
+        if (isScalarB) {
             // Case, b is a scalar, a is an array
             for (var key in a) {
                 result[key] = zip(a[key], b, func);
