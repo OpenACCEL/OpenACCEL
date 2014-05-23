@@ -18,8 +18,12 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler, Analyser, Quantity) {
+    /**
+     * @class Script
+     * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
+     * compiled executable and source code.
+     */
     function Script(source) {
-
         this.compiler = new Compiler();
         this.analyser = new Analyser();
 
@@ -64,6 +68,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
             }).bind(this));
         }
     }
+
 
     Script.prototype = {
 
