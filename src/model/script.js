@@ -17,7 +17,12 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/compiler", "model/analyser", "model/quantity"], /** @lends Model. */ function(Compiler, Analyser, Quantity) {
+define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler, Analyser, Quantity) {
+    /**
+     * @class Script
+     * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
+     * compiled executable and source code.
+     */
     function Script(source) {
         this.compiler = new Compiler();
         this.analyser = new Analyser();
@@ -185,7 +190,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], /** @lends Model.
                 throw new Error('Script.prototype.deleteQuantity.pre :' +
                 'quantity does not exist')
             }
-            if (!this.quantities[qtyname].todo) {
+            if (this.quantities[qtyName].todo) {
                 throw new Error('Script.prototype.deleteQuantity.pre :' +
                 'quantity cannot be deleted: is a todo item')
             }
@@ -195,12 +200,12 @@ define(["model/compiler", "model/analyser", "model/quantity"], /** @lends Model.
             // Delete all dependencies of this quantity that are marked as todo and have no other reverse dependencies!
             qty.dependencies.forEach((function(d) {
                 if (this.quantities[d].todo) {
-                    if (this.quantities[d].reverseDeps == [qtyName]) {
+                    if (this.quantities[d].reverseDeps.length <= 1) {
                         // We are the only quantity depending on it, so delete it
                         delete this.quantities[d];
                     } else {
                         // Remove us from reverse-dependency list
-                        delete this.quantities[d].reverseDeps[qtyname];
+                        delete this.quantities[d].reverseDeps[qtyName];
                     }
                 }
             }).bind(this));
