@@ -18,7 +18,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(['model/passes/preprocessor/compilerpass'], /**@lends Passes.Preprocessor*/ function(CompilerPass) {
+define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Preprocessor*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Class that replaces a binary operator in the right hand side of a definitions 
@@ -40,7 +40,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Passes.Preprocessor
      * by ' _operator_ ' (including spaces).
      *
      * @param {String[]}    scriptLines Array with script lines.
-     * @param {Report}      report A full report containing script information.
+     * @param {Object}      report A full report containing script information.
      * @pre scriptLines != null
      * @pre scriptLines != undefined
      * @pre report != null

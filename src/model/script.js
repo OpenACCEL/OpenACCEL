@@ -1,9 +1,9 @@
-/**
+/*
  *
  * @author Jacco Snoeren
  */
 
-/** Browser vs. Node ***********************************************/
+/* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
 
@@ -17,12 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler, Analyser, Quantity) {
-    /**
-     * @class Script
-     * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
-     * compiled executable and source code.
-     */
+define(["model/compiler", "model/analyser", "model/quantity"], /** @lends Model. */ function(Compiler, Analyser, Quantity) {
     function Script(source) {
         this.compiler = new Compiler();
         this.analyser = new Analyser();

@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/pass'], /**@lends CompilerPass*/ function(Pass) {
+define(['model/passes/pass'], /**@lends Model.Passes.Preprocessor*/ function(Pass) {
     /**
      * @class
      * @classdesc Abstract Pass that is part of compiling the script.
@@ -33,7 +33,7 @@ define(['model/passes/pass'], /**@lends CompilerPass*/ function(Pass) {
      * The base class only contains precondition checking and returns the given input.
      *
      * @param {String[]}    scriptlines Lines of script that need to be parsed.
-     * @param {Report}      report A full report containing script information.
+     * @param {Object}      report A full report containing script information.
      * @pre scriptLines != null
      * @pre scriptLines != undefined
      * @pre report != null

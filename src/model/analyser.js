@@ -18,9 +18,12 @@ if (inNode) {
 /*******************************************************************/
 
 define(["model/passes/analyser/quantitypass",
-        "model/passes/analyser/dependencypass"],
-    /**@lends Analyser*/
-    function(QuantityPass, DependencyPass, CategoryPass) {
+        "model/passes/analyser/dependencypass",
+    ],
+    /**@lends Model*/
+    function(QuantityPass,
+             DependencyPass,
+             CategoryPass) {
         /**
          * @class Analyser
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
@@ -54,8 +57,8 @@ define(["model/passes/analyser/quantitypass",
         /**
          * Performs all 
          *
-         * @param {String} line A single line of input code.
-         * @return {Quantities{} } An object containing all the quantities in the script.
+         * @param {String} line         A single line of input code.
+         * @return {Object}      An object containing all the quantities in the script.
          */
         Analyser.prototype.analyse = function(line, quantities) {
             for (var i = 0; i < this.passes.length; i++) {
@@ -86,7 +89,7 @@ define(["model/passes/analyser/quantitypass",
          * Determines the categories of all quantities and checks whether the script is
          * complete (no todo-items).
          *
-         * @param {Quantity{} } quantities The set of quantities to analyse
+         * @param {Object} quantities The set of quantities to analyse
          * @return quantities, with category attribute set
          * @modifies quantities, this.scriptComplete
          */
