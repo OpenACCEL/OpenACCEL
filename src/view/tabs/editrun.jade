@@ -18,16 +18,17 @@
                 input(type = 'button', value = 'New')#newscript.buttonin
 
     .inline
-        .label Listing
-        .textin(style = "overflow-x: hidden; overflow-y: auto; height: 400px;")
-            #scriptlist
-            //- script.
-            //-     Scriptlist.addLine(1,'a','sin(b)',4);
-            //-     Scriptlist.addLine(2,'b','5',3);
-            //-     Scriptlist.addLine(3,'c','a * 5',2);
+        #scriptlistdiv
+            .label Listing
+            .textin(style = "overflow-x: hidden; overflow-y: auto; height: 400px;")
+                #scriptlist
+                //- script.
+                //-     Scriptlist.addLine(1,'a','sin(b)',4);
+                //-     Scriptlist.addLine(2,'b','5',3);
+                //-     Scriptlist.addLine(3,'c','a * 5',2);
 
-    .inline
-        div
+    .inline100
+        #tododiv
             .label To do
             .report
                 #todolist.divtable
@@ -35,7 +36,8 @@
                 //-     Report.addTodo('c');
                 //-     Report.addTodo('d');
                 //-     Report.addTodo('efgh');
-
+        
+        #arglistdiv
             .label Arg. of
                 .inline.quantityname &nbsp;a
             .report
@@ -44,6 +46,7 @@
                 //-     Report.addArg('a','regular');
                 //-     Report.addArg('sin','std func.');
 
+        #argtodiv
             .label
                 .inline.quantityname a&nbsp;
                 | is Arg. to
@@ -52,27 +55,30 @@
                 //- script.
                 //-     Report.addArgto('c','regular');
 
-    .inline
-        .label User input
-        #userinput.group
-        script.
-            for (var i = 0; i < 4; i++) {
-                console.log(i);
-                var slider = new SliderInput(i, null, 'Slider', i%4,0,10);
-                console.log(slider);
-                addInput(slider);
-            }
-
-    .inline
-        .label Results
-        .group
-            #result.divtable
+    .inline100
+        #userinputdiv
+            .label User input
+            #userinput.group
             //- script.
-            //-     Report.addResult('c', -4.795);
+            //-     for (var i = 0; i < 4; i++) {
+            //-         console.log(i);
+            //-         var slider = new SliderInput(i, null, 'Slider', i%4,0,10);
+            //-         console.log(slider);
+            //-         addInput(slider);
+            //-     }
+
+    .inline100
+        #resultdiv
+            .label Results
+            .group
+                #result.divtable
+                //- script.
+                //-     Report.addResult('c', -4.795);
             
     .inline
-        .label Plot:
-        #plot.group
+        #plotdiv
+            .label Plot:
+            #plot.group
 
     .label Console (Feedback)
     .report(onclick = '$("#console").toggle()')

@@ -7,6 +7,14 @@ $(document).ready(
                 }
             }
         );
+
+        //Hide what needs hiding
+        Report.todolistBuffer.hideIfEmpty('#tododiv');
+        Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+        Report.argtolistBuffer.hideIfEmpty('#argtodiv');
+        userinputBuffer.hideIfEmpty('#userinputdiv');
+        Report.resultBuffer.hideIfEmpty('#resultdiv');
+        $('#plotdiv').toggle(false);
     }
 );
 
@@ -19,29 +27,88 @@ function deleteQuantity(line) {
 var linenr = 0;
 function addQuantity(string) {
     var split = string.split('=');
+    
+    //Approximate Script list
     split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
     addScriptlistLine(linenr++, split[0], split[1], '?');
     scriptlistBuffer.flip();
-    console.log('Added line: ' + string);
+    
+    console.log('Pre-added line: ' + string);
     $('#scriptline').select();
     
     setTimeout(
         function() {
-            console.log(split[0]);
-            console.log(split[1]);
             controller.addQuantity(string);
             console.log('Compiled script.');
 
-            if (split[0] == 'out' || split[0] == 'out2') {
-                console.log('output variable found');
-                Report.addResult(split[0], controller.getValue(split[0]));
-            }
+            //Synchronize Script list
+            var quantities = controller.getQuantities();
+            console.log(quantities);
+            synchronizeScriptList(quantities);
+
+            //Display results
+            // Report.resultBuffer.empty();
+            // if (split[0] == 'out' || split[0] == 'out2') {
+            //     console.log('output variable found');
+            //     Report.addResult(split[0], controller.getValue(split[0]));
+            // }
+            // Report.resultBuffer.flip();
+            Report.todolistBuffer.hideIfEmpty('#tododiv');
+            Report.resultBuffer.hideIfEmpty('#resultdiv');
         },
         10
     );
 };
 
-/*-------------------------------------------*/
+//------------------------------------------------------------------------------
+
+/**
+ * Synchronize the content of the #scriptlist div with the model
+ * 
+ * @param  {Object} quantities All quantities registered in the model
+ */
+function synchronizeScriptList(quantities) {
+    scriptlistBuffer.empty();
+    Report.todolistBuffer.empty();
+    Report.resultBuffer.empty();
+    var i = 0;
+    for (var q in quantities) {
+        var quantity = quantities[q];
+        
+        //TODOs
+        if (quantity.definition == "") {
+            Report.addTodo(quantity.name);
+        } else {
+            addScriptlistLine(i++, quantity.name, quantity.definition, quantity.category);
+        }
+
+        //Results
+        if (quantity.category == 2) {
+            Report.addResult(quantity.name, controller.getValue(quantity.name));
+        }
+    }
+    scriptlistBuffer.flip();
+    Report.todolistBuffer.flip();
+    Report.resultBuffer.flip();
+}
+
+//------------------------------------------------------------------------------
+
+/**
+ * Selects indicated line and puts it's contents in the #scriptline element
+ * 
+ * @param  {Number} line  Identifier of the to be selected line
+ * @param  {String} value To be put in the #scriptline element
+ */
+function selectScriptline(line, value) {
+    console.log('select ' + line + ', ' + value);
+    if ($('#line' + line).length > 0) {
+        var scriptline = $('#scriptline');
+        scriptline.val(value);
+    }
+}
+
+//------------------------------------------------------------------------------
 
 /**
  * Constructs a buffer object to contain updated content of a div and update the div when desired
@@ -62,7 +129,26 @@ function HTMLbuffer(div) {
     }
 
     /**
+     * Checks whether the buffer is empty
+     * 
+     * @return {Boolean} True if and only if buffer is empty
+     */
+    this.isEmpty = function() {
+        return (this.html == '');
+    }
+
+    /**
+     * Hides the target html element if the buffer is empty, show otherwise
+     *
+     * @param {String} selector to indicate which element should be hidden
+     */
+    this.hideIfEmpty = function(target) {
+        $(target).toggle(!this.isEmpty());
+    }
+
+    /**
      * Appends html to the buffer
+     * 
      * @param {String} html String to be appended to the buffer
      */
     this.append = function(html) {
@@ -78,21 +164,7 @@ function HTMLbuffer(div) {
 }
 
 /**
- * Selects indicated line and puts it's contents in the #scriptline element
- * 
- * @param  {Number} line  Identifier of the to be selected line
- * @param  {String} value To be put in the #scriptline element
- */
-function selectScriptline(line, value) {
-    console.log('select ' + line + ', ' + value);
-    if ($('#line' + line).length > 0) {
-        var scriptline = $('#scriptline');
-        scriptline.val(value);
-    }
-}
-
-/**
- * Buffer to contain an updated scriptlist
+ * Buffer to contain updated #scriptlist content
  * @type {HTMLbuffer}
  */
 var scriptlistBuffer = new HTMLbuffer('#scriptlist');
@@ -131,13 +203,16 @@ function addScriptlistLine(line, left, right, category) {
 }
 
 /**
- * Buffer to contain updated userinput content
+ * Buffer to contain updated #userinput content
  * @type {HTMLbuffer}
  */
 var userinputBuffer = new HTMLbuffer('#userinput');
 
 /**
- * [Input description]
+ * Constructs a base input element
+ *
+ * @class
+ * @classdesc Base input element to be extended
  */
 function Input() {
     this.bufferInput = function() {
@@ -259,7 +334,6 @@ function addInput(element) {
 
 /**
  * Object containing methods to modify the contents of the #results element
- * 
  * @type {Object}
  */
 var Report = {
@@ -283,22 +357,57 @@ var Report = {
     },
 
     /**
+     * Buffer to contain updated #todolist content
+     * @type {HTMLbuffer}
+     */
+    todolistBuffer: new HTMLbuffer('#todolist'),
+
+    /**
      * Adds a quantity to be defined to the #todo element
      * 
      * @param {String} quantity Quantity to be implemented
-     * @param {String} property Type of the quantity
      */
     addTodo: function(quantity) {
-        $('#todolist').append(this.getPropertyListHTML(quantity, ''));
+        Report.todolistBuffer.append(this.getPropertyListHTML(quantity, ''));
     },
 
+    /**
+     * Buffer to contain updated #arglist content
+     * @type {HTMLbuffer}
+     */
+    arglistBuffer: new HTMLbuffer('#arglist'),
+
+    /**
+     * Adds a quantity to the list of quantities which are a parameter to the selected quantity
+     * 
+     * @param {String} quantity Quantity which is an argument for the selected quantity
+     * @param {String} property [description]
+     */
     addArg: function(quantity, property) {
-        $('#arglist').append(this.getPropertyListHTML(quantity, property));
+        Report.arglistBuffer.append(this.getPropertyListHTML(quantity, property));
     },
 
+    /**
+     * Buffer to contain updated #argtolist content
+     * @type {HTMLbuffer}
+     */
+    argtolistBuffer: new HTMLbuffer('#argtolist'),
+
+    /**
+     * Adds a quantity to the list of quantities which use the selected quantity as a parameter
+     * 
+     * @param {String} quantityQuantity for which the selected quantity is an argument
+     * @param {String} property [description]
+     */
     addArgto: function(quantity, property) {
-        $('#argtolist').append(this.getPropertyListHTML(quantity, property));
+        Report.argtolistBuffer.append(this.getPropertyListHTML(quantity, property));
     },
+
+    /**
+     * Buffer to contain updated #result content
+     * @type {HTMLbuffer}
+     */
+    resultBuffer: new HTMLbuffer('#result'),
 
     /**
      * Adds a resulting quantity to the #result element
@@ -307,7 +416,7 @@ var Report = {
      * @param {String} result   Right-hand side of the equation
      */
     addResult: function(quantity, result) {
-        $('#result').append(this.getEquationHTML(quantity, result));
+        Report.resultBuffer.append(this.getEquationHTML(quantity, result));
     },
 
     addTooltip: function(div, id, msg, arrow) {
