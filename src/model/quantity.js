@@ -93,13 +93,13 @@ define([], /**@lends Quantity*/ function() {
          */
         this.todo = true;
 
-		/**
+        /**
          * The current value of the quantity, as evaluated in the executable.
          * Default value is zero.
          *
          * @type {Number}
          */
-		this.value = 0;
+        this.value = 0;
 
 
         /**

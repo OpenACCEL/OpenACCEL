@@ -22,10 +22,10 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
     /**
      * @class
      * @classdesc This pass is part of the Script Analyser and extracts:
-     * 	-Dependencies of quantities: on which quantities the value of a 
-     *	 certain quantity depends
+     *  -Dependencies of quantities: on which quantities the value of a 
+     *   certain quantity depends
      *  -Reverse dependencies: which quantities depend on the quantity being defined
-     *	-Whether a quantity has been given a definition already, or is a 'todo-item'
+     *  -Whether a quantity has been given a definition already, or is a 'todo-item'
      */
     function DependencyPass() {
         this.functionlist = FunctionList.getList();
@@ -55,22 +55,22 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
         // Identify all dependencies and add them to the quantities
         if (dep) {
             dep.forEach((function(d) {
-            	// It could be that the dependent variable is not yet in the quantities because
-            	// it has not been defined yet. Therefore, instead test whether the variable
-            	// is local to this definition and if not, add it as a dependency. Also, a single
+                // It could be that the dependent variable is not yet in the quantities because
+                // it has not been defined yet. Therefore, instead test whether the variable
+                // is local to this definition and if not, add it as a dependency. Also, a single
                 // variable can occur multiple times in the rhs of a definition. Check this
                 // as well.
-            	if (lhs.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1 && this.functionlist.indexOf(d) == -1) {
-            		quantities[qty].dependencies.push(d);
-            		
-            		// It could be that it is used in multiple definitions while being
-            		// undefined. Therefore only add it if it's not already there 
-            		if (!quantities[d]) {
-            			quantities[d] = new Quantity();
-            			quantities[d].name = d;
-            			quantities[d].todo = true;
+                if (lhs.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1 && this.functionlist.indexOf(d) == -1) {
+                    quantities[qty].dependencies.push(d);
+                    
+                    // It could be that it is used in multiple definitions while being
+                    // undefined. Therefore only add it if it's not already there 
+                    if (!quantities[d]) {
+                        quantities[d] = new Quantity();
+                        quantities[d].name = d;
+                        quantities[d].todo = true;
                         quantities[d].source = d + '=';
-            		}
+                    }
 
                     // Add the quantity being defined as a reverse dependency of this quantity
                     if (!quantities[d].reverseDeps) {
@@ -81,7 +81,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
                             quantities[d].reverseDeps.push(qty);
                         }
                     }
-            	}
+                }
             }).bind(this));
         }
 

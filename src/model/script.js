@@ -210,15 +210,15 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
             // TODO implementation
         },
 
-		/**
-		 * Does all things that should be done when the script has changed:
+        /**
+         * Does all things that should be done when the script has changed:
          * - Re-evaluates the category of all quantities
-		 *
-		 * Call this method when this.quantities has been modified.
+         *
+         * Call this method when this.quantities has been modified.
          *
          * @modifies this.quantities
          * @post The categories of all quantities have been determined and set.
-		 */
+         */
         scriptChanged: function() {
             this.scriptModified = true;
             

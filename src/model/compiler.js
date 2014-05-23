@@ -8,7 +8,7 @@
 inBrowser = typeof window !== 'undefined';
 inNode    = !inBrowser;
 
-if (inNode) { 
+if (inNode) {
     require = require('requirejs');
 } else {
     require.config({
@@ -47,7 +47,7 @@ define(["model/fileloader",
 
         this.fileLoader.load("map", "library");
         this.fileLoader.load("zip", "library");
-        this.fileLoader.load("nZip", "library");
+        this.fileLoader.load("nzip", "library");
 
         this.fileLoader.load("add", "library");
         this.fileLoader.load("subtract", "library");
@@ -75,7 +75,7 @@ define(["model/fileloader",
         this.fileLoader.load("modulo", "library");
 
     }
-    
+
     /**
      * Compiles a piece of ACCEL code and outputs an object, containing an executable.
      *

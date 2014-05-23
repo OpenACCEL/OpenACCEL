@@ -27,7 +27,7 @@ define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
          * Regex that extracts quantity references from a definition
          * @type {RegExp}
          */
-    	this.regexes.varNames = /(\w*[a-zA-Z_]\w*(?!\w*\s*:))/g;
+        this.regexes.varNames = /(\w*[a-zA-Z_]\w*(?!\w*\s*:))/g;
     }
 
     AnalyserPass.prototype = new Pass();
