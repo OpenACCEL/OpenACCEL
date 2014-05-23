@@ -36,7 +36,7 @@ body div {
 	display: inline-block;
 	height: 70px;
 	width: 337px;
-	background-image: url("../img/logocrop.png");
+	background-image: url("../img/logoV2.png");
 	background-size: 100%;
 	background-repeat: no-repeat;
 }
@@ -86,7 +86,6 @@ body div {
 	-moz-border-radius-bottomleft: 60px;
 	border-bottom-left-radius: 60px;
 	background: #9933CC;
-	/*optional*/
   	box-shadow: 3px 3px 20px #993399;
     -webkit-box-shadow: 3px 3px 20px #993399;
 	-moz-box-shadow: 3px 3px 20px #993399;
@@ -115,6 +114,12 @@ body div {
 	vertical-align: top;
 }
 
+.inline100 {
+	display: inline-block;
+	min-width: 100px;
+	vertical-align: top;
+}
+
 .report {
 	position: relative;
 	z-index: 1;
@@ -125,9 +130,7 @@ body div {
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	border-top: 1px #331144 solid;
-	/*background: #FFDDFF;*/
 	background: #882288;
-	/*background: linear-gradient(#882288, #9933CC);*/
 }
 
 .textin {
