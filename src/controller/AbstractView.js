@@ -26,9 +26,9 @@ define(["controller/ControllerAPI", "model/quantity"], function(Controller, Quan
     function AbstractView(source) {
     }
 
-    
-    AbstractView.prototype = {
 
+    AbstractView.prototype = {
+        
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

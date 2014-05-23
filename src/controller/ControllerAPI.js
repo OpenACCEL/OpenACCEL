@@ -46,6 +46,14 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         this.numIterations = 0;
 
         /**
+         * The current iteration of script execution.
+         * Range: 0-this.numIterations.
+         *
+         * @type {Number}
+         */
+        this.currentIteration = 1;
+
+        /**
          * Whether the script _should_ be executing. If false, the script
          * has already stopped or will abort in the next call to the
          * run() method.
@@ -71,6 +79,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
     Controller.prototype.execute = function() {
         if (!this.executing && this.script.isComplete()) {
             this.executing = true;
+            this.currentIteration = 1;
             this.runloop = setInterval(this.run, 5);
         }
     };
@@ -85,7 +94,14 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
     Controller.prototype.run = function() {
         cat2quantities = this.script.getOutputQuantities();
 
-        // TODO give quantities to view!
+        if (this.numIterations > 0) {
+            if (this.currentIteration == this.numIterations) {
+                // TODO give results to view
+                this.currentIteration = 1;
+            } else {
+                this.currentIteration ++;
+            }
+        }
     };
 
     /**
