@@ -60,7 +60,8 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
                 // is local to this definition and if not, add it as a dependency. Also, a single
                 // variable can occur multiple times in the rhs of a definition. Check this
                 // as well.
-                if (lhs.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1 && this.functionlist.indexOf(d) == -1) {
+                if (quantities[qty].parameters.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1 && this.functionlist.indexOf(d) == -1) {
+                    
                     quantities[qty].dependencies.push(d);
                     
                     // It could be that it is used in multiple definitions while being
@@ -70,12 +71,13 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
                         quantities[d].name = d;
                         quantities[d].todo = true;
                         quantities[d].source = d + '=';
+
+                        // TODO store parameters
                     }
 
                     // Add the quantity being defined as a reverse dependency of this quantity
                     if (!quantities[d].reverseDeps) {
-                        quantities[d].reverseDeps = [];
-                        quantities[d].reverseDeps.push(qty);
+                        quantities[d].reverseDeps = [qty];
                     } else {
                         if (quantities[d].reverseDeps.indexOf(qty) == -1) {
                             quantities[d].reverseDeps.push(qty);
