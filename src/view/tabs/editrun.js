@@ -92,7 +92,11 @@ function synchronizeScriptList(quantities) {
 
         //Results
         if (quantity.category == 2) {
-            Report.addResult(quantity.name, controller.getQuantityValue(quantity.name));
+            try {
+                Report.addResult(quantity.name, controller.getQuantityValue(quantity.name));
+            } catch(e) {
+                console.log(e);
+            }
         }
     }
     scriptlistBuffer.flip();

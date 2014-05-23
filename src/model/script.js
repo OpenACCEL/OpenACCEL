@@ -190,7 +190,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
                 throw new Error('Script.prototype.deleteQuantity.pre :' +
                 'quantity does not exist')
             }
-            if (!this.quantities[qtyname].todo) {
+            if (this.quantities[qtyName].todo) {
                 throw new Error('Script.prototype.deleteQuantity.pre :' +
                 'quantity cannot be deleted: is a todo item')
             }
@@ -200,12 +200,12 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
             // Delete all dependencies of this quantity that are marked as todo and have no other reverse dependencies!
             qty.dependencies.forEach((function(d) {
                 if (this.quantities[d].todo) {
-                    if (this.quantities[d].reverseDeps == [qtyName]) {
+                    if (this.quantities[d].reverseDeps.length <= 1) {
                         // We are the only quantity depending on it, so delete it
                         delete this.quantities[d];
                     } else {
                         // Remove us from reverse-dependency list
-                        delete this.quantities[d].reverseDeps[qtyname];
+                        delete this.quantities[d].reverseDeps[qtyName];
                     }
                 }
             }).bind(this));
@@ -214,15 +214,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
             // delete it from the object
             if (qty.reverseDeps.length > 0) {
                 this.quantities[qtyName].markAsTodo();
-            } else {
-                for (var i = 0; i < this.quantities[qtyName].dependencies.length; i++) {
-                    var dependency = this.quantities[qtyName].dependencies[i];
-                    if (this.quantities[dependency].todo) {
-                        deleteQuantity(dependency);
-                    }
-                }
-                delete this.quantities[qtyName];
-            }
+            } 
 
             // If it has no reverse dependencies, delete it entirely
             else {
