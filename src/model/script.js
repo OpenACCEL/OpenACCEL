@@ -138,16 +138,20 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         },
 
         /**
-         * Returns the value of the quantity with the given name, as .
+         * Returns the value of the quantity with the given name
          *
          * @param {String} qtyName The name of the quantity of which to return the value
-         * @pre this.hasQuantity(qtyName)
+         * @pre this.hasQuantity(qtyName) && !this.quantities[qtyName].todo
          * @return this.quantities[qtyName]
          */
         getQuantityValue: function(qtyName) {
             if (!this.hasQuantity(qtyName)) {
                 throw new Error('Script.prototype.getQuantityValue.pre :' +
                 'no Quantity named qtyName')
+            }
+            if (this.quantities[qtyName].todo) {
+                throw new Error('Script.prototype.getQuantityValue.pre :' +
+                'quantity qtyName undefined (todo)!')
             }
 
             return eval("this.exe." + qtyName + "();");
