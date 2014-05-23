@@ -1,4 +1,4 @@
-/**
+/*
  * A quantity (or symbol, or variable) is represented by one or more letters on the left
  * hand side of a line in an ACCEL script. The right hand side of that line contains the
  * definition of the quantity and optionally the units. We treat a quantity as a function
@@ -19,7 +19,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Quantity*/ function() {
+define([], /**@lends Model*/ function() {
     /**
      * @class
      * @classdesc Abstract Pass that is part of compiling the script.

@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/preprocessor/compilerpass'], /**@lends FuncPass*/ function(CompilerPass) {
+define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Preprocessor*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Pass that wraps each line of script in a 'func(...)' statement.
@@ -30,7 +30,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends FuncPass*/ function
     /**
      * Wraps each line of script in a 'func(...)' statement.
      * @param  {String[]} scriptLines Array of script lines.
-     * @param {Report}      report A full report containing script information.
+     * @param {Object}      report A full report containing script information.
      * @pre scriptLines != null
      * @pre scriptLines != undefined
      * @pre report != null

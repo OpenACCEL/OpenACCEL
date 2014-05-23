@@ -20,7 +20,7 @@ if (inNode) {
 define(["model/passes/analyser/quantitypass",
         "model/passes/analyser/dependencypass",
     ],
-    /**@lends Analyser*/
+    /**@lends Model*/
     function(QuantityPass,
              DependencyPass,
              CategoryPass) {
@@ -55,7 +55,7 @@ define(["model/passes/analyser/quantitypass",
          * Returns a new object with quantities, containing the newly defined one.
          *
          * @param {String} line         A single line of input code.
-         * @return {Quantities{} }      An object containing all the quantities in the script.
+         * @return {Object}      An object containing all the quantities in the script.
          */
         Analyser.prototype.analyse = function(line, quantities) {
             for (var i = 0; i < this.passes.length; i++) {
@@ -86,7 +86,7 @@ define(["model/passes/analyser/quantitypass",
          * Determines the categories of all quantities and checks whether the script is
          * complete (no todo-items).
          *
-         * @param {Quantity{} } quantities The set of quantities to analyse
+         * @param {Object} quantities The set of quantities to analyse
          * @return quantities, with category attribute set
          * @modifies quantities, this.scriptComplete
          */

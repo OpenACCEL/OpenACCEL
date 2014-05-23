@@ -1,4 +1,4 @@
-/**
+/*
  * File containing the Controller Class
  *
  * @author Loct
@@ -29,7 +29,7 @@ if (inNode) {
 define(["model/script", "model/compiler"], /**@lends Controller*/ function(Script, Compiler) {
 
     /**
-     * @class Controller
+     * @class
      * @classdesc Base controller class.
      */
     function Controller() {

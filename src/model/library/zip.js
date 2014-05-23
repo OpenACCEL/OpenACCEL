@@ -1,10 +1,13 @@
 /**
+ * @memberof Model.Library
  * Applies the given function on the given array. The function is aplied recursively,
  * so also to nested arrays.
  * @param  {Array}   a        array taking the role of the first input of the function
  * @param  {Array}   b        array taking the role of the second input of the function
  * @param  {Function} func function that should be applied
  * @return {Array}            Resulting array.
+ *
+ * @memberof Model.Library
  */
 function zip(a, b, func) {
     var isScalarA = !(a instanceof Array || a instanceof Object);

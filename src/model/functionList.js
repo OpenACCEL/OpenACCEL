@@ -18,7 +18,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(['model/compiler'], /**@lends */ function(Compiler) {
+define(['model/compiler'], /**@lends Model*/ function(Compiler) {
 
     /**
      * Object keeping the track of the list of 'reserved' functions.

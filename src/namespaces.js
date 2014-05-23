@@ -5,12 +5,35 @@
  */
 
 /**
- * Passes for the compiler.
+ * Classes for the Model in the Model-View-Controller system.
  * 
- * @namespace Passes
+ * @namespace Model
+ */
+
+/**
+ * Library function.
+ * 
+ * @namespace Model.Library
+ */
+
+/**
+ * Passes are classes that process a script.
+ * 
+ * @namespace Model.Passes
  */
 
 /**
  * Passes for the preprocessor.
- * @namespace Passes.Preprocessor
+ * @namespace Model.Passes.Preprocessor
+ */
+
+/**
+ * Passes for the analyser.
+ * @namespace Model.Passes.Analyser
+ */
+
+/**
+ * Classes for the Controller in the Model-View-Controller system.
+ * 
+ * @namespace Controller
  */

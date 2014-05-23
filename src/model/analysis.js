@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /** @lends Analysis */ function() {
+define([], /** @lends Model */ function() {
 
     /**
      * @class

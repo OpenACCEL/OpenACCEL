@@ -25,7 +25,7 @@ define(["model/passes/preprocessor/unitpass",
         "model/passes/preprocessor/vectorpass",
         "model/passes/preprocessor/namedvectorpass"
     ],
-    /**@lends PreProcessor*/
+    /**@lends Model*/
     function(UnitPass,
         OperatorPass,
         ExePass,

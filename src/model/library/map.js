@@ -4,6 +4,8 @@
  * @param  {Array | Number}   a        array or scalar to which the given function should be applied
  * @param  {Function} func function that should be applied
  * @return {Array | Number}            Result of applying operator.
+ *
+ * @memberof Model.Library
  */
 function map(a, func) {
 	if (a instanceof Object) {

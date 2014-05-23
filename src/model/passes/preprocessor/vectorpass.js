@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/preprocessor/compilerpass'], /**@lends VectorPass*/ function(CompilerPass) {
+define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Preprocessor*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Pass that replaces every dot notation and bracket notation to its javascript
@@ -33,7 +33,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends VectorPass*/ functi
      * For example a[b] becomes a.b and a.0 becomes a[0].
      *
      * @param  {String[]} scriptLines Array of script lines.
-     * @param {Report}      report A full report containing script information.
+     * @param {Object}      report A full report containing script information.
      * @pre scriptLines != null
      * @pre scriptLines != undefined
      * @pre report != null

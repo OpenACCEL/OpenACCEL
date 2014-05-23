@@ -1,9 +1,12 @@
 /**
+ * @memberof Model.Library
  * Applies the given function on the given array. The function is aplied recursively,
  * so also to nested arrays.
  * @param  {Array}   x        array of inputs used in the function of interest, each of which may be an array itself
  * @param  {Function} func    function that should be applied
  * @return {Array}            Resulting array.
+ *
+ * @memberof Model.Library
  */
 function nZip(x, func) {
     var allScalar = true;

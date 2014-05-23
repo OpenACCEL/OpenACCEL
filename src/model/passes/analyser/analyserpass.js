@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
+define(['model/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
     /**
      * @class
      * @classdesc Analyses a single line of code and updates the quantities in the script.
@@ -38,12 +38,12 @@ define(['model/passes/pass'], /**@lends AnalyserPass*/ function(Pass) {
      * The base class only contains precondition checking and returns the given input.
      *
      * @param {String} line The line of code that needs to be analysed.
-     * @param {Quantity{}} quantities The quantities of this script with their attributes
+     * @param {Object} quantities The quantities of this script with their attributes
      * @pre line != null
      * @pre line != undefined
      * @pre quantities != null
      * @pre quantities != undefined
-     * @return {Quantity{}} An object containing all the  quantities in the script with their 
+     * @return {Object} An object containing all the  quantities in the script with their 
      * attributes such as parameters and dependencies.
      */
     AnalyserPass.prototype.analyse = function(line, quantities) {

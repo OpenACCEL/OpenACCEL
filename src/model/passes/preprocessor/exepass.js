@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(CompilerPass) {
+define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Preprocessor*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Pass that replaces every reference to variable on the right
@@ -33,7 +33,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends ExePass*/ function(
      * exe.<varname>().
      *
      * @param {String[]}    scriptLines Array with script lines.
-     * @param {Report}      report A full report containing script information.
+     * @param {Object}      report A full report containing script information.
      * @pre scriptLines != null
      * @pre scriptLines != undefined
      * @pre report != null
