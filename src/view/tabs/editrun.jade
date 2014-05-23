@@ -5,6 +5,8 @@
             .label Script line
             input(type = 'text')#scriptline.textin
             #syntaxtip.tooltip(onclick = '$(this).toggle();') SYNTAX ERROR
+            script.
+                $('#syntaxtip').toggle(false);
         .inline
             .label &nbsp;
             input(type = 'button', value = 'Enter', onclick = 'addQuantity($("#scriptline").val())')#enterline.buttonin
@@ -13,6 +15,8 @@
                 .label &nbsp;
                 input(type = 'button', value = 'Run')#runscript.buttonin
                 #runtimetip.tooltip(onclick = '$(this).toggle();') RUNTIME ERROR
+                script.
+                    $('#runtimetip').toggle(false);
             .inline
                 .label &nbsp;
                 input(type = 'button', value = 'New')#newscript.buttonin
@@ -84,5 +88,5 @@
     .report(onclick = '$("#console").toggle()')
         #console.divtable(style = "height: 100px;")
             div
-                div Warning -&nbsp
-                div To string conversion
+                //- div Warning -&nbsp
+                //- div To string conversion
