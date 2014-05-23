@@ -69,7 +69,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * script is complete and non-empty
      */
     Controller.prototype.execute = function() {
-        if (this.script.isComplete()) {
+        if (!this.executing && this.script.isComplete()) {
             this.executing = true;
             this.runloop = setInterval(this.run, 5);
         }
