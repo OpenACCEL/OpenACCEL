@@ -55,7 +55,7 @@ define(["model/passes/analyser/quantitypass",
          * Performs all 
          *
          * @param {String} line A single line of input code.
-         * @return {Quantities{} } An object containing all the quantities in the script.
+         * @return {Object} An object containing all the quantities in the script.
          */
         Analyser.prototype.analyse = function(line, quantities) {
             for (var i = 0; i < this.passes.length; i++) {
