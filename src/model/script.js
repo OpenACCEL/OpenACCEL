@@ -185,6 +185,14 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
             // todo and delete it's definition.
             if (this.quantities[qtyName].reverseDeps.length > 0) {
                 this.quantities[qtyName].markAsTodo();
+            } else {
+                for (var i = 0; i < this.quantities[qtyName].dependencies.length; i++) {
+                    var dependency = this.quantities[qtyName].dependencies[i];
+                    if (this.quantities[dependency].todo) {
+                        deleteQuantity(dependency);
+                    }
+                }
+                delete this.quantities[qtyName];
             }
 
             this.scriptChanged();

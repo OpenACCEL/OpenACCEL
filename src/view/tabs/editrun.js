@@ -18,10 +18,17 @@ $(document).ready(
     }
 );
 
-function deleteQuantity(line) {
-    //controller.deleteQuantity(line);
-    //Scriptlist.removeLine(line);
-    console.log('delete ' + line);
+function deleteQuantity(quantity) {
+    console.log('deleting ' + quantity);
+
+    controller.deleteQuantity(quantity);
+
+    var quantities = controller.getQuantities();
+    synchronizeScriptList(quantities);
+    Report.todolistBuffer.hideIfEmpty('#tododiv');
+    Report.resultBuffer.hideIfEmpty('#resultdiv');
+
+    console.log('deleted ' + quantity);
 };
 
 var linenr = 0;
@@ -50,7 +57,7 @@ function addQuantity(string) {
             // Report.resultBuffer.empty();
             // if (split[0] == 'out' || split[0] == 'out2') {
             //     console.log('output variable found');
-            //     Report.addResult(split[0], controller.getValue(split[0]));
+            //     Report.addResult(split[0], controller.getQuantityValue(split[0]));
             // }
             // Report.resultBuffer.flip();
             Report.todolistBuffer.hideIfEmpty('#tododiv');
@@ -74,6 +81,7 @@ function synchronizeScriptList(quantities) {
     var i = 0;
     for (var q in quantities) {
         var quantity = quantities[q];
+        console.log(quantity);
         
         //TODOs
         if (quantity.definition == "") {
@@ -84,7 +92,7 @@ function synchronizeScriptList(quantities) {
 
         //Results
         if (quantity.category == 2) {
-            Report.addResult(quantity.name, controller.getValue(quantity.name));
+            Report.addResult(quantity.name, controller.getQuantityValue(quantity.name));
         }
     }
     scriptlistBuffer.flip();
@@ -185,7 +193,7 @@ function getScriptlistLineHTML(line, left, right, category) {
             <div class="inline operator">=</div>\
             <div class="inline ellipsis max256w">' + right + '</div>\
             <div class="inline comment">(cat.=' + category + ')</div>\
-            <a onclick="deleteQuantity(#line' + line + ')" class="inline lineoption">delete</a>\
+            <a onclick="deleteQuantity(\'' + left + '\')" class="inline lineoption">delete</a>\
         </label>\
     ';
 }
