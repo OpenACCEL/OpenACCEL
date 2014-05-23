@@ -1,4 +1,4 @@
-suite("Min Library", function() {
+suite("Max Library", function() {
     var compiler;
     var macros;
     var assert;

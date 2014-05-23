@@ -33,7 +33,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * @classdesc Base controller class.
      */
     function Controller() {
-    	this.compiler = new Compiler();
+        this.compiler = new Compiler();
         this.script = new Script();
 
         /**
@@ -69,10 +69,10 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * script is complete and non-empty
      */
     Controller.prototype.execute = function() {
-    	if (this.script.isComplete()) {
-    		this.executing = true;
-    		this.runloop = setInterval(this.run, 5);
-    	}
+        if (this.script.isComplete()) {
+            this.executing = true;
+            this.runloop = setInterval(this.run, 5);
+        }
     };
 
     /**
@@ -83,9 +83,9 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * @post The view has received the current values of all output quantities.
      */ 
     Controller.prototype.run = function() {
-    	cat2quantities = this.script.getOutputQuantities();
+        cat2quantities = this.script.getOutputQuantities();
 
-    	// TODO give quantities to view!
+        // TODO give quantities to view!
     };
 
     /**
@@ -94,10 +94,10 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * @post controller.executing == false
      */
     Controller.prototype.stop = function() {
-    	if (this.executing) {
-	    	clearInterval(this.runloop);
-	        this.executing = false;  
-    	}
+        if (this.executing) {
+            clearInterval(this.runloop);
+            this.executing = false;  
+        }
     }; 
 
     /**
@@ -146,7 +146,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
                 'quantity is null or undefined')
         }
         if (!this.script.hasQuantity(quantity)) {
-        	throw new Error('Controller.prototype.getQuantity.pre :' +
+            throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity does not exist')
         }
         //TODO Precondition quantity \in Script 
@@ -194,7 +194,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
                 'qtyName is null or undefined')
         }
         if (!this.script.hasQuantity(qtyName)) {
-        	throw new Error('Controller.prototype.getQuantity.pre :' +
+            throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity does not exist')
         }
 
@@ -207,12 +207,12 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * @param  {Script} script script to compile
      */
     Controller.prototype.compileScript = function(script) {
-    	if (script.isComplete()) {
-        	script.exe = this.compiler.compile(script).exe;
-        	return true;
-    	} else {
-    		return false;
-    	}
+        if (script.isComplete()) {
+            script.exe = this.compiler.compile(script).exe;
+            return true;
+        } else {
+            return false;
+        }
     }     
 
     /**
@@ -230,7 +230,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
                 'quantity is null or undefined')
         }
         if (!this.script.hasQuantity(quantity)) {
-        	throw new Error('Controller.prototype.getQuantity.pre :' +
+            throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity does not exist')
         }
 
@@ -259,7 +259,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
                 'quantity is null or undefined')
         }
         if (!this.script.hasQuantity(quantity)) {
-        	throw new Error('Controller.prototype.getQuantity.pre :' +
+            throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity does not exist')
         }
 

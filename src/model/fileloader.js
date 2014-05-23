@@ -8,7 +8,7 @@
 inBrowser = typeof window !== 'undefined';
 inNode    = !inBrowser;
 
-if (inNode) { 
+if (inNode) {
     require = require('requirejs');
     fileModule = "fs";
 } else {
@@ -36,7 +36,7 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
          */
         this.library = {};
     }
-    
+
     /**
      * Tries to load a file by its filename.
      * By default, it will try and load macros.
@@ -52,6 +52,9 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
 
         if (type && type == "library") {
             location = "library";
+            extension = ".js";
+        } else if (type && type == "test") {
+            location = "../../test/model/util";
             extension = ".js";
         } else {
             type = "macros";
@@ -88,7 +91,7 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
             // Variables needed to locate the file.
             var dirname = require("path").dirname(module.uri);
             var filename = dirname + "/" + location + "/" + file + extension;
-            
+
             // We need to *synchronously* load the file.
             try {
                 content = fs.readFileSync(filename);
@@ -139,6 +142,13 @@ define(["module", fileModule], /**@lends FileLoader*/ function(module, fs) {
         }
 
         return output;
+    };
+
+    /**
+     * @returns {String} A string containing both the library functions and macros.
+     */
+    FileLoader.prototype.getContent = function() {
+        return this.getLibrary() + this.getMacros();
     };
 
     /**

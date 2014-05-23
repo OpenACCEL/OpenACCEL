@@ -1,3 +1,3 @@
 function max() {
-    return nZip(arguments, Math.max);
+    return nzip(arguments, Math.max);
 }

@@ -1,3 +1,3 @@
 function min() {
-    return nZip(arguments, Math.min);
+    return nzip(arguments, Math.min);
 }
