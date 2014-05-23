@@ -18,19 +18,19 @@ if (inNode) {
 /*******************************************************************/
 
 define(["model/passes/analyser/quantitypass",
-        "model/passes/analyser/dependencypass",
-    ],
+        "model/passes/analyser/dependencypass"],
     /**@lends Analyser*/
-    function(QuantityPass,
-             DependencyPass,
-             CategoryPass) {
+    function(QuantityPass, DependencyPass, CategoryPass) {
         /**
-         * @class
+         * @class Analyser
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
          */
         function Analyser() {
             /**
-             * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
+             * An array of AnalyserPasses that are performed on each line of ACCEL code.
+             * It is an array instead of a dictionary because the order of pass execution matters.
+             *
+             * @type {AnalyserPass[]}
              */
             this.passes = [];
             this.passes.push(new QuantityPass());
@@ -52,10 +52,10 @@ define(["model/passes/analyser/quantitypass",
         }
 
         /**
-         * Returns a new object with quantities, containing the newly defined one.
+         * Performs all 
          *
-         * @param {String} line         A single line of input code.
-         * @return {Quantities{} }      An object containing all the quantities in the script.
+         * @param {String} line A single line of input code.
+         * @return {Quantities{} } An object containing all the quantities in the script.
          */
         Analyser.prototype.analyse = function(line, quantities) {
             for (var i = 0; i < this.passes.length; i++) {

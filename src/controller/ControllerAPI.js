@@ -38,7 +38,8 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
 
         /**
          * The number of iterations that the script should perform
-         * before presenting the result.
+         * before presenting the result. If zero, results are presented
+         * after every iteration.
          *
          * @type {Number}
          */
