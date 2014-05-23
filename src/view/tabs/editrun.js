@@ -93,7 +93,7 @@ function synchronizeScriptList(quantities) {
         //Results
         if (quantity.category == 2) {
             try {
-                Report.addResult(quantity.name, controller.getQuantityValue(quantity.name));
+                Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
             } catch(e) {
                 console.log(e);
             }
@@ -102,6 +102,24 @@ function synchronizeScriptList(quantities) {
     scriptlistBuffer.flip();
     Report.todolistBuffer.flip();
     Report.resultBuffer.flip();
+}
+
+function objectToString(obj) {
+    if (obj instanceof Object) {
+        var results = [];
+        for (var key in obj) {
+            var elem = '';
+            if (!(/^\d+$/.test(key))) {
+                // Key is not a number
+                elem += key + ':';
+            }
+            elem += objectToString(obj[key]);
+            results.push(elem);
+        }
+        return '[' + results.join(',') + ']';
+    } else {
+        return obj.toString();
+    }
 }
 
 //------------------------------------------------------------------------------
