@@ -84,7 +84,7 @@ function synchronizeScriptList(quantities) {
         console.log(quantity);
         
         //TODOs
-        if (quantity.definition == "") {
+        if (quantity.todo) {
             Report.addTodo(quantity.name);
         } else {
             addScriptlistLine(i++, quantity.name, quantity.definition, quantity.category);
