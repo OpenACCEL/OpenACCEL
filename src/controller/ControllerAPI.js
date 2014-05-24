@@ -107,6 +107,8 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          * @type {Integer}
          */
         this.runloop = null;
+
+        this.autoExecute = false;
     }
 
     /**
@@ -121,6 +123,10 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             this.executing = true;
             this.runloop = setInterval(this.run, 5);
         }
+    };
+
+    Controller.prototype.shouldAutoExecute = function(autoExecute) {
+        this.autoExecute = autoExecute;
     };
 
     /**
@@ -139,6 +145,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
                 this.stop();
             } else {
                 this.currentIteration ++;
+                this.presentResults(cat2quantities);
             }
         }
     };
@@ -271,7 +278,9 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         this.script.addQuantity(definition);
         this.compileScript(this.script);
         this.view.setQuantities(this.script.getQuantities());
-        this.execute();
+        if (this.autoExecute) {
+            this.execute();
+        }
     }; 
 
     /**
@@ -299,7 +308,9 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         this.script.deleteQuantity(qtyName);
         this.compileScript(this.script);
         this.view.setQuantities(this.script.getQuantities());
-        this.execute();
+        if (this.autoExecute) {
+            this.execute();
+        }
     };
 
     /**
