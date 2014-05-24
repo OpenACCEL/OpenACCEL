@@ -17,14 +17,21 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler, Analyser, Quantity) {
+define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
     /**
      * @class Script
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
      * compiled executable and source code.
+     *
+     * @param source {String} (optional) The source code with which to initialise the script. All quantities
+     * defined herein will be added to the script.
      */
     function Script(source) {
-        this.compiler = new Compiler();
+        /**
+         * The analyser that will be used to analyse the script.
+         *
+         * @type {Analyser}
+         */
         this.analyser = new Analyser();
 
         /**
@@ -57,11 +64,8 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          */
         this.quantities = {};
 
-        // TODO store array of quantity names to preserve the order in which
-        // they were defined
-
+        // Initialise with given source if not undefined
         if (typeof source !== 'undefined') {
-            // Source code is given, initialize.
             var lines = source.split("\n");
             lines.forEach((function(line) {
                 this.addQuantity(line);
@@ -71,7 +75,6 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
 
 
     Script.prototype = {
-
         /**
          * Returns whether the script can be compiled and executed.
          *
@@ -99,26 +102,6 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
          */
         getQuantities: function() {
             return this.quantities;
-        },
-
-        /**
-         * Returns an object containing all category 2 quantities, keyed
-         * by quantity name, and containing their current values if the script
-         * can be executed.
-         *
-         * @return this.analyser.getOutputQuantities()
-         */
-        getOutputQuantities: function() {
-            var cat2quantities = this.analyser.getOutputQuantities();
-
-            // Populate object with quantity values if script can be evaluated
-            if (this.isComplete()) {
-                for (q in cat2quantities) {
-                    cat2quantities[q].value = this.getQuantityValue(q);
-                }
-            }
-
-            return cat2quantities;
         },
 
         /**
@@ -156,7 +139,6 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
 
             return eval("this.exe." + qtyName + "();");
         },
-        
 
         /**
          * Adds the quantity defined in source to the script. If the quantity already exists,
@@ -225,23 +207,40 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
         },
 
         /**
+         * Returns an object containing all category 2 quantities, keyed
+         * by quantity name, and containing their current values if the script
+         * can be executed.
+         *
+         * @return this.analyser.getOutputQuantities()
+         */
+        getOutputQuantities: function() {
+            var cat2quantities = this.analyser.getOutputQuantities();
+
+            // Populate object with quantity values if script can be evaluated
+            if (this.isComplete()) {
+                for (q in cat2quantities) {
+                    cat2quantities[q].value = this.getQuantityValue(q);
+                }
+            }
+
+            return cat2quantities;
+        },
+
+        /**
          * Sets the value of a category 1 user input quantity.
          *
          * @param {String} qtyName The name of the category 1 quantity to set the value of
          * @param {Number} value The value to give to the Quantity with name qtyName
-         * @pre qtyName in this.quantities && this.quantities[qtyName].category == 1
+         * @pre this.hasQuantity(qtyName) && this.quantities[qtyName].category == 1
+         * @post this.quantities[qtyName].value == value
          */
         setConstant: function(qtyName, value) {
-            if(!this.hasQuantity(qtyName)) {
+            if(this.getQuantity(qtyName).category != 1) {
                 throw new Error('Script.prototype.setConstant.pre :' +
-                'no Quantity named qtyName')
-            }
-            if(this.quantities[qtyName].category != 1) {
-                throw new Error('Script.prototype.setConstant.pre :' +
-                'Quantity qtyName is not of category 1')
+                'not a category 1 (user-input) quantity')
             }
 
-            // TODO implementation
+            this.quantities[qtyName].value = value;
         },
 
         /**

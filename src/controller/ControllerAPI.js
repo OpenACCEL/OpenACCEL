@@ -26,15 +26,47 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/script", "model/compiler"], /**@lends Controller*/ function(Script, Compiler) {
-
+define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends Controller*/ function(Script, Compiler, AbstractView) {
     /**
-     * @class
+     * @class Controller
      * @classdesc Base controller class.
+     *
+     * @param view {AbstractView} The view with which the controller will communicate 
+     * to present the results and data.
+     * @param script {Script} The script that the controller should manage and execute.
+     * @param compiler {Compiler} The compiler that should be used to compile the script.
      */
-    function Controller() {
-        this.compiler = new Compiler();
-        this.script = new Script();
+    function Controller(view, script, compiler) {
+        /**
+         * The view with which the controller will communicate 
+         * to present the results and data.
+         *
+         * @type {AbstractView}
+         */
+        this.view = view;
+        
+        /**
+         * The compiler that will be used to compile the script.
+         *
+         * @type {Compiler}
+         */
+        if (typeof compiler !== undefined) {
+            this.compiler = compiler;
+        } else {
+            this.compiler = new Compiler();
+        }
+        
+
+        /**
+         * The script that this Controller will manage and execute.
+         *
+         * @type {Script}
+         */
+        if (typeof script !== undefined) {
+            this.script = script;
+        } else {
+            this.script = new Script();
+        }
 
         /**
          * The number of iterations that the script should perform.
@@ -72,15 +104,15 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
     }
 
     /**
-     * Starts execution of the script.
+     * Starts or resumes execution of the script.
      *
      * @post The script is being executed in a loop if the
-     * script is complete and non-empty
+     * script is complete and non-empty. The script has been resumed
+     * if it was paused, and otherwise started over.
      */
     Controller.prototype.execute = function() {
         if (!this.executing && this.script.isComplete()) {
             this.executing = true;
-            this.currentIteration = 1;
             this.runloop = setInterval(this.run, 5);
         }
     };
@@ -89,15 +121,15 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * Evaluates the values of all category 2 quantities and provides 
      * them to the view.
      *
-     * @pre this.script.isComplete(). NOTE: not checked for performance reasons!
+     * @pre this.script.isComplete(). NOTE: not asserted for performance reasons!
      * @post The view has received the current values of all output quantities.
      */ 
     Controller.prototype.run = function() {
-        this.cat2quantities = this.script.getOutputQuantities();
+        var cat2quantities = this.script.getOutputQuantities();
 
         if (this.numIterations > 0) {
             if (this.currentIteration == this.numIterations) {
-                // TODO give results to view and stop execution
+                this.presentResults(cat2quantities);
                 this.stop();
             } else {
                 this.currentIteration ++;
@@ -106,22 +138,54 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
     };
 
     /**
+     * Pauses the script but does not clear history or resets
+     * the current iteration.
+     * 
+     * @post this.executing == false
+     */
+    Controller.prototype.pause = function() {
+            if (this.executing) {
+            clearInterval(this.runloop);
+            this.executing = false;
+        }
+    };
+
+    /**
+     * Stops script execution if currently executing,
+     * clears any quantity histories and resets the current
+     * iteration to 1.
+     * 
+     * @post this.executing == false && this.currentIteration == 1
+     */
+    Controller.prototype.stop = function() {
+        if (this.executing) {
+            clearInterval(this.runloop);
+            this.executing = false;
+            this.currentIteration = 1; 
+        }
+    }; 
+
+    /**
+     * Returns whether the script is currently executing.
      *
+     * @return this.executing
+     */
     Controller.prototype.isRunning = function() {
         return this.executing;
     };
 
     /**
-     * Stops script execution, if currently executing.
-     * 
-     * @post controller.executing == false
+     * Presents the results stored in the given output quantities
+     * to the view associated with this controller.
+     *
+     * @param cat2quantities {map<String, Quantity>} Map containing the output
+     * quantities to present to the view, keyed by quantity name.
+     * @post The given quantities and their values have been pushed to the
+     * view.
      */
-    Controller.prototype.stop = function() {
-        if (this.executing) {
-            clearInterval(this.runloop);
-            this.executing = false;  
-        }
-    }; 
+    Controller.prototype.presentResults = function(cat2quantities) {
+        this.view.presentResults(cat2quantities);
+    };
 
     /**
      * Sets the number of executions of the script.
@@ -139,11 +203,11 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         }
         if(!(iterations >= 0)) {
             throw new Error('Controller.prototype.setIteration.pre :' +
-                'iterations is not greater or equal to 0')
+                'iterations is not greater than or equal to 0')
         }
+
         this.numIterations = iterations;
-        //TODO Tests
-    } 
+    }; 
 
     /**
      * Retrieves list of quantities.
@@ -152,19 +216,20 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      */
     Controller.prototype.getQuantities = function() {
         return this.script.quantities;
-    }
+    };
 
     /**
-     * Retrieves, if possible, a quantity from the model.
-     * NOTE: For sake of the demo, this function is a duplicate of getValue.
-     * @param quantity {String} quantity name
-     * @pre quantity != null
-     * @pre quantity != undefined
-     * @pre quantity \in Script
-     * @return {Object} the Quantity
+     * Returns the quantity with name qtyName from the script.
+     *
+     * @param qtyName {String} The name of the quantity to return
+     * @pre qtyName != null
+     * @pre qtyName != undefined
+     * @pre this.script.hasQuantity(qtyName)
+     *
+     * @return {Quantity} The Quantity with name qtyName
      */
-    Controller.prototype.getQuantity = function(quantity) {
-        if(!quantity) {
+    Controller.prototype.getQuantity = function(qtyName) {
+        if(!qtyName) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
@@ -172,21 +237,20 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity does not exist')
         }
+
         //TODO Precondition quantity \in Script 
-        //TODO Implementation
-        //TODO Tests
         return this.script.getQuantity(quantity);
-    } 
+    }; 
 
     /**
-     * Adds a quantity to a model.
+     * Adds a quantity to the model.
      *
-     * @param definition {String} Contains a quantity on the LHS and a defition on the RHS
+     * @param definition {String} A single line of ACCEL script which contains the
+     * definition of the quantity to be added
      * @pre definition != null
      * @pre definition != undefined
-     * @pre model.ScriptAnalyzer() == true
-     * @post definition \in Script
-     * @return {Object} list of quantities
+     * @post
+     * @modifies this.script.quantities
      */
     Controller.prototype.addQuantity = function(definition) {
         //TODO Precondition, syntax checking
@@ -200,7 +264,9 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         this.stop();
         this.script.addQuantity(definition);
         this.compileScript(this.script);
-    } 
+        this.view.setQuantities(this.script.getQuantities());
+        this.execute();
+    }; 
 
     /**
      * Deletes a quantity from the model.
@@ -221,13 +287,20 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
                 'quantity does not exist')
         }
 
+        // Stop script execution, delete quantity, recompile, and 
+        // start again if todo list is empty
         this.stop();
         this.script.deleteQuantity(qtyName);
         this.compileScript(this.script);
-    }
+        this.view.setQuantities(this.script.getQuantities());
+        this.execute();
+    };
+
     /**
      * Compiles the given script if the todo-list is empty.
-     * @param  {Script} script script to compile
+     *
+     * @param  {Script} script The script to compile
+     * @return Whether the script has been compiled
      */
     Controller.prototype.compileScript = function(script) {
         if (script.isComplete()) {
@@ -236,58 +309,58 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         } else {
             return false;
         }
-    }     
+    };     
 
     /**
-     * Retrieves, if possible, a value of a quantity.
-     * NOTE: For sake of the demo, this function is a duplicate of getQuantity.
-     * @param quantity = {String} quantity 
-     * @pre quantity != null
-     * @pre quantity != undefined
-     * @pre quantity \in Script
-     * @return {Number} value of quantity
+     * Returns the most recent computed value of the given quantity.
+     * 
+     * @param qtyName = {String} The name of the quantity of which to return the value 
+     * @pre qtyName != null
+     * @pre qtyName != undefined
+     * @pre this.script.hasQuantity(qtyName)
+     * @return {Number} The value of Quantity qtyname
      */
-    Controller.prototype.getQuantityValue = function(quantity) {
-        if(!quantity) {
+    Controller.prototype.getQuantityValue = function(qtyName) {
+        if(!qtyName) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
-        if (!this.script.hasQuantity(quantity)) {
+        if (!this.script.hasQuantity(qtyName)) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity does not exist')
         }
 
-        return this.script.getQuantityValue(quantity);
-    }
+        return this.script.getQuantityValue(qtyName);
+    };
 
     /**
-     * Sets the value of a quantity.
+     * Sets the value of the given category 1 (user input) quantity.
      *
-     * @param quantity = {Object} quantity
-     * @param value = {Number} value
+     * @param qtyname {String} The name of the quantity of which to set the value
+     * @param value {Number} value
      * @pre value != null
      * @pre value != undefined
-     * @pre quantity != null
-     * @pre quantity != undefined
-     * @pre quantity \in Script
-     * @post model.Quantity.value = value
+     * @pre qtyname != null
+     * @pre qtyname != undefined
+     * @pre this.script.hasQuantity(qtyname)
+     * @post this.script.quantities[qtyname].value = value
      */
-    Controller.prototype.setValue = function(quantity, value) {
+    Controller.prototype.setUserInputQuantity = function(qtyname, value) {
         if(!value) {
             throw new Error('Controller.prototype.setValue.pre :' +
                 'value is null or undefined')
         }
-        if(!quantity) {
+        if(!qtyname) {
             throw new Error('Controller.prototype.setValue.pre :' +
                 'quantity is null or undefined')
         }
-        if (!this.script.hasQuantity(quantity)) {
+        if (this.script.getQuantity(qtyName).category != 1) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
-                'quantity does not exist')
+                'not a category 1 (user-input) quantity')
         }
 
-        //this.script.setValue(quantity, value);
-    } 
+        this.script.setConstant(qtyName, value);
+    }; 
 
     /**
      * Gets Email address from the model.
@@ -299,7 +372,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         //TODO Precondition model.EmailAddress != null
         //TODO Implementation
         //TODO Tests
-    } 
+    }; 
 
     /**
      * Gets help files from the model.
@@ -311,7 +384,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         //TODO Precondition model.HelpFiles != null
         //TODO Implementation
         //TODO Tests
-    } 
+    }; 
 
     /**
      * Gets demo scripts from the model.
@@ -323,7 +396,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         //TODO Precondition model.DemoScripts != null
         //TODO Implementation
         //TODO Tests
-    }
+    };
 
     /**
      * Loads demo script from the model.
@@ -342,7 +415,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         //TODO Precondition name \in model.DemoScripts
         //TODO Implementation
         //TODO Tests
-    } 
+    }; 
 
     /**
      * Saves script on server and, returns a link to the script.
@@ -361,7 +434,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         //TODO Precondition name \in model.DemoScripts
         //TODO Implementation
         //TODO Tests
-    } 
+    }; 
 
     /**
      * Retrieves the currently loaded script from the model.
@@ -370,7 +443,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      */
     Controller.prototype.getScript = function() {
         return this.script;
-    } 
+    }; 
 
     /**
      * Sets the script to the model.
@@ -381,7 +454,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
     Controller.prototype.setScript = function() {
         //TODO Implementation
         //TODO Tests
-    }
+    };
 
     /**
      * Plots the relation between two Quantities.
@@ -407,7 +480,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         //TODO 
         //TODO Implementation
         //TODO Tests
-    }
+    };
 
     /**
      * Generates a number of iterations of SPEA.
@@ -426,7 +499,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         //TODO 
         //TODO Implementation
         //TODO Tests
-    }    
+    };    
 
     /**
      * Gets list of quantities and their position in the network
@@ -436,7 +509,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
     Controller.prototype.getNetwork = function() {
         //TODO Implementation
         //TODO Tests
-    }
+    };
 
     /**
      * Sets the position of a quantity in the network.
@@ -464,7 +537,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         }
         //TODO Implementation
         //TODO Tests
-    }   
+    };   
  
     
     // Exports are needed, such that other modules may invoke methods from this module file.

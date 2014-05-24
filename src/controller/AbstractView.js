@@ -25,10 +25,28 @@ define(["controller/ControllerAPI", "model/quantity"], function(Controller, Quan
      */
     function AbstractView(source) {
     }
-
     
     AbstractView.prototype = {
+        /**
+         * Should use the given map of quantities to update the UI lists.
+         * NOTE: do NOT retrieve the values from these quantities for 
+         * presenting the results!
+         *
+         * @param quantities {map<String, Quantity>} All the quantities
+         * currently in the model, including todo quantities with empty
+         * definitions.
+         */
+        AbstractView.prototype.setQuantities = function(quantities) { 
+        };
 
+        /**
+         * Should display the values of the given output quantities in the UI.
+         *
+         * @param cat2quantities {map<String, Quantity>} A map of all output
+         * quantities in the script.
+         */
+        AbstractView.prototype.presentResults = function(cat2quantities) {
+        };
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
