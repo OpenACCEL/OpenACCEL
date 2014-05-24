@@ -108,7 +108,14 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          */
         this.runloop = null;
 
-        this.autoExecute = false;
+        /**
+         * Whether the controller should automatically execute the script
+         * after adding or removing quantities. Currently set to false
+         * by default, for testing purposes.
+         *
+         * @type {Boolean}
+         */
+        this.autoExecute = false;   // TODO default=true
     }
 
     /**
@@ -125,7 +132,15 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         }
     };
 
-    Controller.prototype.shouldAutoExecute = function(autoExecute) {
+    /**
+     * Sets whether the controller should automatically execute the script
+     * after adding or removing quantities. 
+     *
+     * @param autoExecute {Boolean} Whether to automatically begin executing
+     * after the script has been changed.
+     * @post this.autoExecute = autoExecute
+     */
+    Controller.prototype.setAutoExecute = function(autoExecute) {
         this.autoExecute = autoExecute;
     };
 
