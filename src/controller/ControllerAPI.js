@@ -32,7 +32,8 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * @classdesc Base controller class.
      *
      * @param view {AbstractView} The view with which the controller will communicate 
-     * to present the results and data.
+     * to present the results and data. If not provided, the controller will use a
+     * dummy view.
      * @param script {Script} The script that the controller should manage and execute.
      * @param compiler {Compiler} The compiler that should be used to compile the script.
      */
@@ -43,14 +44,19 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          *
          * @type {AbstractView}
          */
-        this.view = view;
+        if (typeof view !== 'undefined') {
+            this.view = view;
+        } else {
+            console.log("Warning: Controller.Constructor: view not provided, using dummy view.");
+            this.view = new AbstractView();
+        }
         
         /**
          * The compiler that will be used to compile the script.
          *
          * @type {Compiler}
          */
-        if (typeof compiler !== undefined) {
+        if (typeof compiler !== 'undefined') {
             this.compiler = compiler;
         } else {
             this.compiler = new Compiler();
@@ -62,7 +68,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          *
          * @type {Script}
          */
-        if (typeof script !== undefined) {
+        if (typeof script !== 'undefined') {
             this.script = script;
         } else {
             this.script = new Script();

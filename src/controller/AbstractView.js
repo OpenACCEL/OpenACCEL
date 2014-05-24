@@ -17,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["controller/ControllerAPI", "model/quantity"], function(Controller, Quantity) {
+define([], /**@lends AbstractView*/ function() {
     /**
      * @class AbstractView
      * @classdesc Interface declaring the methods that the view with which the Controller will 
@@ -36,8 +36,9 @@ define(["controller/ControllerAPI", "model/quantity"], function(Controller, Quan
          * currently in the model, including todo quantities with empty
          * definitions.
          */
-        AbstractView.prototype.setQuantities = function(quantities) { 
-        };
+        setQuantities: function(quantities) { 
+            console.log("Warning: AbstractView.prototype.setQuantities called but not implemented!");
+        },
 
         /**
          * Should display the values of the given output quantities in the UI.
@@ -45,8 +46,9 @@ define(["controller/ControllerAPI", "model/quantity"], function(Controller, Quan
          * @param cat2quantities {map<String, Quantity>} A map of all output
          * quantities in the script.
          */
-        AbstractView.prototype.presentResults = function(cat2quantities) {
-        };
+        presentResults: function(cat2quantities) {
+            console.log("Warning: AbstractView.prototype.presentResults called but not implemented!");
+        }
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
