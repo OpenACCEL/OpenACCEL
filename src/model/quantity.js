@@ -149,7 +149,11 @@ define([], /**@lends Model*/ function() {
         }
 
         return def;
-    }; 
+    };
+
+    Quantity.prototype.toSource = function() {
+        return this.getSource();
+    };
 
     /**
      * Returns a String representation of the line corresponding to this quantity

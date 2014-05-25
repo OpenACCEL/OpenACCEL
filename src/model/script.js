@@ -142,18 +142,20 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
 
         /**
          * Adds the quantity defined in source to the script. If the quantity already exists,
-         * it's definition is updated.
+         * it's definition is updated. Cannot include comments.
          *
          * @param {String} source The definition of the quantity to be added, as specified by the user
-         * @pre true
          * @modifies quantities
          * @post The quantity defined in source has been added to the script, the category of all
          * quantities has been re-evaluated and the script has been recompiled if complete.
          */
         addQuantity: function(source) {
             // Analyse the added line of code and add the defined quantity to the model
-            this.quantities = this.analyser.analyse(source, this.quantities);
+            var newQuantity = this.analyser.analyse(source, this.quantities);
+
             this.scriptChanged();
+
+            return newQuantity;
         },
 
         /**
@@ -162,7 +164,7 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
          *
          * @param {String} source The piece of ACCEL script to add to the model.
          * @post All quantities defined in source have been added to the model,
-         * including any comments that were present.
+         * including any comments.
          */
         addSource: function(source) {
             var lines = source.split("\n");

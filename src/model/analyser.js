@@ -18,9 +18,10 @@ if (inNode) {
 /*******************************************************************/
 
 define(["model/passes/analyser/quantitypass",
-        "model/passes/analyser/dependencypass"],
+        "model/passes/analyser/dependencypass",
+        "model/quantity"],
     /**@lends Analyser*/
-    function(QuantityPass, DependencyPass, CategoryPass) {
+    function(QuantityPass, DependencyPass, Quantity) {
         /**
          * @class Analyser
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
@@ -52,20 +53,6 @@ define(["model/passes/analyser/quantitypass",
         }
 
         /**
-         * Performs all analysis passes on the given piece of ACCEL script
-         *
-         * @param {String} line A single line of input code.
-         * @return {Object} An object containing all the quantities in the script.
-         */
-        Analyser.prototype.analyse = function(line, quantities) {
-            for (var i = 0; i < this.passes.length; i++) {
-                quantities = this.passes[i].analyse(line, quantities);
-            }
-
-            return quantities;
-        };
-
-        /**
          * Returns whether there are no todo-items.
          *
          * @return this.scriptComplete
@@ -80,6 +67,30 @@ define(["model/passes/analyser/quantitypass",
          */
         Analyser.prototype.getOutputQuantities = function() {
             return this.outputQuantities;
+        };
+
+        /**
+         * Performs all analysis passes on the given line of ACCEL script
+         *
+         * @param {String} line A single line of input code, without comments.
+         * @param {Object} quantities The current quantities in the script.
+         * @modifies quantities
+         * @return {Quantity} A Quantity object representing the quantity defined
+         * in line.
+         * @post quantities contains the Quantity defined in line
+         */
+        Analyser.prototype.analyse = function(line, quantities) {
+            if (!quantities) {
+                throw new Error('Analyser.analyse.pre violated:' +
+                'quantities is null or undefined');
+            }
+
+            var newQuantity = null;
+            for (var i = 0; i < this.passes.length; i++) {
+                newQuantity = this.passes[i].analyse(line, newQuantity, quantities);
+            }
+
+            return newQuantity;
         };
 
         /**
