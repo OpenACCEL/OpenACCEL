@@ -157,6 +157,22 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
         },
 
         /**
+         * Adds the given piece of ACCEL script to the model. Can contain multiple
+         * quantity definitions including comments.
+         *
+         * @param {String} source The piece of ACCEL script to add to the model.
+         * @post All quantities defined in source have been added to the model,
+         * including any comments that were present.
+         */
+        addSource: function(source) {
+            var lines = source.split("\n");
+            
+            lines.foreach((function(line) {
+
+            }).bind(this));
+        },
+
+        /**
          * Deletes the given quantity from the script if it's in there,
          * or sets it as todo-item if nessecary
          *

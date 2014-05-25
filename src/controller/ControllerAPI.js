@@ -116,6 +116,13 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          * @type {Boolean}
          */
         this.autoExecute = false;   // TODO default=true
+
+        /**
+         * The currently active tab in the UI.
+         *
+         * @type {Number}
+         */
+        this.currentTab = 1;
     }
 
     /**
@@ -191,7 +198,17 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             this.executing = false;
             this.currentIteration = 1; 
         }
-    }; 
+    };
+
+    /**
+     * Signals the controller to switch state to the given tab.
+     *
+     * @param tab {Number} The tab to switch to.
+     * @post this.currentTab = tab
+     */
+    Controller.prototype.switchTab = function(tab) {
+        this.currentTab = tab;
+    };
 
     /**
      * Returns whether the script is currently executing.
