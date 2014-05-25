@@ -119,6 +119,18 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     }
 
     /**
+     * Sets whether the controller should automatically execute the script
+     * after adding or removing quantities. 
+     *
+     * @param autoExecute {Boolean} Whether to automatically begin executing
+     * after the script has been changed.
+     * @post this.autoExecute = autoExecute
+     */
+    Controller.prototype.setAutoExecute = function(autoExecute) {
+        this.autoExecute = autoExecute;
+    };
+
+    /**
      * Starts or resumes execution of the script.
      *
      * @post The script is being executed in a loop if the
@@ -130,18 +142,6 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             this.executing = true;
             this.runloop = setInterval(this.run, 5);
         }
-    };
-
-    /**
-     * Sets whether the controller should automatically execute the script
-     * after adding or removing quantities. 
-     *
-     * @param autoExecute {Boolean} Whether to automatically begin executing
-     * after the script has been changed.
-     * @post this.autoExecute = autoExecute
-     */
-    Controller.prototype.setAutoExecute = function(autoExecute) {
-        this.autoExecute = autoExecute;
     };
 
     /**
@@ -469,23 +469,47 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     }; 
 
     /**
-     * Retrieves the currently loaded script from the model.
+     * Returns the Script object currently managed by this controller.
      *
-     * @return {Object} script
+     * @return {Script} this.script
      */
     Controller.prototype.getScript = function() {
         return this.script;
-    }; 
+    };
 
     /**
-     * Sets the script to the model.
-
-     * @param script = {String} list of quantity definitions
-     * @post model.Script == script
+     * Returns the original source code of the current script, exactly as it
+     * was entered by the user. For more functionality, see scriptToString().
+     *
+     * @return {String} this.getScript().getSource()
      */
-    Controller.prototype.setScript = function() {
-        //TODO Implementation
-        //TODO Tests
+    Controller.prototype.getScriptSource = function() {
+        return this.script.getSource();
+    };
+
+    /**
+     * Returns the source code of the current script, optionally including
+     * quantity units and comments.
+     *
+     * @param {Boolean} includeUnits Whether to include the quantity units
+     * in the output.
+     * @param {Boolean} includeComments (optional) Whether to include the 
+     * comments belonging to the quantities in the output
+     * @return {String} The source code of the current script, with or without
+     * units and comments as specified.
+     */
+    Controller.prototype.scriptToString = function(includeUnits, includeComments) {
+        return this.script.toString(includeUnits, includeComments);
+    };
+
+    /**
+     * Builds the model defined in the given script and sets it
+     * as the current script.
+     *
+     * @param {String} script List of quantity definitions
+     */
+    Controller.prototype.setScript = function(script) {
+        // TODO implementation
     };
 
     /**

@@ -52,7 +52,7 @@ define(["model/passes/analyser/quantitypass",
         }
 
         /**
-         * Performs all 
+         * Performs all analysis passes on the given piece of ACCEL script
          *
          * @param {String} line A single line of input code.
          * @return {Object} An object containing all the quantities in the script.

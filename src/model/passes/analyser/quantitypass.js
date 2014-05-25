@@ -53,6 +53,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
         quantities[qtyName] = new Quantity();
         quantities[qtyName].source = line;
         quantities[qtyName].name = qtyName;
+        quantities[qtyName].LHS = lhs;
 
         // If there are other items left in vars, then this are the parameters.
         quantities[qtyName].parameters = vars.slice(1);

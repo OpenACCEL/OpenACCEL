@@ -35,6 +35,14 @@ define([], /**@lends Model*/ function() {
         this.name = '';
 
         /**
+         * The entire 'left-hand side' of the definition of this quantity: it's name
+         * with optionally it's arguments.
+         *
+         * @type {String}
+         */
+        this.LHS = '';
+
+        /**
          * The definition of this quantity in a String format. This is simply the right
          * hand side of the equation.
          * @type {String}
@@ -120,6 +128,7 @@ define([], /**@lends Model*/ function() {
     Quantity.prototype.markAsTodo = function() {
         this.todo = true;
         this.definition = '';
+        this.LHS = '';
         this.dependencies = [];
         this.category = 0;
         this.unit = '';
@@ -130,14 +139,38 @@ define([], /**@lends Model*/ function() {
     }
 
     /**
+     * Returns the original definition code of this quantity, as it was entered by the user
+     * in the UI. Includes comment.
+     */
+    Quantity.prototype.getSource = function() {
+        var def = this.source;
+        if (this.comment != '') {
+            def += '\n\t' + this.comment;
+        }
+
+        return def;
+    }; 
+
+    /**
      * Returns a String representation of the line corresponding to this quantity
      * as provided by the user in the ACCEL script.
      *
      * @param {Boolean} includeUnits Whether to include the unit in the string representation
-     * @return {String} The script line corresponding to this quantity
+     * @param {Boolean} includeComments Whether to include the comment in the string representation
+     * @return {String} The script line corresponding to this quantity, optionally with 
+     * unit and comment
      */
-    Quantity.prototype.toString = function(includeUnits) {
-        return this.source;
+    Quantity.prototype.toString = function(includeUnits, includeComments) {
+        var def = this.LHS + '=' + this.definition;
+        
+        if (includeUnits && this.unit != '') {
+            def += ' ; ' + this.unit;
+        }
+        if (includeComments && this.comment != '') {
+            def += '\n\t' + this.comment;
+        }
+
+        return def;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

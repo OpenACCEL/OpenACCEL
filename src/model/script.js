@@ -177,12 +177,13 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
                 'quantity cannot be deleted: is a todo item')
             }
 
-            var qty = this.quantities[qtyName];
+            var delqty = this.quantities[qtyName];
 
-            // Delete all dependencies of this quantity that are marked as todo and have no other reverse dependencies!
-            qty.dependencies.forEach((function(d) {
-                if (this.quantities[d].todo) {
-                    if (this.quantities[d].reverseDeps.length <= 1) {
+            // Step 1: Delete all dependencies of this quantity that are marked as todo and have no other reverse dependencies
+            delqty.dependencies.forEach((function(d) {
+                var dep = this.quantities[d];
+                if (dep.todo) {
+                    if (dep.reverseDeps.length <= 1) {
                         // We are the only quantity depending on it, so delete it
                         delete this.quantities[d];
                     } else {
@@ -192,14 +193,11 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
                 }
             }).bind(this));
 
-            // If there are quantities depending on this quantity, mark it as todo but do not
-            // delete it from the object
-            if (qty.reverseDeps.length > 0) {
+            // Step 2: Mark this quantity as todo or remove it from the script entirely
+            // depending on whether it has any reverse dependencies
+            if (delqty.reverseDeps.length > 0) {
                 this.quantities[qtyName].markAsTodo();
-            }
-
-            // If it has no reverse dependencies, delete it entirely
-            else {
+            } else {
                 delete this.quantities[qtyName];
             }
 
@@ -260,21 +258,60 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
         },
 
         /**
+         * Returns the code of the script as a single string, exactly as it was entered by the user.
+         *
+         * @return {String} A single line containing all quantity definitions in the script, exactly
+         * as they were entered by the user
+         */
+        getSource: function() {
+            // Use cached value if script has not been modified since last call to this function
+            if (!this.scriptModified) {
+                return this.source;
+            }
+
+            // Iterate through all quantities and append their definition to the source code
+            var lines = [];
+            for (var qtyName in this.quantities) {
+                var qty = this.quantities[qtyName];
+
+                // Do not include quantities in the script string that are undefined!
+                if (!qty.todo) {
+                    lines.push(qty.getSource());
+                }
+            }
+
+            this.source = lines.join("\n");
+            this.scriptModified = false;
+            
+            return this.source;
+        },
+
+        /**
+         * Replaced with getSource()!
+         */
+        toSource: function() {
+            console.log("Warning: using old function Script.toSource(), \
+                use Script.getSource() or Script.toString() instead!");
+
+            return this.getSource();
+        },
+
+        /**
          * Returns the code of the script as a single string.
          *
          * @param {Boolean} includeUnits (optional) Whether to include the units in the string representation
-         * @modifies source
+         * @modifies this.source
+         * @param {Boolean} includeComments (optional) Whether to include the comments belonging to the quantities
+         * in the source
+         * @return {String} A single line containing all quantity definitions in the script.
          */
-        toSource: function(includeUnits) {
+        toString: function(includeUnits, includeComments) {
             // Make parameter optional by setting value if undefined
             if (typeof includeUnits === 'undefined') {
                 includeUnits = false;
             }
-
-            // If the script has not been modified since the last call to toSource, return
-            // the cached value instead of re-evaluating
-            if (!this.scriptModified) {
-                return this.source;
+            if (typeof includeComments === 'undefined') {
+                includeComments = false;
             }
 
             // Iterate through all quantities and append their string representation to the source code
@@ -284,7 +321,7 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
 
                 // Do not include quantities in the script string that are undefined!
                 if (!qty.todo) {
-                    lines.push(qty.toString(includeUnits));
+                    lines.push(qty.toString(includeUnits, includeComments));
                 }
             }
 
