@@ -26,16 +26,15 @@ suite('ifpass.js', function() {
         test('IfPass: reference to if function', function() {
             var lines = [
                 'x = if(1 == 1, 1, 2)',
-                'y = if(sin(0) == 0, if(1 == 1, 2, 3), 4)'
+                'y = if(sin(0) == 0, if(1 == 1, 2, 3),if(1 == 4, 5, 6))'
                 
             ];
             var expResult = [
                 'x = __if__(1 == 1, 1, 2)',
-                'y = __if__(sin(0) == 0, __if__(1 == 1, 2, 3), 4)'
+                'y = __if__(sin(0) == 0, __if__(1 == 1, 2, 3),__if__(1 == 4, 5, 6))'
             ];
             var script = new Script(lines.join("\n"));
             var report = script.getQuantities();
-
             assert.deepEqual(instance.parse(lines, report), expResult);
         });
 

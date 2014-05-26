@@ -28,7 +28,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
          * Regex to extract calls to the if-function
          * @type {RegExp}
          */
-        this.ifRegex = /(if(?=\())/g;
+        this.ifRegex = /(\bif(?=\())/g;
     }
 
     IfPass.prototype = new CompilerPass();
@@ -50,15 +50,12 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
         CompilerPass.prototype.parse.call(this, scriptLines, report);
 
         var result = scriptLines.map((function(line) {
-            // This inner function replaces the binary operator in a single line.
-
             // Modfied RHS
             var newrhs = this.getRHS(line);
 
-            // Replace the operators.
-            // We *need* to add spaces, because sweet otherwise gives an error.
-            newrhs = newrhs.replace(this.ifRegex, function(op) {
-                return '__' + op + '__';
+            // Replace the if
+            newrhs = newrhs.replace(this.ifRegex, function(iffunc) {
+                return '__' + iffunc + '__';
             });
 
             return line.replace(this.getRHS(line), newrhs);
