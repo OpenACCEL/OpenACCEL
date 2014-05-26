@@ -17,16 +17,22 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/passes/unitpass",
-        "model/passes/exepass",
-        "model/passes/funcpass",
-        "model/passes/packagepass"
+define(["model/passes/preprocessor/unitpass",
+        "model/passes/preprocessor/operatorpass",
+        "model/passes/preprocessor/exepass",
+        "model/passes/preprocessor/funcpass",
+        "model/passes/preprocessor/packagepass",
+        "model/passes/preprocessor/vectorpass",
+        "model/passes/preprocessor/namedvectorpass"
     ],
-    /**@lends PreProcessor*/
+    /**@lends Model*/
     function(UnitPass,
+        OperatorPass,
         ExePass,
         FuncPass,
-        PackagePass) {
+        PackagePass,
+        VectorPass,
+        NamedVectorPass) {
         /**
          * @class
          * @classdesc The pre-processor performs multiple passes over the code for transformation and analysation.
@@ -36,30 +42,32 @@ define(["model/passes/unitpass",
              * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
              */
             this.passes = [];
-            this.passes.push(new UnitPass());
             this.passes.push(new ExePass());
+            this.passes.push(new OperatorPass());
+            this.passes.push(new NamedVectorPass());
+            this.passes.push(new VectorPass());
+            this.passes.push(new UnitPass());
             this.passes.push(new FuncPass());
             this.passes.push(new PackagePass());
         }
 
-        PreProcessor.prototype = {
-            /**
-             * Transforms a piece of code with the configured order of passes.
-             *
-             * @param {String} code     A single line of input code.
-             * @return {String} A single line of processed code.
-             */
-            process: function(code) {
-                // Perform all passes on the code and return its output.
-                var lines = code.split("\n");
+        /**
+         * Transforms a piece of code with the configured order of passes.
+         *
+         * @param {String} code     A single line of input code.
+         * @return {String} A single line of processed code.
+         */
+        PreProcessor.prototype.process = function(script) {
+            // Perform all passes on the code and return its output.
+            var report = script.getQuantities();
+            var lines = script.toSource().split("\n");
 
-                for (var i = 0; i < this.passes.length; i++) {
-                    lines = this.passes[i].parse(lines);
-                }
-
-                return lines.join("");
+            for (var i = 0; i < this.passes.length; i++) {
+                lines = this.passes[i].parse(lines, report);
             }
-        }
+
+            return lines.join("");
+        };
 
         // Exports all macros.
         return PreProcessor;

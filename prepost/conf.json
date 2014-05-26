@@ -16,6 +16,6 @@
         }
     },
     "opts": {
-    "template": "prepost/default_prepost"
+    "template": "prepost/jaguarjs-jsdoc_prepost"
     }
 }

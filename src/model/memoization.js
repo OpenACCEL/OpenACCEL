@@ -45,7 +45,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /** @lends Memoization */ function() {
+define([], /** @lends Model */ function() {
 
     /**
      * @class Memoization

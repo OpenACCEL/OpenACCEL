@@ -70,7 +70,7 @@ define([sweetModule, "jquery"], /**@lends TemplateClass*/ function(sweet) {
                 return -1;
             }
         }
-    }
+    };
 
     // If we are in the browser, we want to execute the compile function at the start.
     if (inBrowser) {

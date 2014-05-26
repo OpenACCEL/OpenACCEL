@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * This script automatically creates macro files for each Accel function that
+ * This script automatically creates library files for each Accel function that
  * just takes a single argument, and which can be converted to a javascript Math-function
  * with the same argument.
  *
@@ -53,16 +53,16 @@ var functionsDiff = [{
 }];
 
 /**
- * Template, read from macrotemplate.txt
+ * Template, read from librarytemplate.txt
  * @type {String}
  */
-var template = fs.readFileSync('./utils/macrotemplate.txt', 'utf8');
+var template = fs.readFileSync('./utils/librarytemplate.txt', 'utf8');
 
 /**
- * Extension for macro files
+ * Extension for library files
  * @type {String}
  */
-var ext = '.sjs';
+var ext = '.js';
 
 /**
  * Output directory for the macro files.
@@ -100,14 +100,20 @@ function mkPath(p) {
     }
 }
 
+// Create a new .gitignore file.
+var gitignore = fs.openSync(path.join(outputdir, ".gitignore"), 'w');
+fs.appendFile(path.join(outputdir, ".gitignore"), ".gitignore\n", function (err) { });
+
 // Handle all functions that need no translation
 functions1to1.forEach(function(func) {
     var output = template.replace(/(__a__|__j__)/g, func);
     outputFile(func, output);
+    fs.appendFile(path.join(outputdir, ".gitignore"), func + ext + "\n", function (err) { });
 });
 
 // Handle all functions that need translation
 functionsDiff.forEach(function(func) {
     var output = template.replace(/(__a__)/g, func.accel).replace(/(__j__)/g, func.js);
     outputFile(func.accel, output);
+    fs.appendFile(path.join(outputdir, ".gitignore"), func.accel + ext + "\n", function (err) { });
 });

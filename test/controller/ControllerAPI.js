@@ -17,21 +17,21 @@ suite("ControllerAPI", function() {
 
         test("Constructor tests", function() {
             var expected = 0;
-            var output = controller.iterations;
+            var output = controller.numIterations;
             assert.equal(output,expected);
-            var output = controller.execute;
-            assert.equal(output, true);
+            var output = controller.executing;
+            assert.equal(output, false);
         });
 
         test("Normal Execution tests", function() {
-            controller.execution;
+            controller.execute;
         });
 
         test("Pause Execution tests", function() {
             var expected = false;
-            controller.pause;
-            var output = controller.execute;
-            assert(output, expected);    
+            controller.stop();
+            var output = controller.executing;
+            assert.equal(output, expected);    
         });
 
         test("Normal get quantities tests", function() {
@@ -44,10 +44,10 @@ suite("ControllerAPI", function() {
 
         test("Setting iterations to valid number", function() {
             var iterations = 1;
-            var output = controller.iterations;
+            var output = controller.numIterations;
             assert.equal(output, 0);
             controller.setIterations(iterations);
-            output = controller.iterations;
+            output = controller.numIterations;
             var expected = 1;
             assert.equal(output, expected);
         });
@@ -57,7 +57,7 @@ suite("ControllerAPI", function() {
             controller.addQuantity(input);
             var input = "b = 10";
             controller.addQuantity(input);
-            var output = controller.getValue('a');
+            var output = controller.getQuantityValue('a');
             var expected = 20;
             assert.equal(output, expected);
         });

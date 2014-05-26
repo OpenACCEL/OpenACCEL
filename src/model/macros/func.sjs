@@ -3,29 +3,25 @@ let func = macro {
     rule {
         ($x = $expr:expr)
     } => {
-        var $x = function() { return ($expr); };
-        exe.$x = $x;
+        exe.$x = function() { return ($expr); };
     }
     rule {
         ($x = $expr:expr ; $dim)
     } => {
-        var $x = function() { return ($expr); };
-        $x.dim = $dim;
-        exe.$x = $x;
+        exe.$x = function() { return ($expr); };
+        exe.$x.dim = $dim;
     }
 
     // Function declarations.
     rule {
         ($x($xs (,) ...) = $expr:expr)
     } => {
-        var $x = function($xs (,) ...) { return ($expr); };
-        exe.$x = $x;
+        exe.$x = function($xs (,) ...) { return ($expr); };
     }
     rule {
         ($x($xs (,) ...) = $expr:expr ; $dim)
     } => {
-        var $x = function($xs (,) ...) { return ($expr); };
-        $x.dim = $dim;
-        exe.$x = $x;
+        exe.$x = function($xs (,) ...) { return ($expr); };
+        exe.$x.dim = $dim;
     }
 }

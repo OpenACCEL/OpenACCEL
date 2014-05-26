@@ -1,4 +1,4 @@
-/**
+/*
  * File containing the Controller Class
  *
  * @author Loct
@@ -26,35 +26,102 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/script"], /**@lends Controller*/ function(Script) {
+define(["model/script", "model/compiler"], /**@lends Controller*/ function(Script, Compiler) {
 
     /**
      * @class
      * @classdesc Base controller class.
      */
     function Controller() {
+        this.compiler = new Compiler();
         this.script = new Script();
-        this.execute = true;
-        this.iterations = 0;
+
+        /**
+         * The number of iterations that the script should perform.
+         * If zero, the script will continue running untill stopped.
+         * If greater than zero, after this number of iterations the result
+         * is presented and the execution stops.
+         *
+         * @type {Number}
+         */
+        this.numIterations = 0;
+
+        /**
+         * The current iteration of script execution.
+         * Range: [1, this.numIterations]
+         *
+         * @type {Number}
+         */
+        this.currentIteration = 1;
+
+        /**
+         * Whether the script _should_ be executing. If false, the script
+         * has already stopped or will abort in the next call to the
+         * run() method.
+         *
+         * @type {Boolean}
+         */
+        this.executing = false;
+
+        /**
+         * Unique id for the runloop interval.
+         *
+         * @type {Integer}
+         */
+        this.runloop = null;
     }
-    
-    /**
-     * Main execution loop of the script.
-     */
-    Controller.prototype.execution = function() {
-        //TODO Implementation
-        //TODO Tests
-    } 
 
     /**
-     * Pauses execution of the script.
-     * 
-     * @post controller.execute == false
+     * Starts execution of the script.
+     *
+     * @post The script is being executed in a loop if the
+     * script is complete and non-empty
      */
-    Controller.prototype.pause = function() {
-        this.execute = false;    
-        //TODO Tests
-    } 
+    Controller.prototype.execute = function() {
+        if (!this.executing && this.script.isComplete()) {
+            this.executing = true;
+            this.currentIteration = 1;
+            this.runloop = setInterval(this.run, 5);
+        }
+    };
+
+    /**
+     * Evaluates the values of all category 2 quantities and provides 
+     * them to the view.
+     *
+     * @pre this.script.isComplete(). NOTE: not checked for performance reasons!
+     * @post The view has received the current values of all output quantities.
+     */ 
+    Controller.prototype.run = function() {
+        this.cat2quantities = this.script.getOutputQuantities();
+
+        if (this.numIterations > 0) {
+            if (this.currentIteration == this.numIterations) {
+                // TODO give results to view and stop execution
+                this.stop();
+            } else {
+                this.currentIteration ++;
+            }
+        }
+    };
+
+    /**
+     *
+    Controller.prototype.isRunning = function() {
+        return this.executing;
+    };
+
+    /**
+     * Stops script execution, if currently executing.
+     * 
+     * @post controller.executing == false
+     */
+    Controller.prototype.stop = function() {
+        if (this.executing) {
+            clearInterval(this.runloop);
+            this.executing = false;  
+        }
+    }; 
 
     /**
      * Sets the number of executions of the script.
@@ -74,7 +141,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.setIteration.pre :' +
                 'iterations is not greater or equal to 0')
         }
-        this.iterations = iterations;
+        this.numIterations = iterations;
         //TODO Tests
     } 
 
@@ -84,54 +151,8 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} List of quantities
      */
     Controller.prototype.getQuantities = function() {
-        //TODO Implementation
-        //TODO Tests
-    } 
-
-    /**
-     * Adds a quantity to a model.
-     *
-     * @param definition {String} Contains a quantity on the LHS and a defition on the RHS
-     * @pre definition != null
-     * @pre definition != undefined
-     * @pre model.ScriptAnalyzer() == true
-     * @post definition \in Script
-     * @return {Object} list of quantities
-     */
-    Controller.prototype.addQuantity = function(definition) {
-        if(!definition) {
-            throw new Error('Controller.prototype.addQuantity.pre violated :' +
-                'definition is null or undefined')
-        }
-        //TODO Precondition, syntax checking
-        //TODO Implementation
-        //TODO Tests
-        this.script.addQuantity(definition);
-        return this.getQuantities;
-    } 
-
-    /**
-     * Deletes a quantity from a model.
-     *
-     * @param quantity {String} Quantity name
-     * @pre quantity != null
-     * @pre quantity != undefined
-     * @pre model.ScriptAnalyzer() == true
-     * @pre definition \in Script
-     * @post definition removed from Script
-     * @return {Object} list of quantities
-     */
-    Controller.prototype.deleteQuantity = function(quantity) {
-        if(!quantity) {
-            throw new Error('Controller.prototype.addQuantity.pre violated :' +
-                'quantity is null or undefined')
-        }
-        //TODO Precondition, removing quantity
-        //TODO Implementation
-        //TODO Tests
-        this.script.deleteQuantity(quantity);
-        return this.getQuantities;
-    }     
+        return this.script.quantities;
+    }
 
     /**
      * Retrieves, if possible, a quantity from the model.
@@ -147,11 +168,75 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
+        if (!this.script.hasQuantity(quantity)) {
+            throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
         //TODO Precondition quantity \in Script 
         //TODO Implementation
         //TODO Tests
         return this.script.getQuantity(quantity);
     } 
+
+    /**
+     * Adds a quantity to a model.
+     *
+     * @param definition {String} Contains a quantity on the LHS and a defition on the RHS
+     * @pre definition != null
+     * @pre definition != undefined
+     * @pre model.ScriptAnalyzer() == true
+     * @post definition \in Script
+     * @return {Object} list of quantities
+     */
+    Controller.prototype.addQuantity = function(definition) {
+        //TODO Precondition, syntax checking
+        if(!definition) {
+            throw new Error('Controller.prototype.addQuantity.pre violated :' +
+                'definition is null or undefined')
+        }
+        
+        // Stop script execution, add quantity, recompile, and 
+        // start again if todo list is empty
+        this.stop();
+        this.script.addQuantity(definition);
+        this.compileScript(this.script);
+    } 
+
+    /**
+     * Deletes a quantity from the model.
+     *
+     * @param qtyName {String} The name of the quantity to delete
+     * @pre qtyName != null
+     * @pre qtyName != undefined
+     * @pre qtyName \in Script
+     * @post quantity removed from Script
+     */
+    Controller.prototype.deleteQuantity = function(qtyName) {
+        if(!qtyName) {
+            throw new Error('Controller.prototype.addQuantityuantity.pre violated :' +
+                'qtyName is null or undefined')
+        }
+        if (!this.script.hasQuantity(qtyName)) {
+            throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        this.stop();
+        this.script.deleteQuantity(qtyName);
+        this.compileScript(this.script);
+    }
+    /**
+     * Compiles the given script if the todo-list is empty.
+     * @param  {Script} script script to compile
+     */
+    Controller.prototype.compileScript = function(script) {
+        if (script.isComplete()) {
+            script.exe = this.compiler.compile(script).exe;
+            return true;
+        } else {
+            return false;
+        }
+    }     
 
     /**
      * Retrieves, if possible, a value of a quantity.
@@ -162,16 +247,19 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @pre quantity \in Script
      * @return {Number} value of quantity
      */
-    Controller.prototype.getValue = function(quantity) {
+    Controller.prototype.getQuantityValue = function(quantity) {
         if(!quantity) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
-        //TODO Precondition name \in Script 
-        //TODO Implementation
-        //TODO Tests
-        return this.script.getQuantity(quantity);
-    } 
+        if (!this.script.hasQuantity(quantity)) {
+            throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        return this.script.getQuantityValue(quantity);
+    }
+
     /**
      * Sets the value of a quantity.
      *
@@ -193,9 +281,12 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
             throw new Error('Controller.prototype.setValue.pre :' +
                 'quantity is null or undefined')
         }
-        //TODO Precondition quantiy \in Script
-        //TODO Implementation
-        //TODO Tests
+        if (!this.script.hasQuantity(quantity)) {
+            throw new Error('Controller.prototype.getQuantity.pre :' +
+                'quantity does not exist')
+        }
+
+        //this.script.setValue(quantity, value);
     } 
 
     /**
@@ -278,8 +369,7 @@ define(["model/script"], /**@lends Controller*/ function(Script) {
      * @return {Object} script
      */
     Controller.prototype.getScript = function() {
-        //TODO Implementation
-        //TODO Tests
+        return this.script;
     } 
 
     /**
