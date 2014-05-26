@@ -1,15 +1,15 @@
 /**
  * Applies the given function on the given array of arrays. The function is aplied recursively,
  * so also to nested arrays.
- * @param  {Array}   x        array of inputs used in the function of interest, each of which may be an array itself
- * @param  {Function} func    function that should be applied
- * @return {Array}            Resulting array.
+ * @param  {Object}   x        array of inputs used in the function of interest, each of which may be an array itself
+ * @param  {Function} func     function that should be applied
+ * @return {Object}            Resulting array.
  */
 function nzip(x, func) {
     var numArgs = x.length;
     var allScalar = true;
     for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
-        if (x[inKey] instanceof Array) {
+        if (x[inKey] instanceof Object) {
             allScalar = false;
             // Determine if there is an array in the input.
             break;
@@ -27,7 +27,7 @@ function nzip(x, func) {
         var numKeys;
         // Number of keys in the set of referenceKeys.
         for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
-            if (x[inKey] instanceof Array) {
+            if (x[inKey] instanceof Object) {
                 referenceKeys = Object.keys(x[inKey]);
                 // Keys of contender for input of reference found.
                 numKeys = referenceKeys.length;
@@ -46,7 +46,7 @@ function nzip(x, func) {
             // Key occurs in every input until proven otherwise.
             for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
                 // Loop over all inputs in x.
-                if (x[inKey] instanceof Array) {
+                if (x[inKey] instanceof Object) {
                     if (x[inKey][referenceKeys[resultKey]] !== undefined) {
                         // Loop over all keys in our input of reference
                         recursiveInput[inKey] = x[inKey][referenceKeys[resultKey]];
