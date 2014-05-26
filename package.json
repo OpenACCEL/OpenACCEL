@@ -41,9 +41,9 @@
         "jade": "jade -o bin/ src/view/index.jade",
         "doc": "jsdoc -c prepost/conf.json -d doc/ src/ -r",
         "doc-latex": "jsdoc -c JSDoc2Latex/conf.json -d doc-latex/ src/ -r",
-        "build": "sh build/build.sh",
-        "test": "sh build/test.sh",
-        "benchmark": "sh build/benchmark.sh",
+        "build": "sh build/build.sh --build",
+        "test": "sh build/build.sh --test",
+        "benchmark": "sh build/build.sh --benchmark",
         "start": "http-server bin/ -c-1",
         "build-start": "npm run build && npm run start"
     },
