@@ -1,3 +1,4 @@
+
 html {
 	height: 100%;
 }
@@ -6,7 +7,7 @@ body {
 	/*background: #FFFFFF;*/
 	background: #FFDDFF;
 	background: linear-gradient(#FFDDFF, #FFFFFF);
-	font-family: "Verdana";
+	font-family: "Arial";
 	color: #FFFFFF;
 }
 body div {
@@ -79,12 +80,12 @@ body div {
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-bottom: 10px;
-	-webkit-border-top-right-radius: 60px;
-	-moz-border-radius-topright: 60px;
-	border-top-right-radius: 60px;
-	-webkit-border-bottom-left-radius: 60px;
-	-moz-border-radius-bottomleft: 60px;
-	border-bottom-left-radius: 60px;
+	-webkit-border-top-right-radius: 30px;
+	-moz-border-radius-topright: 30px;
+	border-top-right-radius: 30px;
+	-webkit-border-bottom-left-radius: 30px;
+	-moz-border-radius-bottomleft: 30px;
+	border-bottom-left-radius: 30px;
 	background: #9933CC;
   	box-shadow: 3px 3px 20px #993399;
     -webkit-box-shadow: 3px 3px 20px #993399;
@@ -282,12 +283,16 @@ body div {
 }
 
 #scriptline {
-	width: 768px;
+	width: 640px;
 }
 
 #scriptoptions {
 	display: inline-block;
 	float: right;
+}
+
+#iterations {
+	width: 60px;
 }
 
 #scriptlist { 
