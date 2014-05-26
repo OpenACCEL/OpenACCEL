@@ -67,12 +67,36 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
         var units = this.getUnits(line);
         var lhs = this.getLHS(line);
         line = this.getRHS(line);
+        var output = line;
+        var x = 1;
+        for (var i = x; i < line.length; i++) {
+            // We have found a begin token, thus we have to find an end token.
+            if (line[i] == "[" && line[i-1].match(/\w/)) {
+                x = i;
+                var level = 1;
+                // Update the deepness level accordingly.
+                for (var j = x + 1; j < line.length; j++) {
+                    if (line[j] == "[") {
+                        level++;
+                    } else if (line[j] == "]") {
+                        level--;
 
-        line = line.replace(this.regexes.vectorCall, (function(s) {
-            s = s.split("[").join(this.otherBegin);
-            return s.split("]").join(this.otherEnd);
-        }).bind(this));
-
+                        // If level is 0, we have found the matching end token.
+                        // We then need to recursively replace this substring with a translated substring.
+                        if (level == 0) {
+                            var substring = line.substring(x, j + 1);
+                            output = output.replace(substring, (function(s) {
+                                s = s.split("[").join(this.otherBegin);
+                                return s.split("]").join(this.otherEnd);    
+                            }).bind(this));
+                            i = j; // When we want to look for a next begin token, thus we start where we have now ended.
+                            break;
+                        }
+                    }
+                }
+            }
+        }  
+        line = output
         line = line.replace(this.regexes.openingBracket, (function(s) {
             return s.split("[").join(this.begin);
         }).bind(this));

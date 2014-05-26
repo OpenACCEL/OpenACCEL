@@ -115,11 +115,19 @@ suite("namedvectorpass.js", function() {
         })
 
         test('replaceBrackets() y = [[1],[2],[3],[4],[5]]', function() {
-            assert.equal(instance.replaceBrackets("y = [[1],[1],[1],[1],[1]]"), "y = {'0':{'0':1},'1':{'0':1},'2':{'0':1},'3':{'0':1},'4':{'0':1}}");
+            assert.equal(instance.replaceBrackets("y = [[1],[2],[3],[4],[5]]"), "y = {'0':{'0':1},'1':{'0':2},'2':{'0':3},'3':{'0':4},'4':{'0':5}}");
         })
 
         test('replaceBrackets() y = [[[[1]]], [[1]]]', function() {
             assert.equal(instance.replaceBrackets("y = [[[[1]]], [[1]]]"), "y = {'0':{'0':{'0':{'0':1}}},'1': {'0':{'0':1}}}");
+        });
+
+        test('replaceBrackets() y = [[1, a[0 + 10], b[x + 5]],[2],[3],[4],[5]]', function() {
+            assert.equal(instance.replaceBrackets("y = [[1,a[0+10],b[x+5]],[2],[3],[4],[5]]"), "y = {'0':{'0':1,'1':a[0+10],'2':b[x+5]},'1':{'0':2},'2':{'0':3},'3':{'0':4},'4':{'0':5}}");
+        });
+
+        test('replaceBrackets() y = a[1 + a[0 + b[0]] + c[0]]', function() {
+            assert.equal(instance.replaceBrackets("y = a[1 + a[0 + b[0]] + c[0]]"), "y = a[1 + a[0 + b[0]] + c[0]]");
         });
 
 
