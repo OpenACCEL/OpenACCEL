@@ -29,7 +29,7 @@ function deleteQuantity(quantity) {
     Report.resultBuffer.hideIfEmpty('#resultdiv');
 
     console.log('deleted ' + quantity);
-};
+}
 
 var linenr = 0;
 function addQuantity(string) {
@@ -65,7 +65,17 @@ function addQuantity(string) {
         },
         10
     );
-};
+}
+
+function newScript() {
+    if(confirm("Are you sure you want to stop your current script and delete all existing script lines? It can not be undone.")) {
+        //TODO
+    }
+}
+
+function setIterations(iterations) {
+    controller.setIterations(iterations);
+}
 
 //------------------------------------------------------------------------------
 
