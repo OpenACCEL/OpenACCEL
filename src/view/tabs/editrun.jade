@@ -4,22 +4,21 @@
         .inline
             .label Script line
             input(type = 'text')#scriptline.textin
-            #syntaxtip.tooltip(onclick = '$(this).toggle();') SYNTAX ERROR
-            script.
-                $('#syntaxtip').toggle(false);
+            //- #syntaxtip.tooltip(onclick = '$(this).toggle();') SYNTAX ERROR
         .inline
             .label &nbsp;
             input(type = 'button', value = 'Enter', onclick = 'addQuantity($("#scriptline").val())')#enterline.buttonin
         #scriptoptions
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'Run')#runscript.buttonin
-                #runtimetip.tooltip(onclick = '$(this).toggle();') RUNTIME ERROR
-                script.
-                    $('#runtimetip').toggle(false);
+                input(type = 'button', value = 'New', onclick = 'newScript()')#newscript.buttonin
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'New')#newscript.buttonin
+                input(type = 'button', value = 'Run')#runscript.buttonin
+                //- #runtimetip.tooltip(onclick = '$(this).toggle();') RUNTIME ERROR
+            .inline
+                .label Iterations
+                input(type = 'number', min = '0', onchange = 'setIterations(this.value)')#iterations.textin
 
     .inline
         #scriptlistdiv
@@ -84,9 +83,9 @@
             .label Plot:
             #plot.group
 
-    .label Console (Feedback)
-    .report(onclick = '$("#console").toggle()')
-        #console.divtable(style = "height: 100px;")
-            div
+    //- .label Console (Feedback)
+    //- .report(onclick = '$("#console").toggle()')
+    //-     #console.divtable(style = "height: 100px;")
+    //-         div
                 //- div Warning -&nbsp
                 //- div To string conversion
