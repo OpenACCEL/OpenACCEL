@@ -6,16 +6,16 @@ function nzipcees(x, f) {
     var n = x.length;
     var ntm = false;
     for (var i = 0; i < n; i++) {
-        if (x[i]instanceof Array) {
+        if (x[i] instanceof Array) {
             ntm = true;
         }
     }
     if (!ntm) {
         return f(x);
     } else {
-        var rr,xx,k;
+        var rr, xx, k;
         for (var i = 0; i < n; i++) {
-            if (x[i]instanceof Array) {
+            if (x[i] instanceof Array) {
                 // we are tolerant with respect to
                 // size mismatches.
                 l = Math.min(l, x[i].length);
@@ -25,10 +25,10 @@ function nzipcees(x, f) {
         for (var j = 0; j < l; j++) {
             xx = [];
             for (var i = 0; i < n; i++) {
-                if (!(x[i]instanceof Array)) {
+                if (!(x[i] instanceof Array)) {
                     xx[i] = x[i];
                 } else {
-                    xx[i]=x[i][j];
+                    xx[i] = x[i][j];
                 }
             }
             rr[j] = nzipcees(xx, f);
@@ -37,10 +37,10 @@ function nzipcees(x, f) {
         // by the length-operator; we need to use the for(var in array)-construction.
         var keys = [];
         for (i = 0; i < n; i++) {
-            if (x[i]instanceof Array) {
+            if (x[i] instanceof Array) {
                 for (j in x[i]) {
                     if (!isNumeric(j)) {
-                        if(keys.indexOf(j)== -1)
+                        if (keys.indexOf(j) == -1)
                             keys.push(j);
                     }
                 }
@@ -49,13 +49,13 @@ function nzipcees(x, f) {
         // the array keys now contains the keys that occur in at least one of the arrays
         for (k = 0; k < keys.length; k++) {
             var occursInAll = true;
-            xx=[];
+            xx = [];
             for (i = 0; i < n; i++) {
-                if (!(x[i]instanceof Array)) {
+                if (!(x[i] instanceof Array)) {
                     xx[i] = x[i];
                 } else {
                     if (x[i][keys[k]] != undefined) {
-                        xx[i]=x[i][keys[k]];
+                        xx[i] = x[i][keys[k]];
                     } else {
                         occursInAll = false;
                     }
@@ -69,12 +69,24 @@ function nzipcees(x, f) {
     }
 }
 
-function isNumeric (o) {
-    return ! isNaN (o-0);
+function isNumeric(o) {
+    return !isNaN(o - 0);
+}
+
+function add(x, y) {
+    return x + y;
 }
 
 function addCees(x) {
     return x[0] + x[1];
+}
+
+function sum() {
+    var _sum = 0;
+    for (var i = arguments.length - 1; i >= 0; i--) {
+        _sum += arguments[i];
+    }
+    return _sum;
 }
 
 function sumCees(x) {
