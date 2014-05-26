@@ -135,7 +135,7 @@ define([], /**@lends Model*/ function() {
         this.parameters = [];
         this.comment = '';
         this.value = 0;
-        this.source = qtyName + '=';
+        this.source = this.name + '=';
     }
 
     /**
