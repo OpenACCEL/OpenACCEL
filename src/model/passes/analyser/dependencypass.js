@@ -67,7 +67,8 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
 
                     // Add the quantity being defined as a reverse dependency of this quantity
                     if (!quantities[d].reverseDeps) {
-                        quantities[d].reverseDeps = [quantity.name];
+                        quantities[d].reverseDeps = [];
+                        quantities[d].reverseDeps.push(quantity.name);
                     } else {
                         if (quantities[d].reverseDeps.indexOf(quantity.name) == -1) {
                             quantities[d].reverseDeps.push(quantity.name);

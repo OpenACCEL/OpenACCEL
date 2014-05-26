@@ -57,9 +57,13 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
         var qtyName = vars[0];
 
         // Create new Quantity object and add it to quantities
+        if (qtyName in quantities) {
+            delete quantities[qtyName];
+        }
+
         var qty = new Quantity();
         quantities[qtyName] = qty;
-
+        
         // Fill in information
         qty.name = qtyName;
         qty.LHS = lhs;
