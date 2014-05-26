@@ -1,4 +1,4 @@
-/**
+/*
  * File containing the Controller Class
  *
  * @author Loct
@@ -29,7 +29,7 @@ if (inNode) {
 define(["model/script", "model/compiler"], /**@lends Controller*/ function(Script, Compiler) {
 
     /**
-     * @class Controller
+     * @class
      * @classdesc Base controller class.
      */
     function Controller() {
@@ -37,13 +37,22 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
         this.script = new Script();
 
         /**
-         * The number of iterations that the script should perform
-         * before presenting the result. If zero, results are presented
-         * after every iteration.
+         * The number of iterations that the script should perform.
+         * If zero, the script will continue running untill stopped.
+         * If greater than zero, after this number of iterations the result
+         * is presented and the execution stops.
          *
          * @type {Number}
          */
         this.numIterations = 0;
+
+        /**
+         * The current iteration of script execution.
+         * Range: [1, this.numIterations]
+         *
+         * @type {Number}
+         */
+        this.currentIteration = 1;
 
         /**
          * Whether the script _should_ be executing. If false, the script
@@ -71,6 +80,7 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
     Controller.prototype.execute = function() {
         if (!this.executing && this.script.isComplete()) {
             this.executing = true;
+            this.currentIteration = 1;
             this.runloop = setInterval(this.run, 5);
         }
     };
@@ -83,9 +93,22 @@ define(["model/script", "model/compiler"], /**@lends Controller*/ function(Scrip
      * @post The view has received the current values of all output quantities.
      */ 
     Controller.prototype.run = function() {
-        cat2quantities = this.script.getOutputQuantities();
+        this.cat2quantities = this.script.getOutputQuantities();
 
-        // TODO give quantities to view!
+        if (this.numIterations > 0) {
+            if (this.currentIteration == this.numIterations) {
+                // TODO give results to view and stop execution
+                this.stop();
+            } else {
+                this.currentIteration ++;
+            }
+        }
+    };
+
+    /**
+     *
+    Controller.prototype.isRunning = function() {
+        return this.executing;
     };
 
     /**

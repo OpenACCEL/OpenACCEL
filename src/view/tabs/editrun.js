@@ -34,15 +34,15 @@ function deleteQuantity(quantity) {
 var linenr = 0;
 function addQuantity(string) {
     var split = string.split('=');
-    
+
     //Approximate Script list
     split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
     addScriptlistLine(linenr++, split[0], split[1], '?');
     scriptlistBuffer.flip();
-    
+
     console.log('Pre-added line: ' + string);
     $('#scriptline').select();
-    
+
     setTimeout(
         function() {
             controller.addQuantity(string);
@@ -71,7 +71,7 @@ function addQuantity(string) {
 
 /**
  * Synchronize the content of the #scriptlist div with the model
- * 
+ *
  * @param  {Object} quantities All quantities registered in the model
  */
 function synchronizeScriptList(quantities) {
@@ -82,7 +82,7 @@ function synchronizeScriptList(quantities) {
     for (var q in quantities) {
         var quantity = quantities[q];
         console.log(quantity);
-        
+
         //TODOs
         if (quantity.todo) {
             Report.addTodo(quantity.name);
@@ -126,7 +126,7 @@ function objectToString(obj) {
 
 /**
  * Selects indicated line and puts it's contents in the #scriptline element
- * 
+ *
  * @param  {Number} line  Identifier of the to be selected line
  * @param  {String} value To be put in the #scriptline element
  */
@@ -142,7 +142,7 @@ function selectScriptline(line, value) {
 
 /**
  * Constructs a buffer object to contain updated content of a div and update the div when desired
- * 
+ *
  * @param {String} div Id of the div who's content is to be buffered
  * @class
  * @classdesc Buffer class to contain updated content of a div and update the div when desired
@@ -160,7 +160,7 @@ function HTMLbuffer(div) {
 
     /**
      * Checks whether the buffer is empty
-     * 
+     *
      * @return {Boolean} True if and only if buffer is empty
      */
     this.isEmpty = function() {
@@ -178,7 +178,7 @@ function HTMLbuffer(div) {
 
     /**
      * Appends html to the buffer
-     * 
+     *
      * @param {String} html String to be appended to the buffer
      */
     this.append = function(html) {
@@ -201,7 +201,7 @@ var scriptlistBuffer = new HTMLbuffer('#scriptlist');
 
 /**
  * Generates HTML for a line of ACCEL code to be added to the listing in the #scriptlist element
- * 
+ *
  * @param {Number} line     Line number to identify this line of code
  * @param {String} left     Left-hand of the equation
  * @param {String} right    Right-hand side of the equation
@@ -222,7 +222,7 @@ function getScriptlistLineHTML(line, left, right, category) {
 
 /**
  * Adds HTML for a line of ACCEL code to the buffer
- * 
+ *
  * @param {Number} line     Line number to identify this line of code
  * @param {String} left     Left-hand of the equation
  * @param {String} right    Right-hand side of the equation
@@ -254,14 +254,14 @@ Input.prototype.initialize = function() {};
 
 /**
  * Constructs a dynamic slider object
- * 
+ *
  * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
  * @param {Object} quantity   Object which the input element affects
  * @param {String} label      String to be used as a label for the input element in the UI
  * @param {Number} val        Initial value of the slider
  * @param {Number} min        Minimal value of the slider
  * @param {Number} max        Maximal value of the slider
- * 
+ *
  * @class
  * @classdesc Dynamic slider class to be generated according to ACCEL script requirements
  */
@@ -303,7 +303,7 @@ SliderInput.prototype.initialize = function() {
  * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
  * @param {Object} quantity   Object which the input element affects
  * @param {String} label      String to be used as a label for the input element in the UI
- * 
+ *
  * @class
  * @classdesc Dynamic checkbox class to be generated according to ACCEL script requirements
  */
@@ -345,7 +345,7 @@ var inputs = [];
 
 /**
  * Add dynamic input element to the #userinput element
- * 
+ *
  * @param {Object} elements    Object with {@code appendHTML(div, name, identifier)} function to append the corresponding HTML to #userinput
  * @param {String} label       A string displayed near the input element to describe it
  * @param {Number} identifier  A unique number to identify the element later on
@@ -394,7 +394,7 @@ var Report = {
 
     /**
      * Adds a quantity to be defined to the #todo element
-     * 
+     *
      * @param {String} quantity Quantity to be implemented
      */
     addTodo: function(quantity) {
@@ -409,7 +409,7 @@ var Report = {
 
     /**
      * Adds a quantity to the list of quantities which are a parameter to the selected quantity
-     * 
+     *
      * @param {String} quantity Quantity which is an argument for the selected quantity
      * @param {String} property [description]
      */
@@ -425,7 +425,7 @@ var Report = {
 
     /**
      * Adds a quantity to the list of quantities which use the selected quantity as a parameter
-     * 
+     *
      * @param {String} quantityQuantity for which the selected quantity is an argument
      * @param {String} property [description]
      */
@@ -441,7 +441,7 @@ var Report = {
 
     /**
      * Adds a resulting quantity to the #result element
-     * 
+     *
      * @param {String} quantity Left-hand of the equation
      * @param {String} result   Right-hand side of the equation
      */

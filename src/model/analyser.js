@@ -86,7 +86,7 @@ define(["model/passes/analyser/quantitypass",
          * Determines the categories of all quantities and checks whether the script is
          * complete (no todo-items).
          *
-         * @param {Quantity{} } quantities The set of quantities to analyse
+         * @param {Object} quantities The set of quantities to analyse
          * @return quantities, with category attribute set
          * @modifies quantities, this.scriptComplete
          */

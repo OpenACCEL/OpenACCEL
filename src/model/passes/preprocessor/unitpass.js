@@ -19,7 +19,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/passes/preprocessor/compilerpass"], /**@lends UnitPass*/ function(CompilerPass) {
+define(["model/passes/preprocessor/compilerpass"], /**@lends Model.Passes.Preprocessor*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Classes can be defined as objects. Indicate this using the @class param.

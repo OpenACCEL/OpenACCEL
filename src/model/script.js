@@ -1,9 +1,9 @@
-/**
+/*
  *
  * @author Jacco Snoeren
  */
 
-/** Browser vs. Node ***********************************************/
+/* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
 
@@ -214,7 +214,7 @@ define(["model/compiler", "model/analyser", "model/quantity"], function(Compiler
             // delete it from the object
             if (qty.reverseDeps.length > 0) {
                 this.quantities[qtyName].markAsTodo();
-            } 
+            }
 
             // If it has no reverse dependencies, delete it entirely
             else {

@@ -19,7 +19,7 @@ if (inNode) {
 
 define(["model/fileloader",
         "model/preprocessor",
-        "model/macroexpander"], /**@lends Compiler*/
+        "model/macroexpander"], /**@lends Model*/
         function(FileLoader,
                  PreProcessor,
                  MacroExpander) {

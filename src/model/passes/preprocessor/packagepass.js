@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/passes/preprocessor/compilerpass"], /**@lends PackagePass*/ function(CompilerPass) {
+define(["model/passes/preprocessor/compilerpass"], /**@lends Model.Passes.Preprocessor*/ function(CompilerPass) {
     /**
      * @class
      * @classdesc Pass that wraps the lines in an executable for eval().
@@ -30,7 +30,7 @@ define(["model/passes/preprocessor/compilerpass"], /**@lends PackagePass*/ funct
     /**
      * Wraps the lines inside a package, ready to be evalled by eval() such that you get a executable javascript object.
      * @param {String[]}    scriptLines Array of script lines.
-     * @param {Report}      report A full report containing script information.
+     * @param {Object}      report A full report containing script information.
      * @return {String[]}   Array in which each line of the input is wrapped in a "func(...)" statement.
      */
     PackagePass.prototype.parse = function(scriptLines, report) {
