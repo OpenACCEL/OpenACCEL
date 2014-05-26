@@ -1,5 +1,5 @@
 var controller;
 
-require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends View*/ function(Controller, AbstractView) {
-    controller = new Controller();
+require(["../controller/ControllerAPI", "./View"], /**@lends View*/ function(Controller, View) {
+    controller = new Controller(new View());
 });

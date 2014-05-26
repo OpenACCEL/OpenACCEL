@@ -23,7 +23,7 @@ define([], /**@lends AbstractView*/ function() {
      * @classdesc Interface declaring the methods that the view with which the Controller will 
      * communicate should implement.
      */
-    function AbstractView(source) {
+    function AbstractView() {
     }
     
     AbstractView.prototype = {
