@@ -67,25 +67,25 @@ suite("If Library", function() {
         });
     });
 
-    /*    suite("expansion", function() {
+        suite("expansion", function() {
 
-        test("should expand for 'x = sum(true,10,30)'", function() {
-            var input = "x = sum(true,10,30)";
+        test("should expand for 'x = if(1 == 1,10,30)'", function() {
+            var input = "x = if(1 == 1,10,30)";
             var output = compiler.compile(new Script(input));
             assert.equal(output.exe.x(), 10);
         });
 
-        test("should expand for 'x = 5, y = if(true,x,4) + 2, z = if(false,if(false,x,2),y)'", function() {
-            var input = "x = 5\ny = if(true,x,4) + 2\nz = if(true,if(false,x,2),y)";
+        test("should expand for 'x = 5, y = if(1 == 1,x,4) + 2, z = if(1 == 0,if(1 == 0,x,2),y)'", function() {
+            var input = "x = 5\ny = if(1 == 1,x,4) + 2\nz = if(1 == 1,if(1 == 0,x,2),y)";
             var output = compiler.compile(new Script(input));
             assert.equal(output.exe.y(), 7);
             assert.equal(output.exe.z(), 2);
         });
 
         test("should expand for 'x = if([1,2], [3,4])'", function() {
-            var input = "x = if([true,false], [1,2], [3,4])";
+            var input = "x = if([1 == 1,1 == 0], [1,2], [3,4])";
             var output = compiler.compile(new Script(input));
-            assert.deepEqual(output.exe.x(), [1, 3]);
+            assert.deepEqual(output.exe.x(), [1, 4]);
         });
-    });*/
+    });
 });
