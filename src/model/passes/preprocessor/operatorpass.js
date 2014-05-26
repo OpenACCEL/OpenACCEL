@@ -78,7 +78,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
                     default:
                         throw new Error('operator unknown');
                 }
-                return ' _' + op + '_ ';
+                return ' __' + op + '__ ';
             });
 
             return line.replace(this.getRHS(line), newrhs);
