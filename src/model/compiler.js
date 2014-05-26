@@ -89,10 +89,13 @@ define(["model/fileloader",
             var code = this.preProcessor.process(script);
             code = this.fileLoader.getLibrary() + code;
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
+            
+            exe = eval(code);
+            exe.__report__ = script.getQuantities();
 
             return {
                 report: script.getQuantities(),
-                exe: eval(code)
+                exe: exe
             };
         };
 

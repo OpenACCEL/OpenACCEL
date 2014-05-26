@@ -66,10 +66,7 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
 
         // Initialise with given source if not undefined
         if (typeof source !== 'undefined') {
-            var lines = source.split("\n");
-            lines.forEach((function(line) {
-                this.addQuantity(line);
-            }).bind(this));
+            this.addSource(source);
         }
     }
 
@@ -151,11 +148,8 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
          */
         addQuantity: function(source) {
             // Analyse the added line of code and add the defined quantity to the model
-            var newQuantity = this.analyser.analyse(source, this.quantities);
-
+            this.analyser.analyse(source, this.quantities);
             this.scriptChanged();
-
-            return newQuantity;
         },
 
         /**
@@ -167,11 +161,9 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
          * including any comments.
          */
         addSource: function(source) {
-            var lines = source.split("\n");
-            
-            lines.foreach((function(line) {
-
-            }).bind(this));
+            // Analyse the added line of code and add the defined quantity to the model
+            this.analyser.analyse(source, this.quantities);
+            this.scriptChanged();
         },
 
         /**
