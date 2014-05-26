@@ -10,8 +10,8 @@
  * @memberof Model.Library
  */
 function zip(a, b, func) {
-    var isScalarA = !(a instanceof Array || a instanceof Object);
-    var isScalarB = !(b instanceof Array || b instanceof Object);
+    var isScalarA = !(a instanceof Object);
+    var isScalarB = !(b instanceof Object);
 
     if (!isScalarA || !isScalarB) {
         // Recursive step, a or b is an array
