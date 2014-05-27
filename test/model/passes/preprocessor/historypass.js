@@ -38,9 +38,11 @@ suite('historypass.js', function() {
             assert.deepEqual(expected, actual);
         });
 
-
-
-
         // test('parse() s = s{t {1}}')
+        test('parse() t=t{1}+2 \n s=s{1+t}+2', function() {
+            var actual = instance.parse(['t = t{1} + 2', 's = s{1 + t} + 2']);
+            var expected = ['t = history(t, 1) + 1', 's = history(s, 1 + t) + 2'];
+            assert.deepEqual(expected, actual);
+        });
     });
 });
