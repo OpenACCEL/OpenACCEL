@@ -50,7 +50,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
             var rhs =  this.getRHS(line);
             rhs = rhs.replace(pattern, function(match, ident, brace) {
 
-                return 'history(' + ident + ', ';
+                return '__history__(' + ident + ', ';
             });
 
             rhs = rhs.replace(/\}/g, ')');
