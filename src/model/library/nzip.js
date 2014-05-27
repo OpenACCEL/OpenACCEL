@@ -10,8 +10,8 @@ function nzip(x, func) {
     var allScalar = true;
     for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
         if (x[inKey] instanceof Object) {
-            allScalar = false;
             // Determine if there is an array in the input.
+            allScalar = false;
             break;
         }
     }
@@ -19,52 +19,52 @@ function nzip(x, func) {
         // Base: all elements in x are scalar
         return func.apply(this, x);
     } else {
-        var result = [];
         // Return variable.
-        var referenceKeys;
+        var result = [];
         // Set of keys that are valid candidates for matching with the rest of the input,
         // thus having a potential place in the output.
-        var numKeys;
+        var referenceKeys;
         // Number of keys in the set of referenceKeys.
+        var numKeys;
         for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
             if (x[inKey] instanceof Object) {
-                referenceKeys = Object.keys(x[inKey]);
                 // Keys of contender for input of reference found.
+                referenceKeys = Object.keys(x[inKey]);
                 numKeys = referenceKeys.length;
-                break;
                 // Cut off the loop as soon as possible
+                break;
             }
         }
-        var isCommonKey;
         // True if resultKey occurs in every input in x.
-        var recursiveInput;
+        var isCommonKey;
         // Input to be used for the recursive call.
+        var recursiveInput;
         for (var resultKey = numKeys - 1; resultKey >= 0; resultKey--) {
-            recursiveInput = [];
             // Start with empty input
-            isCommonKey = true;
+            recursiveInput = [];
             // Key occurs in every input until proven otherwise.
+            isCommonKey = true;
+            // Loop over all inputs in x.
             for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
-                // Loop over all inputs in x.
                 if (x[inKey] instanceof Object) {
+                    // Check if keys contained in all objects
                     if (x[inKey][referenceKeys[resultKey]] !== undefined) {
-                        // Loop over all keys in our input of reference.
                         recursiveInput[inKey] = x[inKey][referenceKeys[resultKey]];
                     } else {
-                        isCommonKey = false;
                         // Key does not occur in this array.
-                        break;
+                        isCommonKey = false;
                         // Cut short loop to save processing time.
+                        break;
                     }
                 } else {
                     // Input x[inKey] is a scalar.
                     recursiveInput[inKey] = x[inKey];
                 }
             }
+            // Key occurs in all non-scalar inputs.
             if (isCommonKey) {
-                // Key occurs in all non-scalar inputs.
-                result[referenceKeys[resultKey]] = nzip(recursiveInput, func);
                 // Put the recursive result in the representative key.
+                result[referenceKeys[resultKey]] = nzip(recursiveInput, func);
             }
         }
         return result;
