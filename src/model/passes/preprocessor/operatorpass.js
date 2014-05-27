@@ -59,9 +59,25 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
             // Replace the operators.
             // We *need* to add spaces, because sweet otherwise gives an error.
             newrhs = newrhs.replace(this.operatorRegex, function(op) {
-                // if (op === '+') {
-                //     op = 'add';
-                // }
+                switch (op) {
+                    case '+':
+                        op = 'add';
+                        break;
+                    case '-':
+                        op = 'subtract';
+                        break;
+                    case '*':
+                        op = 'multiply';
+                        break;
+                    case '/':
+                        op = 'divide';
+                        break;
+                    case '%':
+                        op = 'modulo';
+                        break;
+                    default:
+                        throw new Error('operator unknown');
+                }
                 return ' _' + op + '_ ';
             });
 
