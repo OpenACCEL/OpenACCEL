@@ -35,7 +35,7 @@ define([], /**@lends Model.Passes*/ function() {
 
         // Regex to get all quantity identifiers, BOTH functions and others
         // Warning! to use this regex, keep in mind to look at the capturing groups
-        this.regexes.quantities = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*:))/g;
+        this.regexes.variables = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*:))/g;
 
         // Regex to get all quantity identifiers that ARE functions
         this.regexes.function = /(\w+)(?=[(])/g;

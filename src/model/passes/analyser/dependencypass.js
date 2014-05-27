@@ -43,10 +43,10 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
         var rhs = this.getRHS(line);
 
         // get the quantity for which we determine the dependencies
-        var qty = this.getQuantities(lhs)[0];
+        var qty = this.getVariables(lhs)[0];
 
         // get all variable names from the right hand side
-        var dep = this.getQuantities(rhs);
+        var dep = this.getVariables(rhs);
         
         if (!quantities[qty].dependencies) {
             quantities[qty].dependencies = [];

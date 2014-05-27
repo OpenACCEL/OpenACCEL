@@ -56,12 +56,12 @@ define(['model/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
     };
 
     /**
-     * Extracts all quantities, both functions and other quantities, from the given string
-     * @param  {String} def String to get the quantities from
+     * Extracts all Variables, both functions and other Variables, from the given string
+     * @param  {String} def String to get the Variables from
      * @return {Sting[]}     Array of quantity names
      */
-    AnalyserPass.prototype.getQuantities = function(s) {
-        var regex = new RegExp(this.regexes.quantities);
+    AnalyserPass.prototype.getVariables = function(s) {
+        var regex = new RegExp(this.regexes.variables);
         var output = [];
         var match;
         while (match = regex.exec(s)) {
