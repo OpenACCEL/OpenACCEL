@@ -8,10 +8,17 @@ build() {
     deploy
 }
 
+# Quickbuild
+quickbuild() {
+    clean
+    jade
+    deploy
+}
+
 # Testing.
 test() {
-    # clean
-    # deploy
+    clean
+    deploy
     echo "Testing..."
     case "$1" in
         "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark --invert ; shift ;;
@@ -93,6 +100,7 @@ case "$1" in
                         "") test ; shift 2 ;;
                         *)  test $2 ; shift 2 ;;
                     esac ;;
+    --quickbuild)   quickbuild ; shift ;;
     --)             shift ; break ;;
     *)              echo "Invalid argument(s)." ; exit 1 ;;
 esac
