@@ -91,16 +91,15 @@ deploy() {
 
 # Read command line options.
 case "$1" in
-    --build)        build ; shift ;;
+    --build)        build ;;
     --benchmark)    case "$2" in
-                        "") benchmark ; shift 2 ;;
-                        *)  benchmark $2 ; shift 2 ;;
+                        "") benchmark ; shift ;;
+                        *)  benchmark $2 ; shift ;;
                     esac ;;
     --test)         case "$2" in
-                        "") test ; shift 2 ;;
-                        *)  test $2 ; shift 2 ;;
+                        "") test ; shift ;;
+                        *)  test $2 ; shift ;;
                     esac ;;
-    --quickbuild)   quickbuild ; shift ;;
-    --)             shift ; break ;;
+    --quickbuild)   quickbuild ;;
     *)              echo "Invalid argument(s)." ; exit 1 ;;
 esac
