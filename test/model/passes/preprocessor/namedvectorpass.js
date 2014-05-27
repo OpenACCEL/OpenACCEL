@@ -137,6 +137,9 @@ suite("namedvectorpass.js", function() {
             assert.equal(instance.replaceBrackets("y = a[1 + a[0 + b[0]] + c[0]]"), "y = a[1 + a[0 + b[0]] + c[0]]");
         });
 
+        test('replaceBrackets() y = a[[1,2,3]*[1,2,3]]', function() {
+            assert.equal(instance.replaceBrackets("y = a[[1,2,3]*[1,2,3]]"), "y = a[{'0':1,'1':2,'2':3}*{'0':1,'1':2,'2':3}]");
+        });
 
         /**
          * replaceBrackets() robustness tests.
