@@ -202,18 +202,32 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             clearInterval(this.runloop);
             this.executing = false;
             this.view.setExecuting(this.executing);
-            this.currentIteration = 1; 
+            this.currentIteration = 1;
+            this.reset();
         }
     };
 
     /**
-     * Resets the values of all quantities, so that the model
-     * can thereafter be executed from the initial state again.
+     * Resets the values of all quantities
      *
      * @post All quantity values, and their history, have been reset
      */
     Controller.prototype.reset = function() {
-        // TODO
+        // TODO think of better/more efficient implementation?
+        this.compileScript(this.script);
+
+        if (this.autoExecute) {
+            this.run();
+        }
+    };
+
+    /**
+     * Destroys the current script with all it's definitions, and
+     * loads a new, empty one.
+     */
+    Controller.prototype.newScript = function() {
+        this.stop();
+        this.script = new Script();
     };
 
     /**
