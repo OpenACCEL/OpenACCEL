@@ -27,7 +27,8 @@ define([], /**@lends Model.Passes*/ function() {
          * Various utility regexes which may be usefull when performing passes.
          */
         this.regexes = {};
-        this.regexes.identifier = /([\w.]*[a-zA-Z]\w*\b(?!\s*[\(:]))/g;
+        // Warning! to use this regex, keep in mind to look at the capturing groups
+        this.regexes.identifier = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*[\(:]))/g; 
         this.regexes.function = /(\w+)(?=[(])/g;
         this.regexes.squareBrackets = /(\d*[a-zA-Z]+\w*)(\[\d*[a-zA-Z]+\w*\])/g;
         this.regexes.dots = /(\d*[a-zA-Z]+\w*)(\.\d+)/g;
