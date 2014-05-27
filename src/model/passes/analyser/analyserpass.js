@@ -23,11 +23,7 @@ define(['model/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
      * @classdesc Analyses a single line of code and updates the quantities in the script.
      */
     function AnalyserPass() {
-        /**
-         * Regex that extracts quantity references from a definition
-         * @type {RegExp}
-         */
-        this.regexes.varNames = /(\w*[a-zA-Z_]\w*(?!\w*\s*:))/g;
+        
     }
 
     AnalyserPass.prototype = new Pass();
@@ -58,6 +54,21 @@ define(['model/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
         
         return quantities;
     };
+
+    /**
+     * Extracts all quantities, both functions and other quantities, from the given string
+     * @param  {String} def String to get the quantities from
+     * @return {Sting[]}     Array of quantity names
+     */
+    AnalyserPass.prototype.getQuantities = function(s) {
+        var regex = new RegExp(this.regexes.quantities);
+        var output = [];
+        var match;
+        while (match = regex.exec(s)) {
+            output.push(match[1]);
+        }
+        return output;
+    }
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return AnalyserPass;

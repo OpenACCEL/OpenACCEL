@@ -66,10 +66,10 @@ suite('exepass.js', function() {
             var line = '2 + sin(y + sin(x)) + sin(2)';
             var expResult = '2 + sin(exe.y() + sin(exe.x())) + sin(2)';
 
-            var script = new Script("x = " + line);
+            var script = new Script("z = " + line);
             var report = script.getQuantities();
 
-            assert.equal(instance.translateRHS(line, "x", report), expResult);
+            assert.equal(instance.translateRHS(line, "z", report), expResult);
         });
 
         test('parse(): Vector dot notation test: myVar.myKey', function() {

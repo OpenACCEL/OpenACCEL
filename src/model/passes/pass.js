@@ -27,7 +27,17 @@ define([], /**@lends Model.Passes*/ function() {
          * Various utility regexes which may be usefull when performing passes.
          */
         this.regexes = {};
-        this.regexes.identifier = /([\w.]*[a-zA-Z]\w*\b(?![\(:]))/g;
+
+
+        // Regex to get all quantity identifiers that are NOT functions
+        // Warning! to use this regex, keep in mind to look at the capturing groups
+        this.regexes.identifier = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*[\(:]))/g;
+
+        // Regex to get all quantity identifiers, BOTH functions and others
+        // Warning! to use this regex, keep in mind to look at the capturing groups
+        this.regexes.quantities = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*:))/g;
+
+        // Regex to get all quantity identifiers that ARE functions
         this.regexes.function = /(\w+)(?=[(])/g;
         this.regexes.squareBrackets = /(\d*[a-zA-Z]+\w*)(\[\d*[a-zA-Z]+\w*\])/g;
         this.regexes.dots = /(\d*[a-zA-Z]+\w*)(\.\d+)/g;
