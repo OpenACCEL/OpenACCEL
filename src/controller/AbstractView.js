@@ -48,6 +48,15 @@ define([], /**@lends AbstractView*/ function() {
          */
         presentResults: function(cat2quantities) {
             console.log("Warning: AbstractView.prototype.presentResults called but not implemented!");
+        },
+
+        /**
+         * Should change UI elements depending on whether the OpenACCEL model is being executed.
+         *
+         * @param executing Boolean indicating whether the OpenACCEL model is being executed.
+         */
+        setExecuting: function(executing) {
+            console.log("Warning: AbstractView.prototype.setExecuting called but not implemented!");
         }
     };
 

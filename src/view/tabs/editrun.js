@@ -22,13 +22,6 @@ function deleteQuantity(quantity) {
     console.log('deleting ' + quantity);
 
     controller.deleteQuantity(quantity);
-
-    var quantities = controller.getQuantities();
-    synchronizeScriptList(quantities);
-    Report.todolistBuffer.hideIfEmpty('#tododiv');
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
-
-    console.log('deleted ' + quantity);
 }
 
 var linenr = 0;
@@ -47,29 +40,25 @@ function addQuantity(string) {
         function() {
             controller.addQuantity(string);
             console.log('Compiled script.');
-
-            //Synchronize Script list
-            var quantities = controller.getQuantities();
-            console.log(quantities);
-            synchronizeScriptList(quantities);
-
-            //Display results
-            // Report.resultBuffer.empty();
-            // if (split[0] == 'out' || split[0] == 'out2') {
-            //     console.log('output variable found');
-            //     Report.addResult(split[0], controller.getQuantityValue(split[0]));
-            // }
-            // Report.resultBuffer.flip();
-            Report.todolistBuffer.hideIfEmpty('#tododiv');
-            Report.resultBuffer.hideIfEmpty('#resultdiv');
         },
         10
     );
 }
 
+function toggleExecution(action) {
+    if (action == 'Run') {
+        controller.run();
+        // setRunning(true);
+    } else {
+        controller.pause();
+        // setRunning(false);
+    }
+}
+
 function newScript() {
     if(confirm("Are you sure you want to stop your current script and delete all existing script lines? It can not be undone.")) {
-        //TODO
+        controller.reset();
+        // setRunning(false);
     }
 }
 
@@ -78,6 +67,14 @@ function setIterations(iterations) {
 }
 
 //------------------------------------------------------------------------------
+
+function setExecuting(executing) {
+    if (executing) {
+        $('#runscript').val('Pause');
+    } else {
+        $('#runscript').val('Run');
+    }
+}
 
 /**
  * Synchronize the content of the #scriptlist div with the model
@@ -99,19 +96,33 @@ function synchronizeScriptList(quantities) {
         } else {
             addScriptlistLine(i++, quantity.name, quantity.definition, quantity.category);
         }
-
-        //Results
-        if (quantity.category == 2) {
-            try {
-                Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
-            } catch(e) {
-                console.log(e);
-            }
-        }
     }
     scriptlistBuffer.flip();
     Report.todolistBuffer.flip();
     Report.resultBuffer.flip();
+    
+    Report.todolistBuffer.hideIfEmpty('#tododiv');
+    Report.resultBuffer.hideIfEmpty('#resultdiv');
+}
+
+/**
+ * Synchronize the content of the #result div with the model
+ *
+ * @param  {Object} quantities All category 2 quantities registered in the model
+ */
+function synchronizeResults(quantities) {
+    Report.resultBuffer.empty();
+    for (var q in quantities) {
+        var quantity = quantities[q];
+
+        try {
+            Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
+        } catch(e) {
+            console.log(e);
+        }
+    }
+    Report.resultBuffer.flip();
+    Report.resultBuffer.hideIfEmpty('#resultdiv');
 }
 
 function objectToString(obj) {

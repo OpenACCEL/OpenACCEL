@@ -14,11 +14,11 @@
                 input(type = 'button', value = 'New', onclick = 'newScript()')#newscript.buttonin
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'Run')#runscript.buttonin
+                input(type = 'button', value = 'Run', onclick = 'toggleExecution(this.value)')#runscript.buttonin
                 //- #runtimetip.tooltip(onclick = '$(this).toggle();') RUNTIME ERROR
             .inline
                 .label Iterations
-                input(type = 'number', min = '0', onchange = 'setIterations(this.value)')#iterations.textin
+                input(type = 'number', min = '0', value = '0', onchange = 'setIterations(this.value)')#iterations.textin
 
     .inline
         #scriptlistdiv

@@ -95,7 +95,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         /**
          * Whether the script _should_ be executing. If false, the script
          * has already stopped or will abort in the next call to the
-         * run() method.
+         * execute() method.
          *
          * @type {Boolean}
          */
@@ -115,7 +115,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          *
          * @type {Boolean}
          */
-        this.autoExecute = false;   // TODO default=true
+        this.autoExecute = true;   // TODO default=true
 
         /**
          * The currently active tab in the UI.
@@ -144,10 +144,16 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * script is complete and non-empty. The script has been resumed
      * if it was paused, and otherwise started over.
      */
-    Controller.prototype.execute = function() {
+    Controller.prototype.run = function() {
         if (!this.executing && this.script.isComplete()) {
             this.executing = true;
-            this.runloop = setInterval(this.run, 5);
+            this.view.setExecuting(this.executing);
+            var controller = this;
+            this.runloop = setInterval(
+                function() {
+                    controller.execute();
+                }, 5
+            );
         }
     };
 
@@ -158,21 +164,13 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * @pre this.script.isComplete(). NOTE: not asserted for performance reasons!
      * @post The view has received the current values of all output quantities.
      */ 
-    Controller.prototype.run = function() {
-        var cat2quantities = this.script.getOutputQuantities();
+    Controller.prototype.execute = function() {
+        this.presentResults(this.script.getOutputQuantities());
 
-        if (this.numIterations > 0) {
-            // Only display results if the specified number of iterations have been made
-            if (this.currentIteration == this.numIterations) {
-                this.presentResults(cat2quantities);
-                this.stop();
-            } else {
-                this.currentIteration ++;
-            }
-        } else {
-            // Display results continuously, every iteration
+        if (this.numIterations > 0 && this.currentIteration != this.numIterations) {
             this.currentIteration ++;
-            this.presentResults(cat2quantities);
+        } else {
+            this.stop();
         }
     };
 
@@ -186,6 +184,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         if (this.executing) {
             clearInterval(this.runloop);
             this.executing = false;
+            this.view.setExecuting(this.executing);
         }
     };
 
@@ -200,6 +199,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         if (this.executing) {
             clearInterval(this.runloop);
             this.executing = false;
+            this.view.setExecuting(this.executing);
             this.currentIteration = 1; 
         }
     };
@@ -325,7 +325,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         this.compileScript(this.script);
         this.view.setQuantities(this.script.getQuantities());
         if (this.autoExecute) {
-            this.execute();
+            this.run();
         }
     }; 
 
@@ -355,7 +355,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         this.compileScript(this.script);
         this.view.setQuantities(this.script.getQuantities());
         if (this.autoExecute) {
-            this.execute();
+            this.run();
         }
     };
 
