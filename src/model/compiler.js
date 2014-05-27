@@ -76,6 +76,8 @@ define(["model/fileloader",
             this.fileLoader.load("modulo", "library");
             this.fileLoader.load("sum", "library");
 
+            this.fileLoader.load("__if__", "library");
+
         }
 
         /**
