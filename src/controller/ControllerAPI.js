@@ -167,10 +167,12 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     Controller.prototype.execute = function() {
         this.presentResults(this.script.getOutputQuantities());
 
-        if (this.numIterations > 0 && this.currentIteration != this.numIterations) {
-            this.currentIteration ++;
-        } else {
-            this.stop();
+        if (this.numIterations > 0) {
+            if (this.currentIteration != this.numIterations) {
+                this.currentIteration ++;
+            } else {
+                this.stop();
+            }
         }
     };
 
