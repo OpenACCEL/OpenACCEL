@@ -45,6 +45,7 @@ define(["model/fileloader",
             this.fileLoader = new FileLoader();
             this.fileLoader.load("func");
             this.fileLoader.load("operators");
+            this.fileLoader.load("cond");
 
             this.fileLoader.load("map", "library");
             this.fileLoader.load("zip", "library");

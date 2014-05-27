@@ -44,6 +44,7 @@ define(['model/compiler'], /**@lends Model*/ function(Compiler) {
             while (match = pattern.exec(macro)) {
                 this.list.push(match[1]);
             }
+
         },
 
         /**
