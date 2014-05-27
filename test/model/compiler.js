@@ -3,7 +3,7 @@ suite("Compiler", function() {
     var assert;
     var Script;
 
-    setup(function (done) {
+    setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/script"], function(assertModule, module, scriptModule) {
@@ -70,5 +70,20 @@ suite("Compiler", function() {
             expected.x = 17;
             assert.deepEqual(output.exe.y(), expected);
         });
+
+        test('default settings, a = [1,2,3]\n c = [1+1,2,3,a[0] +2] ', function() {
+            var code = 'a = [1,2,3]\n c = [1 + 1, 2, 3, a[1] + 2]';
+            var output = compiler.compile(new Script(code));
+            var expected = [2, 2, 3, 4];
+            assert.deepEqual(output.exe.c(), expected);
+        });
+
+        test('default settings a = [1 + 10, b[1 + 2]]', 'c = [x:2, y:3, a.1]', 'b = [0, 2, y:3, t5: c.0, 6, 3, o93e: 0, 5]', function() {
+            var code = ['a = [1 + 10, b[1 + 2]]', 'c = [x:2, y:3, b: a.1]', 'b = [0, 2, y:3, t5: c.0, 6, g6h: c[x], o93e: 0, 5]'];
+            var output = compiler.compile(new Script(code));
+            var expected = ['x: 2', 'y: 3', 'b: 2'];
+            assert.deepEqual(output.exe.c(), expected);
+        })
+
     });
 });

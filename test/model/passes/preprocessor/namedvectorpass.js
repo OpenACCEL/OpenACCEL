@@ -29,6 +29,13 @@ suite("namedvectorpass.js", function() {
 
     suite("namedVectorPass", function() {
 
+
+        test('parse() : a = [1 + 10, b[1 + 2], c[x:2, y:3, 5], b[0, 2, y:3, t5: 4, 6, 3, o93e: 0, 5]', function() {
+            var exScript = ['a = [1 + 10, b[1 + 2]]', 'c = [x:2, y:3, a.1]', 'b[0, 2, y:3, t5: c.0, 6, 3, o93e: 0, 5]'];
+            var resultScript = ["a = {'0':1 + 10, '1':b[1 + 2]}', 'c = {x:2, y:3,'0': a[1]}', 'b{'0':0, '1':2, y:3, t5: c[0], '2':6, '3':3, o93e: 0, '4':5}"];
+            assert.deepEqual(instance.parse(exScript, {}), resultScript);
+        });
+
         test("replaceBrackets:y = [4, 5]", function() {
             var input = "y = [4, 5]";
             var expected = "y = {'0':4,'1': 5}";
