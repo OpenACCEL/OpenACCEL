@@ -3,3 +3,5 @@ function and(x, y) {
         return (x && y);
     });
 }
+
+and.base = true;
