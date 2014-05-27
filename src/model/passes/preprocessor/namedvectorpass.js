@@ -54,19 +54,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
         }).bind(this));
     };
 
-    /**
-     * Replaces some brackets([]) in line by curly braces ({}). The brackets that are replaced
-     * are the ones that indicate creation of vectors, not of calling a vector.
-     * @param  {String} line some line of the script
-     * @pre line != null && line != undefined
-     * @return {String} the same line with all brackets replaced by curly braces.
-     */
-    NamedVectorPass.prototype.replaceBrackets = function(line) {
-        // First, we replace all '[' by '{' and ']' by '}', such that it becomes an object.
-        // This way, we can identify when we go 'a level deeper'.
-        var units = this.getUnits(line);
-        var lhs = this.getLHS(line);
-        line = this.getRHS(line);
+    NamedVectorPass.prototype.keepBrackets = function(line) {
         var output = line;
         var x = 1;
         for (var i = x; i < line.length; i++) {
@@ -84,11 +72,10 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
                         // If level is 0, we have found the matching end token.
                         // We then need to recursively replace this substring with a translated substring.
                         if (level == 0) {
-                            var substring = line.substring(x, j + 1);
-                            output = output.replace(substring, (function(s) {
-                                s = s.split("[").join(this.otherBegin);
-                                return s.split("]").join(this.otherEnd);    
-                            }).bind(this));
+                            var substring = line.substring(x + 1, j);
+                            output = output.replace(substring, this.keepBrackets(substring));
+                            output = this.replaceAt(output, x, this.otherBegin);
+                            output = this.replaceAt(output, j, this.otherEnd);
                             i = j; // When we want to look for a next begin token, thus we start where we have now ended.
                             break;
                         }
@@ -96,7 +83,30 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
                 }
             }
         }  
-        line = output
+        return output;
+    }
+
+    NamedVectorPass.prototype.replaceAt = function(line, idx, chr) {
+        var left = line.substring(0, idx);
+        var right = line.substring(idx + 1);
+        return left + chr + right;
+    }
+    /**
+     * Replaces some brackets([]) in line by curly braces ({}). The brackets that are replaced
+     * are the ones that indicate creation of vectors, not of calling a vector.
+     * @param  {String} line some line of the script
+     * @pre line != null && line != undefined
+     * @return {String} the same line with all brackets replaced by curly braces.
+     */
+    NamedVectorPass.prototype.replaceBrackets = function(line) {
+        // First, we replace all '[' by '{' and ']' by '}', such that it becomes an object.
+        // This way, we can identify when we go 'a level deeper'.
+        var units = this.getUnits(line);
+        var lhs = this.getLHS(line);
+        line = this.getRHS(line);
+
+        line = this.keepBrackets(line);
+
         line = line.replace(this.regexes.openingBracket, (function(s) {
             return s.split("[").join(this.begin);
         }).bind(this));
