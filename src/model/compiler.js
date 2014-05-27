@@ -79,6 +79,17 @@ define(["model/fileloader",
 
             this.fileLoader.load("__if__", "library");
 
+            this.fileLoader.load("and", "library");
+            this.fileLoader.load("equal", "library");
+            this.fileLoader.load("greaterThan", "library");
+            this.fileLoader.load("greaterThanEqual", "library");
+            this.fileLoader.load("imply", "library");
+            this.fileLoader.load("lessThan", "library");
+            this.fileLoader.load("lessThanEqual", "library");
+            this.fileLoader.load("not", "library");
+            this.fileLoader.load("notEqual", "library");
+            this.fileLoader.load("or", "library");
+
         }
 
         /**
