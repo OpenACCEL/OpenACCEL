@@ -118,10 +118,12 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
         },
 
         /**
-         * Returns the value of the quantity with the given name
+         * Returns the value of the quantity with the given name, if the model
+         * is compiled and the quantity
          *
          * @param {String} qtyName The name of the quantity of which to return the value
-         * @pre this.hasQuantity(qtyName) && !this.quantities[qtyName].todo
+         * @pre this.hasQuantity(qtyName)
+         * @pre this.isComplete()
          * @return this.quantities[qtyName]
          */
         getQuantityValue: function(qtyName) {
@@ -129,9 +131,9 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
                 throw new Error('Script.prototype.getQuantityValue.pre :' +
                 'no Quantity named qtyName')
             }
-            if (this.quantities[qtyName].todo) {
+            if (!this.isComplete()) {
                 throw new Error('Script.prototype.getQuantityValue.pre :' +
-                'quantity qtyName undefined (todo)!')
+                'script not compiled because incomplete')
             }
 
             return eval("this.exe." + qtyName + "();");
@@ -217,7 +219,7 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
         /**
          * Returns an object containing all category 2 quantities, keyed
          * by quantity name, and containing their current values if the script
-         * can be executed.
+         * can be executed. Output values are all "?" if model is incomplete.
          *
          * @return this.analyser.getOutputQuantities()
          */
@@ -228,6 +230,11 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
             if (this.isComplete()) {
                 for (q in cat2quantities) {
                     cat2quantities[q].value = this.getQuantityValue(q);
+                }
+            } else {
+                // Else set output values to "?"
+                for (q in cat2quantities) {
+                    cat2quantities[q].value = "?";
                 }
             }
 

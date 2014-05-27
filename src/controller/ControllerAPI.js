@@ -162,13 +162,17 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         var cat2quantities = this.script.getOutputQuantities();
 
         if (this.numIterations > 0) {
+            // Only display results if the specified number of iterations have been made
             if (this.currentIteration == this.numIterations) {
                 this.presentResults(cat2quantities);
                 this.stop();
             } else {
                 this.currentIteration ++;
-                this.presentResults(cat2quantities);
             }
+        } else {
+            // Display results continuously, every iteration
+            this.currentIteration ++;
+            this.presentResults(cat2quantities);
         }
     };
 
@@ -179,7 +183,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * @post this.executing == false
      */
     Controller.prototype.pause = function() {
-            if (this.executing) {
+        if (this.executing) {
             clearInterval(this.runloop);
             this.executing = false;
         }
@@ -198,6 +202,16 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             this.executing = false;
             this.currentIteration = 1; 
         }
+    };
+
+    /**
+     * Resets the values of all quantities, so that the model
+     * can thereafter be executed from the initial state again.
+     *
+     * @post All quantity values, and their history, have been reset
+     */
+    Controller.prototype.reset = function() {
+        // TODO
     };
 
     /**
