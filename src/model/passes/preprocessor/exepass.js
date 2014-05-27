@@ -86,13 +86,15 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
 
 
         // place exe. before, and () after athe quantities that this variable depends on.
-        output = output.replace(this.regexes.identifier, function(s) {
+        output = output.replace(this.regexes.identifier, function(match, s) {
+            // Note, because we use capturing groups in this regex we need the additional
+            // parameter 'match' that represents the complete match
             // a quantiy is found, check if this variable depends on it.
             if (report[qty].dependencies.indexOf(s) > -1) {
-                return 'exe.' + s +'()';
+                return match.replace(s, 'exe.' + s +'()');;
             }
 
-            return s;
+            return match;
         });
         
         return output;
