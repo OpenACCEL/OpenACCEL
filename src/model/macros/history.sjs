@@ -1,4 +1,4 @@
-let __history__ = macro {
+macro __history__ {
     rule {
         ($quantity:ident, $time:expr)
     } => {
