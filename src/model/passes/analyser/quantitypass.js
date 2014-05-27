@@ -42,7 +42,6 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
 
         // get all variable names from the left hand side
         var vars = this.getQuantities(lhs);
-        console.log(vars);
 
 		// Create quantities if it doesn't already exist
         if (!quantities) {
