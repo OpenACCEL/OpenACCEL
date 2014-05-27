@@ -73,51 +73,29 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
         }
 
         var output = rhs.trim();
-
-        /*
-         * For user defined functions, like 'f(a) = 2 + a + x', we want dont want this pass to modify the 'a' on the rhs.
-         * So what we do, is we first detect if the left hand side is a user defined function. If this is the case, we
-         * use the same regex to find the local variables (like 'a'), and skip those regex matches on the rhs transformation.
-         */
-
-        // Get a list of all user defined functions.
-        var userDefinedFunctions = [];
-        for (var key in report) {
-            if (report[key].name && report[key].parameters.length > 0) {
-                userDefinedFunctions.push(report[key].name);
-            }
-        }
-
-        // Put .exe before any user-defined function.
+        var qty = lhs.match(/\w*[a-zA-z_]\w*/)[0]; // the quantity we are evaluating
+        // place exe. before each user defined function
         output = output.replace(this.regexes.function, function(s) {
-            // If a found function is a user-defined function, put .exe in front of it.
-            if (userDefinedFunctions.indexOf(s) > -1) {
+            // a function is found, check if this variable depends on it.
+            if (report[qty].dependencies.indexOf(s) > -1) {
                 return 'exe.' + s;
             }
 
             return s;
         });
 
-        // The regex we use here extracts the definition-variables from the string.
-        return output.replace(this.regexes.identifier, function(s) {
-            // Check if this variable is not a local function variable.
-            var parameters = report[lhs.match(/([a-zA-Z]\w*)/)[0]].parameters;
-            if (parameters.indexOf(s) > -1 || s == "exe") {
-                return s;
+
+        // place exe. before, and () after athe quantities that this variable depends on.
+        output = output.replace(this.regexes.identifier, function(s) {
+            // a quantiy is found, check if this variable depends on it.
+            if (report[qty].dependencies.indexOf(s) > -1) {
+                return 'exe.' + s +'()';
             }
 
-            // We may have the case where the regex matches 'myVar.myKey'.
-            // We only want to modify the first part, thus we split by . and only edit the first element.
-
-            var split = s.split(".");
-            var newQuantityName = 'exe.' + split[0] + '()';
-
-            if (split.slice(1).length > 0) {
-                newQuantityName += "." + split.slice(1).join(".");
-            }
-            
-            return newQuantityName;
+            return s;
         });
+        
+        return output;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

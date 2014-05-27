@@ -46,10 +46,10 @@ define(["model/passes/preprocessor/unitpass",
             this.passes = [];
             this.passes.push(new NamedVectorPass());
             this.passes.push(new VectorPass());
+            this.passes.push(new IfPass());
             this.passes.push(new ExePass());
             this.passes.push(new OperatorPass());
             this.passes.push(new UnitPass());
-            this.passes.push(new IfPass());
             this.passes.push(new FuncPass());
             this.passes.push(new PackagePass());
         }
