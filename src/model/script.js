@@ -192,6 +192,7 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
             var delqty = this.quantities[qtyName];
 
             // Step 1: Delete all dependencies of this quantity that are marked as todo and have no other reverse dependencies
+            // Also, remove this quantity from all reverse dependency lists
             delqty.dependencies.forEach((function(d) {
                 var dep = this.quantities[d];
                 if (dep.todo) {
@@ -202,6 +203,9 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
                         // Remove us from reverse-dependency list
                         delete this.quantities[d].reverseDeps[qtyName];
                     }
+                } else {
+                    // Remove us from reverse-dependency list
+                    delete this.quantities[d].reverseDeps[qtyName];
                 }
             }).bind(this));
 

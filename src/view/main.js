@@ -45,4 +45,5 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
     };
 
     controller = new Controller(new View());
+    controller.setAutoExecute(true);
 });

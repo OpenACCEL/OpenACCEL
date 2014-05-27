@@ -115,7 +115,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          *
          * @type {Boolean}
          */
-        this.autoExecute = true;   // TODO default=true
+        this.autoExecute = false;   // TODO default=true
 
         /**
          * The currently active tab in the UI.

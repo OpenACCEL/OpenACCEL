@@ -42,6 +42,9 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
      * @return A Quantity object with filled in dependency information/data.
      */
     DependencyPass.prototype.analyse = function(line, quantity, quantities) {
+        // Reset quantities array
+        quantity.dependencies = [];
+
         // get all variable names from the right hand side
         var dep = quantity.definition.match(this.regexes.varNames);
 
