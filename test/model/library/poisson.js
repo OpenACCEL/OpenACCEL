@@ -33,13 +33,25 @@ suite("Poisson Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        test("poisson function calculating the density.", function() {
+            eval(fileLoader.getContent());
+            var x = 3;
+            var y = 4;
+            var z = true;
+            output = poisson(x, y, z);
+            expected = 64 * Math.exp(-4) / 6 + 16 * Math.exp(-4) / 2 + 4 * Math.exp(-4) / 1 + 1 * Math.exp(-4) / 1;
+            assert.deepEqual(output, expected);
+        });
+
         test("poisson function with variables less than 0", function() {
             eval(fileLoader.getContent());
             var x = -1;
             var y = 1;
             var z = true;
             expected = /The poisson of numbers less than 0 are not supported./;
-            assert.throws(function(){poisson(x, y, z);}, expected);
+            assert.throws(function() {
+                poisson(x, y, z);
+            }, expected);
         });
 
         test("poisson function with variables less than 0", function() {
@@ -48,7 +60,9 @@ suite("Poisson Library", function() {
             var y = -1;
             var z = false;
             expected = /The poisson of numbers less than 0 are not supported./;
-            assert.throws(function(){poisson(x, y, z);}, expected);
+            assert.throws(function() {
+                poisson(x, y, z);
+            }, expected);
         });
 
     });
