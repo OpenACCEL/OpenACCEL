@@ -24,13 +24,8 @@ if (inNode) {
 
 define(["model/passes/analyser/quantitypass",
         "model/passes/analyser/dependencypass",
-<<<<<<< HEAD
         "model/quantity",
         'underscore'],
-=======
-        "model/quantity"
-    ],
->>>>>>> 3c2235adc85d11fa753123d1bfe5b5bc769070ea
     /**@lends Analyser*/
     function(QuantityPass, DependencyPass, Quantity, _) {
         /**
