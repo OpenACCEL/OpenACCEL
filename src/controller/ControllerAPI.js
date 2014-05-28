@@ -161,10 +161,15 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * Evaluates the values of all category 2 quantities and provides 
      * them to the view.
      *
-     * @pre this.script.isComplete(). NOTE: not asserted for performance reasons!
+     * @pre this.script.isComplete()
      * @post The view has received the current values of all output quantities.
      */ 
     Controller.prototype.execute = function() {
+        if (!this.script.isComplete()) {
+            this.stop();
+            return;
+        }
+        
         this.presentResults(this.script.getOutputQuantities());
 
         if (this.numIterations > 0) {
@@ -214,6 +219,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      */
     Controller.prototype.reset = function() {
         // TODO think of better/more efficient implementation?
+        this.stop();
         this.compileScript(this.script);
 
         if (this.autoExecute) {

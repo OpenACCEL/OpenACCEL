@@ -42,7 +42,7 @@ define(["model/passes/analyser/quantitypass",
              *
              * @type {Boolean}
              */
-            this.scriptComplete = true;
+            this.scriptComplete = false;
 
             /**
              * Object containing all category 2 (output) quantities, keyed by name.
