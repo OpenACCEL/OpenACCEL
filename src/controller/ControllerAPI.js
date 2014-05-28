@@ -440,7 +440,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
                 'not a category 1 (user-input) quantity')
         }
 
-        this.script.setConstant(qtyName, value);
+        this.script.exe[qtyName][0] = value;
     }; 
 
     /**
