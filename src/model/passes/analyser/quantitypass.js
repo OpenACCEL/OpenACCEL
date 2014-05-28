@@ -64,8 +64,9 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
         var qtyName = vars[0];
         var qty;
 
-        // If the quantity already exists, update it instead of creating a new one
-        // to preserve reverse dependencies!
+        // Existing quantity is redefined. We have to make sure to keep the reverse dependencies
+        // of _this_ quantity, but remove this quantity from all reverse dependency lists of 
+        // it's dependencies
         if (qtyName in quantities) {
             qty = quantities[qtyName];
             qty.LHS = lhs;
@@ -75,6 +76,11 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
             
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
+
+            // Remove the 
+            for (var dep in qty.dependencies) {
+                _.without(quantities[dep].reverseDeps, qtyName);
+            }
         } else {
             // Create new quantity and add it to the quantities
             qty = new Quantity();
