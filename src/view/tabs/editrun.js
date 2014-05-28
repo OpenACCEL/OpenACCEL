@@ -85,6 +85,7 @@ function setExecuting(executing) {
 function synchronizeScriptList(quantities) {
     scriptlistBuffer.empty();
     Report.todolistBuffer.empty();
+    userinputBuffer.empty();
 
     var i = 0;
     for (var q in quantities) {
@@ -102,11 +103,7 @@ function synchronizeScriptList(quantities) {
         if (quantity.category == 1) {
             switch (quantity.input.type) {
                 case 'slider':
-                    console.log(':D');
-                    var s = new SliderInput(i, quantity.name, quantity.name, quantity.input.parameters[0], quantity.input.parameters[1], quantity.input.parameters[2]);
-                    console.log(s);
-                    addInput(s);
-                    console.log(userinputBuffer);
+                    addInput(new SliderInput(i, quantity.name, quantity.name, quantity.input.parameters[0], quantity.input.parameters[1], quantity.input.parameters[2]));
                     break;
                 case 'check':
                     addInput(new CheckboxInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
@@ -130,6 +127,7 @@ function synchronizeScriptList(quantities) {
     Report.todolistBuffer.hideIfEmpty('#tododiv');
 
     initInputs();
+    userinputBuffer.hideIfEmpty('#userinputdiv');
 }
 
 /**
@@ -343,6 +341,7 @@ SliderInput.prototype.getHTML = function() {
     ';
 };
 SliderInput.prototype.initialize = function() {
+    console.log(this.properties);
     $('#userslider' + this.identifier).slider(this.properties);
 };
 
