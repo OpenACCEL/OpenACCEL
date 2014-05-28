@@ -84,7 +84,7 @@ function setExecuting(executing) {
 function synchronizeScriptList(quantities) {
     scriptlistBuffer.empty();
     Report.todolistBuffer.empty();
-    Report.resultBuffer.empty();
+
     var i = 0;
     for (var q in quantities) {
         var quantity = quantities[q];
@@ -96,13 +96,35 @@ function synchronizeScriptList(quantities) {
         } else {
             addScriptlistLine(i++, quantity.name, quantity.definition, quantity.category);
         }
+
+        //User Input
+        if (quantity.category == 1) {
+            switch(quatity.input.type) {
+                case 'slider':
+                    addInput(new SliderInput(i, quantity.name, quantity.name, input.parameters[0], input.parameters[1], input.parameters[2]))
+                    break;
+                case 'check':
+                    addInput(new CheckboxInput(i, quantity.name, quantity.name, input.parameters[0]));
+                    break;
+                case 'button':
+                    addInput(new ButtonInput(i, quantity.name, quantity.name, input.parameters[0]));
+                    break;
+                case 'text':
+                    addInput(new TextInput(i, quantity.name, quantity.name));
+                    break;
+                default:
+                    //Unknown input type
+                    console.log('Unknown input type');
+                    break;
+            }
+        }
     }
     scriptlistBuffer.flip();
+
     Report.todolistBuffer.flip();
-    Report.resultBuffer.flip();
-    
     Report.todolistBuffer.hideIfEmpty('#tododiv');
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
+
+    initInputs();
 }
 
 /**
@@ -112,6 +134,7 @@ function synchronizeScriptList(quantities) {
  */
 function synchronizeResults(quantities) {
     Report.resultBuffer.empty();
+
     for (var q in quantities) {
         var quantity = quantities[q];
 
@@ -321,17 +344,20 @@ SliderInput.prototype.initialize = function() {
 /**
  * Constructs a dynamic checkbox input object
  *
- * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
- * @param {Object} quantity   Object which the input element affects
- * @param {String} label      String to be used as a label for the input element in the UI
+ * @param {String}  identifier String to be used as a suffix in the id values of the generated html elements
+ * @param {Object}  quantity   Object which the input element affects
+ * @param {String}  label      String to be used as a label for the input element in the UI
+ * @param {Boolean} val        Initial value of the checkbox
  *
  * @class
  * @classdesc Dynamic checkbox input class to be generated according to ACCEL script requirements
  */
-function CheckboxInput(identifier, quantity, label) {
+function CheckboxInput(identifier, quantity, label, val) {
     this.identifier = identifier;
     this.quantity = quantity;
     this.label = label;
+
+    this.val = val;
 };
 CheckboxInput.prototype = new Input();
 CheckboxInput.prototype.getHTML = function() {
@@ -339,7 +365,7 @@ CheckboxInput.prototype.getHTML = function() {
         <div id = "userinput' + this.identifier + '">\
             <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
             <div class = "inline checkboxin">\
-                <input type = "checkbox" id = "usercheck' + this.identifier + '">\
+                <input type = "checkbox" id = "usercheck' + this.identifier + '" checked = "' + this.val + '">\
                 <label for = "usercheck' + this.identifier + '"></label>\
             </div>\
         </div>\
@@ -360,21 +386,24 @@ CheckboxInput.prototype.initialize = function() {
  * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
  * @param {Object} quantity   Object which the input element affects
  * @param {String} label      String to be used as a label for the input element in the UI
+ * @param {String} val        Initial value of the text input field
  *
  * @class
  * @classdesc Dynamic text input class to be generated according to ACCEL script requirements
  */
-function TextInput(identifier, quantity, label) {
+function TextInput(identifier, quantity, label, val) {
     this.identifier = identifier;
     this.quantity = quantity;
     this.label = label;
+
+    this.val = val;
 };
 TextInput.prototype = new Input();
 TextInput.prototype.getHTML = function() {
     return '\
         <div id = "userinput' + this.identifier + '">\
             <label for = "usertext' + this.identifier + '">' + this.label + '</label>\
-            <input type = "text" id = "usertext' + this.identifier + '" class = "textin">\
+            <input type = "text" id = "usertext' + this.identifier + '" class = "textin" value = "' + this.val + '">\
         </div>\
     ';
 };
@@ -416,13 +445,11 @@ ButtonInput.prototype.initialize = function() {
     var buttoninput = this;
     $('#userbutton' + buttoninput.identifier).on('mousedown',
         function() {
-            console.log('buttoninput');
             controller.setUserInputQuantity(buttoninput.quantity, true);
         }
     );
     $('#userbutton' + buttoninput.identifier).on('mouseup',
         function() {
-            console.log('buttoninput');
             controller.setUserInputQuantity(buttoninput.quantity, false);
         }
     );
@@ -435,7 +462,7 @@ ButtonInput.prototype.initialize = function() {
 var inputs = [];
 
 /**
- * Add dynamic input element to the #userinput element
+ * Adds a dynamic input element to the #userinput element
  *
  * @param {Object} elements    Object with {@code appendHTML(div, name, identifier)} function to append the corresponding HTML to #userinput
  * @param {String} label       A string displayed near the input element to describe it
@@ -444,8 +471,13 @@ var inputs = [];
 function addInput(element) {
     this.inputs.push(element);
     userinputBuffer.append(element.getHTML());
-    console.log(this.inputs);
+}
 
+/**
+ * Initializes the added input elements
+ */
+function initInputs() {
+    console.log(this.inputs);
     userinputBuffer.flip();
 
     for (var i = 0; i < inputs.length; i++) {
