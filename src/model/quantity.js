@@ -118,7 +118,12 @@ define([], /**@lends Model*/ function() {
          */
         this.source = '';
 
-
+        /**
+         * This input object contains the type of the input e.g. slider, checkbox.
+         * The parameters of this input are the parameters of the input method. For example,
+         * in a slider the start and end limits and the default value.
+         * @type {Object}
+         */
         this.input = {
             type: null,
             parameters: []

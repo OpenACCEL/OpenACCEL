@@ -27,7 +27,7 @@ suite('uipass.js', function() {
             var actual = instance.parse(['x = slider(50,0,100)'], {});
             var expected = ['x = exe.x[0]'];
             assert.deepEqual(actual, expected);
-        })
+        });
 
         /**
          * Tests UIPass.parse() with slider
@@ -36,7 +36,7 @@ suite('uipass.js', function() {
             var actual = instance.parse(['f(x) = check(true)'], {});
             var expected = ['f(x) = exe.f[0]'];
             assert.deepEqual(actual, expected);
-        })
+        });
 
         /**
          * Tests UIPass.parse() with slider
@@ -45,7 +45,7 @@ suite('uipass.js', function() {
             var actual = instance.parse(["x = input('something')"], {});
             var expected = ['x = exe.x[0]'];
             assert.deepEqual(actual, expected);
-        })
+        });
 
         /**
          * Tests UIPass.parse() with slider
@@ -54,6 +54,6 @@ suite('uipass.js', function() {
             var actual = instance.parse(['f(x) = button()'], {});
             var expected = ['f(x) = exe.f[0]'];
             assert.deepEqual(actual, expected);
-        })
+        });
     });
 });
