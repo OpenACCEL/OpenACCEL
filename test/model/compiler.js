@@ -60,6 +60,7 @@ suite("Compiler", function() {
             var output = compiler.compile(new Script(code));
             var expected = [3];
             expected.x = 5;
+            console.log(output.exe);
             assert.deepEqual(output.exe.y(), expected);
         });
 
@@ -96,5 +97,37 @@ suite("Compiler", function() {
             assert.deepEqual(output.exe.d(), expected);
         })
 
+    });
+
+    suite("History Tests", function() {
+
+        test('default settings t = t{1 + 1} + 1', function() {
+            var code = 't = t{1 + 1} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            assert.equal(output.exe.t(), expected);
+            output.exe.step();
+            assert.equal(output.exe.t(), expected);
+        });
+
+        test('default settings t = t{1 + b} + 1 \n b = b{0} + 1', function() {
+            var code = 't = t{0 + b} + 1 \n b = b{0} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            for (var i = 0; i < 1000; i++) {
+                assert.equal(output.exe.t(), expected + i);
+                output.exe.step();       
+            };
+        });
+
+        test('default settings t = t{1 + b} + 1 \n b = b{0} + 1', function() {
+            var code = 't = t{0 + b} + 1 \n b = b{0} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            for (var i = 0; i < 1000; i++) {
+                assert.equal(output.exe.t(), expected + i);
+                output.exe.step();       
+            };
+        });
     });
 });

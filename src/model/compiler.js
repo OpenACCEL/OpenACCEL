@@ -46,6 +46,7 @@ define(["model/fileloader",
             this.fileLoader.load("func");
             this.fileLoader.load("operators");
             this.fileLoader.load("cond");
+            this.fileLoader.load("history");
 
             this.fileLoader.load("map", "library");
             this.fileLoader.load("zip", "library");
@@ -77,6 +78,7 @@ define(["model/fileloader",
             this.fileLoader.load("modulo", "library");
             this.fileLoader.load("sum", "library");
 
+            this.fileLoader.load("random", "library");
             this.fileLoader.load("__if__", "library");
 
             this.fileLoader.load("and", "library");
@@ -89,7 +91,6 @@ define(["model/fileloader",
             this.fileLoader.load("not", "library");
             this.fileLoader.load("notEqual", "library");
             this.fileLoader.load("or", "library");
-
         }
 
         /**
@@ -103,10 +104,13 @@ define(["model/fileloader",
             var code = this.preProcessor.process(script);
             code = this.fileLoader.getLibrary() + code;
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
+            
+            exe = eval(code);
+            exe.__report__ = script.getQuantities();
 
             return {
                 report: script.getQuantities(),
-                exe: eval(code)
+                exe: exe
             };
         };
 

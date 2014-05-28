@@ -13,6 +13,7 @@ suite("Modulo Library", function() {
             var fileLoader = new FileLoader();
             fileLoader.load("func");
             fileLoader.load("modulo", "library");
+            fileLoader.load("zip", "library");
             macros = fileLoader.getContent();
             done();
         });

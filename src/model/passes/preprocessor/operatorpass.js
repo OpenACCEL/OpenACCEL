@@ -29,7 +29,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
          * Regex to extract binary operators.
          * @type {RegExp}
          */
-        this.operatorRegex = /([\+\-\*\/%])/g;
+        this.operatorRegex = /((&&|==|>=|<=|!=|\|\||[\+\-\*\/%<>!]))/g;
     }
 
     OperatorPass.prototype = new CompilerPass();
@@ -75,10 +75,37 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
                     case '%':
                         op = 'modulo';
                         break;
+                    case '&&':
+                        op = 'and';
+                        break;
+                    case '==':
+                        op = 'equal';
+                        break;
+                    case '>=':
+                        op = 'geq';
+                        break;
+                    case '>':
+                        op = 'gt';
+                        break;
+                    case '<=':
+                        op = 'leq';
+                        break;
+                    case '<':
+                        op = 'lt';
+                        break;
+                    case '!=':
+                        op = 'neq';
+                        break;
+                    case '!':
+                        op = 'not';
+                        break;
+                    case '||':
+                        op = 'or';
+                        break;
                     default:
-                        throw new Error('operator unknown');
+                        throw new Error('operator unknown' + op);
                 }
-                return ' _' + op + '_ ';
+                return ' __' + op + '__ ';
             });
 
             return line.replace(this.getRHS(line), newrhs);

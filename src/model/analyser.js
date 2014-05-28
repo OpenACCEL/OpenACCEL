@@ -18,9 +18,11 @@ if (inNode) {
 /*******************************************************************/
 
 define(["model/passes/analyser/quantitypass",
-        "model/passes/analyser/dependencypass"],
+        "model/passes/analyser/dependencypass",
+        "model/quantity"
+    ],
     /**@lends Analyser*/
-    function(QuantityPass, DependencyPass, CategoryPass) {
+    function(QuantityPass, DependencyPass, Quantity) {
         /**
          * @class Analyser
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
@@ -41,7 +43,7 @@ define(["model/passes/analyser/quantitypass",
              *
              * @type {Boolean}
              */
-            this.scriptComplete = true;
+            this.scriptComplete = false;
 
             /**
              * Object containing all category 2 (output) quantities, keyed by name.
@@ -50,20 +52,6 @@ define(["model/passes/analyser/quantitypass",
              */
             this.outputQuantities = {};
         }
-
-        /**
-         * Performs all 
-         *
-         * @param {String} line A single line of input code.
-         * @return {Object} An object containing all the quantities in the script.
-         */
-        Analyser.prototype.analyse = function(line, quantities) {
-            for (var i = 0; i < this.passes.length; i++) {
-                quantities = this.passes[i].analyse(line, quantities);
-            }
-
-            return quantities;
-        };
 
         /**
          * Returns whether there are no todo-items.
@@ -80,6 +68,37 @@ define(["model/passes/analyser/quantitypass",
          */
         Analyser.prototype.getOutputQuantities = function() {
             return this.outputQuantities;
+        };
+
+        /**
+         * Performs all analysis passes on the given piece of ACCEL script
+         *
+         * @param {String} script A piece of ACCEL script, consisting of an arbitrary
+         * number of lines. Comments should follow quantity definitions: if there is a
+         * comment on the first line it will be ignored.
+         * @param {Object} quantities The current quantities in the script.
+         * @modifies quantities
+         * @post quantities contains all the quantities defined in script
+         */
+        Analyser.prototype.analyse = function(script, quantities) {
+            if (!quantities) {
+                throw new Error('Analyser.analyse.pre violated:' +
+                    'quantities is null or undefined');
+            }
+
+            // Perform the relevant passes on each line
+            var lines = script.split("\n");
+            var prevQuantity = null;
+            lines.forEach((function(line) {
+                line = line.trim();
+                if (prevQuantity != null && line.substring(0, 2) == '//') {
+                    prevQuantity.comment = line.substring(2, line.length);
+                } else {
+                    for (var i = 0; i < this.passes.length; i++) {
+                        prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
+                    }
+                }
+            }).bind(this));
         };
 
         /**
@@ -108,8 +127,13 @@ define(["model/passes/analyser/quantitypass",
 
                 // If the quantity has no dependencies, it is a category 3 (input) quantity
                 if (qty.dependencies.length == 0) {
-                    // TODO check whether it's a category 1 user input
-                    quantities[qtyName].category = 3;
+                    qty.input.type = this.findUserInput(qty.definition);
+                    if (qty.input.type !== null) {
+                        quantities[qtyName].category = 1;
+                        qty.input.parameters = this.findInputParameters(qty.definition, qty.input.type);
+                    } else {
+                        quantities[qtyName].category = 3;
+                    }
                 } else {
                     // If there are no quantities that depend on this quantity, it is category
                     // 2 (output)
@@ -125,6 +149,32 @@ define(["model/passes/analyser/quantitypass",
 
             return quantities;
         };
+
+        Analyser.prototype.findUserInput = function(definition) {
+            if (definition.match(/slider\(/)) {
+                return 'slider';
+            } else if (definition.match(/check\(/)) {
+                return 'check';
+            } else if (definition.match(/button\(/)) {
+                return 'button';
+            } else if (definition.match(/input\(/)) {
+                return 'text';
+            } else {
+                return null;
+            }
+        };
+
+        Analyser.prototype.findInputParameters = function(definition, type) {
+            var parameters = [];
+            if (type === 'slider') {
+                parameters = definition.match(/slider\((\d+),(\d+),(\d+)\)/);
+            } else if (type === 'check') {
+                parameters = definition.match(/check\((true|false)\)/);
+            } else if (type === 'text') {
+                parameters = definition.match(/input\((\'\w+\')\)/)
+            }
+            return parameters.slice(1);
+        }
 
         // Exports all macros.
         return Analyser;
