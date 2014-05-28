@@ -22,32 +22,38 @@ define(['model/compiler'], /**@lends Model*/ function(Compiler) {
     // List of keywords which may not be altered by passes or macros.
     var keywords = [
         'true',
-        'false'
+        'false',
+        'slider',
+        'input',
+        'check',
+        'button'
     ];
 
     /**
-     * Object keeping the track of the list of 'reserved' functions.
+     * Object keeping the track of the list of 'reserved' words.
      * Call getList() to retrieve the list.
-     * The is only generated once.
+     * The list is only generated once.
      * @type {Object}
      */
-    var FunctionList = {
+    var ReservedWords = {
         /**
-         * Generates the list of predefined functions
+         * Generates the list of reserved words
          */
         generateList: function() {
             this.list = [];
             var match;
             var compiler = new Compiler();
             var lib = compiler.fileLoader.getLibrary();
-            var pattern = /(?:function\s*)(\w*)(?:\()/g;
+            var pattern = /(?:function\s*)(\b\w*)(?:\()/g;
             while (match = pattern.exec(lib)) {
-                this.list.push(match[1]);
+                // remove __ if present and add to the list
+                this.list.push(match[1].replace(/__/g,""));
             }
-            pattern = /(?:let\s*)(\w*)/g;
+            pattern = /(?:let\s*)(\b\w*\b)/g;
             var macro = compiler.fileLoader.getMacros();
             while (match = pattern.exec(macro)) {
-                this.list.push(match[1]);
+                // remove __ if present and add to the list
+                this.list.push(match[1].replace(/__/g,""));
             }
 
             // Add additional keywords.
@@ -58,7 +64,7 @@ define(['model/compiler'], /**@lends Model*/ function(Compiler) {
         },
 
         /**
-         * Returns the list of predefined functions.
+         * Returns the list of reserved words
          * @return {String} the list of predefined functions
          */
         getList: function() {
@@ -71,5 +77,5 @@ define(['model/compiler'], /**@lends Model*/ function(Compiler) {
 
 
     // Exports are needed, such that other modules may invoke methods from this module file.
-    return FunctionList;
+    return ReservedWords;
 });

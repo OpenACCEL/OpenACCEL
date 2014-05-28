@@ -455,8 +455,8 @@ label + input[type="checkbox"]:checked {
 }
 
 .checkboxin label:after {
-	filter: alpha(opacity=0);
-	opacity: 0;
+	filter: alpha(opacity=20);
+	opacity: 0.2;
 
 	content: '';
 	position: absolute;
@@ -477,8 +477,8 @@ label + input[type="checkbox"]:checked {
 }
 
 .checkboxin label:hover::after {
-	filter: alpha(opacity=30);
-	opacity: 0.3;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
 }
 
 .checkboxin input[type=checkbox]:checked + label:after {

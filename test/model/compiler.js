@@ -60,6 +60,7 @@ suite("Compiler", function() {
             var output = compiler.compile(new Script(code));
             var expected = [3];
             expected.x = 5;
+            console.log(output.exe);
             assert.deepEqual(output.exe.y(), expected);
         });
 

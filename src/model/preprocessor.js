@@ -25,6 +25,7 @@ define(["model/passes/preprocessor/historypass",
         "model/passes/preprocessor/packagepass",
         "model/passes/preprocessor/vectorpass",
         "model/passes/preprocessor/namedvectorpass",
+        "model/passes/preprocessor/uipass",
         "model/passes/preprocessor/ifpass"
     ],
     /**@lends Model*/
@@ -36,6 +37,7 @@ define(["model/passes/preprocessor/historypass",
         PackagePass,
         VectorPass,
         NamedVectorPass,
+        UIPass,
         IfPass) {
         /**
          * @class
@@ -53,6 +55,7 @@ define(["model/passes/preprocessor/historypass",
             this.passes.push(new ExePass());
             this.passes.push(new OperatorPass());
             this.passes.push(new UnitPass());
+            this.passes.push(new UIPass());
             this.passes.push(new FuncPass());
             this.passes.push(new PackagePass());
         }

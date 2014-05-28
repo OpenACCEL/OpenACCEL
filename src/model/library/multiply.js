@@ -1,3 +1,5 @@
 function multiply(x, y) {
-	return x * y;
+	return zip(x, y, function(a, b) {
+        return a * b;
+    });
 }

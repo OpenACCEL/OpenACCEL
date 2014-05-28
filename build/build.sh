@@ -21,9 +21,9 @@ test() {
     deploy
     echo "Testing..."
     case "$1" in
-        "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark --invert ; shift ;;
+        "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark --invert ;;
         *)  file=$(find test/ -name "$1".js)
-            node_modules/.bin/mocha $file -u tdd -r test/require.js --grep @benchmark --invert ; shift ;;
+            node_modules/.bin/mocha $file -u tdd -r test/require.js --grep @benchmark --invert ;;
     esac
 }
 
@@ -33,9 +33,9 @@ benchmark() {
     deploy
     echo "Benchmarking..."
     case "$1" in
-        "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark ; shift ;;
+        "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark ;;
         *)  file=$(find test/ -name "$1".js)
-            node_modules/.bin/mocha $file -u tdd -r test/require.js --grep @benchmark ; shift ;;
+            node_modules/.bin/mocha $file -u tdd -r test/require.js --grep @benchmark ;;
     esac
 
 }

@@ -22,7 +22,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/reservedw
     /**
      * @class
      * @classdesc This pass is part of the Script Analyser and extracts:
-     *  -Dependencies of quantities: on which quantities the value of a
+     *  -Dependencies of quantities: on which quantities the value of a 
      *   certain quantity depends
      *  -Reverse dependencies: which quantities depend on the quantity being defined
      *  -Whether a quantity has been given a definition already, or is a 'todo-item'
@@ -54,7 +54,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/reservedw
 
         // get all variable names from the right hand side
         var dep = this.getVariables(rhs);
-
+        
         if (!quantities[qty].dependencies) {
             quantities[qty].dependencies = [];
         }
@@ -67,10 +67,15 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/reservedw
                 // is local to this definition and if not, add it as a dependency. Also, a single
                 // variable can occur multiple times in the rhs of a definition. Check this
                 // as well.
-                if (quantity.parameters.indexOf(d) == -1 && quantity.dependencies.indexOf(d) == -1 && this.functionlist.indexOf(d) == -1
-                    && quantity.name != d) {
+<<<<<<< HEAD
+                if (quantity.parameters.indexOf(d) == -1 && quantity.dependencies.indexOf(d) == -1 && this.functionlist.indexOf(d) == -1) {
                     quantity.dependencies.push(d);
-
+=======
+                if (quantities[qty].parameters.indexOf(d) == -1 && quantities[qty].dependencies.indexOf(d) == -1 && this.reservedwords.indexOf(d) == -1) {
+                    
+                    quantities[qty].dependencies.push(d);
+>>>>>>> development
+                    
                     // It could be that it is used in multiple definitions while being
                     // undefined. Therefore only add it if it's not already there 
                     if (!quantities[d]) {
