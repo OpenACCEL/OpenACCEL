@@ -35,5 +35,28 @@ suite('analyserpass.js', function() {
             var result = analyserpass.getVariables(input);
             assert.deepEqual(result, expResult);
         });
+
+        test('Quantifier', function() {
+            var input = '\#(i, [1,2,3], i * i, add)';
+            var expResult = ['add'];
+            var result = analyserpass.getVariables(input);
+            assert.deepEqual(result, expResult);
+        });
+    });
+
+    suite('getDummies()', function() {
+        test('variables', function() {
+            var input = 'x + y + z';
+            var expResult = [];
+            var result = analyserpass.getDummies(input);
+            assert.deepEqual(result, expResult);
+        });
+
+        test('Quantifier', function() {
+            var input = '\#(i, [1,2,3], i * i, add)';
+            var expResult = ['i'];
+            var result = analyserpass.getDummies(input);
+            assert.deepEqual(result, expResult);
+        });
     });
 });

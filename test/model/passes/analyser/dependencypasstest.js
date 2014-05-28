@@ -27,7 +27,8 @@ suite('dependencypass.js', function() {
             'g = [2, b, x:c]',
             'h = [b, x:[1, y:c, b], 3]',
             'i = b * b',
-            'j = f(a) + sin(1)'
+            'j = f(a) + sin(1)',
+            'k = #(i, [1,2,3], i * i, add)',
         ];
 
         /**
@@ -87,6 +88,13 @@ suite('dependencypass.js', function() {
                 name: 'j',
                 parameters: [],
                 definition: 'j = f(a) + sin(1)',
+                todo: false,
+                reverseDeps: []
+            },
+            k: {
+                name: 'k',
+                parameters: [],
+                definition: 'k = #(i, [1,2,3], i * i, add)',
                 todo: false,
                 reverseDeps: []
             }
@@ -159,7 +167,16 @@ suite('dependencypass.js', function() {
                 definition: 'j = f(a) + sin(1)',
                 todo: false,
                 reverseDeps: []
+            },
+            k: {
+                name: 'k',
+                parameters: [],
+                dependencies: [],
+                definition: 'k = #(i, [1,2,3], i * i, add)',
+                todo: false,
+                reverseDeps: []
             }
+
         };
 
         /**

@@ -29,13 +29,38 @@ define([], /**@lends Model.Passes*/ function() {
         this.regexes = {};
 
 
-        // Regex to get all quantity identifiers that are NOT functions
-        // Warning! to use this regex, keep in mind to look at the capturing groups
+        /**
+         * Regex to get all quantity identifiers that are NOT functions
+         * 
+         * Warning!
+         * This regex has one capturing group
+         * so to get the actual variable name, look at this subgroup,
+         * not at the complete match.
+         * @type {RegExp}
+         */
         this.regexes.identifier = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*[\(:]))/g;
 
-        // Regex to get all quantity identifiers, BOTH functions and others
-        // Warning! to use this regex, keep in mind to look at the capturing groups
+        /**
+         * Regex to get all quantity identifiers, BOTH functions and others
+         * 
+         * Warning!
+         * This regex has one capturing group
+         * so to get the actual variable name, look at this subgroup,
+         * not at the complete match.
+         * @type {RegExp}
+         */
         this.regexes.variables = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*:))/g;
+
+        /**
+         * Regex to get all quantity identifiers, BOTH functions and others
+         * 
+         * Warning!
+         * This regex has one capturing group
+         * so to get the actual variable name, look at this subgroup,
+         * not at the complete match.
+         * @type {RegExp}
+         */
+        this.regexes.dummies = /(?:\#\(\s*)(\w*[a-zA-Z_]\w*)/g;
 
         // Regex to get all quantity identifiers that ARE functions
         this.regexes.function = /(\w+)(?=[(])/g;
