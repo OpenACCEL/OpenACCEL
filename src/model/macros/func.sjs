@@ -18,7 +18,7 @@ macro func {
     } => {
         exe.$x = function($xs (,) ...) {
             // If a quantity is time dependant, look up if there exists a previous version.
-            if (exe.__report__ && exe.__report__.$x.isTimeDependant) {
+            if (true /* exe.__report__ && exe.__report__.$x.isTimeDependant */) {
                 if (exe.$x[exe.__time__] === undefined) {
                     exe.$x[exe.__time__] = $expr;
                 }

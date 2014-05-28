@@ -17,7 +17,8 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/passes/preprocessor/unitpass",
+define(["model/passes/preprocessor/historypass",
+        "model/passes/preprocessor/unitpass",
         "model/passes/preprocessor/operatorpass",
         "model/passes/preprocessor/exepass",
         "model/passes/preprocessor/funcpass",
@@ -27,7 +28,8 @@ define(["model/passes/preprocessor/unitpass",
         "model/passes/preprocessor/ifpass"
     ],
     /**@lends Model*/
-    function(UnitPass,
+    function(HistoryPass,
+        UnitPass,
         OperatorPass,
         ExePass,
         FuncPass,
@@ -44,6 +46,7 @@ define(["model/passes/preprocessor/unitpass",
              * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
              */
             this.passes = [];
+            this.passes.push(new HistoryPass());
             this.passes.push(new NamedVectorPass());
             this.passes.push(new VectorPass());
             this.passes.push(new IfPass());
