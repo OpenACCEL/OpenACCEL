@@ -37,8 +37,8 @@ suite("Foldl", function() {
             eval(fileLoader.getContent());
             var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
             var output = foldl(input, add);
-            var expected = 30;
-            assert.equal(output, expected);
+            var expected = [15, 15];
+            assert.deepEqual(output, expected);
         });
 
         test("foldl(array, function): multiply", function() {
@@ -53,8 +53,8 @@ suite("Foldl", function() {
             eval(fileLoader.getContent());
             var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
             var output = foldl(input, multiply);
-            var expected = 14400;
-            assert.equal(output, expected);
+            var expected = [120, 120];
+            assert.deepEqual(output, expected);
         });
 
         test("foldl(array, function): and", function() {
@@ -69,8 +69,8 @@ suite("Foldl", function() {
             eval(fileLoader.getContent());
             var input = [[true, false], [false, true], [true, false], [false, true], [true, false]];
             var output = foldl(input, and);
-            var expected = false;
-            assert.equal(output, expected);
+            var expected = [false, false];
+            assert.deepEqual(output, expected);
         });
 
         test("foldl(array, function): or", function() {
@@ -85,8 +85,8 @@ suite("Foldl", function() {
             eval(fileLoader.getContent());
             var input = [[true, false], [false, true], [true, false], [false, true], [true, false]];
             var output = foldl(input, or);
-            var expected = true;
-            assert.equal(output, expected);
+            var expected = [true, true];
+            assert.deepEqual(output, expected);
         });
 
         test("foldl(array, function): max", function() {
@@ -101,8 +101,8 @@ suite("Foldl", function() {
             eval(fileLoader.getContent());
             var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
             var output = foldl(input, max);
-            var expected = 5;
-            assert.equal(output, expected);
+            var expected = [5, 5];
+            assert.deepEqual(output, expected);
         });
 
         test("foldl(array, function): min", function() {
@@ -117,8 +117,8 @@ suite("Foldl", function() {
             eval(fileLoader.getContent());
             var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
             var output = foldl(input, min);
-            var expected = 1;
-            assert.equal(output, expected);
+            var expected = [1, 1];
+            assert.deepEqual(output, expected);
         });
     });
 });
