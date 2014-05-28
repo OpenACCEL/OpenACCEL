@@ -341,6 +341,8 @@ SliderInput.prototype.getHTML = function() {
     ';
 };
 SliderInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+
     $('#userslider' + this.identifier).slider(this.properties);
 };
 
@@ -375,6 +377,8 @@ CheckboxInput.prototype.getHTML = function() {
     ';
 };
 CheckboxInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+
     var checkboxinput = this;
     $('#usercheck' + checkboxinput.identifier).on('change',
         function() {
@@ -411,6 +415,8 @@ TextInput.prototype.getHTML = function() {
     ';
 };
 TextInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+
     var textinput = this;
     $('#usertext' + textinput.identifier).on('input',
         function() {
@@ -445,6 +451,8 @@ ButtonInput.prototype.getHTML = function() {
     ';
 };
 ButtonInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+    
     var buttoninput = this;
     $('#userbutton' + buttoninput.identifier).on('mousedown',
         function() {
