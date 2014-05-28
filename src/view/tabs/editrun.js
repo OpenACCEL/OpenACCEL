@@ -103,7 +103,7 @@ function synchronizeScriptList(quantities) {
         if (quantity.category == 1) {
             switch (quantity.input.type) {
                 case 'slider':
-                    addInput(new SliderInput(i, quantity.name, quantity.name, quantity.input.parameters[0], quantity.input.parameters[1], quantity.input.parameters[2]));
+                    addInput(new SliderInput(i, quantity.name, quantity.name, parseInt(quantity.input.parameters[0]), parseInt(quantity.input.parameters[1]), parseInt(quantity.input.parameters[2])));
                     break;
                 case 'check':
                     addInput(new CheckboxInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
@@ -341,7 +341,6 @@ SliderInput.prototype.getHTML = function() {
     ';
 };
 SliderInput.prototype.initialize = function() {
-    console.log(this.properties);
     $('#userslider' + this.identifier).slider(this.properties);
 };
 
