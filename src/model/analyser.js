@@ -127,10 +127,10 @@ define(["model/passes/analyser/quantitypass",
 
                 // If the quantity has no dependencies, it is a category 3 (input) quantity
                 if (qty.dependencies.length == 0) {
-                    qty.input.type = findUserInput(qty.definition);
+                    qty.input.type = this.findUserInput(qty.definition);
                     if (qty.input.type !== null) {
                         quantities[qtyName].category = 1;
-                        qty.input.parameters = findInputParameters(qty.definition, qty.input.type);
+                        qty.input.parameters = this.findInputParameters(qty.definition, qty.input.type);
                     } else {
                         quantities[qtyName].category = 3;
                     }
