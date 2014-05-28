@@ -24,7 +24,8 @@ define(["model/passes/preprocessor/unitpass",
         "model/passes/preprocessor/packagepass",
         "model/passes/preprocessor/vectorpass",
         "model/passes/preprocessor/namedvectorpass",
-        "model/passes/preprocessor/ifpass"
+        "model/passes/preprocessor/ifpass",
+        "model/passes/preprocessor/quantifierpass"
     ],
     /**@lends Model*/
     function(UnitPass,
@@ -34,7 +35,8 @@ define(["model/passes/preprocessor/unitpass",
         PackagePass,
         VectorPass,
         NamedVectorPass,
-        IfPass) {
+        IfPass,
+        QuantifierPass) {
         /**
          * @class
          * @classdesc The pre-processor performs multiple passes over the code for transformation and analysation.
@@ -44,6 +46,7 @@ define(["model/passes/preprocessor/unitpass",
              * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
              */
             this.passes = [];
+            this.passes.push(new QuantifierPass());
             this.passes.push(new NamedVectorPass());
             this.passes.push(new VectorPass());
             this.passes.push(new IfPass());

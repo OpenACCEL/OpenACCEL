@@ -99,7 +99,6 @@ define(["model/fileloader", "model/preprocessor", "model/macroexpander"],
         var code = this.preProcessor.process(script);
         code = this.fileLoader.getLibrary() + code;
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
-
         return {
             report: script.getQuantities(),
             exe: eval(code)
