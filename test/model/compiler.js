@@ -97,4 +97,17 @@ suite("Compiler", function() {
         })
 
     });
+
+    suite("History Tests", function() {
+
+        test('default settings t = t{1} + 1', function() {
+            var code = 't = t{1} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            assert.deepEqual(output.exe.t(), expected);
+            output.exe.step();
+            assert.deepEqual(output.exe.t(), expected + 1);
+
+        });
+    });
 });
