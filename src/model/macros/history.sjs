@@ -1,6 +1,6 @@
 macro __history__ {
     rule {
-        ($quantity:ident, $time:expr)
+        (exe.$quantity:ident(), $time:expr)
     } => {
         (function() {
             var historyValue = exe.$quantity[exe.__time__ - $time];

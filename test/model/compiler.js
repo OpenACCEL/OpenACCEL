@@ -100,14 +100,23 @@ suite("Compiler", function() {
 
     suite("History Tests", function() {
 
-        test('default settings t = t{1} + 1', function() {
-            var code = 't = t{1} + 1';
+        test('default settings t = t{1 + 1} + 1', function() {
+            var code = 't = t{1 + 1} + 1';
             var output = compiler.compile(new Script(code));
             var expected = 1;
-            assert.deepEqual(output.exe.t(), expected);
+            assert.equal(output.exe.t(), expected);
             output.exe.step();
-            assert.deepEqual(output.exe.t(), expected + 1);
+            assert.equal(output.exe.t(), expected);
+        });
 
+        test('default settings t = t{1 + b} + 1 \n b = b{0} + 1', function() {
+            var code = 't = t{0 + b} + 1 \n b = b{0} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            for (var i = 0; i < 1000; i++) {
+                assert.equal(output.exe.t(), expected + i);
+                output.exe.step();       
+            };
         });
     });
 });
