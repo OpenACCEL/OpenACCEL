@@ -10,10 +10,7 @@ inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
-    sweetModule = 'sweet.js';
 } else {
-    sweetModule = 'sweet';
-
     require.config({
         shim: {
             'underscore': {
@@ -37,7 +34,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * @param script {Script} The script that the controller should manage and execute.
      * @param compiler {Compiler} The compiler that should be used to compile the script.
      */
-    function Controller(view, script, compiler) {
+    function Controller(view) {
         /**
          * The view with which the controller will communicate 
          * to present the results and data.
@@ -56,23 +53,14 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          *
          * @type {Compiler}
          */
-        if (typeof compiler !== 'undefined') {
-            this.compiler = compiler;
-        } else {
-            this.compiler = new Compiler();
-        }
-        
+        this.compiler = new Compiler();
 
         /**
          * The script that this Controller will manage and execute.
          *
          * @type {Script}
          */
-        if (typeof script !== 'undefined') {
-            this.script = script;
-        } else {
-            this.script = new Script();
-        }
+        this.script = new Script();
 
         /**
          * The number of iterations that the script should perform.
@@ -169,7 +157,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             this.stop();
             return;
         }
-        
+
         this.presentResults(this.script.getOutputQuantities());
 
         if (this.numIterations > 0) {

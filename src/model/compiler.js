@@ -12,6 +12,11 @@ if (inNode) {
     require = require('requirejs');
 } else {
     require.config({
+        shim: {
+            'underscore': {
+                exports: '_'
+            }
+        },
         baseUrl: "scripts"
     });
 }
@@ -19,11 +24,13 @@ if (inNode) {
 
 define(["model/fileloader",
         "model/preprocessor",
-        "model/macroexpander"
+        "model/macroexpander",
+        "underscore"
     ], /**@lends Model*/
     function(FileLoader,
         PreProcessor,
-        MacroExpander) {
+        MacroExpander,
+        _) {
         /**
          * @class
          * @classdesc The compiler takes code as input, and outputs an executable and report when compiling.
@@ -91,6 +98,16 @@ define(["model/fileloader",
             this.fileLoader.load("not", "library");
             this.fileLoader.load("notEqual", "library");
             this.fileLoader.load("or", "library");
+
+            /**
+             * Contains the quantities for which the history has been checked
+             */
+            this.historyChecked = [];
+
+            /**
+             * The total number of quantities in the script being compiled.
+             */
+            this.totalNumQuantities = 0;
         }
 
         /**
@@ -100,6 +117,9 @@ define(["model/fileloader",
          * @return {Object}         An object, containing an executable and information.
          */
         Compiler.prototype.compile = function(script) {
+            // Determine all time-dependent quantities
+            this.determineTimeDependencies(script.getQuantities());
+
             // Pre-process and expand.
             var code = this.preProcessor.process(script);
             code = this.fileLoader.getLibrary() + code;
@@ -112,6 +132,62 @@ define(["model/fileloader",
                 report: script.getQuantities(),
                 exe: exe
             };
+        };
+
+        /**
+         * Flags all time-dependent quantities as such
+         *
+         * @param quantities The set of quantities to analyse.
+         */
+        Compiler.prototype.determineTimeDependencies = function(quantities) {
+            this.historyChecked = [];
+            this.totalNumQuantities = _.size(quantities);
+
+            var historyQuantities = this.getTimeDependentQuantities(quantities);
+            for (var qty in historyQuantities) {
+                this.setTimeDependent(historyQuantities[qty], true, quantities);
+            }
+        };
+
+        /**
+         * Recursively sets whether the given quantity, and all quantities depending on it,
+         * are time-dependent. 
+         *
+         * @param {Quantity} quantity The quantity to use as starting point. All of it's reverse dependencies, if any, are checked recursively.
+         * @param {Boolean} timeDependent Whether to mark quantity and it's reverse dependencies as time dependent or not.
+         */
+        Compiler.prototype.setTimeDependent = function(quantity, timeDependent, quantities) {
+            // Base case: if all quantities have been checked
+            if (_.size(this.historyChecked) == this.totalNumQuantities || quantity.name in this.historyChecked) {
+                return;
+            }
+
+            quantity.isTimeDependent = timeDependent;
+            for (var dep in quantity.reverseDeps) {
+                this.determineTimeDependencies(quantities[quantity.reverseDeps[dep]], timeDependent);
+            }
+
+            this.historyChecked.push(quantity.name);
+        };
+
+        /**
+         * Returns all quantities in the given set marked as time-dependent right now.
+         *
+         * @param quantities The set of quantities out of which to extract all time-
+         * dependent quantities
+         * @return A map of all time-dependent quantities in quantities, keyed by quantity
+         * name.
+         */
+        Compiler.prototype.getTimeDependentQuantities = function(quantities) {
+            var tdquantities = {};
+
+            for (var qtyName in quantities) {
+                if (quantities[qtyName].isTimeDependent) {
+                    tdquantities[qtyName] = quantities[qtyName];
+                }
+            }
+
+            return tdquantities;
         };
 
         // Exports all macros.
