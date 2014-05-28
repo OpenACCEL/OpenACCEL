@@ -25,6 +25,7 @@ function deleteQuantity(quantity) {
 }
 
 var linenr = 0;
+
 function addQuantity(string) {
     var split = string.split('=');
 
@@ -56,7 +57,7 @@ function toggleExecution(action) {
 }
 
 function newScript() {
-    if(confirm("Are you sure you want to stop your current script and delete all existing script lines? It can not be undone.")) {
+    if (confirm("Are you sure you want to stop your current script and delete all existing script lines? It can not be undone.")) {
         controller.reset();
         // setRunning(false);
     }
@@ -99,15 +100,19 @@ function synchronizeScriptList(quantities) {
 
         //User Input
         if (quantity.category == 1) {
-            switch(quatity.input.type) {
+            switch (quantity.input.type) {
                 case 'slider':
-                    addInput(new SliderInput(i, quantity.name, quantity.name, input.parameters[0], input.parameters[1], input.parameters[2]))
+                    console.log(':D');
+                    var s = new SliderInput(i, quantity.name, quantity.name, quantity.input.parameters[0], quantity.input.parameters[1], quantity.input.parameters[2]);
+                    console.log(s);
+                    addInput(s);
+                    console.log(userinputBuffer);
                     break;
                 case 'check':
-                    addInput(new CheckboxInput(i, quantity.name, quantity.name, input.parameters[0]));
+                    addInput(new CheckboxInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
                     break;
                 case 'button':
-                    addInput(new ButtonInput(i, quantity.name, quantity.name, input.parameters[0]));
+                    addInput(new ButtonInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
                     break;
                 case 'text':
                     addInput(new TextInput(i, quantity.name, quantity.name));
@@ -140,7 +145,7 @@ function synchronizeResults(quantities) {
 
         try {
             Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
     }
