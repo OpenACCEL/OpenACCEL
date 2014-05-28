@@ -200,18 +200,18 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
                         // We are the only quantity depending on it, so delete it
                         delete this.quantities[d];
                     } else {
-                        // Remove us from reverse-dependency list
-                        _.without(this.quantities[d].reverseDeps, qtyName);
+                        // Remove us from reverse-dependency array
+                        this.quantities[d].reverseDeps = _.without(this.quantities[d].reverseDeps, qtyName);
                     }
                 } else {
-                    // Remove us from reverse-dependency list
-                    _.without(this.quantities[d].reverseDeps, qtyName);
+                    // Remove us from reverse-dependency array
+                    this.quantities[d].reverseDeps = _.without(this.quantities[d].reverseDeps, qtyName);
                 }
             }).bind(this));
 
             // Step 2: Mark this quantity as todo or remove it from the script entirely
             // depending on whether it has any reverse dependencies
-            if (_.size(dep.reverseDeps) > 0) {
+            if (_.size(delqty.reverseDeps) > 0) {
                 this.quantities[qtyName].markAsTodo();
             } else {
                 delete this.quantities[qtyName];
