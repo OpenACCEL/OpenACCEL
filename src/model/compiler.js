@@ -91,6 +91,11 @@ define(["model/fileloader",
             this.fileLoader.load("not", "library");
             this.fileLoader.load("notEqual", "library");
             this.fileLoader.load("or", "library");
+
+            this.fileLoader.load("random", "library");
+            this.fileLoader.load("bin", "library");
+            this.fileLoader.load("fact", "library");
+            this.fileLoader.load("poisson", "library");
         }
 
         /**
