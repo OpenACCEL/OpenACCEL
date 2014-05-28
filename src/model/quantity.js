@@ -92,7 +92,7 @@ define([], /**@lends Model*/ function() {
          * @type {String}
          */
         this.comment = '';
-        
+
         /**
          * Whether this quantity has an empty definition. If true, it should be displayed
          * in the todo list.
@@ -117,6 +117,12 @@ define([], /**@lends Model*/ function() {
          * @type {String}
          */
         this.source = '';
+
+
+        this.input = {
+            type: null,
+            parameters: []
+        };
     }
 
     /**
@@ -161,12 +167,12 @@ define([], /**@lends Model*/ function() {
      *
      * @param {Boolean} includeUnits Whether to include the unit in the string representation
      * @param {Boolean} includeComments Whether to include the comment in the string representation
-     * @return {String} The script line corresponding to this quantity, optionally with 
+     * @return {String} The script line corresponding to this quantity, optionally with
      * unit and comment
      */
     Quantity.prototype.toString = function(includeUnits, includeComments) {
         var def = this.LHS + '=' + this.definition;
-        
+
         if (includeUnits && this.unit != '') {
             def += ' ; ' + this.unit;
         }
