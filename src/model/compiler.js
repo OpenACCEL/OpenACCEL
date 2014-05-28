@@ -75,7 +75,8 @@ define(["model/fileloader",
             this.fileLoader.load("log", "library");
             this.fileLoader.load("modulo", "library");
             this.fileLoader.load("sum", "library");
-
+            
+            this.fileLoader.load("random", "library");
         }
 
         /**

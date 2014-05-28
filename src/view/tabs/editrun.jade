@@ -62,13 +62,11 @@
         #userinputdiv
             .label User input
             #userinput.group
-            //- script.
-            //-     for (var i = 0; i < 4; i++) {
-            //-         console.log(i);
-            //-         var slider = new SliderInput(i, null, 'Slider', i%4,0,10);
-            //-         console.log(slider);
-            //-         addInput(slider);
-            //-     }
+            script.
+                addInput(new SliderInput(0, 'test', 'Slider', 0,0,10));
+                addInput(new CheckboxInput(1, 'test', 'Checkbox'));
+                addInput(new TextInput(2, 'test', 'Text'));
+                addInput(new ButtonInput(3, 'test', 'Button'));
 
     .inline100
         #resultdiv

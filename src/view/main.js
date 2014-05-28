@@ -19,7 +19,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
      * currently in the model, including todo quantities with empty
      * definitions.
      */
-    View.prototype.setQuantities = function(quantities) { 
+    View.prototype.setQuantities = function(quantities) {
         synchronizeScriptList(quantities);
     };
 
