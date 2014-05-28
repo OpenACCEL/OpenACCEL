@@ -24,7 +24,7 @@ suite("Func Macro", function() {
             var expected =
             "exe.x = function () {"                                                                 +
             "\n    // If a quantity is time dependant, look up if there exists a previous version." +
-            "\n    if (exe.__report__ && exe.__report__.x.isTimeDependant) {"                       +
+            "\n    if (true) {"                       +
             "\n        if (exe.x[exe.__time__] === undefined) {"                                    +
             "\n            exe.x[exe.__time__] = 5;"                                                +
             "\n        }"                                                                           +
@@ -45,7 +45,7 @@ suite("Func Macro", function() {
             var expected =
             "exe.z = function () {"                                                                 +
             "\n    // If a quantity is time dependant, look up if there exists a previous version." +
-            "\n    if (exe.__report__ && exe.__report__.z.isTimeDependant) {"                       +
+            "\n    if (true) {"                       +
             "\n        if (exe.z[exe.__time__] === undefined) {"                                    +
             "\n            exe.z[exe.__time__] = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);"     +
             "\n        }"                                                                           +
@@ -68,7 +68,7 @@ suite("Func Macro", function() {
             var expected =
             "exe.x = function (a, b) {"                                                             +
             "\n    // If a quantity is time dependant, look up if there exists a previous version." +
-            "\n    if (exe.__report__ && exe.__report__.x.isTimeDependant) {"                       +
+            "\n    if (true) {"                       +
             "\n        if (exe.x[exe.__time__] === undefined) {"                                    +
             "\n            exe.x[exe.__time__] = 5;"                                                +
             "\n        }"                                                                           +
@@ -89,7 +89,7 @@ suite("Func Macro", function() {
             var expected =
             "exe.z = function (a, b) {"                                                             +
             "\n    // If a quantity is time dependant, look up if there exists a previous version." +
-            "\n    if (exe.__report__ && exe.__report__.z.isTimeDependant) {"                       +
+            "\n    if (true) {"                       +
             "\n        if (exe.z[exe.__time__] === undefined) {"                                    +
             "\n            exe.z[exe.__time__] = a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);" +
             "\n        }"                                                                           +
