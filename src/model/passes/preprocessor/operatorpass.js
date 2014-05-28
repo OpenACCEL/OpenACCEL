@@ -21,7 +21,7 @@ if (inNode) {
 define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Preprocessor*/ function(CompilerPass) {
     /**
      * @class
-     * @classdesc Class that replaces a binary operator in the right hand side of a definitions 
+     * @classdesc Class that replaces a binary operator in the right hand side of a definitions
      * by ' _operator_ ' (including spaces), so it can be processed properly by sweet.
      */
     function OperatorPass() {
@@ -35,8 +35,8 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
     OperatorPass.prototype = new CompilerPass();
 
 
-     /**
-     * Replaces a binary operator in the right hand side of a definitions 
+    /**
+     * Replaces a binary operator in the right hand side of a definitions
      * by ' _operator_ ' (including spaces).
      *
      * @param {String[]}    scriptLines Array with script lines.
@@ -50,7 +50,6 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
     OperatorPass.prototype.parse = function(scriptLines, report) {
         // Preconsition checking.
         CompilerPass.prototype.parse.call(this, scriptLines, report);
-
         var result = scriptLines.map((function(line) {
             // This inner function replaces the binary operator in a single line.
 
@@ -60,7 +59,26 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
             // Replace the operators.
             // We *need* to add spaces, because sweet otherwise gives an error.
             newrhs = newrhs.replace(this.operatorRegex, function(op) {
-                return ' _' + op + '_ ';
+                switch (op) {
+                    case '+':
+                        op = 'add';
+                        break;
+                    case '-':
+                        op = 'subtract';
+                        break;
+                    case '*':
+                        op = 'multiply';
+                        break;
+                    case '/':
+                        op = 'divide';
+                        break;
+                    case '%':
+                        op = 'modulo';
+                        break;
+                    default:
+                        throw new Error('operator unknown');
+                }
+                return ' __' + op + '__ ';
             });
 
             return line.replace(this.getRHS(line), newrhs);

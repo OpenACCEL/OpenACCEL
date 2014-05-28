@@ -52,8 +52,15 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
         var lhs = this.getLHS(line);
         var rhs = this.getRHS(line);
 
-        // Get all variable names from the left hand side
-        var vars = lhs.match(this.regexes.varNames);
+        // get all variable names from the left hand side
+        var vars = this.getVariables(lhs);
+
+		// Create quantities if it doesn't already exist
+        if (!quantities) {
+            quantities = {};
+        }
+
+        // first entry in vars is the quantity name
         var qtyName = vars[0];
         var qty;
 

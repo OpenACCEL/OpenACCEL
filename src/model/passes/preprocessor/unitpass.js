@@ -39,7 +39,7 @@ define(["model/passes/preprocessor/compilerpass"], /**@lends Model.Passes.Prepro
             }
             var result = this.getLHS(line) + // left hand side
             ' = ' +
-                this.getRHS(this.getRHS(line)) + // translated right hand side
+                this.getRHS(line) + // translated right hand side
             ((units) ? ' ; ' + units : ''); // units if needed
             lines.push(result);
         }

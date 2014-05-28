@@ -32,7 +32,25 @@ suite("vectorpass.js", function() {
 
             var resultScript = ['a = [1,2,x:3]', 'y = a[0] + a.x', 'z = a[1]', 'p = a.x']
             assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
-        })
+        });
+
+        test('parse() : a = [1, 2, b.0], b = [4, 6, 7]', function() {
+            var exScript = ['a = [1, 2, b.0]', 'b = [4, 6, 7]'];
+            var resultScript = ['a = [1, 2, b[0]]', 'b = [4, 6, 7]'];
+            assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
+        });
+
+        test('parse() : a = [1, 2, b[0]], b = [4, 6, 7]', function() {
+            var exScript = ['a = [1, 2, b[0]]', 'b = [4, 6, 7]'];
+            var resultScript = ['a = [1, 2, b[0]]', 'b = [4, 6, 7]'];
+            assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
+        });
+
+        test('parse() : a = [1 + 10, b[1 + 2], c[x:2, y:3, 5], b[0, 2, y:3, t5: 4, 6, 3, o93e: 0, 5]', function() {
+            var exScript = ['a = [1 + 10, b[1 + 2]]', 'c = [x:2, y:3, a.1]', 'b[0, 2, y:3, t5: c.0, 6, 3, o93e: 0, 5]'];
+            var resultScript = ['a = [1 + 10, b[1 + 2]]', 'c = [x:2, y:3, a[1]]', 'b[0, 2, y:3, t5: c[0], 6, 3, o93e: 0, 5]'];
+            assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
+        });
 
         /** Test dotToBrackets().
          * Basic transformation

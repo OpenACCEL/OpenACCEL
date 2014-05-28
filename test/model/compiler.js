@@ -3,7 +3,7 @@ suite("Compiler", function() {
     var assert;
     var Script;
 
-    setup(function (done) {
+    setup(function(done) {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/script"], function(assertModule, module, scriptModule) {
@@ -69,6 +69,64 @@ suite("Compiler", function() {
             var expected = [7];
             expected.x = 17;
             assert.deepEqual(output.exe.y(), expected);
+        });
+
+        test('default settings, a = [1,2,3]\n c = [1+1,2,3,a[0] +2] ', function() {
+            var code = 'a = [1,2,3]\n c = [1 + 1, 2, 3, a[1] + 2]';
+            var output = compiler.compile(new Script(code));
+            var expected = [2, 2, 3, 4];
+            assert.deepEqual(output.exe.c(), expected);
+        });
+
+        test('default settings a = [1 + 10, b[1 + 2]]\n  c = [x:2, y:3, a.1]\n b = [0, 2, y:3, t5: c.0, 6, 3, o93e: 0, 5]', function() {
+            var code = 'a = [1 + 10, b[1 + 2]]\n c = [x:2, y:3, p: a.0] \n b = [0, 2, y:3, t5: 4, 7, g6h: 6, o93e: 0, 5]';
+            var output = compiler.compile(new Script(code));
+            var expected = {
+                x: 2,
+                y: 3,
+                p: 11
+            };
+            assert.deepEqual(output.exe.c(), expected);
+        });
+
+        test('default settings a = [1 + 10, b[1 + 2]]\n  c = [x:2, y:3, a.1]\n b = [0, 2, y:3, t5: c.0, 6, 3, o93e: 0, 5]', function() {
+            var code = 'a = [1 + 10, b[1 + 2]]\n c = [x:2, y:3, p: a.0] \n b = [0, 2, y:3, t5: 4, 7, g6h: 6, o93e: 0, 5]\n d = b + a';
+            var output = compiler.compile(new Script(code));
+            var expected = [11, 7];
+            assert.deepEqual(output.exe.d(), expected);
+        })
+
+    });
+
+    suite("History Tests", function() {
+
+        test('default settings t = t{1 + 1} + 1', function() {
+            var code = 't = t{1 + 1} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            assert.equal(output.exe.t(), expected);
+            output.exe.step();
+            assert.equal(output.exe.t(), expected);
+        });
+
+        test('default settings t = t{1 + b} + 1 \n b = b{0} + 1', function() {
+            var code = 't = t{0 + b} + 1 \n b = b{0} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            for (var i = 0; i < 1000; i++) {
+                assert.equal(output.exe.t(), expected + i);
+                output.exe.step();       
+            };
+        });
+
+        test('default settings t = t{1 + b} + 1 \n b = b{0} + 1', function() {
+            var code = 't = t{0 + b} + 1 \n b = b{0} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            for (var i = 0; i < 1000; i++) {
+                assert.equal(output.exe.t(), expected + i);
+                output.exe.step();       
+            };
         });
     });
 });

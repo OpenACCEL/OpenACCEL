@@ -19,6 +19,11 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(['model/compiler'], /**@lends Model*/ function(Compiler) {
+    // List of keywords which may not be altered by passes or macros.
+    var keywords = [
+        'true',
+        'false'
+    ];
 
     /**
      * Object keeping the track of the list of 'reserved' functions.
@@ -44,6 +49,12 @@ define(['model/compiler'], /**@lends Model*/ function(Compiler) {
             while (match = pattern.exec(macro)) {
                 this.list.push(match[1]);
             }
+
+            // Add additional keywords.
+            for (var i = keywords.length - 1; i >= 0; i--) {
+                this.list.push(keywords[i]);
+            }
+
         },
 
         /**

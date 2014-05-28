@@ -37,7 +37,7 @@ define(["model/passes/preprocessor/compilerpass"], /**@lends Model.Passes.Prepro
         // Precondition check
         CompilerPass.prototype.parse.call(this, scriptLines, report);
 
-        scriptLines.unshift("(function () { exe = {}; ");
+        scriptLines.unshift("(function () { exe = {}; exe.__time__ = 0; exe.step = function() { this.__time__++; };");
         scriptLines.push("return exe; })()");
 
         return scriptLines;

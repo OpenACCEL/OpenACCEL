@@ -42,4 +42,4 @@ The follow scripts can all be invoked using `npm run`:
 **A**: With Jade we are able to split the view into different modules. By creating a view for each tab, it is possible to combine all tabs into a single HTML page, such that the user does not have to crawl through different URLs, and to remain as close as possible to the implementation of ACCEL of which this library is based.
 
 ## License ##
-The license is to be determined.
+[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
