@@ -41,7 +41,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/functionL
      * @param quantities {Object} The current quantities in the script.
      * @return A Quantity object with filled in dependency information/data.
      */
-    DependencyPass.prototype.analyse = function(line, quantities) {
+    DependencyPass.prototype.analyse = function(line, quantity, quantities) {
         // Reset quantities array
         quantity.dependencies = [];
 
