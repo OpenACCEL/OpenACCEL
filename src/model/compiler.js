@@ -103,7 +103,6 @@ define(["model/fileloader",
             // Pre-process and expand.
             var code = this.preProcessor.process(script);
             code = this.fileLoader.getLibrary() + code;
-            console.log(code);
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
             return {
