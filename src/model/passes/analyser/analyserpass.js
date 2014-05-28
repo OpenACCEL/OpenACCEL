@@ -61,14 +61,34 @@ define(['model/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
      * @return {Sting[]}     Array of quantity names
      */
     AnalyserPass.prototype.getVariables = function(s) {
-        var regex = new RegExp(this.regexes.variables);
-        var output = [];
+        var regexvar = new RegExp(this.regexes.variables);
+        
+        var dummies = this.getDummies(s); // determine dummies
         var match;
-        while (match = regex.exec(s)) {
-            output.push(match[1]);
+        var output = [];
+        while (match = regexvar.exec(s)) {
+            if (dummies.indexOf(match[1]) == -1) {
+                output.push(match[1]);
+            }
         }
         return output;
-    }
+    };
+
+    /**
+     * Extracts all dummy variables (the ones in quantified expressions), from the given string
+     * @param  {String} def String to get the dummies from
+     * @return {Sting[]}     Array of quantity names
+     */
+    AnalyserPass.prototype.getDummies = function(s) {
+        var regexdum = new RegExp(this.regexes.dummies);
+        var dummies = []; // determine dummies
+        var match;
+        while (match = regexdum.exec(s)) {
+            dummies.push(match[1]);
+        }
+
+        return dummies;
+    };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return AnalyserPass;

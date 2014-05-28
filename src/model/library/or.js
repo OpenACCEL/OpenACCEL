@@ -3,3 +3,5 @@ function or(x, y) {
         return (x || y);
     });
 }
+
+or.base = false;
