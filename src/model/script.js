@@ -136,7 +136,7 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
                 'script not compiled because incomplete')
             }
 
-            return eval("this.exe." + qtyName + "();");
+            return this.exe[qtyName]();
         },
 
         /**
