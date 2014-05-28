@@ -43,59 +43,12 @@ define(["model/fileloader",
              * The file loader is reponsible for loading all files, like macros and library functions.
              */
             this.fileLoader = new FileLoader();
-            this.fileLoader.load("func");
-            this.fileLoader.load("operators");
-            this.fileLoader.load("cond");
-            this.fileLoader.load("history");
 
-            this.fileLoader.load("map", "library");
-            this.fileLoader.load("zip", "library");
-            this.fileLoader.load("nzip", "library");
+            this.fileLoader.load("cond", "macros");
+            this.fileLoader.load("func", "macros");
+            this.fileLoader.load("operators", "macros");
 
-            this.fileLoader.load("add", "library");
-            this.fileLoader.load("subtract", "library");
-            this.fileLoader.load("multiply", "library");
-            this.fileLoader.load("divide", "library");
-
-            this.fileLoader.load("sin", "library");
-            this.fileLoader.load("cos", "library");
-            this.fileLoader.load("tan", "library");
-            this.fileLoader.load("pow", "library");
-            this.fileLoader.load("sqrt", "library");
-            this.fileLoader.load("abs", "library");
-            this.fileLoader.load("ceil", "library");
-            this.fileLoader.load("floor", "library");
-            this.fileLoader.load("round", "library");
-            this.fileLoader.load("max", "library");
-            this.fileLoader.load("min", "library");
-            this.fileLoader.load("acos", "library");
-            this.fileLoader.load("asin", "library");
-            this.fileLoader.load("atan", "library");
-            this.fileLoader.load("atan2", "library");
-            this.fileLoader.load("exp", "library");
-            this.fileLoader.load("ln", "library");
-            this.fileLoader.load("log", "library");
-            this.fileLoader.load("modulo", "library");
-            this.fileLoader.load("sum", "library");
-
-            this.fileLoader.load("random", "library");
-            this.fileLoader.load("__if__", "library");
-
-            this.fileLoader.load("and", "library");
-            this.fileLoader.load("equal", "library");
-            this.fileLoader.load("greaterThan", "library");
-            this.fileLoader.load("greaterThanEqual", "library");
-            this.fileLoader.load("imply", "library");
-            this.fileLoader.load("lessThan", "library");
-            this.fileLoader.load("lessThanEqual", "library");
-            this.fileLoader.load("not", "library");
-            this.fileLoader.load("notEqual", "library");
-            this.fileLoader.load("or", "library");
-
-            this.fileLoader.load("random", "library");
-            this.fileLoader.load("bin", "library");
-            this.fileLoader.load("fact", "library");
-            this.fileLoader.load("poisson", "library");
+            this.fileLoader.load("functions", "library");
         }
 
         /**

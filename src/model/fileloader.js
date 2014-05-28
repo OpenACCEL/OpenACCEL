@@ -50,16 +50,24 @@ define(["module", fileModule], /**@lends Model*/ function(module, fs) {
         var location;
         var extension;
 
-        if (type && type == "library") {
-            location = "library";
-            extension = ".js";
-        } else if (type && type == "test") {
-            location = "../../test/model/util";
-            extension = ".js";
-        } else {
-            type = "macros";
-            location = "macros";
-            extension = ".sjs";
+        switch (type) {
+            case "library":
+                location = "library";
+                extension = ".js";
+                break;
+            case "macros":
+                location = "macros";
+                extension = ".sjs";
+                break;
+            case "test":
+                location = "../../test/model/util";
+                extension = ".js";
+                break;
+            default:
+                type = "library";
+                location = "library";
+                extension = ".js";
+                break;
         }
 
         // TODO: Write test cases for the browser. This is now being tested manually.

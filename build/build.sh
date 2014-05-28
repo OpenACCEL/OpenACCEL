@@ -78,9 +78,14 @@ deploy() {
     # Generating monofunc library functions.
     node ./utils/monofuncgenerator.js ./src/model/library
 
+    # Generate single file containing all functions.
+    rm src/model/library/functions.js
+    cat src/model/library/* > src/model/library/functions.js
+
     # Copy scripts.
     cp -r src/* bin/scripts
-    find bin/scripts -type f ! -regex ".*\.s?js" -exec rm {} \;
+    find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
+    find bin/scripts/model/library -type f -not -name "functions.js" -exec rm {} \;
 
     # Copy images.
     cp -r src/view/img bin/img/

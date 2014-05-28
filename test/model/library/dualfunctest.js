@@ -12,7 +12,7 @@ suite("Dualfunc", function() {
             assert = assertModule;
             compiler = new module();
             var fileLoader = new FileLoader();
-            fileLoader.load("func");
+            fileLoader.load("func", "macros");
             fileLoader.load("sin", "library");
             macros = fileLoader.getContent();
             Script = scriptModule;

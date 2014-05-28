@@ -25,7 +25,7 @@ suite("Macro Expander", function() {
 
         test("should equal 6", function() {
             var code = "(function() { var test = function() { return add(5); }; x = {}; x.test1 = test; return x; })();";
-            fileLoader.load("testAdd");
+            fileLoader.load("testAdd", "macros");
             var output = eval(macroExpander.expand(code, fileLoader.getMacros()));
             assert.equal(6, output.test1());
         });

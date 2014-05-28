@@ -11,7 +11,7 @@ suite("Func Macro", function() {
             assert = assertModule;
             macroExpander = new module();
             var fileLoader = new FileLoader();
-            fileLoader.load("func");
+            fileLoader.load("func", "macros");
             macros = fileLoader.getMacros();
             done();
         });
