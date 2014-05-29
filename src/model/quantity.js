@@ -154,6 +154,11 @@ define([], /**@lends Model*/ function() {
         this.comment = '';
         this.value = 0;
         this.source = this.name + '=';
+        this.isTimeDependent = false;
+        this.input = {
+            type: null,
+            parameters: []
+        };
     }
 
     /**

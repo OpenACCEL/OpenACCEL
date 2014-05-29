@@ -72,7 +72,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
 
-            // Remove the 
+            // Remove the redefined quantity from reverse dependencies
             for (var dep in qty.dependencies) {
                 quantities[qty.dependencies[dep]].reverseDeps = _.without(quantities[qty.dependencies[dep]].reverseDeps, qtyName);
             }
@@ -81,7 +81,9 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
             if (qty.definition.indexOf("{") >= 0) {
                 qty.isTimeDependent = true;
             }
-        } else {
+        } 
+
+        else {
             // Create new quantity and add it to the quantities
             qty = new Quantity();
             qty.name = qtyName;

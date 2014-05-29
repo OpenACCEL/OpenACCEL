@@ -47,6 +47,13 @@ define(["model/fileloader",
             this.macroExpander = new MacroExpander();
 
             /**
+             * All the quantities in the script to be compiled.
+             *
+             * @type {Map<String, Quantity>}
+             */
+            this.quantities = null;
+
+            /**
              * The file loader is reponsible for loading all files, like macros and library functions.
              */
             this.fileLoader = new FileLoader();
@@ -117,8 +124,10 @@ define(["model/fileloader",
          * @return {Object}         An object, containing an executable and information.
          */
         Compiler.prototype.compile = function(script) {
+            this.quantities = script.getQuantities();
+
             // Determine all time-dependent quantities
-            this.determineTimeDependencies(script.getQuantities());
+            this.determineTimeDependencies();
 
             // Pre-process and expand.
             var code = this.preProcessor.process(script);
@@ -135,17 +144,17 @@ define(["model/fileloader",
         };
 
         /**
-         * Flags all time-dependent quantities as such
+         * Flags all time-dependent quantities in this.quantities as such
          *
-         * @param quantities The set of quantities to analyse.
+         * @modifies this.quantities
          */
-        Compiler.prototype.determineTimeDependencies = function(quantities) {
+        Compiler.prototype.determineTimeDependencies = function() {
             this.historyChecked = [];
-            this.totalNumQuantities = _.size(quantities);
+            this.totalNumQuantities = _.size(this.quantities);
 
-            var historyQuantities = this.getTimeDependentQuantities(quantities);
+            var historyQuantities = this.getTimeDependentQuantities();
             for (var qty in historyQuantities) {
-                this.setTimeDependent(historyQuantities[qty], true, quantities);
+                this.setTimeDependent(historyQuantities[qty], true);
             }
         };
 
@@ -156,34 +165,37 @@ define(["model/fileloader",
          * @param {Quantity} quantity The quantity to use as starting point. All of it's reverse dependencies, if any, are checked recursively.
          * @param {Boolean} timeDependent Whether to mark quantity and it's reverse dependencies as time dependent or not.
          */
-        Compiler.prototype.setTimeDependent = function(quantity, timeDependent, quantities) {
+        Compiler.prototype.setTimeDependent = function(quantity, timeDependent) {
             // Base case: if all quantities have been checked
-            if (_.size(this.historyChecked) == this.totalNumQuantities || quantity.name in this.historyChecked) {
+            if (this.historyChecked.indexOf(quantity.name) >= 0) {
+                //console.log(quantity.name + " already checked");
                 return;
             }
 
             quantity.isTimeDependent = timeDependent;
+            this.historyChecked.push(quantity.name);
+            //console.log ("Starting " + quantity.name);
             for (var dep in quantity.reverseDeps) {
-                this.determineTimeDependencies(quantities[quantity.reverseDeps[dep]], timeDependent);
+                //console.log("Going to dependency " + this.quantities[quantity.reverseDeps[dep]].name);
+                this.setTimeDependent(this.quantities[quantity.reverseDeps[dep]], timeDependent);
             }
 
-            this.historyChecked.push(quantity.name);
+            //console.log ("Finished " + quantity.name);
+            //console.log ("History log: " + this.historyChecked);
         };
 
         /**
-         * Returns all quantities in the given set marked as time-dependent right now.
+         * Returns all quantities in this.quantities marked as time-dependent
          *
-         * @param quantities The set of quantities out of which to extract all time-
-         * dependent quantities
-         * @return A map of all time-dependent quantities in quantities, keyed by quantity
+         * @return A map of all time-dependent quantities in this.quantities, keyed by quantity
          * name.
          */
-        Compiler.prototype.getTimeDependentQuantities = function(quantities) {
+        Compiler.prototype.getTimeDependentQuantities = function() {
             var tdquantities = {};
 
-            for (var qtyName in quantities) {
-                if (quantities[qtyName].isTimeDependent) {
-                    tdquantities[qtyName] = quantities[qtyName];
+            for (var qtyName in this.quantities) {
+                if (this.quantities[qtyName].isTimeDependent) {
+                    tdquantities[qtyName] = this.quantities[qtyName];
                 }
             }
 
