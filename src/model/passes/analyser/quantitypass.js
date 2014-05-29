@@ -79,7 +79,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
 
             // Remove the 
             for (var dep in qty.dependencies) {
-                quantities[dep].reverseDeps = _.without(quantities[dep].reverseDeps, qtyName);
+                quantities[qty.dependencies[dep]].reverseDeps = _.without(quantities[qty.dependencies[dep]].reverseDeps, qtyName);
             }
         } else {
             // Create new quantity and add it to the quantities
