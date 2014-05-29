@@ -67,8 +67,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/reservedw
                 // is local to this definition and if not, add it as a dependency. Also, a single
                 // variable can occur multiple times in the rhs of a definition. Check this
                 // as well.
-                if (quantity.parameters.indexOf(d) == -1 && quantity.dependencies.indexOf(d) == -1 && this.reservedwords.indexOf(d) == -1
-                    && quantity.name != d) {
+                if (quantity.parameters.indexOf(d) == -1 && quantity.dependencies.indexOf(d) == -1 && this.reservedwords.indexOf(d) == -1) {
                     quantity.dependencies.push(d);
 
                     // It could be that it is used in multiple definitions while being
