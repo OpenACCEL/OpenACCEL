@@ -90,6 +90,7 @@ deploy() {
 }
 
 # Read command line options.
+set -e
 case "$1" in
     --build)        build ;;
     --benchmark)    case "$2" in
