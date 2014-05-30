@@ -185,10 +185,11 @@ define(["model/fileloader",
         };
 
         /**
-         * Returns all quantities in this.quantities marked as time-dependent
+         * Returns all quantities in this.quantities marked as time-dependent by the analyser.
+         * First step in determining ALL time-dependent quantities.
          *
-         * @return A map of all time-dependent quantities in this.quantities, keyed by quantity
-         * name.
+         * @return A map of all quantities in this.quantities marked as time-dependent, 
+         * keyed by quantity name.
          */
         Compiler.prototype.getTimeDependentQuantities = function() {
             var tdquantities = {};
