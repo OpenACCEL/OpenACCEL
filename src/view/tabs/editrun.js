@@ -58,7 +58,7 @@ function toggleExecution(action) {
 
 function newScript() {
     if (confirm("Are you sure you want to stop your current script and delete all existing script lines? It can not be undone.")) {
-        controller.reset();
+        controller.newScript();
         // setRunning(false);
     }
 }

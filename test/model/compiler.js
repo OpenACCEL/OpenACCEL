@@ -118,15 +118,42 @@ suite("Compiler", function() {
                 output.exe.step();       
             };
         });
+    });
 
-        test('default settings t = t{1 + b} + 1 \n b = b{0} + 1', function() {
-            var code = 't = t{0 + b} + 1 \n b = b{0} + 1';
-            var output = compiler.compile(new Script(code));
-            var expected = 1;
-            for (var i = 0; i < 1000; i++) {
-                assert.equal(output.exe.t(), expected + i);
-                output.exe.step();       
-            };
+    suite("History Analysis Tests", function() {
+
+        test('Flagging time-dependenten quantities in analyser, and retrieving them', function() {
+            var code = 'a=b \n b=4 \n c=t \n t = t{1 + 1} + 1';
+            var script = new Script(code);
+            compiler.quantities = script.quantities;
+
+            var output = compiler.getTimeDependentQuantities();
+            var expected = {'t': script.quantities['t']};
+            assert.deepEqual(output, expected);
+        });
+
+        test('Setting time-dependencies recursively', function() {
+            var code = 'a=b \n b=4 \n d=c \n z=c \n c=t \n t = t{1 + 1} + 1';
+            var script = new Script(code);
+            compiler.quantities = script.quantities;
+            compiler.setTimeDependent(script.quantities['t'], true);
+
+            var output = compiler.getTimeDependentQuantities();
+            var expected = {'t': script.quantities['t'], 'c': script.quantities['c'], 'd': script.quantities['d'], 
+                'z': script.quantities['z']};
+            assert.deepEqual(output, expected);
+        });
+
+        test('Identifying all time-dependent quantities in script', function() {
+            var code = 'a=b \n b=4 \n x=d \n r=y \n d=c+y \n z=c \n c=t \n t = t{1 + 1} + 1 \n y=y{1}+2';
+            var script = new Script(code);
+            compiler.quantities = script.quantities;
+            compiler.determineTimeDependencies();
+
+            var output = compiler.getTimeDependentQuantities();
+            var expected = {'t': script.quantities['t'], 'c': script.quantities['c'], 'd': script.quantities['d'], 
+                'z': script.quantities['z'], 'y': script.quantities['y'], 'r': script.quantities['r'], 'x': script.quantities['x']};
+            assert.deepEqual(output, expected);
         });
     });
 });
