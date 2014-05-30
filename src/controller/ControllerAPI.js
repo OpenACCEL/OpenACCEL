@@ -129,8 +129,9 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * Starts or resumes execution of the script.
      *
      * @post The script is being executed in a loop if the
-     * script is complete and non-empty. The script has been resumed
-     * if it was paused, and otherwise started over.
+     * script is complete and non-empty. 
+     * The script has been resumed if it was paused and 
+     * otherwise has been started over.
      */
     Controller.prototype.run = function() {
         if (!this.executing && this.script.isComplete()) {
@@ -153,13 +154,17 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * @post The view has received the current values of all output quantities.
      */
     Controller.prototype.execute = function() {
+        // Extra check to make sure that the model is complete
         if (!this.script.isComplete()) {
-            this.stop();
+            this.stop(false);
             return;
         }
 
+        // Present the results to the view
         this.presentResults(this.script.getOutputQuantities());
 
+        // If the number of iterations to be executed is >0, stop
+        // when the last iteration has just completed
         if (this.numIterations > 0) {
             if (this.currentIteration != this.numIterations) {
                 this.currentIteration++;
@@ -168,6 +173,8 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             }
         }
 
+        // Signal the executable that one iteration has been completed,
+        // for quantity history functionality
         this.script.exe.step();
     };
 
@@ -190,30 +197,27 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * clears any quantity histories and resets the current
      * iteration to 1.
      *
+     * @param recompile {Boolean} (Optional) Whether to recompile the script
+     * after stopping execution. Defaults to true
      * @post this.executing == false && this.currentIteration == 1
      */
-    Controller.prototype.stop = function() {
+    Controller.prototype.stop = function(recompile) {
+        if (typeof recompile === 'undefined') {
+            recompile = true;
+        }
+
         if (this.executing) {
             clearInterval(this.runloop);
             this.executing = false;
             this.view.setExecuting(this.executing);
             this.currentIteration = 1;
-            this.reset();
-        }
-    };
+            this.view.clearResults();
 
-    /**
-     * Resets the values of all quantities
-     *
-     * @post All quantity values, and their history, have been reset
-     */
-    Controller.prototype.reset = function() {
-        // TODO think of better/more efficient implementation?
-        this.stop();
-        this.compileScript(this.script);
-
-        if (this.autoExecute) {
-            this.run();
+            // Quick hack: recompile script to 'reset' everything
+            // TODO think of better implementation?
+            if (recompile) {
+                this.compileScript(this.script);
+            }
         }
     };
 
@@ -222,8 +226,11 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * loads a new, empty one.
      */
     Controller.prototype.newScript = function() {
-        this.stop();
+        // Stop execution, create new script and let the view update the
+        // quantity list
+        this.stop(false);
         this.script = new Script();
+        this.view.setQuantities({});
     };
 
     /**
@@ -332,7 +339,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
 
         // Stop script execution, add quantity, recompile, and 
         // start again if todo list is empty
-        this.stop();
+        this.stop(false);
         this.script.addQuantity(definition);
         this.compileScript(this.script);
         this.view.setQuantities(this.script.getQuantities());
@@ -362,7 +369,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
 
         // Stop script execution, delete quantity, recompile, and 
         // start again if todo list is empty
-        this.stop();
+        this.stop(false);
         this.script.deleteQuantity(qtyName);
         this.compileScript(this.script);
         this.view.setQuantities(this.script.getQuantities());

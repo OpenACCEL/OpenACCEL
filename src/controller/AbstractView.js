@@ -57,6 +57,13 @@ define([], /**@lends AbstractView*/ function() {
          */
         setExecuting: function(executing) {
             console.log("Warning: AbstractView.prototype.setExecuting called but not implemented!");
+        },
+
+        /**
+         * Should remove all currently displayed results from the UI.
+         */
+        clearResults: function() {
+            console.log("Warning: AbstractView.prototype.clearResults called but not implemented!");
         }
     };
 
