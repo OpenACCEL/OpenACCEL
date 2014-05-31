@@ -211,7 +211,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             this.executing = false;
             this.view.setExecuting(this.executing);
             this.currentIteration = 1;
-            this.view.clearResults();
+            this.view.presentResults({});
 
             // Quick hack: recompile script to 'reset' everything
             // TODO think of better implementation?
