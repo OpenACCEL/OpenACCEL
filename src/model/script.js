@@ -156,7 +156,8 @@ define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
 
         /**
          * Adds the given piece of ACCEL script to the model. Can contain multiple
-         * quantity definitions including comments.
+         * quantity definitions including comments. Does not delete existing quantity
+         * definitions!
          *
          * @param {String} source The piece of ACCEL script to add to the model.
          * @post All quantities defined in source have been added to the model,

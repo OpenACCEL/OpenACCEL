@@ -96,7 +96,7 @@ function synchronizeScriptList(quantities) {
         if (quantity.todo) {
             Report.addTodo(quantity.name);
         } else {
-            addScriptlistLine(i++, quantity.name, quantity.definition, quantity.category);
+            addScriptlistLine(i++, quantity.LHS, quantity.definition, quantity.category);
         }
 
         //User Input
