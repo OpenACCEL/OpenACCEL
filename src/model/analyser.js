@@ -127,6 +127,7 @@ define(["model/passes/analyser/quantitypass",
 
                 // If the quantity has no dependencies, it is a category 3 (input) quantity
                 if (qty.dependencies.length == 0) {
+                    console.log(qty.definition);
                     qty.input.type = this.findUserInput(qty.definition);
                     if (qty.input.type !== null) {
                         quantities[qtyName].category = 1;
@@ -150,7 +151,22 @@ define(["model/passes/analyser/quantitypass",
             return quantities;
         };
 
+        /**
+         * Determines whether the quantity is a user input and determines the type of the user input.
+         * Returns null if the quantity is not defined by user input (is not category I).
+         * @param  {String} definition the definition of the desired quantity
+         * @pre definition != null && definition != undefined
+         * @return {String} 'slider' if the input element is a slider,
+         * 'check' if the input element is a check box,
+         * 'button' if the input element is a button,
+         * 'text' if the input element is a text field,
+         * null if the quantity is not category 1
+         */
         Analyser.prototype.findUserInput = function(definition) {
+            if (!definition) {
+                throw new Error('Analyser.findUserInput.pre violated:' +
+                    'definition is undefined or null');
+            }
             if (definition.match(/slider\(/)) {
                 return 'slider';
             } else if (definition.match(/check\(/)) {
@@ -164,15 +180,28 @@ define(["model/passes/analyser/quantitypass",
             }
         };
 
+        /**
+         * Finds the input parameter of input elements.
+         * @param  {String} definition the definition of the quantity that defines the input element
+         * @param  {String} type the type of the input element (can be null)
+         * @pre definition != null && definition != undefined
+         * @return {Object[]} the parameters of the input elements, or the empty array if no parameters are found
+         * parameters can be Strings or Numbers
+         */
         Analyser.prototype.findInputParameters = function(definition, type) {
+            if (!definition) {
+                throw new Error('Analyser.findInputParameters.pre violated:' +
+                    'definition is null or undefined')
+            }
             var parameters = [];
             if (type === 'slider') {
                 parameters = definition.match(/slider\((\d+),(\d+),(\d+)\)/);
             } else if (type === 'check') {
                 parameters = definition.match(/check\((true|false)\)/);
             } else if (type === 'text') {
-                parameters = definition.match(/input\((\'\w+\')\)/)
+                parameters = definition.match(/input\((?:\'|\")(\w+)(?:\'|\")\)/)
             }
+            console.log('parameters ' + parameters + ' type: ' + type);
             return parameters.slice(1);
         }
 

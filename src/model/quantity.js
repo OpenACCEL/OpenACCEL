@@ -116,7 +116,11 @@ define([], /**@lends Model*/ function() {
          *
          * @type {String}
          */
-        this.source = '';
+        if (!source) {
+            this.source = '';
+        } else {
+            this.source = source;
+        }
 
         /**
          * This input object contains the type of the input e.g. slider, checkbox.
