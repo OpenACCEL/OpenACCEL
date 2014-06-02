@@ -14,7 +14,7 @@ suite("LessThan Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("lessThan", "library");
-            fileLoader.load("zip", "library");
+            fileLoader.load("binaryZip", "library");
             done();
         });
     });

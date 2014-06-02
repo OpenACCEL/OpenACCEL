@@ -14,8 +14,8 @@ suite("Poisson Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("poisson", "library");
-            fileLoader.load("nzip", "library");
-            fileLoader.load("map", "library");
+            fileLoader.load("multiaryZip", "library");
+            fileLoader.load("unaryZip", "library");
             fileLoader.load("fact", "library");
             done();
         });

@@ -14,7 +14,7 @@ suite("GreaterThanEqual Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("greaterThanEqual", "library");
-            fileLoader.load("zip", "library");
+            fileLoader.load("binaryZip", "library");
             done();
         });
     });

@@ -15,8 +15,8 @@ suite("Bin Library", function() {
             Script = scriptModule;
             fileLoader.load("bin", "library");
             fileLoader.load("fact", "library");
-            fileLoader.load("zip", "library");
-            fileLoader.load("map", "library");
+            fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
             done();
         });
     });

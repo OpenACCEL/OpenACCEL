@@ -6,7 +6,7 @@
 
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
-inNode    = !inBrowser;
+inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
@@ -32,7 +32,7 @@ define(["module", fileModule], /**@lends Model*/ function(module, fs) {
         this.macros = {};
 
         /**
-         * List of loaded utility functions. At the moment of writing, this could for exmaple contain the zip function.
+         * List of loaded utility functions. At the moment of writing, this could for exmaple contain the binaryZip function.
          */
         this.library = {};
     }

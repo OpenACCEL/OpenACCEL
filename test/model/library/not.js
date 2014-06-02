@@ -14,7 +14,7 @@ suite("Not Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("not", "library");
-            fileLoader.load("map", "library");
+            fileLoader.load("unaryZip", "library");
             done();
         });
     });

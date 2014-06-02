@@ -1,5 +1,5 @@
 function fact(x) {
-    return map(x, function(x) {
+    return unaryZip(x, function(a) {
 
         var factNum = [
             1,
@@ -105,11 +105,11 @@ function fact(x) {
             93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000
         ];
 
-        if (x > 100 || x < 0) {
+        if (a > 100 || a < 0) {
             throw new Error("The factorial of numbers less than 0 or greater than 100 are not supported.");
         } else {
-            x = Math.round(x);
-            return factNum[x];
+            a = Math.round(a);
+            return factNum[a];
         }
     });
 }

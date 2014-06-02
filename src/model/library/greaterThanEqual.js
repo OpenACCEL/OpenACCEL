@@ -1,5 +1,5 @@
 function greaterThanEqual(x, y) {
-    return zip(x, y, function(x, y) {
-        return (x >= y);
+    return binaryZip(x, y, function(a, b) {
+        return (a >= b);
     });
 }

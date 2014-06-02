@@ -14,7 +14,7 @@ suite("Imply Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("imply", "library");
-            fileLoader.load("zip", "library");
+            fileLoader.load("binaryZip", "library");
             done();
         });
     });

@@ -14,7 +14,7 @@ suite("Fact Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("fact", "library");
-            fileLoader.load("map", "library");
+            fileLoader.load("unaryZip", "library");
             done();
         });
     });

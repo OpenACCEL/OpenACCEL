@@ -1,44 +1,26 @@
 /**
- * @memberof Model.Library
- * Applies the given function on the given array. The function is aplied recursively,
- * so also to nested arrays.
- * @param  {Array}   a        array taking the role of the first input of the function
- * @param  {Array}   b        array taking the role of the second input of the function
- * @param  {Function} func function that should be applied
- * @return {Array}            Resulting array.
- *
- * @memberof Model.Library
+ * Applies the given function on the given array of inputs. The function is aplied recursively,
+ * so also to nested arrays. This fucntion is to be called by anything that wants to use either map, binaryZip or nzip.
+ * This function automatically calls the most efficient function for the job.
+ * @param  {Array}      x       array of inputs used in the function of interest, each of which may be an array itself
+ * @param  {Function}   func    function that should be applied
+ * @return {Array}              resulting array
+ * @throws
  */
-function zip(a, b, func) {
-    var isScalarA = !(a instanceof Object);
-    var isScalarB = !(b instanceof Object);
-
-    if (!isScalarA || !isScalarB) {
-        // Recursive step, a or b is an array
-        var result = [];
-        if (isScalarA) {
-            // Case, a is a scalar, b is an array
-            for (var key in b) {
-                result[key] = zip(a, b[key], func);
-            }
-            return result;
-        }
-        if (isScalarB) {
-            // Case, b is a scalar, a is an array
-            for (var key in a) {
-                result[key] = zip(a[key], b, func);
-            }
-            return result;
-        }
-        // Case, a and b are both arrays
-        for (var key in a) {
-            if (b[key] !== undefined) {
-                result[key] = zip(a[key], b[key], func);
-            }
-        }
-        return result;
-    } else {
-        // Base: a and b are both scalar
-        return func(a, b);
+function zip(x, func) {
+    var numArgs = x.length;
+    switch (numArgs) {
+        case 0:
+            throw new error("Cannot zip with zero arguments, attempted by: " + arguments.callee.caller.name);
+            break;
+        case 1:
+            return unaryZip(x[0], func);
+            break;
+        case 2:
+            return binaryZip(x[0], x[1], func);
+            break;
+        default:
+            return multiaryZip(x, func);
+            break;
     }
 }

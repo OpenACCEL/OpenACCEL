@@ -14,7 +14,7 @@ suite("Or Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("or", "library");
-            fileLoader.load("zip", "library");
+            fileLoader.load("binaryZip", "library");
             done();
         });
     });

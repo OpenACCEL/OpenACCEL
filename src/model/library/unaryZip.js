@@ -7,16 +7,16 @@
  *
  * @memberof Model.Library
  */
-function map(a, func) {
-	if (a instanceof Object) {
-		// Recursive step, a is an array
-		var result = [];
-		for (var key in a) {
-			result[key] = map(a[key], func);
-		}
-		return result;
-	} else {
-		// Base: a is a scalar
-		return func(a);
-	}
+function unaryZip(a, func) {
+    if (a instanceof Object) {
+        // Recursive step, a is an array
+        var result = [];
+        for (var key in a) {
+            result[key] = unaryZip(a[key], func);
+        }
+        return result;
+    } else {
+        // Base: a is a scalar
+        return func(a);
+    }
 }

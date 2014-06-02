@@ -1,5 +1,5 @@
 function not(x) {
-    return map(x, function(x) {
-        return (!x);
+    return unaryZip(x, function(a) {
+        return (!a);
     });
 }

@@ -7,11 +7,11 @@
  * @return 				ifTrue if condition evaluates to true, ifFalse if condition evaluates to false
  */
 function __if__(condition, ifTrue, ifFalse) {
-    return nzip([condition, ifTrue, ifFalse], function(condition, ifTrue, ifFalse) {
-        if (condition) {
-            return ifTrue;
+    return multiaryZip([condition, ifTrue, ifFalse], function(conditionInner, ifTrueInner, ifFalseInner) {
+        if (conditionInner) {
+            return ifTrueInner;
         } else {
-            return ifFalse;
+            return ifFalseInner;
         }
     });
 }

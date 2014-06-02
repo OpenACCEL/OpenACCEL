@@ -14,7 +14,7 @@ suite("If Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("__if__", "library");
-            fileLoader.load("nzip", "library");
+            fileLoader.load("multiaryZip", "library");
             done();
         });
     });
@@ -39,7 +39,7 @@ suite("If Library", function() {
             assert.deepEqual(output, 3);
         });
 
-        test("if function with array condition, using nzip", function() {
+        test("if function with array condition, using multiaryZip", function() {
             eval(fileLoader.getContent());
             var condition = [false, true, true];
             var ifTrue = 1;
@@ -48,7 +48,7 @@ suite("If Library", function() {
             assert.deepEqual(output, [3, 1, 1]);
         });
 
-        test("if function with array condition and scalar or array choice, using nzip", function() {
+        test("if function with array condition and scalar or array choice, using multiaryZip", function() {
             eval(fileLoader.getContent());
             var condition = [true, true, false];
             var ifTrue = 3;
@@ -57,7 +57,7 @@ suite("If Library", function() {
             assert.deepEqual(output, [3, 3, 6]);
         });
 
-        test("if function with array condition and scalar or array choice, using nzip", function() {
+        test("if function with array condition and scalar or array choice, using multiaryZip", function() {
             eval(fileLoader.getContent());
             var condition = [false, true, false];
             var ifTrue = [3, [4, 5]];
@@ -67,7 +67,7 @@ suite("If Library", function() {
         });
     });
 
-        suite("expansion", function() {
+    suite("expansion", function() {
 
         test("should expand for 'x = if(1 == 1,10,30)'", function() {
             var input = "x = if(1 == 1,10,30)";
