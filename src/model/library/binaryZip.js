@@ -15,7 +15,7 @@ function binaryZip(a, b, func) {
 
     if (!isScalarA || !isScalarB) {
         // Recursive step, a or b is an array
-        var result = [];
+        var result = {};
         if (isScalarA) {
             // Case, a is a scalar, b is an array
             for (var key in b) {

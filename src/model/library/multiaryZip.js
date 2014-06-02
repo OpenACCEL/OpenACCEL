@@ -20,7 +20,7 @@ function multiaryZip(x, func) {
         return func.apply(this, x);
     } else {
         // Return variable.
-        var result = [];
+        var result = {};
         // Set of keys that are valid candidates for matching with the rest of the input,
         // thus having a potential place in the output.
         var referenceKeys;
@@ -41,7 +41,7 @@ function multiaryZip(x, func) {
         var recursiveInput;
         for (var resultKey = numKeys - 1; resultKey >= 0; resultKey--) {
             // Start with empty input
-            recursiveInput = [];
+            recursiveInput = {};
             // Key occurs in every input until proven otherwise.
             isCommonKey = true;
             // Loop over all inputs in x.

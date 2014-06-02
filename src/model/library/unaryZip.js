@@ -10,7 +10,7 @@
 function unaryZip(a, func) {
     if (a instanceof Object) {
         // Recursive step, a is an array
-        var result = [];
+        var result = {};
         for (var key in a) {
             result[key] = unaryZip(a[key], func);
         }
