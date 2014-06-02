@@ -1,5 +1,5 @@
 function not(x) {
-    return unaryZip(x, function(a) {
+    return zip([x], function(a) {
         return (!a);
     });
 }

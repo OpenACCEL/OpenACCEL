@@ -14,7 +14,10 @@ suite("If Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("__if__", "library");
+            fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");
+            fileLoader.load("zip", "library");
             done();
         });
     });

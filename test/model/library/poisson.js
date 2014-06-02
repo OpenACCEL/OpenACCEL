@@ -14,8 +14,10 @@ suite("Poisson Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("poisson", "library");
-            fileLoader.load("multiaryZip", "library");
             fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
+            fileLoader.load("zip", "library");
             fileLoader.load("fact", "library");
             done();
         });

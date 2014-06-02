@@ -14,7 +14,10 @@ suite("Or Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("or", "library");
+            fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
+            fileLoader.load("zip", "library");
             done();
         });
     });
@@ -67,7 +70,9 @@ suite("Or Library", function() {
             var x = [true, [true, false], false];
             var y = [true, false, [true, false]];
             output = or(x, y);
-            assert.deepEqual(output, [true, [true, false], [true, false]]);
+            assert.deepEqual(output, [true, [true, false],
+                [true, false]
+            ]);
         });
 
     });

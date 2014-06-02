@@ -2,7 +2,7 @@
 
 
 function poisson(x, y, z) {
-    return multiaryZip([x, y, z], function(a, b, c) {
+    return zip([x, y, z], function(a, b, c) {
         if (a < 0 || b < 0) {
             throw new Error("The poisson of numbers less than 0 are not supported.");
         } else {

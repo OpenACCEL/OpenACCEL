@@ -7,7 +7,7 @@
  * @return 				ifTrue if condition evaluates to true, ifFalse if condition evaluates to false
  */
 function __if__(condition, ifTrue, ifFalse) {
-    return multiaryZip([condition, ifTrue, ifFalse], function(conditionInner, ifTrueInner, ifFalseInner) {
+    return zip([condition, ifTrue, ifFalse], function(conditionInner, ifTrueInner, ifFalseInner) {
         if (conditionInner) {
             return ifTrueInner;
         } else {
@@ -22,12 +22,12 @@ function acos(x) {
     return unaryZip(x, Math.acos);
 }
 function add(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return a + b;
     });
 }
 function and(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (a && b);
     });
 }
@@ -41,7 +41,7 @@ function atan2(x, y) {
 	return Math.atan2(y, x);
 }
 function bin(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         if (b > a) {
             return 0;
         } else {
@@ -100,12 +100,12 @@ function cos(x) {
     return unaryZip(x, Math.cos);
 }
 function divide(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return a / b;
     });
 }
 function equal(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (a == b);
     });
 }
@@ -113,7 +113,7 @@ function exp(x) {
     return unaryZip(x, Math.exp);
 }
 function fact(x) {
-    return unaryZip(x, function(a) {
+    return zip([x], function(a) {
 
         var factNum = [
             1,
@@ -231,27 +231,27 @@ function floor(x) {
     return unaryZip(x, Math.floor);
 }
 function greaterThan(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (a > b);
     });
 }
 function greaterThanEqual(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (a >= b);
     });
 }
 function imply(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (!a || b);
     });
 }
 function lessThan(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (a < b);
     });
 }
 function lessThanEqual(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (a <= b);
     });
 }
@@ -268,7 +268,7 @@ function min() {
     return zip(arguments, Math.min);
 }
 function modulo(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return a % b;
     });
 }
@@ -345,22 +345,22 @@ function multiaryZip(x, func) {
     }
 }
 function multiply(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return a * b;
     });
 }
 function not(x) {
-    return unaryZip(x, function(a) {
+    return zip([x], function(a) {
         return (!a);
     });
 }
 function notEqual(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (a != b);
     });
 }
 function or(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return (a || b);
     });
 }
@@ -368,7 +368,7 @@ function or(x, y) {
 
 
 function poisson(x, y, z) {
-    return multiaryZip([x, y, z], function(a, b, c) {
+    return zip([x, y, z], function(a, b, c) {
         if (a < 0 || b < 0) {
             throw new Error("The poisson of numbers less than 0 are not supported.");
         } else {
@@ -415,7 +415,7 @@ function sqrt(x) {
     return unaryZip(x, Math.sqrt);
 }
 function subtract(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return a - b;
     });
 }

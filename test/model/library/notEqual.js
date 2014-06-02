@@ -14,7 +14,10 @@ suite("NotEqual Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("notEqual", "library");
+            fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
+            fileLoader.load("zip", "library");
             done();
         });
     });
@@ -67,7 +70,9 @@ suite("NotEqual Library", function() {
             var x = [1, [2, 3], 3];
             var y = [3, 2, [1, 4]];
             output = notEqual(x, y);
-            assert.deepEqual(output, [true, [false, true], [true, true]]);
+            assert.deepEqual(output, [true, [false, true],
+                [true, true]
+            ]);
         });
 
     });

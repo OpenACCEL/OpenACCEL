@@ -15,6 +15,9 @@ suite("Fact Library", function() {
             Script = scriptModule;
             fileLoader.load("fact", "library");
             fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
+            fileLoader.load("zip", "library");
             done();
         });
     });
@@ -57,7 +60,9 @@ suite("Fact Library", function() {
             eval(fileLoader.getContent());
             var x = 101;
             expected = /The factorial of numbers less than 0 or greater than 100 are not supported./;
-            assert.throws(function(){fact(x);}, expected);
+            assert.throws(function() {
+                fact(x);
+            }, expected);
         });
 
     });

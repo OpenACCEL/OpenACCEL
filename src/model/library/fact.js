@@ -1,5 +1,5 @@
 function fact(x) {
-    return unaryZip(x, function(a) {
+    return zip([x], function(a) {
 
         var factNum = [
             1,

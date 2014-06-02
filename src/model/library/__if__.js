@@ -7,7 +7,7 @@
  * @return 				ifTrue if condition evaluates to true, ifFalse if condition evaluates to false
  */
 function __if__(condition, ifTrue, ifFalse) {
-    return multiaryZip([condition, ifTrue, ifFalse], function(conditionInner, ifTrueInner, ifFalseInner) {
+    return zip([condition, ifTrue, ifFalse], function(conditionInner, ifTrueInner, ifFalseInner) {
         if (conditionInner) {
             return ifTrueInner;
         } else {

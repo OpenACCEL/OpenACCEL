@@ -17,6 +17,8 @@ suite("Bin Library", function() {
             fileLoader.load("fact", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
+            fileLoader.load("zip", "library");
             done();
         });
     });
@@ -73,7 +75,9 @@ suite("Bin Library", function() {
             var x = -1;
             var y = -5;
             expected = /The factorial of numbers less than 0 or greater than 100 are not supported./;
-            assert.throws(function(){bin(x, y);}, expected);
+            assert.throws(function() {
+                bin(x, y);
+            }, expected);
         });
 
         test("bin function with variables greater than 100", function() {
@@ -81,7 +85,9 @@ suite("Bin Library", function() {
             var x = 101;
             var y = 5;
             expected = /The factorial of numbers less than 0 or greater than 100 are not supported./;
-            assert.throws(function(){bin(x, y);}, expected);
+            assert.throws(function() {
+                bin(x, y);
+            }, expected);
         });
 
     });

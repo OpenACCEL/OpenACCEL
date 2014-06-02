@@ -1,5 +1,5 @@
 function add(x, y) {
-    return binaryZip(x, y, function(a, b) {
+    return zip([x, y], function(a, b) {
         return a + b;
     });
 }
