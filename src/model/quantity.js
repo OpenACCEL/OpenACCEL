@@ -102,6 +102,13 @@ define([], /**@lends Model*/ function() {
         this.todo = true;
 
         /**
+         * Whether this quantity is time-dependent.
+         *
+         * @type {Boolean}
+         */
+        this.isTimeDependent = false;
+
+        /**
          * The current value of the quantity, as evaluated in the executable.
          * Default value is zero.
          *
@@ -147,6 +154,11 @@ define([], /**@lends Model*/ function() {
         this.comment = '';
         this.value = 0;
         this.source = this.name + '=';
+        this.isTimeDependent = false;
+        this.input = {
+            type: null,
+            parameters: []
+        };
     }
 
     /**

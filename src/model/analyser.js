@@ -12,6 +12,11 @@ if (inNode) {
     require = require('requirejs');
 } else {
     require.config({
+        shim: {
+            'underscore': {
+                exports: '_'
+            }
+        },
         baseUrl: "scripts"
     });
 }
@@ -19,10 +24,10 @@ if (inNode) {
 
 define(["model/passes/analyser/quantitypass",
         "model/passes/analyser/dependencypass",
-        "model/quantity"
-    ],
+        "model/quantity",
+        'underscore'],
     /**@lends Analyser*/
-    function(QuantityPass, DependencyPass, Quantity) {
+    function(QuantityPass, DependencyPass, Quantity, _) {
         /**
          * @class Analyser
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
@@ -87,10 +92,13 @@ define(["model/passes/analyser/quantitypass",
             }
 
             // Perform the relevant passes on each line
-            var lines = script.split("\n");
             var prevQuantity = null;
+            var lines = script.split("\n");
+
             lines.forEach((function(line) {
                 line = line.trim();
+
+                // Check whether it's a comment line
                 if (prevQuantity != null && line.substring(0, 2) == '//') {
                     prevQuantity.comment = line.substring(2, line.length);
                 } else {
