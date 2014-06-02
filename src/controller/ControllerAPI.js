@@ -211,7 +211,6 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             this.executing = false;
             this.view.setExecuting(this.executing);
             this.currentIteration = 1;
-            this.view.presentResults({});
 
             // Quick hack: recompile script to 'reset' everything
             // TODO think of better implementation?
@@ -386,6 +385,8 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      */
     Controller.prototype.compileScript = function(script) {
         if (script.isComplete()) {
+        	// Clear old results when recompiling
+        	this.view.presentResults({});
             script.exe = this.compiler.compile(script).exe;
             return true;
         } else {
