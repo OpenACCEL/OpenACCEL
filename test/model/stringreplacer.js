@@ -11,7 +11,7 @@ suite("StringReplacer", function() {
             assert = assertModule;
             instance = new module();
             Script = scriptModule;
-            SUBSTITUTE = '/u24E2';
+            SUBSTITUTE = '\u24E2';
             done();
         });
     });
@@ -22,10 +22,10 @@ suite("StringReplacer", function() {
          * a = "hello"
          */
         test("replaceStrings simple double quotes", function() {
-            var script = 'a = "hello"';
+            var script = ['a = "hello"'];
             var actual = instance.replaceStrings(script);
             var expected = ['a = ' + SUBSTITUTE + '0'];
-            assert.equal(actual, expected);
+            assert.deepEqual(actual, expected);
         });
 
         /**
@@ -37,7 +37,7 @@ suite("StringReplacer", function() {
             var script = ['a = "hello"', 'b = \'hi\''];
             var actual = instance.replaceStrings(script);
             var expected = ['a = ' + SUBSTITUTE + '0', 'b = ' + SUBSTITUTE + '1'];
-            assert.equal(actual, expected);
+            assert.deepEqual(actual, expected);
         });
 
         /**
@@ -47,8 +47,8 @@ suite("StringReplacer", function() {
         test("replaceStrings one statement hello + world", function() {
             var script = ['a = "hello" + \'world\''];
             var actual = instance.replaceStrings(script);
-            var expected = ['a = ' + SUBSTITUTE + '0'];
-            assert.equal(actual, expected);
+            var expected = ['a = ' + SUBSTITUTE + '0 + ' + SUBSTITUTE + '1'];
+            assert.deepEqual(actual, expected);
         });
 
         /**
@@ -71,10 +71,10 @@ suite("StringReplacer", function() {
          */
         test("restoreStrings two statements one double one single quotes", function() {
             var script = ['a = ' + SUBSTITUTE + '0'];
-            instance.buffer = ["hello"];
+            instance.buffer = ['"hello"'];
             var actual = instance.restoreStrings(script);
             var expected = ['a = "hello"'];
-            assert.equal(actual, expected);
+            assert.deepEqual(actual, expected);
         });
 
         /**
@@ -84,10 +84,10 @@ suite("StringReplacer", function() {
          */
         test("restoreStrings simple double quotes", function() {
             var script = ['a = ' + SUBSTITUTE + '0', 'b = ' + SUBSTITUTE + '1'];
-            instance.buffer = ["hello", 'hi'];
+            instance.buffer = ['"hello"', "'hi'"];
             var actual = instance.restoreStrings(script);
-            var expected = ['a = \'hello\'', "b = 'hi'"];
-            assert.equal(actual, expected);
+            var expected = ['a = "hello"', "b = 'hi'"];
+            assert.deepEqual(actual, expected);
         });
 
         /**
@@ -96,10 +96,10 @@ suite("StringReplacer", function() {
          */
         test("restoreStrings one statement hello + world", function() {
             var script = ['a = ' + SUBSTITUTE + '0'];
-            instance.buffer = ["hello world"];
+            instance.buffer = ['"hello world"'];
             var actual = instance.restoreStrings(script);
             var expected = ['a = "hello world"'];
-            assert.equal(actual, expected);
+            assert.deepEqual(actual, expected);
         });
 
         /**
@@ -158,10 +158,10 @@ suite("StringReplacer", function() {
          */
         test('restore() a = "hello" simple double quotes', function() {
             var script = 'a = ' + SUBSTITUTE + '0';
-            instance.buffer = ["hello", 'blub'];
+            instance.buffer = ['"hello"', "'blub'"];
             var actual = instance.restore(script);
             var expected = 'a = "hello"';
-            assert(actual, expected);
+            assert.equal(actual, expected);
         });
 
         /**
@@ -170,10 +170,10 @@ suite("StringReplacer", function() {
          */
         test('restore() a = \'hello\' simple single quotes', function() {
             var script = 'a = ' + SUBSTITUTE + '0';
-            instance.buffer = ['hello', 'world'];
+            instance.buffer = ["'hello'", "'world'"];
             var actual = instance.restore(script);
             var expected = 'a = \'hello\'';
-            assert(actual, expected);
+            assert.equal(actual, expected);
         });
 
         /**
@@ -182,11 +182,11 @@ suite("StringReplacer", function() {
          */
         test('restore() ', function() {
             var script = 'a = ' + SUBSTITUTE + '1';
-            instance.buffer = ['hello', 'world'];
+            instance.buffer = ["'hello'", "'world'"];
             instance.restore(script);
             var actual = instance.restore(script);
             var expected = 'a = \'world\'';
-            assert(actual, expected);
+            assert.equal(actual, expected);
         });
 
         /**

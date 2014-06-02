@@ -81,8 +81,11 @@ define([], /**@lends Model*/ function() {
      */
     StringReplacer.prototype.replaceStrings = function(scriptLines) {
         this.buffer = [];
-
-        return scriptLines.map(this.replace);
+        var result = [];
+        for (var i = 0; i < scriptLines.length; i ++) {
+            result[i] = this.replace(scriptLines[i]);
+        }
+        return result;
     };
 
     /**
@@ -94,7 +97,11 @@ define([], /**@lends Model*/ function() {
      * @return {String[]}             Array of script lines in which the strings are restored.
      */
     StringReplacer.prototype.restoreStrings = function(scriptLines) {
-        return scriptLines.map(this.restore);
+        var result = [];
+        for (var i = 0; i < scriptLines.length; i ++) {
+            result[i] = this.restore(scriptLines[i]);
+        }
+        return result;
     };
 
     /**
@@ -105,12 +112,12 @@ define([], /**@lends Model*/ function() {
      * @return {String}             line in which the strings are replaced
      */
     StringReplacer.prototype.replace = function(line) {
-        return line.replace(this.stringregex, function(match) {
+        return line.replace(this.stringregex, (function(match) {
             var index = this.buffer.length;
             this.buffer.push(match);
 
             return this.SUBSTITUTE + index;
-        });
+        }).bind(this));
     };
 
     /**
@@ -120,7 +127,7 @@ define([], /**@lends Model*/ function() {
      * @return {String}             line in which the strings are replaced
      */
     StringReplacer.prototype.restore = function(line) {
-        return scriptLines.replace(this.restoreregex, (function(match, index) {
+        return line.replace(this.restoreregex, (function(match, index) {
             return this.buffer[index];
         }).bind(this));
     };
