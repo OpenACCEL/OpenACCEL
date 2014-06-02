@@ -451,7 +451,7 @@ ButtonInput.prototype.getHTML = function() {
     ';
 };
 ButtonInput.prototype.initialize = function() {
-    controller.setUserInputQuantity(this.quantity, this.val);
+    controller.setUserInputQuantity(this.quantity, false);
     
     var buttoninput = this;
     $('#userbutton' + buttoninput.identifier).on('mousedown',
