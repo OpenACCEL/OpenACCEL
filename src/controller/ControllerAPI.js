@@ -386,7 +386,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     Controller.prototype.compileScript = function(script) {
         if (script.isComplete()) {
         	// Clear old results when recompiling
-        	this.view.presentResults({});
+        	this.view.presentResults({});		
             script.exe = this.compiler.compile(script).exe;
             return true;
         } else {
@@ -556,13 +556,20 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     };
 
     /**
-     * Builds the model defined in the given script and sets it
+     * Builds the model defined in the given source code and sets it
      * as the current script.
      *
-     * @param {String} script List of quantity definitions
+     * @param {String} source List of quantity definitions and optionally
+     * comments
+     * @modifies this.script
+     * @post A new script has been created, containing all quantities
+     * defined in source.
      */
-    Controller.prototype.setScript = function(script) {
-        // TODO implementation
+    Controller.prototype.setScriptFromSource = function(source) {
+    	// Stop the current model and create a new script with the
+    	// given source
+        this.stop(false);
+        this.script = new Script(source);
     };
 
     /**
