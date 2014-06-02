@@ -94,7 +94,39 @@ suite("Compiler", function() {
             var output = compiler.compile(new Script(code));
             var expected = [11, 7];
             assert.deepEqual(output.exe.d(), expected);
-        })
+        });
+
+    });
+
+    suite("strings tests", function() {
+        test("Simple string", function() {
+            var code = 
+            'a = "hello world"\n' +
+            'b = a';
+            var output = compiler.compile(new Script(code));
+            var expected = "hello world";
+            var resulta = output.exe.a();
+            var resultb = output.exe.b();
+            assert.equal(resulta, expected);
+            assert.equal(resultb, expected);
+        });
+
+        test("String wich contains names of other variables", function() {
+            var code = 
+            'a = 5\n' +
+            'b = 6\n' +
+            'c = "a + b"';
+            var output = compiler.compile(new Script(code));
+            assert.equal(output.exe.a(), 5);
+            assert.equal(output.exe.b(), 6);
+            assert.equal(output.exe.c(), 'a + b');
+        });
+
+        test("String in condition", function() {
+            var code = 'a = cond(true, "foo", "bar")';
+            var output = compiler.compile(new Script(code));
+            assert.equal(output.exe.a(), "foo");
+        });
 
     });
 });

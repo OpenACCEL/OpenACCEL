@@ -82,10 +82,13 @@ define(["model/stringreplacer",
 
             // replace string definitions for wildcards
             lines = this.replacer.replaceStrings(lines);
+
+            // executing passes
             for (var i = 0; i < this.passes.length; i++) {
                 lines = this.passes[i].parse(lines, report);
             }
-            // resture all string definitions
+
+            // restore all string definitions
             lines = this.replacer.restoreStrings(lines);
 
             return lines.join("");
