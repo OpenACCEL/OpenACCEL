@@ -11,7 +11,7 @@ suite("History Macro", function() {
             assert = assertModule;
             macroExpander = new module();
             var fileLoader = new FileLoader();
-            fileLoader.load("history");
+            fileLoader.load("history", "macros");
             macros = fileLoader.getMacros();
             done();
         });

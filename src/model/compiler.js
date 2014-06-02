@@ -64,6 +64,16 @@ define(["model/fileloader",
             this.fileLoader.load("history", "macros");
 
             this.fileLoader.load("functions", "library");
+
+            /**
+             * Contains the quantities for which the history has been checked
+             */
+            this.historyChecked = [];
+
+            /**
+             * The total number of quantities in the script being compiled.
+             */
+            this.totalNumQuantities = 0;
         }
 
         /**
