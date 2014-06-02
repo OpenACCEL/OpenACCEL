@@ -55,11 +55,6 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
         // get all variable names from the left hand side
         var vars = this.getVariables(lhs);
 
-		// Create quantities if it doesn't already exist
-        if (!quantities) {
-            quantities = {};
-        }
-
         // first entry in vars is the quantity name
         var qtyName = vars[0];
         var qty;
@@ -77,11 +72,18 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
 
-            // Remove the 
+            // Remove the redefined quantity from reverse dependencies
             for (var dep in qty.dependencies) {
-                quantities[dep].reverseDeps = _.without(quantities[dep].reverseDeps, qtyName);
+                quantities[qty.dependencies[dep]].reverseDeps = _.without(quantities[qty.dependencies[dep]].reverseDeps, qtyName);
             }
-        } else {
+
+            // Check whether time-dependent
+            if (qty.definition.indexOf("{") >= 0) {
+                qty.isTimeDependent = true;
+            }
+        } 
+
+        else {
             // Create new quantity and add it to the quantities
             qty = new Quantity();
             qty.name = qtyName;
@@ -99,6 +101,11 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
             
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
+
+            // Check whether time-dependent
+            if (qty.definition.indexOf("{") >= 0) {
+                qty.isTimeDependent = true;
+            }
 
             // Add to quantities
             quantities[qtyName] = qty;

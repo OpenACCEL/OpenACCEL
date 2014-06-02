@@ -58,7 +58,7 @@ function toggleExecution(action) {
 
 function newScript() {
     if (confirm("Are you sure you want to stop your current script and delete all existing script lines? It can not be undone.")) {
-        controller.reset();
+        controller.newScript();
         // setRunning(false);
     }
 }
@@ -96,14 +96,14 @@ function synchronizeScriptList(quantities) {
         if (quantity.todo) {
             Report.addTodo(quantity.name);
         } else {
-            addScriptlistLine(i++, quantity.name, quantity.definition, quantity.category);
+            addScriptlistLine(i++, quantity.LHS, quantity.definition, quantity.category);
         }
 
         //User Input
         if (quantity.category == 1) {
             switch (quantity.input.type) {
                 case 'slider':
-                    addInput(new SliderInput(i, quantity.name, quantity.name, quantity.input.parameters[0], quantity.input.parameters[1], quantity.input.parameters[2]));
+                    addInput(new SliderInput(i, quantity.name, quantity.name, parseInt(quantity.input.parameters[0]), parseInt(quantity.input.parameters[1]), parseInt(quantity.input.parameters[2])));
                     break;
                 case 'check':
                     addInput(new CheckboxInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
@@ -341,7 +341,8 @@ SliderInput.prototype.getHTML = function() {
     ';
 };
 SliderInput.prototype.initialize = function() {
-    console.log(this.properties);
+    controller.setUserInputQuantity(this.quantity, this.val);
+
     $('#userslider' + this.identifier).slider(this.properties);
 };
 
@@ -376,6 +377,8 @@ CheckboxInput.prototype.getHTML = function() {
     ';
 };
 CheckboxInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+
     var checkboxinput = this;
     $('#usercheck' + checkboxinput.identifier).on('change',
         function() {
@@ -412,6 +415,8 @@ TextInput.prototype.getHTML = function() {
     ';
 };
 TextInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+
     var textinput = this;
     $('#usertext' + textinput.identifier).on('input',
         function() {
@@ -446,6 +451,8 @@ ButtonInput.prototype.getHTML = function() {
     ';
 };
 ButtonInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, false);
+    
     var buttoninput = this;
     $('#userbutton' + buttoninput.identifier).on('mousedown',
         function() {

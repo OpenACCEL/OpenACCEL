@@ -80,7 +80,7 @@ deploy() {
 
     # Copy scripts.
     cp -r src/* bin/scripts
-    find bin/scripts -type f ! -regex ".*\.s?js" -exec rm {} \;
+    #find bin/scripts -type f ! -regex ".*\.s?js" -exec rm {} \;
 
     # Copy images.
     cp -r src/view/img bin/img/

@@ -57,7 +57,7 @@ define([], /**@lends AbstractView*/ function() {
          */
         setExecuting: function(executing) {
             console.log("Warning: AbstractView.prototype.setExecuting called but not implemented!");
-        }
+        },
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
