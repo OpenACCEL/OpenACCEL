@@ -11,7 +11,7 @@ suite("Log Library", function() {
             assert = assertModule;
             macroExpander = new module();
             var fileLoader = new FileLoader();
-            fileLoader.load("func");
+            fileLoader.load("func", "macros");
             fileLoader.load("log", "library");
             macros = fileLoader.getContent();
             done();

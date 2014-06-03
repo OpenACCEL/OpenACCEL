@@ -17,26 +17,28 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/passes/preprocessor/unitpass",
+define(["model/passes/preprocessor/historypass",
+        "model/passes/preprocessor/unitpass",
         "model/passes/preprocessor/operatorpass",
         "model/passes/preprocessor/exepass",
         "model/passes/preprocessor/funcpass",
         "model/passes/preprocessor/packagepass",
         "model/passes/preprocessor/vectorpass",
         "model/passes/preprocessor/namedvectorpass",
-        "model/passes/preprocessor/ifpass",
-        "model/passes/preprocessor/quantifierpass"
+        "model/passes/preprocessor/uipass",
+        "model/passes/preprocessor/ifpass"
     ],
     /**@lends Model*/
-    function(UnitPass,
+    function(HistoryPass,
+        UnitPass,
         OperatorPass,
         ExePass,
         FuncPass,
         PackagePass,
         VectorPass,
         NamedVectorPass,
-        IfPass,
-        QuantifierPass) {
+        UIPass,
+        IfPass) {
         /**
          * @class
          * @classdesc The pre-processor performs multiple passes over the code for transformation and analysation.
@@ -46,13 +48,14 @@ define(["model/passes/preprocessor/unitpass",
              * The 'passes' object is an array of passes and not a dictionary, because the order of pass execution matters.
              */
             this.passes = [];
-            this.passes.push(new QuantifierPass());
+            this.passes.push(new HistoryPass());
             this.passes.push(new NamedVectorPass());
             this.passes.push(new VectorPass());
             this.passes.push(new IfPass());
             this.passes.push(new ExePass());
             this.passes.push(new OperatorPass());
             this.passes.push(new UnitPass());
+            this.passes.push(new UIPass());
             this.passes.push(new FuncPass());
             this.passes.push(new PackagePass());
         }

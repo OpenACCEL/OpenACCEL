@@ -5,7 +5,7 @@
  * @param  {Function}   func    function that should be applied
  * @return {Array}              resulting array
  */
-function nzip(x, func) {
+function multiaryZip(x, func) {
     var numArgs = x.length;
     var allScalar = true;
     for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
@@ -20,7 +20,7 @@ function nzip(x, func) {
         return func.apply(this, x);
     } else {
         // Return variable.
-        var result = [];
+        var result = {};
         // Set of keys that are valid candidates for matching with the rest of the input,
         // thus having a potential place in the output.
         var referenceKeys;
@@ -64,7 +64,7 @@ function nzip(x, func) {
             // Key occurs in all non-scalar inputs.
             if (isCommonKey) {
                 // Put the recursive result in the representative key.
-                result[referenceKeys[resultKey]] = nzip(recursiveInput, func);
+                result[referenceKeys[resultKey]] = multiaryZip(recursiveInput, func);
             }
         }
         return result;

@@ -14,6 +14,9 @@ suite("GreaterThanEqual Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("greaterThanEqual", "library");
+            fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
             done();
         });
@@ -67,7 +70,9 @@ suite("GreaterThanEqual Library", function() {
             var x = [1, [2, 3], 3];
             var y = [3, 2, [1, 4]];
             output = greaterThanEqual(x, y);
-            assert.deepEqual(output, [false, [true, true], [true, false]]);
+            assert.deepEqual(output, [false, [true, true],
+                [true, false]
+            ]);
         });
 
     });

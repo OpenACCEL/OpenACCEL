@@ -32,40 +32,86 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
     QuantityPass.prototype = new AnalyserPass();
 
     /**
-     * @Override
-     * Determines the quantities that are present in the script
+     * Determines the quantity being defined in the given line of script,
+     * along with any parameters.
+     *
+     * @param line {String} The line of ACCEL code in which a quantity is defined
+     * @param quantity {Quantity} Unused, can be null
+     * @param quantities {Object} The current quantities in the script.
+     * @modifies quantity, quantities
+     * @post quantity in quantities
+     * @return A Quantity object representing the quantity which is defined in line.
      */
-    QuantityPass.prototype.analyse = function(line, quantities) {
-        // left hand side of the definitions
+    QuantityPass.prototype.analyse = function(line, quantity, quantities) {
+        if (!quantities) {
+            throw new Error('QuantityPass.analyse.pre violated:' +
+                'quantities is null or undefined');
+        }
+
+        // Left and right hand sides of the definition
         var lhs = this.getLHS(line);
         var rhs = this.getRHS(line);
 
         // get all variable names from the left hand side
         var vars = this.getVariables(lhs);
 
-		// Create quantities if it doesn't already exist
-        if (!quantities) {
-            quantities = {};
-        }
-
         // first entry in vars is the quantity name
         var qtyName = vars[0];
-        quantities[qtyName] = new Quantity();
-        quantities[qtyName].source = line;
-        quantities[qtyName].name = qtyName;
+        var qty;
 
-        // If there are other items left in vars, then this are the parameters.
-        quantities[qtyName].parameters = vars.slice(1);
-        quantities[qtyName].definition = rhs;
-        
-        // Straightforward check for empty definitions of quantities. Further 
-        // identification of todo-items is done in the dependency pass.
-        if (rhs == '') {
-        	quantities[qtyName].todo = true;
-        } else {
-            quantities[qtyName].todo = false;
+        // Existing quantity is redefined. We have to make sure to keep the reverse dependencies
+        // of _this_ quantity, but remove this quantity from all reverse dependency lists of 
+        // it's dependencies
+        if (qtyName in quantities) {
+            qty = quantities[qtyName];
+            qty.LHS = lhs;
+            qty.source = line;
+            qty.definition = rhs;
+            qty.todo = false;
+            
+            // If there are other items left in vars, then this are the parameters.
+            qty.parameters = vars.slice(1);
+
+            // Remove the redefined quantity from reverse dependencies
+            for (var dep in qty.dependencies) {
+                quantities[qty.dependencies[dep]].reverseDeps = _.without(quantities[qty.dependencies[dep]].reverseDeps, qtyName);
+            }
+
+            // Check whether time-dependent
+            if (qty.definition.indexOf("{") >= 0) {
+                qty.isTimeDependent = true;
+            }
+        } 
+
+        else {
+            // Create new quantity and add it to the quantities
+            qty = new Quantity();
+            qty.name = qtyName;
+            qty.LHS = lhs;
+            qty.source = line;
+            qty.definition = rhs;
+
+            // Straightforward check for empty definitions of quantities. Further 
+            // checking of todo-items is done in the dependency pass.
+            if (rhs == '') {
+                qty.todo = true;
+            } else {
+                qty.todo = false;
+            }
+            
+            // If there are other items left in vars, then this are the parameters.
+            qty.parameters = vars.slice(1);
+
+            // Check whether time-dependent
+            if (qty.definition.indexOf("{") >= 0) {
+                qty.isTimeDependent = true;
+            }
+
+            // Add to quantities
+            quantities[qtyName] = qty;
         }
-        return quantities;
+
+        return qty;
     };
 
 

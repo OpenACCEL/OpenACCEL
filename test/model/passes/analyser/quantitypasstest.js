@@ -17,72 +17,72 @@ suite('quantitypass.js', function() {
     suite('Quantity Pass', function() {
         test('one single character quantity', function() {
             var input = 'x = 5';
-            var result = {};
+            var quantities = {};
 
-            result = quantitypass.analyse(input, result);
+            var result = quantitypass.analyse(input, null, quantities);
 
-            assert(result.x);
-            assert.equal(result.x.name, 'x');
-            assert(result.x.parameters.length === 0);
+            assert('x' in quantities);
+            assert.equal(result.name, 'x');
+            assert(result.parameters.length === 0);
         });
 
         test('one single character function, one parameter', function() {
             var input = 'f(x) = x';
-            var result = {};
+            var quantities = {};
 
-            result = quantitypass.analyse(input, result);
+            var result = quantitypass.analyse(input, null, quantities);
 
-            assert(result.f);
-            assert.equal(result.f.name, 'f');
-            assert.deepEqual(result.f.parameters, ['x']);
+            assert('f' in quantities);
+            assert.equal(result.name, 'f');
+            assert.deepEqual(result.parameters, ['x']);
         });
 
         test('one single character function, multiple parameters', function() {
             var input = 'f(x,y,z) = x + y + z';
-            var result = {};
+            var quantities = {};
 
-            result = quantitypass.analyse(input, result);
+            var result = quantitypass.analyse(input, null, quantities);
 
-            assert(result.f);
-            assert.equal(result.f.name, 'f');
-            assert(result.f.parameters.indexOf('x') > -1);
-            assert(result.f.parameters.indexOf('y') > -1);
-            assert(result.f.parameters.indexOf('z') > -1);
+            assert('f' in quantities);
+            assert.equal(result.name, 'f');
+            assert(result.parameters.indexOf('x') > -1);
+            assert(result.parameters.indexOf('y') > -1);
+            assert(result.parameters.indexOf('z') > -1);
         });
 
         test('one multi character quantity', function() {
             var input = 'r2d2 = 5';
-            var result = {};
+            var quantities = {};
 
-            result = quantitypass.analyse(input, result);
+            var result = quantitypass.analyse(input, null, quantities);
 
-            assert(result.r2d2);
-            assert.equal(result.r2d2.name, 'r2d2');
-            assert(result.r2d2.parameters.length === 0);
+            assert('r2d2' in quantities);
+            assert.equal(result.name, 'r2d2');
+            assert(result.parameters.length === 0);
         });
 
         test('one multi character function, one parameter', function() {
             var input = 'r2d2(x) = x';
-            var result = {};
+            var quantities = {};
 
-            result = quantitypass.analyse(input, result);
+            var result = quantitypass.analyse(input, null, quantities);
 
-            assert(result.r2d2);
-            assert.equal(result.r2d2.name, 'r2d2');
-            assert.deepEqual(result.r2d2.parameters, ['x']);
+            assert('r2d2' in quantities);
+            assert.equal(result.name, 'r2d2');
+            assert.deepEqual(result.parameters, ['x']);
         });
 
         test('one multi character function, multiple parameters', function() {
             var input = 'r2d2(x,y,z) = x + y + z';
-            var result = {};
+            var quantities = {};
 
-            result = quantitypass.analyse(input, result);
+            var result = quantitypass.analyse(input, null, quantities);
 
-            assert(result.r2d2);
-            assert.equal(result.r2d2.name, 'r2d2');
-            assert(result.r2d2.parameters.indexOf('x') > -1);
-            assert(result.r2d2.parameters.indexOf('y') > -1);
-            assert(result.r2d2.parameters.indexOf('z') > -1);
+            assert(quantities[result.name]);
+            assert.equal(quantities['r2d2'].name, 'r2d2');
+            assert(result.parameters.indexOf('x') > -1);
+            assert(result.parameters.indexOf('y') > -1);
+            assert(result.parameters.indexOf('z') > -1);
         });
     });
 });

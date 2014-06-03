@@ -14,6 +14,9 @@ suite("Imply Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("imply", "library");
+            fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
             done();
         });
@@ -63,10 +66,15 @@ suite("Imply Library", function() {
 
         test("imply function with nested array's", function() {
             eval(fileLoader.getContent());
-            var x = [[true, false], false];
+            var x = [
+                [true, false], false
+            ];
             var y = [true, [true, false]];
             output = imply(x, y);
-            assert.deepEqual(output, [[true, true], [true, true]]);
+            assert.deepEqual(output, [
+                [true, true],
+                [true, true]
+            ]);
         });
 
     });

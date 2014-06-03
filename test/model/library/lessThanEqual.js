@@ -14,6 +14,9 @@ suite("LessThanEqual Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("lessThanEqual", "library");
+            fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
             done();
         });
@@ -47,7 +50,8 @@ suite("LessThanEqual Library", function() {
         });
 
         test("lessThanEqual function with 2 array's", function() {
-            eval(fileLoader.getContent());true
+            eval(fileLoader.getContent());
+            true
             var x = [1, 2, 3];
             var y = [3, 2, 1];
             output = lessThanEqual(x, y);
@@ -67,7 +71,9 @@ suite("LessThanEqual Library", function() {
             var x = [1, [2, 3], 3];
             var y = [3, 2, [1, 4]];
             output = lessThanEqual(x, y);
-            assert.deepEqual(output, [true, [true, false], [false, true]]);
+            assert.deepEqual(output, [true, [true, false],
+                [false, true]
+            ]);
         });
 
     });

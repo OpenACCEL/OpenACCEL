@@ -75,7 +75,8 @@ suite('exepass.js', function() {
         test('parse(): Vector dot notation test: myVar.myKey', function() {
             var lines = ['x = myVar.myKey'];
             var expResult = ['x = exe.myVar().myKey'];
-            var report = analyser.analyse(lines.join("\n"));
+            var script = new Script(lines.join("\n"));
+            var report = script.getQuantities();
 
             assert.deepEqual(instance.parse(lines, report), expResult);
         });

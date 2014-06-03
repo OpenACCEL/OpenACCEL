@@ -78,9 +78,14 @@ deploy() {
     # Generating monofunc library functions.
     node ./utils/monofuncgenerator.js ./src/model/library
 
+    # Generate single file containing all functions.
+    rm src/model/library/functions.js
+    cat src/model/library/* > src/model/library/functions.js
+
     # Copy scripts.
     cp -r src/* bin/scripts
-    find bin/scripts -type f ! -regex ".*\.s?js" -exec rm {} \;
+    find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
+    find bin/scripts/model/library -type f -not -name "functions.js" -exec rm {} \;
 
     # Copy images.
     cp -r src/view/img bin/img/
@@ -88,6 +93,15 @@ deploy() {
     # Copy style sheets.
     cp -r src/view/css bin/css/
 }
+
+# Ensure each file in 'folders' with a .js extension has a new line at EOF.
+# function fixnleof() {
+#     local folders=(src/ test/ utils/)
+
+#     for i in ${folders[@]}; do
+#         find $i -type d -exec sh -c '(cd {} && for file in *; do if [[ $file == *.js ]] && [ -n "$(tail -c 1 <"$file")" ]; then echo >>"$file"; fi; done)' ';'
+#     done
+# }
 
 # Read command line options.
 set -e

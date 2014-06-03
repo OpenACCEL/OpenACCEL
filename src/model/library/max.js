@@ -1,5 +1,5 @@
 function max() {
-    return nzip(arguments, Math.max);
+    return zip(arguments, Math.max);
 }
 
 max.base = -Infinity;

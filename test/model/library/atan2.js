@@ -15,7 +15,7 @@ suite("Atan2 Library", function() {
             assert = assertModule;
             macroExpander = new module();
             var fileLoader = new FileLoader();
-            fileLoader.load("func");
+            fileLoader.load("func", "macros");
             fileLoader.load("atan2", "library");
             macros = fileLoader.getContent();
             done();

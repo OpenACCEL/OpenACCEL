@@ -14,6 +14,9 @@ suite("And Library", function() {
             fileLoader = new FileLoader();
             Script = scriptModule;
             fileLoader.load("and", "library");
+            fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
             done();
         });
@@ -63,10 +66,15 @@ suite("And Library", function() {
 
         test("and function with nested array's", function() {
             eval(fileLoader.getContent());
-            var x = [[true, false], false];
+            var x = [
+                [true, false], false
+            ];
             var y = [true, [true, false]];
             output = and(x, y);
-            assert.deepEqual(output, [[true, false], [false, false]]);
+            assert.deepEqual(output, [
+                [true, false],
+                [false, false]
+            ]);
         });
 
     });

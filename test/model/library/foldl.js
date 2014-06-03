@@ -10,8 +10,10 @@ suite("Foldl", function() {
             macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
             fileLoader.load("foldl","library");
+            fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
-            fileLoader.load("nzip", "library");
             fileLoader.load("add", "library");
             fileLoader.load("multiply", "library");
             fileLoader.load("and", "library");

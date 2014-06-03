@@ -1,5 +1,5 @@
 function not(x) {
-    return map(x, function(x) {
-        return (!x);
+    return zip([x], function(a) {
+        return (!a);
     });
 }
