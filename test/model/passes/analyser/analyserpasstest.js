@@ -42,6 +42,13 @@ suite('analyserpass.js', function() {
             var result = analyserpass.getVariables(input);
             assert.deepEqual(result, expResult);
         });
+
+        test('Strings should be ignored', function() {
+            var input = 'x + "y + z"';
+            var expResult = ['x'];
+            var result = analyserpass.getVariables(input);
+            assert.deepEqual(result, expResult);
+        });
     });
 
     suite('getDummies()', function() {

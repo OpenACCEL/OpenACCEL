@@ -170,7 +170,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
             for (var i = 0; i < elements.length; i++) {
                 var key = elements[i].split(this.begin);
                 if (key[0].indexOf(":") == -1) {
-                    elements[i] = "'" + count+++"':" + elements[i];
+                    elements[i] = "'" + (count++) +"':" + elements[i];
                 }
             }
             output = elements.join("\u2603");

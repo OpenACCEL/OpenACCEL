@@ -94,11 +94,51 @@ suite("Compiler", function() {
             var output = compiler.compile(new Script(code));
             var expected = [11, 7];
             assert.deepEqual(output.exe.d(), expected);
-        })
+        });
+
+        test('array with names with quotes = [2, "x": "foobar"]', function() {
+            var code = 'y = [2, "x": "foobar"]';
+            var output = compiler.compile(new Script(code));
+            var expected = [2];
+            expected.x = 'foobar';
+            assert.deepEqual(output.exe.y(), expected);
+        });
 
     });
 
-    suite("History Tests", function() {
+    suite("strings tests", function() {
+        test("Simple string", function() {
+            var code =
+            'a = "hello world"\n' +
+            'b = a';
+            var output = compiler.compile(new Script(code));
+            var expected = "hello world";
+            var resulta = output.exe.a();
+            var resultb = output.exe.b();
+            assert.equal(resulta, expected);
+            assert.equal(resultb, expected);
+        });
+
+        test("String wich contains names of other variables", function() {
+            var code =
+            'a = 5\n' +
+            'b = 6\n' +
+            'c = "a + b"';
+            var output = compiler.compile(new Script(code));
+            assert.equal(output.exe.a(), 5);
+            assert.equal(output.exe.b(), 6);
+            assert.equal(output.exe.c(), 'a + b');
+        });
+
+        test("String in condition", function() {
+            var code = 'a = cond(true, "foo", "bar")';
+            var output = compiler.compile(new Script(code));
+            assert.equal(output.exe.a(), "foo");
+        });
+
+    });
+
+    suite("history tests", function() {
 
         test('default settings t = t{1 + 1} + 1', function() {
             var code = 't = t{1 + 1} + 1';
@@ -115,12 +155,12 @@ suite("Compiler", function() {
             var expected = 1;
             for (var i = 0; i < 1000; i++) {
                 assert.equal(output.exe.t(), expected + i);
-                output.exe.step();       
+                output.exe.step();
             };
         });
     });
 
-    suite("History Analysis Tests", function() {
+    suite("history analysis tests", function() {
 
         test('Flagging time-dependenten quantities in analyser, and retrieving them', function() {
             var code = 'a=b \n b=4 \n c=t \n t = t{1 + 1} + 1';
@@ -139,7 +179,7 @@ suite("Compiler", function() {
             compiler.setTimeDependent(script.quantities['t'], true);
 
             var output = compiler.getTimeDependentQuantities();
-            var expected = {'t': script.quantities['t'], 'c': script.quantities['c'], 'd': script.quantities['d'], 
+            var expected = {'t': script.quantities['t'], 'c': script.quantities['c'], 'd': script.quantities['d'],
                 'z': script.quantities['z']};
             assert.deepEqual(output, expected);
         });
@@ -151,7 +191,7 @@ suite("Compiler", function() {
             compiler.determineTimeDependencies();
 
             var output = compiler.getTimeDependentQuantities();
-            var expected = {'t': script.quantities['t'], 'c': script.quantities['c'], 'd': script.quantities['d'], 
+            var expected = {'t': script.quantities['t'], 'c': script.quantities['c'], 'd': script.quantities['d'],
                 'z': script.quantities['z'], 'y': script.quantities['y'], 'r': script.quantities['r'], 'x': script.quantities['x']};
             assert.deepEqual(output, expected);
         });

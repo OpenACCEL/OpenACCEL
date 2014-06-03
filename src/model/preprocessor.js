@@ -17,7 +17,8 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/passes/preprocessor/historypass",
+define(["model/stringreplacer",
+        "model/passes/preprocessor/historypass",
         "model/passes/preprocessor/unitpass",
         "model/passes/preprocessor/operatorpass",
         "model/passes/preprocessor/exepass",
@@ -26,10 +27,13 @@ define(["model/passes/preprocessor/historypass",
         "model/passes/preprocessor/vectorpass",
         "model/passes/preprocessor/namedvectorpass",
         "model/passes/preprocessor/uipass",
-        "model/passes/preprocessor/ifpass"
+        "model/passes/preprocessor/ifpass",
+        "model/passes/preprocessor/quantifierpass",
+        "model/passes/preprocessor/commentpass"
     ],
     /**@lends Model*/
-    function(HistoryPass,
+    function(StringReplacer,
+        HistoryPass,
         UnitPass,
         OperatorPass,
         ExePass,
@@ -38,7 +42,10 @@ define(["model/passes/preprocessor/historypass",
         VectorPass,
         NamedVectorPass,
         UIPass,
-        IfPass) {
+        IfPass,
+        QuantifierPass,
+        CommentPass) {
+
         /**
          * @class
          * @classdesc The pre-processor performs multiple passes over the code for transformation and analysation.
@@ -49,6 +56,8 @@ define(["model/passes/preprocessor/historypass",
              */
             this.passes = [];
             this.passes.push(new HistoryPass());
+            this.passes.push(new CommentPass());
+            this.passes.push(new QuantifierPass());
             this.passes.push(new NamedVectorPass());
             this.passes.push(new VectorPass());
             this.passes.push(new IfPass());
@@ -58,6 +67,13 @@ define(["model/passes/preprocessor/historypass",
             this.passes.push(new UIPass());
             this.passes.push(new FuncPass());
             this.passes.push(new PackagePass());
+
+            /**
+             * Stringreplacer used to make sure the passes do not
+             * edit the content of strings.
+             * @type {StringReplacer}
+             */
+            this.replacer = new StringReplacer();
         }
 
         /**
@@ -71,9 +87,16 @@ define(["model/passes/preprocessor/historypass",
             var report = script.getQuantities();
             var lines = script.toSource().split("\n");
 
+            // replace string definitions for wildcards
+            lines = this.replacer.replaceStrings(lines);
+
+            // executing passes
             for (var i = 0; i < this.passes.length; i++) {
                 lines = this.passes[i].parse(lines, report);
             }
+
+            // restore all string definitions
+            lines = this.replacer.restoreStrings(lines);
 
             return lines.join("");
         };

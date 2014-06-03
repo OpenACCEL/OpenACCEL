@@ -59,6 +59,20 @@ define(["model/passes/analyser/quantitypass",
         }
 
         /**
+         * Performs all
+         *
+         * @param {String} line A single line of input code.
+         * @return {Object} An object containing all the quantities in the script.
+         */
+        Analyser.prototype.analyse = function(line, quantities) {
+            for (var i = 0; i < this.passes.length; i++) {
+                quantities = this.passes[i].analyse(line, quantities);
+            }
+
+            return quantities;
+        };
+
+        /**
          * Returns whether there are no todo-items.
          *
          * @return this.scriptComplete
@@ -179,10 +193,10 @@ define(["model/passes/analyser/quantitypass",
             } else if (type === 'check') {
                 parameters = definition.match(/check\((true|false)\)/);
             } else if (type === 'text') {
-                parameters = definition.match(/input\((\'\w+\')\)/)
+                parameters = definition.match(/input\((?:\'|\")(\w+)(?:\'|\")/);
             }
             return parameters.slice(1);
-        }
+        };
 
         // Exports all macros.
         return Analyser;
