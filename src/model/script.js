@@ -17,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/analyser", "model/quantity"], function(Analyser, Quantity) {
+define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Quantity, _) {
     /**
      * @class Script
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
