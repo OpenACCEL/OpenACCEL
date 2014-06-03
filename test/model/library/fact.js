@@ -1,18 +1,15 @@
 suite("Fact Library", function() {
+
+    var assert;
     var compiler;
     var macros;
-    var assert;
-    var Script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
-            assert = assertModule;
-            compiler = new module();
+        requirejs(["assert", "model/compiler", "model/fileloader"], function(Assert, Compiler, FileLoader) {
+            console.log("Loaded 'Fact' module.");
+            assert = Assert;
+            compiler = new Compiler();
             fileLoader = new FileLoader();
-            Script = scriptModule;
             fileLoader.load("fact", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");

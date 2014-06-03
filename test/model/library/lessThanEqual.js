@@ -1,18 +1,17 @@
 suite("LessThanEqual Library", function() {
+
+    var assert;
     var compiler;
     var macros;
-    var assert;
-    var Script;
+    var script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
-            assert = assertModule;
-            compiler = new module();
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
+            console.log("Loaded 'LessThanEqual' module.");
+            assert = Assert;
+            compiler = new Compiler();
             fileLoader = new FileLoader();
-            Script = scriptModule;
+            script = Script;
             fileLoader.load("lessThanEqual", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
@@ -82,13 +81,13 @@ suite("LessThanEqual Library", function() {
 
         test("should expand for 'x = 5, y = lessThanEqual(x, 4)'", function() {
             var input = "x = 5\ny = lessThanEqual(x, 4)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), false);
         });
 
         test("should expand for 'x = 5, y = lessThanEqual(x, 5), z = lessThanEqual(x, lessThanEqual(4, y))'", function() {
             var input = "x = 5\ny = lessThanEqual(x, 5) \nz = lessThanEqual(x, lessThanEqual(4, y))";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), true);
             assert.equal(output.exe.z(), false);
         });

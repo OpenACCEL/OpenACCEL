@@ -1,18 +1,17 @@
 suite("Or Library", function() {
+
+    var assert;
     var compiler;
     var macros;
-    var assert;
-    var Script;
+    var script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
-            assert = assertModule;
-            compiler = new module();
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
+            console.log("Loaded 'Or' module.");
+            assert = Assert;
+            compiler = new Compiler();
             fileLoader = new FileLoader();
-            Script = scriptModule;
+            script = Script;
             fileLoader.load("or", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
@@ -81,13 +80,13 @@ suite("Or Library", function() {
 
         test("should expand for 'x = true, y = or(x, false)'", function() {
             var input = "x = true\ny = or(x, false)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), true);
         });
 
         test("should expand for 'x = false, y = or(x, false), z = or(x, or(true, y))'", function() {
             var input = "x = false\ny = or(x, false) \nz = or(x, or(true, y))";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), false);
             assert.equal(output.exe.z(), true);
         });

@@ -1,15 +1,13 @@
-suite('quantitypass.js', function() {
-    // quantitypass module.
-    var quantitypass;
+suite("QunatityPass", function() {
+
     var assert;
+    var quantityPass;
 
     setup(function (done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/passes/analyser/quantitypass'], function(assertModule, module) {
-            console.log('Loaded \'quantitypass\' module.');
+        requirejs(['assert', 'model/passes/analyser/quantitypass'], function(assertModule, QunatityPass) {
+            console.log("Loaded 'QunatityPass' module.");
             assert = assertModule;
-            quantitypass = new module();
+            quantityPass = new QunatityPass();
             done();
         });
     });
@@ -19,7 +17,7 @@ suite('quantitypass.js', function() {
             var input = 'x = 5';
             var quantities = {};
 
-            var result = quantitypass.analyse(input, null, quantities);
+            var result = quantityPass.analyse(input, null, quantities);
 
             assert('x' in quantities);
             assert.equal(result.name, 'x');
@@ -30,7 +28,7 @@ suite('quantitypass.js', function() {
             var input = 'f(x) = x';
             var quantities = {};
 
-            var result = quantitypass.analyse(input, null, quantities);
+            var result = quantityPass.analyse(input, null, quantities);
 
             assert('f' in quantities);
             assert.equal(result.name, 'f');
@@ -41,7 +39,7 @@ suite('quantitypass.js', function() {
             var input = 'f(x,y,z) = x + y + z';
             var quantities = {};
 
-            var result = quantitypass.analyse(input, null, quantities);
+            var result = quantityPass.analyse(input, null, quantities);
 
             assert('f' in quantities);
             assert.equal(result.name, 'f');
@@ -54,7 +52,7 @@ suite('quantitypass.js', function() {
             var input = 'r2d2 = 5';
             var quantities = {};
 
-            var result = quantitypass.analyse(input, null, quantities);
+            var result = quantityPass.analyse(input, null, quantities);
 
             assert('r2d2' in quantities);
             assert.equal(result.name, 'r2d2');
@@ -65,7 +63,7 @@ suite('quantitypass.js', function() {
             var input = 'r2d2(x) = x';
             var quantities = {};
 
-            var result = quantitypass.analyse(input, null, quantities);
+            var result = quantityPass.analyse(input, null, quantities);
 
             assert('r2d2' in quantities);
             assert.equal(result.name, 'r2d2');
@@ -76,7 +74,7 @@ suite('quantitypass.js', function() {
             var input = 'r2d2(x,y,z) = x + y + z';
             var quantities = {};
 
-            var result = quantitypass.analyse(input, null, quantities);
+            var result = quantityPass.analyse(input, null, quantities);
 
             assert(quantities[result.name]);
             assert.equal(quantities['r2d2'].name, 'r2d2');

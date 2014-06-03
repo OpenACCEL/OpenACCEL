@@ -1,18 +1,17 @@
 suite("Cond Macro", function() {
-    var macroExpander;
+
     var assert;
     var compiler;
-    var Script
+    var macroExpander;
+    var script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/macroexpander", "model/compiler", "model/script"], function(assertModule, MacroExpander, Compiler, scriptModule) {
-            console.log("Loaded 'MacroExpander, FileLoader, Compiler and Script' module.");
-            assert = assertModule;
+        requirejs(["assert", "model/macroexpander", "model/compiler", "model/script"], function(Assert, MacroExpander, Compiler, Script) {
+            console.log("Loaded 'Cond' module.");
+            assert = Assert;
             macroExpander = new MacroExpander();
-            compiler = new Compiler;
-            Script = scriptModule;
+            compiler = new Compiler();
+            script = Script;
             done();
         });
     });
@@ -20,13 +19,13 @@ suite("Cond Macro", function() {
     suite("Results through compiler", function() {
         test("Simple expression, false", function() {
             var input = "x = cond(1 > 2, 3, 4)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.x(), 4);
         });
 
         test("Simple expression, true", function() {
             var input = "x = cond(1 < 2, 3, 4)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.x(), 3);
         });
 
@@ -35,13 +34,13 @@ suite("Cond Macro", function() {
                 "a = 20\n" +
                 "b = 40\n" +
                 "c = f(a,b)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.c(), 40);
         });
 
         test("Nested cond", function() {
             var input = "x = cond(1 == 2, cond(1 < 2, 3, 4), cond(2 > 1, 5, 6))";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.x(), 5);
         });
     });

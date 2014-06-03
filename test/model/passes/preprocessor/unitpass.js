@@ -1,15 +1,13 @@
 suite("UnitPass.js", function() {
-    // Template module.
-    var UnitPass;
+
     var assert;
+    var unitPass;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/passes/preprocessor/unitpass"], function(assertModule, module) {
+        requirejs(["assert", "model/passes/preprocessor/unitpass"], function(Assert, UnitPass) {
             console.log("Loaded 'UnitPass' module.");
-            assert = assertModule;
-            UnitPass = new module();
+            assert = Assert;
+            unitPass = new UnitPass();
             done();
         });
     });
@@ -18,45 +16,45 @@ suite("UnitPass.js", function() {
         test("parse()", function() {
             var input = ['x = 2 ; kg2', 'y = 3 ; m/s', 'z = 3'];
             var expResult = ['x = 2 ; {\'kg\': 2}', 'y = 3 ; {\'m\': 1, \'s\': -1}', 'z = 3'];
-            var result = UnitPass.parse(input, {});
+            var result = unitPass.parse(input, {});
             assert.deepEqual(result, expResult);
         });
 
         test("parse() robustness", function() {
             assert.throws(
                 function() {
-                    UnitPass.parse(null);
+                    unitPass.parse(null);
                 });
             assert.throws(
                 function() {
-                    UnitPass.parse();
+                    unitPass.parse();
                 });
         });
     });
 
     suite("UnitPass.translateUnits", function() {
-        /** 
+        /**
          * Test translateUnits().
          * Unit kg squared.
          */
         test('kg2', function() {
-            assert.deepEqual(UnitPass.translateUnits('kg2'), '{\'kg\': 2}');
+            assert.deepEqual(unitPass.translateUnits('kg2'), '{\'kg\': 2}');
         });
 
-        /** 
+        /**
          * Test translateUnits().
          * Unit m/s.
          */
         test('m/s', function() {
-            assert.deepEqual(UnitPass.translateUnits('m/s'), '{\'m\': 1, \'s\': -1}');
+            assert.deepEqual(unitPass.translateUnits('m/s'), '{\'m\': 1, \'s\': -1}');
         });
 
-        /** 
+        /**
          * Test translateUnits().
          * Unit 1/s.
          */
         test('1/s', function() {
-            assert.deepEqual(UnitPass.translateUnits('1/s'), '{\'s\': -1}');
+            assert.deepEqual(unitPass.translateUnits('1/s'), '{\'s\': -1}');
         });
 
         /**
@@ -64,7 +62,7 @@ suite("UnitPass.js", function() {
          * Unit kg10.m/s2.t3
          */
         test('kg10.m/s2.t3', function() {
-            assert.deepEqual(UnitPass.translateUnits('kg10.m/s2.t3'), '{\'kg\': 10, \'m\': 1, \'s\': -2, \'t\': -3}');
+            assert.deepEqual(unitPass.translateUnits('kg10.m/s2.t3'), '{\'kg\': 10, \'m\': 1, \'s\': -2, \'t\': -3}');
         });
 
         /**
@@ -72,7 +70,7 @@ suite("UnitPass.js", function() {
          * Error: Multiple divisions
          */
         test('Error: Multiple divisions', function() {
-            assert.deepEqual(UnitPass.translateUnits('kg/m/s'), '{\'error\': \'uniterror\'}');
+            assert.deepEqual(unitPass.translateUnits('kg/m/s'), '{\'error\': \'uniterror\'}');
         });
 
         /**
@@ -80,7 +78,7 @@ suite("UnitPass.js", function() {
          * Error: Error in unitname
          */
         test('Error: Error in unitname', function() {
-            assert.deepEqual(UnitPass.translateUnits('k2g/m'), '{\'error\': \'uniterror\'}');
+            assert.deepEqual(unitPass.translateUnits('k2g/m'), '{\'error\': \'uniterror\'}');
         });
 
         /**
@@ -89,10 +87,10 @@ suite("UnitPass.js", function() {
          */
         test('translateUnits() robustness', function() {
             assert.throws(function() {
-                UnitPass.translateUnits(null);
+                unitPass.translateUnits(null);
             });
             assert.throws(function() {
-                UnitPass.translateUnits();
+                unitPass.translateUnits();
             });
         });
     });
@@ -105,7 +103,7 @@ suite("UnitPass.js", function() {
         test('Unit with positive power.', function() {
             var input = 'm2';
             var expResult = ['\'m\': 2'];
-            var result = UnitPass.translateUnitProduct(input, false);
+            var result = unitPass.translateUnitProduct(input, false);
             assert.deepEqual(result, expResult);
         });
 
@@ -116,7 +114,7 @@ suite("UnitPass.js", function() {
         test('Two Units with positive power.', function() {
             var input = 'm2.s3';
             var expResult = ['\'m\': 2', '\'s\': 3'];
-            var result = UnitPass.translateUnitProduct(input, false);
+            var result = unitPass.translateUnitProduct(input, false);
             assert.deepEqual(result, expResult);
         });
 
@@ -127,7 +125,7 @@ suite("UnitPass.js", function() {
         test('Two Units with negative power.', function() {
             var input = 'm2.s3';
             var expResult = ['\'m\': -2', '\'s\': -3'];
-            var result = UnitPass.translateUnitProduct(input, true);
+            var result = unitPass.translateUnitProduct(input, true);
             assert.deepEqual(result, expResult);
         });
 
@@ -138,7 +136,7 @@ suite("UnitPass.js", function() {
         test('One unit without power, one with.', function() {
             var input = 'm.s3';
             var expResult = ['\'m\': 1', '\'s\': 3'];
-            var result = UnitPass.translateUnitProduct(input, false);
+            var result = unitPass.translateUnitProduct(input, false);
             assert.deepEqual(result, expResult);
         });
 
@@ -149,7 +147,7 @@ suite("UnitPass.js", function() {
         test('One unit without power, one with; negative', function() {
             var input = 'm.s3';
             var expResult = ['\'m\': -1', '\'s\': -3'];
-            var result = UnitPass.translateUnitProduct(input, true);
+            var result = unitPass.translateUnitProduct(input, true);
             assert.deepEqual(result, expResult);
         });
 
@@ -160,7 +158,7 @@ suite("UnitPass.js", function() {
         test('Long one', function() {
             var input = 'a.b2.c3.d4.e5';
             var expResult = ['\'a\': 1', '\'b\': 2', '\'c\': 3', '\'d\': 4', '\'e\': 5'];
-            var result = UnitPass.translateUnitProduct(input, false);
+            var result = unitPass.translateUnitProduct(input, false);
             assert.deepEqual(result, expResult);
         });
 
@@ -171,10 +169,9 @@ suite("UnitPass.js", function() {
         test('Error in a unit', function() {
             var input = 's2/k.m4';
             var expResult = ['\'error\': \'uniterror\''];
-            var result = UnitPass.translateUnitProduct(input, false);
+            var result = unitPass.translateUnitProduct(input, false);
             assert.deepEqual(result, expResult);
         });
-
 
         /**
          * Test translateUnitProduct()
@@ -182,15 +179,16 @@ suite("UnitPass.js", function() {
          */
         test('translateUnitProduct() robustness', function() {
             assert.throws(function() {
-                UnitPass.translateUnitProduct(null);
+                unitPass.translateUnitProduct(null);
             });
             assert.throws(function() {
-                UnitPass.translateUnitProduct();
+                unitPass.translateUnitProduct();
             });
         });
     });
 
     suite("UnitPass.translateSingleUnit", function() {
+
         /**
          * Test for UnitPass.translateSingleUnit
          * Unit with positive power.
@@ -198,7 +196,7 @@ suite("UnitPass.js", function() {
         test('Unit with positive power.', function() {
             var input = 'm2';
             var expResult = '\'m\': 2'
-            var result = UnitPass.translateSingleUnit(input, false);
+            var result = unitPass.translateSingleUnit(input, false);
             assert.equal(result, expResult);
         });
 
@@ -209,7 +207,7 @@ suite("UnitPass.js", function() {
         test('Unit with negative power.', function() {
             var input = 'm2';
             var expResult = '\'m\': -2'
-            var result = UnitPass.translateSingleUnit(input, true);
+            var result = unitPass.translateSingleUnit(input, true);
             assert.equal(result, expResult);
         });
 
@@ -220,7 +218,7 @@ suite("UnitPass.js", function() {
         test('Multi-character unit with multi-digit positive power.', function() {
             var input = 'kg10';
             var expResult = '\'kg\': 10'
-            var result = UnitPass.translateSingleUnit(input, false);
+            var result = unitPass.translateSingleUnit(input, false);
             assert.equal(result, expResult);
         });
 
@@ -231,7 +229,7 @@ suite("UnitPass.js", function() {
         test('Multi-character unit with multi-digit negative power.', function() {
             var input = 'kg10';
             var expResult = '\'kg\': -10'
-            var result = UnitPass.translateSingleUnit(input, true);
+            var result = unitPass.translateSingleUnit(input, true);
             assert.equal(result, expResult);
         });
 
@@ -242,7 +240,7 @@ suite("UnitPass.js", function() {
         test('Unit with no power; positive', function() {
             var input = 's';
             var expResult = '\'s\': 1'
-            var result = UnitPass.translateSingleUnit(input, false);
+            var result = unitPass.translateSingleUnit(input, false);
             assert.equal(result, expResult);
         });
 
@@ -253,7 +251,7 @@ suite("UnitPass.js", function() {
         test('Unit with no power; negative', function() {
             var input = 's';
             var expResult = '\'s\': -1'
-            var result = UnitPass.translateSingleUnit(input, true);
+            var result = unitPass.translateSingleUnit(input, true);
             assert.equal(result, expResult);
         });
 
@@ -264,7 +262,7 @@ suite("UnitPass.js", function() {
         test('error: number in unitname', function() {
             var input = 's2s';
             var expResult = '\'error\': \'uniterror\'';
-            var result = UnitPass.translateSingleUnit(input, true);
+            var result = unitPass.translateSingleUnit(input, true);
             assert.equal(result, expResult);
         });
 
@@ -275,7 +273,7 @@ suite("UnitPass.js", function() {
         test('error: non-letter symbol', function() {
             var input = 's/s';
             var expResult = '\'error\': \'uniterror\'';
-            var result = UnitPass.translateSingleUnit(input, true);
+            var result = unitPass.translateSingleUnit(input, true);
             assert.equal(result, expResult);
         });
 
@@ -285,13 +283,11 @@ suite("UnitPass.js", function() {
          */
         test('robustness', function() {
             assert.throws(function() {
-                UnitPass.translateSingleUnit(null);
+                unitPass.translateSingleUnit(null);
             });
             assert.throws(function() {
-                UnitPass.translateSingleUnit();
+                unitPass.translateSingleUnit();
             });
         });
     });
-
-
 });

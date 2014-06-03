@@ -1,23 +1,22 @@
 suite("GreaterThanEqual Library", function() {
+
+    var assert;
     var compiler;
     var macros;
-    var assert;
-    var Script;
+    var script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
-            assert = assertModule;
-            compiler = new module();
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
+            console.log("Loaded 'GreaterThanEqual' module.");
+            assert = Assert;
+            compiler = new Compiler();
             fileLoader = new FileLoader();
-            Script = scriptModule;
             fileLoader.load("greaterThanEqual", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
+            script = Script;
             done();
         });
     });
@@ -81,13 +80,13 @@ suite("GreaterThanEqual Library", function() {
 
         test("should expand for 'x = 5, y = greaterThanEqual(x, 4)'", function() {
             var input = "x = 5\ny = greaterThanEqual(x, 4)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), true);
         });
 
         test("should expand for 'x = 5, y = greaterThanEqual(x, 5), z = greaterThanEqual(x, greaterThanEqual(4, y))'", function() {
             var input = "x = 5\ny = greaterThanEqual(x, 5) \nz = greaterThanEqual(x, greaterThanEqual(4, y))";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), true);
             assert.equal(output.exe.z(), true);
         });

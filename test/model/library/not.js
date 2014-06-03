@@ -1,18 +1,17 @@
 suite("Not Library", function() {
+
+    var assert;
     var compiler;
     var macros;
-    var assert;
-    var Script;
+    var script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
-            assert = assertModule;
-            compiler = new module();
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
+            console.log("Loaded 'Not' module.");
+            assert = Assert;
+            compiler = new Compiler();
             fileLoader = new FileLoader();
-            Script = scriptModule;
+            script = Script;
             fileLoader.load("not", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
@@ -73,13 +72,13 @@ suite("Not Library", function() {
 
         test("should expand for 'x = 5, y = not(x)'", function() {
             var input = "x = 5\ny = not(x)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), false);
         });
 
         test("should expand for 'x = 5, y = not(x), z = not(y)'", function() {
             var input = "x = 5\ny = not(x) \nz = not(y)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), false);
             assert.equal(output.exe.z(), true);
         });

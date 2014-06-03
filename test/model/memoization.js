@@ -1,13 +1,12 @@
-suite("memoization.js", function() {
+suite("Memoization", function() {
 
-    // Memoization module.
     var assert;
     var memoization;
 
     setup(function (done) {
-        requirejs(["assert", "model/memoization"], function(assertModule, memoizationModule) {
-            assert = assertModule;
-            memoization = memoizationModule;
+        requirejs(["assert", "model/memoization"], function(Assert, Memoization) {
+            assert = Assert;
+            memoization = Memoization;
             console.log("Loaded 'Memoization' module.");
             done();
         });

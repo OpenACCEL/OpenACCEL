@@ -1,16 +1,16 @@
 suite("Macro Expander", function() {
-    var macroExpander;
-    var fileLoader;
+
     var assert;
+    var fileLoader;
+    var macroExpander;
 
     setup(function (done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(assertModule, module, FileLoader) {
+        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, MacroExpander, FileLoader) {
             console.log("Loaded 'MacroExpander' module.");
-            assert = assertModule;
-            macroExpander = new module();
+            assert = Assert;
+            macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
+            fileLoader.load("testAdd", "macros");
             done();
         });
     });
@@ -25,7 +25,6 @@ suite("Macro Expander", function() {
 
         test("should equal 6", function() {
             var code = "(function() { var test = function() { return add(5); }; x = {}; x.test1 = test; return x; })();";
-            fileLoader.load("testAdd", "macros");
             var output = eval(macroExpander.expand(code, fileLoader.getMacros()));
             assert.equal(6, output.test1());
         });

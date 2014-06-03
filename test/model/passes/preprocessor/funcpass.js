@@ -1,21 +1,18 @@
 suite('funcpass.js', function() {
-    // Template module.
-    var instance;
+
     var assert;
+    var funcPass;
 
     setup(function (done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/passes/preprocessor/funcpass'], function(assertModule, module) {
+        requirejs(['assert', 'model/passes/preprocessor/funcpass'], function(Assert, FuncPass) {
             console.log('Loaded \'FuncPass\' module.');
-            assert = assertModule;
-            instance = new module();
+            assert = Assert;
+            funcPass = new FuncPass();
             done();
         });
     });
 
     suite('FuncPass', function() {
-
 
         /**
          * Test case for parse()
@@ -31,7 +28,7 @@ suite('funcpass.js', function() {
                 'func(y = sin(exe.x()))',
                 'func(z = 2 + sin(exe.y() + sin(exe.x())) + sin(2))'
             ];
-            assert.deepEqual(instance.parse(lines, {}), expResult);
+            assert.deepEqual(funcPass.parse(lines, {}), expResult);
         });
     });
 });

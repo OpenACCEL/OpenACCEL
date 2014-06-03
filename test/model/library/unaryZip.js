@@ -1,16 +1,15 @@
 suite("UnaryZip", function() {
-    var macroExpander;
-    var macros;
+
     var assert;
     var fileLoader;
+    var macroExpander;
+    var macros;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(assertModule, module, FileLoader) {
-            console.log("Loaded 'MacroExpander & FileLoader' module.");
-            assert = assertModule;
-            macroExpander = new module();
+        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, MacroExpander, FileLoader) {
+            console.log("Loaded 'UnaryZip' module.");
+            assert = Assert;
+            macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
             fileLoader.load("unaryZip", "library");
             done();
@@ -18,7 +17,6 @@ suite("UnaryZip", function() {
     });
 
     suite("expansion", function() {
-
 
         // simple test function
         function square(x) {
@@ -86,7 +84,5 @@ suite("UnaryZip", function() {
             var output = unaryZip(input, square);
             assert.deepEqual(output, expected);
         });
-
-
     });
 });

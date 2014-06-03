@@ -1,19 +1,17 @@
 suite('exepass.js', function() {
-    // Template module.
+
     var analyser;
-    var instance;
     var assert;
+    var exePass;
     var Script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
         requirejs(['assert', 'model/passes/preprocessor/exepass', "model/analyser", "model/script"],
-                                                            function(assertModule, module, analyserModule, scriptModule) {
+                function(Assert, ExePass, Analyser, scriptModule) {
             console.log('Loaded \'ExePass\' module.');
-            assert = assertModule;
-            instance = new module();
-            analyser = new analyserModule();
+            assert = Assert;
+            exePass = new ExePass();
+            analyser = new Analyser();
             Script = scriptModule;
             done();
         });
@@ -37,7 +35,7 @@ suite('exepass.js', function() {
             var script = new Script(lines.join("\n"));
             var report = script.getQuantities();
 
-            assert.deepEqual(instance.parse(lines, report), expResult);
+            assert.deepEqual(exePass.parse(lines, report), expResult);
         });
 
         test('parse(): local function parameter and user defined function', function() {
@@ -55,7 +53,7 @@ suite('exepass.js', function() {
             var script = new Script(lines.join("\n"));
             var report = script.getQuantities();
 
-            assert.deepEqual(instance.parse(lines, report), expResult);
+            assert.deepEqual(exePass.parse(lines, report), expResult);
         });
 
         /**
@@ -69,7 +67,7 @@ suite('exepass.js', function() {
             var script = new Script("z = " + line);
             var report = script.getQuantities();
 
-            assert.equal(instance.translateRHS(line, "z", report), expResult);
+            assert.equal(exePass.translateRHS(line, "z", report), expResult);
         });
 
         test('parse(): Vector dot notation test: myVar.myKey', function() {
@@ -78,7 +76,7 @@ suite('exepass.js', function() {
             var script = new Script(lines.join("\n"));
             var report = script.getQuantities();
 
-            assert.deepEqual(instance.parse(lines, report), expResult);
+            assert.deepEqual(exePass.parse(lines, report), expResult);
         });
 
         /**
@@ -87,10 +85,10 @@ suite('exepass.js', function() {
          */
         test('translateRHS(): Robustness', function() {
             assert.throws(function() {
-                instance.translateRHS(null);
+                exePass.translateRHS(null);
             });
             assert.throws(function() {
-                instance.translateRHS();
+                exePass.translateRHS();
             });
         });
     });
