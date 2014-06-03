@@ -95,9 +95,9 @@ define(["model/fileloader",
 
         // Pre-process and expand.
         var code = this.preProcessor.process(script);
-        code = this.fileLoader.getLibrary() + code;
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
+        eval(this.fileLoader.getLibrary());
         exe = eval(code);
         exe.__report__ = script.getQuantities();
 
