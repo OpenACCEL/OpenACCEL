@@ -79,7 +79,7 @@ deploy() {
     node ./utils/monofuncgenerator.js ./src/model/library
 
     # Generate single file containing all functions.
-    rm src/model/library/functions.js
+    rm -f src/model/library/functions.js
     cat src/model/library/* > src/model/library/functions.js
 
     # Copy scripts.
