@@ -28,7 +28,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
          * Regex to extract calls to the at-function
          * @type {RegExp}
          */
-        this.atRegex = /(@(?=\())/g;
+        this.atRegex = /(^|\W)(?:@(?=\())/g;
     }
 
     AtPass.prototype = new CompilerPass();
@@ -54,7 +54,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
             var rhs = this.getRHS(line);
 
             // Replace the if
-            var newrhs = rhs.replace(this.atRegex, '__at__');
+            var newrhs = rhs.replace(this.atRegex, '$1__at__');
 
             return line.replace(rhs, newrhs);
 
