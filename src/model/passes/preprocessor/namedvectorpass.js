@@ -160,12 +160,10 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
                 }
             }
         }
-
         if (!parent) {
             // We have not found a begin token at all, thus we are dealing with a base case and can start translating.
             var count = 0;
             var elements = output.split(",");
-
             // If an element does *not* contain a ':', it is unnamed and thus needs an index identifier.
             for (var i = 0; i < elements.length; i++) {
                 var key = elements[i].split(this.begin);
@@ -176,6 +174,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
             output = elements.join("\u2603");
 
         }
+        console.log(output)
         return output;
     }
 
