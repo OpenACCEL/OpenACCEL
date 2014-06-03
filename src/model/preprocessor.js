@@ -29,10 +29,12 @@ define(["model/stringreplacer",
         "model/passes/preprocessor/uipass",
         "model/passes/preprocessor/ifpass",
         "model/passes/preprocessor/quantifierpass",
-        "model/passes/preprocessor/commentpass"
+        "model/passes/preprocessor/commentpass",
+        "model/passes/preprocessor/atpass"
     ],
     /**@lends Model*/
-    function(StringReplacer,
+    function(
+        StringReplacer,
         HistoryPass,
         UnitPass,
         OperatorPass,
@@ -44,7 +46,8 @@ define(["model/stringreplacer",
         UIPass,
         IfPass,
         QuantifierPass,
-        CommentPass) {
+        CommentPass,
+        AtPass) {
 
         /**
          * @class
@@ -61,6 +64,7 @@ define(["model/stringreplacer",
             this.passes.push(new NamedVectorPass());
             this.passes.push(new VectorPass());
             this.passes.push(new IfPass());
+            this.passes.push(new AtPass());
             this.passes.push(new ExePass());
             this.passes.push(new OperatorPass());
             this.passes.push(new UnitPass());
