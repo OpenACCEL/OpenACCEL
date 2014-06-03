@@ -1,24 +1,18 @@
 suite("DependencyPass", function() {
-    // Template module.
-    var instance;
-    var qpass;
+
     var assert;
+    var dependencyPass;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/passes/analyser/dependencypass', 'model/passes/analyser/quantitypass'],
-                function(assertModule, module, qpassmodule) {
+        requirejs(['assert', 'model/passes/analyser/dependencypass'], function(Assert, DependencyPass) {
             console.log("Loaded 'DependencyPass' module.");
-            assert = assertModule;
-            instance = new module();
-            qpass = new qpassmodule();
+            assert = Assert;
+            dependencyPass = new DependencyPass();
             done();
         });
     });
 
     suite('DependencyPass', function() {
-
 
         /**
          * The script that we take as example for this pass.
@@ -258,7 +252,7 @@ suite("DependencyPass", function() {
                 var qtyName =  lhs.match(/(\w*[a-zA-Z_]\w*(?!\w*\s*:))/g)[0];
                 var quantity = result[qtyName];
 
-                quantity = instance.analyse(line, quantity, result);
+                quantity = dependencyPass.analyse(line, quantity, result);
             });
 
             assert.deepEqual(result, endReport);

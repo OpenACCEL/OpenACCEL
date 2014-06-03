@@ -1,23 +1,22 @@
 suite("Imply Library", function() {
+
+    var assert;
     var compiler;
     var macros;
-    var assert;
-    var Script;
+    var script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
             console.log("Loaded 'Imply' module.");
-            assert = assertModule;
-            compiler = new module();
+            assert = Assert;
+            compiler = new Compiler();
             fileLoader = new FileLoader();
-            Script = scriptModule;
             fileLoader.load("imply", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
+            script = Script;
             done();
         });
     });
@@ -83,13 +82,13 @@ suite("Imply Library", function() {
 
         test("should expand for 'x = 5, y = imply(x, 4)'", function() {
             var input = "x = 5\ny = imply(x, 4)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), 4);
         });
 
         test("should expand for 'x = 5, y = imply(x, 5), z = imply(x, imply(4, y))'", function() {
             var input = "x = 5\ny = imply(x, 5) \nz = imply(x, imply(4, y))";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), 5);
             assert.equal(output.exe.z(), 5);
         });

@@ -1,23 +1,22 @@
 suite("And Library", function() {
+
+    var assert;
     var compiler;
     var macros;
-    var assert;
-    var Script;
+    var script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
             console.log("Loaded 'And' module.");
-            assert = assertModule;
-            compiler = new module();
+            assert = Assert;
+            compiler = new Compiler();
             fileLoader = new FileLoader();
-            Script = scriptModule;
             fileLoader.load("and", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
+            script = Script;
             done();
         });
     });
@@ -83,13 +82,13 @@ suite("And Library", function() {
 
         test("should expand for 'x = 5, y = and(x, true)'", function() {
             var input = "x = 5\ny = and(x, true)";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), true);
         });
 
         test("should expand for 'x = 5, y = and(x, true), z = and(y, and(x, false))'", function() {
             var input = "x = 5\ny = and(x, true) \nz = and(y, and(x, false))";
-            var output = compiler.compile(new Script(input));
+            var output = compiler.compile(new script(input));
             assert.equal(output.exe.y(), true);
             assert.equal(output.exe.z(), false);
         });

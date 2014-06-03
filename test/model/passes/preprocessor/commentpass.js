@@ -1,15 +1,13 @@
 suite('commentpass.js', function() {
-    // Template module.
-    var commentpass;
+
     var assert;
+    var commentPass;
 
     setup(function (done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/passes/preprocessor/commentpass'], function(assertModule, module) {
+        requirejs(['assert', 'model/passes/preprocessor/commentpass'], function(Assert, CommentPass) {
             console.log('Loaded \'CommentPass\' module.');
-            assert = assertModule;
-            commentpass = new module();
+            assert = Assert;
+            commentPass = new CommentPass();
             done();
         });
     });
@@ -28,7 +26,7 @@ suite('commentpass.js', function() {
             'y = sin(x)'
             ];
 
-            var result = commentpass.parse(input, {});
+            var result = commentPass.parse(input, {});
             assert.deepEqual(result, expResult);
         });
 
@@ -40,7 +38,7 @@ suite('commentpass.js', function() {
 
             var expResult = [];
 
-            var result = commentpass.parse(input, {});
+            var result = commentPass.parse(input, {});
             assert.deepEqual(result, expResult);
         });
 
@@ -50,7 +48,7 @@ suite('commentpass.js', function() {
             'y = sin(x)',
             ];
 
-            var result = commentpass.parse(input, {});
+            var result = commentPass.parse(input, {});
             assert.deepEqual(result, input);
         });
     });

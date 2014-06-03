@@ -1,14 +1,13 @@
 suite("ControllerAPI", function() {
-    var controller;
+
     var assert;
+    var controller;
 
     setup(function (done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "controller/ControllerAPI"], function(assertModule, module) {
+        requirejs(["assert", "controller/ControllerAPI"], function(Assert, ControllerAPI) {
             console.log("Loaded 'Controller' module.");
-            assert = assertModule;
-            controller = new module();
+            assert = Assert;
+            controller = new ControllerAPI();
             done();
         });
     });
@@ -31,7 +30,7 @@ suite("ControllerAPI", function() {
             var expected = false;
             controller.stop();
             var output = controller.executing;
-            assert.equal(output, expected);    
+            assert.equal(output, expected);
         });
 
         test("Normal get quantities tests", function() {

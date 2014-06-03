@@ -1,16 +1,15 @@
 suite("File Loader", function() {
-    var fileLoader;
+
     var assert;
+    var fileLoader;
     var os;
 
     setup(function (done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/fileloader", "os"], function(assertModule, module, osModule) {
+        requirejs(["assert", "model/fileloader", "os"], function(Assert, FileLoader, OS) {
             console.log("Loaded 'FileLoader' module.");
-            assert = assertModule;
-            fileLoader = new module();
-            os = osModule;
+            assert = Assert;
+            fileLoader = new FileLoader();
+            os = OS;
             done();
         });
     });

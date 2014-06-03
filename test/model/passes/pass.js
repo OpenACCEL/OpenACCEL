@@ -1,15 +1,13 @@
 suite('pass.js', function() {
-    // Template module.
-    var instance;
+
     var assert;
+    var pass;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(['assert', 'model/passes/pass'], function(assertModule, module) {
+        requirejs(['assert', 'model/passes/pass'], function(Assert, Pass) {
             console.log('Loaded \'Pass\' module.');
-            assert = assertModule;
-            instance = new module();
+            assert = Assert;
+            pass = new Pass();
             done();
         });
     });
@@ -26,11 +24,11 @@ suite('pass.js', function() {
         test('parse() robustness', function() {
             assert.throws(
                 function() {
-                    instance.parse(null);
+                    pass.parse(null);
                 });
             assert.throws(
                 function() {
-                    instance.parse();
+                    pass.parse();
                 });
         });
 
@@ -38,28 +36,27 @@ suite('pass.js', function() {
          * Test for getLHS method
          */
         test('getLHS()', function() {
-            assert.equal('x', instance.getLHS(line1));
-            assert.equal('y', instance.getLHS(line2));
-            assert.equal('z', instance.getLHS(line3));
+            assert.equal('x', pass.getLHS(line1));
+            assert.equal('y', pass.getLHS(line2));
+            assert.equal('z', pass.getLHS(line3));
         });
 
         /**
          * Test for getRHS method
          */
         test('getRHS()', function() {
-            assert.equal('5', instance.getRHS(line1));
-            assert.equal('sin(x)', instance.getRHS(line2));
-            assert.equal('2 + sin(y + sin(x)) + sin(2)', instance.getRHS(line3));
+            assert.equal('5', pass.getRHS(line1));
+            assert.equal('sin(x)', pass.getRHS(line2));
+            assert.equal('2 + sin(y + sin(x)) + sin(2)', pass.getRHS(line3));
         });
 
         /**
          * Test for getUnits method
          */
         test('getUnits()', function() {
-            assert.equal('kg', instance.getUnits(line1));
-            assert.equal('', instance.getUnits(line2));
-            assert.equal('', instance.getUnits(line3));
+            assert.equal('kg', pass.getUnits(line1));
+            assert.equal('', pass.getUnits(line2));
+            assert.equal('', pass.getUnits(line3));
         });
-
     });
 });

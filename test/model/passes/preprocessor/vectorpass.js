@@ -1,15 +1,13 @@
 suite("vectorpass.js", function() {
-    // Template module.
-    var VectorPass;
+
     var assert;
+    var vectorPass;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/passes/preprocessor/vectorpass"], function(assertModule, module) {
+        requirejs(["assert", "model/passes/preprocessor/vectorpass"], function(Assert, VectorPass) {
             console.log("Loaded 'VectorPass' module.");
-            assert = assertModule;
-            VectorPass = new module();
+            assert = Assert;
+            vectorPass = new VectorPass();
             done();
         });
     });
@@ -19,11 +17,11 @@ suite("vectorpass.js", function() {
         test("parse() robustness", function() {
             assert.throws(
                 function() {
-                    VectorPass.parse(null);
+                    vectorPass.parse(null);
                 });
             assert.throws(
                 function() {
-                    VectorPass.parse();
+                    vectorPass.parse();
                 });
         });
 
@@ -31,25 +29,25 @@ suite("vectorpass.js", function() {
             var exScript = ['a = [1,2,x:3]', 'y = a.0 + a[x]', 'z = a.1', 'p = a[x]'];
 
             var resultScript = ['a = [1,2,x:3]', 'y = a[0] + a.x', 'z = a[1]', 'p = a.x']
-            assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
+            assert.deepEqual(vectorPass.parse(exScript, {}), resultScript);
         });
 
         test('parse() : a = [1, 2, b.0], b = [4, 6, 7]', function() {
             var exScript = ['a = [1, 2, b.0]', 'b = [4, 6, 7]'];
             var resultScript = ['a = [1, 2, b[0]]', 'b = [4, 6, 7]'];
-            assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
+            assert.deepEqual(vectorPass.parse(exScript, {}), resultScript);
         });
 
         test('parse() : a = [1, 2, b[0]], b = [4, 6, 7]', function() {
             var exScript = ['a = [1, 2, b[0]]', 'b = [4, 6, 7]'];
             var resultScript = ['a = [1, 2, b[0]]', 'b = [4, 6, 7]'];
-            assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
+            assert.deepEqual(vectorPass.parse(exScript, {}), resultScript);
         });
 
         test('parse() : a = [1 + 10, b[1 + 2], c[x:2, y:3, 5], b[0, 2, y:3, t5: 4, 6, 3, o93e: 0, 5]', function() {
             var exScript = ['a = [1 + 10, b[1 + 2]]', 'c = [x:2, y:3, a.1]', 'b[0, 2, y:3, t5: c.0, 6, 3, o93e: 0, 5]'];
             var resultScript = ['a = [1 + 10, b[1 + 2]]', 'c = [x:2, y:3, a[1]]', 'b[0, 2, y:3, t5: c[0], 6, 3, o93e: 0, 5]'];
-            assert.deepEqual(VectorPass.parse(exScript, {}), resultScript);
+            assert.deepEqual(vectorPass.parse(exScript, {}), resultScript);
         });
 
         /** Test dotToBrackets().
@@ -57,7 +55,7 @@ suite("vectorpass.js", function() {
          * y = a.0 == y = a[0]
          */
         test('dotToBrackets() y = a.0', function() {
-            assert.equal(VectorPass.dotToBrackets('y = a.0'), 'y = a[0]');
+            assert.equal(vectorPass.dotToBrackets('y = a.0'), 'y = a[0]');
         });
 
         /** Test dotToBrackets().
@@ -65,7 +63,7 @@ suite("vectorpass.js", function() {
          * y = a.0 + b.0 == y = a[0] + b[0]
          */
         test('dotToBrackets() y = a.0 + b.0', function() {
-            assert.equal(VectorPass.dotToBrackets('y = a.0 + b.0'), 'y = a[0] + b[0]');
+            assert.equal(vectorPass.dotToBrackets('y = a.0 + b.0'), 'y = a[0] + b[0]');
         });
 
         /** Test dotToBrackets().
@@ -73,7 +71,7 @@ suite("vectorpass.js", function() {
          * y = a[0]  == y = a[0]
          */
         test('dotToBrackets() y = a[0]', function() {
-            assert.equal(VectorPass.dotToBrackets('y = a[0]'), 'y = a[0]');
+            assert.equal(vectorPass.dotToBrackets('y = a[0]'), 'y = a[0]');
         });
 
         /** Test dotToBrackets().
@@ -81,17 +79,17 @@ suite("vectorpass.js", function() {
          * y = a.x + b.0  == y = a.x + b[0]
          */
         test('dotToBrackets() y = a.x + b.0 ', function() {
-            assert.equal(VectorPass.dotToBrackets('y = a.x + b.0'), 'y = a.x + b[0]');
+            assert.equal(vectorPass.dotToBrackets('y = a.x + b.0'), 'y = a.x + b[0]');
         });
 
         test('dotToBrackets() robustness', function() {
             assert.throws(
                 function() {
-                    VectorPass.dotToBrackets(null);
+                    vectorPass.dotToBrackets(null);
                 });
             assert.throws(
                 function() {
-                    VectorPass.dotToBrackets();
+                    vectorPass.dotToBrackets();
                 });
         })
 
@@ -101,14 +99,14 @@ suite("vectorpass.js", function() {
          * y = a[x] == y = a.x
          */
         test("bracketsToDot() y = a[x]", function() {
-            assert.equal(VectorPass.bracketsToDot('y = a[x]'), 'y = a.x');
+            assert.equal(vectorPass.bracketsToDot('y = a[x]'), 'y = a.x');
         });
 
         /**
          * Simple test for bracketsToDot().
          */
         test("bracketsToDot() y = a[x] + a[b]", function() {
-            assert.equal(VectorPass.bracketsToDot('y = a[x] + a[b]'), 'y = a.x + a.b');
+            assert.equal(vectorPass.bracketsToDot('y = a[x] + a[b]'), 'y = a.x + a.b');
         });
 
         /** Test bracketsToDot().
@@ -116,7 +114,7 @@ suite("vectorpass.js", function() {
          * y = a.x == y = a.x
          */
         test('bracketsToDot() y = a.x', function() {
-            assert.equal(VectorPass.bracketsToDot('y = a.x'), 'y = a.x');
+            assert.equal(vectorPass.bracketsToDot('y = a.x'), 'y = a.x');
         });
 
         /** Test bracketsToDot().
@@ -124,7 +122,7 @@ suite("vectorpass.js", function() {
          * y = a[x] + a.b  == y = a.x + a.b
          */
         test('bracketsToDot() y = a[x] + a.b', function() {
-            assert.equal(VectorPass.bracketsToDot('y = a[x] + a.b'), 'y = a.x + a.b');
+            assert.equal(vectorPass.bracketsToDot('y = a[x] + a.b'), 'y = a.x + a.b');
         });
 
         /**
@@ -133,11 +131,11 @@ suite("vectorpass.js", function() {
         test('bracketsToDot() robustness', function() {
             assert.throws(
                 function() {
-                    VectorPass.bracketsToDot(null);
+                    vectorPass.bracketsToDot(null);
                 });
             assert.throws(
                 function() {
-                    VectorPass.bracketsToDot();
+                    vectorPass.bracketsToDot();
                 });
         });
     });

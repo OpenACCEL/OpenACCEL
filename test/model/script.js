@@ -1,14 +1,13 @@
 suite("Script", function() {
+
     var assert;
     var Script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/script"], function(assertModule, module) {
+        requirejs(["assert", "model/script"], function(Assert, scriptModule) {
             console.log("Loaded 'Script' module.");
-            assert = assertModule;
-            Script = module;
+            assert = Assert;
+            Script = scriptModule;
             done();
         });
     });

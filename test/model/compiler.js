@@ -1,15 +1,14 @@
 suite("Compiler", function() {
-    var compiler;
+
     var assert;
+    var compiler;
     var Script;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/script"], function(assertModule, module, scriptModule) {
+        requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, scriptModule) {
             console.log("Loaded 'Compiler' module.");
-            assert = assertModule;
-            compiler = new module();
+            assert = Assert;
+            compiler = new Compiler();
             Script = scriptModule;
             done();
         });
