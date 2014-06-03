@@ -18,7 +18,7 @@ suite("vLen Library", function() {
         });
     });
 
-    suite("vDom", function() {
+    suite("vLen", function() {
 
         test("get the domain of an array with only numeric indices", function() {
             eval(fileLoader.getContent());
