@@ -23,7 +23,11 @@ define(['model/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
      * @classdesc Analyses a single line of code and updates the quantities in the script.
      */
     function AnalyserPass() {
-        
+        /**
+         * Regex extracting string-definitions
+         * @type {RegExp}
+         */
+        this.stringregex = /(['"])(.*?)(\1)/g;
     }
 
     AnalyserPass.prototype = new Pass();
@@ -57,12 +61,14 @@ define(['model/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
 
     /**
      * Extracts all Variables, both functions and other Variables, from the given string
+     * Does not include dummy variables of quantified expressions
+     * 
      * @param  {String} def String to get the Variables from
      * @return {Sting[]}     Array of quantity names
      */
     AnalyserPass.prototype.getVariables = function(s) {
         var regexvar = new RegExp(this.regexes.variables);
-        
+        s = s.replace(this.stringregex, ""); // remove string definitions
         var dummies = this.getDummies(s); // determine dummies
         var match;
         var output = [];
@@ -81,6 +87,7 @@ define(['model/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
      */
     AnalyserPass.prototype.getDummies = function(s) {
         var regexdum = new RegExp(this.regexes.dummies);
+        s = s.replace(this.stringregex, ""); // remove string definitions
         var dummies = []; // determine dummies
         var match;
         while (match = regexdum.exec(s)) {

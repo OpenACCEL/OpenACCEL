@@ -96,6 +96,14 @@ suite("Compiler", function() {
             assert.deepEqual(output.exe.d(), expected);
         });
 
+        test('array with names with quotes = [2, "x": "foobar"]', function() {
+            var code = 'y = [2, "x": "foobar"]';
+            var output = compiler.compile(new Script(code));
+            var expected = [2];
+            expected.x = 'foobar';
+            assert.deepEqual(output.exe.y(), expected);
+        });
+
     });
 
     suite("strings tests", function() {
