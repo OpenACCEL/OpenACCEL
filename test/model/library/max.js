@@ -8,7 +8,7 @@ suite("Max Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/script"], function(assertModule, module, scriptModule) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
+            console.log("Loaded 'Max' module.");
             assert = assertModule;
             compiler = new module();
             Script = scriptModule;

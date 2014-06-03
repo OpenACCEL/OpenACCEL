@@ -9,7 +9,7 @@ suite('historypass.js', function() {
         // the done callback because this is asynchronous.
         requirejs(['assert', 'model/passes/preprocessor/historypass', "model/analyser", "model/script"],
             function(assertModule, module, analyserModule, scriptModule) {
-                console.log('Loaded \'Historypass\' module.');
+                console.log('Loaded \'HistoryPass\' module.');
                 assert = assertModule;
                 instance = new module();
                 analyser = new analyserModule();

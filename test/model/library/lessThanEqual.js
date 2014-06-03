@@ -8,7 +8,7 @@ suite("LessThanEqual Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
+            console.log("Loaded 'LessThanEqual' module.");
             assert = assertModule;
             compiler = new module();
             fileLoader = new FileLoader();

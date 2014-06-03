@@ -7,7 +7,7 @@ suite("Func Macro", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/macroexpander", "model/fileloader"], function(assertModule, module, FileLoader) {
-            console.log("Loaded 'MacroExpander & FileLoader' module.");
+            console.log("Loaded 'Func' module.");
             assert = assertModule;
             macroExpander = new module();
             var fileLoader = new FileLoader();

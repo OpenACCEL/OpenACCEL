@@ -7,7 +7,7 @@ suite('commentpass.js', function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(['assert', 'model/passes/preprocessor/commentpass'], function(assertModule, module) {
-            console.log('Loaded \'Commentpass\' module.');
+            console.log('Loaded \'CommentPass\' module.');
             assert = assertModule;
             commentpass = new module();
             done();

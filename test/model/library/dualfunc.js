@@ -8,7 +8,7 @@ suite("Dualfunc", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'compiler & FileLoader' module.");
+            console.log("Loaded 'Dualfunc' module.");
             assert = assertModule;
             compiler = new module();
             var fileLoader = new FileLoader();

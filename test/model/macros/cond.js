@@ -8,7 +8,7 @@ suite("Cond Macro", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/macroexpander", "model/compiler", "model/script"], function(assertModule, MacroExpander, Compiler, scriptModule) {
-            console.log("Loaded 'MacroExpander, FileLoader, Compiler and Script' module.");
+            console.log("Loaded 'Cond' module.");
             assert = assertModule;
             macroExpander = new MacroExpander();
             compiler = new Compiler;

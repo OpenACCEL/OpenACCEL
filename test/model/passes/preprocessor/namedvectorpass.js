@@ -20,7 +20,7 @@ suite("namedvectorpass.js", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/passes/preprocessor/namedvectorpass"], function(assertModule, module) {
-            console.log("Loaded 'namedVectorPass' module.");
+            console.log("Loaded 'NamedVectorPass' module.");
             assert = assertModule;
             instance = new module();
             done();

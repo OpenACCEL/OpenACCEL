@@ -9,7 +9,7 @@ suite('uipass.js', function() {
         // the done callback because this is asynchronous.
         requirejs(['assert', 'model/passes/preprocessor/uipass', "model/analyser", "model/script"],
             function(assertModule, module, analyserModule, scriptModule) {
-                console.log('Loaded \'uipass\' module.');
+                console.log('Loaded \'UIPass\' module.');
                 assert = assertModule;
                 instance = new module();
                 analyser = new analyserModule();

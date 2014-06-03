@@ -12,7 +12,7 @@ suite('analyser.js', function() {
         // the done callback because this is asynchronous.
         requirejs(['assert', 'model/analyser', "model/analyser", "model/script", "model/quantity"],
             function(assertModule, module, analyserModule, scriptModule, quantityModule) {
-                console.log('Loaded \'analyser\' module.');
+                console.log('Loaded \'Analyser\' module.');
                 assert = assertModule;
                 instance = new module();
                 analyser = new analyserModule();

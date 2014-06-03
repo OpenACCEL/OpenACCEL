@@ -8,7 +8,7 @@ suite("Bin Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'Compiler & FileLoader' module.");
+            console.log("Loaded 'Bin' module.");
             assert = assertModule;
             compiler = new module();
             fileLoader = new FileLoader();

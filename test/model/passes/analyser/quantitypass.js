@@ -1,4 +1,4 @@
-suite('quantitypass.js', function() {
+suite("QunatityPass", function() {
     // quantitypass module.
     var quantitypass;
     var assert;
@@ -7,7 +7,7 @@ suite('quantitypass.js', function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(['assert', 'model/passes/analyser/quantitypass'], function(assertModule, module) {
-            console.log('Loaded \'quantitypass\' module.');
+            console.log("Loaded 'QunatityPass' module.");
             assert = assertModule;
             quantitypass = new module();
             done();

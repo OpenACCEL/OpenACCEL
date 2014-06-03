@@ -8,7 +8,7 @@ suite("Monofunc", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/script"], function(assertModule, module, scriptModule) {
-            console.log("Loaded 'compiler & FileLoader' module.");
+            console.log("Loaded 'Monofunc' module.");
             assert = assertModule;
             compiler = new module();
             Script = scriptModule;

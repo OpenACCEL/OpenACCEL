@@ -8,7 +8,7 @@ suite("UnaryZip", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/macroexpander", "model/fileloader"], function(assertModule, module, FileLoader) {
-            console.log("Loaded 'MacroExpander & FileLoader' module.");
+            console.log("Loaded 'UnaryZip' module.");
             assert = assertModule;
             macroExpander = new module();
             fileLoader = new FileLoader();

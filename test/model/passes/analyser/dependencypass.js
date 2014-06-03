@@ -1,4 +1,4 @@
-suite('dependencypass.js', function() {
+suite("DependencyPass", function() {
     // Template module.
     var instance;
     var qpass;
@@ -9,7 +9,7 @@ suite('dependencypass.js', function() {
         // the done callback because this is asynchronous.
         requirejs(['assert', 'model/passes/analyser/dependencypass', 'model/passes/analyser/quantitypass'],
                 function(assertModule, module, qpassmodule) {
-            console.log('Loaded \'DependencyPass\' module.');
+            console.log("Loaded 'DependencyPass' module.");
             assert = assertModule;
             instance = new module();
             qpass = new qpassmodule();
