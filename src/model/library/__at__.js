@@ -1,6 +1,6 @@
 /**
  * @memberof Model.Library
- * Returns one of two arguments based on a conditional argument.
+ * Returns the elements in x indexed by y.
  * @param  x		array with values to be gotten
  * @param  y		array with indexes
  * @return 			array with values in x indexed by y

@@ -1,6 +1,6 @@
 /**
  * @memberof Model.Library
- * Returns one of two arguments based on a conditional argument.
+ * Returns an array consisting of y instances of x.
  * @param  x		the value to be filled in
  * @param  y		the number of times x is filled in
  * @return result	object containing x y times
