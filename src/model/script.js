@@ -290,6 +290,10 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
                 return;
             }
 
+            if (this.exe[quantity.name] === undefined) {
+                return;
+            }
+
             this.exe[quantity.name].__hasChanged__ = true;
             this.flaggedAsChanged.push(quantity.name);
             for (var dep in quantity.reverseDeps) {

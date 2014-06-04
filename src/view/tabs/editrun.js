@@ -393,6 +393,7 @@ function CheckboxInput(identifier, quantity, label, val) {
     this.label = label;
 
     this.val = val;
+    console.log(val);
 };
 CheckboxInput.prototype = new Input();
 CheckboxInput.prototype.getHTML = function() {
@@ -400,7 +401,7 @@ CheckboxInput.prototype.getHTML = function() {
         <div id = "userinput' + this.identifier + '">\
             <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
             <div class = "inline checkboxin">\
-                <input type = "checkbox" id = "usercheck' + this.identifier + '" checked = "' + this.val + '">\
+                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true'?'checked':'') + '>\
                 <label for = "usercheck' + this.identifier + '"></label>\
             </div>\
         </div>\
@@ -412,6 +413,7 @@ CheckboxInput.prototype.initialize = function() {
     var checkboxinput = this;
     $('#usercheck' + checkboxinput.identifier).on('change',
         function() {
+            console.log(this.checked);
             controller.setUserInputQuantity(checkboxinput.quantity, this.checked);
         }
     );
@@ -489,6 +491,11 @@ ButtonInput.prototype.initialize = function() {
         }
     );
     $('#userbutton' + buttoninput.identifier).on('mouseup',
+        function() {
+            controller.setUserInputQuantity(buttoninput.quantity, false);
+        }
+    );
+    $('#userbutton' + buttoninput.identifier).on('mouseleave',
         function() {
             controller.setUserInputQuantity(buttoninput.quantity, false);
         }

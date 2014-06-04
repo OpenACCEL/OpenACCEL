@@ -48,3 +48,21 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
     controller = new Controller(new View());
     controller.setAutoExecute(true);
 });
+
+$(document).ready(
+    function() {
+        $('#main').tabs();
+
+        $('#main').on('tabsbeforeactivate', 
+        	function(event, ui) {
+	            switch (ui.oldPanel[0].id) {
+	                case 'editrun':
+	                	controller.pause();
+	                    break;
+	                default:
+	                    break;
+	            }
+        	}
+        );
+    }
+);
