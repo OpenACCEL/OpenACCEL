@@ -44,7 +44,7 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         if (typeof view !== 'undefined') {
             this.view = view;
         } else {
-            console.log("Warning: Controller.Constructor: view not provided, using dummy view.");
+        	// Used in tests
             this.view = new AbstractView();
         }
 
@@ -111,13 +111,6 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          * @type {Number}
          */
         this.currentTab = 1;
-
-        /**
-         * Array containing the names of all the quantities that have 
-         * been flagged as changed in the executable. Used for memoization 
-         * purposes when setting user input quantity values (setUserInputQuantity()).
-         */
-        this.flaggedAsChanged = [];
     }
 
     /**
@@ -450,33 +443,9 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         }
 
         // Update value in exe
-        this.script.exe[qtyName][0] = value;
-
-        // Recursively flag the updated user input quantity and all it's reverse
-        // dependencies as changed. First reset memoization datastructure!
-        this.flaggedAsChanged = [];
-        this.setQuantityChanged(this.script.getQuantity(qtyName), true);
+        this.script.setConstant(qtyName, value);
     };
 
-    /**
-     * Recursively sets whether the given quantity and all of it's reverse 
-     * dependencies have been modified.
-     *
-     * @param {Quantity} quantity The quantity to use as starting point. All of it's reverse dependencies, if any, are set recursively.
-     * @param {Boolean} changed Whether to mark quantity and it's reverse dependencies as changed or not.
-     */
-    Controller.prototype.setQuantityChanged = function(quantity, changed) {
-        // Base case: quantity already checked
-        if (this.flaggedAsChanged.indexOf(quantity.name) >= 0) {
-            return;
-        }
-
-        this.script.exe[quantity.name].__hasChanged__ = true;
-        this.flaggedAsChanged.push(quantity.name);
-        for (var dep in quantity.reverseDeps) {
-            this.setQuantityChanged(this.script.quantities[quantity.reverseDeps[dep]], true);
-        }
-    };
 
     /**
      * Gets Email address from the model.
@@ -601,9 +570,11 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     	// given source
         this.stop(false);
         this.script = new Script(source);
-
-        // Update quantities in view
-        this.view.setQuantities(this.script.quantities);
+        this.compileScript(this.script);
+        this.view.setQuantities(this.script.getQuantities());
+        if (this.autoExecute) {
+            this.run();
+        }
     };
 
     /**
