@@ -2,9 +2,9 @@
 function vConvolve(x, y, n, m) {
     x = __objectToArray__(x);
     y = __objectToArray__(y);
-    if (xinstanceof Array) {
+    if (x instanceof Array) {
         var r = x.length;
-        if (yinstanceof Array) {
+        if (y instanceof Array) {
             var p = y.length;
             if (!(n instanceof Array)) {
                 var n = Math.round(n);
