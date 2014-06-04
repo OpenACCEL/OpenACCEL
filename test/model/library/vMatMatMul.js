@@ -172,7 +172,7 @@ suite("vMatMatMul Library", function() {
 
     suite("expansion", function() {
 
-        test("should expand for 'x = vMatMatMul(y), y = [[1, 1],[0, -1]], z = [[2, 4],[3, 5]]'", function() {
+        test("should expand for 'x = vMatMatMul(z, y), y = [[1, 1],[0, -1]], z = [[2, 4],[3, 5]]'", function() {
             var input = "x = vMatMatMul(z, y)\ny = [[1, 1],[0, -1]]\nz = [[2, 4],[3, 5]]";
             expected = [
                 [2, -2],
