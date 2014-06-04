@@ -72,9 +72,24 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
 
-            // Remove the redefined quantity from reverse dependencies
+            // Remove the redefined quantity from reverse dependencies and delete all reverse
+            // dependencies that are todo and don't have any other reverse dependencies
             for (var dep in qty.dependencies) {
-                quantities[qty.dependencies[dep]].reverseDeps = _.without(quantities[qty.dependencies[dep]].reverseDeps, qtyName);
+                var d = quantities[qty.dependencies[dep]];
+
+                if (d.todo) {
+                    if (_.size(d.reverseDeps) <= 1) {
+                        // We are the only quantity depending on it, so delete it
+                        delete quantities[d.name];
+                    } else {
+                        // Remove us from reverse-dependency array
+                        d.reverseDeps = _.without(d.reverseDeps, qtyName);
+                    }
+                } else {
+                    // Remove us from reverse-dependency array
+                    d.reverseDeps = _.without(d.reverseDeps, qtyName);
+                }
+                
             }
 
             // Check whether time-dependent

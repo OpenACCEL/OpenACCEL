@@ -37,7 +37,7 @@ define([], /**@lends AbstractView*/ function() {
          * definitions.
          */
         setQuantities: function(quantities) { 
-            console.log("Warning: AbstractView.prototype.setQuantities called but not implemented!");
+            //console.log("Warning: AbstractView.prototype.setQuantities called but not implemented!");
         },
 
         /**
@@ -47,7 +47,7 @@ define([], /**@lends AbstractView*/ function() {
          * quantities in the script.
          */
         presentResults: function(cat2quantities) {
-            console.log("Warning: AbstractView.prototype.presentResults called but not implemented!");
+            //console.log("Warning: AbstractView.prototype.presentResults called but not implemented!");
         },
 
         /**
@@ -56,7 +56,7 @@ define([], /**@lends AbstractView*/ function() {
          * @param executing Boolean indicating whether the OpenACCEL model is being executed.
          */
         setExecuting: function(executing) {
-            console.log("Warning: AbstractView.prototype.setExecuting called but not implemented!");
+            //console.log("Warning: AbstractView.prototype.setExecuting called but not implemented!");
         },
     };
 
