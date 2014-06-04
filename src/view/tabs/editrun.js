@@ -79,7 +79,7 @@ function setExecuting(executing) {
 function synchronizeScriptList(quantities) {
     scriptlistBuffer.empty();
     Report.todolistBuffer.empty();
-    userinputBuffer.empty();
+    resetInputs();
 
     var i = 0;
     for (var q in quantities) {
@@ -502,15 +502,23 @@ ButtonInput.prototype.initialize = function() {
 var inputs = [];
 
 /**
+ * Removes the existing input elements and empties the associated buffer
+ */
+function resetInputs() {
+    userinputBuffer.empty();
+
+    inputs = [];
+}
+
+/**
  * Adds a dynamic input element to the #userinput element
  *
- * @param {Object} elements    Object with {@code appendHTML(div, name, identifier)} function to append the corresponding HTML to #userinput
- * @param {String} label       A string displayed near the input element to describe it
- * @param {Number} identifier  A unique number to identify the element later on
+ * @param {Object} elements    Object with functions to generate the corresponding HTML to be put in #userinput
  */
 function addInput(element) {
-    this.inputs.push(element);
     userinputBuffer.append(element.getHTML());
+
+    this.inputs.push(element);
 }
 
 /**
