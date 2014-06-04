@@ -85,7 +85,7 @@ define(["model/stringreplacer",
         PreProcessor.prototype.process = function(script) {
             // Perform all passes on the code and return its output.
             var report = script.getQuantities();
-            var lines = script.toSource().split("\n");
+            var lines = script.getSource().split("\n");
 
             // replace string definitions for wildcards
             lines = this.replacer.replaceStrings(lines);
