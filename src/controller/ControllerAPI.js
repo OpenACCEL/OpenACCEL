@@ -572,9 +572,9 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         this.script = new Script(source);
         this.compileScript(this.script);
         this.view.setQuantities(this.script.getQuantities());
-        if (this.autoExecute) {
-            this.run();
-        }
+        // if (this.autoExecute) {
+        //     this.run();
+        // }
     };
 
     /**

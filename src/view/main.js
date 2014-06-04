@@ -7,14 +7,14 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
      * communicate should implement.
      */
     function View() {
-    	
+        
     }
 
     View.prototype = new AbstractView();
     
     /**
      * Uses the given map of quantities to update the UI lists.
-	 *
+     *
      * @param quantities {map<String, Quantity>} All the quantities
      * currently in the model, including todo quantities with empty
      * definitions.
@@ -48,21 +48,3 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
     controller = new Controller(new View());
     controller.setAutoExecute(true);
 });
-
-$(document).ready(
-    function() {
-        $('#main').tabs();
-
-        $('#main').on('tabsbeforeactivate', 
-        	function(event, ui) {
-	            switch (ui.oldPanel[0].id) {
-	                case 'editrun':
-	                	controller.pause();
-	                    break;
-	                default:
-	                    break;
-	            }
-        	}
-        );
-    }
-);
