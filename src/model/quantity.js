@@ -172,7 +172,7 @@ define([], /**@lends Model*/ function() {
     Quantity.prototype.getSource = function() {
         var def = this.source;
         if (this.comment != '') {
-            def += '\n\t' + this.comment;
+            def += '\n\t//' + this.comment;
         }
 
         return def;
