@@ -310,13 +310,13 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
-        if (!this.script.hasQuantity(quantity)) {
+        if (!this.script.hasQuantity(qtyName)) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity does not exist')
         }
 
         //TODO Precondition quantity \in Script 
-        return this.script.getQuantity(quantity);
+        return this.script.getQuantity(qtyName);
     };
 
     /**

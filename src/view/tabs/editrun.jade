@@ -23,64 +23,46 @@
     .inline
         #scriptlistdiv
             .label Listing
-            .textin(style = "overflow-x: hidden; overflow-y: auto; height: 400px;")
+            .textin#scriptlistcontainer
                 #scriptlist
-                //- script.
-                //-     Scriptlist.addLine(1,'a','sin(b)',4);
-                //-     Scriptlist.addLine(2,'b','5',3);
-                //-     Scriptlist.addLine(3,'c','a * 5',2);
 
     .inline100
         #tododiv
             .label To do
             .report
                 #todolist.divtable
-                //- script.
-                //-     Report.addTodo('c');
-                //-     Report.addTodo('d');
-                //-     Report.addTodo('efgh');
-        
         #arglistdiv
-            .label Arg. of
-                .inline.quantityname &nbsp;a
+            .label Arg. of&nbsp;
+                .inline.quantityname
             .report
                 #arglist.divtable
-                //- script.
-                //-     Report.addArg('a','regular');
-                //-     Report.addArg('sin','std func.');
-
         #argtodiv
             .label
-                .inline.quantityname a&nbsp;
-                | is Arg. to
+                .inline.quantityname
+                | &nbsp;is Arg. to
             .report
                 #argtolist.divtable
-                //- script.
-                //-     Report.addArgto('c','regular');
 
     .inline100
         #userinputdiv
             .label User input
             #userinput.group
-            //- script.
-            //-     addInput(new SliderInput(0, 'test', 'Slider', 0,0,10));
-            //-     addInput(new CheckboxInput(1, 'test', 'Checkbox', true));
-            //-     addInput(new TextInput(2, 'test', 'Text', 'initial value'));
-            //-     addInput(new ButtonInput(3, 'test', 'Button'));
-            //-     initInputs();
 
     .inline100
         #resultdiv
             .label Results
             .group
                 #result.divtable
-                //- script.
-                //-     Report.addResult('c', -4.795);
             
     .inline
         #plotdiv
             .label Plot:
             #plot.group
+
+    //- script.
+    //-     var syntaxerror = new Tooltip(0, '#scriptline', 'tooltip');
+    //-     console.log("SET SYNTAX ERROR TOOLTIP")
+    //-     syntaxerror.set('ERROR! ERROR!! ERROR!!!');
 
     //- .label Console (Feedback)
     //- .report(onclick = '$("#console").toggle()')

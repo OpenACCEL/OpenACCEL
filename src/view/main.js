@@ -21,6 +21,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
      */
     View.prototype.setQuantities = function(quantities) {
         synchronizeScriptList(quantities);
+        synchronizeScriptArea();
     };
 
     /**

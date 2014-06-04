@@ -213,10 +213,11 @@ body div {
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	border: #662266 solid 1px;
+	cursor: pointer;
 }
-.tooltip:hover {
+/*.tooltip:hover {
 	background: #FFDDFF;
-}
+}*/
 .tooltip:after { /* Tooltip tip */
 	content: '';
 	position: absolute;
@@ -229,9 +230,9 @@ body div {
 	display: block;
 	width: 0px;
 }
-.tooltip:hover:after {
+/*.tooltip:hover:after {
 	border-color: #FFDDFF transparent;
-}
+}*/
 .tooltip:before { /* Tooltip border */
 	content: '';
 	position: absolute;
@@ -253,6 +254,8 @@ body div {
 }
 .divtable > div > div {
 	display: table-cell;
+	padding-left: 2px;
+	padding-right: 2px;
 }
 
 .ellipsis {
@@ -295,6 +298,12 @@ body div {
 	width: 60px;
 }
 
+#scriptlistcontainer {
+	overflow-x: hidden; 
+	overflow-y: auto; 
+	height: 400px;
+}
+
 #scriptlist { 
 	display: table;
 	padding-left: 0px;
@@ -330,28 +339,6 @@ body div {
 	color: #331144;
 }
 
-/*input[type="checkbox"] {
-    display:none;
-}
-label + input[type="checkbox"]{
-    display:inline-block;
-    width:19px;
-    height:19px;
-    margin:-1px 4px 0 0;
-    vertical-align:middle;
-    cursor:pointer;
-
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	border: 1px #331144 solid;
-	background: #FFFFFF;
-}
-label + input[type="checkbox"]:checked {
-	border: 1px #FFDDFF solid;
-	background: #331144;
-}*/
-
 #result .operator {
 	color: #FFDDFF;
 }
@@ -380,10 +367,6 @@ label + input[type="checkbox"]:checked {
 	position: relative;
 	text-align: left;
 	margin: 8px;
-	/*margin-left: 5px;
-	margin-right: 5px;
-	margin-top: 8px;
-	margin-bottom: 8px;*/
 
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -484,4 +467,31 @@ label + input[type="checkbox"]:checked {
 .checkboxin input[type=checkbox]:checked + label:after {
 	filter: alpha(opacity=100);
 	opacity: 1;
+}
+
+/**
+ * 
+ * Help / Demo
+ * 
+ */
+
+/**
+ * 
+ * IO / Edit
+ * 
+ */
+
+#scriptlineinfo > div > div {
+	padding-left: 4px;
+	padding-right: 4px;
+	font-size: 12px;
+	color: #444444;
+}
+
+#scriptarea {
+	height: 400px;
+	resize: none;
+	border: none;
+	padding: 0px;
+	font-size: 12px;
 }
