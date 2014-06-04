@@ -23,7 +23,7 @@ function replaceSpecial(s) {
     result = result.replace("~", "\\textasciitilde ");
     result = result.replace("^", "\\textasciicircum ");
     result = result.replace(/([#$%&_{}])/g, function(sym) {
-        return "\\" + sym
+        return "\\" + sym;
     });
     return result;
 
@@ -37,13 +37,15 @@ function handleMember(m) {
     // Section header
     output += "\\subsubsection{" + replaceSpecial(m.name) + "} \n";
     output += "\\label{mem:" + m.longname.replace(/[#~]/g,".") + "}\n";
+    output += "\\index{" + replaceSpecial(m.name) + "@" + replaceSpecial(m.name) + ", \\textsl{member}}\n";
+
     // constant indicator
     if (m.kind == "constant") {
         output += "$\\langle$ Constant $\\rangle$ \n";
     }
     // Information fields
     if (hasDesc || hasType) {
-        output += "\\begin{description} \n"
+        output += "\\begin{description} \n";
 
         if (hasDesc) {
             output += "\\item[Description:]" + replaceSpecial(m.description) + "\n";
@@ -71,6 +73,7 @@ function handleMethod(m) {
     }
     output += ")} \n";
     output += "\\label{mem:" + m.longname.replace(/[#~]/g,".") + "}\n";
+    output += "\\index{" + replaceSpecial(m.name) + "@" + replaceSpecial(m.name) + ", \\textsl{method}}\n";
 
     if (m.description) {
         // Description
@@ -139,6 +142,7 @@ function handleClass(c) {
     // new section for a new class
     output += "\\subsection{" + replaceSpecial(c.name) + "} \n";
     output += "\\label{class:" + c.name + "}\n";
+    output += "\\index{" + replaceSpecial(c.name) + "@" + replaceSpecial(c.name) + ", \\textsl{class}}\n";
     if (c.classdesc) {
         // Description of class
         output += "\\textbf{Description: }" + replaceSpecial(c.classdesc) + "\n";
@@ -161,6 +165,9 @@ function handleGlobals() {
     });
 
     output += "\\section{Global} \n";
+    output += "\\label{global}\n";
+    output += "\\index{Global}\n";
+
     //output += "\\label{global}\n";
     if (globalMem.count() > 0) {
         output += membersection;
@@ -239,13 +246,14 @@ function handleMethods(memberOf) {
 function handleNamespace(n) {
     var output = "";
     output += "\\section{" + replaceSpecial(n.longname) + "}\n";
-    output += "\\label{ns:" + n.name + "}\n"
+    output += "\\label{ns:" + n.name + "}\n";
+    output += "\\index{" + replaceSpecial(n.name) + "@" + replaceSpecial(n.name) + ", \\textsl{namespace}}\n";
     if (n.description) {
         output += "\\paragraph{Description}" + replaceSpecial(n.description);
     }
 
 
-    output += "\\setcounter{subsubsection}{0}\n";
+    output += "\\subsection{Namespace Members}\n";
 
     // handle members of this namespace
     output += handleMembers(n.longname);
@@ -257,10 +265,6 @@ function handleNamespace(n) {
         kind: "class",
         memberof: n.longname
     });
-
-    if (nsclasses.count() > 0) {
-        output += classsection;
-    }
 
     // Handle each class
     nsclasses.each(function(c) {
