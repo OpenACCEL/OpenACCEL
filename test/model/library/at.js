@@ -13,7 +13,7 @@ suite("@ Library", function() {
             compiler = new module();
             fileLoader = new FileLoader();
             Script = scriptModule;
-            fileLoader.load("__at__", "library");
+            fileLoader.load("at", "library");
             done();
         });
     });

@@ -11,7 +11,7 @@ suite("If Library", function() {
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
-            fileLoader.load("__if__", "library");
+            fileLoader.load("if", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");
