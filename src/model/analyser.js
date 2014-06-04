@@ -207,7 +207,7 @@ define(["model/passes/analyser/quantitypass",
             }
             var parameters = [];
             if (type === 'slider') {
-                parameters = definition.match(/slider\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+                parameters = definition.match(/slider\((\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*\)/);
             } else if (type === 'check') {
                 parameters = definition.match(/check\(\s*(true|false)\s*\)/);
             } else if (type === 'text') {
