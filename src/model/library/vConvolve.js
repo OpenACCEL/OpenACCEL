@@ -1,4 +1,4 @@
-//This function was taken from keesvanoverveld.com
+ //This function was taken from keesvanoverveld.com
 function vConvolve(x, y, n, m) {
     x = __objectToArray__(x);
     y = __objectToArray__(y);
@@ -52,15 +52,11 @@ function vConvolve(x, y, n, m) {
                         return res;
                         break;
                     default:
-                        runOK = false;
-                        errorString += "\nconvolution: fourth argument must be 0, 1 or 2.";
-                        return errOb;
-                        break;
+                        throw new Error("convolution: fourth argument must be 0, 1 or 2.");
                 }
             } else {
-                runOK = false;
-                errorString += "\nconvolution: auto-mapping is not supported, third argument must be scalar.";
-                return errOb;
+                throw new Error("convolution: auto-mapping is not supported, third argument must be scalar.");
+
             }
         } else {
             return [];
