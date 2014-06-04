@@ -111,6 +111,13 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          * @type {Number}
          */
         this.currentTab = 1;
+
+        /**
+         * Array containing the names of all the quantities that have 
+         * been flagged as changed in the executable. Used for memoization 
+         * purposes when setting user input quantity values (setUserInputQuantity()).
+         */
+        this.flaggedAsChanged = [];
     }
 
     /**
@@ -444,7 +451,33 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
                 'not a category 1 (user-input) quantity')
         }
 
+        // Update value in exe
         this.script.exe[qtyName][0] = value;
+
+        // Recursively flag the updated user input quantity and all it's reverse
+        // dependencies as changed. First reset memoization datastructure!
+        this.flaggedAsChanged = [];
+        this.setQuantityChanged(this.script.getQuantity(qtyName), true);
+    };
+
+    /**
+     * Recursively sets whether the given quantity and all of it's reverse 
+     * dependencies have been modified.
+     *
+     * @param {Quantity} quantity The quantity to use as starting point. All of it's reverse dependencies, if any, are set recursively.
+     * @param {Boolean} changed Whether to mark quantity and it's reverse dependencies as changed or not.
+     */
+    Controller.prototype.setQuantityChanged = function(quantity, changed) {
+        // Base case: quantity already checked
+        if (this.flaggedAsChanged.indexOf(quantity.name) >= 0) {
+            return;
+        }
+
+        this.script.exe[quantity.name].__hasChanged__ = true;
+        this.flaggedAsChanged.push(quantity.name);
+        for (var dep in quantity.reverseDeps) {
+            this.setQuantityChanged(this.script.quantities[quantity.reverseDeps[dep]], true);
+        }
     };
 
     /**
