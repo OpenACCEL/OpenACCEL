@@ -21,7 +21,7 @@ suite("vGaussian Library", function() {
 
         /**
          * Test case for vGuassian.
-         * Based on an example of thhe help documentation
+         * Based on an example of the help documentation
          * 
          * input: vGaussian(6,3)
          * expected: [0.14,0.17,0.19,0.19,0.17,0.14]
@@ -49,7 +49,7 @@ suite("vGaussian Library", function() {
 
         /**
          * Test case for vGuassian.
-         * Based on an example of thhe help documentation
+         * Based on an example of the help documentation
          * 
          * input: vGaussian(10,3)
          * expected: [0.048, 0.074, 0.10, 0.13, 0.14, 0.14, 0.13, 0.10, 0.074, 0.048]
