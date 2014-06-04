@@ -429,8 +429,6 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * @post this.script.quantities[qtyname].value = value
      */
     Controller.prototype.setUserInputQuantity = function(qtyName, value) {
-        console.log('Set userinput ' + qtyName + ' = ' + value);
-
         if (value == null || value == undefined) {
             throw new Error('Controller.prototype.setValue.pre :' +
                 'value is null or undefined')

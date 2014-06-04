@@ -4,7 +4,6 @@
         .inline
             .label Script line
             input(type = 'text')#scriptline.textin
-            //- #syntaxtip.tooltip(onclick = '$(this).toggle();') SYNTAX ERROR
         .inline
             .label &nbsp;
             input(type = 'button', value = 'Enter', onclick = 'addQuantity($("#scriptline").val())')#enterline.buttonin
@@ -15,7 +14,6 @@
             .inline
                 .label &nbsp;
                 input(type = 'button', value = 'Run', onclick = 'toggleExecution(this.value)')#runscript.buttonin
-                //- #runtimetip.tooltip(onclick = '$(this).toggle();') RUNTIME ERROR
             .inline
                 .label Iterations
                 input(type = 'number', min = '0', value = '0', onchange = 'setIterations(this.value)')#iterations.textin
@@ -61,7 +59,6 @@
 
     //- script.
     //-     var syntaxerror = new Tooltip(0, '#scriptline', 'tooltip');
-    //-     console.log("SET SYNTAX ERROR TOOLTIP")
     //-     syntaxerror.set('ERROR! ERROR!! ERROR!!!');
 
     //- .label Console (Feedback)

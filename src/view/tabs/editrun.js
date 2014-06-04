@@ -19,8 +19,6 @@ $(document).ready(
 );
 
 function deleteQuantity(quantity) {
-    console.log('deleting ' + quantity);
-
     controller.deleteQuantity(quantity);
 }
 
@@ -40,7 +38,6 @@ function addQuantity(string) {
     setTimeout(
         function() {
             controller.addQuantity(string);
-            console.log('Compiled script.');
         },
         10
     );
@@ -87,7 +84,6 @@ function synchronizeScriptList(quantities) {
     var i = 0;
     for (var q in quantities) {
         var quantity = quantities[q];
-        console.log(quantity);
 
         //TODOs
         if (quantity.todo) {
@@ -180,7 +176,6 @@ function objectToString(obj) {
  * @param  {String} value To be put in the #scriptline element
  */
 function selectScriptline(linenr, quantityname) {
-    console.log('select ' + linenr + ' - [' + quantityname + ']');
     if ($('#line' + linenr).length > 0) {
         var quantity = controller.getQuantity(quantityname);
 
@@ -455,7 +450,6 @@ TextInput.prototype.initialize = function() {
     var textinput = this;
     $('#usertext' + textinput.identifier).on('input',
         function() {
-            console.log('textinput');
             controller.setUserInputQuantity(textinput.quantity, this.value);
         }
     );
@@ -523,7 +517,6 @@ function addInput(element) {
  * Initializes the added input elements
  */
 function initInputs() {
-    console.log(this.inputs);
     userinputBuffer.flip();
 
     for (var i = 0; i < inputs.length; i++) {
@@ -583,7 +576,6 @@ var Report = {
      * @param {String} property [description]
      */
     addArg: function(quantity, property) {
-        console.log('arg');
         Report.arglistBuffer.append(this.getPropertyListHTML(quantity, property));
     },
 
@@ -600,7 +592,6 @@ var Report = {
      * @param {String} property [description]
      */
     addArgto: function(quantity, property) {
-        console.log('argto');
         Report.argtolistBuffer.append(this.getPropertyListHTML(quantity, property));
     },
 
@@ -621,6 +612,16 @@ var Report = {
     },
 };
 
+/**
+ * Constructs a new Tooltip object
+ * 
+ * @param {String} id      String to be used as a suffix in the id values of the generated html elements
+ * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
+ * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
+ *
+ * @class
+ * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
+ */
 function Tooltip(id, div, classes) {
     this.id = id;
     this.div = div;
@@ -665,10 +666,6 @@ function Tooltip(id, div, classes) {
         $('#tooltip' + this.id).html(message);
         $('#tooltip' + this.id).toggle(true);
     }
-
-    // this.hide = function() {
-    //     $('#tooltip' + this.id).toggle(false);
-    // }
 
     this.remove = function() {
         $('#tooltip' + this.id).remove();
