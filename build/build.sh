@@ -6,6 +6,7 @@ build() {
     jade
     documentation
     deploy
+    post_deploy
 }
 
 # Quickbuild
@@ -13,12 +14,14 @@ quickbuild() {
     clean
     jade
     deploy
+    post_deploy
 }
 
 # Testing.
 test() {
     clean
     deploy
+    post_deploy
     echo "Testing..."
     case "$1" in
         "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark --invert ;;
@@ -92,6 +95,19 @@ deploy() {
 
     # Copy style sheets.
     cp -r src/view/css bin/css/
+}
+
+# Post Deployment
+post_deploy() {
+    # Set time depency functions in quantitypass.js
+    path_functions="src/model/library/functions.js"
+    path_quantitypass="bin/scripts/model/passes/analyser/quantitypass.js"
+    regex=".isTimeDependent = true;"
+    match=$(grep "$regex" "$path_functions")
+    funcs=${match//$regex/} # remove all occurences of regex from match
+    funcs=$(echo $funcs | sed "s/ /\", \"/g") # replace all spaces with ", "
+    placeholder="--TIME-DEPENDENCY-PLACEHOLDER--"
+    sed -i "s/${placeholder}/${funcs}/g" $path_quantitypass
 }
 
 # Ensure each file in 'folders' with a .js extension has a new line at EOF.

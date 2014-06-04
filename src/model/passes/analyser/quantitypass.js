@@ -60,7 +60,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
         var qty;
 
         // Existing quantity is redefined. We have to make sure to keep the reverse dependencies
-        // of _this_ quantity, but remove this quantity from all reverse dependency lists of 
+        // of _this_ quantity, but remove this quantity from all reverse dependency lists of
         // it's dependencies
         if (qtyName in quantities) {
             qty = quantities[qtyName];
@@ -68,9 +68,12 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
             qty.source = line;
             qty.definition = rhs;
             qty.todo = false;
-            
+
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
+
+            // Check whether qty is time-dependent
+            qty.isTimeDependent = isTimeDependent(qty);
 
             // Remove the redefined quantity from reverse dependencies and delete all reverse
             // dependencies that are todo and don't have any other reverse dependencies
@@ -89,14 +92,9 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
                     // Remove us from reverse-dependency array
                     d.reverseDeps = _.without(d.reverseDeps, qtyName);
                 }
-                
-            }
 
-            // Check whether time-dependent
-            if (qty.definition.indexOf("{") >= 0) {
-                qty.isTimeDependent = true;
             }
-        } 
+        }
 
         else {
             // Create new quantity and add it to the quantities
@@ -106,21 +104,19 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
             qty.source = line;
             qty.definition = rhs;
 
-            // Straightforward check for empty definitions of quantities. Further 
+            // Straightforward check for empty definitions of quantities. Further
             // checking of todo-items is done in the dependency pass.
             if (rhs == '') {
                 qty.todo = true;
             } else {
                 qty.todo = false;
             }
-            
+
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
 
-            // Check whether time-dependent
-            if (qty.definition.indexOf("{") >= 0) {
-                qty.isTimeDependent = true;
-            }
+            // Check whether qty is time-dependent
+            qty.isTimeDependent = isTimeDependent(qty);
 
             // Add to quantities
             quantities[qtyName] = qty;
@@ -129,6 +125,23 @@ define(['model/passes/analyser/analyserpass', 'model/quantity'], /**@lends Model
         return qty;
     };
 
+    function isTimeDependent(qty) {
+        // Check whether qty.definition contains a history operator
+        if (qty.definition.indexOf("{") >= 0) {
+            return true;
+        }
+
+        // check whether qty.definition contains a time dependent function
+        // Do NOT edit the line below. Placeholder will be automatically replaced at build time.
+        var timeDependencies = ["--TIME-DEPENDENCY-PLACEHOLDER--"];
+        for (var i = timeDependencies.length - 1; i >= 0; i--) {
+            if (qty.definition.indexOf(timeDependencies[i]) >= 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return QuantityPass;
