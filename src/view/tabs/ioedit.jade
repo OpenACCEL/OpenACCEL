@@ -1,3 +1,28 @@
 #ioedit
-	h1 IO / Edit
-	
+    script(src = 'scripts/view/tabs/ioedit.js')
+    div
+        .inline
+            .label Options
+            input(type = 'button', value = 'Show values' onclick = 'toggleValues()')#showvalues.buttonin
+        .inline
+            .label &nbsp;
+            input(type = 'button', value = 'Check units' onclick = 'toggleUnitChecking()')#checkunits.buttonin
+    .inline
+        .label Script
+        .textin
+            //- .inline
+            //-     #scriptlineinfo.divtable
+            //-         div 
+            //-             .inline 1
+            //-             .inline value
+            //-             .inline unitcheck
+            //-         div 
+            //-             .inline 2
+            //-             .inline value
+            //-             .inline unitcheck
+            //-         div 
+            //-             .inline 3
+            //-             .inline value
+            //-             .inline unitcheck
+            .inline
+                textarea(cols="80", onchange = 'editScript(this.value)')#scriptarea

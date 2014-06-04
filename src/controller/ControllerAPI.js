@@ -317,13 +317,13 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity is null or undefined')
         }
-        if (!this.script.hasQuantity(quantity)) {
+        if (!this.script.hasQuantity(qtyName)) {
             throw new Error('Controller.prototype.getQuantity.pre :' +
                 'quantity does not exist')
         }
 
         //TODO Precondition quantity \in Script 
-        return this.script.getQuantity(quantity);
+        return this.script.getQuantity(qtyName);
     };
 
     /**
@@ -436,8 +436,6 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * @post this.script.quantities[qtyname].value = value
      */
     Controller.prototype.setUserInputQuantity = function(qtyName, value) {
-        console.log('Set userinput ' + qtyName + ' = ' + value);
-
         if (value == null || value == undefined) {
             throw new Error('Controller.prototype.setValue.pre :' +
                 'value is null or undefined')

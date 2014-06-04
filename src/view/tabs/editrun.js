@@ -19,8 +19,6 @@ $(document).ready(
 );
 
 function deleteQuantity(quantity) {
-    console.log('deleting ' + quantity);
-
     controller.deleteQuantity(quantity);
 }
 
@@ -31,7 +29,7 @@ function addQuantity(string) {
 
     //Approximate Script list
     split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
-    addScriptlistLine(linenr++, split[0], split[1], '?');
+    addScriptlistLine(linenr++, split[0], split[0], split[1], '?');
     scriptlistBuffer.flip();
 
     console.log('Pre-added line: ' + string);
@@ -40,7 +38,6 @@ function addQuantity(string) {
     setTimeout(
         function() {
             controller.addQuantity(string);
-            console.log('Compiled script.');
         },
         10
     );
@@ -49,17 +46,14 @@ function addQuantity(string) {
 function toggleExecution(action) {
     if (action == 'Run') {
         controller.run();
-        // setRunning(true);
     } else {
         controller.pause();
-        // setRunning(false);
     }
 }
 
 function newScript() {
     if (confirm("Are you sure you want to stop your current script and delete all existing script lines? It can not be undone.")) {
         controller.newScript();
-        // setRunning(false);
     }
 }
 
@@ -90,13 +84,12 @@ function synchronizeScriptList(quantities) {
     var i = 0;
     for (var q in quantities) {
         var quantity = quantities[q];
-        console.log(quantity);
 
         //TODOs
         if (quantity.todo) {
             Report.addTodo(quantity.name);
         } else {
-            addScriptlistLine(i++, quantity.LHS, quantity.definition, quantity.category);
+            addScriptlistLine(i++, quantity.name, quantity.LHS, quantity.definition, quantity.category);
         }
 
         //User Input
@@ -121,13 +114,18 @@ function synchronizeScriptList(quantities) {
             }
         }
     }
+
     scriptlistBuffer.flip();
-
     Report.todolistBuffer.flip();
-    Report.todolistBuffer.hideIfEmpty('#tododiv');
-
     initInputs();
+
+    //Hide what needs hiding
+    Report.todolistBuffer.hideIfEmpty('#tododiv');
+    Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+    Report.argtolistBuffer.hideIfEmpty('#argtodiv');
     userinputBuffer.hideIfEmpty('#userinputdiv');
+    Report.resultBuffer.hideIfEmpty('#resultdiv');
+    $('#plotdiv').toggle(false);
 }
 
 /**
@@ -177,11 +175,41 @@ function objectToString(obj) {
  * @param  {Number} line  Identifier of the to be selected line
  * @param  {String} value To be put in the #scriptline element
  */
-function selectScriptline(line, value) {
-    console.log('select ' + line + ', ' + value);
-    if ($('#line' + line).length > 0) {
+function selectScriptline(linenr, quantityname) {
+    if ($('#line' + linenr).length > 0) {
+        var quantity = controller.getQuantity(quantityname);
+
         var scriptline = $('#scriptline');
-        scriptline.val(value);
+        scriptline.val(quantity.source);
+
+        $('.quantityname').html(quantityname);
+
+        Report.arglistBuffer.empty();
+        Report.argtolistBuffer.empty();
+
+        //list parameters (type = dummy)
+        for (var p in quantity.parameters) {
+            Report.addArg(quantity.parameters[p], 'dummy');
+        }
+
+        //list dependencies (type = regular)
+        for (var d in quantity.dependencies) {
+            Report.addArg(quantity.dependencies[d], 'regular');
+        }
+
+        //list used standard functions (type = standard function)
+        //TODO
+                
+        //list reverse dependencies (type = regular)
+        for (var r in quantity.reverseDeps) {
+            Report.addArgto(quantity.reverseDeps[r], 'regular');
+        }
+
+        Report.arglistBuffer.flip();
+        Report.argtolistBuffer.flip();
+
+        Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+        Report.argtolistBuffer.hideIfEmpty('#argtodiv');
     }
 }
 
@@ -240,6 +268,8 @@ function HTMLbuffer(div) {
     }
 }
 
+//------------------------------------------------------------------------------
+
 /**
  * Buffer to contain updated #scriptlist content
  * @type {HTMLbuffer}
@@ -254,15 +284,15 @@ var scriptlistBuffer = new HTMLbuffer('#scriptlist');
  * @param {String} right    Right-hand side of the equation
  * @param {Number} category Category to which the left-hand side belongs
  */
-function getScriptlistLineHTML(line, left, right, category) {
+function getScriptlistLineHTML(linenr, quantity, left, right, category) {
     return '\
-        <input type="radio" name="script" id="line' + line + '" value="' + left + ' = ' + right + '">\
-        <label for="line' + line + '" onclick = "selectScriptline(' + line + ', \'' + left + ' = ' + right + '\');">\
+        <input type="radio" name="script" id="line' + linenr + '" value="' + left + ' = ' + right + '">\
+        <label for="line' + linenr + '" onclick = "selectScriptline(' + linenr + ', \'' + quantity + '\');">\
             <div class="inline ellipsis max256w">' + left + '</div>\
             <div class="inline operator">=</div>\
             <div class="inline ellipsis max256w">' + right + '</div>\
             <div class="inline comment">(cat.=' + category + ')</div>\
-            <a onclick="deleteQuantity(\'' + left + '\')" class="inline lineoption">delete</a>\
+            <a onclick="deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>\
         </label>\
     ';
 }
@@ -275,8 +305,8 @@ function getScriptlistLineHTML(line, left, right, category) {
  * @param {String} right    Right-hand side of the equation
  * @param {Number} category Category to which the left-hand side belongs
  */
-function addScriptlistLine(line, left, right, category) {
-    scriptlistBuffer.append(getScriptlistLineHTML(line, left, right, category));
+function addScriptlistLine(linenr, quantity, left, right, category) {
+    scriptlistBuffer.append(getScriptlistLineHTML(linenr, quantity, left, right, category));
 }
 
 /**
@@ -420,7 +450,6 @@ TextInput.prototype.initialize = function() {
     var textinput = this;
     $('#usertext' + textinput.identifier).on('input',
         function() {
-            console.log('textinput');
             controller.setUserInputQuantity(textinput.quantity, this.value);
         }
     );
@@ -488,7 +517,6 @@ function addInput(element) {
  * Initializes the added input elements
  */
 function initInputs() {
-    console.log(this.inputs);
     userinputBuffer.flip();
 
     for (var i = 0; i < inputs.length; i++) {
@@ -582,8 +610,64 @@ var Report = {
     addResult: function(quantity, result) {
         Report.resultBuffer.append(this.getEquationHTML(quantity, result));
     },
-
-    addTooltip: function(div, id, msg, arrow) {
-
-    }
 };
+
+/**
+ * Constructs a new Tooltip object
+ * 
+ * @param {String} id      String to be used as a suffix in the id values of the generated html elements
+ * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
+ * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
+ *
+ * @class
+ * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
+ */
+function Tooltip(id, div, classes) {
+    this.id = id;
+    this.div = div;
+    this.classes = classes;
+
+    this.getHTML = function(message) {
+        return '\
+            <div id = "tooltip' + this.id + '" class = "' + this.classes + '">\
+                ' + message + '\
+            </div>\
+        ';
+    }
+
+    this.initialize = function() {
+        $(this.getHTML('')).insertAfter(this.div);
+        $('#tooltip' + this.id).toggle(false);
+
+        $('#tooltip' + this.id).on('click', 
+            function() {
+                $(this).animate({opacity: 0}, 200, 
+                    function() {
+                        $(this).toggle(false);
+                    }
+                )
+            }
+        );
+        $('#tooltip' + this.id).on('mouseover', 
+            function() {
+                $(this).animate({opacity: 0.5}, 200);
+            }
+        );
+        $('#tooltip' + this.id).on('mouseleave', 
+            function() {
+                $(this).animate({opacity: 1}, 100);
+            }
+        );
+    }
+
+    this.initialize();
+
+    this.set = function(message) {
+        $('#tooltip' + this.id).html(message);
+        $('#tooltip' + this.id).toggle(true);
+    }
+
+    this.remove = function() {
+        $('#tooltip' + this.id).remove();
+    }
+}
