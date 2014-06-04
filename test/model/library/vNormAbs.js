@@ -37,7 +37,6 @@ suite("vNormAbs Library", function() {
 
         /**
          * Test case for vNormAbs.
-         * Based on an example of the help documentation
          *
          * input: vNormAbs([1, -1, x:1, y: -1])
          * expected: 4
@@ -50,6 +49,21 @@ suite("vNormAbs Library", function() {
             input.x = 1;
             input.y = -1;
             var result = vNormAbs(input);
+
+            assert.deepEqual(result, expected);
+        });
+
+        /**
+         * Test case for vNormAbs.
+         *
+         * input: vNormAbs(-42)
+         * expected: 42
+         */
+        test("vNormAbs(-42) = 42", function() {
+            eval(fileLoader.getContent());
+
+            var expected = 42;
+            var result = vNormAbs(-42);
 
             assert.deepEqual(result, expected);
         });
