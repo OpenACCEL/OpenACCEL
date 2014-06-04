@@ -25,7 +25,8 @@ if (inNode) {
 define(["model/passes/analyser/quantitypass",
         "model/passes/analyser/dependencypass",
         "model/quantity",
-        'underscore'],
+        'underscore'
+    ],
     /**@lends Analyser*/
     function(QuantityPass, DependencyPass, Quantity, _) {
         /**
@@ -216,11 +217,11 @@ define(["model/passes/analyser/quantitypass",
             }
             var parameters = [];
             if (type === 'slider') {
-                parameters = definition.match(/slider\((\d+),(\d+),(\d+)\)/);
+                parameters = definition.match(/slider\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
             } else if (type === 'check') {
-                parameters = definition.match(/check\((true|false)\)/);
+                parameters = definition.match(/check\(\s*(true|false)\s*\)/);
             } else if (type === 'text') {
-                parameters = definition.match(/input\((?:\'|\")(\w+)(?:\'|\")/);
+                parameters = definition.match(/input\(\s*(?:\'|\")(\w+)(?:\'|\")\s*\)/);
             }
             return parameters.slice(1);
         };
