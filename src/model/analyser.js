@@ -25,10 +25,11 @@ if (inNode) {
 define(["model/passes/analyser/quantitypass",
         "model/passes/analyser/dependencypass",
         "model/quantity",
-        'underscore'
+        'underscore',
+        'jison'
     ],
     /**@lends Analyser*/
-    function(QuantityPass, DependencyPass, Quantity, _) {
+    function(QuantityPass, DependencyPass, Quantity, _, jison) {
         /**
          * @class Analyser
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
@@ -102,8 +103,12 @@ define(["model/passes/analyser/quantitypass",
                 // Only process non-blank lines
                 if (line.replace(/ +?/g, '') != '') {
                     // Handle comments
-                    if (prevQuantity != null && line.substring(0, 2) == '//') {
-                        prevQuantity.comment = line.substring(2, line.length);
+                    if (line.substring(0, 2) == '//') {
+                        // Ignore comments on first line of script for instance, only handle
+                        // those appearing after quantity definitions
+                        if (prevQuantity != null) {
+                            prevQuantity.comment = line.substring(2, line.length);
+                        }
                     } else {
                         // Actual quantity definition: apply all passes
                         for (var i = 0; i < this.passes.length; i++) {
