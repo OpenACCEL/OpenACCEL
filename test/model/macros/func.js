@@ -29,8 +29,9 @@ suite("Func Macro", function() {
             "\n        }"                                                                           +
             "\n        return exe.x[exe.__time__];"                                                 +
             "\n    } else {"                                                                        +
-            "\n        if (exe.x[0] === undefined) {"                                               +
+            "\n        if (exe.x[0] === undefined || exe.x.__hasChanged__) {"                       +
             "\n            exe.x[0] = 5;"                                                           +
+            "\n            exe.x.__hasChanged__ = false;"                                           +
             "\n        }"                                                                           +
             "\n        return exe.x[0];"                                                            +
             "\n    }"                                                                               +
@@ -50,8 +51,9 @@ suite("Func Macro", function() {
             "\n        }"                                                                           +
             "\n        return exe.z[exe.__time__];"                                                 +
             "\n    } else {"                                                                        +
-            "\n        if (exe.z[0] === undefined) {"                                               +
+            "\n        if (exe.z[0] === undefined || exe.z.__hasChanged__) {"                       +
             "\n            exe.z[0] = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);"                +
+            "\n            exe.z.__hasChanged__ = false;"                                           +
             "\n        }"                                                                           +
             "\n        return exe.z[0];"                                                            +
             "\n    }"                                                                               +
@@ -73,8 +75,9 @@ suite("Func Macro", function() {
             "\n        }"                                                                           +
             "\n        return exe.x[exe.__time__];"                                                 +
             "\n    } else {"                                                                        +
-            "\n        if (exe.x[0] === undefined) {"                                               +
+            "\n        if (exe.x[0] === undefined || exe.x.__hasChanged__) {"                       +
             "\n            exe.x[0] = 5;"                                                           +
+            "\n            exe.x.__hasChanged__ = false;"                                           +
             "\n        }"                                                                           +
             "\n        return exe.x[0];"                                                            +
             "\n    }"                                                                               +
@@ -94,8 +97,9 @@ suite("Func Macro", function() {
             "\n        }"                                                                           +
             "\n        return exe.z[exe.__time__];"                                                 +
             "\n    } else {"                                                                        +
-            "\n        if (exe.z[0] === undefined) {"                                               +
+            "\n        if (exe.z[0] === undefined || exe.z.__hasChanged__) {"                       +
             "\n            exe.z[0] = a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);"            +
+            "\n            exe.z.__hasChanged__ = false;"                                           +
             "\n        }"                                                                           +
             "\n        return exe.z[0];"                                                            +
             "\n    }"                                                                               +

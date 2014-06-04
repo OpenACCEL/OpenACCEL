@@ -24,8 +24,9 @@ macro func {
                 }
                 return exe.$x[exe.__time__];
             } else {
-                if (exe.$x[0] === undefined) {
+                if (exe.$x[0] === undefined || exe.$x.__hasChanged__) {
                     exe.$x[0] = ($expr);
+                    exe.$x.__hasChanged__ = false;
                 }
                 return exe.$x[0];
             }
