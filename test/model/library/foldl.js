@@ -20,6 +20,7 @@ suite("Foldl", function() {
             fileLoader.load("or", "library");
             fileLoader.load("max", "library");
             fileLoader.load("min", "library");
+            fileLoader.load("vLen", "library");
             console.log("Loaded 'Foldl' module.");
             done();
         });
