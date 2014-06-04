@@ -601,6 +601,9 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     	// given source
         this.stop(false);
         this.script = new Script(source);
+
+        // Update quantities in view
+        this.view.setQuantities(this.script.quantities);
     };
 
     /**
