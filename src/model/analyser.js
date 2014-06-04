@@ -100,7 +100,7 @@ define(["model/passes/analyser/quantitypass",
                 line = line.trim();
 
                 // Only process non-blank lines
-                if (lines.replace(/ +?/g, '') != '') {
+                if (line.replace(/ +?/g, '') != '') {
                     // Handle comments
                     if (prevQuantity != null && line.substring(0, 2) == '//') {
                         prevQuantity.comment = line.substring(2, line.length);
