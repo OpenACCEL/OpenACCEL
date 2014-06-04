@@ -19,6 +19,13 @@ suite("vGaussian Library", function() {
 
     suite("vGaussian", function() {
 
+        /**
+         * Test case for vGuassian.
+         * Based on an example of thhe help documentation
+         * 
+         * input: vGaussian(6,3)
+         * expected: [0.14,0.17,0.19,0.19,0.17,0.14]
+         */
         test("Example from help vGaussian(6,3)=[0.14,0.17,0.19,0.19,0.17,0.14]", function() {
             eval(fileLoader.getContent());
             var expected = [0.14, 0.17, 0.19, 0.19, 0.17, 0.14];
@@ -40,6 +47,13 @@ suite("vGaussian Library", function() {
             assert.deepEqual(result, expected);
         });
 
+        /**
+         * Test case for vGuassian.
+         * Based on an example of thhe help documentation
+         * 
+         * input: vGaussian(10,3)
+         * expected: [0.048, 0.074, 0.10, 0.13, 0.14, 0.14, 0.13, 0.10, 0.074, 0.048]
+         */
         test("Example from help vGaussian(8,3)=[0.048,0.074,0.10,0.13,0.14,0.14,0.13,0.10,0.074,0.048]", function() {
             eval(fileLoader.getContent());
 

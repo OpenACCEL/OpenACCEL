@@ -19,6 +19,13 @@ suite("vAggregate Library", function() {
 
     suite("vAggregate", function() {
 
+        /**
+         * Test case for vAggregate.
+         * Based on an example of thhe help documentation
+         * 
+         * input: vAggregate([1,2,3,4],[10,[20,21,22]],1)
+         * expected: [1, 10, [20, 21, 22], 2, 3, 4]
+         */
         test("Example from help vAggregate([1,2,3,4],[10,[20,21,22]],1)=[1,10,[20,21,22],2,3,4]", function() {
             eval(fileLoader.getContent());
             assert.deepEqual(vAggregate([1, 2, 3, 4], [10, [20, 21, 22]], 1), [1, 10, [20, 21, 22], 2, 3, 4]);
