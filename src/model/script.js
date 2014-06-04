@@ -64,6 +64,13 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          */
         this.quantities = {};
 
+        /**
+         * Array containing the names of all the quantities that have 
+         * been flagged as changed in the executable. Used for memoization 
+         * purposes when setting user input quantity values (setUserInputQuantity()).
+         */
+        this.flaggedAsChanged = [];
+
         // Initialise with given source if not undefined
         if (typeof source !== 'undefined') {
             this.addSource(source);
@@ -260,7 +267,34 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
                 'not a category 1 (user-input) quantity')
             }
 
+            // Set values in exe and quantities
+            this.exe[qtyName][0] = value;
             this.quantities[qtyName].value = value;
+
+            // Recursively flag the updated user input quantity and all it's reverse
+            // dependencies as changed. First reset memoization datastructure!
+            this.flaggedAsChanged = [];
+            this.setQuantityChanged(this.quantities[qtyName], true);
+        },
+
+        /**
+         * Recursively sets whether the given quantity and all of it's reverse 
+         * dependencies have been modified.
+         *
+         * @param {Quantity} quantity The quantity to use as starting point. All of it's reverse dependencies, if any, are set recursively.
+         * @param {Boolean} changed Whether to mark quantity and it's reverse dependencies as changed or not.
+         */
+        setQuantityChanged: function(quantity, changed) {
+            // Base case: quantity already checked
+            if (this.flaggedAsChanged.indexOf(quantity.name) >= 0) {
+                return;
+            }
+
+            this.exe[quantity.name].__hasChanged__ = true;
+            this.flaggedAsChanged.push(quantity.name);
+            for (var dep in quantity.reverseDeps) {
+                this.setQuantityChanged(this.quantities[quantity.reverseDeps[dep]], true);
+            }
         },
 
         /**
