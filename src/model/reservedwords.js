@@ -28,7 +28,9 @@ define(['model/compiler'], /**@lends Model*/ function(Compiler) {
         'check',
         'button',
         '@',
-        'if'
+        'if',
+        'pi',
+        'e'
     ];
 
     /**
