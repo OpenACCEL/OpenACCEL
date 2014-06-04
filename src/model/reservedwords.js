@@ -26,7 +26,9 @@ define(['model/compiler'], /**@lends Model*/ function(Compiler) {
         'slider',
         'input',
         'check',
-        'button'
+        'button',
+        '@',
+        'if'
     ];
 
     /**
@@ -46,14 +48,12 @@ define(['model/compiler'], /**@lends Model*/ function(Compiler) {
             var lib = compiler.fileLoader.getLibrary();
             var pattern = /(?:function\s*)(\b\w*)(?:\()/g;
             while (match = pattern.exec(lib)) {
-                // remove __ if present and add to the list
-                this.list.push(match[1].replace(/__/g,""));
+                this.list.push(match[1]);
             }
             pattern = /(?:let\s*)(\b\w*\b)/g;
             var macro = compiler.fileLoader.getMacros();
             while (match = pattern.exec(macro)) {
-                // remove __ if present and add to the list
-                this.list.push(match[1].replace(/__/g,""));
+                this.list.push(match[1]);
             }
 
             // Add additional keywords.
