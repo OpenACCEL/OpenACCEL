@@ -99,12 +99,16 @@ define(["model/passes/analyser/quantitypass",
             lines.forEach((function(line) {
                 line = line.trim();
 
-                // Check whether it's a comment line
-                if (prevQuantity != null && line.substring(0, 2) == '//') {
-                    prevQuantity.comment = line.substring(2, line.length);
-                } else {
-                    for (var i = 0; i < this.passes.length; i++) {
-                        prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
+                // Only process non-blank lines
+                if (lines.replace(/ +?/g, '') != '') {
+                    // Handle comments
+                    if (prevQuantity != null && line.substring(0, 2) == '//') {
+                        prevQuantity.comment = line.substring(2, line.length);
+                    } else {
+                        // Actual quantity definition: apply all passes
+                        for (var i = 0; i < this.passes.length; i++) {
+                            prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
+                        }
                     }
                 }
             }).bind(this));
