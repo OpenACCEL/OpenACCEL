@@ -44,10 +44,9 @@ define(["model/passes/preprocessor/compilerpass"], /**@lends Model.Passes.Prepro
         var output = [];
 
         scriptLines.forEach(function(line) {
-            if (line.substr(0, 2) !== '//') {
+            if (!(/\s*\/\//g).test(line)) {
                 // The line does not start with a comment indicator, so we
                 // have to keep it
-
                 output.push(line);
             }
         });

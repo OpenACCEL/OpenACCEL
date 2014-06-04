@@ -138,25 +138,22 @@ define(["model/passes/analyser/quantitypass",
                     continue;
                 }
 
-                // If the quantity has no dependencies, it is a category 3 (input) quantity
-                if (qty.dependencies.length == 0) {
-                    qty.input.type = this.findUserInput(qty.definition);
-                    if (qty.input.type !== null) {
-                        quantities[qtyName].category = 1;
-                        qty.input.parameters = this.findInputParameters(qty.definition, qty.input.type);
-                    } else {
-                        quantities[qtyName].category = 3;
-                    }
-                } else {
+                qty.input.type = this.findUserInput(qty.definition);
+                if (qty.input.type !== null) {
+                    // The quantity has an input element, so it is category 1
+                    quantities[qtyName].category = 1;
+                    qty.input.parameters = this.findInputParameters(qty.definition, qty.input.type);
+                } else if (qty.reverseDeps.length === 0) {
                     // If there are no quantities that depend on this quantity, it is category
                     // 2 (output)
-                    if (qty.reverseDeps.length == 0) {
-                        quantities[qtyName].category = 2;
-                        this.outputQuantities[qtyName] = qty;
-                    } else {
-                        // Has both dependencies and quantities that depend on this quantity: category 4
-                        quantities[qtyName].category = 4;
-                    }
+                    quantities[qtyName].category = 2;
+                    this.outputQuantities[qtyName] = qty;
+                } else if (qty.dependencies.length === 0) {
+                    // If the quantity has no dependencies, it is a category 3 (input) quantity
+                    quantities[qtyName].category = 3;
+                } else {
+                    // Has both dependencies and quantities that depend on this quantity: category 4
+                    quantities[qtyName].category = 4;
                 }
             }
 
@@ -207,7 +204,7 @@ define(["model/passes/analyser/quantitypass",
             }
             var parameters = [];
             if (type === 'slider') {
-                parameters = definition.match(/slider\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+                parameters = definition.match(/slider\((\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*\)/);
             } else if (type === 'check') {
                 parameters = definition.match(/check\(\s*(true|false)\s*\)/);
             } else if (type === 'text') {

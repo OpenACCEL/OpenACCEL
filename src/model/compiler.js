@@ -60,8 +60,9 @@ define(["model/fileloader",
 
         this.fileLoader.load("cond", "macros");
         this.fileLoader.load("func", "macros");
-        this.fileLoader.load("operators", "macros");
         this.fileLoader.load("history", "macros");
+        this.fileLoader.load("operators", "macros");
+        this.fileLoader.load("quantifier", "macros");
 
         this.fileLoader.load("functions", "library");
 

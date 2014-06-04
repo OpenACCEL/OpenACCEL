@@ -30,6 +30,23 @@ suite('commentpass.js', function() {
             assert.deepEqual(result, expResult);
         });
 
+        test('Array with comments with leading whitespace', function() {
+            var input = [
+            'x = 4',
+            '              // Value x',
+            'y = sin(x)',
+            '              // sine of x'
+            ];
+
+            var expResult = [
+            'x = 4',
+            'y = sin(x)'
+            ];
+
+            var result = commentPass.parse(input, {});
+            assert.deepEqual(result, expResult);
+        });
+
         test('Only comments array', function() {
             var input = [
             '// Value x',

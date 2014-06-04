@@ -1,15 +1,15 @@
 let __quantifier__ = macro {
     rule {
-        ($element:ident, $input:expr, $map:expr, $fold:expr)
+        ($dummy:ident, $domain:expr, $exp:expr, $func:expr)
     } => {
         (function() {
-            var input = $input;
+            var domain = $domain;
 
-            var mapResult = map(input, function($element) {
-                return $map;
+            var zipResult = unaryZip(domain, function($dummy) {
+                return $exp;
             });
 
-            return foldl(mapResult, $fold);
+            return foldl(zipResult, $func);
         })()
     }
 }
