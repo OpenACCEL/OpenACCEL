@@ -5,8 +5,9 @@ function vMatMatMul(x, y) {
     if (x instanceof Array) {
         var trueMatrix0 = false;
         for (i in x) {
-            if (x[i] instanceof Array)
+            if (x[i] instanceof Array) {
                 trueMatrix0 = true;
+            }
         }
         if (trueMatrix0) {
             if (y instanceof Array) {
@@ -109,7 +110,7 @@ function vMatMatMul(x, y) {
                     for (i in x) {
                         if (y[i] != undefined) {
                             if (!(y[i] instanceof Array)) {
-                                a += x[i] * a[1][i];
+                                a += x[i] * y[i];
                             }
                         }
                     }

@@ -64,29 +64,18 @@ function vVecRamp(x, y, z) {
                             return 0.5 * (y[lo] + y[lo + 1]);
                         }
                     } else {
-                        runOK = false;
-                        errorString += "vVecRamp: could not find enclosing interval for abcissa.";
-                        return errOb;
+                        throw new Error("vVecRamp: could not find enclosing interval for abcissa.");
                     }
                 } else {
-                    runOK = false;
-                    errorString += "vVecRamp: not all the abcissae values are scalar.";
-                    return errOb;
-                    return 0;
+                    throw new Error("vVecRamp: not all the abcissae values are scalar.");
                 }
             } else {
-                runOK = false;
-                errorString += "vVecRamp: third argument of vVecRamp must be scalar (abcissa-value).";
-                return errOb;
+                throw new Error("vVecRamp: third argument of vVecRamp must be scalar (abcissa-value).");
             }
         } else {
-            runOK = false;
-            errorString += "vVecRamp: second argument of vVecRamp must be vector (of ordinates).";
-            return errOb;
+            throw new Error("vVecRamp: second argument of vVecRamp must be vector (of ordinates).");
         }
     } else {
-        runOK = false;
-        errorString += "vVecRamp: first argument of vVecRamp must be vector (of abcissae).";
-        return errOb;
+        throw new Error("vVecRamp: first argument of vVecRamp must be vector (of abcissae).");
     }
 }

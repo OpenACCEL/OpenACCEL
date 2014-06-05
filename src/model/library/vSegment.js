@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function vSegment(x) {
+function vSegment(x, y, z) {
     x = __objectToArray__(x);
     if (x instanceof Array) {
         if (!(y instanceof Array)) {
@@ -17,18 +17,12 @@ function vSegment(x) {
                 }
                 return r;
             } else {
-                runOK = false;
-                errorString += "\nvSegment: third argument must be a scalar.";
-                return errOb;
+                throw new Error("vSegment: third argument must be a scalar.");
             }
         } else {
-            runOK = false;
-            errorString += "\nvSegment: second argument must be a scalar.";
-            return errOb;
+            throw new Error("vSegment: second argument must be a scalar.");
         }
     } else {
-        runOK = false;
-        errorString += "\nvSegment: first argument must be a vector.";
-        return errOb;
+        throw new Error("vSegment: first argument must be a vector.");
     }
 }

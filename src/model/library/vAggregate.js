@@ -19,9 +19,7 @@ function vAggregate(x, y, z) {
                 }
                 return r;
             } else {
-                runOK = false;
-                errorString += "\nvAggregate: third argument must be a scalar.";
-                return errOb;
+                throw new Error("vAggregate: third argument must be a scalar.");
             }
         } else {
             // we interpret the scala element to be inserted as if it is a vector with length 1
@@ -38,13 +36,13 @@ function vAggregate(x, y, z) {
                 return r;
             } else {
                 runOK = false;
-                errorString += "\nvAggregate: third argument must be a scalar.";
+                throw new Error("vAggregate: third argument must be a scalar.");
                 return errOb;
             }
         }
     } else {
         runOK = false;
-        errorString += "\nvAggregate: first argument must be a vector";
+        throw new Error("vAggregate: first argument must be a vector");
         return errOb;
     }
 }

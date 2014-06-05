@@ -18,13 +18,9 @@ function vGaussian(x, y) {
             }
             return t;
         } else {
-            runOK = false;
-            errorString += "\nvGaussian: cannot make a vector with <0 elements";
-            return errOb;
+            throw new Error("vGaussian: cannot make a vector with <0 elements");
         }
     } else {
-        runOK = false;
-        errorString += "\nvGaussian: both arguments must be scalar.";
-        return errOb;
+        throw new Error("vGaussian: both arguments must be scalar.");
     }
 }
