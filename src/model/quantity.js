@@ -198,7 +198,7 @@ define([], /**@lends Model*/ function() {
             def += ' ; ' + this.unit;
         }
         if (includeComments && this.comment != '') {
-            def += '\n\t' + this.comment;
+            def += '\n\t //' + this.comment;
         }
 
         return def;
