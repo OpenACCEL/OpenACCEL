@@ -23,7 +23,7 @@ function replaceSpecial(s) {
     result = result.replace("~", "\\textasciitilde ");
     result = result.replace("^", "\\textasciicircum ");
     result = result.replace(/([#$%&_{}])/g, function(sym) {
-        return "\\" + sym
+        return "\\" + sym;
     });
     return result;
 
@@ -36,13 +36,16 @@ function handleMember(m) {
 
     // Section header
     output += "\\subsubsection{" + replaceSpecial(m.name) + "} \n";
+    output += "\\label{mem:" + m.longname.replace(/[#~]/g,".") + "}\n";
+    output += "\\index{" + replaceSpecial(m.name) + "@" + replaceSpecial(m.name) + ", \\textsl{member}}\n";
+
     // constant indicator
     if (m.kind == "constant") {
         output += "$\\langle$ Constant $\\rangle$ \n";
     }
     // Information fields
     if (hasDesc || hasType) {
-        output += "\\begin{description} \n"
+        output += "\\begin{description} \n";
 
         if (hasDesc) {
             output += "\\item[Description:]" + replaceSpecial(m.description) + "\n";
@@ -69,6 +72,8 @@ function handleMethod(m) {
         }
     }
     output += ")} \n";
+    output += "\\label{mem:" + m.longname.replace(/[#~]/g,".") + "}\n";
+    output += "\\index{" + replaceSpecial(m.name) + "@" + replaceSpecial(m.name) + ", \\textsl{method}}\n";
 
     if (m.description) {
         // Description
@@ -136,6 +141,8 @@ function handleClass(c) {
     var output = "";
     // new section for a new class
     output += "\\subsection{" + replaceSpecial(c.name) + "} \n";
+    output += "\\label{class:" + c.name + "}\n";
+    output += "\\index{" + replaceSpecial(c.name) + "@" + replaceSpecial(c.name) + ", \\textsl{class}}\n";
     if (c.classdesc) {
         // Description of class
         output += "\\textbf{Description: }" + replaceSpecial(c.classdesc) + "\n";
@@ -158,6 +165,10 @@ function handleGlobals() {
     });
 
     output += "\\section{Global} \n";
+    output += "\\label{global}\n";
+    output += "\\index{Global}\n";
+
+    //output += "\\label{global}\n";
     if (globalMem.count() > 0) {
         output += membersection;
     }
@@ -232,6 +243,38 @@ function handleMethods(memberOf) {
     return output;
 }
 
+function handleNamespace(n) {
+    var output = "";
+    output += "\\section{" + replaceSpecial(n.longname) + "}\n";
+    output += "\\label{ns:" + n.name + "}\n";
+    output += "\\index{" + replaceSpecial(n.name) + "@" + replaceSpecial(n.name) + ", \\textsl{namespace}}\n";
+    if (n.description) {
+        output += "\\paragraph{Description}" + replaceSpecial(n.description);
+    }
+
+
+    output += "\\subsection{Namespace Members}\n";
+
+    // handle members of this namespace
+    output += handleMembers(n.longname);
+    output += handleMethods(n.longname);
+
+
+    // Extract all classes for this namespace
+    var nsclasses = getData().filter({
+        kind: "class",
+        memberof: n.longname
+    });
+
+    // Handle each class
+    nsclasses.each(function(c) {
+        if (!c.comment) {
+            return;
+        }
+        output += handleClass(c);
+    });
+    return output;
+}
 
 
 exports.publish = function(taffydata) {
@@ -247,68 +290,8 @@ exports.publish = function(taffydata) {
         kind: "namespace"
     });
 
-    var nsNames = [''];
-
     namespaces.each(function(n) {
-        output += "\\section{" + replaceSpecial(n.longname) + "}\n";
-        if (n.description) {
-            output += "\\paragraph{Description}" + replaceSpecial(n.description);
-        }
-
-        nsNames.push(n.longname);
-
-        output += "\\setcounter{subsubsection}{0}\n"
-
-        // handle members of this namespace
-        output += handleMembers(n.longname);
-        output += handleMethods(n.longname);
-
-
-        // Extract all classes for this namespace
-        var nsclasses = getData().filter({
-            kind: "class",
-            memberof: n.longname
-        });
-
-        if (nsclasses.count() > 0) {
-            output += classsection;
-        }
-
-        // Handle each class
-        nsclasses.each(function(c) {
-            if (!c.comment) {
-                return;
-            }
-            output += handleClass(c);
-        });
-
-    });
-
-    // Extract all classes without namespace
-    var classes = getData().filter({
-        kind: "class"
-    });
-
-    var noNSClasses = [];
-    classes.each(function(c) {
-        if (nsNames.indexOf(c.memberof) == -1) {
-            noNSClasses.push(c);
-        }
-    });
-
-
-    if (noNSClasses.length > 0) {
-        output += "\\section{$\\langle$ No Namespace $\\rangle$}\n";
-    }
-
-    // Handle each class
-    noNSClasses.forEach(function(c) {
-        if (!c.comment) {
-            return;
-        }
-        output += handleClass(c);
-
-
+        output += handleNamespace(n);
     });
 
     output += "}";
