@@ -104,7 +104,7 @@ post_deploy() {
     path_quantitypass="bin/scripts/model/passes/analyser/quantitypass.js"
     regex=".isTimeDependent = true;"
     match=$(grep "$regex" "$path_functions")
-    funcs=${match//$regex/} # remove all occurences of regex from match
+    funcs=$(echo $match | sed "s@$regex@@g") # remove all occurences of regex from match
     funcs=$(echo $funcs | sed "s/ /\", \"/g") # replace all spaces with ", "
     placeholder="--TIME-DEPENDENCY-PLACEHOLDER--"
     sed -i "s/${placeholder}/${funcs}/g" $path_quantitypass
