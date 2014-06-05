@@ -1,29 +1,29 @@
-suite("Operator precedence", function() {
-	// Template module.
-	var compiler;
-	var assert;
-    var Script;
+suite("Operator Precedence", function() {
+
+    var assert;
+    var compiler;
+    var script;
 
     setup(function (done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/compiler", "model/script"], function(assertModule, Compiler, scriptModule) {
+        requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
             console.log("Loaded 'Compiler' module.");
-            assert = assertModule;
+            assert = Assert;
             compiler = new Compiler();
-            Script = scriptModule;
+            script = Script;
             done();
         });
     });
 
 	suite("Operator precedence", function() {
+
 		// first some simple sanity checks
+
         /**
          * Test for Operator precedence: no operator
          */
         test("Operator precedence: no operator", function() {
             var code = "x = 5";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
 			assert.equal(exe.x(), 5);
 		});
 
@@ -32,7 +32,7 @@ suite("Operator precedence", function() {
          */
         test("Operator precedence: one operator", function() {
             var code = "x = 1 + 2";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 3);
         });
 
@@ -41,11 +41,11 @@ suite("Operator precedence", function() {
          * Test for Operator precedence: multiplication before addition
          */
         test("Operator precedence: multiplication before addition", function() {
-            var code = 
-            "x = y * y + z\n" + 
+            var code =
+            "x = y * y + z\n" +
             "y = 2\n" +
             "z = 1";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 5);
         });
 
@@ -56,7 +56,7 @@ suite("Operator precedence", function() {
             var code = "x = y * y - z\n"+
             "y = 2\n" +
             "z = 1";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 3);
         });
 
@@ -68,7 +68,7 @@ suite("Operator precedence", function() {
             "a = 4\n" +
             "b = 2\n" +
             "c = 1";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 3);
         });
 
@@ -80,7 +80,7 @@ suite("Operator precedence", function() {
             "a = 4\n" +
             "b = 2\n" +
             "c = 1";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 1);
         });
 
@@ -92,7 +92,7 @@ suite("Operator precedence", function() {
             "a = 2\n" +
             "b = 2\n" +
             "c = 1";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 3);
         });
 
@@ -104,7 +104,7 @@ suite("Operator precedence", function() {
             "a = 2\n" +
             "b = 1\n" +
             "c = 2";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 3);
         });
 
@@ -116,7 +116,7 @@ suite("Operator precedence", function() {
             "a = 4\n" +
             "b = 3\n" +
             "c = 6";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 2);
         });
 
@@ -128,7 +128,7 @@ suite("Operator precedence", function() {
             "a = 12\n" +
             "b = 2\n" +
             "c = 3";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 18);
         });
 
@@ -140,7 +140,7 @@ suite("Operator precedence", function() {
             "a = 24\n" +
             "b = 4\n" +
             "c = 2";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 3);
         });
 
@@ -152,7 +152,7 @@ suite("Operator precedence", function() {
             "a = 2\n" +
             "b = 2\n" +
             "c = 3";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 10);
         });
 
@@ -164,7 +164,7 @@ suite("Operator precedence", function() {
             "a = 2\n" +
             "b = 2\n" +
             "c = 3";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), -2);
         });
 
@@ -176,7 +176,7 @@ suite("Operator precedence", function() {
             "a = 12\n" +
             "b = 1\n" +
             "c = 3";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 3);
         });
 
@@ -188,7 +188,7 @@ suite("Operator precedence", function() {
             "a = 12\n" +
             "b = 3\n" +
             "c = 1";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 6);
         });
 
@@ -200,7 +200,7 @@ suite("Operator precedence", function() {
             "a = 12\n" +
             "b = 3\n" +
             "c = 2";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 2);
         });
 
@@ -212,7 +212,7 @@ suite("Operator precedence", function() {
             "a = 24\n" +
             "b = 4\n" +
             "c = 2";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 12);
         });
 
@@ -224,7 +224,7 @@ suite("Operator precedence", function() {
             "a = 1\n" +
             "b = 4\n" +
             "c = 2";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 4);
         });
 
@@ -237,7 +237,7 @@ suite("Operator precedence", function() {
             "b = 2\n" +
             "c = 5\n" +
             "d = 3";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), Math.sin(6));
         });
 
@@ -249,7 +249,7 @@ suite("Operator precedence", function() {
             "a = 5\n" +
             "b = 4\n" +
             "c = 2";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 400);
         });
 
@@ -261,12 +261,8 @@ suite("Operator precedence", function() {
             "a = 4\n" +
             "b = 8\n" +
             "c = 1";
-            var exe = compiler.compile(new Script(code)).exe;
+            var exe = compiler.compile(new script(code)).exe;
             assert.equal(exe.x(), 30);
         });
-
-
-
-
 	});
 });

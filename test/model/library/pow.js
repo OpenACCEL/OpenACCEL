@@ -1,17 +1,16 @@
 suite("Pow Library", function() {
+
+    var assert;
     var macroExpander;
     var macros;
-    var assert;
 
     setup(function(done) {
-        // This saves the module for use in tests. You have to use
-        // the done callback because this is asynchronous.
-        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(assertModule, module, FileLoader) {
-            console.log("Loaded 'MacroExpander & FileLoader' module.");
-            assert = assertModule;
-            macroExpander = new module();
+        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, MacroExpander, FileLoader) {
+            console.log("Loaded 'Pow' module.");
+            assert = Assert;
+            macroExpander = new MacroExpander();
             var fileLoader = new FileLoader();
-            fileLoader.load("func");
+            fileLoader.load("func", "macros");
             fileLoader.load("pow", "library");
             macros = fileLoader.getContent();
             done();

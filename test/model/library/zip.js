@@ -7,127 +7,157 @@ suite("Zip", function() {
 
     setup(function(done) {
         requirejs(["assert", "benchmark", "model/macroexpander", "model/fileloader"], function(Assert, Benchmark, MacroExpander, FileLoader) {
+            console.log("Loaded 'Zip' module.");
             assert = Assert;
             benchmark = Benchmark;
             macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
+            fileLoader.load("unaryZip", "library");
+            fileLoader.load("binaryZip", "library");
+            fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
-            fileLoader.load("nzip", "library");
             fileLoader.load("nzipcees", "test");
-            console.log("Loaded 'Zip' module.");
             done();
         });
     });
 
     suite("zip and nzip", function() {
 
-        test("zip(): add two vectors", function() {
+        test("binaryZip(): add two vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
-            output = zip(input1, input2, add);
+            output = binaryZip(input1, input2, add);
             assert.deepEqual(output, expected);
         });
 
-        test("nzip(): add two vectors", function() {
+        test("multiaryZip(): add two vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
-            output = nzip([input1, input2], add);
+            output = multiaryZip([input1, input2], add);
+            assert.deepEqual(output, expected);
+        });
+
+        test("zip(): add two vectors", function() {
+            eval(fileLoader.getContent());
+            setUpAddTwoVectors();
+            output = zip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
+
+        test("binaryZip(): add scalar to vector", function() {
+            eval(fileLoader.getContent());
+            setUpAddScalarToVector();
+            output = binaryZip(input1, input2, add);
+            assert.deepEqual(output, expected);
+        });
+
+        test("multiaryZip(): add scalar to vector", function() {
+            eval(fileLoader.getContent());
+            setUpAddScalarToVector();
+            output = multiaryZip([input1, input2], add);
+            assert.deepEqual(output, expected);
+        });
 
         test("zip(): add scalar to vector", function() {
             eval(fileLoader.getContent());
             setUpAddScalarToVector();
-            output = zip(input1, input2, add);
-            assert.deepEqual(output, expected);
-        });
-
-        test("nzip(): add scalar to vector", function() {
-            eval(fileLoader.getContent());
-            setUpAddScalarToVector();
-            output = nzip([input1, input2], add);
+            output = zip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
+
+        test("binaryZip(): add vector to nested vector", function() {
+            eval(fileLoader.getContent());
+            setUpAddVectorToNestedVector();
+            output = binaryZip(input1, input2, add);
+            assert.deepEqual(output, expected);
+        });
+
+        test("multiaryZip(): add vector to nested vector", function() {
+            eval(fileLoader.getContent());
+            setUpAddVectorToNestedVector();
+            output = multiaryZip([input1, input2], add);
+            assert.deepEqual(output, expected);
+        });
 
         test("zip(): add vector to nested vector", function() {
             eval(fileLoader.getContent());
             setUpAddVectorToNestedVector();
-            output = zip(input1, input2, add);
-            assert.deepEqual(output, expected);
-        });
-
-        test("nzip(): add vector to nested vector", function() {
-            eval(fileLoader.getContent());
-            setUpAddVectorToNestedVector();
-            output = nzip([input1, input2], add);
+            output = zip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
+
+        test("binaryZip(): add two nested vectors", function() {
+            eval(fileLoader.getContent());
+            setUpAddTwoNestedVectors();
+            output = binaryZip(input1, input2, add);
+            assert.deepEqual(output, expected);
+        });
+
+        test("multiaryZip(): add two nested vectors", function() {
+            eval(fileLoader.getContent());
+            setUpAddTwoNestedVectors();
+            output = multiaryZip([input1, input2], add);
+            assert.deepEqual(output, expected);
+        });
 
         test("zip(): add two nested vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoNestedVectors();
-            output = zip(input1, input2, add);
-            assert.deepEqual(output, expected);
-        });
-
-        test("nzip(): add two nested vectors", function() {
-            eval(fileLoader.getContent());
-            setUpAddTwoNestedVectors();
-            output = nzip([input1, input2], add);
+            output = zip([input1, input2], add);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
 
-        test("nzip(): sum three vectors", function() {
+        test("zip(): sum three vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 2, 3];
             input2 = [4, 5, 6];
             input3 = [7, 8, 9];
             expected = [12, 15, 18];
-            output = nzip([input1, input2, input3], sum);
+            output = zip([input1, input2, input3], sum);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
 
-        test("nzip(): sum scalar to two nested vectors", function() {
+        test("zip(): sum scalar to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];
             input2 = [1, 1, [1, 1, [1, 1]], 1];
             input3 = 2;
             expected = [4, 4, [4, 4, [4, 4]]];
-            output = nzip([input1, input2, input3], sum);
+            output = zip([input1, input2, input3], sum);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
 
-        test("nzip(): sum vector to two nested vectors", function() {
+        test("zip(): sum vector to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];
             input2 = [1, 1, [1, 1, [1, 1]], 1];
             input3 = [2, 2, 2, 2];
             expected = [4, 4, [4, 4, [4, 4]]];
-            output = nzip([input1, input2, input3], sum);
+            output = zip([input1, input2, input3], sum);
             assert.deepEqual(output, expected);
         });
 
         //----------------------------------------------------------------------
 
-        test("nzip(): sum vector to two nested vectors", function() {
+        test("zip(): sum vector to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];
             input2 = [1, 1, [1, 1, [1, 1]], 1];
             input3 = [2, 2, [2, 2]];
             expected = [4, 4, [4, 4]];
-            output = nzip([input1, input2, input3], sum);
+            output = zip([input1, input2, input3], sum);
             assert.deepEqual(output, expected);
         });
 
@@ -237,13 +267,13 @@ suite("Zip", function() {
             func = add;
             funcCees = addCees;
             benchmark_suite
-                .add('zip()', function() {
-                    zip(args[0], args[1], func);
+                .add('binaryZip()', function() {
+                    binaryZip(args[0], args[1], func);
                 });
         }
         benchmark_suite
-            .add('nzip()', function() {
-                nzip(args, func);
+            .add('multiaryZip()', function() {
+                multiaryZip(args, func);
             })
             .add('nzipcees()', function() {
                 nzipcees(args, funcCees);

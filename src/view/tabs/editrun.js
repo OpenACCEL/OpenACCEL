@@ -19,25 +19,17 @@ $(document).ready(
 );
 
 function deleteQuantity(quantity) {
-    console.log('deleting ' + quantity);
-
     controller.deleteQuantity(quantity);
-
-    var quantities = controller.getQuantities();
-    synchronizeScriptList(quantities);
-    Report.todolistBuffer.hideIfEmpty('#tododiv');
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
-
-    console.log('deleted ' + quantity);
-};
+}
 
 var linenr = 0;
+
 function addQuantity(string) {
     var split = string.split('=');
 
     //Approximate Script list
     split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
-    addScriptlistLine(linenr++, split[0], split[1], '?');
+    addScriptlistLine(linenr++, split[0], split[0], split[1], '?');
     scriptlistBuffer.flip();
 
     console.log('Pre-added line: ' + string);
@@ -46,28 +38,38 @@ function addQuantity(string) {
     setTimeout(
         function() {
             controller.addQuantity(string);
-            console.log('Compiled script.');
-
-            //Synchronize Script list
-            var quantities = controller.getQuantities();
-            console.log(quantities);
-            synchronizeScriptList(quantities);
-
-            //Display results
-            // Report.resultBuffer.empty();
-            // if (split[0] == 'out' || split[0] == 'out2') {
-            //     console.log('output variable found');
-            //     Report.addResult(split[0], controller.getQuantityValue(split[0]));
-            // }
-            // Report.resultBuffer.flip();
-            Report.todolistBuffer.hideIfEmpty('#tododiv');
-            Report.resultBuffer.hideIfEmpty('#resultdiv');
         },
         10
     );
-};
+}
+
+function toggleExecution(action) {
+    if (action == 'Run') {
+        controller.run();
+    } else {
+        controller.pause();
+    }
+}
+
+function newScript() {
+    if (confirm("Are you sure you want to stop your current script and delete all existing script lines? It can not be undone.")) {
+        controller.newScript();
+    }
+}
+
+function setIterations(iterations) {
+    controller.setIterations(iterations);
+}
 
 //------------------------------------------------------------------------------
+
+function setExecuting(executing) {
+    if (executing) {
+        $('#runscript').val('Pause');
+    } else {
+        $('#runscript').val('Run');
+    }
+}
 
 /**
  * Synchronize the content of the #scriptlist div with the model
@@ -77,31 +79,74 @@ function addQuantity(string) {
 function synchronizeScriptList(quantities) {
     scriptlistBuffer.empty();
     Report.todolistBuffer.empty();
-    Report.resultBuffer.empty();
+    resetInputs();
+
     var i = 0;
     for (var q in quantities) {
         var quantity = quantities[q];
-        console.log(quantity);
 
         //TODOs
         if (quantity.todo) {
             Report.addTodo(quantity.name);
         } else {
-            addScriptlistLine(i++, quantity.name, quantity.definition, quantity.category);
+            addScriptlistLine(i++, quantity.name, quantity.LHS, quantity.definition, quantity.category);
         }
 
-        //Results
-        if (quantity.category == 2) {
-            try {
-                Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
-            } catch(e) {
-                console.log(e);
+        //User Input
+        if (quantity.category == 1) {
+            switch (quantity.input.type) {
+                case 'slider':
+                    addInput(new SliderInput(i, quantity.name, quantity.name, parseInt(quantity.input.parameters[0]), parseInt(quantity.input.parameters[1]), parseInt(quantity.input.parameters[2])));
+                    break;
+                case 'check':
+                    addInput(new CheckboxInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                    break;
+                case 'button':
+                    addInput(new ButtonInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                    break;
+                case 'text':
+                    addInput(new TextInput(i, quantity.name, quantity.name));
+                    break;
+                default:
+                    //Unknown input type
+                    console.log('Unknown input type');
+                    break;
             }
         }
     }
+
     scriptlistBuffer.flip();
     Report.todolistBuffer.flip();
+    initInputs();
+
+    //Hide what needs hiding
+    Report.todolistBuffer.hideIfEmpty('#tododiv');
+    Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+    Report.argtolistBuffer.hideIfEmpty('#argtodiv');
+    userinputBuffer.hideIfEmpty('#userinputdiv');
+    Report.resultBuffer.hideIfEmpty('#resultdiv');
+    $('#plotdiv').toggle(false);
+}
+
+/**
+ * Synchronize the content of the #result div with the model
+ *
+ * @param  {Object} quantities All category 2 quantities registered in the model
+ */
+function synchronizeResults(quantities) {
+    Report.resultBuffer.empty();
+
+    for (var q in quantities) {
+        var quantity = quantities[q];
+
+        try {
+            Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
+        } catch (e) {
+            console.log(e);
+        }
+    }
     Report.resultBuffer.flip();
+    Report.resultBuffer.hideIfEmpty('#resultdiv');
 }
 
 function objectToString(obj) {
@@ -130,11 +175,41 @@ function objectToString(obj) {
  * @param  {Number} line  Identifier of the to be selected line
  * @param  {String} value To be put in the #scriptline element
  */
-function selectScriptline(line, value) {
-    console.log('select ' + line + ', ' + value);
-    if ($('#line' + line).length > 0) {
+function selectScriptline(linenr, quantityname) {
+    if ($('#line' + linenr).length > 0) {
+        var quantity = controller.getQuantity(quantityname);
+
         var scriptline = $('#scriptline');
-        scriptline.val(value);
+        scriptline.val(quantity.source);
+
+        $('.quantityname').html(quantityname);
+
+        Report.arglistBuffer.empty();
+        Report.argtolistBuffer.empty();
+
+        //list parameters (type = dummy)
+        for (var p in quantity.parameters) {
+            Report.addArg(quantity.parameters[p], 'dummy');
+        }
+
+        //list dependencies (type = regular)
+        for (var d in quantity.dependencies) {
+            Report.addArg(quantity.dependencies[d], 'regular');
+        }
+
+        //list used standard functions (type = standard function)
+        //TODO
+                
+        //list reverse dependencies (type = regular)
+        for (var r in quantity.reverseDeps) {
+            Report.addArgto(quantity.reverseDeps[r], 'regular');
+        }
+
+        Report.arglistBuffer.flip();
+        Report.argtolistBuffer.flip();
+
+        Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+        Report.argtolistBuffer.hideIfEmpty('#argtodiv');
     }
 }
 
@@ -193,6 +268,8 @@ function HTMLbuffer(div) {
     }
 }
 
+//------------------------------------------------------------------------------
+
 /**
  * Buffer to contain updated #scriptlist content
  * @type {HTMLbuffer}
@@ -207,15 +284,15 @@ var scriptlistBuffer = new HTMLbuffer('#scriptlist');
  * @param {String} right    Right-hand side of the equation
  * @param {Number} category Category to which the left-hand side belongs
  */
-function getScriptlistLineHTML(line, left, right, category) {
+function getScriptlistLineHTML(linenr, quantity, left, right, category) {
     return '\
-        <input type="radio" name="script" id="line' + line + '" value="' + left + ' = ' + right + '">\
-        <label for="line' + line + '" onclick = "selectScriptline(' + line + ', \'' + left + ' = ' + right + '\');">\
+        <input type="radio" name="script" id="line' + linenr + '" value="' + left + ' = ' + right + '">\
+        <label for="line' + linenr + '" onclick = "selectScriptline(' + linenr + ', \'' + quantity + '\');">\
             <div class="inline ellipsis max256w">' + left + '</div>\
             <div class="inline operator">=</div>\
             <div class="inline ellipsis max256w">' + right + '</div>\
             <div class="inline comment">(cat.=' + category + ')</div>\
-            <a onclick="deleteQuantity(\'' + left + '\')" class="inline lineoption">delete</a>\
+            <a onclick="deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>\
         </label>\
     ';
 }
@@ -228,8 +305,8 @@ function getScriptlistLineHTML(line, left, right, category) {
  * @param {String} right    Right-hand side of the equation
  * @param {Number} category Category to which the left-hand side belongs
  */
-function addScriptlistLine(line, left, right, category) {
-    scriptlistBuffer.append(getScriptlistLineHTML(line, left, right, category));
+function addScriptlistLine(linenr, quantity, left, right, category) {
+    scriptlistBuffer.append(getScriptlistLineHTML(linenr, quantity, left, right, category));
 }
 
 /**
@@ -253,7 +330,7 @@ Input.prototype.getHTML = function() {};
 Input.prototype.initialize = function() {};
 
 /**
- * Constructs a dynamic slider object
+ * Constructs a dynamic slider input object
  *
  * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
  * @param {Object} quantity   Object which the input element affects
@@ -263,7 +340,7 @@ Input.prototype.initialize = function() {};
  * @param {Number} max        Maximal value of the slider
  *
  * @class
- * @classdesc Dynamic slider class to be generated according to ACCEL script requirements
+ * @classdesc Dynamic slider input class to be generated according to ACCEL script requirements
  */
 function SliderInput(identifier, quantity, label, val, min, max) {
     this.identifier = identifier;
@@ -278,9 +355,9 @@ function SliderInput(identifier, quantity, label, val, min, max) {
         value: this.val,
         min: this.min,
         max: this.max,
+        quantity: this.quantity, //Non-jquery addition to get the associated quantity within the slide function's scope
         slide: function(event, ui) {
-            $('#userinput' + this.identifier).val(ui.value);
-            //SEND CONTROLLER UPDATE
+            controller.setUserInputQuantity(quantity, ui.value);
         }
     };
 }
@@ -294,48 +371,136 @@ SliderInput.prototype.getHTML = function() {
     ';
 };
 SliderInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+
     $('#userslider' + this.identifier).slider(this.properties);
 };
 
 /**
- * Constructs a dynamic checkbox object
+ * Constructs a dynamic checkbox input object
+ *
+ * @param {String}  identifier String to be used as a suffix in the id values of the generated html elements
+ * @param {Object}  quantity   Object which the input element affects
+ * @param {String}  label      String to be used as a label for the input element in the UI
+ * @param {Boolean} val        Initial value of the checkbox
+ *
+ * @class
+ * @classdesc Dynamic checkbox input class to be generated according to ACCEL script requirements
+ */
+function CheckboxInput(identifier, quantity, label, val) {
+    this.identifier = identifier;
+    this.quantity = quantity;
+    this.label = label;
+
+    this.val = val;
+    console.log(val);
+};
+CheckboxInput.prototype = new Input();
+CheckboxInput.prototype.getHTML = function() {
+    return '\
+        <div id = "userinput' + this.identifier + '">\
+            <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
+            <div class = "inline checkboxin">\
+                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true'?'checked':'') + '>\
+                <label for = "usercheck' + this.identifier + '"></label>\
+            </div>\
+        </div>\
+    ';
+};
+CheckboxInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+
+    var checkboxinput = this;
+    $('#usercheck' + checkboxinput.identifier).on('change',
+        function() {
+            console.log(this.checked);
+            controller.setUserInputQuantity(checkboxinput.quantity, this.checked);
+        }
+    );
+};
+
+/**
+ * Constructs a dynamic text input object
+ *
+ * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
+ * @param {Object} quantity   Object which the input element affects
+ * @param {String} label      String to be used as a label for the input element in the UI
+ * @param {String} val        Initial value of the text input field
+ *
+ * @class
+ * @classdesc Dynamic text input class to be generated according to ACCEL script requirements
+ */
+function TextInput(identifier, quantity, label, val) {
+    this.identifier = identifier;
+    this.quantity = quantity;
+    this.label = label;
+
+    this.val = val;
+};
+TextInput.prototype = new Input();
+TextInput.prototype.getHTML = function() {
+    return '\
+        <div id = "userinput' + this.identifier + '">\
+            <label for = "usertext' + this.identifier + '">' + this.label + '</label>\
+            <input type = "text" id = "usertext' + this.identifier + '" class = "textin" value = "' + this.val + '">\
+        </div>\
+    ';
+};
+TextInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, this.val);
+
+    var textinput = this;
+    $('#usertext' + textinput.identifier).on('input',
+        function() {
+            controller.setUserInputQuantity(textinput.quantity, this.value);
+        }
+    );
+};
+
+/**
+ * Constructs a dynamic button input object
  *
  * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
  * @param {Object} quantity   Object which the input element affects
  * @param {String} label      String to be used as a label for the input element in the UI
  *
  * @class
- * @classdesc Dynamic checkbox class to be generated according to ACCEL script requirements
+ * @classdesc Dynamic button input class to be generated according to ACCEL script requirements
  */
-function CheckboxInput(identifier, quantity, label) {
+function ButtonInput(identifier, quantity, label) {
     this.identifier = identifier;
     this.quantity = quantity;
     this.label = label;
-
-    this.identifier = 0;
-    this.quantity = null;
-
-    this.update = function () {
-        controller.setValue(this.identifier, $('usercheck' + this.identifier).prop('checked'));
-    };
-}
-CheckboxInput.prototype = new Input();
-CheckboxInput.prototype.getHTML = function() {
+};
+ButtonInput.prototype = new Input();
+ButtonInput.prototype.getHTML = function() {
     return '\
-        <div id = "userinput' + identifier + '">\
-            <label for = "usercheck' + identifier + '">' + label + '</label>\
-            <input type = "checkbox" id = "usercheck' + identifier + '" onclick = "">\
+        <div id = "userinput' + this.identifier + '">\
+            <label for = "userbutton' + this.identifier + '">' + this.label + '</label>\
+            <input type = "button" id = "userbutton' + this.identifier + '" class = "buttonin" value = "' + this.label + '">\
         </div>\
     ';
 };
-
-/*
- * TODO Dynamic Text input field to be generated according to ACCEL script requirements
- */
-
-/*
- * TODO Dynamic Button to be generated according to ACCEL script requirements
- */
+ButtonInput.prototype.initialize = function() {
+    controller.setUserInputQuantity(this.quantity, false);
+    
+    var buttoninput = this;
+    $('#userbutton' + buttoninput.identifier).on('mousedown',
+        function() {
+            controller.setUserInputQuantity(buttoninput.quantity, true);
+        }
+    );
+    $('#userbutton' + buttoninput.identifier).on('mouseup',
+        function() {
+            controller.setUserInputQuantity(buttoninput.quantity, false);
+        }
+    );
+    $('#userbutton' + buttoninput.identifier).on('mouseleave',
+        function() {
+            controller.setUserInputQuantity(buttoninput.quantity, false);
+        }
+    );
+};
 
 /**
  * Array of input javascript objects
@@ -344,17 +509,29 @@ CheckboxInput.prototype.getHTML = function() {
 var inputs = [];
 
 /**
- * Add dynamic input element to the #userinput element
+ * Removes the existing input elements and empties the associated buffer
+ */
+function resetInputs() {
+    userinputBuffer.empty();
+
+    inputs = [];
+}
+
+/**
+ * Adds a dynamic input element to the #userinput element
  *
- * @param {Object} elements    Object with {@code appendHTML(div, name, identifier)} function to append the corresponding HTML to #userinput
- * @param {String} label       A string displayed near the input element to describe it
- * @param {Number} identifier  A unique number to identify the element later on
+ * @param {Object} elements    Object with functions to generate the corresponding HTML to be put in #userinput
  */
 function addInput(element) {
-    this.inputs.push(element);
     userinputBuffer.append(element.getHTML());
-    console.log(this.inputs);
 
+    this.inputs.push(element);
+}
+
+/**
+ * Initializes the added input elements
+ */
+function initInputs() {
     userinputBuffer.flip();
 
     for (var i = 0; i < inputs.length; i++) {
@@ -448,8 +625,64 @@ var Report = {
     addResult: function(quantity, result) {
         Report.resultBuffer.append(this.getEquationHTML(quantity, result));
     },
-
-    addTooltip: function(div, id, msg, arrow) {
-
-    }
 };
+
+/**
+ * Constructs a new Tooltip object
+ * 
+ * @param {String} id      String to be used as a suffix in the id values of the generated html elements
+ * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
+ * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
+ *
+ * @class
+ * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
+ */
+function Tooltip(id, div, classes) {
+    this.id = id;
+    this.div = div;
+    this.classes = classes;
+
+    this.getHTML = function(message) {
+        return '\
+            <div id = "tooltip' + this.id + '" class = "' + this.classes + '">\
+                ' + message + '\
+            </div>\
+        ';
+    }
+
+    this.initialize = function() {
+        $(this.getHTML('')).insertAfter(this.div);
+        $('#tooltip' + this.id).toggle(false);
+
+        $('#tooltip' + this.id).on('click', 
+            function() {
+                $(this).animate({opacity: 0}, 200, 
+                    function() {
+                        $(this).toggle(false);
+                    }
+                )
+            }
+        );
+        $('#tooltip' + this.id).on('mouseover', 
+            function() {
+                $(this).animate({opacity: 0.5}, 200);
+            }
+        );
+        $('#tooltip' + this.id).on('mouseleave', 
+            function() {
+                $(this).animate({opacity: 1}, 100);
+            }
+        );
+    }
+
+    this.initialize();
+
+    this.set = function(message) {
+        $('#tooltip' + this.id).html(message);
+        $('#tooltip' + this.id).toggle(true);
+    }
+
+    this.remove = function() {
+        $('#tooltip' + this.id).remove();
+    }
+}

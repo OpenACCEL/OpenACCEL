@@ -54,6 +54,43 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
         }).bind(this));
     };
 
+    NamedVectorPass.prototype.keepBrackets = function(line) {
+        var output = line;
+        var x = 1;
+        for (var i = x; i < line.length; i++) {
+            // We have found a begin token, thus we have to find an end token.
+            if (line[i] == "[" && line[i-1].match(/\w/)) {
+                x = i;
+                var level = 1;
+                // Update the deepness level accordingly.
+                for (var j = x + 1; j < line.length; j++) {
+                    if (line[j] == "[") {
+                        level++;
+                    } else if (line[j] == "]") {
+                        level--;
+
+                        // If level is 0, we have found the matching end token.
+                        // We then need to recursively replace this substring with a translated substring.
+                        if (level == 0) {
+                            var substring = line.substring(x + 1, j);
+                            output = output.replace(substring, this.keepBrackets(substring));
+                            output = this.replaceAt(output, x, this.otherBegin);
+                            output = this.replaceAt(output, j, this.otherEnd);
+                            i = j; // When we want to look for a next begin token, thus we start where we have now ended.
+                            break;
+                        }
+                    }
+                }
+            }
+        }  
+        return output;
+    }
+
+    NamedVectorPass.prototype.replaceAt = function(line, idx, chr) {
+        var left = line.substring(0, idx);
+        var right = line.substring(idx + 1);
+        return left + chr + right;
+    }
     /**
      * Replaces some brackets([]) in line by curly braces ({}). The brackets that are replaced
      * are the ones that indicate creation of vectors, not of calling a vector.
@@ -68,10 +105,7 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
         var lhs = this.getLHS(line);
         line = this.getRHS(line);
 
-        line = line.replace(this.regexes.vectorCall, (function(s) {
-            s = s.split("[").join(this.otherBegin);
-            return s.split("]").join(this.otherEnd);
-        }).bind(this));
+        line = this.keepBrackets(line);
 
         line = line.replace(this.regexes.openingBracket, (function(s) {
             return s.split("[").join(this.begin);
@@ -131,12 +165,21 @@ define(['model/passes/preprocessor/compilerpass'], /**@lends Model.Passes.Prepro
             // We have not found a begin token at all, thus we are dealing with a base case and can start translating.
             var count = 0;
             var elements = output.split(",");
-
+            var funcCount = 0;
             // If an element does *not* contain a ':', it is unnamed and thus needs an index identifier.
             for (var i = 0; i < elements.length; i++) {
-                var key = elements[i].split(this.begin);
-                if (key[0].indexOf(":") == -1) {
-                    elements[i] = "'" + count+++"':" + elements[i];
+                if (funcCount === 0) {
+                    var key = elements[i].split(this.begin);
+                    if (key[0].indexOf(":") == -1) {
+                        elements[i] = "'" + count+++"':" + elements[i];
+                    }   
+                }
+                if (elements[i].match(/\(/g)) {
+
+                    funcCount +=  (1  * elements[i].match(/\(/g).length);
+                }
+                if (elements[i].match(/\)/g)) {
+                    funcCount -=  (1  * elements[i].match(/\)/g).length);
                 }
             }
             output = elements.join("\u2603");

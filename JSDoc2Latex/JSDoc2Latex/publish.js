@@ -4,8 +4,9 @@
 var fs = require('jsdoc/fs');
 var outdir = env.opts.destination;
 
-var membersection = "\\addcontentsline{toc}{subsubsection}{Members}\n\\subsubsection*{Members} \n";
-var methodsection = "\\addcontentsline{toc}{subsubsection}{Methods}\n\\subsubsection*{Methods} \n";
+var membersection = "\\subsubsection*{\\underline{Members}}\n";
+var methodsection = "\\subsubsection*{\\underline{Methods}} \n";
+var classsection = "\\subsubsection*{\\underline{Classes}} \n";
 
 var data;
 
@@ -22,7 +23,7 @@ function replaceSpecial(s) {
     result = result.replace("~", "\\textasciitilde ");
     result = result.replace("^", "\\textasciicircum ");
     result = result.replace(/([#$%&_{}])/g, function(sym) {
-        return "\\" + sym
+        return "\\" + sym;
     });
     return result;
 
@@ -35,13 +36,16 @@ function handleMember(m) {
 
     // Section header
     output += "\\subsubsection{" + replaceSpecial(m.name) + "} \n";
+    output += "\\label{mem:" + m.longname.replace(/[#~]/g,".") + "}\n";
+    output += "\\index{" + replaceSpecial(m.name) + "@" + replaceSpecial(m.name) + ", \\textsl{member}}\n";
+
     // constant indicator
     if (m.kind == "constant") {
         output += "$\\langle$ Constant $\\rangle$ \n";
     }
     // Information fields
     if (hasDesc || hasType) {
-        output += "\\begin{description} \n"
+        output += "\\begin{description} \n";
 
         if (hasDesc) {
             output += "\\item[Description:]" + replaceSpecial(m.description) + "\n";
@@ -52,6 +56,7 @@ function handleMember(m) {
         }
         output += "\\end{description} \n";
     }
+    output += "\n\n\\smallskip\\hrulefill\n\n";
 
     return output;
 }
@@ -67,6 +72,8 @@ function handleMethod(m) {
         }
     }
     output += ")} \n";
+    output += "\\label{mem:" + m.longname.replace(/[#~]/g,".") + "}\n";
+    output += "\\index{" + replaceSpecial(m.name) + "@" + replaceSpecial(m.name) + ", \\textsl{method}}\n";
 
     if (m.description) {
         // Description
@@ -77,7 +84,7 @@ function handleMethod(m) {
         output += "\\paragraph{Parameters:} \\hfill \\\\ \n";
         output += "\\begin{tabular}{|l|l|p{0.6\\textwidth}|}\n";
         output += "\\hline\n";
-        output += "\\textbf{Name} & \\textbf{Type} & \\textbf{Description} \\\\ \n";
+        output += "\\textsc{Name} & \\textsc{Type} & \\textsc{Description} \\\\ \n";
         output += "\\hline\n\\hline\n";
         for (var i in m.params) {
             output += ((m.params[i].name) ? replaceSpecial(m.params[i].name) : "") + "& ";
@@ -108,7 +115,7 @@ function handleMethod(m) {
         output += "\\paragraph{Throws:} \\hfill \\\\ \n";
         output += "\\begin{tabular}{|l|p{0.6\\textwidth}|}\n";
         output += "\\hline\n\\hline\n";
-        output += "\\textbf{Type} & \\textbf{Description} \\\\ \n";
+        output += "\\textsc{Type} & \\textsc{Description} \\\\ \n";
         output += "\\hline\n";
         for (var i in m.exceptions) {
             output += ((m.exceptions[i].type && m.exceptions[i].type.names && m.exceptions[i].type.names.length) ? m.exceptions[i].type.names[0] : "") + " & ";
@@ -122,9 +129,11 @@ function handleMethod(m) {
         // return variable
         output += "\\paragraph{Returns:} \\hfill \\\\ \n";
         output += ((m.returns[0].description) ? replaceSpecial(m.returns[0].description) + "\\\\ \n" : "");
-        output += ((m.returns[0].type && m.returns[0].type.names && m.returns[0].type.names.length) ? "\\underline{Type:} " + m.returns[0].type.names[0] + "\n" : "");
+        output += ((m.returns[0].type && m.returns[0].type.names && m.returns[0].type.names.length) ? "\\textsc{Type:} " + m.returns[0].type.names[0] + "\n" : "");
 
     }
+
+    output += "\n\n\\smallskip\\hrulefill\n\n";
     return output;
 }
 
@@ -132,49 +141,22 @@ function handleClass(c) {
     var output = "";
     // new section for a new class
     output += "\\subsection{" + replaceSpecial(c.name) + "} \n";
+    output += "\\label{class:" + c.name + "}\n";
+    output += "\\index{" + replaceSpecial(c.name) + "@" + replaceSpecial(c.name) + ", \\textsl{class}}\n";
     if (c.classdesc) {
         // Description of class
         output += "\\textbf{Description: }" + replaceSpecial(c.classdesc) + "\n";
     }
 
-    // ==========================================
-    // Member variables of the class
+    output += handleMembers(c.longname);
+    output += handleMethods(c.longname);
 
-    var members = getData().filter({
-        kind: ["member", "constant"],
-        memberof: c.longname
-    });
-
-    if (members.count() > 0) {
-        output += membersection;
-    }
-
-    // handle each member variable
-    members.each(function(m) {
-        output += handleMember(m);
-    });
-
-    // ==========================================
-    // Methods 
-    var methods = getData().filter({
-        kind: "function",
-        memberof: c.longname
-    });
-
-    if (methods.count() > 0) {
-        output += methodsection;
-    }
-
-
-    // handle each method
-    methods.each(function(m) {
-        output += handleMethod(m);
-    });
     return output;
 }
 
 function handleGlobals() {
     var output = "";
+
     // Handle global definitions
     // Members
     var globalMem = getData().filter({
@@ -183,6 +165,10 @@ function handleGlobals() {
     });
 
     output += "\\section{Global} \n";
+    output += "\\label{global}\n";
+    output += "\\index{Global}\n";
+
+    //output += "\\label{global}\n";
     if (globalMem.count() > 0) {
         output += membersection;
     }
@@ -217,6 +203,80 @@ function handleGlobals() {
     return output;
 }
 
+function handleMembers(memberOf) {
+    var output = "";
+    var members = getData().filter({
+        kind: ["member", "constant"],
+        memberof: memberOf
+    });
+
+    if (members.count() > 0) {
+        output += membersection;
+    }
+
+    // handle each member variable
+    members.each(function(m) {
+        output += handleMember(m);
+    });
+
+
+
+    return output;
+}
+
+function handleMethods(memberOf) {
+    var output = "";
+    var methods = getData().filter({
+        kind: "function",
+        memberof: memberOf
+    });
+
+    if (methods.count() > 0) {
+        output += methodsection;
+    }
+
+
+    // handle each method
+    methods.each(function(m) {
+        output += handleMethod(m);
+    });
+    return output;
+}
+
+function handleNamespace(n) {
+    var output = "";
+    output += "\\section{" + replaceSpecial(n.longname) + "}\n";
+    output += "\\label{ns:" + n.name + "}\n";
+    output += "\\index{" + replaceSpecial(n.name) + "@" + replaceSpecial(n.name) + ", \\textsl{namespace}}\n";
+    if (n.description) {
+        output += "\\paragraph{Description}" + replaceSpecial(n.description);
+    }
+
+
+    output += "\\subsection{Namespace Members}\n";
+
+    // handle members of this namespace
+    output += handleMembers(n.longname);
+    output += handleMethods(n.longname);
+
+
+    // Extract all classes for this namespace
+    var nsclasses = getData().filter({
+        kind: "class",
+        memberof: n.longname
+    });
+
+    // Handle each class
+    nsclasses.each(function(c) {
+        if (!c.comment) {
+            return;
+        }
+        output += handleClass(c);
+    });
+    return output;
+}
+
+
 exports.publish = function(taffydata) {
     var output = "{\\ttfamily\n";
 
@@ -230,51 +290,8 @@ exports.publish = function(taffydata) {
         kind: "namespace"
     });
 
-    var nsNames = [''];
-
     namespaces.each(function(n) {
-        output += "\\section{" + replaceSpecial(n.longname) + "}\n";
-        if (n.description) {
-            output += "\\paragraph{Description}" + replaceSpecial(n.description);
-        }
-
-        nsNames.push(n.longname);
-
-        // Extract all classes for this namespace
-        var nsclasses = getData().filter({
-            kind: "class",
-            memberof: n.longname
-        });
-
-        // Handle each class
-        nsclasses.each(function(c) {
-            if (!c.comment) {
-                return;
-            }
-            output += handleClass(c);
-        });
-
-    });
-
-    // Extract all classes without namespace
-    var classes = getData().filter({
-        kind: "class",
-        memberof:{"!is":nsNames}
-    });
-
-    if(classes.count()  > 0)
-    {
-        output += "\\section{$\\langle$ No Namespace $\\rangle$}\n";
-    }
-
-    // Handle each class
-    classes.each(function(c) {
-        if (!c.comment) {
-            return;
-        }
-        output += handleClass(c);
-
-
+        output += handleNamespace(n);
     });
 
     output += "}";

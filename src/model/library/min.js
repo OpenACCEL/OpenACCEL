@@ -1,3 +1,5 @@
 function min() {
-    return nzip(arguments, Math.min);
+    return zip(arguments, Math.min);
 }
+
+min.base = Infinity;

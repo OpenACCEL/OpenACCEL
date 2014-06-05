@@ -6,6 +6,7 @@ build() {
     jade
     documentation
     deploy
+    post_deploy
 }
 
 # Quickbuild
@@ -13,12 +14,14 @@ quickbuild() {
     clean
     jade
     deploy
+    post_deploy
 }
 
 # Testing.
 test() {
     clean
     deploy
+    post_deploy
     echo "Testing..."
     case "$1" in
         "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark --invert ;;
@@ -31,6 +34,7 @@ test() {
 benchmark() {
     clean
     deploy
+    post_deploy
     echo "Benchmarking..."
     case "$1" in
         "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark ;;
@@ -78,9 +82,14 @@ deploy() {
     # Generating monofunc library functions.
     node ./utils/monofuncgenerator.js ./src/model/library
 
+    # Generate single file containing all functions.
+    rm -f src/model/library/functions.js
+    cat src/model/library/* > src/model/library/functions.js
+
     # Copy scripts.
     cp -r src/* bin/scripts
-    find bin/scripts -type f ! -regex ".*\.s?js" -exec rm {} \;
+    find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
+    find bin/scripts/model/library -type f -not -name "functions.js" -exec rm {} \;
 
     # Copy images.
     cp -r src/view/img bin/img/
@@ -89,7 +98,30 @@ deploy() {
     cp -r src/view/css bin/css/
 }
 
+# Post Deployment
+post_deploy() {
+    # Set time depency functions in quantitypass.js
+    path_functions="src/model/library/functions.js"
+    path_quantitypass="bin/scripts/model/passes/analyser/quantitypass.js"
+    regex=".isTimeDependent = true;"
+    match=$(grep "$regex" "$path_functions")
+    funcs=$(echo $match | sed "s@$regex@@g") # remove all occurences of regex from match
+    funcs=$(echo $funcs | sed "s/ /\", \"/g") # replace all spaces with ", "
+    placeholder="--TIME-DEPENDENCY-PLACEHOLDER--"
+    sed -i "s/${placeholder}/${funcs}/g" $path_quantitypass
+}
+
+# Ensure each file in 'folders' with a .js extension has a new line at EOF.
+# function fixnleof() {
+#     local folders=(src/ test/ utils/)
+
+#     for i in ${folders[@]}; do
+#         find $i -type d -exec sh -c '(cd {} && for file in *; do if [[ $file == *.js ]] && [ -n "$(tail -c 1 <"$file")" ]; then echo >>"$file"; fi; done)' ';'
+#     done
+# }
+
 # Read command line options.
+set -e
 case "$1" in
     --build)        build ;;
     --benchmark)    case "$2" in
