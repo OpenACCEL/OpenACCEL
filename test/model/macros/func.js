@@ -21,7 +21,7 @@ suite("Func Macro", function() {
             var input = "func(x = 5)";
             var output = macroExpander.expand(input, macros);
             var expected =
-            "exe.x = function () {"                                                                 +
+            "exe.x = function (x) {"                                                                +
             "\n    // If a quantity is time dependant, look up if there exists a previous version." +
             "\n    if (exe.__report__ && exe.__report__.x.isTimeDependent) {"                       +
             "\n        if (exe.x[exe.__time__] === undefined) {"                                    +
@@ -43,7 +43,7 @@ suite("Func Macro", function() {
             var input = "func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))";
             var output = macroExpander.expand(input, macros);
             var expected =
-            "exe.z = function () {"                                                                 +
+            "exe.z = function (z) {"                                                                +
             "\n    // If a quantity is time dependant, look up if there exists a previous version." +
             "\n    if (exe.__report__ && exe.__report__.z.isTimeDependent) {"                       +
             "\n        if (exe.z[exe.__time__] === undefined) {"                                    +
@@ -68,19 +68,7 @@ suite("Func Macro", function() {
             var output = macroExpander.expand(input, macros);
             var expected =
             "exe.x = function (a, b) {"                                                             +
-            "\n    // If a quantity is time dependant, look up if there exists a previous version." +
-            "\n    if (exe.__report__ && exe.__report__.x.isTimeDependent) {"                       +
-            "\n        if (exe.x[exe.__time__] === undefined) {"                                    +
-            "\n            exe.x[exe.__time__] = 5;"                                                +
-            "\n        }"                                                                           +
-            "\n        return exe.x[exe.__time__];"                                                 +
-            "\n    } else {"                                                                        +
-            "\n        if (exe.x[0] === undefined || exe.x.__hasChanged__) {"                       +
-            "\n            exe.x[0] = 5;"                                                           +
-            "\n            exe.x.__hasChanged__ = false;"                                           +
-            "\n        }"                                                                           +
-            "\n        return exe.x[0];"                                                            +
-            "\n    }"                                                                               +
+            "\n    return 5;"                                                                       +
             "\n};";
             assert.equal(output, expected);
         });
@@ -90,19 +78,7 @@ suite("Func Macro", function() {
             var output = macroExpander.expand(input, macros);
             var expected =
             "exe.z = function (a, b) {"                                                             +
-            "\n    // If a quantity is time dependant, look up if there exists a previous version." +
-            "\n    if (exe.__report__ && exe.__report__.z.isTimeDependent) {"                       +
-            "\n        if (exe.z[exe.__time__] === undefined) {"                                    +
-            "\n            exe.z[exe.__time__] = a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);" +
-            "\n        }"                                                                           +
-            "\n        return exe.z[exe.__time__];"                                                 +
-            "\n    } else {"                                                                        +
-            "\n        if (exe.z[0] === undefined || exe.z.__hasChanged__) {"                       +
-            "\n            exe.z[0] = a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);"            +
-            "\n            exe.z.__hasChanged__ = false;"                                           +
-            "\n        }"                                                                           +
-            "\n        return exe.z[0];"                                                            +
-            "\n    }"                                                                               +
+            "\n    return a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);"                        +
             "\n};";
             assert.equal(output, expected);
         });
