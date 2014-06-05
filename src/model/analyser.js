@@ -25,11 +25,10 @@ if (inNode) {
 define(["model/passes/analyser/quantitypass",
         "model/passes/analyser/dependencypass",
         "model/quantity",
-        'underscore',
-        'jison'
+        'underscore'
     ],
     /**@lends Analyser*/
-    function(QuantityPass, DependencyPass, Quantity, _, jison) {
+    function(QuantityPass, DependencyPass, Quantity, _) {
         /**
          * @class Analyser
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
