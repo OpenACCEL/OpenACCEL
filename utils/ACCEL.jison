@@ -1,13 +1,21 @@
 /* lexical grammar */
 
 %lex
+
 /* Lexical definitions of tokens etc. */
 digit                       [0-9]
 esc                         \\\\
 int                         (-)?(?:[0-9]|[1-9][0-9]+)
 exp                         (?:[eE][-+]?[0-9]+)
 frac                        (?:\\.[0-9]+)
-unit                        [a-zA-Z]+[0-9]*                 
+unit                        [a-zA-Z]+[0-9]*  
+
+/* Initialization code. Define the error handling function here */
+%{
+    this.yy.parser.parseError = function(message, hash) {
+        throw {message: message, hash: hash};
+    }  
+%}               
 
 
 %%
@@ -143,8 +151,3 @@ vectorElem          :
 vectorCall          :
         scalarTerm '[' expr ']'
     |   scalarTerm '.' (IDENTIFIER | NUMBER);
-
-
-%%
-
-/* Additional user code can be put here */
