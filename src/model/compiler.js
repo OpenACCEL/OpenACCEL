@@ -1,173 +1,588 @@
-/*
- * Central compiling point. Code goes in, executable and report go out.
- *
- * @author Roy Stoof
- */
 
-/* Browser vs. Node ***********************************************/
-inBrowser = typeof window !== 'undefined';
-inNode = !inBrowser;
 
-if (inNode) {
-    require = require('requirejs');
-} else {
-    require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
-        baseUrl: "scripts"
-    });
+define([], function(){
+var parser = {trace: function trace() { },
+yy: {},
+symbols_: {"error":2,"script":3,"script_repetition0":4,"script_option0":5,"scriptLine":6,"LINEBREAK":7,"quantity":8,"comment":9,"scriptFinalLine":10,"quantityDef":11,"quantityFuncDef":12,"funcDef":13,"=":14,"expr":15,"IDENTIFIER":16,"(":17,"funcDef_repetition0":18,")":19,"COMMENT":20,"quantityDef_option0":21,"term":22,"arith":23,"scalarTerm":24,"vectorExpr":25,"uniArith":26,"binArith":27,"-":28,"+":29,"!":30,"*":31,"/":32,"%":33,"<=":34,"<":35,">=":36,"==":37,"!=":38,"&&":39,"||":40,"scalarVar":41,"scalarConst":42,"funcCall":43,"quantifier":44,"brackets":45,"vectorCall":46,"historyVar":47,"normalVar":48,"{":49,"}":50,"NUMBER":51,"STRING":52,"predefinedConstant":53,"PI":54,"E":55,"TRUE":56,"FALSE":57,"funcCall_option0":58,"argList":59,"argList_repetition0":60,"#(":61,",":62,"[":63,"vectorExpr_option0":64,"]":65,"vectorArgList":66,"vectorElem":67,"vectorArgList_repetition0":68,":":69,".":70,"vectorCall_group0":71,"UNIT":72,"$accept":0,"$end":1},
+terminals_: {2:"error",7:"LINEBREAK",14:"=",16:"IDENTIFIER",17:"(",19:")",20:"COMMENT",28:"-",29:"+",30:"!",31:"*",32:"/",33:"%",34:"<=",35:"<",36:">=",37:"==",38:"!=",39:"&&",40:"||",49:"{",50:"}",51:"NUMBER",52:"STRING",54:"PI",55:"E",56:"TRUE",57:"FALSE",61:"#(",62:",",63:"[",65:"]",69:":",70:".",72:"UNIT"},
+productions_: [0,[3,2],[6,1],[6,2],[6,2],[10,1],[10,1],[8,1],[8,1],[12,3],[13,5],[9,1],[11,4],[15,1],[15,1],[22,1],[22,1],[23,1],[23,1],[26,2],[26,2],[26,2],[27,3],[27,3],[27,3],[27,3],[27,3],[27,3],[27,3],[27,3],[27,3],[27,3],[27,3],[27,3],[24,1],[24,1],[24,1],[24,1],[24,1],[24,1],[41,1],[41,1],[48,1],[47,4],[42,1],[42,1],[42,1],[53,1],[53,1],[53,1],[53,1],[43,4],[59,2],[44,9],[45,3],[25,3],[66,2],[67,3],[67,3],[67,1],[46,4],[46,3],[4,0],[4,2],[5,0],[5,1],[18,0],[18,3],[21,0],[21,1],[58,0],[58,1],[60,0],[60,3],[64,0],[64,1],[68,0],[68,3],[71,1],[71,1]],
+performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
+/* this == yyval */
+
+var $0 = $$.length - 1;
+switch (yystate) {
+case 62:this.$ = [];
+break;
+case 63:$$[$0-1].push($$[$0]);
+break;
+case 66:this.$ = [];
+break;
+case 67:$$[$0-2].push($$[$0-1]);
+break;
+case 72:this.$ = [];
+break;
+case 73:$$[$0-2].push($$[$0-1]);
+break;
+case 76:this.$ = [];
+break;
+case 77:$$[$0-2].push($$[$0-1]);
+break;
 }
-/*******************************************************************/
-
-define(["model/fileloader",
-        "model/preprocessor",
-        "model/macroexpander",
-        "underscore"
-        ], /**@lends Model*/
-        function(FileLoader,
-            PreProcessor,
-            MacroExpander,
-            _) {
-
-    /**
-     * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
-     */
-    function Compiler() {
-        /**
-         * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
-         */
-        this.preProcessor = new PreProcessor();
-
-        /**
-         * The macro expander will expand all macros, such that the code can be eval()'d.
-         */
-        this.macroExpander = new MacroExpander();
-
-        /**
-         * All the quantities in the script to be compiled.
-         *
-         * @type {Map<String, Quantity>}
-         */
-        this.quantities = null;
-
-        /**
-         * The file loader is reponsible for loading all files, like macros and library functions.
-         */
-        this.fileLoader = new FileLoader();
-
-        this.fileLoader.load("cond", "macros");
-        this.fileLoader.load("func", "macros");
-        this.fileLoader.load("history", "macros");
-        this.fileLoader.load("operators", "macros");
-        this.fileLoader.load("quantifier", "macros");
-
-        this.fileLoader.load("functions", "library");
-
-        /**
-         * Contains the quantities for which the history has been checked
-         */
-        this.historyChecked = [];
-
-        /**
-         * The total number of quantities in the script being compiled.
-         */
-        this.totalNumQuantities = 0;
+},
+table: [{1:[2,62],3:1,4:2,7:[2,62],16:[2,62],20:[2,62]},{1:[3]},{1:[2,64],5:3,6:4,7:[1,6],8:7,9:8,10:5,11:9,12:10,13:13,16:[1,12],20:[1,11]},{1:[2,1]},{1:[2,63],7:[2,63],16:[2,63],20:[2,63]},{1:[2,65]},{1:[2,2],7:[2,2],16:[2,2],20:[2,2]},{1:[2,5],7:[1,14]},{1:[2,6],7:[1,15]},{1:[2,7],7:[2,7]},{1:[2,8],7:[2,8]},{1:[2,11],7:[2,11]},{14:[1,16],17:[1,17]},{14:[1,18]},{1:[2,3],7:[2,3],16:[2,3],20:[2,3]},{1:[2,4],7:[2,4],16:[2,4],20:[2,4]},{15:19,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{16:[1,48]},{15:49,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{1:[2,68],7:[2,68],21:50,28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],72:[1,63]},{1:[2,13],7:[2,13],19:[2,13],28:[2,13],29:[2,13],31:[2,13],32:[2,13],33:[2,13],34:[2,13],35:[2,13],36:[2,13],37:[2,13],38:[2,13],39:[2,13],40:[2,13],50:[2,13],62:[2,13],65:[2,13],72:[2,13]},{1:[2,14],7:[2,14],19:[2,14],28:[2,14],29:[2,14],31:[2,14],32:[2,14],33:[2,14],34:[2,14],35:[2,14],36:[2,14],37:[2,14],38:[2,14],39:[2,14],40:[2,14],50:[2,14],62:[2,14],65:[2,14],72:[2,14]},{1:[2,15],7:[2,15],19:[2,15],28:[2,15],29:[2,15],31:[2,15],32:[2,15],33:[2,15],34:[2,15],35:[2,15],36:[2,15],37:[2,15],38:[2,15],39:[2,15],40:[2,15],50:[2,15],62:[2,15],63:[1,64],65:[2,15],70:[1,65],72:[2,15]},{1:[2,16],7:[2,16],19:[2,16],28:[2,16],29:[2,16],31:[2,16],32:[2,16],33:[2,16],34:[2,16],35:[2,16],36:[2,16],37:[2,16],38:[2,16],39:[2,16],40:[2,16],50:[2,16],62:[2,16],65:[2,16],72:[2,16]},{1:[2,17],7:[2,17],19:[2,17],28:[2,17],29:[2,17],31:[2,17],32:[2,17],33:[2,17],34:[2,17],35:[2,17],36:[2,17],37:[2,17],38:[2,17],39:[2,17],40:[2,17],50:[2,17],62:[2,17],65:[2,17],72:[2,17]},{1:[2,18],7:[2,18],19:[2,18],28:[2,18],29:[2,18],31:[2,18],32:[2,18],33:[2,18],34:[2,18],35:[2,18],36:[2,18],37:[2,18],38:[2,18],39:[2,18],40:[2,18],50:[2,18],62:[2,18],65:[2,18],72:[2,18]},{1:[2,34],7:[2,34],19:[2,34],28:[2,34],29:[2,34],31:[2,34],32:[2,34],33:[2,34],34:[2,34],35:[2,34],36:[2,34],37:[2,34],38:[2,34],39:[2,34],40:[2,34],50:[2,34],62:[2,34],63:[2,34],65:[2,34],70:[2,34],72:[2,34]},{1:[2,35],7:[2,35],19:[2,35],28:[2,35],29:[2,35],31:[2,35],32:[2,35],33:[2,35],34:[2,35],35:[2,35],36:[2,35],37:[2,35],38:[2,35],39:[2,35],40:[2,35],50:[2,35],62:[2,35],63:[2,35],65:[2,35],70:[2,35],72:[2,35]},{1:[2,36],7:[2,36],19:[2,36],28:[2,36],29:[2,36],31:[2,36],32:[2,36],33:[2,36],34:[2,36],35:[2,36],36:[2,36],37:[2,36],38:[2,36],39:[2,36],40:[2,36],50:[2,36],62:[2,36],63:[2,36],65:[2,36],70:[2,36],72:[2,36]},{1:[2,37],7:[2,37],19:[2,37],28:[2,37],29:[2,37],31:[2,37],32:[2,37],33:[2,37],34:[2,37],35:[2,37],36:[2,37],37:[2,37],38:[2,37],39:[2,37],40:[2,37],50:[2,37],62:[2,37],63:[2,37],65:[2,37],70:[2,37],72:[2,37]},{1:[2,38],7:[2,38],19:[2,38],28:[2,38],29:[2,38],31:[2,38],32:[2,38],33:[2,38],34:[2,38],35:[2,38],36:[2,38],37:[2,38],38:[2,38],39:[2,38],40:[2,38],50:[2,38],62:[2,38],63:[2,38],65:[2,38],70:[2,38],72:[2,38]},{1:[2,39],7:[2,39],19:[2,39],28:[2,39],29:[2,39],31:[2,39],32:[2,39],33:[2,39],34:[2,39],35:[2,39],36:[2,39],37:[2,39],38:[2,39],39:[2,39],40:[2,39],50:[2,39],62:[2,39],63:[2,39],65:[2,39],70:[2,39],72:[2,39]},{15:71,16:[1,70],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,69],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32],64:66,65:[2,74],66:67,67:68},{15:72,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:73,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:74,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{1:[2,40],7:[2,40],19:[2,40],28:[2,40],29:[2,40],31:[2,40],32:[2,40],33:[2,40],34:[2,40],35:[2,40],36:[2,40],37:[2,40],38:[2,40],39:[2,40],40:[2,40],50:[2,40],62:[2,40],63:[2,40],65:[2,40],70:[2,40],72:[2,40]},{1:[2,41],7:[2,41],19:[2,41],28:[2,41],29:[2,41],31:[2,41],32:[2,41],33:[2,41],34:[2,41],35:[2,41],36:[2,41],37:[2,41],38:[2,41],39:[2,41],40:[2,41],50:[2,41],62:[2,41],63:[2,41],65:[2,41],70:[2,41],72:[2,41]},{1:[2,44],7:[2,44],19:[2,44],28:[2,44],29:[2,44],31:[2,44],32:[2,44],33:[2,44],34:[2,44],35:[2,44],36:[2,44],37:[2,44],38:[2,44],39:[2,44],40:[2,44],50:[2,44],62:[2,44],63:[2,44],65:[2,44],70:[2,44],72:[2,44]},{1:[2,45],7:[2,45],19:[2,45],28:[2,45],29:[2,45],31:[2,45],32:[2,45],33:[2,45],34:[2,45],35:[2,45],36:[2,45],37:[2,45],38:[2,45],39:[2,45],40:[2,45],50:[2,45],62:[2,45],63:[2,45],65:[2,45],70:[2,45],72:[2,45]},{1:[2,46],7:[2,46],19:[2,46],28:[2,46],29:[2,46],31:[2,46],32:[2,46],33:[2,46],34:[2,46],35:[2,46],36:[2,46],37:[2,46],38:[2,46],39:[2,46],40:[2,46],50:[2,46],62:[2,46],63:[2,46],65:[2,46],70:[2,46],72:[2,46]},{1:[2,42],7:[2,42],17:[1,75],19:[2,42],28:[2,42],29:[2,42],31:[2,42],32:[2,42],33:[2,42],34:[2,42],35:[2,42],36:[2,42],37:[2,42],38:[2,42],39:[2,42],40:[2,42],49:[1,76],50:[2,42],62:[2,42],63:[2,42],65:[2,42],70:[2,42],72:[2,42]},{16:[1,77]},{15:78,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{1:[2,47],7:[2,47],19:[2,47],28:[2,47],29:[2,47],31:[2,47],32:[2,47],33:[2,47],34:[2,47],35:[2,47],36:[2,47],37:[2,47],38:[2,47],39:[2,47],40:[2,47],50:[2,47],62:[2,47],63:[2,47],65:[2,47],70:[2,47],72:[2,47]},{1:[2,48],7:[2,48],19:[2,48],28:[2,48],29:[2,48],31:[2,48],32:[2,48],33:[2,48],34:[2,48],35:[2,48],36:[2,48],37:[2,48],38:[2,48],39:[2,48],40:[2,48],50:[2,48],62:[2,48],63:[2,48],65:[2,48],70:[2,48],72:[2,48]},{1:[2,49],7:[2,49],19:[2,49],28:[2,49],29:[2,49],31:[2,49],32:[2,49],33:[2,49],34:[2,49],35:[2,49],36:[2,49],37:[2,49],38:[2,49],39:[2,49],40:[2,49],50:[2,49],62:[2,49],63:[2,49],65:[2,49],70:[2,49],72:[2,49]},{1:[2,50],7:[2,50],19:[2,50],28:[2,50],29:[2,50],31:[2,50],32:[2,50],33:[2,50],34:[2,50],35:[2,50],36:[2,50],37:[2,50],38:[2,50],39:[2,50],40:[2,50],50:[2,50],62:[2,50],63:[2,50],65:[2,50],70:[2,50],72:[2,50]},{18:79,19:[2,66],62:[2,66]},{1:[2,9],7:[2,9],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62]},{1:[2,12],7:[2,12]},{15:80,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:81,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:82,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:83,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:84,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:85,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:86,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:87,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:88,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:89,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:90,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:91,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{1:[2,69],7:[2,69]},{15:92,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{16:[1,94],51:[1,95],71:93},{65:[1,96]},{65:[2,75]},{62:[2,76],65:[2,76],68:97},{28:[2,45],29:[2,45],31:[2,45],32:[2,45],33:[2,45],34:[2,45],35:[2,45],36:[2,45],37:[2,45],38:[2,45],39:[2,45],40:[2,45],62:[2,45],63:[2,45],65:[2,45],69:[1,98],70:[2,45]},{17:[1,75],28:[2,42],29:[2,42],31:[2,42],32:[2,42],33:[2,42],34:[2,42],35:[2,42],36:[2,42],37:[2,42],38:[2,42],39:[2,42],40:[2,42],49:[1,76],62:[2,42],63:[2,42],65:[2,42],69:[1,99],70:[2,42]},{28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],62:[2,59],65:[2,59]},{1:[2,19],7:[2,19],19:[2,19],28:[2,19],29:[2,19],31:[2,19],32:[2,19],33:[2,19],34:[2,19],35:[2,19],36:[2,19],37:[2,19],38:[2,19],39:[2,19],40:[2,19],50:[2,19],62:[2,19],65:[2,19],72:[2,19]},{1:[2,20],7:[2,20],19:[2,20],28:[2,20],29:[2,20],31:[2,20],32:[2,20],33:[2,20],34:[2,20],35:[2,20],36:[2,20],37:[2,20],38:[2,20],39:[2,20],40:[2,20],50:[2,20],62:[2,20],65:[2,20],72:[2,20]},{1:[2,21],7:[2,21],19:[2,21],28:[2,21],29:[2,21],31:[2,21],32:[2,21],33:[2,21],34:[2,21],35:[2,21],36:[2,21],37:[2,21],38:[2,21],39:[2,21],40:[2,21],50:[2,21],62:[2,21],65:[2,21],72:[2,21]},{15:102,16:[1,41],17:[1,43],19:[2,70],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],58:100,59:101,61:[1,42],63:[1,32]},{15:103,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{62:[1,104]},{19:[1,105],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62]},{19:[1,106],62:[1,107]},{1:[2,22],7:[2,22],19:[2,22],28:[2,22],29:[2,22],31:[1,53],32:[1,54],33:[1,55],34:[2,22],35:[2,22],36:[2,22],37:[2,22],38:[2,22],39:[2,22],40:[2,22],50:[2,22],62:[2,22],65:[2,22],72:[2,22]},{1:[2,23],7:[2,23],19:[2,23],28:[2,23],29:[2,23],31:[1,53],32:[1,54],33:[1,55],34:[2,23],35:[2,23],36:[2,23],37:[2,23],38:[2,23],39:[2,23],40:[2,23],50:[2,23],62:[2,23],65:[2,23],72:[2,23]},{1:[2,24],7:[2,24],19:[2,24],28:[2,24],29:[2,24],31:[2,24],32:[2,24],33:[2,24],34:[2,24],35:[2,24],36:[2,24],37:[2,24],38:[2,24],39:[2,24],40:[2,24],50:[2,24],62:[2,24],65:[2,24],72:[2,24]},{1:[2,25],7:[2,25],19:[2,25],28:[2,25],29:[2,25],31:[2,25],32:[2,25],33:[2,25],34:[2,25],35:[2,25],36:[2,25],37:[2,25],38:[2,25],39:[2,25],40:[2,25],50:[2,25],62:[2,25],65:[2,25],72:[2,25]},{1:[2,26],7:[2,26],19:[2,26],28:[2,26],29:[2,26],31:[2,26],32:[2,26],33:[2,26],34:[2,26],35:[2,26],36:[2,26],37:[2,26],38:[2,26],39:[2,26],40:[2,26],50:[2,26],62:[2,26],65:[2,26],72:[2,26]},{1:[2,27],7:[2,27],19:[2,27],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[2,27],35:[2,27],36:[2,27],37:[2,27],38:[2,27],39:[2,27],40:[2,27],50:[2,27],62:[2,27],65:[2,27],72:[2,27]},{1:[2,28],7:[2,28],19:[2,28],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[2,28],35:[2,28],36:[2,28],37:[2,28],38:[2,28],39:[2,28],40:[2,28],50:[2,28],62:[2,28],65:[2,28],72:[2,28]},{1:[2,29],7:[2,29],19:[2,29],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[2,29],35:[2,29],36:[2,29],37:[2,29],38:[2,29],39:[2,29],40:[2,29],50:[2,29],62:[2,29],65:[2,29],72:[2,29]},{1:[2,30],7:[2,30],19:[2,30],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[2,30],38:[2,30],39:[2,30],40:[2,30],50:[2,30],62:[2,30],65:[2,30],72:[2,30]},{1:[2,31],7:[2,31],19:[2,31],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[2,31],38:[2,31],39:[2,31],40:[2,31],50:[2,31],62:[2,31],65:[2,31],72:[2,31]},{1:[2,32],7:[2,32],19:[2,32],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[2,32],40:[2,32],50:[2,32],62:[2,32],65:[2,32],72:[2,32]},{1:[2,33],7:[2,33],19:[2,33],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[2,33],50:[2,33],62:[2,33],65:[2,33],72:[2,33]},{28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],65:[1,108]},{1:[2,61],7:[2,61],19:[2,61],28:[2,61],29:[2,61],31:[2,61],32:[2,61],33:[2,61],34:[2,61],35:[2,61],36:[2,61],37:[2,61],38:[2,61],39:[2,61],40:[2,61],50:[2,61],62:[2,61],63:[2,61],65:[2,61],70:[2,61],72:[2,61]},{1:[2,78],7:[2,78],19:[2,78],28:[2,78],29:[2,78],31:[2,78],32:[2,78],33:[2,78],34:[2,78],35:[2,78],36:[2,78],37:[2,78],38:[2,78],39:[2,78],40:[2,78],50:[2,78],62:[2,78],63:[2,78],65:[2,78],70:[2,78],72:[2,78]},{1:[2,79],7:[2,79],19:[2,79],28:[2,79],29:[2,79],31:[2,79],32:[2,79],33:[2,79],34:[2,79],35:[2,79],36:[2,79],37:[2,79],38:[2,79],39:[2,79],40:[2,79],50:[2,79],62:[2,79],63:[2,79],65:[2,79],70:[2,79],72:[2,79]},{1:[2,55],7:[2,55],19:[2,55],28:[2,55],29:[2,55],31:[2,55],32:[2,55],33:[2,55],34:[2,55],35:[2,55],36:[2,55],37:[2,55],38:[2,55],39:[2,55],40:[2,55],50:[2,55],62:[2,55],65:[2,55],72:[2,55]},{62:[1,109],65:[2,56]},{15:110,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:111,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{19:[1,112]},{19:[2,71]},{19:[2,72],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],60:113,62:[2,72]},{28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],50:[1,114]},{15:115,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{1:[2,54],7:[2,54],19:[2,54],28:[2,54],29:[2,54],31:[2,54],32:[2,54],33:[2,54],34:[2,54],35:[2,54],36:[2,54],37:[2,54],38:[2,54],39:[2,54],40:[2,54],50:[2,54],62:[2,54],63:[2,54],65:[2,54],70:[2,54],72:[2,54]},{14:[2,10]},{16:[1,116]},{1:[2,60],7:[2,60],19:[2,60],28:[2,60],29:[2,60],31:[2,60],32:[2,60],33:[2,60],34:[2,60],35:[2,60],36:[2,60],37:[2,60],38:[2,60],39:[2,60],40:[2,60],50:[2,60],62:[2,60],63:[2,60],65:[2,60],70:[2,60],72:[2,60]},{15:71,16:[1,70],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,69],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32],67:117},{28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],62:[2,57],65:[2,57]},{28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],62:[2,58],65:[2,58]},{1:[2,51],7:[2,51],19:[2,51],28:[2,51],29:[2,51],31:[2,51],32:[2,51],33:[2,51],34:[2,51],35:[2,51],36:[2,51],37:[2,51],38:[2,51],39:[2,51],40:[2,51],50:[2,51],62:[2,51],63:[2,51],65:[2,51],70:[2,51],72:[2,51]},{19:[2,52],62:[1,118]},{1:[2,43],7:[2,43],19:[2,43],28:[2,43],29:[2,43],31:[2,43],32:[2,43],33:[2,43],34:[2,43],35:[2,43],36:[2,43],37:[2,43],38:[2,43],39:[2,43],40:[2,43],50:[2,43],62:[2,43],63:[2,43],65:[2,43],70:[2,43],72:[2,43]},{28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],62:[1,119]},{19:[2,67],62:[2,67]},{62:[2,77],65:[2,77]},{15:120,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{15:121,16:[1,41],17:[1,43],22:20,23:21,24:22,25:23,26:24,27:25,28:[1,33],29:[1,34],30:[1,35],41:26,42:27,43:28,44:29,45:30,46:31,47:36,48:37,51:[1,38],52:[1,39],53:40,54:[1,44],55:[1,45],56:[1,46],57:[1,47],61:[1,42],63:[1,32]},{19:[2,73],28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],62:[2,73]},{28:[1,52],29:[1,51],31:[1,53],32:[1,54],33:[1,55],34:[1,56],35:[1,57],36:[1,58],37:[1,59],38:[1,60],39:[1,61],40:[1,62],62:[1,122]},{16:[1,123]},{19:[1,124]},{1:[2,53],7:[2,53],19:[2,53],28:[2,53],29:[2,53],31:[2,53],32:[2,53],33:[2,53],34:[2,53],35:[2,53],36:[2,53],37:[2,53],38:[2,53],39:[2,53],40:[2,53],50:[2,53],62:[2,53],63:[2,53],65:[2,53],70:[2,53],72:[2,53]}],
+defaultActions: {3:[2,1],5:[2,65],67:[2,75],101:[2,71],106:[2,10]},
+parseError: function parseError(str, hash) {
+    if (hash.recoverable) {
+        this.trace(str);
+    } else {
+        throw new Error(str);
     }
+},
+parse: function parse(input) {
+    var self = this, stack = [0], vstack = [null], lstack = [], table = this.table, yytext = '', yylineno = 0, yyleng = 0, recovering = 0, TERROR = 2, EOF = 1;
+    var args = lstack.slice.call(arguments, 1);
+    this.lexer.setInput(input);
+    this.lexer.yy = this.yy;
+    this.yy.lexer = this.lexer;
+    this.yy.parser = this;
+    if (typeof this.lexer.yylloc == 'undefined') {
+        this.lexer.yylloc = {};
+    }
+    var yyloc = this.lexer.yylloc;
+    lstack.push(yyloc);
+    var ranges = this.lexer.options && this.lexer.options.ranges;
+    if (typeof this.yy.parseError === 'function') {
+        this.parseError = this.yy.parseError;
+    } else {
+        this.parseError = Object.getPrototypeOf(this).parseError;
+    }
+    function popStack(n) {
+        stack.length = stack.length - 2 * n;
+        vstack.length = vstack.length - n;
+        lstack.length = lstack.length - n;
+    }
+    function lex() {
+        var token;
+        token = self.lexer.lex() || EOF;
+        if (typeof token !== 'number') {
+            token = self.symbols_[token] || token;
+        }
+        return token;
+    }
+    var symbol, preErrorSymbol, state, action, a, r, yyval = {}, p, len, newState, expected;
+    while (true) {
+        state = stack[stack.length - 1];
+        if (this.defaultActions[state]) {
+            action = this.defaultActions[state];
+        } else {
+            if (symbol === null || typeof symbol == 'undefined') {
+                symbol = lex();
+            }
+            action = table[state] && table[state][symbol];
+        }
+                    if (typeof action === 'undefined' || !action.length || !action[0]) {
+                var errStr = '';
+                expected = [];
+                for (p in table[state]) {
+                    if (this.terminals_[p] && p > TERROR) {
+                        expected.push('\'' + this.terminals_[p] + '\'');
+                    }
+                }
+                if (this.lexer.showPosition) {
+                    errStr = 'Parse error on line ' + (yylineno + 1) + ':\n' + this.lexer.showPosition() + '\nExpecting ' + expected.join(', ') + ', got \'' + (this.terminals_[symbol] || symbol) + '\'';
+                } else {
+                    errStr = 'Parse error on line ' + (yylineno + 1) + ': Unexpected ' + (symbol == EOF ? 'end of input' : '\'' + (this.terminals_[symbol] || symbol) + '\'');
+                }
+                this.parseError(errStr, {
+                    text: this.lexer.match,
+                    token: this.terminals_[symbol] || symbol,
+                    line: this.lexer.yylineno,
+                    loc: yyloc,
+                    expected: expected
+                });
+            }
+        if (action[0] instanceof Array && action.length > 1) {
+            throw new Error('Parse Error: multiple actions possible at state: ' + state + ', token: ' + symbol);
+        }
+        switch (action[0]) {
+        case 1:
+            stack.push(symbol);
+            vstack.push(this.lexer.yytext);
+            lstack.push(this.lexer.yylloc);
+            stack.push(action[1]);
+            symbol = null;
+            if (!preErrorSymbol) {
+                yyleng = this.lexer.yyleng;
+                yytext = this.lexer.yytext;
+                yylineno = this.lexer.yylineno;
+                yyloc = this.lexer.yylloc;
+                if (recovering > 0) {
+                    recovering--;
+                }
+            } else {
+                symbol = preErrorSymbol;
+                preErrorSymbol = null;
+            }
+            break;
+        case 2:
+            len = this.productions_[action[1]][1];
+            yyval.$ = vstack[vstack.length - len];
+            yyval._$ = {
+                first_line: lstack[lstack.length - (len || 1)].first_line,
+                last_line: lstack[lstack.length - 1].last_line,
+                first_column: lstack[lstack.length - (len || 1)].first_column,
+                last_column: lstack[lstack.length - 1].last_column
+            };
+            if (ranges) {
+                yyval._$.range = [
+                    lstack[lstack.length - (len || 1)].range[0],
+                    lstack[lstack.length - 1].range[1]
+                ];
+            }
+            r = this.performAction.apply(yyval, [
+                yytext,
+                yyleng,
+                yylineno,
+                this.yy,
+                action[1],
+                vstack,
+                lstack
+            ].concat(args));
+            if (typeof r !== 'undefined') {
+                return r;
+            }
+            if (len) {
+                stack = stack.slice(0, -1 * len * 2);
+                vstack = vstack.slice(0, -1 * len);
+                lstack = lstack.slice(0, -1 * len);
+            }
+            stack.push(this.productions_[action[1]][0]);
+            vstack.push(yyval.$);
+            lstack.push(yyval._$);
+            newState = table[stack[stack.length - 2]][stack[stack.length - 1]];
+            stack.push(newState);
+            break;
+        case 3:
+            return true;
+        }
+    }
+    return true;
+}};
 
-    /**
-     * The macro expander will expand all macros, such that the code can be eval()'d.
-     */
-    this.macroExpander = new MacroExpander();
 
-    /**
-     * Compiles a piece of ACCEL code and outputs an object, containing an executable.
-     *
-     * @param {Script} script   The ACCEL script to be compiled.
-     * @return {Object}         An object, containing an executable and information.
-     */
-    Compiler.prototype.compile = function(script) {
-        this.quantities = script.getQuantities();
+/* Additional user code can be put here */
 
-        // Determine all time-dependent quantities
-        this.determineTimeDependencies();
+/* generated by jison-lex 0.2.1 */
+var lexer = (function(){
+var lexer = {
 
-        // Pre-process and expand.
-        var code = this.preProcessor.process(script);
-        code = this.macroExpander.expand(code, this.fileLoader.getMacros());
+EOF:1,
 
-        eval(this.fileLoader.getLibrary());
-        exe = eval(code);
-        exe.__report__ = script.getQuantities();
+parseError:function parseError(str, hash) {
+        if (this.yy.parser) {
+            this.yy.parser.parseError(str, hash);
+        } else {
+            throw new Error(str);
+        }
+    },
 
-        return {
-            report: script.getQuantities(),
-            exe: exe
+// resets the lexer, sets new input
+setInput:function (input) {
+        this._input = input;
+        this._more = this._backtrack = this.done = false;
+        this.yylineno = this.yyleng = 0;
+        this.yytext = this.matched = this.match = '';
+        this.conditionStack = ['INITIAL'];
+        this.yylloc = {
+            first_line: 1,
+            first_column: 0,
+            last_line: 1,
+            last_column: 0
         };
-    };
-
-    /**
-     * Flags all time-dependent quantities in this.quantities as such
-     *
-     * @modifies this.quantities
-     */
-    Compiler.prototype.determineTimeDependencies = function() {
-        this.historyChecked = [];
-        this.totalNumQuantities = _.size(this.quantities);
-
-        var historyQuantities = this.getTimeDependentQuantities();
-        for (var qty in historyQuantities) {
-            this.setTimeDependent(historyQuantities[qty], true);
+        if (this.options.ranges) {
+            this.yylloc.range = [0,0];
         }
-    };
+        this.offset = 0;
+        return this;
+    },
 
-    /**
-     * Recursively sets whether the given quantity, and all quantities depending on it,
-     * are time-dependent.
-     *
-     * @param {Quantity} quantity The quantity to use as starting point. All of it's reverse dependencies, if any, are checked recursively.
-     * @param {Boolean} timeDependent Whether to mark quantity and it's reverse dependencies as time dependent or not.
-     */
-    Compiler.prototype.setTimeDependent = function(quantity, timeDependent) {
-        // Base case: if all quantities have been checked
-        if (this.historyChecked.indexOf(quantity.name) >= 0) {
-            //console.log(quantity.name + " already checked");
-            return;
+// consumes and returns one char from the input
+input:function () {
+        var ch = this._input[0];
+        this.yytext += ch;
+        this.yyleng++;
+        this.offset++;
+        this.match += ch;
+        this.matched += ch;
+        var lines = ch.match(/(?:\r\n?|\n).*/g);
+        if (lines) {
+            this.yylineno++;
+            this.yylloc.last_line++;
+        } else {
+            this.yylloc.last_column++;
+        }
+        if (this.options.ranges) {
+            this.yylloc.range[1]++;
         }
 
-        quantity.isTimeDependent = timeDependent;
-        this.historyChecked.push(quantity.name);
-        //console.log ("Starting " + quantity.name);
-        for (var dep in quantity.reverseDeps) {
-            //console.log("Going to dependency " + this.quantities[quantity.reverseDeps[dep]].name);
-            this.setTimeDependent(this.quantities[quantity.reverseDeps[dep]], timeDependent);
+        this._input = this._input.slice(1);
+        return ch;
+    },
+
+// unshifts one char (or a string) into the input
+unput:function (ch) {
+        var len = ch.length;
+        var lines = ch.split(/(?:\r\n?|\n)/g);
+
+        this._input = ch + this._input;
+        this.yytext = this.yytext.substr(0, this.yytext.length - len - 1);
+        //this.yyleng -= len;
+        this.offset -= len;
+        var oldLines = this.match.split(/(?:\r\n?|\n)/g);
+        this.match = this.match.substr(0, this.match.length - 1);
+        this.matched = this.matched.substr(0, this.matched.length - 1);
+
+        if (lines.length - 1) {
+            this.yylineno -= lines.length - 1;
         }
+        var r = this.yylloc.range;
 
-        //console.log ("Finished " + quantity.name);
-        //console.log ("History log: " + this.historyChecked);
-    };
+        this.yylloc = {
+            first_line: this.yylloc.first_line,
+            last_line: this.yylineno + 1,
+            first_column: this.yylloc.first_column,
+            last_column: lines ?
+                (lines.length === oldLines.length ? this.yylloc.first_column : 0)
+                 + oldLines[oldLines.length - lines.length].length - lines[0].length :
+              this.yylloc.first_column - len
+        };
 
-    /**
-     * Returns all quantities in this.quantities marked as time-dependent by the analyser.
-     * First step in determining ALL time-dependent quantities.
-     *
-     * @return A map of all quantities in this.quantities marked as time-dependent,
-     * keyed by quantity name.
-     */
-    Compiler.prototype.getTimeDependentQuantities = function() {
-        var tdquantities = {};
+        if (this.options.ranges) {
+            this.yylloc.range = [r[0], r[0] + this.yyleng - len];
+        }
+        this.yyleng = this.yytext.length;
+        return this;
+    },
 
-        for (var qtyName in this.quantities) {
-            if (this.quantities[qtyName].isTimeDependent) {
-                tdquantities[qtyName] = this.quantities[qtyName];
+// When called from action, caches matched text and appends it on next action
+more:function () {
+        this._more = true;
+        return this;
+    },
+
+// When called from action, signals the lexer that this rule fails to match the input, so the next matching rule (regex) should be tested instead.
+reject:function () {
+        if (this.options.backtrack_lexer) {
+            this._backtrack = true;
+        } else {
+            return this.parseError('Lexical error on line ' + (this.yylineno + 1) + '. You can only invoke reject() in the lexer when the lexer is of the backtracking persuasion (options.backtrack_lexer = true).\n' + this.showPosition(), {
+                text: "",
+                token: null,
+                line: this.yylineno
+            });
+
+        }
+        return this;
+    },
+
+// retain first n characters of the match
+less:function (n) {
+        this.unput(this.match.slice(n));
+    },
+
+// displays already matched input, i.e. for error messages
+pastInput:function () {
+        var past = this.matched.substr(0, this.matched.length - this.match.length);
+        return (past.length > 20 ? '...':'') + past.substr(-20).replace(/\n/g, "");
+    },
+
+// displays upcoming input, i.e. for error messages
+upcomingInput:function () {
+        var next = this.match;
+        if (next.length < 20) {
+            next += this._input.substr(0, 20-next.length);
+        }
+        return (next.substr(0,20) + (next.length > 20 ? '...' : '')).replace(/\n/g, "");
+    },
+
+// displays the character position where the lexing error occurred, i.e. for error messages
+showPosition:function () {
+        var pre = this.pastInput();
+        var c = new Array(pre.length + 1).join("-");
+        return pre + this.upcomingInput() + "\n" + c + "^";
+    },
+
+// test the lexed token: return FALSE when not a match, otherwise return token
+test_match:function (match, indexed_rule) {
+        var token,
+            lines,
+            backup;
+
+        if (this.options.backtrack_lexer) {
+            // save context
+            backup = {
+                yylineno: this.yylineno,
+                yylloc: {
+                    first_line: this.yylloc.first_line,
+                    last_line: this.last_line,
+                    first_column: this.yylloc.first_column,
+                    last_column: this.yylloc.last_column
+                },
+                yytext: this.yytext,
+                match: this.match,
+                matches: this.matches,
+                matched: this.matched,
+                yyleng: this.yyleng,
+                offset: this.offset,
+                _more: this._more,
+                _input: this._input,
+                yy: this.yy,
+                conditionStack: this.conditionStack.slice(0),
+                done: this.done
+            };
+            if (this.options.ranges) {
+                backup.yylloc.range = this.yylloc.range.slice(0);
             }
         }
 
-        return tdquantities;
-    };
+        lines = match[0].match(/(?:\r\n?|\n).*/g);
+        if (lines) {
+            this.yylineno += lines.length;
+        }
+        this.yylloc = {
+            first_line: this.yylloc.last_line,
+            last_line: this.yylineno + 1,
+            first_column: this.yylloc.last_column,
+            last_column: lines ?
+                         lines[lines.length - 1].length - lines[lines.length - 1].match(/\r?\n?/)[0].length :
+                         this.yylloc.last_column + match[0].length
+        };
+        this.yytext += match[0];
+        this.match += match[0];
+        this.matches = match;
+        this.yyleng = this.yytext.length;
+        if (this.options.ranges) {
+            this.yylloc.range = [this.offset, this.offset += this.yyleng];
+        }
+        this._more = false;
+        this._backtrack = false;
+        this._input = this._input.slice(match[0].length);
+        this.matched += match[0];
+        token = this.performAction.call(this, this.yy, this, indexed_rule, this.conditionStack[this.conditionStack.length - 1]);
+        if (this.done && this._input) {
+            this.done = false;
+        }
+        if (token) {
+            return token;
+        } else if (this._backtrack) {
+            // recover context
+            for (var k in backup) {
+                this[k] = backup[k];
+            }
+            return false; // rule action called reject() implying the next rule should be tested instead.
+        }
+        return false;
+    },
 
-    // Exports all macros.
-    return Compiler;
+// return next match in input
+next:function () {
+        if (this.done) {
+            return this.EOF;
+        }
+        if (!this._input) {
+            this.done = true;
+        }
+
+        var token,
+            match,
+            tempMatch,
+            index;
+        if (!this._more) {
+            this.yytext = '';
+            this.match = '';
+        }
+        var rules = this._currentRules();
+        for (var i = 0; i < rules.length; i++) {
+            tempMatch = this._input.match(this.rules[rules[i]]);
+            if (tempMatch && (!match || tempMatch[0].length > match[0].length)) {
+                match = tempMatch;
+                index = i;
+                if (this.options.backtrack_lexer) {
+                    token = this.test_match(tempMatch, rules[i]);
+                    if (token !== false) {
+                        return token;
+                    } else if (this._backtrack) {
+                        match = false;
+                        continue; // rule action called reject() implying a rule MISmatch.
+                    } else {
+                        // else: this is a lexer rule which consumes input without producing a token (e.g. whitespace)
+                        return false;
+                    }
+                } else if (!this.options.flex) {
+                    break;
+                }
+            }
+        }
+        if (match) {
+            token = this.test_match(match, rules[index]);
+            if (token !== false) {
+                return token;
+            }
+            // else: this is a lexer rule which consumes input without producing a token (e.g. whitespace)
+            return false;
+        }
+        if (this._input === "") {
+            return this.EOF;
+        } else {
+            return this.parseError('Lexical error on line ' + (this.yylineno + 1) + '. Unrecognized text.\n' + this.showPosition(), {
+                text: "",
+                token: null,
+                line: this.yylineno
+            });
+        }
+    },
+
+// return next match that has a token
+lex:function lex() {
+        var r = this.next();
+        if (r) {
+            return r;
+        } else {
+            return this.lex();
+        }
+    },
+
+// activates a new lexer condition state (pushes the new lexer condition state onto the condition stack)
+begin:function begin(condition) {
+        this.conditionStack.push(condition);
+    },
+
+// pop the previously active lexer condition state off the condition stack
+popState:function popState() {
+        var n = this.conditionStack.length - 1;
+        if (n > 0) {
+            return this.conditionStack.pop();
+        } else {
+            return this.conditionStack[0];
+        }
+    },
+
+// produce the lexer rule set which is active for the currently active lexer condition state
+_currentRules:function _currentRules() {
+        if (this.conditionStack.length && this.conditionStack[this.conditionStack.length - 1]) {
+            return this.conditions[this.conditionStack[this.conditionStack.length - 1]].rules;
+        } else {
+            return this.conditions["INITIAL"].rules;
+        }
+    },
+
+// return the currently active lexer condition state; when an index argument is provided it produces the N-th previous condition state, if available
+topState:function topState(n) {
+        n = this.conditionStack.length - 1 - Math.abs(n || 0);
+        if (n >= 0) {
+            return this.conditionStack[n];
+        } else {
+            return "INITIAL";
+        }
+    },
+
+// alias for begin(condition)
+pushState:function pushState(condition) {
+        this.begin(condition);
+    },
+
+// return the number of states currently on the stack
+stateStackSize:function stateStackSize() {
+        return this.conditionStack.length;
+    },
+options: {},
+performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
+
+var YYSTATE=YY_START;
+switch($avoiding_name_collisions) {
+case 0: /* Ignore all whitespace characters except newlines */; 
+break;
+case 1: return 7; 
+break;
+case 2: return 51; 
+break;
+case 3: return 20; 
+break;
+case 4: return 52; 
+break;
+case 5: return 72; 
+break;
+case 6: return 16; 
+break;
+case 7: return 54; 
+break;
+case 8: return 55; 
+break;
+case 9: return 56; 
+break;
+case 10: return 57; 
+break;
+case 11: return 17; 
+break;
+case 12: return 19; 
+break;
+case 13: return 49; 
+break;
+case 14: return 50; 
+break;
+case 15: return 63; 
+break;
+case 16: return 65; 
+break;
+case 17: return 70; 
+break;
+case 18: return 62; 
+break;
+case 19: return 69; 
+break;
+case 20: return ';'; 
+break;
+case 21: return 61; 
+break;
+case 22: return 29; 
+break;
+case 23: return 28; 
+break;
+case 24: return 30; 
+break;
+case 25: return 31; 
+break;
+case 26: return 32; 
+break;
+case 27: return 33; 
+break;
+case 28: return 34; 
+break;
+case 29: return 35; 
+break;
+case 30: return 36; 
+break;
+case 31: return '>'; 
+break;
+case 32: return 37; 
+break;
+case 33: return 38; 
+break;
+case 34: return 39; 
+break;
+case 35: return 40; 
+break;
+case 36: return 14; 
+break;
+case 37: return '@'; 
+break;
+}
+},
+rules: [/^(?:[ \t])/,/^(?:(\r)?\n)/,/^(?:(()?(?:[0-9]|[1-9][0-9]+))((?:\\.[0-9]+))?((?:[eE][-+]?[0-9]+))?\b)/,/^(?:\/\/([^\n])*)/,/^(?:(?:"[^"]*")|(?:'[^']*'))/,/^(?:;\s*(1|(([a-zA-Z]+[0-9]*)(\.([a-zA-Z]+[0-9]*))?))(\s*\/\s*(([a-zA-Z]+[0-9]*)(\.([a-zA-Z]+[0-9]*))?))?)/,/^(?:\b\w*[a-zA-Z_]\w*\b)/,/^(?:\bPI\b)/,/^(?:\bE\b)/,/^(?:\btrue\b)/,/^(?:\bfalse\b)/,/^(?:\()/,/^(?:\))/,/^(?:\{)/,/^(?:\})/,/^(?:\[)/,/^(?:\])/,/^(?:\.)/,/^(?:,)/,/^(?::)/,/^(?:;)/,/^(?:#\()/,/^(?:\+)/,/^(?:-)/,/^(?:!)/,/^(?:\*)/,/^(?:\/)/,/^(?:%)/,/^(?:<=)/,/^(?:<)/,/^(?:>=)/,/^(?:>)/,/^(?:==)/,/^(?:!=)/,/^(?:&&)/,/^(?:\|\|)/,/^(?:=)/,/^(?:@)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37],"inclusive":true}}
+};
+return lexer;
+})();
+parser.lexer = lexer;
+return parser;
 });
