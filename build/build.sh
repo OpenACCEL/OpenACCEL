@@ -95,10 +95,6 @@ deploy() {
 
     # Copy style sheets.
     cp -r src/view/css bin/css/
-
-    # Generate ACCEL compiler using Jison
-    echo "Generating ACCEL compiler..."
-    node_modules/.bin/jison utils/ACCEL.jison -o src/model/compiler.js -m amd -p lalr
 }
 
 # Post Deployment
