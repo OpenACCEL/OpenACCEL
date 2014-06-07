@@ -1,8 +1,20 @@
-/* lexical grammar */
+/*
+This file contains the ACCEL language definition in (E)BNF format and is used
+to generate a parser for ACCEL script using Jison.
 
-%lex
+The syntax is largely the same as that of the input files for Flex and Bison,
+see:
 
-/* Lexical definitions of tokens etc. */
+Jison documentation: http://zaach.github.io/jison/docs/#specifying-a-language
+Flex input file: http://dinosaur.compilertools.net/flex/flex_6.html#SEC6
+Bison input file: http://dinosaur.compilertools.net/bison/bison_6.html#SEC41
+*/
+
+
+%lex 
+/* --------- Lexer macros and initialization section --------- */   
+
+/* Macros used in the lexer */
 digit                       [0-9]
 esc                         \\\\
 int                         (-)?(?:[0-9]|[1-9][0-9]+)
@@ -10,22 +22,28 @@ exp                         (?:[eE][-+]?[0-9]+)
 frac                        (?:\\.[0-9]+)
 unit                        [a-zA-Z]+[0-9]*  
 
-/* Initialization code. Define the error handling function here */
+
+/* Initialization code */
 %{
+    /* Define error handler */
     this.yy.parser.parseError = function(message, hash) {
         throw {message: message, hash: hash};
-    }  
+    }
+
+    /* Variables accesible in actions and user code at the end of this file */ 
+    var parser = yy.parser;
 %}               
 
 
-%%
 
+%%
+/* --------- Lexer definitions section --------- */
 [ \t]                                                       { /* Ignore all whitespace characters except newlines */; }
 (\r)?\n                                                     { return 'LINEBREAK'; }
 {int}{frac}?{exp}?\b                                        { return 'NUMBER'; }
-\/\/([^\n])*                                                { return 'COMMENT'; }
-(?:\"[^"]*\")|(?:\'[^']*\')                                 { return 'STRING'; }
-\;\s*(1|({unit}(\.{unit})?))(\s*\/\s*({unit}(\.{unit})?))?  { return 'UNIT'; }
+\/\/([^\n])*                                                { yytext = yytext.slice(2); return 'COMMENT'; }
+(\"[^"]*\")|(\'[^']*\')                                     { yytext = yytext.slice(1,yyleng-1); return 'STRING'; }
+\;\s*((1|({unit}(\.{unit})?))(\s*\/\s*({unit}(\.{unit})?))?) { yytext = this.matches[1]; return 'UNIT'; }
 \b\w*[a-zA-Z_]\w*\b                                         { return 'IDENTIFIER'; }
 \bPI\b                                                      { return 'PI'; }
 \bE\b                                                       { return 'E'; }
@@ -41,7 +59,7 @@ unit                        [a-zA-Z]+[0-9]*
 ","                                                         { return ','; }
 ":"                                                         { return ':'; }
 ";"                                                         { return ';'; }
-"#("                                                       { return '#('; }
+"#("                                                        { return '#('; }
 "+"                                                         { return '+'; }
 "-"                                                         { return '-'; }
 "!"                                                         { return '!'; }
@@ -61,7 +79,11 @@ unit                        [a-zA-Z]+[0-9]*
 
 /lex
 
-/* operator associations and precedence */
+
+
+/* --------- Parser declarations section --------- */
+
+/* Association and precedence of the various operators */
 %nonassoc ';'
 %right '='
 %left '||'
@@ -76,11 +98,14 @@ unit                        [a-zA-Z]+[0-9]*
 %left '(' ')'
 
 
+/* Parser configuration directives */
 %ebnf                   /* Enable extended BNF syntax! */
 %start script           /* The non-terminal to start at */
 
 
-%% /* language grammar */
+
+%% 
+/* --------- Language grammar section --------- */
 
 /* Structure of ACCEL script */
 script              : (scriptLine)* (scriptFinalLine)?
@@ -102,7 +127,7 @@ quantity            :  quantityDef | quantityFuncDef;
 quantityFuncDef     :  funcDef '=' expr
                        { $$ = $1 + $2 + $3; }
                     ;
-funcDef             :  IDENTIFIER '(' IDENTIFIER funcDefAdditionalArg* ')'
+funcDef             :  IDENTIFIER '(' IDENTIFIER (funcDefAdditionalArg)* ')'
                        {{
                            var funcName = $1 + $2 + $3;
                            if ($4) {
