@@ -145,7 +145,7 @@ function handleClass(c) {
     output += "\\index{" + replaceSpecial(c.name) + "@" + replaceSpecial(c.name) + ", \\textsl{class}}\n";
     if (c.classdesc) {
         // Description of class
-        output += "\\textbf{Description: }" + replaceSpecial(c.classdesc) + "\n";
+        output += "\\begin{description}\\item[Description]" + replaceSpecial(c.classdesc) + "\\end{description}\n";
     }
 
     output += handleMembers(c.longname);
@@ -167,6 +167,7 @@ function handleGlobals() {
     output += "\\section{Global} \n";
     output += "\\label{global}\n";
     output += "\\index{Global}\n";
+    output += "\\NSExtra\n";
 
     //output += "\\label{global}\n";
     if (globalMem.count() > 0) {
@@ -249,9 +250,9 @@ function handleNamespace(n) {
     output += "\\label{ns:" + n.name + "}\n";
     output += "\\index{" + replaceSpecial(n.name) + "@" + replaceSpecial(n.name) + ", \\textsl{namespace}}\n";
     if (n.description) {
-        output += "\\paragraph{Description}" + replaceSpecial(n.description);
+        output += "\\begin{description}\\item[Description]" + replaceSpecial(n.description) + "\\end{description}\n";
     }
-
+    output += "\\NSExtra\n";
 
     output += "\\subsection{Namespace Members}\n";
 
@@ -279,6 +280,7 @@ function handleNamespace(n) {
 
 exports.publish = function(taffydata) {
     var output = "{\\ttfamily\n";
+    output += "\\providecommand{\\NSExtra}{}\n"; // give possibility to add additional content tot he start of a namespace description
 
 
     data = taffydata;
