@@ -102,7 +102,9 @@ define([], /**@lends Model*/ function() {
         this.todo = true;
 
         /**
-         * Whether this quantity is time-dependent.
+         * Whether this quantity is time-dependent. A quantity is time-dependent if
+         * it contains a reference to a historic value of a(nother) quantity or contains
+         * a function that can vary every iteration, such as random().
          *
          * @type {Boolean}
          */

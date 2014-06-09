@@ -111,6 +111,13 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          * @type {Number}
          */
         this.currentTab = 1;
+
+        /**
+         * The current status of the application.
+         *
+         * @type {String}
+         */
+        this.status = "";
     }
 
     /**
@@ -135,8 +142,12 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      */
     Controller.prototype.run = function() {
         if (!this.executing && this.script.isComplete()) {
+            // Update state
             this.executing = true;
+            this.status = "Executing";
+            this.view.setStatus(this.status);
             this.view.setExecuting(this.executing);
+
             var controller = this;
             this.runloop = setInterval(
                 function() {
@@ -187,8 +198,12 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     Controller.prototype.pause = function() {
         if (this.executing) {
             clearInterval(this.runloop);
+
+            // Update state
             this.executing = false;
             this.view.setExecuting(this.executing);
+            this.status = "Paused";
+            this.view.setStatus(this.status);
         }
     };
 
@@ -208,8 +223,12 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
 
         if (this.executing) {
             clearInterval(this.runloop);
+
+            // Update state
             this.executing = false;
             this.view.setExecuting(this.executing);
+            this.status = "Stopped";
+            this.view.setStatus(this.status);
             this.currentIteration = 1;
 
             // Quick hack: recompile script to 'reset' everything
@@ -283,7 +302,11 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
                 'iterations is not greater than or equal to 0')
         }
 
+        this.stop(false);
         this.numIterations = iterations;
+        if (this.autoExecute) {
+            this.run();
+        }
     };
 
     /**
