@@ -220,9 +220,19 @@ predefinedConstant  :  PI
                        { $$ = 'false'; }
                     ;
 
-funcCall            :  IDENTIFIER '(' (argList)? ')'
-                       { $$ = $1 + $2 + $3 + $4; };
-argList             :  expr (',' expr)*;
+funcCall            :  IDENTIFIER '(' expr? (funcCallArgList)* ')'
+                       {{
+                            var funcCall = $1 + $2 + ($3 || '');
+                            if ($4 && $4.length > 0) {
+                               $$ = funcCall + ',' + $4 + $5;
+                           } else {
+                               $$ = funcCall + $5;
+                           }
+                       }}
+                    ;
+funcCallArgList     :  ',' expr
+                       { $$ = $2; }
+                    ;
 
 quantifier          :  '#(' IDENTIFIER ',' expr ',' expr ',' IDENTIFIER ')'
                        { $$ = "__quantifier__(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
