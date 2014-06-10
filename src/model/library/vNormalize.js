@@ -1,6 +1,6 @@
 //This function was taken from keesvanoverveld.com
 function vNormalize(x) {
-    x = __objectToArray__(x);
+    x = objectToArray(x);
     var a = 0;
     if (x instanceof Array) {
         for (i in x) {

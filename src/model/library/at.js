@@ -5,12 +5,12 @@
  * @param  y		array with indexes
  * @return 			array with values in x indexed by y
  */
-function __at__(x, y) {
+function at(x, y) {
     if (y instanceof Object) {
         // Recursive step, y is an array
         var result = {};
         for (var key in y) {
-            result[key] = __at__(x, y[key]);
+            result[key] = at(x, y[key]);
         }
         return result;
     } else {

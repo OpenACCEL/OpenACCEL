@@ -6,13 +6,13 @@
  * @param  {Object} obj object to convert
  * @return {Array}      converted array
  */
-function __objectToArray__(obj) {
+function '(obj) {
     if (obj instanceof Object) {
         var array = []; // Initialize the array
         for (var key in obj) {
             // go through each element in the object
             // and add them to the array at the same key
-            array[key] = __objectToArray__(obj[key]);
+            array[key] = objectToArray(obj[key]);
         }
         return array;
     } else {

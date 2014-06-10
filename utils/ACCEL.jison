@@ -146,7 +146,8 @@ unit                        [a-zA-Z]+[0-9]*
 
 \;\s*((1|({unit}(\.{unit})?))(\s*\/\s*({unit}(\.{unit})?))?) { yytext = this.matches[1]; return 'UNIT'; }
 
-\b\w*[a-zA-Z_]\w*\b                                         %{ if (parser.stdfunctions.indexOf(yytext) == -1) { 
+\b\w*[a-zA-Z_]\w*\b                                         %{ if (parser.stdfunctions.indexOf(yytext) == -1) {
+                                                                  yytext = '__' + yytext + '__'; 
                                                                   return 'IDENTIFIER'; 
                                                                } else { 
                                                                   return 'STDFUNCTION'; 
@@ -318,7 +319,7 @@ scalarVar           :  IDENTIFIER
                     |  STDFUNCTION
                     ;
 historyVar          :  scalarVar '{' expr '}'
-                       { $$ = "__history__(" + $1 + "," + $3 + ")"; }
+                       { $$ = "history(" + $1 + "," + $3 + ")"; }
                     ;
 scalarConst         :  NUMBER | STRING | predefinedConstant;
 predefinedConstant  :  PI
@@ -355,7 +356,7 @@ funcCallArgList     :  ',' expr
                     ;
 
 quantifier          :  '#(' (IDENTIFIER | STDFUNCTION) ',' expr ',' expr ',' STDFUNCTION ')'
-                       { $$ = "__quantifier__(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
+                       { $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
                     ;
 brackets            :  '(' expr ')'
                        { $$ = $1 + $2 + $3; }

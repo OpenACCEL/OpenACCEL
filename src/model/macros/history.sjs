@@ -1,4 +1,4 @@
-macro __history__ {
+macro history {
     rule {
         (exe.$quantity:ident(), $time:expr)
     } => {

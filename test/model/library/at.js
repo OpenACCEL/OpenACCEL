@@ -23,7 +23,7 @@ suite("@ Library", function() {
             eval(fileLoader.getContent());
             x = 3;
             y = 1;
-            output = __at__(x, y);
+            output = at(x, y);
             assert.deepEqual(output, 3);
         });
 
@@ -31,7 +31,7 @@ suite("@ Library", function() {
             eval(fileLoader.getContent());
             x = [1, 2, 3];
             y = 1;
-            output = __at__(x, y);
+            output = at(x, y);
             assert.deepEqual(output, 2);
         });
 
@@ -42,7 +42,7 @@ suite("@ Library", function() {
                 [2, 3], 3
             ];
             y = 0;
-            output = __at__(x, y);
+            output = at(x, y);
             expected = [1, 2];
             assert.deepEqual(output, expected);
         });
@@ -51,7 +51,7 @@ suite("@ Library", function() {
             eval(fileLoader.getContent());
             x = [1, 2, 3];
             y = [0, 2];
-            output = __at__(x, y);
+            output = at(x, y);
             expected = [1, 3];
             assert.deepEqual(output, expected);
         });
@@ -63,7 +63,7 @@ suite("@ Library", function() {
                 [2, 3], 3
             ];
             y = [0, 2];
-            output = __at__(x, y);
+            output = at(x, y);
             expected = [
                 [1, 2], 3
             ];
@@ -77,7 +77,7 @@ suite("@ Library", function() {
                 [2, 3], 3
             ];
             y = [0, [2, 1]];
-            output = __at__(x, y);
+            output = at(x, y);
             expected = [
                 [1, 2],
                 [3, [2, 3]]
@@ -89,7 +89,7 @@ suite("@ Library", function() {
             eval(fileLoader.getContent());
             x = [3];
             y = 1;
-            output = __at__(x, y);
+            output = at(x, y);
             assert.deepEqual(output, {});
         });
     });
