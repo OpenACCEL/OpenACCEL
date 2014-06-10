@@ -27,7 +27,7 @@ unit                        [a-zA-Z]+[0-9]*
 %{
     /* Define error handler */
     this.yy.parser.parseError = function(message, hash) {
-        throw {message: message, hash: hash};
+        throw { message: message, hash: hash };
     }
 
     /* Variables accesible in actions and user code at the end of this file */ 
@@ -114,8 +114,7 @@ script              : (scriptLine)* (scriptFinalLine)?
                           return $2;
                       }}
                     ;
-scriptLine          : 
-                       LINEBREAK 
+scriptLine          :  LINEBREAK 
                     |  quantity LINEBREAK 
                     |  comment LINEBREAK;
 scriptFinalLine     :  quantity
@@ -130,7 +129,7 @@ quantityFuncDef     :  funcDef '=' expr
 funcDef             :  IDENTIFIER '(' IDENTIFIER (funcDefAdditionalArg)* ')'
                        {{
                            var funcName = $1 + $2 + $3;
-                           if ($4) {
+                           if ($4 && $4.length > 0) {
                                $$ = funcName + ',' + $4 + $5;
                            } else {
                                $$ = funcName + $5;
@@ -244,11 +243,11 @@ vectorAdditionalArg :  ',' vectorElem
                        { $$ = $2 }
                     ;
 vectorElem          :  STRING ':' expr 
-                       { $$ = {index:$1, value:$3}; }
+                       { $$ = { index:$1, value:$3}; }
                     |  IDENTIFIER ':' expr
-                       { $$ = {index:'\'' + $1 + '\'', value:$3}; }
+                       { $$ = { index:'\'' + $1 + '\'', value:$3}; }
                     |  expr
-                       { $$ = {value:$1}; }
+                       { $$ = { value:$1 }; }
                     ;
 
 vectorCall          :  scalarTerm '[' expr ']'
