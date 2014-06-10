@@ -248,13 +248,13 @@ function handleNamespace(n) {
     var output = "";
     output += "\\section{" + replaceSpecial(n.longname) + "}\n";
     output += "\\label{ns:" + n.name + "}\n";
-    output += "\\index{" + replaceSpecial(n.name) + "@" + replaceSpecial(n.name) + ", \\textsl{namespace}}\n";
+    output += "\\index{" + replaceSpecial(n.name) + "@" + replaceSpecial(n.name) + ", \\textsl{module}}\n";
     if (n.description) {
         output += "\\begin{description}\\item[Description]" + replaceSpecial(n.description) + "\\end{description}\n";
     }
     output += "\\NSExtra\n";
 
-    output += "\\subsection{Namespace Members}\n";
+    output += "\\subsection{Module Members}\n";
 
     // handle members of this namespace
     output += handleMembers(n.longname);
