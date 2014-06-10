@@ -25,12 +25,14 @@ if (inNode) {
 define(["model/fileloader",
         "model/macroexpander",
         "underscore",
-        "model/parser"
+        "model/parser",
+        "model/SyntaxError"
         ], /**@lends Model*/
         function(FileLoader,
             MacroExpander,
             _,
-            parser) {
+            parser,
+            SyntaxError) {
 
     /**
      * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
@@ -85,19 +87,29 @@ define(["model/fileloader",
      * @return {Object}         An object, containing an executable and information.
      */
     Compiler.prototype.compile = function(script) {
-        var code;
         this.quantities = script.getQuantities();
+        var code;
+
+        // Parse the script and handle any syntax errors
+        try {
+            code = this.parser.parse(script.getSource());
+        } catch (e) {
+            var err = new SyntaxError();
+                
+            err.found = e.hash.text;
+            err.expected = e.hash.expected;
+            err.firstLine = e.hash.loc.first_line;
+            err.lastLine = e.hash.loc.last_line;
+            err.startPos = e.hash.loc.first_column;
+            err.endPos = e.hash.loc.last_column;
+
+            throw err;
+        }
 
         // Determine all time-dependent quantities
         this.determineTimeDependencies();
-
-        // Pre-process and expand.
-
-        try {
-            code = this.parser.parse(script);
-        } catch (e) {
-            console.log("Error compiling script: " + e.message);
-        }
+        
+        // Expand the macros in the parser-outputted code
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
         eval(this.fileLoader.getLibrary());

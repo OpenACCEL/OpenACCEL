@@ -18,7 +18,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/reservedwords'], /**@lends Model.Passes.Analyser*/ function(AnalyserPass, Quantity, ReservedWords) {
+define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/parser'], /**@lends Model.Passes.Analyser*/ function(AnalyserPass, Quantity, parser) {
     /**
      * @class
      * @classdesc This pass is part of the Script Analyser and extracts:
@@ -28,7 +28,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/reservedw
      *  -Whether a quantity has been given a definition already, or is a 'todo-item'
      */
     function DependencyPass() {
-        this.reservedwords = ReservedWords.getList();
+        this.reservedwords = parser.stdfunctions;
     }
 
     DependencyPass.prototype = new AnalyserPass();

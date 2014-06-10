@@ -23,7 +23,12 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends Controller*/ function(Script, Compiler, AbstractView) {
+define(["model/script", 
+		"model/compiler", 
+		"controller/AbstractView", 
+		"underscore",
+		"model/datastorage/LocalQuantityStore"], 
+		/**@lends Controller*/ function(Script, Compiler, AbstractView, _, LocalQuantityStore) {
     /**
      * @class Controller
      * @classdesc Base controller class.
@@ -104,6 +109,22 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
          * @type {Boolean}
          */
         this.autoExecute = false; // TODO default=true
+
+        /**
+         * Whether each quantity should be saved to localStorage when it's
+         * added to the script.
+         *
+         * @type {Boolean}
+         */
+        this.autoSave = false;
+
+        /**
+         * The Quantity Store used for autosaving the script.
+         * Object must conform to the AbstractQuantityStore interface.
+         *
+         * @type {AbstractQuantityStore}
+         */
+        this.autoSaveStore = new LocalQuantityStore();
 
         /**
          * The currently active tab in the UI.
@@ -249,6 +270,40 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
         this.stop(false);
         this.script = new Script();
         this.view.setQuantities({});
+
+        if (this.autoSave) {
+        	this.autoSaveStore.clear();
+        }
+    };
+
+    /**
+     * Restores any script that was previously autosaved in the autoSaveStore.
+     *
+     * @post Any script that might have been stored in the autoSaveStore has
+     * been restored and loaded as the current Script.
+     */.
+    Controller.prototype.restoreSavedScript = function() {
+    	this.newScript();
+
+    	// Retrieve the definitions of all the stored quantities and add them to the script
+    	if (this.autoSaveStore.numQuantities() > 0) {
+    		// Get the names of all stored quantities
+    		var storedQuantities = this.autoSaveStore.getQuantities();
+
+    		for (var q in storedQuantities) {
+    			var qty = this.autoSaveStore.loadQuantity(qty);
+
+    			// Add restored quantity to the script
+    			if (qty) {
+	    			this.script.addQuantity(qty);
+	    		}
+    		}
+    	}
+
+    	this.view.setQuantities(this.script.quantities);
+
+    	// Do not attempt to compile the script now: leave it to the user to inspect the restored
+    	// script and optionally run it now or after modifying it.
     };
 
     /**
@@ -353,18 +408,23 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
      * @modifies this.script.quantities
      */
     Controller.prototype.addQuantity = function(definition) {
-        //TODO Precondition, syntax checking
         if (!definition) {
             throw new Error('Controller.prototype.addQuantity.pre violated :' +
                 'definition is null or undefined')
         }
 
-        // Stop script execution, add quantity, recompile, and 
-        // start again if todo list is empty
+        // Stop script, add quantity to script and update quantities in view
         this.stop(false);
-        this.script.addQuantity(definition);
-        this.compileScript(this.script);
+        var qty = this.script.addQuantity(definition);
         this.view.setQuantities(this.script.getQuantities());
+
+        // Autosave quantity if enabled
+        if (this.autoSave) {
+        	this.autoSaveStore.saveQuantity(qty.name, definition);
+        }
+
+        // Compile script (if script is complete) and optionally autostart
+        this.compileScript(this.script);
         if (this.autoExecute) {
             this.run();
         }
@@ -389,12 +449,18 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
                 'quantity does not exist')
         }
 
-        // Stop script execution, delete quantity, recompile, and 
-        // start again if todo list is empty
+        // Stop script, delete quantity from script and update quantities in view
         this.stop(false);
-        this.script.deleteQuantity(qtyName);
-        this.compileScript(this.script);
+        this.script.deleteQuantity(qtyname);
         this.view.setQuantities(this.script.getQuantities());
+
+        // Remove quantity from autosave store
+        if (this.autoSave) {
+        	this.autoSaveStore.deleteQuantity(qtyName);
+        }
+
+        // Compile script (if script is complete) and optionally autostart
+        this.compileScript(this.script);
         if (this.autoExecute) {
             this.run();
         }
@@ -591,13 +657,14 @@ define(["model/script", "model/compiler", "controller/AbstractView"], /**@lends 
     Controller.prototype.setScriptFromSource = function(source) {
     	// Stop the current model and create a new script with the
     	// given source
-        this.stop(false);
-        this.script = new Script(source);
-        this.compileScript(this.script);
+        this.newScript();
+        this.script.addSource(source);
         this.view.setQuantities(this.script.getQuantities());
-        // if (this.autoExecute) {
-        //     this.run();
-        // }
+
+        this.compileScript(this.script);
+        if (this.autoExecute) {
+        	this.run();
+        }
     };
 
     /**

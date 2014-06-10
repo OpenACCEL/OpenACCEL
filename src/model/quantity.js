@@ -22,7 +22,7 @@ if (inNode) {
 define([], /**@lends Model*/ function() {
     /**
      * @class
-     * @classdesc Abstract Pass that is part of compiling the script.
+     * @classdesc Represents a single quantity of the Script.
      */
 
     function Quantity(source) {

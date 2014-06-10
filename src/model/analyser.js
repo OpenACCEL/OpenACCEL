@@ -85,6 +85,7 @@ define(["model/passes/analyser/quantitypass",
          * @param {Object} quantities The current quantities in the script.
          * @modifies quantities
          * @post quantities contains all the quantities defined in script
+         * @return {Quantity} The last quantity defined in the given script.
          */
         Analyser.prototype.analyse = function(script, quantities) {
             if (!quantities) {
@@ -116,6 +117,8 @@ define(["model/passes/analyser/quantitypass",
                     }
                 }
             }).bind(this));
+
+            return prevQuantity;
         };
 
         /**

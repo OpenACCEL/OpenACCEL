@@ -35,10 +35,13 @@ unit                        [a-zA-Z]+[0-9]*
 
     /* List of all built-in ACCEL functions */
     parser.stdfunctions = [
+      /* Input elements */
       'slider',
       'input',
       'check',
       'button',
+
+      /* Functions */
       'abs',
       'acos',
       'add',

@@ -17,7 +17,12 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Quantity, _) {
+define(["model/analyser", 
+        "model/quantity", 
+        "underscore", 
+        "model/parser",
+        "model/SyntaxError"], 
+        function(Analyser, Quantity, _, parser, SyntaxError) {
     /**
      * @class Script
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
@@ -33,6 +38,11 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          * @type {Analyser}
          */
         this.analyser = new Analyser();
+
+        /**
+         * The parser used to parse the quantity definitions and do syntax checking.
+         */
+        this.parser = parser;
 
         /**
          * The source of the ACCEL script, as provided by the user.
@@ -143,7 +153,7 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
                 'script not compiled because incomplete')
             }
 
-            return this.exe[qtyName]();
+            return this.exe['__' + qtyName + '__']();
         },
 
         /**
@@ -154,11 +164,18 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          * @modifies quantities
          * @post The quantity defined in source has been added to the script, the category of all
          * quantities has been re-evaluated and the script has been recompiled if complete.
+         * @return {Quantity} The quantity defined in the given piece of code.
+         * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
          */
         addQuantity: function(source) {
+            // First check whether the given piece of script is valid ACCEL code
+            this.checkSyntax(source);
+
             // Analyse the added line of code and add the defined quantity to the model
-            this.analyser.analyse(source, this.quantities);
+            var qty = this.analyser.analyse(source, this.quantities);
             this.scriptChanged();
+
+            return qty;
         },
 
         /**
@@ -167,13 +184,47 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          * definitions!
          *
          * @param {String} source The piece of ACCEL script to add to the model.
+         * @modifies quantities
          * @post All quantities defined in source have been added to the model,
          * including any comments.
+         * @return {Quantity} The last quantity defined in the given script.
+         * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
          */
         addSource: function(source) {
+            // First check whether the given piece of script is valid ACCEL code
+            this.checkSyntax(source);
+
             // Analyse the added line of code and add the defined quantity to the model
-            this.analyser.analyse(source, this.quantities);
+            var qty = this.analyser.analyse(source, this.quantities);
             this.scriptChanged();
+
+            return qty;
+        },
+
+        /**
+         * Returns whether the given piece of script is valid ACCEL code.
+         *
+         * @param {String} source The piece of script of which to check the syntax
+         * @return Whether source is valid ACCEL code
+         * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
+         */
+        checkSyntax: function(source) {
+            try {
+                this.parser.parse(source);
+            } catch (e) {
+                var err = new SyntaxError();
+                
+                err.found = e.hash.text;
+                err.expected = e.hash.expected;
+                err.firstLine = e.hash.loc.first_line;
+                err.lastLine = e.hash.loc.last_line;
+                err.startPos = e.hash.loc.first_column;
+                err.endPos = e.hash.loc.last_column;
+
+                throw err;
+            }
+
+            return true;
         },
 
         /**
@@ -268,7 +319,7 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
             }
 
             // Set values in exe and quantities
-            this.exe[qtyName][0] = value;
+            this.exe['__' + qtyName + '__'][0] = value;
             this.quantities[qtyName].value = value;
 
             // Recursively flag the updated user input quantity and all it's reverse
@@ -290,11 +341,11 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
                 return;
             }
 
-            if (this.exe[quantity.name] === undefined) {
+            if (this.exe['__' + quantity.name + '__'] === undefined) {
                 return;
             }
 
-            this.exe[quantity.name].__hasChanged__ = true;
+            this.exe['__' + quantity.name + '__'].__hasChanged__ = true;
             this.flaggedAsChanged.push(quantity.name);
             for (var dep in quantity.reverseDeps) {
                 this.setQuantityChanged(this.quantities[quantity.reverseDeps[dep]], true);
