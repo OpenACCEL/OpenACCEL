@@ -27,7 +27,7 @@ define(["model/script",
 		"model/compiler", 
 		"controller/AbstractView", 
 		"underscore",
-		"model/datastorage/LocalQuantityStore"], 
+		"model/datastores/LocalQuantityStore"], 
 		/**@lends Controller*/ function(Script, Compiler, AbstractView, _, LocalQuantityStore) {
     /**
      * @class Controller

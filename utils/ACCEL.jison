@@ -228,12 +228,12 @@ script              : (scriptLine)* (scriptFinalLine)?
                             if ($1) {
                                 var length = $1.length;
                                 for (var i = 0; i < length; i++) {
-                                    output += "func(" + $1[i] + ")";
+                                    output += "\n func(" + $1[i] + ")";
                                 }
                             }
 
                             if ($2) {
-                                output += "func(" + $2 + ")";
+                                output += "\n func(" + $2 + ")";
                             }
 
                             return output;

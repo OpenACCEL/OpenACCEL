@@ -106,6 +106,8 @@ define(["model/fileloader",
             throw err;
         }
 
+        console.log("Script: " + code);
+
         // Determine all time-dependent quantities
         this.determineTimeDependencies();
         

@@ -16,7 +16,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/datastorage/AbstractQuantityStore"], /**@lends Model*/ function(AbstractQuantityStore) {
+define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(AbstractQuantityStore) {
     /**
      * @class
      * @classdesc This class can load and save quantities to localStorage.
