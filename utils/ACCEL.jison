@@ -313,8 +313,9 @@ binArith            :  /* Operator precedence defined above */
 
 /* Scalars */
 scalarTerm          :  scalarVar | scalarConst | funcCall | quantifier | brackets | vectorCall | historyVar;
-scalarVar           :  (STDFUNCTION |  IDENTIFIER)
+scalarVar           :  IDENTIFIER
                        { $$ = '(' + $1 + '|| exe.' + $1 + '())'; }
+                    |  STDFUNCTION
                     ;
 historyVar          :  scalarVar '{' expr '}'
                        { $$ = "__history__(" + $1 + "," + $3 + ")"; }
@@ -385,7 +386,9 @@ vectorAdditionalArg :  ',' vectorElem
                     ;
 vectorElem          :  STRING ':' expr 
                        { $$ = { index:$1, value:$3}; }
-                    |  (IDENTIFIER | STDFUNCTION) ':' expr
+                    |  IDENTIFIER ':' expr
+                       { $$ = { index:'\'' + $1 + '\'', value:$3}; }
+                    |  STDFUNCTION ':' expr
                        { $$ = { index:'\'' + $1 + '\'', value:$3}; }
                     |  NUMBER ':' expr
                        { $$ = { index:'\'' + $1 + '\'', value:$3}; }
@@ -395,8 +398,10 @@ vectorElem          :  STRING ':' expr
 
 vectorCall          :  scalarTerm '[' expr ']'
                        { $$ = $1 + $2 + $3 + $4; }
-                    |  scalarTerm '.' (IDENTIFIER | STDFUNCTION)
+                    |  scalarTerm '.' IDENTIFIER
                        { $$ = $1 + $2 + $3; }
+                    |  scalarTerm '.' STDFUNCTION
+                       { $$ = $1 + $2 + $3; }  
                     |  scalarTerm '.' NUMBER
                        { $$ = $1 + '[' + $3 + ']'; } 
                     ;
