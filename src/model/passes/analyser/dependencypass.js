@@ -28,7 +28,7 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/parser'],
      *  -Whether a quantity has been given a definition already, or is a 'todo-item'
      */
     function DependencyPass() {
-        this.reservedwords = parser.stdfunctions;
+        //this.reservedwords = parser.yy.stdfunctions;
     }
 
     DependencyPass.prototype = new AnalyserPass();
@@ -42,54 +42,43 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/parser'],
      * @return A Quantity object with filled in dependency information/data.
      */
     DependencyPass.prototype.analyse = function(line, quantity, quantities) {
-        // Reset quantities array
+        // Reset dependencies array in case we're redefining a quantity
         quantity.dependencies = [];
 
-        // left and right hand side of the definitions
-        var lhs = this.getLHS(line);
-        var rhs = this.getRHS(line);
-
-        // get the quantity for which we determine the dependencies
-        var qty = this.getVariables(lhs)[0];
-
-        // get all variable names from the right hand side
-        var dep = this.getVariables(rhs);
-
-        if (!quantities[qty].dependencies) {
-            quantities[qty].dependencies = [];
-        }
+        // Get all variable names from the right hand side
+        var deps = this.getVariables(quantity.definition);
 
         // Identify all dependencies and add them to the quantities
-        if (dep) {
-            dep.forEach((function(d) {
-                // It could be that the dependent variable is not yet in the quantities because
-                // it has not been defined yet. Therefore, instead test whether the variable
-                // is local to this definition and if not, add it as a dependency. Also, a single
-                // variable can occur multiple times in the rhs of a definition. Check this
-                // as well.
-                if (quantity.parameters.indexOf(d) == -1 && quantity.dependencies.indexOf(d) == -1 && this.reservedwords.indexOf(d) == -1) {
-                    quantity.dependencies.push(d);
+        for (var dep in deps) {
+            var d = deps[dep];
 
-                    // It could be that it is used in multiple definitions while being
-                    // undefined. Therefore only add it if it's not already there 
-                    if (!quantities[d]) {
-                        quantities[d] = new Quantity();
-                        quantities[d].name = d;
-                        quantities[d].todo = true;
-                        quantities[d].source = d + '=';
-                    }
+            // It could be that the dependent variable is not yet in the quantities because
+            // it has not been defined yet. Therefore, instead test whether the variable
+            // is local to this definition and if not, add it as a dependency. Also, a single
+            // variable can occur multiple times in the rhs of a definition. Check this
+            // as well.
+            if (quantity.parameters.indexOf(d) == -1 && quantity.dependencies.indexOf(d) == -1 && parser.yy.stdfunctions.indexOf(d) == -1) {
+                quantity.dependencies.push(d);
 
-                    // Add the quantity being defined as a reverse dependency of this quantity
-                    if (!quantities[d].reverseDeps) {
-                        quantities[d].reverseDeps = [];
+                // It could be that it is used in multiple definitions while being
+                // undefined. Therefore only add it if it's not already there 
+                if (!quantities[d]) {
+                    quantities[d] = new Quantity();
+                    quantities[d].name = d;
+                    quantities[d].todo = true;
+                    quantities[d].source = d + '=';
+                }
+
+                // Add the quantity being defined as a reverse dependency of this quantity
+                if (!quantities[d].reverseDeps) {
+                    quantities[d].reverseDeps = [];
+                    quantities[d].reverseDeps.push(quantity.name);
+                } else {
+                    if (quantities[d].reverseDeps.indexOf(quantity.name) == -1) {
                         quantities[d].reverseDeps.push(quantity.name);
-                    } else {
-                        if (quantities[d].reverseDeps.indexOf(quantity.name) == -1) {
-                            quantities[d].reverseDeps.push(quantity.name);
-                        }
                     }
                 }
-            }).bind(this));
+            }
         }
 
         return quantity;

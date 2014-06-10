@@ -25,16 +25,13 @@ unit                        [a-zA-Z]+[0-9]*
 
 /* Initialization code */
 %{
-    /* Variables accesible in actions and user code at the end of this file */ 
-    var parser = yy.parser;
-
     /* Define error handler */
-    parser.parseError = function(message, hash) {
+    yy.parser.parseError = function(message, hash) {
         throw {message: message, hash: hash};
     }
 
     /* List of all built-in ACCEL functions */
-    parser.stdfunctions = [
+    yy.stdfunctions = [
       /* Input elements */
       'slider',
       'input',
@@ -153,7 +150,7 @@ unit                        [a-zA-Z]+[0-9]*
 \bE\b                                                       { return 'E'; }
 \btrue\b                                                    { return 'TRUE'; }
 \bfalse\b                                                   { return 'FALSE'; }
-\b\w*[a-zA-Z_]\w*\b                                         %{ if (parser.stdfunctions.indexOf(yytext) == -1) {
+\b\w*[a-zA-Z_]\w*\b                                         %{ if (yy.stdfunctions.indexOf(yytext) == -1) {
                                                                   return 'IDENTIFIER'; 
                                                                } else { 
                                                                   return 'STDFUNCTION'; 
