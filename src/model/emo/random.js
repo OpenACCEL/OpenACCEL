@@ -22,17 +22,18 @@ define([], /**@lends Model.EMO*/ function() {
      * @class
      * @classdesc Class for generating a random number.
      */
-    function Random() {
+    function Random() {}
 
-        /**
-         * Returns a random integer between min and max
-         *
-         * @param  {Number} min the lower bound
-         * @param  {Number} max the upper bound
-         * @return {Number}     a random integer between min and max
-         */
-        Random.prototype.getRandomInt = function(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        };
-    }
+    /**
+     * Returns a random integer between min and max
+     *
+     * @param  {Number} min the lower bound
+     * @param  {Number} max the upper bound
+     * @return {Number}     a random integer between min and max
+     */
+    Random.prototype.getRandomInt = function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    return Random();
 });
