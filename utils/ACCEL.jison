@@ -154,9 +154,6 @@ unit                        [a-zA-Z]+[0-9]*
 \btrue\b                                                    { return 'TRUE'; }
 \bfalse\b                                                   { return 'FALSE'; }
 \b\w*[a-zA-Z_]\w*\b                                         %{ if (parser.stdfunctions.indexOf(yytext) == -1) {
-                                                                  // we add underscores to all identifierss
-                                                                  // this is to escape js keywords and variables starting with numbers
-                                                                  yytext = '__' + yytext + '__'; 
                                                                   return 'IDENTIFIER'; 
                                                                } else { 
                                                                   return 'STDFUNCTION'; 
@@ -251,7 +248,10 @@ quantity            :  quantityDef | quantityFuncDef;
 quantityFuncDef     :  funcDef '=' expr
                        { $$ = $1 + $2 + $3; }
                     ;
-funcDef             :  IDENTIFIER '(' (STDFUNCTION | IDENTIFIER) (funcDefAdditionalArg)* ')'
+quantityName        : IDENTIFIER
+                       { $$ = '__' + $1 + '__'; } 
+                    ;                    
+funcDef             :  quantityName '(' (STDFUNCTION | quantityName) (funcDefAdditionalArg)* ')'
                        {{
                            var funcName = $1 + $2 + $3;
                            if ($4 && $4.length > 0) {
@@ -261,10 +261,10 @@ funcDef             :  IDENTIFIER '(' (STDFUNCTION | IDENTIFIER) (funcDefAdditio
                            }
                        }}
                     ;
-funcDefAdditionalArg:  ',' (STDFUNCTION | IDENTIFIER)
+funcDefAdditionalArg:  ',' (STDFUNCTION | quantityName)
                        { $$ = $2 }
                     ;
-quantityDef         :  IDENTIFIER '=' expr (UNIT)?
+quantityDef         :  quantityName '=' expr (UNIT)?
                        {{ 
                            var defStr = $1 + $2 + $3;
                            $$ = defStr;
@@ -321,7 +321,7 @@ binArith            :  /* Operator precedence defined above */
 
 /* Scalars */
 scalarTerm          :  scalarVar | scalarConst | funcCall | quantifier | brackets | vectorCall | historyVar | at;
-scalarVar           :  IDENTIFIER
+scalarVar           :  quantityName
                        { $$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : exe.' + $1 + '())'; }
                     |  STDFUNCTION
                     ;
@@ -355,7 +355,7 @@ funcCall            :  STDFUNCTION '(' expr? (funcCallArgList)* ')'
                                $$ = funcCall + $5;
                            }
                        }}
-                    |  IDENTIFIER '(' expr? (funcCallArgList)* ')'
+                    |  quantityName '(' expr? (funcCallArgList)* ')'
                        {{
                             var funcCall = 'exe.' + $1 + $2 + ($3 || '');
                             if ($4 && $4.length > 0) {
@@ -369,7 +369,7 @@ funcCallArgList     :  ',' expr
                        { $$ = $2; }
                     ;
 
-quantifier          :  '#(' (IDENTIFIER | STDFUNCTION) ',' expr ',' expr ',' STDFUNCTION ')'
+quantifier          :  '#(' (quantityName | STDFUNCTION) ',' expr ',' expr ',' STDFUNCTION ')'
                        { $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
                     ;
 at                  :  '@(' expr  ','  expr  ')'
