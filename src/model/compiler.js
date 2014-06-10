@@ -106,23 +106,39 @@ define(["model/fileloader",
             throw err;
         }
 
-        console.log("Script: " + code);
+        code = '(function () { exe = {}; exe.__time__ = 0; exe.step = function() { this.__time__++; };' +
+            code +
+            'return exe; })()';
+
 
         // Determine all time-dependent quantities
         this.determineTimeDependencies();
+
+
         
         // Expand the macros in the parser-outputted code
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
-
         eval(this.fileLoader.getLibrary());
         exe = eval(code);
-        exe.__report__ = script.getQuantities();
-
+        exe.report = this.underscorifyKeys(script.getQuantities());
         return {
             report: script.getQuantities(),
             exe: exe
         };
-    };
+    };  
+    
+    /**
+     * Puts two underscores before and after each key of the fiven object
+     * @param  {Object} obj object to conver
+     * @return {Object}     converted object.
+     */
+    Compiler.prototype.underscorifyKeys = function(obj) {
+        var obj2 = {};
+        for (var key in obj) {
+            obj2['__' + key + '__'] = obj[key];
+        }
+        return obj2;
+    }
 
     /**
      * Flags all time-dependent quantities in this.quantities as such

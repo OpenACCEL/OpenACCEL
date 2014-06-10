@@ -5,15 +5,15 @@ macro func {
     } => {
         exe.$x = function($x) {
             // If a quantity is time dependant, look up if there exists a previous version.
-            if (exe.__report__ && exe.__report__.$x.isTimeDependent) {
-                if (exe.$x[exe.__time__] === undefined) {
-                    exe.$x[exe.__time__] = $expr;
+            if (exe.report && exe.report.$x.isTimeDependent) {
+                if (exe.$x[exe.time] === undefined) {
+                    exe.$x[exe.time] = $expr;
                 }
-                return exe.$x[exe.__time__];
+                return exe.$x[exe.time];
             } else {
-                if (exe.$x[0] === undefined || exe.$x.__hasChanged__) {
+                if (exe.$x[0] === undefined || exe.$x.hasChanged) {
                     exe.$x[0] = ($expr);
-                    exe.$x.__hasChanged__ = false;
+                    exe.$x.hasChanged = false;
                 }
                 return exe.$x[0];
             }

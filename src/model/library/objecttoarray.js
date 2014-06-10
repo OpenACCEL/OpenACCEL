@@ -6,7 +6,7 @@
  * @param  {Object} obj object to convert
  * @return {Array}      converted array
  */
-function '(obj) {
+function objectToArray(obj) {
     if (obj instanceof Object) {
         var array = []; // Initialize the array
         for (var key in obj) {

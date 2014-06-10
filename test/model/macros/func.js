@@ -39,20 +39,20 @@ suite("Func Macro", function() {
             assert.equal(output, expected);
         });
 
-        test("should expand for 'func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))'", function() {
-            var input = "func(z = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))";
+        test("should expand for 'func(z = 2 + sin(exe.__y__() + sin(exe.__x__())) + 4 + sin(2))'", function() {
+            var input = "func(z = 2 + sin(exe.__y__() + sin(exe.__x__())) + 4 + sin(2))";
             var output = macroExpander.expand(input, macros);
             var expected =
             "exe.z = function (z) {"                                                                +
             "\n    // If a quantity is time dependant, look up if there exists a previous version." +
             "\n    if (exe.__report__ && exe.__report__.z.isTimeDependent) {"                       +
             "\n        if (exe.z[exe.__time__] === undefined) {"                                    +
-            "\n            exe.z[exe.__time__] = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);"     +
+            "\n            exe.z[exe.__time__] = 2 + sin(exe.__y__() + sin(exe.__x__())) + 4 + sin(2);"     +
             "\n        }"                                                                           +
             "\n        return exe.z[exe.__time__];"                                                 +
             "\n    } else {"                                                                        +
             "\n        if (exe.z[0] === undefined || exe.z.__hasChanged__) {"                       +
-            "\n            exe.z[0] = 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);"                +
+            "\n            exe.z[0] = 2 + sin(exe.__y__() + sin(exe.__x__())) + 4 + sin(2);"                +
             "\n            exe.z.__hasChanged__ = false;"                                           +
             "\n        }"                                                                           +
             "\n        return exe.z[0];"                                                            +
@@ -73,12 +73,12 @@ suite("Func Macro", function() {
             assert.equal(output, expected);
         });
 
-        test("should expand for 'func(z(a, b) = a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))'", function() {
-            var input = "func(z(a, b) = a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2))";
+        test("should expand for 'func(z(a, b) = a + 2 + sin(exe.__y__() + sin(exe.__x__())) + 4 + sin(2))'", function() {
+            var input = "func(z(a, b) = a + 2 + sin(exe.__y__() + sin(exe.__x__())) + 4 + sin(2))";
             var output = macroExpander.expand(input, macros);
             var expected =
             "exe.z = function (a, b) {"                                                             +
-            "\n    return a + 2 + sin(exe.y() + sin(exe.x())) + 4 + sin(2);"                        +
+            "\n    return a + 2 + sin(exe.__y__() + sin(exe.__x__())) + 4 + sin(2);"                        +
             "\n};";
             assert.equal(output, expected);
         });

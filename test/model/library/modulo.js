@@ -29,7 +29,7 @@ suite("Modulo Library", function() {
         });
 
         test("should expand for 'x = 5, y = modulo(x,4) + 2, z = modulo(modulo(x,2),y)'", function() {
-            var input = "exe = {};func(x = 5)func(y = modulo(exe.x(),4) + 2)func(z = modulo(modulo(exe.x(), 2), exe.y()))";
+            var input = "exe = {};func(x = 5)func(y = modulo(exe.__x__(),4) + 2)func(z = modulo(modulo(exe.__x__(), 2), exe.__y__()))";
             var output = macroExpander.expand(input, macros);
             assert.equal((5 % 2) % (5 % 4 + 2), eval(output)());
         });

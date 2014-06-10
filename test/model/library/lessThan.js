@@ -81,14 +81,14 @@ suite("LessThan Library", function() {
         test("should expand for 'x = 5, y = lessThan(x, 4)'", function() {
             var input = "x = 5\ny = lessThan(x, 4)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), false);
+            assert.equal(output.exe.__y__(), false);
         });
 
         test("should expand for 'x = 5, y = lessThan(x, 5), z = lessThan(x, lessThan(4, y))'", function() {
             var input = "x = 5\ny = lessThan(x, 5) \nz = lessThan(x, lessThan(4, y))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), false);
-            assert.equal(output.exe.z(), false);
+            assert.equal(output.exe.__y__(), false);
+            assert.equal(output.exe.__z__(), false);
         });
 
     });

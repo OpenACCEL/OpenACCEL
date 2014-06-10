@@ -17,8 +17,8 @@ suite("History Macro", function() {
     });
 
     suite("one level deep", function() {
-        test("should expand for '__history__(exe.x(), 5)'", function() {
-            var input = "__history__(exe.x(), 5)";
+        test("should expand for '__history__(exe.__x__(), 5)'", function() {
+            var input = "__history__(exe.__x__(), 5)";
             var output = macroExpander.expand(input, macros);
             var expected =
             "(function () {"                                                                        +
@@ -32,8 +32,8 @@ suite("History Macro", function() {
             assert.equal(output, expected);
         });
 
-        test("should expand for '__history__(exe.x(), sin(5) - 3)'", function() {
-            var input = "__history__(exe.x(), sin(5) - 3)";
+        test("should expand for '__history__(exe.__x__(), sin(5) - 3)'", function() {
+            var input = "__history__(exe.__x__(), sin(5) - 3)";
             var output = macroExpander.expand(input, macros);
             var expected =
             "(function () {"                                                                        +

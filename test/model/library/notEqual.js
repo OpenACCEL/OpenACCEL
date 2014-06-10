@@ -81,14 +81,14 @@ suite("NotEqual Library", function() {
         test("should expand for 'x = 5, y = notEqual(x, 4)'", function() {
             var input = "x = 5\ny = notEqual(x, 4)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), true);
+            assert.equal(output.exe.__y__(), true);
         });
 
         test("should expand for 'x = 5, y = notEqual(x, 5), z = notEqual(x, notEqual(4, y))'", function() {
             var input = "x = 5\ny = notEqual(x, 5) \nz = notEqual(x, notEqual(4, y))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), false);
-            assert.equal(output.exe.z(), true);
+            assert.equal(output.exe.__y__(), false);
+            assert.equal(output.exe.__z__(), true);
         });
 
     });

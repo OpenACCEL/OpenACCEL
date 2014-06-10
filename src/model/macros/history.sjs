@@ -1,9 +1,9 @@
 macro history {
     rule {
-        (exe.$quantity:ident(), $time:expr)
+        (((typeof $quantity:ident !== 'undefined') ? $quantity:ident : exe.$quantity:ident()), $time:expr)
     } => {
         (function() {
-            var historyValue = exe.$quantity[exe.__time__ - $time];
+            var historyValue = exe.$quantity[exe.time - $time];
             if (historyValue === undefined) {
                 return 0;
             } else {

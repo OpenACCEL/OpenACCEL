@@ -29,7 +29,7 @@ suite("Atan2 Library", function() {
         });
 
         test("should expand for 'x = 5, y = atan2(x, 7) + 2, z = atan2(3, atan2(x, y))'", function() {
-            var input = "exe = {};func(x = 5)func(y = atan2(exe.x(), 7) + 2)func(z = atan2(3, atan2(exe.x(), exe.y())))";
+            var input = "exe = {};func(x = 5)func(y = atan2(exe.__x__(), 7) + 2)func(z = atan2(3, atan2(exe.__x__(), exe.__y__())))";
             var output = macroExpander.expand(input, macros);
             assert.equal(Math.atan2(Math.atan2(Math.atan2(7, 5) + 2, 5), 3), eval(output)());
         });

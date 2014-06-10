@@ -25,7 +25,7 @@ suite("Pow Library", function() {
         });
 
         test("should expand for 'x = 5, y = pow(x, 3), z = pow(y, pow(x,2))'", function() {
-            var input = "exe = {};func(x = 5)func(y = pow(exe.x(), 3))func(z = pow(exe.y(), pow(exe.x(), 2)))";
+            var input = "exe = {};func(x = 5)func(y = pow(exe.__x__(), 3))func(z = pow(exe.__y__(), pow(exe.__x__(), 2)))";
             var output = macroExpander.expand(input, macros);
             assert.equal(Math.pow(Math.pow(5, 3), Math.pow(5, 2)), eval(output)());
         });

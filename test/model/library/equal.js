@@ -81,14 +81,14 @@ suite("Equal Library", function() {
         test("should expand for 'x = 5, y = equal(x, 4)'", function() {
             var input = "x = 5\ny = equal(x, 4)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), false);
+            assert.equal(output.exe.__y__(), false);
         });
 
         test("should expand for 'x = 5, y = equal(x, 5), z = equal(x, equal(4, y)'", function() {
             var input = "x = 5\ny = equal(x, 5) \nz = equal(x, equal(4, y))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), true);
-            assert.equal(output.exe.z(), false);
+            assert.equal(output.exe.__y__(), true);
+            assert.equal(output.exe.__z__(), false);
         });
 
     });

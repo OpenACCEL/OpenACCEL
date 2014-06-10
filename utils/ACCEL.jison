@@ -53,6 +53,7 @@ unit                        [a-zA-Z]+[0-9]*
       'button',
       'ceil',
       'check',
+      'cond',
       'cos',
       'cursorB',
       'cursorX',
@@ -144,10 +145,14 @@ unit                        [a-zA-Z]+[0-9]*
 
 \/\/([^\n])*                                                { yytext = yytext.slice(2); return 'COMMENT'; }
 
-(\"[^"]*\")|(\'[^']*\')                                     { yytext = yytext.slice(1,yyleng-1); return 'STRING'; }
+(\"[^"]*\")|(\'[^']*\')                                     { return 'STRING'; }
 
 \;\s*((1|({unit}(\.{unit})?))(\s*\/\s*({unit}(\.{unit})?))?) { yytext = this.matches[1]; return 'UNIT'; }
 
+\bPI\b                                                      { return 'PI'; }
+\bE\b                                                       { return 'E'; }
+\btrue\b                                                    { return 'TRUE'; }
+\bfalse\b                                                   { return 'FALSE'; }
 \b\w*[a-zA-Z_]\w*\b                                         %{ if (parser.stdfunctions.indexOf(yytext) == -1) {
                                                                   // we add underscores to all identifierss
                                                                   // this is to escape js keywords and variables starting with numbers
@@ -157,11 +162,6 @@ unit                        [a-zA-Z]+[0-9]*
                                                                   return 'STDFUNCTION'; 
                                                                } 
                                                             %}
-
-\bPI\b                                                      { return 'PI'; }
-\bE\b                                                       { return 'E'; }
-\btrue\b                                                    { return 'TRUE'; }
-\bfalse\b                                                   { return 'FALSE'; }
 "("                                                         { return '('; }
 ")"                                                         { return ')'; }
 "{"                                                         { return '{'; }
@@ -293,7 +293,7 @@ binArith            :  /* Operator precedence defined above */
                        expr '+' expr
                        { $$ = 'add(' + $1 + ',' + $3 + ')'; }
                     |  expr '-' expr
-                       { $$ = 'substract(' + $1 + ',' + $3 + ')'; }
+                       { $$ = 'subtract(' + $1 + ',' + $3 + ')'; }
                     |  expr '*' expr
                        { $$ = 'multiply(' + $1 + ',' + $3 + ')'; }
                     |  expr '/' expr
@@ -322,7 +322,7 @@ binArith            :  /* Operator precedence defined above */
 /* Scalars */
 scalarTerm          :  scalarVar | scalarConst | funcCall | quantifier | brackets | vectorCall | historyVar | at;
 scalarVar           :  IDENTIFIER
-                       { $$ = '(' + $1 + '|| exe.' + $1 + '())'; }
+                       { $$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : exe.' + $1 + '())'; }
                     |  STDFUNCTION
                     ;
 historyVar          :  scalarVar '{' expr '}'

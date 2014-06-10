@@ -20,13 +20,13 @@ suite("Cond Macro", function() {
         test("Simple expression, false", function() {
             var input = "x = cond(1 > 2, 3, 4)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.x(), 4);
+            assert.equal(output.exe.__x__(), 4);
         });
 
         test("Simple expression, true", function() {
             var input = "x = cond(1 < 2, 3, 4)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.x(), 3);
+            assert.equal(output.exe.__x__(), 3);
         });
 
         test("Custom max function", function() {
@@ -41,7 +41,7 @@ suite("Cond Macro", function() {
         test("Nested cond", function() {
             var input = "x = cond(1 == 2, cond(1 < 2, 3, 4), cond(2 > 1, 5, 6))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.x(), 5);
+            assert.equal(output.exe.__x__(), 5);
         });
     });
 
