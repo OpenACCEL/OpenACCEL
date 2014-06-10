@@ -16,7 +16,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model.emo*/ function() {
+define([], /**@lends Model.EMO*/ function() {
 
     /**
      * @class
