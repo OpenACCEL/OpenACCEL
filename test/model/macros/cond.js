@@ -35,7 +35,7 @@ suite("Cond Macro", function() {
                 "b = 40\n" +
                 "c = f(a,b)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.c(), 40);
+            assert.equal(output.exe.__c__(), 40);
         });
 
         test("Nested cond", function() {
