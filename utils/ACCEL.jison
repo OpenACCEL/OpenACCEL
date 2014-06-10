@@ -258,6 +258,8 @@ vectorElem          :  STRING ':' expr
                        { $$ = { index:$1, value:$3}; }
                     |  IDENTIFIER ':' expr
                        { $$ = { index:'\'' + $1 + '\'', value:$3}; }
+                    |  NUMBER ':' expr
+                       { $$ = { index:'\'' + $1 + '\'', value:$3}; }
                     |  expr
                        { $$ = { value:$1 }; }
                     ;
