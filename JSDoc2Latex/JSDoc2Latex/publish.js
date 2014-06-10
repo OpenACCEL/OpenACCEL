@@ -77,17 +77,17 @@ function handleMethod(m) {
 
     if (m.description) {
         // Description
-        output += "\\paragraph{Description:} \\hfill \\\\ \n" + replaceSpecial(m.description) + "\n";
+        output += "\\paragraph{Description:} \\hfill \\\\ " + replaceSpecial(m.description) + "\n";
     }
     if (m.params && m.params.length) {
         // parameters
         output += "\\paragraph{Parameters:} \\hfill \\\\ \n";
         output += "\\begin{tabular}{|l|l|p{0.6\\textwidth}|}\n";
         output += "\\hline\n";
-        output += "\\textsc{Name} & \\textsc{Type} & \\textsc{Description} \\\\ \n";
+        output += "\\textbf{Name} & \\textbf{Type} & \\textbf{Description} \\\\ \n";
         output += "\\hline\n\\hline\n";
         for (var i in m.params) {
-            output += ((m.params[i].name) ? replaceSpecial(m.params[i].name) : "") + "& ";
+            output += "\\texttt{" + ((m.params[i].name) ? replaceSpecial(m.params[i].name) : "") + "}& ";
             output += ((m.params[i].type && m.params[i].type.names && m.params[i].type.names.length) ? m.params[i].type.names[0] : "") + " & ";
             output += ((m.params[i].description) ? replaceSpecial(m.params[i].description) : "") + "\\\\ \n";
             output += "\\hline\n";
@@ -99,7 +99,7 @@ function handleMethod(m) {
         output += "\\paragraph{Preconditions:} \n";
         output += "\\begin{itemize}  \n";
         for (var i in m.pre)
-            output += "\\item  " + replaceSpecial(m.pre[i]) + "\n";
+            output += "\\item  \\texttt{" + replaceSpecial(m.pre[i]) + "}\n";
         output += "\\end{itemize}  \n";
     }
     if (m.post && m.post.length) {
@@ -107,7 +107,7 @@ function handleMethod(m) {
         output += "\\paragraph{Postconditions:}\n";
         output += "\\begin{itemize}  \n";
         for (var i in m.post)
-            output += "\\item  " + replaceSpecial(m.post[i]) + "\n";
+            output += "\\item  \\texttt{" + replaceSpecial(m.post[i]) + "}\n";
         output += "\\end{itemize}  \n";
     }
     if (m.exceptions && m.exceptions.length) {
@@ -115,7 +115,7 @@ function handleMethod(m) {
         output += "\\paragraph{Throws:} \\hfill \\\\ \n";
         output += "\\begin{tabular}{|l|p{0.6\\textwidth}|}\n";
         output += "\\hline\n\\hline\n";
-        output += "\\textsc{Type} & \\textsc{Description} \\\\ \n";
+        output += "\\textbf{Type} & \\textbf{Description} \\\\ \n";
         output += "\\hline\n";
         for (var i in m.exceptions) {
             output += ((m.exceptions[i].type && m.exceptions[i].type.names && m.exceptions[i].type.names.length) ? m.exceptions[i].type.names[0] : "") + " & ";
@@ -279,7 +279,7 @@ function handleNamespace(n) {
 
 
 exports.publish = function(taffydata) {
-    var output = "{\\ttfamily\n";
+    var output = "";
     output += "\\providecommand{\\NSExtra}{}\n"; // give possibility to add additional content tot he start of a namespace description
 
 
@@ -295,8 +295,6 @@ exports.publish = function(taffydata) {
     namespaces.each(function(n) {
         output += handleNamespace(n);
     });
-
-    output += "}";
 
     fs.mkPath(outdir);
     fs.writeFileSync(outdir + "jsdoc.tex", output);
