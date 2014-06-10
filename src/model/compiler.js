@@ -23,28 +23,29 @@ if (inNode) {
 /*******************************************************************/
 
 define(["model/fileloader",
-        "model/preprocessor",
         "model/macroexpander",
-        "underscore"
+        "underscore",
+        "model/parser"
         ], /**@lends Model*/
         function(FileLoader,
-            PreProcessor,
             MacroExpander,
-            _) {
+            _,
+            parser) {
 
     /**
      * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
      */
     function Compiler() {
         /**
-         * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
-         */
-        this.preProcessor = new PreProcessor();
-
-        /**
          * The macro expander will expand all macros, such that the code can be eval()'d.
          */
         this.macroExpander = new MacroExpander();
+
+        /**
+         * The parser that will be used to parse inputted ACCEL code
+         * and construct the executable from it.
+         */
+        this.parser = parser;
 
         /**
          * All the quantities in the script to be compiled.
@@ -78,24 +79,25 @@ define(["model/fileloader",
     }
 
     /**
-     * The macro expander will expand all macros, such that the code can be eval()'d.
-     */
-    this.macroExpander = new MacroExpander();
-
-    /**
      * Compiles a piece of ACCEL code and outputs an object, containing an executable.
      *
      * @param {Script} script   The ACCEL script to be compiled.
      * @return {Object}         An object, containing an executable and information.
      */
     Compiler.prototype.compile = function(script) {
+        var code;
         this.quantities = script.getQuantities();
 
         // Determine all time-dependent quantities
         this.determineTimeDependencies();
 
         // Pre-process and expand.
-        var code = this.preProcessor.process(script);
+
+        try {
+            code = this.parser.parse(script);
+        } catch (e) {
+            console.log("Error compiling script: " + e.message);
+        }
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
         eval(this.fileLoader.getLibrary());
