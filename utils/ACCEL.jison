@@ -25,13 +25,111 @@ unit                        [a-zA-Z]+[0-9]*
 
 /* Initialization code */
 %{
-    /* Define error handler */
-    this.yy.parser.parseError = function(message, hash) {
-        throw { message: message, hash: hash };
-    }
-
     /* Variables accesible in actions and user code at the end of this file */ 
     var parser = yy.parser;
+
+    /* Define error handler */
+    parser.parseError = function(message, hash) {
+        throw {message: message, hash: hash};
+    }
+
+    /* List of all built-in ACCEL functions */
+    parser.stdfunctions = [
+      'slider',
+      'input',
+      'check',
+      'button',
+      '@',
+      'abs',
+      'acos',
+      'add',
+      'and',
+      'asin',
+      'atan',
+      'atan2',
+      'bin',
+      'button',
+      'ceil',
+      'check',
+      'cos',
+      'cursorB',
+      'cursorX',
+      'cursorY',
+      'debug',
+      'divide',
+      'do',
+      'equal',
+      'exp',
+      'factorial',
+      'floor',
+      'getChan',
+      'getTime',
+      'getUrl',
+      'greaterThan',
+      'greaterThanEqual',
+      'iConvolve',
+      'iGaussian',
+      'iMake',
+      'iMedian',
+      'iSpike',
+      'if',
+      'imply',
+      'input',
+      'lessThan',
+      'lessThanEqual',
+      'ln',
+      'log',
+      'max',
+      'min',
+      'modulo',
+      'multiply',
+      'not',
+      'notEqual',
+      'or',
+      'paretoHor',
+      'paretoMax',
+      'paretoMin',
+      'paretoVer',
+      'plot',
+      'poisson',
+      'pow',
+      'putChan',
+      'ramp',
+      'random',
+      'round',
+      'sin',
+      'slider',
+      'sqrt',
+      'subtract',
+      'tan',
+      'uniminus',
+      'vAggregate',
+      'vAppend',
+      'vConcat',
+      'vConvolve',
+      'vDom',
+      'vDot',
+      'vEigenSystem',
+      'vGaussian',
+      'vLen',
+      'vMake',
+      'vMatInverse',
+      'vMatMatMul',
+      'vMatSolve',
+      'vNormAbs',
+      'vNormEuclid',
+      'vNormFlat',
+      'vNormSq',
+      'vNormalize',
+      'vRange',
+      'vSegment',
+      'vSeq',
+      'vSequence',
+      'vSpike',
+      'vTranspose',
+      'vVecRamp'
+    ];
+
 %}               
 
 
@@ -41,10 +139,20 @@ unit                        [a-zA-Z]+[0-9]*
 [ \t]                                                       { /* Ignore all whitespace characters except newlines */; }
 (\r)?\n                                                     { return 'LINEBREAK'; }
 {int}{frac}?{exp}?\b                                        { return 'NUMBER'; }
+
 \/\/([^\n])*                                                { yytext = yytext.slice(2); return 'COMMENT'; }
+
 (\"[^"]*\")|(\'[^']*\')                                     { yytext = yytext.slice(1,yyleng-1); return 'STRING'; }
+
 \;\s*((1|({unit}(\.{unit})?))(\s*\/\s*({unit}(\.{unit})?))?) { yytext = this.matches[1]; return 'UNIT'; }
-\b\w*[a-zA-Z_]\w*\b                                         { return 'IDENTIFIER'; }
+
+\b\w*[a-zA-Z_]\w*\b                                         %{ if (parser.stdfunctions.indexOf(yytext) == -1) { 
+                                                                  return 'IDENTIFIER'; 
+                                                               } else { 
+                                                                  return 'STDFUNCTION'; 
+                                                               } 
+                                                            %}
+
 \bPI\b                                                      { return 'PI'; }
 \bE\b                                                       { return 'E'; }
 \btrue\b                                                    { return 'TRUE'; }
@@ -75,7 +183,6 @@ unit                        [a-zA-Z]+[0-9]*
 "&&"                                                        { return '&&'; }
 "||"                                                        { return '||'; }
 "="                                                         { return '='; }
-"@("                                                        { return '@('; }
 
 /lex
 
@@ -283,7 +390,5 @@ vectorCall          :  scalarTerm '[' expr ']'
                     ;
 
 
+
 %%
-
-/* Additional user code can be put here */
-
