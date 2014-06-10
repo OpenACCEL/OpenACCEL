@@ -245,7 +245,7 @@ quantity            :  quantityDef | quantityFuncDef;
 quantityFuncDef     :  funcDef '=' expr
                        { $$ = $1 + $2 + $3; }
                     ;
-funcDef             :  IDENTIFIER '(' IDENTIFIER (funcDefAdditionalArg)* ')'
+funcDef             :  IDENTIFIER '(' (STDFUNCTION | IDENTIFIER) (funcDefAdditionalArg)* ')'
                        {{
                            var funcName = $1 + $2 + $3;
                            if ($4 && $4.length > 0) {
@@ -255,7 +255,7 @@ funcDef             :  IDENTIFIER '(' IDENTIFIER (funcDefAdditionalArg)* ')'
                            }
                        }}
                     ;
-funcDefAdditionalArg:  ',' IDENTIFIER
+funcDefAdditionalArg:  ',' (STDFUNCTION | IDENTIFIER)
                        { $$ = $2 }
                     ;
 quantityDef         :  IDENTIFIER '=' expr (UNIT)?
@@ -312,8 +312,11 @@ binArith            :  /* Operator precedence defined above */
 
 
 /* Scalars */
-scalarTerm          :  scalarVar | scalarConst | funcCall | quantifier | brackets | vectorCall | historyVar | IDENTIFIER;
-historyVar          :  IDENTIFIER '{' expr '}'
+scalarTerm          :  scalarVar | scalarConst | funcCall | quantifier | brackets | vectorCall | historyVar;
+scalarVar           :  (STDFUNCTION |  IDENTIFIER)
+                       { $$ = '(' + $1 + '|| exe.' + $1 + '())'; }
+                    ;
+historyVar          :  scalarVar '{' expr '}'
                        { $$ = "__history__(" + $1 + "," + $3 + ")"; }
                     ;
 scalarConst         :  NUMBER | STRING | predefinedConstant;
@@ -327,7 +330,7 @@ predefinedConstant  :  PI
                        { $$ = 'false'; }
                     ;
 
-funcCall            :  IDENTIFIER '(' expr? (funcCallArgList)* ')'
+funcCall            :  STDFUNCTION '(' expr? (funcCallArgList)* ')'
                        {{
                             var funcCall = $1 + $2 + ($3 || '');
                             if ($4 && $4.length > 0) {
@@ -336,12 +339,21 @@ funcCall            :  IDENTIFIER '(' expr? (funcCallArgList)* ')'
                                $$ = funcCall + $5;
                            }
                        }}
+                    |  IDENTIFIER '(' expr? (funcCallArgList)* ')'
+                       {{
+                            var funcCall = 'exe.' + $1 + $2 + ($3 || '');
+                            if ($4 && $4.length > 0) {
+                               $$ = funcCall + ',' + $4 + $5;
+                           } else {
+                               $$ = funcCall + $5;
+                           }
+                       }}   
                     ;
 funcCallArgList     :  ',' expr
                        { $$ = $2; }
                     ;
 
-quantifier          :  '#(' IDENTIFIER ',' expr ',' expr ',' IDENTIFIER ')'
+quantifier          :  '#(' (IDENTIFIER | STDFUNCTION) ',' expr ',' expr ',' STDFUNCTION ')'
                        { $$ = "__quantifier__(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
                     ;
 brackets            :  '(' expr ')'
@@ -373,7 +385,7 @@ vectorAdditionalArg :  ',' vectorElem
                     ;
 vectorElem          :  STRING ':' expr 
                        { $$ = { index:$1, value:$3}; }
-                    |  IDENTIFIER ':' expr
+                    |  (IDENTIFIER | STDFUNCTION) ':' expr
                        { $$ = { index:'\'' + $1 + '\'', value:$3}; }
                     |  NUMBER ':' expr
                        { $$ = { index:'\'' + $1 + '\'', value:$3}; }
@@ -383,7 +395,7 @@ vectorElem          :  STRING ':' expr
 
 vectorCall          :  scalarTerm '[' expr ']'
                        { $$ = $1 + $2 + $3 + $4; }
-                    |  scalarTerm '.' IDENTIFIER
+                    |  scalarTerm '.' (IDENTIFIER | STDFUNCTION)
                        { $$ = $1 + $2 + $3; }
                     |  scalarTerm '.' NUMBER
                        { $$ = $1 + '[' + $3 + ']'; } 
