@@ -110,8 +110,20 @@ unit                        [a-zA-Z]+[0-9]*
 /* Structure of ACCEL script */
 script              : (scriptLine)* (scriptFinalLine)?
                       {{
-                          // For now, we only print out the final line.
-                          return $2;
+                            var output = "";
+
+                            if ($1) {
+                                var length = $1.length;
+                                for (var i = 0; i < length; i++) {
+                                    output += "func(" + $1[i] + ")";
+                                }
+                            }
+
+                            if ($2) {
+                                output += "func(" + $2 + ")";
+                            }
+
+                            return output;
                       }}
                     ;
 scriptLine          :  LINEBREAK 
