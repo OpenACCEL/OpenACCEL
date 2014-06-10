@@ -271,7 +271,7 @@ define(["model/script",
         this.script = new Script();
         this.view.setQuantities({});
 
-        if (this.autoSave) {
+        if (this.autoSave && window.localStorage) {
         	this.autoSaveStore.clear();
         }
     };
@@ -281,7 +281,7 @@ define(["model/script",
      *
      * @post Any script that might have been stored in the autoSaveStore has
      * been restored and loaded as the current Script.
-     */.
+     */
     Controller.prototype.restoreSavedScript = function() {
     	this.newScript();
 
@@ -419,7 +419,7 @@ define(["model/script",
         this.view.setQuantities(this.script.getQuantities());
 
         // Autosave quantity if enabled
-        if (this.autoSave) {
+        if (this.autoSave && window.localStorage) {
         	this.autoSaveStore.saveQuantity(qty.name, definition);
         }
 
@@ -455,7 +455,7 @@ define(["model/script",
         this.view.setQuantities(this.script.getQuantities());
 
         // Remove quantity from autosave store
-        if (this.autoSave) {
+        if (this.autoSave && window.localStorage) {
         	this.autoSaveStore.deleteQuantity(qtyName);
         }
 

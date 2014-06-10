@@ -73,7 +73,7 @@ define([], /**@lends Model*/ function() {
          *
          * @return The number of quantities currently stored in the store.
          */
-        numQuantities: function() {},
+        numQuantities: function() {}
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

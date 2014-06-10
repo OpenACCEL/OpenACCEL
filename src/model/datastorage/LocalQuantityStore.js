@@ -24,11 +24,13 @@ define(["model/datastorage/AbstractQuantityStore"], /**@lends Model*/ function(A
 
     function LocalQuantityStore() {
         // Create empty index if there is no index already!
-        if (!localStorage['quantities']) {
-            localStorage['quantities'] = [];
-        } else {
-            // Validate index of quantities stored in the localStorage
-            this.validateIndex();
+        if (inBrowser && window.localStorage) {
+            if (!localStorage['quantities']) {
+                localStorage['quantities'] = [];
+            } else {
+                // Validate index of quantities stored in the localStorage
+                this.validateIndex();
+            }
         }
     }
 
