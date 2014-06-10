@@ -47,33 +47,6 @@ define([], /**@lends Model.EMO*/ function() {
     }
 
     /**
-     * Returns the vector of an individual.
-     *
-     * @return {Array} the vector containing the dimensions of an individual
-     */
-    Individual.prototype.getVector = function() {
-        return this.vector;
-    };
-
-    /**
-     * Returns whether an individual is in the Pareto Set.
-     *
-     * @return {Boolean} whether an individual is in the Pareto Set
-     */
-    Individual.prototype.inParetoSet = function() {
-        return this.inParetoSet;
-    };
-
-    /**
-     * Returns whether an individual is in the Pareto Front.
-     *
-     * @return {Boolean} whether an individual is in the Pareto Front
-     */
-    Individual.prototype.inParetoFront = function() {
-        return this.inParetoFront;
-    };
-
-    /**
      * Returns whether an individual dominates another individual.
      *
      * An individual dominates another individual if:
@@ -90,7 +63,7 @@ define([], /**@lends Model.EMO*/ function() {
             throw new Error("Individual.dominates.pre is violated: individual2 is null or undefined.");
         }
         var vector1 = this.vector;
-        var vector2 = individual2.getVector();
+        var vector2 = individual2.vector;
         if (vector1.length !== vector2.length) {
             throw new Error("Cannot compare individuals of unequal dimensions.");
         }
