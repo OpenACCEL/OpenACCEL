@@ -35,5 +35,16 @@ define([], /**@lends Model.EMO*/ function() {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
+    /**
+     * Returns a random double between min and max
+     *
+     * @param  {Number} min the lower bound
+     * @param  {Number} max the upper bound
+     * @return {Number}     a random double between min and max
+     */
+    Random.prototype.getRandomDouble = function(min, max) {
+        return (Math.random() * (max - min)) + min;
+    };
+
     return Random();
 });
