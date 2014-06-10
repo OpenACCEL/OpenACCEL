@@ -41,7 +41,8 @@ define([], /**@lends Mutation*/ function() {
          * category I quantities that the two individuals on the Pareto front have.
          * @param {Individual[]} input two individuals on the Pareto front
          * @pre input != null && input != undefined && input.length == 2 &&
-         * input[0] is on the Pareto front && input[1] is on the Pareto front
+         * input[0] != null && input[1] != null && input[0] != undefined && input[1] != undefined
+         * input[0].inParetoFront() && input[1].inParetoFront()
          * @return {Individual} the mutated individual
          */
         CrossOverMutation.prototype.mutate = function(input) {
@@ -53,8 +54,13 @@ define([], /**@lends Mutation*/ function() {
                 throw new Error('CrossOverMutation.mutate().pre violated:' +
                     'instead of providing 2 individuals, you provided ' + input.length);
             }
-            if (false) { // TODO add that input[0] and input[1] are both on the Pareto front.
-                throw new Error(); //TODO
+            if (!input[0] || !input[1]) {
+                throw new Error('CrossOverMutation.mutate().pre violated:' +
+                    'one of your provided individuals is null or undefined');
+            }
+            if (!(input[0].onParetoFront() && input[1].onParetoFront())) {
+                throw new Error('CrossOverMutation.mutate().pre violated:' +
+                    'one of the provided individuals is not on the Pareto front');
             }
         };
 

@@ -35,12 +35,22 @@ define([], /**@lends Mutation*/ function() {
         RandomMutation.prototype = new Mutation();
 
         /**
-         * Takes no individual as input and returns a random individual. That is, an individual
+         * Takes one individual as input and returns a random individual. That is, an individual
          * with random category I variables and random boolean values.
+         * @param {Individual} input the individual provided as input
+         * @pre input != null && input != undefined &&
+         * !input.inParetoFront()
          * @return {Individual} a random individual
          */
-        RandomMutation.prototype.mutate = function() {
-
+        RandomMutation.prototype.mutate = function(input) {
+            if (!input) {
+                throw new Error('RandomMutation.mutate().pre violated:' +
+                    'your input individual is null or undefined');
+            }
+            if (input.inParetoFront()) {
+                throw new Error('RandomMutation.mutate().pre violated:' +
+                    'your input individual is on the Pareto front');
+            }
         };
 
         return RandomMutation;
