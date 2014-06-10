@@ -39,7 +39,6 @@ unit                        [a-zA-Z]+[0-9]*
       'input',
       'check',
       'button',
-      '@',
       'abs',
       'acos',
       'add',
@@ -147,6 +146,8 @@ unit                        [a-zA-Z]+[0-9]*
 \;\s*((1|({unit}(\.{unit})?))(\s*\/\s*({unit}(\.{unit})?))?) { yytext = this.matches[1]; return 'UNIT'; }
 
 \b\w*[a-zA-Z_]\w*\b                                         %{ if (parser.stdfunctions.indexOf(yytext) == -1) {
+                                                                  // we add underscores to all identifierss
+                                                                  // this is to escape js keywords and variables starting with numbers
                                                                   yytext = '__' + yytext + '__'; 
                                                                   return 'IDENTIFIER'; 
                                                                } else { 
@@ -169,6 +170,7 @@ unit                        [a-zA-Z]+[0-9]*
 ":"                                                         { return ':'; }
 ";"                                                         { return ';'; }
 "#("                                                        { return '#('; }
+"@("                                                        { return '@('; }
 "+"                                                         { return '+'; }
 "-"                                                         { return '-'; }
 "!"                                                         { return '!'; }
@@ -301,6 +303,8 @@ binArith            :  /* Operator precedence defined above */
                        { $$ = 'lessThan(' + $1 + ',' + $3 + ')'; }
                     |  expr '>=' expr
                        { $$ = 'greaterThanEqual(' + $1 + ',' + $3 + ')'; }
+                    |  expr '>' expr
+                       { $$ = 'greaterThan(' + $1 + ',' + $3 + ')'; }
                     |  expr '==' expr
                        { $$ = 'equal(' + $1 + ',' + $3 + ')'; }
                     |  expr '!=' expr
@@ -313,7 +317,7 @@ binArith            :  /* Operator precedence defined above */
 
 
 /* Scalars */
-scalarTerm          :  scalarVar | scalarConst | funcCall | quantifier | brackets | vectorCall | historyVar;
+scalarTerm          :  scalarVar | scalarConst | funcCall | quantifier | brackets | vectorCall | historyVar | at;
 scalarVar           :  IDENTIFIER
                        { $$ = '(' + $1 + '|| exe.' + $1 + '())'; }
                     |  STDFUNCTION
@@ -334,7 +338,14 @@ predefinedConstant  :  PI
 
 funcCall            :  STDFUNCTION '(' expr? (funcCallArgList)* ')'
                        {{
-                            var funcCall = $1 + $2 + ($3 || '');
+                            var funcname;
+                            if($1 === 'if') {
+                              // if needs underscores as it is a javascript keyword
+                              funcname = '__if__'
+                            } else {
+                              funcname = $1;
+                            }
+                            var funcCall = funcname + $2 + ($3 || '');
                             if ($4 && $4.length > 0) {
                                $$ = funcCall + ',' + $4 + $5;
                            } else {
@@ -357,6 +368,9 @@ funcCallArgList     :  ',' expr
 
 quantifier          :  '#(' (IDENTIFIER | STDFUNCTION) ',' expr ',' expr ',' STDFUNCTION ')'
                        { $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
+                    ;
+at                  :  '@(' expr  ','  expr  ')'
+                       { $$ = 'at(' + $2 + $3 + $4 +  $5; }
                     ;
 brackets            :  '(' expr ')'
                        { $$ = $1 + $2 + $3; }
