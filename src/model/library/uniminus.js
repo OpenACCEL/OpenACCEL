@@ -1,5 +1,5 @@
 function uniminus(x) {
-    return unaryZip(function(a) {
-        return -a;
+    return unaryZip(x, function(a) {
+        return -1*a;
     });
 }

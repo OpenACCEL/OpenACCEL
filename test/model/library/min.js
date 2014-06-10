@@ -16,6 +16,7 @@ suite("Min Library", function() {
     });
 
     suite("expansion", function() {
+
         test("should expand for 'x = min(5, 2, 3, 7, 1, 0, -8)'", function() {
             var input = "x = min(5, 2, 3, 7, 1, 0, -8)";
             var output = compiler.compile(new script(input));
