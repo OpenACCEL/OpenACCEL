@@ -35,11 +35,14 @@ define([], /**@lends Mutation*/ function() {
          * other classes.
          * @param {Individual[]} arguments the individuals provided as input
          * (In Javascript arguments gives an array of all arguments provided to this function)
-         * @pre true
+         * @pre arguements != null or undefined
          * @return {Individual} the mutated individual
          */
         Mutation.prototype.mutate = function() {
-
+            if (!arguments) {
+                throw new Error('RandomMutation.mutate().pre violated:' +
+                    'your input individual(s) is/are null or undefined');
+            }
         };
 
         return Mutation;

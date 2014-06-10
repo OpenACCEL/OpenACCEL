@@ -46,10 +46,7 @@ define([], /**@lends Mutation*/ function() {
          * @return {Individual} the mutated individual
          */
         CrossOverMutation.prototype.mutate = function(input) {
-            if (!input) {
-                throw new Error('CrossOverMutation.mutate().pre violated:' +
-                    'input individual is null or undefined');
-            }
+            Mutation.prototype.parse.call(input);
             if (input.length != 2) {
                 throw new Error('CrossOverMutation.mutate().pre violated:' +
                     'instead of providing 2 individuals, you provided ' + input.length);
@@ -62,6 +59,7 @@ define([], /**@lends Mutation*/ function() {
                 throw new Error('CrossOverMutation.mutate().pre violated:' +
                     'one of the provided individuals is not on the Pareto front');
             }
+
         };
 
         return CrossOverMutation;

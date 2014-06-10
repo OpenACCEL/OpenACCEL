@@ -32,7 +32,7 @@ define([], /**@lends Mutation*/ function() {
     function ArbitraryMutation() {
 
         ArbitraryMutation.prototype = new Mutation();
-        
+
         /**
          * Takes one individual as input and mutates one of the category I quantities, randomly
          * chosen.
@@ -41,10 +41,7 @@ define([], /**@lends Mutation*/ function() {
          * @return {Individual} the mutated individual
          */
         ArbitraryMutation.prototype.mutate = function(input) {
-            if (!input) {
-                throw new Error('ArbitraryMutation.mutate().pre violated:' +
-                    'input individual is null or undefined');
-            }
+            Mutation.prototype.parse.call(input);
         };
 
         return ArbitraryMutation;

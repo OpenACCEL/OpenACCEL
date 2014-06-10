@@ -43,10 +43,7 @@ define([], /**@lends Mutation*/ function() {
          * @return {Individual} the mutated individual
          */
         BinaryTournamentMutation.prototype.mutate = function(input) {
-            if (!input) {
-                throw new Error('BinaryTournamentMutation.mutate().pre violated:' +
-                    'input individual is null or undefined');
-            }
+            Mutation.prototype.parse.call(input);
             if (input.length != 2) {
                 throw new Error('BinaryTournamentMutation.mutate().pre violated:' +
                     'instead of 2 individuals, you provided ' + input.length + ' individuals');

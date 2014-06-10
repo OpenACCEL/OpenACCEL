@@ -39,10 +39,7 @@ define([], /**@lends Mutation*/ function() {
          * @return {Individual} the mutated individual
          */
         CloseMutation.prototype.mutate = function(input) {
-            if (!input) {
-                throw new Error('CloseMutation.mutate().pre violated:' +
-                    'input individual is null or undefined');
-            }
+            Mutation.prototype.parse.call(input);
         };
 
         return CloseMutation;

@@ -43,10 +43,7 @@ define([], /**@lends Mutation*/ function() {
          * @return {Individual} a random individual
          */
         RandomMutation.prototype.mutate = function(input) {
-            if (!input) {
-                throw new Error('RandomMutation.mutate().pre violated:' +
-                    'your input individual is null or undefined');
-            }
+            Mutation.prototype.parse.call(input);
             if (input.inParetoFront()) {
                 throw new Error('RandomMutation.mutate().pre violated:' +
                     'your input individual is on the Pareto front');
