@@ -94,13 +94,14 @@ define(["model/datastores/AbstractScriptStore",
         };
 
         /**
-         * Retrieves the script with the given name from the store.
+         * Loads the script with the given name from the store and calls the given
+         * completion handler with the result.
          *
          * @param {String} name The name of the script to load from the store
-         * @return {String} The source of the script with name name, or null if there
-         * is no script in the store with this name.
+         * @param completionHandler The callback function to call with the result. Must accept
+         * a single parameter containing the source of the requested script.
          */
-        ServerScriptStore.prototype.loadScript = function(name) {
+        ServerScriptStore.prototype.loadScript = function(name, completionHandler) {
             if (inBrowser) {
                 $.ajax({
                     context: this,
@@ -109,22 +110,19 @@ define(["model/datastores/AbstractScriptStore",
 
                     success: (function(result) {
                         if (result) {
-                            // Iterate through all returned scriptnames and add them to our array
-                            for (var i = 0; i < result.length; i++) {
-                                this.scriptList.push(result[i]["name"]);
-                            }
+                            completionHandler(result);
                         }
                     }).bind(this),
 
                     error: function(err) {
-                        throw new NetworkError("Error retrieving list of scripts: " + err);
+                        throw new NetworkError("Error loading script: " + err);
                     },
 
                     fail: function(err) {
-                        throw new NetworkError("Error retrieving list of scripts: " + err);
+                        throw new NetworkError("Error loading script: " + err);
                     },
 
-                    async: false
+                    async: true
                 });
             }
         };
