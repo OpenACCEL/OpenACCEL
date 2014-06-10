@@ -39,6 +39,15 @@ define([], /**@lends Model.EMO.Mutation*/ function() {
          */
         RandomMutation.prototype.mutate = function(individual) {
             Mutation.prototype.mutate.call(individual);
+            var vector = individual.vector;
+            var quantity;
+            for (var i = vector.length - 1; i >= 0; i--) {
+                // obtain the quantity to be mutated
+                quantity = vector[i];
+                // the new value for the quantity
+                quantity.value = Random.getRandomDouble(quantity.min, quantity.max);
+            }
+            return individual;
         };
 
         return RandomMutation;
