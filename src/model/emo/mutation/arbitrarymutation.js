@@ -41,7 +41,7 @@ define([], /**@lends Model.EMO.Mutation*/ function() {
         ArbitraryMutation.prototype.mutate = function() {
             Mutation.prototype.mutate.call(individual);
             var vector = individual.vector;
-            //obtain the quantity to be mutated
+            // obtain the quantity to be mutated
             var quantity = vector[Random.getRandomInt(0, vector.length - 1)];
             // the new value for the quantity
             var newValue = Random.getRandomInt(quantity.min, quantity.max);
