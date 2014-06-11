@@ -163,18 +163,20 @@ define(["model/script",
      */
     Controller.prototype.run = function() {
         if (this.script.isCompiled()) {
-            // Update state
-            this.executing = true;
-            this.status = "Executing";
-            this.view.setStatus(this.status);
-            this.view.setExecuting(this.executing);
+        	if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
+	            // Update state
+	            this.executing = true;
+	            this.status = "Executing";
+	            this.view.setStatus(this.status);
+	            this.view.setExecuting(this.executing);
 
-            var controller = this;
-            this.runloop = setInterval(
-                function() {
-                    controller.execute();
-                }, 1
-            );
+	            var controller = this;
+	            this.runloop = setInterval(
+	                function() {
+	                    controller.execute();
+	                }, 1
+	            );
+	        }
         }
     };
 
@@ -186,28 +188,28 @@ define(["model/script",
      * @post The view has received the current values of all output quantities.
      */
     Controller.prototype.execute = function() {
-        // Extra check to make sure that the model is complete
-        if (!this.script.isCompiled()) {
-            this.stop(false);
+        // Extra check to make sure that the model is complete and we are
+        // really (still) executing
+        if (!this.executing || !this.script.isCompiled()) {
+            this.stop();
             return;
         }
 
-        // Present the results to the view
-        this.presentResults(this.script.getOutputQuantities());
-
-        // If the number of iterations to be executed is >0, stop
-        // when the last iteration has just completed
-        if (this.numIterations > 0) {
-            if (this.currentIteration != this.numIterations) {
-                this.currentIteration++;
-            } else {
-                this.stop();
-            }
+        // Check whether another iteration should be made
+        if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
+        	// Present the results to the view
+    		this.presentResults(this.script.getOutputQuantities());
+            
+            // Signal the executable that one iteration has been completed,
+	        // for quantity history functionality
+	        this.script.exe.step();
+	        this.currentIteration++;
         }
 
-        // Signal the executable that one iteration has been completed,
-        // for quantity history functionality
-        this.script.exe.step();
+        // If specified number of iterations have been reached, stop executing
+        if (this.numIterations > 0 && this.currentIteration > this.numIterations) {
+        	this.stop();
+        }
     };
 
     /**
@@ -230,14 +232,11 @@ define(["model/script",
 
     /**
      * Stops script execution if currently executing,
-     * clears any quantity histories and resets the current
-     * iteration to 1.
+     * Resets current iteration to 1
      *
-     * @param recompile {Boolean} (Optional) Whether to recompile the script
-     * after stopping execution. Defaults to true
      * @post this.executing == false && this.currentIteration == 1
      */
-    Controller.prototype.stop = function(recompile) {
+    Controller.prototype.stop = function() {
         if (typeof recompile === 'undefined') {
             recompile = true;
         }
@@ -251,12 +250,6 @@ define(["model/script",
             this.status = "Stopped";
             this.view.setStatus(this.status);
             this.currentIteration = 1;
-
-            // Quick hack: recompile script to 'reset' everything
-            // TODO think of better implementation?
-            if (recompile) {
-                this.compileScript(this.script);
-            }
         }
     };
 
@@ -267,7 +260,7 @@ define(["model/script",
     Controller.prototype.newScript = function() {
         // Stop execution, create new script and let the view update the
         // quantity list
-        this.stop(false);
+        this.stop();
         this.script = new Script();
         this.view.setQuantities({});
 
@@ -357,7 +350,7 @@ define(["model/script",
                 'iterations is not greater than or equal to 0')
         }
 
-        this.stop(false);
+        this.stop();
         this.numIterations = iterations;
         if (this.autoExecute) {
             this.run();
@@ -414,7 +407,7 @@ define(["model/script",
         }
 
         // Stop script, add quantity to script and update quantities in view
-        this.stop(false);
+        this.stop();
         var qty = this.script.addQuantity(definition);
         this.view.setQuantities(this.script.getQuantities());
 
@@ -450,7 +443,7 @@ define(["model/script",
         }
 
         // Stop script, delete quantity from script and update quantities in view
-        this.stop(false);
+        this.stop();
         this.script.deleteQuantity(qtyName);
         this.view.setQuantities(this.script.getQuantities());
 
