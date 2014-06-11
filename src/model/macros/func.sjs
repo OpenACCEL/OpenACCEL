@@ -3,7 +3,7 @@ macro func {
     rule {
         ($x = $expr:expr)
     } => {
-        exe.$x = function($x) {
+        exe.$x = function() {
             // If a quantity is time dependant, look up if there exists a previous version.
             if (exe.report && exe.report.$x.isTimeDependent) {
                 if (exe.$x[exe.time] === undefined) {
