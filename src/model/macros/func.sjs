@@ -12,7 +12,12 @@ macro func {
                 return exe.$x.hist[exe.time];
             } else {
                 if (exe.$x.hist[0] === undefined || exe.$x.hasChanged) {
-                    exe.$x.hist[0] = exe.$x.expr();
+                    // initialize the values for user input
+                    if (exe.$x.report && exe.$x.report[$x].category === 1) {
+                        exe.$x.hist[0] = exe.$x.report[$x].input.parameters[0];
+                    } else {
+                         exe.$x.hist[0] = exe.$x.expr();
+                    }            
                     exe.$x.hasChanged = false;
                 }
                 return exe.$x.hist[0];
