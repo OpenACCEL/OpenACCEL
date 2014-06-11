@@ -122,13 +122,6 @@ define(["model/analyser/analyser",
         setExecutable: function(exe) {
             this.exe = exe;
             this.compiled = true;
-
-            // Synchronise user input quantity values 
-            var cat1quantities = this.getQuantitiesByCategory(1);
-            for (var qtyName in cat1quantities) {
-                this.exe['__' + qtyName + '__'].hist[0] = this.quantities[qtyName].value;
-                //this.setQuantityChanged(this.quantities[qtyName], true);
-            }
         },
 
         /**
