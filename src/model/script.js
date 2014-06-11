@@ -318,9 +318,15 @@ define(["model/analyser",
                 'not a category 1 (user-input) quantity')
             }
 
-            // Set values in exe and quantities
-            this.exe['__' + qtyName + '__'][0] = value;
+            // Update value in quantities array
             this.quantities[qtyName].value = value;
+
+            // Set value in exe if property for this quantity exists.
+            // It does not exist if the script has not been compiled yet
+            if (this.exe['__' + qtyName + '__']) {
+                this.exe['__' + qtyName + '__'][0] = value;
+            }
+            
 
             // Recursively flag the updated user input quantity and all it's reverse
             // dependencies as changed. First reset memoization datastructure!
@@ -341,7 +347,7 @@ define(["model/analyser",
                 return;
             }
 
-            if (this.exe['__' + quantity.name + '__'] === undefined) {
+            if (!this.exe['__' + quantity.name + '__']) {
                 return;
             }
 

@@ -49,6 +49,9 @@ define(["model/fileloader",
          */
         this.parser = parser;
 
+
+        this.script = null;
+
         /**
          * All the quantities in the script to be compiled.
          *
@@ -86,12 +89,48 @@ define(["model/fileloader",
      * @return {Object}         An object, containing an executable and information.
      */
     Compiler.prototype.compile = function(script) {
+        // Save the quantities of the script once so we don't have to query them every time in
+        // the recursive compiler methods further down
         this.quantities = script.getQuantities();
-        var code;
 
+        // The code will be incrementally "build"/generated and each intermediate result will be stored
+        // in this variable
+        var code;
+        
+        // Parse the script with the lexical scanner + parser. Do this before checking e.g. the time dependencies
+        // and setting user input values to make sure the script is valid first
+        code = this.parse(script.getSource());
+
+        // Determine all time-dependent quantities
+        this.determineTimeDependencies();
+
+        // Expand the macros in the parser-outputted code
+        code = this.macroExpander.expand(code, this.fileLoader.getMacros());
+        eval(this.fileLoader.getLibrary());
+
+        // Build the executable object by simply evaluating the generated/compiled javascript code,
+        // and return it
+        exe = eval(code);
+        exe.report = this.underscorifyKeys(script.getQuantities());
+
+        return {
+            report: script.getQuantities(),
+            exe: exe
+        };
+    };  
+
+    /**
+     * Parses the code using the generated lexical scanner and parser stored
+     * in this.parser. Throws SyntaxErrors if parsing fails.
+     *
+     * @param {String} code The code to parse.
+     * @return {String} The parsed code as returned by the parser.
+     * @throws {SyntaxError} If parsing fails
+     */
+    Compiler.prototype.parse = function(code) {
         // Parse the script and handle any syntax errors
         try {
-            code = this.parser.parse(script.getSource());
+            code = this.parser.parse(code);
         } catch (e) {
             var err = new SyntaxError();
                 
@@ -105,30 +144,13 @@ define(["model/fileloader",
             throw err;
         }
 
-        code = '(function () { exe = {}; exe.time = 0; exe.step = function() { this.time++; };' +
-            code +
-            'return exe; })()';
-
-
-        // Determine all time-dependent quantities
-        this.determineTimeDependencies();
-
-
-        
-        // Expand the macros in the parser-outputted code
-        code = this.macroExpander.expand(code, this.fileLoader.getMacros());
-        eval(this.fileLoader.getLibrary());
-        exe = eval(code);
-        exe.report = this.underscorifyKeys(script.getQuantities());
-        return {
-            report: script.getQuantities(),
-            exe: exe
-        };
-    };  
+        return code;
+    };
     
     /**
-     * Puts two underscores before and after each key of the fiven object
-     * @param  {Object} obj object to conver
+     * Puts two underscores before and after each key of the given object
+     *
+     * @param  {Object} obj object to convert
      * @return {Object}     converted object.
      */
     Compiler.prototype.underscorifyKeys = function(obj) {

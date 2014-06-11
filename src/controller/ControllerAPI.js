@@ -451,7 +451,7 @@ define(["model/script",
 
         // Stop script, delete quantity from script and update quantities in view
         this.stop(false);
-        this.script.deleteQuantity(qtyname);
+        this.script.deleteQuantity(qtyName);
         this.view.setQuantities(this.script.getQuantities());
 
         // Remove quantity from autosave store
