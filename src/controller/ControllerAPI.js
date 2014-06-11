@@ -246,6 +246,7 @@ define(["model/script",
             this.status = "Stopped";
             this.view.setStatus(this.status);
             this.currentIteration = 1;
+            this.script.exe.reset();
         }
     };
 
@@ -347,7 +348,6 @@ define(["model/script",
         }
 
         this.stop();
-        this.compileScript(this.script);
         this.numIterations = iterations;
         if (this.autoExecute) {
             this.run();
