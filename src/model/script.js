@@ -345,7 +345,7 @@ define(["model/analyser",
                 return;
             }
 
-            this.exe['__' + quantity.name + '__'].__hasChanged__ = true;
+            this.exe['__' + quantity.name + '__'].hasChanged = true;
             this.flaggedAsChanged.push(quantity.name);
             for (var dep in quantity.reverseDeps) {
                 this.setQuantityChanged(this.quantities[quantity.reverseDeps[dep]], true);

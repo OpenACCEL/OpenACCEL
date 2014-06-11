@@ -106,7 +106,7 @@ define(["model/fileloader",
             throw err;
         }
 
-        code = '(function () { exe = {}; exe.__time__ = 0; exe.step = function() { this.__time__++; };' +
+        code = '(function () { exe = {}; exe.time = 0; exe.step = function() { this.time++; };' +
             code +
             'return exe; })()';
 
