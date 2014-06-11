@@ -469,8 +469,7 @@ define(["model/script",
 
         	// Compile script and signal script that it has
         	// been compiled
-            script.exe = this.compiler.compile(script).exe;
-            script.compiled = true;
+            script.setExecutable(this.compiler.compile(script).exe);
             return true;
         } else {
             return false;

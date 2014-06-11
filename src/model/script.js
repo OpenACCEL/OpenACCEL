@@ -17,11 +17,11 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/analyser", 
+define(["model/analyser/analyser", 
         "model/quantity", 
         "underscore", 
         "model/parser",
-        "model/SyntaxError"], 
+        "model/exceptions/SyntaxError"], 
         function(Analyser, Quantity, _, parser, SyntaxError) {
     /**
      * @class Script
@@ -112,6 +112,23 @@ define(["model/analyser",
          */
         isCompiled: function() {
             return this.compiled;
+        },
+
+        /**
+         * Sets the given executable as the executable of this script
+         *
+         * @param {Object} exe The executable to set
+         */
+        setExecutable: function(exe) {
+            this.exe = exe;
+            this.compiled = true;
+
+            // Synchronise user input quantity values 
+            var cat1quantities = this.getQuantitiesByCategory(1);
+            for (var qtyName in cat1quantities) {
+                this.exe['__' + qtyName + '__'].hist[0] = this.quantities[qtyName].value;
+                //this.setQuantityChanged(this.quantities[qtyName], true);
+            }
         },
 
         /**
@@ -316,8 +333,6 @@ define(["model/analyser",
                     cat2quantities[q].value = "?";
                 }
             }
-
-            console.log(cat2quantities);
 
             return cat2quantities;
         },

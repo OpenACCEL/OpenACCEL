@@ -18,7 +18,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/parser'], /**@lends Model.Passes.Analyser*/ function(AnalyserPass, Quantity, parser) {
+define(['model/analyser/passes/analyserpass', 'model/quantity', 'model/parser'], /**@lends Model.Passes.Analyser*/ function(AnalyserPass, Quantity, parser) {
     /**
      * @class
      * @classdesc This pass is part of the Script Analyser and extracts:

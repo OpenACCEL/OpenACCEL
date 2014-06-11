@@ -26,7 +26,7 @@ define(["model/fileloader",
         "model/macroexpander",
         "underscore",
         "model/parser",
-        "model/SyntaxError"
+        "model/exceptions/SyntaxError"
     ], /**@lends Model*/
     function(FileLoader,
         MacroExpander,
@@ -128,10 +128,6 @@ define(["model/fileloader",
                 }
             }
 
-            // Set the values of all user input quantities in the exe to their current values. They might
-            // have changed before compilation so we have to synchronize them
-            this.setUserInputValues(exe, script);
-
             return {
                 report: script.getQuantities(),
                 exe: exe
@@ -164,20 +160,6 @@ define(["model/fileloader",
             }
 
             return code;
-        };
-
-        /**
-         * Synchronizes the values of all category 1 quantities in the given
-         * executable with their values stored in the given script.
-         *
-         * @param {Object} exe The executable in which to update the values.
-         * @param {Script} script The script of which to synchronize the user input values
-         */
-        Compiler.prototype.setUserInputValues = function(exe, script) {
-            var cat1quantities = script.getQuantitiesByCategory(1);
-            for (var qtyName in cat1quantities) {
-                exe['__' + qtyName + '__'][0] = script.getQuantity(qtyName).value;
-            }
         };
 
         /**

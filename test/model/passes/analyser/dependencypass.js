@@ -4,7 +4,7 @@ suite("DependencyPass", function() {
     var dependencyPass;
 
     setup(function(done) {
-        requirejs(['assert', 'model/passes/analyser/dependencypass'], function(Assert, DependencyPass) {
+        requirejs(['assert', 'model/analyser/passes/dependencypass'], function(Assert, DependencyPass) {
             console.log("Loaded 'DependencyPass' module.");
             assert = Assert;
             dependencyPass = new DependencyPass();
