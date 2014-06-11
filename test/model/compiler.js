@@ -167,6 +167,18 @@ suite("Compiler", function() {
                 output.exe.step();
             };
         });
+
+        test('reset', function() {
+            var code = 't = t{1} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            for (var i = 0; i < 1000; i++) {
+                output.exe.step();
+            };
+            exe.reset();
+            assert.equal(output.exe.__t__(), expected);
+        });
+
     });
 
     suite("history analysis tests", function() {

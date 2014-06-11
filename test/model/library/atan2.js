@@ -5,33 +5,34 @@
 suite("Atan2 Library", function() {
 
     var assert;
-    var macroExpander;
+    var compiler;
     var macros;
+    var script;
 
     setup(function(done) {
-        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, MacroExpander, FileLoader) {
+        requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
             console.log("Loaded 'Atan2' module.");
             assert = Assert;
-            macroExpander = new MacroExpander();
-            var fileLoader = new FileLoader();
-            fileLoader.load("func", "macros");
-            fileLoader.load("atan2", "library");
-            macros = fileLoader.getContent();
+            compiler = new Compiler();
+            script = Script;
             done();
         });
     });
-
-    suite("expansion", function() {
-        test("should expand for 'x = atan2(1,1)'", function() {
-            var input = "exe = {};func(y = atan2(4,8))";
-            var output = macroExpander.expand(input, macros);
-            assert.equal(Math.atan2(8, 4), eval(output)());
+    suite("atan2", function() {
+        test("x = atan2(1,1)", function() {
+            var input = "y = atan2(4,8)";
+            var output = compiler.compile(new script(input)).exe.__y__();
+            assert.equal(output, Math.atan2(8, 4));
         });
 
-        test("should expand for 'x = 5, y = atan2(x, 7) + 2, z = atan2(3, atan2(x, y))'", function() {
-            var input = "exe = {};func(x = 5)func(y = atan2(exe.x(), 7) + 2)func(z = atan2(3, atan2(exe.x(), exe.y())))";
-            var output = macroExpander.expand(input, macros);
-            assert.equal(Math.atan2(Math.atan2(Math.atan2(7, 5) + 2, 5), 3), eval(output)());
+        test("x = atan2(1,1)", function() {
+            var input = 
+            "x = 5\n" + 
+            "y = atan2(x, 7) + 2\n" +
+            "z = atan2(3, atan2(x, y))";
+            var output = compiler.compile(new script(input)).exe.__y__();
+            assert.equal(output, Math.atan2(8, 4));
         });
+
     });
 });

@@ -122,6 +122,12 @@ define(["model/fileloader",
                 this.time++;
             };
 
+            exe.reset = function() {
+                for (var qty in this.report) {
+                    this[qty].hist.length = 0;
+                }
+            }
+
             // Set the values of all user input quantities in the exe to their current values. They might
             // have changed before compilation so we have to synchronize them
             this.setUserInputValues(exe, script);
