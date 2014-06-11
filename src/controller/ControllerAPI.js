@@ -162,7 +162,7 @@ define(["model/script",
      * otherwise has been started over.
      */
     Controller.prototype.run = function() {
-        if (!this.executing && this.script.isCompiled()) {
+        if (this.script.isCompiled()) {
             // Update state
             this.executing = true;
             this.status = "Executing";
@@ -480,7 +480,6 @@ define(["model/script",
         	// Compile script and signal script that it has
         	// been compiled
             script.exe = this.compiler.compile(script).exe;
-            script.compiled = true;
             return true;
         } else {
             return false;
