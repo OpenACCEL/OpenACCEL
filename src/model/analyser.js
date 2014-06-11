@@ -52,11 +52,12 @@ define(["model/passes/analyser/quantitypass",
             this.scriptComplete = false;
 
             /**
-             * Object containing all category 2 (output) quantities, keyed by name.
+             * Object containing a partitioning of all quantities into the
+             * different categories.
              *
-             * @type {map<String, Quantity>}
+             * @type {map<[1-4], map<String, Quantity>>}
              */
-            this.outputQuantities = {};
+            this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
         }
 
         /**
@@ -69,11 +70,30 @@ define(["model/passes/analyser/quantitypass",
         };
 
         /**
+         * Returns an object containing all quantities of the given
+         * category
+         *
+         * @param {Integer} cat The category of which to return all quantities
+         * @return {map<String, Quantity>} Object containing all quantities in
+         * category cat.
+         */
+        Analyser.prototype.getQuantitiesByCategory = function(cat) {
+            return this.categories[cat];
+        };
+
+        /**
+         * Resets this.categories to initial empty value.
+         */
+        Analyser.prototype.resetCategoryStores = function() {
+            this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
+        };
+
+        /**
          * Returns an object containing all category 2 quantities,
          * keyed by quantity name.
          */
         Analyser.prototype.getOutputQuantities = function() {
-            return this.outputQuantities;
+            return this.getQuantitiesByCategory(2);
         };
 
         /**
@@ -104,8 +124,8 @@ define(["model/passes/analyser/quantitypass",
                 if (line.replace(/ +?/g, '') != '') {
                     // Handle comments
                     if (line.substring(0, 2) == '//') {
-                        // Ignore comments on first line of script for instance, only handle
-                        // those appearing after quantity definitions
+                        // Ignore comments on first line of script, only handle
+                        // those appearing _after_ a quantity definition
                         if (prevQuantity != null) {
                             prevQuantity.comment = line.substring(2, line.length);
                         }
@@ -130,12 +150,13 @@ define(["model/passes/analyser/quantitypass",
          * @modifies quantities, this.scriptComplete
          */
         Analyser.prototype.determineCategories = function(quantities) {
+            this.resetCategoryStores();
             this.scriptComplete = true;
-            this.outputQuantities = {};
 
             // Loop through all quantities
             for (var qtyName in quantities) {
                 var qty = quantities[qtyName];
+                var category = 0;
 
                 // If the quantity has not been defined yet, set category to 0
                 if (qty.todo) {
@@ -148,20 +169,24 @@ define(["model/passes/analyser/quantitypass",
                 qty.input.type = this.findUserInput(qty.definition);
                 if (qty.input.type !== null) {
                     // The quantity has an input element, so it is category 1
-                    quantities[qtyName].category = 1;
+                    category = 1;
                     qty.input.parameters = this.findInputParameters(qty.definition, qty.input.type);
                 } else if (qty.reverseDeps.length === 0) {
                     // If there are no quantities that depend on this quantity, it is category
                     // 2 (output)
-                    quantities[qtyName].category = 2;
-                    this.outputQuantities[qtyName] = qty;
+                    category = 2;
                 } else if (qty.dependencies.length === 0) {
                     // If the quantity has no dependencies, it is a category 3 (input) quantity
-                    quantities[qtyName].category = 3;
+                    category = 3;
                 } else {
                     // Has both dependencies and quantities that depend on this quantity: category 4
-                    quantities[qtyName].category = 4;
+                    category = 4;
                 }
+
+                // Add the quantity to the corresponding category set and set
+                // the category on the quantity itself
+                quantities[qtyName].category = category;
+                this.categories[category][qtyName] = qty;
             }
 
             return quantities;

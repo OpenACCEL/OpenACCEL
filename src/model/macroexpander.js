@@ -44,11 +44,6 @@ define([sweetModule], /**@lends Model*/ function(sweet) {
      * @return {String}     Expanded code, ready for evaluation.
      */
     MacroExpander.prototype.expand = function(code, macros) {
-        // First enclose the code within this container code
-        code = '(function () { exe = {}; exe.time = 0; exe.step = function() { this.time++; };' +
-            code +
-            'return exe; })()';
-
         code = macros.concat(code);
         var output;
 

@@ -162,7 +162,7 @@ define(["model/script",
      * otherwise has been started over.
      */
     Controller.prototype.run = function() {
-        if (!this.executing && this.script.isComplete()) {
+        if (!this.executing && this.script.isCompiled()) {
             // Update state
             this.executing = true;
             this.status = "Executing";
@@ -187,7 +187,7 @@ define(["model/script",
      */
     Controller.prototype.execute = function() {
         // Extra check to make sure that the model is complete
-        if (!this.script.isComplete()) {
+        if (!this.script.isCompiled()) {
             this.stop(false);
             return;
         }
@@ -475,8 +475,12 @@ define(["model/script",
     Controller.prototype.compileScript = function(script) {
         if (script.isComplete()) {
         	// Clear old results when recompiling
-        	this.view.presentResults({});		
+        	this.view.presentResults({});
+
+        	// Compile script and signal script that it has
+        	// been compiled
             script.exe = this.compiler.compile(script).exe;
+            script.compiled = true;
             return true;
         } else {
             return false;

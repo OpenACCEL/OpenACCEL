@@ -49,9 +49,6 @@ define(["model/fileloader",
          */
         this.parser = parser;
 
-
-        this.script = null;
-
         /**
          * All the quantities in the script to be compiled.
          *
@@ -105,13 +102,20 @@ define(["model/fileloader",
         this.determineTimeDependencies();
 
         // Expand the macros in the parser-outputted code
+        // First enclose the code within this container code
+        code = '(function () { exe = {}; exe.time = 0; exe.step = function() { this.time++; };' +
+            code +
+            'return exe; })()';
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());
-        eval(this.fileLoader.getLibrary());
 
-        // Build the executable object by simply evaluating the generated/compiled javascript code,
-        // and return it
+        // Build the executable object by simply evaluating the generated/compiled javascript code
+        eval(this.fileLoader.getLibrary());
         exe = eval(code);
         exe.report = this.underscorifyKeys(script.getQuantities());
+
+        // Set the values of all user input quantities in the exe to their current values. They might
+        // have changed before compilation so we have to synchronize them
+        this.setUserInputValues(exe, script);
 
         return {
             report: script.getQuantities(),
@@ -145,6 +149,20 @@ define(["model/fileloader",
         }
 
         return code;
+    };
+
+    /**
+     * Synchronizes the values of all category 1 quantities in the given
+     * executable with their values stored in the given script.
+     *
+     * @param {Object} exe The executable in which to update the values.
+     * @param {Script} script The script of which to synchronize the user input values
+     */
+    Compiler.prototype.setUserInputValues = function(exe, script) {
+        var cat1quantities = script.getQuantitiesByCategory(1);
+        for (var qtyName in cat1quantities) {
+            exe['__' + qtyName + '__'][0] = cat1quantities[qtyName].value;
+        }
     };
     
     /**

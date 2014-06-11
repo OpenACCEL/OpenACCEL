@@ -68,6 +68,13 @@ define(["model/analyser",
         this.exe = null;
 
         /**
+         * Whether the script has been compiled.
+         *
+         * @type {Boolean}
+         */
+        this.compiled = false;
+
+        /**
          * Contains the quantities that together make up the ACCEL script.
          *
          * @type {map<String, Quantity>}
@@ -96,6 +103,15 @@ define(["model/analyser",
          */
         isComplete: function() {
             return this.analyser.isScriptComplete() && Object.keys(this.quantities).length > 0;
+        },
+
+        /**
+         * Returns whether the script has been compiled and is thus ready to be executed.
+         *
+         * @return {Boolean} this.compiled
+         */
+        isCompiled: function() {
+            return this.compiled;
         },
 
         /**
@@ -287,10 +303,10 @@ define(["model/analyser",
          * @return this.analyser.getOutputQuantities()
          */
         getOutputQuantities: function() {
-            var cat2quantities = this.analyser.getOutputQuantities();
+            var cat2quantities = this.analyser.getQuantitiesByCategory(2);
 
-            // Populate object with quantity values if script can be evaluated
-            if (this.isComplete()) {
+            // Populate object with quantity values if script has been compiled
+            if (this.isCompiled()) {
                 for (q in cat2quantities) {
                     cat2quantities[q].value = this.getQuantityValue(q);
                 }
@@ -302,6 +318,23 @@ define(["model/analyser",
             }
 
             return cat2quantities;
+        },
+
+        /**
+         * Returns an object containing all quantities of the given
+         * category. For category 2, output quantities, also retrieves their
+         * current values from the executable if the script has been compiled.
+         *
+         * @param {Integer} cat The category of which to return all quantities
+         * @return {map<String, Quantity>} Object containing all quantities in
+         * category cat.
+         */
+        getQuantitiesByCategory: function(cat) {
+            if (cat == 2) {
+                return this.getOutputQuantities();
+            } else {
+                return this.analyser.getQuantitiesByCategory(cat);
+            }
         },
 
         /**
@@ -321,23 +354,22 @@ define(["model/analyser",
             // Update value in quantities array
             this.quantities[qtyName].value = value;
 
-            // Set value in exe if property for this quantity exists.
-            // It does not exist if the script has not been compiled yet
-            if (this.exe['__' + qtyName + '__']) {
+            // Only update values if script has been compiled!
+            if (this.isCompiled()) {
                 this.exe['__' + qtyName + '__'][0] = value;
-            }
-            
 
-            // Recursively flag the updated user input quantity and all it's reverse
-            // dependencies as changed. First reset memoization datastructure!
-            this.flaggedAsChanged = [];
-            this.setQuantityChanged(this.quantities[qtyName], true);
+                // Recursively flag the updated user input quantity and all it's reverse
+                // dependencies as changed. First reset memoization datastructure!
+                this.flaggedAsChanged = [];
+                this.setQuantityChanged(this.quantities[qtyName], true);
+            }
         },
 
         /**
          * Recursively sets whether the given quantity and all of it's reverse 
          * dependencies have been modified.
          *
+         * @pre this.isCompiled() == true
          * @param {Quantity} quantity The quantity to use as starting point. All of it's reverse dependencies, if any, are set recursively.
          * @param {Boolean} changed Whether to mark quantity and it's reverse dependencies as changed or not.
          */
@@ -361,14 +393,18 @@ define(["model/analyser",
         /**
          * Does all things that should be done when the script has changed:
          * - Re-evaluates the category of all quantities
+         * - Updates various state variables
          *
          * Call this method when this.quantities has been modified.
          *
          * @modifies this.quantities
-         * @post The categories of all quantities have been determined and set.
+         * @post The categories of all quantities have been determined and set
+         * and the state has been updated
          */
         scriptChanged: function() {
             this.scriptModified = true;
+            this.compiled = false;
+            this.exe = null;
             
             // Determine categories of all quantities
             this.analyser.determineCategories(this.quantities);
