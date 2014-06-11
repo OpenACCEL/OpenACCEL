@@ -249,7 +249,8 @@ quantityFuncDef     :  funcDef '=' expr
 quantityName        : IDENTIFIER
                        { $$ = '__' + $1 + '__'; } 
                     ;                    
-funcDef             :  quantityName '(' (STDFUNCTION | INPUTFUNCTION | quantityName) (funcDefAdditionalArg)* ')'
+dummy               : STDFUNCTION | INPUTFUNCTION | quantityName;
+funcDef             :  quantityName '(' dummy (funcDefAdditionalArg)* ')'
                        {{
                            var funcName = $1 + $2 + $3;
                            if ($4 && $4.length > 0) {
@@ -259,7 +260,7 @@ funcDef             :  quantityName '(' (STDFUNCTION | INPUTFUNCTION | quantityN
                            }
                        }}
                     ;
-funcDefAdditionalArg:  ',' (STDFUNCTION | INPUTFUNCTION | quantityName)
+funcDefAdditionalArg:  ',' dummy
                        { $$ = $2 }
                     ;
 quantityDef         :  quantityName '=' expr (UNIT)?
@@ -356,7 +357,7 @@ funcCall            :  STDFUNCTION '(' expr? (funcCallArgList)* ')'
                        }}
                     |  INPUTFUNCTION '(' expr? (funcCallArgList)* ')'
                        {{
-                          $$ = 'null';
+                          $$ = 'exe.$x[0]'; // This makes sure the assigment in sweet does not change the value
                        }}
                     |  quantityName '(' expr? (funcCallArgList)* ')'
                        {{
@@ -372,7 +373,7 @@ funcCallArgList     :  ',' expr
                        { $$ = $2; }
                     ;
 
-quantifier          :  '#(' (quantityName | STDFUNCTION | INPUTFUNCTION) ',' expr ',' expr ',' STDFUNCTION ')'
+quantifier          :  '#(' dummy ',' expr ',' expr ',' STDFUNCTION ')'
                        { $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
                     ;
 at                  :  '@(' expr  ','  expr  ')'
