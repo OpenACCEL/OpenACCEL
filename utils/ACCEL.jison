@@ -19,7 +19,7 @@ digit       [0-9]
 esc         \\\\
 int         (-)?(?:[0-9]|[1-9][0-9]+)
 exp         (?:[eE][-+]?[0-9]+)
-frac        (?:\\.[0-9]+)
+frac        (?:\.[0-9]+)
 unit        [a-zA-Z]+[0-9]*  
 
 
@@ -128,6 +128,16 @@ unit        [a-zA-Z]+[0-9]*
         'vTranspose',
         'vVecRamp'
     ];
+
+    yy.reservedwords = 
+    [
+        'true',
+        'false',
+        'PI',
+        'E'
+    ];
+    yy.reservedwords.push.apply(yy.reservedwords, yy.inputfunctions);
+    yy.reservedwords.push.apply(yy.reservedwords, yy.stdfunctions);
 %}               
 
 
@@ -223,7 +233,9 @@ script                  : (scriptLine)* (scriptFinalLine)?
                             if ($1) {
                                 var length = $1.length;
                                 for (var i = 0; i < length; i++) {
-                                    output += "\n func(" + $1[i] + ")";
+                                    if($1[i]) {
+                                        output += "\n func(" + $1[i] + ")";
+                                    }
                                 }
                             }
 
@@ -234,9 +246,12 @@ script                  : (scriptLine)* (scriptFinalLine)?
                             return output;
                         }}
                         ;
-scriptLine              :   LINEBREAK 
+scriptLine              :   LINEBREAK
+                            { $$ = null } 
                         |   quantity LINEBREAK 
-                        |   comment LINEBREAK;
+                        |   comment LINEBREAK
+                            { $$ = null }
+                        ;
 scriptFinalLine         :   quantity
                         |   comment;
 
@@ -276,7 +291,7 @@ comment                 :   COMMENT
 
 /** Expressions */
 expr                    :   term | arith;
-term                    :   scalarTerm | vectorExpr;
+term                    :   scalarTerm | vectorExpr | scalarConst;
 
 
 /* Arithmetic */
@@ -319,7 +334,7 @@ binArith                :  /* Operator precedence defined above */
 
 
 /* Scalars */
-scalarTerm              :   scalarVar | scalarConst | funcCall | quantifier | brackets | vectorCall | historyVar | at;
+scalarTerm              :   scalarVar | funcCall | quantifier | brackets | vectorCall | historyVar | at;
 scalarVar               :   quantityName
                             { $$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : exe.' + $1 + '())'; }
                         |   STDFUNCTION

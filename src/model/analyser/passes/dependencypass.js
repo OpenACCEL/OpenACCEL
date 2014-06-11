@@ -59,8 +59,7 @@ define(['model/analyser/passes/analyserpass', 'model/quantity', 'model/parser'],
             // as well.
             if (quantity.parameters.indexOf(d) == -1 &&
                 quantity.dependencies.indexOf(d) == -1 &&
-                parser.yy.stdfunctions.indexOf(d) == -1 &&
-                parser.yy.inputfunctions.indexOf(d) == -1) {
+                parser.yy.reservedwords.indexOf(d) == -1) {
                 
                 quantity.dependencies.push(d);
 
