@@ -26,7 +26,7 @@ unit        [a-zA-Z]+[0-9]*
 /** Initialization code */
 %{
     /** Define error handler */
-    yy.parser.parseError = function(message, hash) {
+    yy.parser.parseError = this.parseError = yy.parseError = function(message, hash) {
         throw {message: message, hash: hash};
     }
 

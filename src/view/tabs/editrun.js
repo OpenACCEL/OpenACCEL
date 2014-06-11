@@ -37,7 +37,11 @@ function addQuantity(string) {
 
     setTimeout(
         function() {
-            controller.addQuantity(string);
+            try {
+                controller.addQuantity(string);
+            } catch (e) {
+                console.log(e.message);
+            }
         },
         10
     );

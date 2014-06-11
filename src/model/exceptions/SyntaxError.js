@@ -31,6 +31,7 @@ define([], /**@lends Model*/ function() {
         this.endPos = 0;
         this.found = '';
         this.expected = [];
+        this.message = "";
     }
 
     // Exports are needed, such that other modules may invoke methods from this module file.

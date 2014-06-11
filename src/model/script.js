@@ -246,6 +246,7 @@ define(["model/analyser/analyser",
                 err.lastLine = e.hash.loc.last_line;
                 err.startPos = e.hash.loc.first_column;
                 err.endPos = e.hash.loc.last_column;
+                err.message = e.message;
 
                 throw err;
             }
