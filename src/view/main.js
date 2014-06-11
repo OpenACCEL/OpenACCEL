@@ -32,8 +32,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
      */
     View.prototype.presentResults = function(cat2quantities) {
         synchronizeResults(cat2quantities);
-        //Shows iterative execution
-        console.log('Output');
     };
 
     /**

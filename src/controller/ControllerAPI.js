@@ -480,6 +480,7 @@ define(["model/script",
         	// Compile script and signal script that it has
         	// been compiled
             script.exe = this.compiler.compile(script).exe;
+            script.compiled = true;
             return true;
         } else {
             return false;

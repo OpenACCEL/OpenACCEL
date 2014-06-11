@@ -317,6 +317,8 @@ define(["model/analyser",
                 }
             }
 
+            console.log(cat2quantities);
+
             return cat2quantities;
         },
 
