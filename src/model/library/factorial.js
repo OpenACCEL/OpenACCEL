@@ -1,4 +1,4 @@
-function fact(x) {
+function factorial(x) {
     return zip([x], function(a) {
 
         var factNum = [
