@@ -103,7 +103,20 @@ define(["model/fileloader",
 
         // Expand the macros in the parser-outputted code
         // First enclose the code within this container code
-        code = '(function () { exe = {}; exe.time = 0; exe.step = function() { this.time++; };' +
+        code = 
+            '(function () { \
+            exe = {}; \
+            exe.time = 0; \
+            exe.step = function() { \
+                this.time++; \
+                if (this.report) { \
+                    for (var qty in this.report) { \
+                        if (this.report[qty].isTimeDependent) { \
+                            this[qty](); \
+                        } \
+                    } \
+                } \
+            };' +
             code +
             'return exe; })()';
         code = this.macroExpander.expand(code, this.fileLoader.getMacros());

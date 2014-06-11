@@ -157,6 +157,16 @@ suite("Compiler", function() {
                 output.exe.step();
             };
         });
+
+        test('default settings x = y \n y = y{1} + 1 \n z = x{1} + 1', function() {
+            var code = 'x = y \n y = y{1} + 1 \n z = x{1} + 1';
+            var output = compiler.compile(new Script(code));
+            var expected = 1;
+            for (var i = 0; i < 1000; i++) {
+                assert.equal(output.exe.__z__(), expected + i);
+                output.exe.step();
+            };
+        });
     });
 
     suite("history analysis tests", function() {
