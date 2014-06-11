@@ -352,6 +352,7 @@ define(["model/script",
 
         this.stop();
         this.numIterations = iterations;
+        this.compileScript(this.script);
         if (this.autoExecute) {
             this.run();
         }
