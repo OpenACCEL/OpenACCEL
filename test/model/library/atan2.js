@@ -30,8 +30,8 @@ suite("Atan2 Library", function() {
             "x = 5\n" + 
             "y = atan2(x, 7) + 2\n" +
             "z = atan2(3, atan2(x, y))";
-            var output = compiler.compile(new script(input)).exe.__y__();
-            assert.equal(output, Math.atan2(8, 4));
+            var output = compiler.compile(new script(input)).exe.__z__();
+            assert.equal(output, Math.atan2(Math.atan2(Math.atan2(7, 5) + 2, 5), 3));
         });
 
     });
