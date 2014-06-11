@@ -57,7 +57,11 @@ define(['model/passes/analyser/analyserpass', 'model/quantity', 'model/parser'],
             // is local to this definition and if not, add it as a dependency. Also, a single
             // variable can occur multiple times in the rhs of a definition. Check this
             // as well.
-            if (quantity.parameters.indexOf(d) == -1 && quantity.dependencies.indexOf(d) == -1 && parser.yy.stdfunctions.indexOf(d) == -1) {
+            if (quantity.parameters.indexOf(d) == -1 &&
+                quantity.dependencies.indexOf(d) == -1 &&
+                parser.yy.stdfunctions.indexOf(d) == -1 &&
+                parser.yy.inputfunctions.indexOf(d) == -1) {
+                
                 quantity.dependencies.push(d);
 
                 // It could be that it is used in multiple definitions while being

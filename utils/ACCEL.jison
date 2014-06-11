@@ -30,14 +30,17 @@ unit                        [a-zA-Z]+[0-9]*
         throw {message: message, hash: hash};
     }
 
-    /* List of all built-in ACCEL functions */
-    yy.stdfunctions = [
+    /* List of all ACCEL user-input functions */
+    yy.inputfunctions = [
       /* Input elements */
       'slider',
       'input',
       'check',
-      'button',
+      'button'
+    ];
 
+    /* List of all built-in ACCEL functions */
+    yy.stdfunctions = [
       /* Functions */
       'abs',
       'acos',
@@ -47,9 +50,7 @@ unit                        [a-zA-Z]+[0-9]*
       'atan',
       'atan2',
       'bin',
-      'button',
       'ceil',
-      'check',
       'cond',
       'cos',
       'cursorB',
@@ -74,7 +75,6 @@ unit                        [a-zA-Z]+[0-9]*
       'iSpike',
       'if',
       'imply',
-      'input',
       'lessThan',
       'lessThanEqual',
       'ln',
@@ -98,7 +98,6 @@ unit                        [a-zA-Z]+[0-9]*
       'random',
       'round',
       'sin',
-      'slider',
       'sqrt',
       'subtract',
       'tan',
@@ -150,10 +149,12 @@ unit                        [a-zA-Z]+[0-9]*
 \bE\b                                                       { return 'E'; }
 \btrue\b                                                    { return 'TRUE'; }
 \bfalse\b                                                   { return 'FALSE'; }
-\b\w*[a-zA-Z_]\w*\b                                         %{ if (yy.stdfunctions.indexOf(yytext) == -1) {
-                                                                  return 'IDENTIFIER'; 
-                                                               } else { 
+\b\w*[a-zA-Z_]\w*\b                                         %{ if (yy.stdfunctions.indexOf(yytext) > -1) {
                                                                   return 'STDFUNCTION'; 
+                                                               } else if (yy.inputfunctions.indexOf(yytext) > -1) {
+                                                                  return 'INPUTFUNCTION';
+                                                               } else { 
+                                                                  return 'IDENTIFIER'; 
                                                                } 
                                                             %}
 "("                                                         { return '('; }
@@ -248,7 +249,7 @@ quantityFuncDef     :  funcDef '=' expr
 quantityName        : IDENTIFIER
                        { $$ = '__' + $1 + '__'; } 
                     ;                    
-funcDef             :  quantityName '(' (STDFUNCTION | quantityName) (funcDefAdditionalArg)* ')'
+funcDef             :  quantityName '(' (STDFUNCTION | INPUTFUNCTION | quantityName) (funcDefAdditionalArg)* ')'
                        {{
                            var funcName = $1 + $2 + $3;
                            if ($4 && $4.length > 0) {
@@ -258,7 +259,7 @@ funcDef             :  quantityName '(' (STDFUNCTION | quantityName) (funcDefAdd
                            }
                        }}
                     ;
-funcDefAdditionalArg:  ',' (STDFUNCTION | quantityName)
+funcDefAdditionalArg:  ',' (STDFUNCTION | INPUTFUNCTION | quantityName)
                        { $$ = $2 }
                     ;
 quantityDef         :  quantityName '=' expr (UNIT)?
@@ -321,6 +322,7 @@ scalarTerm          :  scalarVar | scalarConst | funcCall | quantifier | bracket
 scalarVar           :  quantityName
                        { $$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : exe.' + $1 + '())'; }
                     |  STDFUNCTION
+                    |  INPUTFUNCTION
                     ;
 historyVar          :  scalarVar '{' expr '}'
                        { $$ = "history(" + $1 + "," + $3 + ")"; }
@@ -352,6 +354,10 @@ funcCall            :  STDFUNCTION '(' expr? (funcCallArgList)* ')'
                                $$ = funcCall + $5;
                            }
                        }}
+                    |  INPUTFUNCTION '(' expr? (funcCallArgList)* ')'
+                       {{
+                          $$ = 'null';
+                       }}
                     |  quantityName '(' expr? (funcCallArgList)* ')'
                        {{
                             var funcCall = 'exe.' + $1 + $2 + ($3 || '');
@@ -366,7 +372,7 @@ funcCallArgList     :  ',' expr
                        { $$ = $2; }
                     ;
 
-quantifier          :  '#(' (quantityName | STDFUNCTION) ',' expr ',' expr ',' STDFUNCTION ')'
+quantifier          :  '#(' (quantityName | STDFUNCTION | INPUTFUNCTION) ',' expr ',' expr ',' STDFUNCTION ')'
                        { $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
                     ;
 at                  :  '@(' expr  ','  expr  ')'
@@ -405,6 +411,8 @@ vectorElem          :  STRING ':' expr
                        { $$ = { index:'\'' + $1 + '\'', value:$3}; }
                     |  STDFUNCTION ':' expr
                        { $$ = { index:'\'' + $1 + '\'', value:$3}; }
+                    |  INPUTFUNCTION ':' expr
+                       { $$ = { index:'\'' + $1 + '\'', value:$3}; }
                     |  NUMBER ':' expr
                        { $$ = { index:'\'' + $1 + '\'', value:$3}; }
                     |  expr
@@ -416,6 +424,8 @@ vectorCall          :  scalarTerm '[' expr ']'
                     |  scalarTerm '.' IDENTIFIER
                        { $$ = $1 + $2 + $3; }
                     |  scalarTerm '.' STDFUNCTION
+                       { $$ = $1 + $2 + $3; }  
+                    |  scalarTerm '.' INPUTFUNCTION
                        { $$ = $1 + $2 + $3; }  
                     |  scalarTerm '.' NUMBER
                        { $$ = $1 + '[' + $3 + ']'; } 
