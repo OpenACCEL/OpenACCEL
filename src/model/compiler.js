@@ -161,7 +161,7 @@ define(["model/fileloader",
     Compiler.prototype.setUserInputValues = function(exe, script) {
         var cat1quantities = script.getQuantitiesByCategory(1);
         for (var qtyName in cat1quantities) {
-            exe['__' + qtyName + '__'][0] = cat1quantities[qtyName].value;
+            exe['__' + qtyName + '__'][0] = script.getQuantity(qtyName).value;
         }
     };
     
