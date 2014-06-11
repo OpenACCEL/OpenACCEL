@@ -1,37 +1,31 @@
 suite("Modulo Library", function() {
 
     var assert;
-    var macroExpander;
+    var compiler;
     var macros;
+    var script;
 
     setup(function(done) {
-        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, MacroExpander, FileLoader) {
-            console.log("Loaded 'Modulo' module.");
+        requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
+            console.log("Loaded 'modulo' module.");
             assert = Assert;
-            macroExpander = new MacroExpander();
-            var fileLoader = new FileLoader();
-            fileLoader.load("func", "macros");
-            fileLoader.load("modulo", "library");
-            fileLoader.load("unaryZip", "library");
-            fileLoader.load("binaryZip", "library");
-            fileLoader.load("multiaryZip", "library");
-            fileLoader.load("zip", "library");
-            macros = fileLoader.getContent();
+            compiler = new Compiler();
+            script = Script;
             done();
         });
     });
-
-    suite("expansion", function() {
-        test("should expand for 'x = modulo(5,4)'", function() {
-            var input = "exe = {};func(y = modulo(5, 4))";
-            var output = macroExpander.expand(input, macros);
-            assert.equal(5 % 4, eval(output)());
+    suite("modulo", function() {
+        test("x = modulo(5, 4)", function() {
+            var input = "x = modulo(5, 4)";
+            var output = compiler.compile(new script(input)).exe.__x__();
+            assert.equal(output, 5 % 4);
         });
 
-        test("should expand for 'x = 5, y = modulo(x,4) + 2, z = modulo(modulo(x,2),y)'", function() {
-            var input = "exe = {};func(x = 5)func(y = modulo(exe.x(),4) + 2)func(z = modulo(modulo(exe.x(), 2), exe.y()))";
-            var output = macroExpander.expand(input, macros);
-            assert.equal((5 % 2) % (5 % 4 + 2), eval(output)());
+        test("x = 5, y = modulo(x,4) + 2, z = modulo(modulo(x,2),y)", function() {
+            var input = "x = 5\n y = modulo(x,4) + 2\n z = modulo(modulo(x,2),y)";
+            var output = compiler.compile(new script(input)).exe.__z__();
+            assert.equal(output, (5 % 2) % (5 % 4 + 2));
         });
+
     });
 });

@@ -1,33 +1,35 @@
 suite("Log Library", function() {
 
     var assert;
-    var macroExpander;
+    var compiler;
     var macros;
+    var script;
 
     setup(function(done) {
-        requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, Compiler, FileLoader) {
+        requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
             console.log("Loaded 'Log' module.");
             assert = Assert;
-            macroExpander = new Compiler();
-            var fileLoader = new FileLoader();
-            fileLoader.load("func", "macros");
-            fileLoader.load("log", "library");
-            macros = fileLoader.getContent();
+            compiler = new Compiler();
+            script = Script;
             done();
         });
     });
-
-    suite("expansion", function() {
-        test("should expand for 'x = log(5)'", function() {
-            var input = "exe = {};func(y = log(5))";
-            var output = macroExpander.expand(input, macros);
-            assert.equal(Math.log(5) / Math.log(10), eval(output)());
+    suite("log", function() {
+        test("x = log(5)", function() {
+            var input = "x = log(5)";
+            var output = compiler.compile(new script(input)).exe.__x__();
+            assert.equal(output, Math.log(5) / Math.log(10));
         });
 
-        test("should expand for 'x = 5, y = log(x) + 2, z = log(log(x) + log(y))'", function() {
-            var input = "exe = {};func(x = 5)func(y = log(exe.x()) + 2)func(z = log(log(exe.x()) + log(exe.y())))";
-            var output = macroExpander.expand(input, macros);
-            assert.equal(Math.log(Math.log(5) / Math.log(10) + Math.log(Math.log(5) / Math.log(10) + 2) / Math.log(10)) / Math.log(10), eval(output)());
+        test("x = 5, y = log(x) + 2, z = log(log(x) + log(y))", function() {
+            var input = 
+            "x = 5\n" + 
+            "y = log(x) + 2\n" +
+            "z = log(log(x) + log(y))";
+            var output = compiler.compile(new script(input)).exe.__z__();
+            assert.equal(output, Math.log(Math.log(5) / Math.log(10) + Math.log(Math.log(5) / Math.log(10) + 2) / Math.log(10)) / Math.log(10));
         });
+
     });
+
 });

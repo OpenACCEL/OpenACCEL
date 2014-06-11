@@ -1,6 +1,6 @@
 //This function was taken from keesvanoverveld.com
 function vNormAbs(x) {
-    x = __objectToArray__(x);
+    x = objectToArray(x);
     if (x instanceof Array) {
         var a = 0;
         for (i in x) {

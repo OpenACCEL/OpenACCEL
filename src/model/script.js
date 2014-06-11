@@ -17,7 +17,12 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Quantity, _) {
+define(["model/analyser/analyser", 
+        "model/quantity", 
+        "underscore", 
+        "model/parser",
+        "model/exceptions/SyntaxError"], 
+        function(Analyser, Quantity, _, parser, SyntaxError) {
     /**
      * @class Script
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
@@ -33,6 +38,11 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          * @type {Analyser}
          */
         this.analyser = new Analyser();
+
+        /**
+         * The parser used to parse the quantity definitions and do syntax checking.
+         */
+        this.parser = parser;
 
         /**
          * The source of the ACCEL script, as provided by the user.
@@ -56,6 +66,13 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          * @type {String}
          */
         this.exe = null;
+
+        /**
+         * Whether the script has been compiled.
+         *
+         * @type {Boolean}
+         */
+        this.compiled = false;
 
         /**
          * Contains the quantities that together make up the ACCEL script.
@@ -86,6 +103,25 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          */
         isComplete: function() {
             return this.analyser.isScriptComplete() && Object.keys(this.quantities).length > 0;
+        },
+
+        /**
+         * Returns whether the script has been compiled and is thus ready to be executed.
+         *
+         * @return {Boolean} this.compiled
+         */
+        isCompiled: function() {
+            return this.compiled;
+        },
+
+        /**
+         * Sets the given executable as the executable of this script
+         *
+         * @param {Object} exe The executable to set
+         */
+        setExecutable: function(exe) {
+            this.exe = exe;
+            this.compiled = true;
         },
 
         /**
@@ -143,7 +179,7 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
                 'script not compiled because incomplete')
             }
 
-            return this.exe[qtyName]();
+            return this.exe['__' + qtyName + '__']();
         },
 
         /**
@@ -154,11 +190,18 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          * @modifies quantities
          * @post The quantity defined in source has been added to the script, the category of all
          * quantities has been re-evaluated and the script has been recompiled if complete.
+         * @return {Quantity} The quantity defined in the given piece of code.
+         * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
          */
         addQuantity: function(source) {
+            // First check whether the given piece of script is valid ACCEL code
+            this.checkSyntax(source);
+
             // Analyse the added line of code and add the defined quantity to the model
-            this.analyser.analyse(source, this.quantities);
+            var qty = this.analyser.analyse(source, this.quantities);
             this.scriptChanged();
+
+            return qty;
         },
 
         /**
@@ -167,13 +210,48 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          * definitions!
          *
          * @param {String} source The piece of ACCEL script to add to the model.
+         * @modifies quantities
          * @post All quantities defined in source have been added to the model,
          * including any comments.
+         * @return {Quantity} The last quantity defined in the given script.
+         * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
          */
         addSource: function(source) {
+            // First check whether the given piece of script is valid ACCEL code
+            this.checkSyntax(source);
+
             // Analyse the added line of code and add the defined quantity to the model
-            this.analyser.analyse(source, this.quantities);
+            var qty = this.analyser.analyse(source, this.quantities);
             this.scriptChanged();
+
+            return qty;
+        },
+
+        /**
+         * Returns whether the given piece of script is valid ACCEL code.
+         *
+         * @param {String} source The piece of script of which to check the syntax
+         * @return Whether source is valid ACCEL code
+         * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
+         */
+        checkSyntax: function(source) {
+            try {
+                this.parser.parse(source);
+            } catch (e) {
+                var err = new SyntaxError();
+                
+                err.found = e.hash.text;
+                err.expected = e.hash.expected;
+                err.firstLine = e.hash.loc.first_line;
+                err.lastLine = e.hash.loc.last_line;
+                err.startPos = e.hash.loc.first_column;
+                err.endPos = e.hash.loc.last_column;
+                err.message = e.message;
+
+                throw err;
+            }
+
+            return true;
         },
 
         /**
@@ -236,10 +314,10 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
          * @return this.analyser.getOutputQuantities()
          */
         getOutputQuantities: function() {
-            var cat2quantities = this.analyser.getOutputQuantities();
+            var cat2quantities = this.analyser.getQuantitiesByCategory(2);
 
-            // Populate object with quantity values if script can be evaluated
-            if (this.isComplete()) {
+            // Populate object with quantity values if script has been compiled
+            if (this.isCompiled()) {
                 for (q in cat2quantities) {
                     cat2quantities[q].value = this.getQuantityValue(q);
                 }
@@ -251,6 +329,23 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
             }
 
             return cat2quantities;
+        },
+
+        /**
+         * Returns an object containing all quantities of the given
+         * category. For category 2, output quantities, also retrieves their
+         * current values from the executable if the script has been compiled.
+         *
+         * @param {Integer} cat The category of which to return all quantities
+         * @return {map<String, Quantity>} Object containing all quantities in
+         * category cat.
+         */
+        getQuantitiesByCategory: function(cat) {
+            if (cat == 2) {
+                return this.getOutputQuantities();
+            } else {
+                return this.analyser.getQuantitiesByCategory(cat);
+            }
         },
 
         /**
@@ -267,20 +362,31 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
                 'not a category 1 (user-input) quantity')
             }
 
-            // Set values in exe and quantities
-            this.exe[qtyName][0] = value;
+            // Update value in quantities array
             this.quantities[qtyName].value = value;
 
-            // Recursively flag the updated user input quantity and all it's reverse
-            // dependencies as changed. First reset memoization datastructure!
-            this.flaggedAsChanged = [];
-            this.setQuantityChanged(this.quantities[qtyName], true);
+            // Only update values if script has been compiled!
+            if (this.isCompiled()) {
+                this.exe['__' + qtyName + '__'].hist[0] = value;
+
+                // Recursively flag the updated user input quantity and all it's reverse
+                // dependencies as changed. First reset memoization datastructure!
+                this.flaggedAsChanged = [];
+                this.setQuantityChanged(this.quantities[qtyName], true);
+
+                // Because of the fact that a cat 1 expression evaluates to 'null' in Jison,
+                // we'll have to set hasChanged back to false, as the controller already updates the expression.
+                // There is no need to re-evaulate the expression for this cat 1 input.
+                // If we evaluate it, it gets set to null which is not what we want.
+                this.exe['__' + qtyName + '__'].hasChanged = false;
+            }
         },
 
         /**
          * Recursively sets whether the given quantity and all of it's reverse 
          * dependencies have been modified.
          *
+         * @pre this.isCompiled() == true
          * @param {Quantity} quantity The quantity to use as starting point. All of it's reverse dependencies, if any, are set recursively.
          * @param {Boolean} changed Whether to mark quantity and it's reverse dependencies as changed or not.
          */
@@ -290,11 +396,11 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
                 return;
             }
 
-            if (this.exe[quantity.name] === undefined) {
+            if (!this.exe['__' + quantity.name + '__']) {
                 return;
             }
 
-            this.exe[quantity.name].__hasChanged__ = true;
+            this.exe['__' + quantity.name + '__'].hasChanged = true;
             this.flaggedAsChanged.push(quantity.name);
             for (var dep in quantity.reverseDeps) {
                 this.setQuantityChanged(this.quantities[quantity.reverseDeps[dep]], true);
@@ -304,14 +410,18 @@ define(["model/analyser", "model/quantity", "underscore"], function(Analyser, Qu
         /**
          * Does all things that should be done when the script has changed:
          * - Re-evaluates the category of all quantities
+         * - Updates various state variables
          *
          * Call this method when this.quantities has been modified.
          *
          * @modifies this.quantities
-         * @post The categories of all quantities have been determined and set.
+         * @post The categories of all quantities have been determined and set
+         * and the state has been updated
          */
         scriptChanged: function() {
             this.scriptModified = true;
+            this.compiled = false;
+            this.exe = null;
             
             // Determine categories of all quantities
             this.analyser.determineCategories(this.quantities);

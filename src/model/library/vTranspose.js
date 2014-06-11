@@ -1,6 +1,6 @@
 //This function was taken from keesvanoverveld.com
 function vTranspose(x) {
-    x = __objectToArray__(x);
+    x = objectToArray(x);
     if (x instanceof Array) {
         var trueMatrix = false;
         for (i in x) {

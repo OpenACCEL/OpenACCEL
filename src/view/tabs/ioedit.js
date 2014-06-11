@@ -1,5 +1,9 @@
 function editScript(script) {
-	controller.setScriptFromSource(script)
+	try {
+		controller.setScriptFromSource(script);
+	} catch (e) {
+		console.log(e.message);
+	}
 }
 
 var showValues = false;

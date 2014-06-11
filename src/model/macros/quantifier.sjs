@@ -1,4 +1,4 @@
-let __quantifier__ = macro {
+let quantifier = macro {
     rule {
         ($dummy:ident, $domain:expr, $exp:expr, $func:expr)
     } => {

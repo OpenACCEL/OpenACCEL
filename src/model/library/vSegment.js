@@ -1,6 +1,6 @@
 //This function was taken from keesvanoverveld.com
 function vSegment(x, y, z) {
-    x = __objectToArray__(x);
+    x = objectToArray(x);
     if (x instanceof Array) {
         if (!(y instanceof Array)) {
             if (!(z instanceof Array)) {

@@ -1,7 +1,7 @@
 //This function was taken from keesvanoverveld.com
 function vMatMatMul(x, y) {
-    x = __objectToArray__(x);
-    y = __objectToArray__(y);
+    x = objectToArray(x);
+    y = objectToArray(y);
     if (x instanceof Array) {
         var trueMatrix0 = false;
         for (i in x) {
