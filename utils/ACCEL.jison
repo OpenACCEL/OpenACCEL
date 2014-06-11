@@ -357,7 +357,7 @@ funcCall            :  STDFUNCTION '(' expr? (funcCallArgList)* ')'
                        }}
                     |  INPUTFUNCTION '(' expr? (funcCallArgList)* ')'
                        {{
-                          $$ = 'exe.$x[0]'; // This makes sure the assigment in sweet does not change the value
+                          $$ = 'null';
                        }}
                     |  quantityName '(' expr? (funcCallArgList)* ')'
                        {{

@@ -362,6 +362,12 @@ define(["model/analyser",
                 // dependencies as changed. First reset memoization datastructure!
                 this.flaggedAsChanged = [];
                 this.setQuantityChanged(this.quantities[qtyName], true);
+
+                // Because of the fact that a cat 1 expression evaluates to 'null' in Jison,
+                // we'll have to set hasChanged back to false, as the controller already updates the expression.
+                // There is no need to re-evaulate the expression for this cat 1 input.
+                // If we evaluate it, it gets set to null which is not what we want.
+                this.exe['__' + qtyName + '__'].hasChanged = false;
             }
         },
 
