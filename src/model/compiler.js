@@ -108,7 +108,6 @@ define(["model/fileloader",
             exe = {}; \
             exe.time = 0; \
             exe.step = function() { \
-                this.time++; \
                 if (this.report) { \
                     for (var qty in this.report) { \
                         if (this.report[qty].isTimeDependent) { \
@@ -116,6 +115,7 @@ define(["model/fileloader",
                         } \
                     } \
                 } \
+                this.time++; \
             };' +
             code +
             'return exe; })()';
