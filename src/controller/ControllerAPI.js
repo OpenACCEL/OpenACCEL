@@ -237,10 +237,6 @@ define(["model/script",
      * @post this.executing == false && this.currentIteration == 1
      */
     Controller.prototype.stop = function() {
-        if (typeof recompile === 'undefined') {
-            recompile = true;
-        }
-
         if (this.executing) {
             clearInterval(this.runloop);
 
@@ -351,8 +347,8 @@ define(["model/script",
         }
 
         this.stop();
-        this.numIterations = iterations;
         this.compileScript(this.script);
+        this.numIterations = iterations;
         if (this.autoExecute) {
             this.run();
         }
