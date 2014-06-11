@@ -254,7 +254,11 @@ define(["model/script",
      * Destroys the current script with all it's definitions, and
      * loads a new, empty one.
      */
-    Controller.prototype.newScript = function() {
+    Controller.prototype.newScript = function(clearStore) {
+        if (typeof clearStore === 'undefined') {
+            clearStore = true;
+        }
+
         // Stop execution, create new script and let the view update the
         // quantities and results lists
         this.stop();
@@ -262,7 +266,7 @@ define(["model/script",
         this.view.setQuantities({});
         this.view.presentResults({});
 
-        if (this.autoSave && window.localStorage) {
+        if (this.autoSave && window.localStorage && clearStore) {
         	this.autoSaveStore.clear();
         }
     };
@@ -274,19 +278,20 @@ define(["model/script",
      * been restored and loaded as the current Script.
      */
     Controller.prototype.restoreSavedScript = function() {
-    	this.newScript();
+    	this.newScript(false);
 
     	// Retrieve the definitions of all the stored quantities and add them to the script
     	if (this.autoSaveStore.numQuantities() > 0) {
     		// Get the names of all stored quantities
     		var storedQuantities = this.autoSaveStore.getQuantities();
 
-    		for (var q in storedQuantities) {
-    			var qty = this.autoSaveStore.loadQuantity(qty);
+    		for (var i = 0; i < storedQuantities.length; i++) {
+                var qtyName = storedQuantities[i];
+    			var qty = this.autoSaveStore.loadQuantity(qtyName);
 
     			// Add restored quantity to the script
     			if (qty) {
-	    			this.script.addQuantity(qty);
+	    			this.addQuantity(qty, false);
 	    		}
     		}
     	}
@@ -398,10 +403,14 @@ define(["model/script",
      * @post
      * @modifies this.script.quantities
      */
-    Controller.prototype.addQuantity = function(definition) {
+    Controller.prototype.addQuantity = function(definition, autoSave) {
         if (!definition) {
             throw new Error('Controller.prototype.addQuantity.pre violated :' +
                 'definition is null or undefined')
+        }
+
+        if (typeof autoSave === 'undefined') {
+            autoSave = true;
         }
 
         // Stop script, add quantity to script and update quantities in view
@@ -410,7 +419,7 @@ define(["model/script",
         this.view.setQuantities(this.script.getQuantities());
 
         // Autosave quantity if enabled
-        if (this.autoSave && window.localStorage) {
+        if (this.autoSave && window.localStorage && autoSave) {
         	this.autoSaveStore.saveQuantity(qty.name, definition);
         }
 

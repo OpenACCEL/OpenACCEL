@@ -11,12 +11,18 @@ if (inNode) {
     require = require('requirejs');
 } else {
     require.config({
+        shim: {
+            'underscore': {
+                exports: '_'
+            }
+        },
         baseUrl: 'scripts'
     });
 }
 /*******************************************************************/
 
-define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(AbstractQuantityStore) {
+define(["model/datastores/AbstractQuantityStore", 
+        "underscore"], /**@lends Model*/ function(AbstractQuantityStore, _) {
     /**
      * @class
      * @classdesc This class can load and save quantities to localStorage.
@@ -25,8 +31,8 @@ define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(Ab
     function LocalQuantityStore() {
         // Create empty index if there is no index already!
         if (inBrowser && window.localStorage) {
-            if (!localStorage['quantities']) {
-                localStorage['quantities'] = [];
+            if (localStorage.getItem('quantities') == null) {
+                localStorage.setItem('quantities', '[]');
             } else {
                 // Validate index of quantities stored in the localStorage
                 this.validateIndex();
@@ -45,7 +51,7 @@ define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(Ab
         // Validate index of quantities stored in the localStorage
         this.validateIndex();
 
-        return localStorage['quantities'];
+        return JSON.parse(localStorage.getItem('quantities'));
     };
 
     /**
@@ -57,7 +63,10 @@ define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(Ab
      * @param {String} def The definition of the quantity to store.
      */
     LocalQuantityStore.prototype.saveQuantity = function(qtyName, def) {
-        localStorage['qtyName'] = def;
+        localStorage.setItem(qtyName, def);
+        var quantities = this.getQuantities();
+        quantities.push(qtyName);
+        localStorage.setItem('quantities', JSON.stringify(quantities));
     };
 
     /**
@@ -68,7 +77,7 @@ define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(Ab
      * is no quantity in the store named qtyName.
      */
     LocalQuantityStore.prototype.loadQuantity = function(qtyName) {
-        return localStorage['qtyName'];
+        return localStorage.getItem(qtyName);
     };
 
     /**
@@ -78,15 +87,23 @@ define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(Ab
      */
     LocalQuantityStore.prototype.deleteQuantity = function(qtyName) {
         localStorage.removeItem(qtyName);
+        var quantities = _.without(this.getQuantities(), qtyName);
+        localStorage.setItem('quantities', JSON.stringify(quantities));
     };
 
     /**
      * Clears the entire store, deleting all quantities from it.
      */
     LocalQuantityStore.prototype.clear = function() {
-        for (var q in this.getQuantities()) {
-            localStorage.removeItem(q);
+        // Can't simply use localStorage.clear() as there may be other
+        // things in the storage besides the quantities!
+        var quantities = this.getQuantities();
+        for (var i = 0; i < quantities.length; i++) {
+            var qtyName = quantities[i];
+            localStorage.removeItem(qtyName);
         }
+
+        localStorage.setItem('quantities', '[]');
     };
 
     /**
@@ -95,10 +112,10 @@ define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(Ab
      * @return Whether there is a quantity named qtyName present in the store.
      */
     LocalQuantityStore.prototype.hasQuantity = function(qtyName) {
-        if (localStorage['qtyName']) {
-            return true;
-        } else {
+        if (localStorage.getItem(qtyName) == null) {
             return false;
+        } else {
+            return true;
         }
     };
 
@@ -108,7 +125,7 @@ define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(Ab
      * @return The number of quantities currently stored in the store.
      */
     LocalQuantityStore.prototype.numQuantities = function() {
-        return localStorage['quantities'].length;
+        return JSON.parse(localStorage['quantities']).length;
     };
 
     /**
@@ -121,12 +138,17 @@ define(["model/datastores/AbstractQuantityStore"], /**@lends Model*/ function(Ab
      * really present in the store.
      */
     LocalQuantityStore.prototype.validateIndex = function() {
-        var storedQuantities = localStorage['quantities'];
-        for (var q in storedQuantities) {
-            if (!localStorage[q]) {
-                _.without(localStorage['quantities'], q);
+        /*var quantities = JSON.parse(localStorage.getItem('quantities'));
+        for (var i = 0; i < quantities.length; true) {
+            var qtyName = quantities[i];
+            if (localStorage.getItem(qtyName) == null) {
+                console.log("Missing q: " + q);
+
+                var quantities = JSON.parse(localStorage.getItem('quantities'));
+                quantities = _.without(this.getQuantities(), q);
+                localStorage.setItem('quantities', JSON.stringify(quantities));
             }
-        }
+        }*/
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
