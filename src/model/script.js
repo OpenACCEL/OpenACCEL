@@ -358,7 +358,7 @@ define(["model/analyser",
 
             // Only update values if script has been compiled!
             if (this.isCompiled()) {
-                this.exe['__' + qtyName + '__'][0] = value;
+                this.exe['__' + qtyName + '__'].hist[0] = value;
 
                 // Recursively flag the updated user input quantity and all it's reverse
                 // dependencies as changed. First reset memoization datastructure!

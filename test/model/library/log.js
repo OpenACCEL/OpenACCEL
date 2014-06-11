@@ -31,4 +31,5 @@ suite("Log Library", function() {
         });
 
     });
+
 });
