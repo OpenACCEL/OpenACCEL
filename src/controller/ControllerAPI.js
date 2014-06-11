@@ -256,10 +256,11 @@ define(["model/script",
      */
     Controller.prototype.newScript = function() {
         // Stop execution, create new script and let the view update the
-        // quantity list
+        // quantities and results lists
         this.stop();
         this.script = new Script();
         this.view.setQuantities({});
+        this.view.presentResults({});
 
         if (this.autoSave && window.localStorage) {
         	this.autoSaveStore.clear();
