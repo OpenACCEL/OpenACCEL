@@ -7,17 +7,18 @@ macro func {
             // If a quantity is time dependant, look up if there exists a previous version.
             if (exe.report && exe.report.$x.isTimeDependent) {
                 if (exe.$x[exe.time] === undefined) {
-                    exe.$x[exe.time] = $expr;
+                    exe.$x[exe.time] = exe.$x.expr();
                 }
                 return exe.$x[exe.time];
             } else {
                 if (exe.$x[0] === undefined || exe.$x.hasChanged) {
-                    exe.$x[0] = ($expr);
+                    exe.$x[0] = exe.$x.expr();
                     exe.$x.hasChanged = false;
                 }
                 return exe.$x[0];
             }
         };
+        exe.$x.expr = function() { return $expr; };
     }
     rule {
         ($x = $expr:expr ; $dim)
@@ -31,8 +32,9 @@ macro func {
         ($x($xs (,) ...) = $expr:expr)
     } => {
         exe.$x = function($xs (,) ...) {
-            return $expr;
+            return exe.$x.expr($xs (,) ...);
         };
+        exe.$x.expr = function($xs (,) ...) { return $expr; };
     }
     rule {
         ($x($xs (,) ...) = $expr:expr ; $dim)
