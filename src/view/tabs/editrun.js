@@ -15,19 +15,6 @@ $(document).ready(
         userinputBuffer.hideIfEmpty('#userinputdiv');
         Report.resultBuffer.hideIfEmpty('#resultdiv');
         $('#plotdiv').toggle(false);
-
-        $(window).on('load',
-            function() {
-                setTimeout(
-                    function() {
-                        console.log(controller);
-                        var dcartvas = canvasCreator.createDescartesCanvas({}, 'plot', 500, 500);
-                        dcartvas.handler.draw();
-                    },
-                    10000
-                )
-            }
-        );
     }
 );
 

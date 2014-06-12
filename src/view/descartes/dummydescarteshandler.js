@@ -41,7 +41,17 @@ define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHa
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
     DummyDescartesHandler.prototype.canHandle = function(modelElement) {
-        return modelElement instanceof Object;
+        return true;
+    };
+
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    DummyDescartesHandler.prototype.getInstance = function(modelElement) {
+        return new DummyDescartesHandler(modelElement);
     };
 
 

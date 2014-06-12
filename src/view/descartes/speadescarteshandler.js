@@ -50,6 +50,16 @@ define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHa
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
+    SPEADescartesHandler.prototype.getInstance = function(modelElement) {
+        return new SPEADescartesHandler(modelElement);
+    };
+
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
     SPEADescartesHandler.prototype.addDescartes = function(div, width, height) {
         this.descartesInstances.push(new descartes({
             dN: div,
