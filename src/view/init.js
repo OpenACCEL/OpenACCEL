@@ -183,3 +183,64 @@ function selectionList(selector, callback) {
         }
     };
 }
+
+/**
+ * Constructs a new Tooltip object
+ * 
+ * @param {String} id      String to be used as a suffix in the id values of the generated html elements
+ * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
+ * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
+ *
+ * @class
+ * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
+ */
+function Tooltip(id, div, classes) {
+    this.id = id;
+    this.div = div;
+    this.classes = classes;
+
+    this.getHTML = function(message) {
+        return '\
+            <div id = "tooltip' + this.id + '" class = "' + this.classes + '">\
+                ' + message + '\
+            </div>\
+        ';
+    }
+
+    this.initialize = function() {
+        $(this.getHTML('')).insertAfter(this.div);
+        $('#tooltip' + this.id).toggle(false);
+
+        $('#tooltip' + this.id).on('click', 
+            function() {
+                $(this).animate({opacity: 0}, 200, 
+                    function() {
+                        //$(this).toggle(false);
+                        $(this).remove();
+                    }
+                )
+            }
+        );
+        $('#tooltip' + this.id).on('mouseover', 
+            function() {
+                $(this).animate({opacity: 0.5}, 200);
+            }
+        );
+        $('#tooltip' + this.id).on('mouseleave', 
+            function() {
+                $(this).animate({opacity: 1}, 100);
+            }
+        );
+    }
+
+    this.initialize();
+
+    this.set = function(message) {
+        $('#tooltip' + this.id).html(message);
+        $('#tooltip' + this.id).toggle(true);
+    }
+
+    this.remove = function() {
+        $('#tooltip' + this.id).remove();
+    }
+}
