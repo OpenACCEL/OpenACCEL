@@ -9,7 +9,13 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
      */
     function View(canvasCreator) {
         this.canvasCreator = canvasCreator;
-        //TODO this.decartesCanvas = this.canvasCreator.create('plot',500,500);
+        
+        $(document).ready(
+            function() {
+                $('#plotdiv').toggle(true);
+                //TODO this.decartesCanvas = this.canvasCreator.create('plot',500,500);
+            }
+        );
     }
 
     View.prototype = new AbstractView();
