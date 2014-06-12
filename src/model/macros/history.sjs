@@ -3,10 +3,11 @@ macro history {
         (((typeof $quantity:ident !== 'undefined') ? $quantity:ident : exe.$quantity:ident()), $time:expr)
     } => {
         (function() {
-            if ($time < 1) {
-                throw new Error('For delayed qyantities, the value must be at leat 1. (porblematic quantity:' + $quantity + ')');
+            var time = $time;
+            if (time < 1) {
+                throw new Error('For delayed quantities, the value must be at least 1');
             }
-            var historyValue = exe.$quantity.hist[exe.time - $time];
+            var historyValue = exe.$quantity.hist[exe.time - time];
             if (historyValue === undefined) {
                 return 0;
             } else {

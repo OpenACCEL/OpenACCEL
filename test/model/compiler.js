@@ -148,12 +148,13 @@ suite("Compiler", function() {
             assert.equal(output.exe.__t__(), expected);
         });
 
-        test('default settings t = t{1 + b} + 1 \n b = b{0} + 1', function() {
-            var code = 't = t{0 + b} + 1 \n b = b{0} + 1';
+        test('default settings t = t{1 + b} + 1 \n b = b{1} + 1', function() {
+            var code = 't = t{0 + b} + 1 \n b = b{1} + 1';
             var output = compiler.compile(new Script(code));
+
             var expected = 1;
             for (var i = 0; i < 1000; i++) {
-                assert.equal(output.exe.__t__(), expected + i);
+                assert.equal(output.exe.__t__(), expected);
                 output.exe.step();
             };
         });
