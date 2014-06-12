@@ -54,6 +54,11 @@ define([], /**@lends AbstractView*/ function() {
         setExecuting: function(executing) {},
 
         /**
+         * Should trigger an update of the plot canvas
+         */
+        drawPlot: function() {},
+
+        /**
          * Informs the view about the current status of the program. This could be for instance
          * "Compiling", "Determining quantity categories", etc.
          */

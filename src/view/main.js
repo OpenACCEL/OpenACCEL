@@ -1,5 +1,5 @@
 var controller;
-var canvasCreator
+var canvasCreator;
 
 require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/descartes/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
     /**
@@ -7,8 +7,9 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
      * @classdesc Interface declaring the methods that the view with which the Controller will
      * communicate should implement.
      */
-    function View() {
-
+    function View(canvasCreator) {
+        this.canvasCreator = canvasCreator;
+        //TODO this.decartesCanvas = this.canvasCreator.create('plot',500,500);
     }
 
     View.prototype = new AbstractView();
@@ -36,6 +37,13 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     };
 
     /**
+     * Trigger an update of the plot canvas
+     */
+    View.prototype.drawPlot = function() {
+        //TODO if (this.decartesCanvas) {this.decartesCanvas.draw()};
+    };
+
+    /**
      * Changes UI elements depending on whether the OpenACCEL model is being executed.
      *
      * @param executing Boolean indicating whether the OpenACCEL model is being executed.
@@ -44,7 +52,8 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
         setExecuting(executing);
     };
 
-    controller = new Controller(new View());
+    //var canvasCreator = null; //TODO not null
+    controller = new Controller(new View(canvasCreator));
     controller.setAutoExecute(true);
     controller.autoSave = true;
     controller.restoreSavedScript();
