@@ -82,13 +82,14 @@ define(["view/descartes/descarteshandlerfactory", "view/descartes/abstractfuncti
         if (this.handler == null) {
             this.handler = this.factory.getHandler(modelElement);
             this.handler.addDescartes(this.div, this.width, this.height);
-        }
-        if (this.handler.canHandle(modelElement)) {
-            this.handler.setModel(modelElement);
         } else {
-            this.handler.removeDescartes(this.div);
-            this.handler = this.factory.getHandler(modelElement);
-            this.handler.addDescartes(this.div, this.width, this.height);
+            if (this.handler.canHandle(modelElement)) {
+                this.handler.setModel(modelElement);
+            } else {
+                this.handler.removeDescartes(this.div);
+                this.handler = this.factory.getHandler(modelElement);
+                this.handler.addDescartes(this.div, this.width, this.height);
+            }
         }
     };
 
