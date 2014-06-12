@@ -6,7 +6,11 @@ function editScript(script) {
 	try {
 		controller.setScriptFromSource(script);
 	} catch (e) {
-		console.log(e.message);
+		if (typeof(e) === 'SyntaxError') {
+			console.log(e.message);
+		} else {
+			console.log(e);
+		}
 	}
 }
 
