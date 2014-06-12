@@ -12,7 +12,7 @@ suite("do Library", function() {
             compiler = new module();
             fileLoader = new FileLoader();
             fileLoader.load("do", "library");
-            fileLoader.load("objectToArray", "library");
+            fileLoader.load("objecttoarray", "library");
             done();
         });
     });
