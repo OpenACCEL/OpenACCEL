@@ -124,7 +124,9 @@ define(["model/fileloader",
 
             exe.reset = function() {
                 for (var qty in this.report) {
-                    this[qty].hist.length = 0;
+                    if (this[qty].hist) {
+                        this[qty].hist.length = 0;
+                    }
                 }
             }
 
