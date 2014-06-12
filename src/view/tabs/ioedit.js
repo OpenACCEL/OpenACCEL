@@ -1,3 +1,7 @@
+
+
+//------------------------------------------------------------------------------
+
 function editScript(script) {
 	try {
 		controller.setScriptFromSource(script);

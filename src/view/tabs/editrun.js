@@ -18,6 +18,8 @@ $(document).ready(
     }
 );
 
+//------------------------------------------------------------------------------
+
 function deleteQuantity(quantity) {
     controller.deleteQuantity(quantity);
 }
@@ -63,6 +65,8 @@ function newScript() {
 
 function setIterations(iterations) {
     controller.setIterations(iterations);
+    controller.stop();
+    controller.run();
 }
 
 //------------------------------------------------------------------------------
@@ -100,16 +104,16 @@ function synchronizeScriptList(quantities) {
         if (quantity.category == 1) {
             switch (quantity.input.type) {
                 case 'slider':
-                    addInput(new SliderInput(i, quantity.name, quantity.name, parseInt(quantity.input.parameters[0]), parseInt(quantity.input.parameters[1]), parseInt(quantity.input.parameters[2])));
+                    addInput(new SliderInput(i, quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2])));
                     break;
                 case 'check':
                     addInput(new CheckboxInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
                     break;
                 case 'button':
-                    addInput(new ButtonInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                    addInput(new ButtonInput(i, quantity.name, 'Click me', quantity.input.parameters[0]));
                     break;
                 case 'text':
-                    addInput(new TextInput(i, quantity.name, quantity.name));
+                    addInput(new TextInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
                     break;
                 default:
                     //Unknown input type
@@ -139,6 +143,8 @@ function synchronizeScriptList(quantities) {
  */
 function synchronizeResults(quantities) {
     Report.resultBuffer.empty();
+
+    //console.log(quantities);
 
     for (var q in quantities) {
         var quantity = quantities[q];
@@ -214,61 +220,6 @@ function selectScriptline(linenr, quantityname) {
 
         Report.arglistBuffer.hideIfEmpty('#arglistdiv');
         Report.argtolistBuffer.hideIfEmpty('#argtodiv');
-    }
-}
-
-//------------------------------------------------------------------------------
-
-/**
- * Constructs a buffer object to contain updated content of a div and update the div when desired
- *
- * @param {String} div Id of the div who's content is to be buffered
- * @class
- * @classdesc Buffer class to contain updated content of a div and update the div when desired
- */
-function HTMLbuffer(div) {
-    this.div = div;
-    this.html = '';
-
-    /**
-     * Clears the buffer
-     */
-    this.empty = function() {
-        this.html = '';
-    }
-
-    /**
-     * Checks whether the buffer is empty
-     *
-     * @return {Boolean} True if and only if buffer is empty
-     */
-    this.isEmpty = function() {
-        return (this.html == '');
-    }
-
-    /**
-     * Hides the target html element if the buffer is empty, show otherwise
-     *
-     * @param {String} selector to indicate which element should be hidden
-     */
-    this.hideIfEmpty = function(target) {
-        $(target).toggle(!this.isEmpty());
-    }
-
-    /**
-     * Appends html to the buffer
-     *
-     * @param {String} html String to be appended to the buffer
-     */
-    this.append = function(html) {
-        this.html = this.html + html;
-    }
-
-    /**
-     * Replaces the content in the div with the content in the buffer
-     */
-    this.flip = function() {
-        $(this.div).html(this.html);
     }
 }
 
@@ -354,14 +305,38 @@ function SliderInput(identifier, quantity, label, val, min, max) {
     this.val = val;
     this.min = min;
     this.max = max;
+
+    this.getStepSize = function(val, min, max) {
+        var sum = val + min + max;
+        console.log(sum);
+        //To compensate for javascript's floating point errors we use a correction variable which will temporarily convert floats to ints
+        var correction = 100000;
+        var sumdecimals = (sum * correction - Math.floor(sum) * correction) / correction;
+        console.log(sumdecimals);
+        var precision = 0;
+        while (sumdecimals % 1 != 0) {
+            sumdecimals *= 10;
+            precision++;
+        }
+        //var precision = sumdecimals.toFixed().length;
+        console.log(sumdecimals.toFixed());
+        console.log(precision);
+        console.log(Math.pow(10, -precision));
+        return Math.pow(10, -precision);
+    };
+
     this.properties = {
         range: "min",
         value: this.val,
         min: this.min,
         max: this.max,
+        step: this.getStepSize(this.val, this.min, this.max),
+        
         quantity: this.quantity, //Non-jquery addition to get the associated quantity within the slide function's scope
+        identifier: this.identifier, //Non-jquery addition to get the associated quantity within the slide function's scope
         slide: function(event, ui) {
             controller.setUserInputQuantity(quantity, ui.value);
+            $('#userslider' + identifier + 'value').html('(' + ui.value + ')');
         }
     };
 }
@@ -370,6 +345,7 @@ SliderInput.prototype.getHTML = function() {
     return '\
         <div id = "userinput' + this.identifier + '">\
             <div class = "inline">' + this.label + '</div>\
+            <div id = "userslider' + this.identifier + 'value" class = "inline">(' + this.val + ')</div>\
             <div id = "userslider' + this.identifier + '"></div>\
         </div>\
     ';
@@ -480,7 +456,7 @@ ButtonInput.prototype = new Input();
 ButtonInput.prototype.getHTML = function() {
     return '\
         <div id = "userinput' + this.identifier + '">\
-            <label for = "userbutton' + this.identifier + '">' + this.label + '</label>\
+            <label for = "userbutton' + this.identifier + '">' + this.quantity + '</label>\
             <input type = "button" id = "userbutton' + this.identifier + '" class = "buttonin" value = "' + this.label + '">\
         </div>\
     ';

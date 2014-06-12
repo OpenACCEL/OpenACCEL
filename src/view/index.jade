@@ -14,27 +14,32 @@ html
         //-         }
         //-     );
     body
+        #loading(style = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000000; background: #FFDDFF; background: linear-gradient(#FFDDFF, #FFFFFF); text-align: center')
+            .inline(style = 'position: relative; top: 100px')
+                div(style = 'background-image: url("../img/logoV2.png"); background-size: 100% auto; background-repeat: no-repeat; width: 800px; height: 200px;')
+                h1(style = 'color: #662266;') Loading... 
+
         #container
             #top
                 #logo
             #main
                 ul
                     li
-                        a(href='#intro') Intro
+                        a(href = '#intro') Intro
                     li
-                        a(href='#editrun') Edit / Run script
+                        a(href = '#editrun') Edit / Run script
                     li
-                        a(href='#helpdemo') Help / Demo
+                        a(href = '#helpdemo') Help / Demo
                     li
-                        a(href='#ioedit') IO / Edit
+                        a(href = '#ioedit') IO / Edit
                     li
-                        a(href='#analysis') Analysis
+                        a(href = '#analysis') Analysis
                     li
-                        a(href='#optimisation') Genetic Optimisation
+                        a(href = '#optimisation') Genetic Optimisation
                     li
-                        a(href='#simulation') Simulation
+                        a(href = '#simulation') Simulation
                     li
-                        a(href='#network') Network
+                        a(href = '#network') Network
 
                 include tabs/intro.jade
                 include tabs/editrun.jade

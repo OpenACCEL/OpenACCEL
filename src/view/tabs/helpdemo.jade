@@ -1,3 +1,24 @@
 #helpdemo
-	h1 Help/Demo
-	
+    script(src = 'scripts/view/tabs/helpdemo.js')
+    div
+        .inline
+            .label Help phrase
+            input(type = 'text')#helpphrase.textin
+        .inline
+            .label &nbsp;
+            input(type = 'button', value = 'Search' onclick = 'toggleValues()')#helpsearch.buttonin
+        .inline
+            .label &nbsp;
+            input(type = 'button', value = 'Ask for help' onclick = 'toggleValues()')#helpmail.buttonin
+    .inline100
+        .label Help categories
+        #helpcategories.report.verticalmenu
+    .inline100
+        .label Help articles
+        #helparticles.report.verticalmenu.px12
+    .inline
+        .label Help text
+        #helptext.group
+    .inline100
+        .label Demo scripts
+        #demoscripts.report.verticalmenu.px12
