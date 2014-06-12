@@ -27,7 +27,8 @@ define(["model/script",
 		"model/compiler", 
 		"controller/AbstractView", 
 		"underscore",
-		"model/datastores/LocalQuantityStore"], 
+		"model/datastores/LocalQuantityStore"],
+		//"model/workers/AutoSaveWorker"], 
 		/**@lends Controller*/ function(Script, Compiler, AbstractView, _, LocalQuantityStore) {
     /**
      * @class Controller
@@ -119,6 +120,14 @@ define(["model/script",
         this.autoSave = false;
 
         /**
+         * Whether the application uses web workers or not. DO NOT
+         * SET DIRECTLY. Use setShouldUseWorkers().
+         *
+         * @param {Boolean}
+         */
+        this.useWorkers = false;
+
+        /**
          * The Quantity Store used for autosaving the script.
          * Object must conform to the AbstractQuantityStore interface.
          *
@@ -151,6 +160,20 @@ define(["model/script",
      */
     Controller.prototype.setAutoExecute = function(autoExecute) {
         this.autoExecute = autoExecute;
+    };
+
+    /**
+     * Sets wether the application should use web workers when they are
+     * available on the user's system.
+     *
+     * @param {Boolean} useWorkers Whether workers should be used when available
+     */
+    Controller.prototype.setUseWorkers = function(useWorkers) {
+    	if (useWorkers && typeof(Worker) !== 'undefined') {
+    		this.useWorkers = true;
+    	} else {
+    		this.useWorkers = false;
+    	}
     };
 
     /**
@@ -266,7 +289,7 @@ define(["model/script",
         this.view.setQuantities({});
         this.view.presentResults({});
 
-        if (this.autoSave && window.localStorage && clearStore) {
+        if (clearStore && this.autoSave && window.localStorage) {
         	this.autoSaveStore.clear();
         }
     };
@@ -294,7 +317,7 @@ define(["model/script",
 	    		}
     		}
 
-            this.setScriptFromSource(src, false);
+            this.setScriptFromSource(src, true);
     	}
 
     	// Do not attempt to compile the script now: leave it to the user to inspect the restored
@@ -408,7 +431,7 @@ define(["model/script",
                 'definition is null or undefined')
         }
 
-        if (typeof autoSave === 'undefined') {
+        if (typeof(autoSave) === 'undefined') {
             autoSave = true;
         }
 
@@ -418,7 +441,7 @@ define(["model/script",
         this.view.setQuantities(this.script.getQuantities());
 
         // Autosave quantity if enabled
-        if (this.autoSave && window.localStorage && autoSave) {
+        if (autoSave && this.autoSave && window.localStorage) {
         	this.autoSaveStore.saveQuantity(qty.name, definition);
         }
 
@@ -652,29 +675,31 @@ define(["model/script",
      *
      * @param {String} source List of quantity definitions and optionally
      * comments
-     * @param {Boolean} compileAndExecute (Optional) Whether to automatically
-     * (re)compile and execute the script after it has been constructed from
-     * the given source.
+     * @param {Boolean} restoring (Optional) Whether we are restoring a script
+     * from the autoSaveStore. Set to true to 
      * @modifies this.script
      * @post A new script has been created, containing all quantities
      * defined in source.
      */
-    Controller.prototype.setScriptFromSource = function(source, compileAndExecute) {
-        if (typeof compileAndExecute === 'undefined') {
-            compileAndExecute = true;
+    Controller.prototype.setScriptFromSource = function(source, restoring) {
+        if (typeof(restoring) === 'undefined') {
+            restoring = false;
         }
 
     	// Stop the current model and create a new script with the
     	// given source
-        this.newScript();
+        this.newScript(!restoring);
         this.script.addSource(source);
         this.view.setQuantities(this.script.getQuantities());
 
-        if (compileAndExecute) {
+        // Only compile if script has not been restored
+        if (!restoring) {
             this.compileScript(this.script);
             if (this.autoExecute) {
                 this.run();
             }
+        } else {
+        	// TODO autosave script to autoSaveStore
         }
     };
 

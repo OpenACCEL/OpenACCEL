@@ -45,11 +45,19 @@ define(["model/datastores/AbstractQuantityStore",
     /**
      * Returns an array containing the names of all the quantities in this store.
      *
+     * @param {Boolean} validate (Optional) Whether to validate the index of quantities
+     * that are in the store.
      * @return {String[]} An array containing all the quantity names in the store.
      */
-    LocalQuantityStore.prototype.getQuantities = function() {
+    LocalQuantityStore.prototype.getQuantities = function(validate) {
+        if (typeof(validate) === 'undefined') {
+            validate = true;
+        }
+
         // Validate index of quantities stored in the localStorage
-        this.validateIndex();
+        if (validate) {
+            this.validateIndex();
+        }
 
         return JSON.parse(localStorage.getItem('quantities'));
     };
@@ -63,10 +71,14 @@ define(["model/datastores/AbstractQuantityStore",
      * @param {String} def The definition of the quantity to store.
      */
     LocalQuantityStore.prototype.saveQuantity = function(qtyName, def) {
+        // Add to index if not already in there
+        if (!this.hasQuantity(qtyName)) {
+            var quantities = this.getQuantities(false);
+            quantities.push(qtyName);
+            localStorage.setItem('quantities', JSON.stringify(quantities));
+        }
+
         localStorage.setItem(qtyName, def);
-        var quantities = this.getQuantities();
-        quantities.push(qtyName);
-        localStorage.setItem('quantities', JSON.stringify(quantities));
     };
 
     /**
@@ -87,7 +99,7 @@ define(["model/datastores/AbstractQuantityStore",
      */
     LocalQuantityStore.prototype.deleteQuantity = function(qtyName) {
         localStorage.removeItem(qtyName);
-        var quantities = _.without(this.getQuantities(), qtyName);
+        var quantities = _.without(this.getQuantities(false), qtyName);
         localStorage.setItem('quantities', JSON.stringify(quantities));
     };
 
@@ -97,7 +109,7 @@ define(["model/datastores/AbstractQuantityStore",
     LocalQuantityStore.prototype.clear = function() {
         // Can't simply use localStorage.clear() as there may be other
         // things in the storage besides the quantities!
-        var quantities = this.getQuantities();
+        var quantities = this.getQuantities(false);
         for (var i = 0; i < quantities.length; i++) {
             var qtyName = quantities[i];
             localStorage.removeItem(qtyName);
@@ -125,30 +137,44 @@ define(["model/datastores/AbstractQuantityStore",
      * @return The number of quantities currently stored in the store.
      */
     LocalQuantityStore.prototype.numQuantities = function() {
+        this.validateIndex();
+
         return JSON.parse(localStorage['quantities']).length;
     };
 
     /**
      * Checks whether all quantities in the index really
-     * still exist in the localStorage. Removes any non-existing
+     * still exist in the localStorage and creates an empty
+     * index if there is none. Removes any missing
      * quantities from the index.
      *
      * @modifies localStorage['quantities']
      * @post All quantities in localStorage['quantities'] are
-     * really present in the store.
+     * really present in the store and the index is valid.
      */
     LocalQuantityStore.prototype.validateIndex = function() {
-        /*var quantities = JSON.parse(localStorage.getItem('quantities'));
-        for (var i = 0; i < quantities.length; true) {
-            var qtyName = quantities[i];
-            if (localStorage.getItem(qtyName) == null) {
-                console.log("Missing q: " + q);
+        // Get current index and make sure it exists
+        var index = localStorage.getItem('quantities');
+        if (index != null) {
+            var quantities = JSON.parse(index);
 
-                var quantities = JSON.parse(localStorage.getItem('quantities'));
-                quantities = _.without(this.getQuantities(), q);
-                localStorage.setItem('quantities', JSON.stringify(quantities));
+            // Identify all items that are missing in the store
+            var deleted = [];
+            for (var i = 0; i < quantities.length; i++) {
+                var qtyName = quantities[i];
+                if (localStorage.getItem(qtyName) == null) {
+                    // Add to quantities array to be deleted
+                    deleted.push(qtyName);
+                }
             }
-        }*/
+
+            // Delete all missing quantities from the index array of quantities
+            quantities = _.difference(quantities, deleted);
+            localStorage.setItem('quantities', JSON.stringify(quantities));
+        } else {
+            // Restore empty index
+            localStorage.setItem('quantities', '[]');
+        }
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
