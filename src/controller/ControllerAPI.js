@@ -278,10 +278,9 @@ define(["model/script",
      * been restored and loaded as the current Script.
      */
     Controller.prototype.restoreSavedScript = function() {
-    	this.newScript(false);
-
     	// Retrieve the definitions of all the stored quantities and add them to the script
     	if (this.autoSaveStore.numQuantities() > 0) {
+            var src = '';
     		// Get the names of all stored quantities
     		var storedQuantities = this.autoSaveStore.getQuantities();
 
@@ -291,12 +290,12 @@ define(["model/script",
 
     			// Add restored quantity to the script
     			if (qty) {
-	    			this.addQuantity(qty, false);
+	    			src += qty + '\n';
 	    		}
     		}
-    	}
 
-    	this.view.setQuantities(this.script.quantities);
+            this.setScriptFromSource(src, false);
+    	}
 
     	// Do not attempt to compile the script now: leave it to the user to inspect the restored
     	// script and optionally run it now or after modifying it.
@@ -653,20 +652,29 @@ define(["model/script",
      *
      * @param {String} source List of quantity definitions and optionally
      * comments
+     * @param {Boolean} compileAndExecute (Optional) Whether to automatically
+     * (re)compile and execute the script after it has been constructed from
+     * the given source.
      * @modifies this.script
      * @post A new script has been created, containing all quantities
      * defined in source.
      */
-    Controller.prototype.setScriptFromSource = function(source) {
+    Controller.prototype.setScriptFromSource = function(source, compileAndExecute) {
+        if (typeof compileAndExecute === 'undefined') {
+            compileAndExecute = true;
+        }
+
     	// Stop the current model and create a new script with the
     	// given source
         this.newScript();
         this.script.addSource(source);
         this.view.setQuantities(this.script.getQuantities());
 
-        this.compileScript(this.script);
-        if (this.autoExecute) {
-        	this.run();
+        if (compileAndExecute) {
+            this.compileScript(this.script);
+            if (this.autoExecute) {
+                this.run();
+            }
         }
     };
 
