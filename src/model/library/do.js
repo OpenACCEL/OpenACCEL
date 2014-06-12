@@ -3,7 +3,7 @@ function __do__(code, args) {
         if (args instanceof Object) {
             for (var arg in args) {
                 var target = new RegExp('_' + arg, "g");
-                code = code.replace(target, JSON.stringify(args[arg]));
+                code = code.replace(target, JSON.stringify(objectToArray(args[arg])));
                 try {
                     // this is to protect against all disasters like syntax errors in the script string code we can't foresee
                     var res = (new Function(code))();
