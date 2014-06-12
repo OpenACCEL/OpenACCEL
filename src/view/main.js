@@ -1,17 +1,18 @@
 var controller;
+var canvasCreator
 
-require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends View*/ function(Controller, AbstractView) {
+require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/descartes/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
     /**
      * @class View
-     * @classdesc Interface declaring the methods that the view with which the Controller will 
+     * @classdesc Interface declaring the methods that the view with which the Controller will
      * communicate should implement.
      */
     function View() {
-        
+
     }
 
     View.prototype = new AbstractView();
-    
+
     /**
      * Uses the given map of quantities to update the UI lists.
      *
@@ -47,4 +48,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
     controller.setAutoExecute(true);
     controller.autoSave = true;
     controller.restoreSavedScript();
+
+    canvasCreator = new CanvasCreator();
 });
