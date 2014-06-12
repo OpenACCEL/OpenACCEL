@@ -428,6 +428,20 @@ define(["model/analyser/analyser",
         },
 
         /**
+         * Returns the plot array from the executable.
+         * Returns the empty array if the executable is null
+         * 
+         * @return {Array} plot array
+         */
+        getPlot: function() {
+            if (!this.exe) {
+                return [];
+            } else {
+                return this.exe.plot;
+            }
+        },
+
+        /**
          * Returns the code of the script as a single string, exactly as it was entered by the user.
          *
          * @return {String} A single line containing all quantity definitions in the script, exactly

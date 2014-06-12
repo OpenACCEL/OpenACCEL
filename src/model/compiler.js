@@ -113,6 +113,7 @@ define(["model/fileloader",
             exe = eval(code);
             exe.report = this.underscorifyKeys(script.getQuantities());
             exe.time = 0;
+            exe.plot = [];
             exe.step = function() {
                 if (this.report) {
                     for (var qty in this.report) {
