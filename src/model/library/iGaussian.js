@@ -1,3 +1,4 @@
+//This function was taken from keesvanoverveld.com
 function iGaussian(n1,n2,s1,s2) {
     n1 = Math.round(n1);
     n2 = Math.round(n2);
