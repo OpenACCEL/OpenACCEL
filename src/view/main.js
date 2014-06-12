@@ -43,6 +43,10 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
         setExecuting(executing);
     };
 
+    View.prototype.runtimeError = function(err) {
+        console.log("Runtime error: " + err.message);
+    };
+
     controller = new Controller(new View());
     controller.setAutoExecute(true);
     controller.autoSave = true;

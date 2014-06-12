@@ -60,7 +60,7 @@ define(['model/analyser/passes/analyserpass', 'model/quantity', 'model/parser'],
             if (quantity.parameters.indexOf(d) == -1 &&
                 quantity.dependencies.indexOf(d) == -1 &&
                 parser.yy.reservedwords.indexOf(d) == -1) {
-                
+                console.log("Adding dependency of " + quantity.name + ": " + d);
                 quantity.dependencies.push(d);
 
                 // It could be that it is used in multiple definitions while being

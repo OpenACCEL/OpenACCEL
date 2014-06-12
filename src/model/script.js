@@ -21,8 +21,9 @@ define(["model/analyser/analyser",
         "model/quantity", 
         "underscore", 
         "model/parser",
-        "model/exceptions/SyntaxError"], 
-        function(Analyser, Quantity, _, parser, SyntaxError) {
+        "model/exceptions/SyntaxError",
+        "model/exceptions/RuntimeError"], 
+        function(Analyser, Quantity, _, parser, SyntaxError, RuntimeError) {
     /**
      * @class Script
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
@@ -167,6 +168,7 @@ define(["model/analyser/analyser",
          * @param {String} qtyName The name of the quantity of which to return the value
          * @pre this.hasQuantity(qtyName)
          * @pre this.isComplete()
+         * @throws {RuntimeError} If an error occured while evaluating the quantity definition
          * @return this.quantities[qtyName]
          */
         getQuantityValue: function(qtyName) {
@@ -179,7 +181,15 @@ define(["model/analyser/analyser",
                 'script not compiled because incomplete')
             }
 
-            return this.exe['__' + qtyName + '__']();
+            // Try evaluating the value. Throw RuntimeError if an error is thrown
+            var value;
+            try {
+                value = this.exe['__' + qtyName + '__']();
+            } catch(e) {
+                throw new RuntimeError(e.message);
+            }
+
+            return value;
         },
 
         /**
@@ -311,6 +321,8 @@ define(["model/analyser/analyser",
          * by quantity name, and containing their current values if the script
          * can be executed. Output values are all "?" if model is incomplete.
          *
+         * @throws {RuntimeError} If an error occured while evaluating the
+         * output quantities
          * @return this.analyser.getOutputQuantities()
          */
         getOutputQuantities: function() {

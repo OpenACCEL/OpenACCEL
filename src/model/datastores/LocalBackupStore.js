@@ -28,7 +28,7 @@ define(["model/datastores/AbstractQuantityStore",
      * @classdesc This class can load and save quantities to localStorage.
      */
 
-    function LocalQuantityStore() {
+    function LocalBackupStore() {
         // Create empty index if there is no index already!
         if (inBrowser && window.localStorage) {
             if (localStorage.getItem('quantities') == null) {
@@ -40,7 +40,7 @@ define(["model/datastores/AbstractQuantityStore",
         }
     }
 
-    LocalQuantityStore.prototype = new AbstractQuantityStore();
+    LocalBackupStore.prototype = new AbstractQuantityStore();
 
     /**
      * Returns an array containing the names of all the quantities in this store.
@@ -49,7 +49,7 @@ define(["model/datastores/AbstractQuantityStore",
      * that are in the store.
      * @return {String[]} An array containing all the quantity names in the store.
      */
-    LocalQuantityStore.prototype.getQuantities = function(validate) {
+    LocalBackupStore.prototype.getQuantities = function(validate) {
         if (typeof(validate) === 'undefined') {
             validate = true;
         }
@@ -70,7 +70,7 @@ define(["model/datastores/AbstractQuantityStore",
      * @param {String} qtyname The name of the quantity to store.
      * @param {String} def The definition of the quantity to store.
      */
-    LocalQuantityStore.prototype.saveQuantity = function(qtyName, def) {
+    LocalBackupStore.prototype.saveQuantity = function(qtyName, def) {
         // Add to index if not already in there
         if (!this.hasQuantity(qtyName)) {
             var quantities = this.getQuantities(false);
@@ -79,6 +79,21 @@ define(["model/datastores/AbstractQuantityStore",
         }
 
         localStorage.setItem(qtyName, def);
+
+        // Delete any saved script source
+        this.clearScriptSource();
+    };
+
+    /**
+     * Saves the entire script source to localStorage.
+     *
+     * @param {String} source The script source to save
+     */
+    LocalBackupStore.prototype.saveScript = function(source) {
+        localStorage.setItem('scriptSource', source);
+
+        // Delete any saved quantities
+        this.clearQuantities();
     };
 
     /**
@@ -88,8 +103,18 @@ define(["model/datastores/AbstractQuantityStore",
      * @return The definition of the quantity with name qtyName, or null if there
      * is no quantity in the store named qtyName.
      */
-    LocalQuantityStore.prototype.loadQuantity = function(qtyName) {
+    LocalBackupStore.prototype.loadQuantity = function(qtyName) {
         return localStorage.getItem(qtyName);
+    };
+
+    /**
+     * Retrieves the saved script source from the store if present.
+     *
+     * @return The retrieved script source, or null if there is no
+     * script source present in the store.
+     */
+    LocalBackupStore.prototype.loadScript = function() {
+        return localStorage.getItem('scriptSource');
     };
 
     /**
@@ -97,16 +122,25 @@ define(["model/datastores/AbstractQuantityStore",
      *
      * @param {String} qtyName The name of the quantity to delete
      */
-    LocalQuantityStore.prototype.deleteQuantity = function(qtyName) {
+    LocalBackupStore.prototype.deleteQuantity = function(qtyName) {
         localStorage.removeItem(qtyName);
         var quantities = _.without(this.getQuantities(false), qtyName);
         localStorage.setItem('quantities', JSON.stringify(quantities));
     };
 
     /**
+     * Clears the entire store, deleting all quantities and
+     * script sources from it.
+     */
+    LocalBackupStore.prototype.clear = function() {
+        this.clearQuantities();
+        this.clearScriptSource();
+    };
+
+    /**
      * Clears the entire store, deleting all quantities from it.
      */
-    LocalQuantityStore.prototype.clear = function() {
+    LocalBackupStore.prototype.clearQuantities = function() {
         // Can't simply use localStorage.clear() as there may be other
         // things in the storage besides the quantities!
         var quantities = this.getQuantities(false);
@@ -119,15 +153,35 @@ define(["model/datastores/AbstractQuantityStore",
     };
 
     /**
+     * Clears the entire script source from the store
+     */
+    LocalBackupStore.prototype.clearScriptSource = function() {
+        localStorage.removeItem('scriptSource');
+    };
+
+    /**
      * Returns whether a quantity with name qtyName exists in the store.
      *
      * @return Whether there is a quantity named qtyName present in the store.
      */
-    LocalQuantityStore.prototype.hasQuantity = function(qtyName) {
+    LocalBackupStore.prototype.hasQuantity = function(qtyName) {
         if (localStorage.getItem(qtyName) == null) {
             return false;
         } else {
             return true;
+        }
+    };
+
+    LocalBackupStore.prototype.hasScript = function() {
+        var source = localStorage.getItem('scriptSource');
+        if (source == null) {
+            return false;
+        } else {
+            if (source.trim() == '') {
+                return false;
+            } else {
+                return true;
+            }
         }
     };
 
@@ -136,7 +190,7 @@ define(["model/datastores/AbstractQuantityStore",
      *
      * @return The number of quantities currently stored in the store.
      */
-    LocalQuantityStore.prototype.numQuantities = function() {
+    LocalBackupStore.prototype.numQuantities = function() {
         this.validateIndex();
 
         return JSON.parse(localStorage['quantities']).length;
@@ -152,7 +206,7 @@ define(["model/datastores/AbstractQuantityStore",
      * @post All quantities in localStorage['quantities'] are
      * really present in the store and the index is valid.
      */
-    LocalQuantityStore.prototype.validateIndex = function() {
+    LocalBackupStore.prototype.validateIndex = function() {
         // Get current index and make sure it exists
         var index = localStorage.getItem('quantities');
         if (index != null) {
@@ -178,5 +232,5 @@ define(["model/datastores/AbstractQuantityStore",
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
-    return LocalQuantityStore;
+    return LocalBackupStore;
 });

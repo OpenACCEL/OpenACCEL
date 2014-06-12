@@ -27,9 +27,11 @@ define(["model/script",
 		"model/compiler", 
 		"controller/AbstractView", 
 		"underscore",
-		"model/datastores/LocalQuantityStore"],
+		"model/datastores/LocalBackupStore",
+		"model/exceptions/RuntimeError"],
 		//"model/workers/AutoSaveWorker"], 
-		/**@lends Controller*/ function(Script, Compiler, AbstractView, _, LocalQuantityStore) {
+		/**@lends Controller*/ 
+		function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError) {
     /**
      * @class Controller
      * @classdesc Base controller class.
@@ -133,7 +135,7 @@ define(["model/script",
          *
          * @type {AbstractQuantityStore}
          */
-        this.autoSaveStore = new LocalQuantityStore();
+        this.autoSaveStore = new LocalBackupStore();
 
         /**
          * The currently active tab in the UI.
@@ -163,13 +165,25 @@ define(["model/script",
     };
 
     /**
+     * Sets whether the controller should automatically save the script to the
+     * backup store when adding or removing quantities.
+     *
+     * @param autoSave {Boolean} Whether to automatically save the script to the
+     * backup store
+     * @post this.autoSave = autoSave
+     */
+    Controller.prototype.setAutoSave = function(autoSave) {
+        this.autoSave = autoSave;
+    };
+
+    /**
      * Sets wether the application should use web workers when they are
      * available on the user's system.
      *
      * @param {Boolean} useWorkers Whether workers should be used when available
      */
     Controller.prototype.setUseWorkers = function(useWorkers) {
-    	if (useWorkers && typeof(Worker) !== 'undefined') {
+    	if (useWorkers && typeof(Worker) !== 'undefined' && inBrowser) {
     		this.useWorkers = true;
     	} else {
     		this.useWorkers = false;
@@ -196,7 +210,12 @@ define(["model/script",
 	            var controller = this;
 	            this.runloop = setInterval(
 	                function() {
-	                    controller.execute();
+	                	try {
+	                    	controller.execute();
+	                    } catch(e) {
+			        		controller.view.runtimeError(e);
+			        		controller.stop();
+			        	}
 	                }, 1
 	            );
 	        }
@@ -208,6 +227,8 @@ define(["model/script",
      * them to the view.
      *
      * @pre this.script.isComplete()
+     * @throws {RuntimeError} If an error occured while evaluating one of the
+     * output quantities in the script.
      * @post The view has received the current values of all output quantities.
      */
     Controller.prototype.execute = function() {
@@ -220,8 +241,11 @@ define(["model/script",
 
         // Check whether another iteration should be made
         if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
-        	// Present the results to the view
-    		this.presentResults(this.script.getOutputQuantities());
+        	// Evaluate the expressions (definitions) of all output quantities
+        	var results = this.script.getOutputQuantities();
+
+    		// Push results to view
+    		this.presentResults(results);
             
             // Signal the executable that one iteration has been completed,
 	        // for quantity history functionality
@@ -269,7 +293,10 @@ define(["model/script",
             this.status = "Stopped";
             this.view.setStatus(this.status);
             this.currentIteration = 1;
-            this.script.exe.reset();
+
+            if (this.script.isCompiled()) {
+            	this.script.exe.reset();
+            }
         }
     };
 
@@ -302,6 +329,7 @@ define(["model/script",
      */
     Controller.prototype.restoreSavedScript = function() {
     	// Retrieve the definitions of all the stored quantities and add them to the script
+    	// Give precedence to individually stored quantities over entire script sources
     	if (this.autoSaveStore.numQuantities() > 0) {
             var src = '';
     		// Get the names of all stored quantities
@@ -318,6 +346,9 @@ define(["model/script",
     		}
 
             this.setScriptFromSource(src, true);
+    	} else if (this.autoSaveStore.hasScript()) {
+    		var src = this.autoSaveStore.loadScript();
+    		this.setScriptFromSource(src, true);
     	}
 
     	// Do not attempt to compile the script now: leave it to the user to inspect the restored
@@ -692,15 +723,33 @@ define(["model/script",
         this.script.addSource(source);
         this.view.setQuantities(this.script.getQuantities());
 
-        // Only compile if script has not been restored
+        // Test whether we're in the process of restoring a script from the backup
+        // store. If we are, don't save it again and don't compile it.
         if (!restoring) {
+        	// If autosave is enabled, save script to backup store
+        	if (this.autoSave) {
+        		this.saveScriptToBackupStore(source);
+        	}
+        	
+        	// Compile script and execute immediately if autoExecute is enabled
             this.compileScript(this.script);
             if (this.autoExecute) {
                 this.run();
             }
-        } else {
-        	// TODO autosave script to autoSaveStore
         }
+    };
+
+    /**
+     * Saves the given script source to the backup store.
+     *
+     * @param {String} source The script source to save to the backup store.
+     */
+    Controller.prototype.saveScriptToBackupStore = function(source) {
+    	if (this.useWorkers) {
+
+    	} else {
+    		this.autoSaveStore.saveScript(source);
+    	}
     };
 
     /**
