@@ -24,7 +24,7 @@ define([], /**@lends Model.EMO*/ function() {
      */
     function SPEA() {}
 
-    SPEA.prototype.initialise = function() {};
+    SPEA.prototype.initialise = function(script) {};
 
     SPEA.prototype.mergeOffspring = function() {};
 

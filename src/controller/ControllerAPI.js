@@ -23,6 +23,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
+<<<<<<< HEAD
 define(["model/script",
 		"model/compiler",
 		"controller/AbstractView",
@@ -32,6 +33,13 @@ define(["model/script",
 		//"model/workers/AutoSaveWorker"],
 		/**@lends Controller*/
 		function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError) {
+=======
+define(["model/script", 
+		"model/compiler", 
+		"controller/AbstractView",
+		"model/emo/spea"], /**@lends Controller*/ 
+		function(Script, Compiler, AbstractView, SPEA) {
+>>>>>>> SPEA object created in controller and initialise method added to controller
     /**
      * @class Controller
      * @classdesc Base controller class.
@@ -69,6 +77,13 @@ define(["model/script",
          * @type {Script}
          */
         this.script = new Script();
+
+        /**
+         * The SPEA object used to do Genetic Optimization.
+         *
+         * @type {SPEA}
+         */
+        this.SPEA = new SPEA();
 
         /**
          * The number of iterations that the script should perform.
@@ -785,6 +800,13 @@ define(["model/script",
         //TODO
         //TODO Implementation
         //TODO Tests
+    };
+
+    /**
+     * Initialises SPEA.
+     */
+    Controller.prototype.initSPEA = function() {
+    	this.SPEA.initialise(this.getScript());
     };
 
     /**
