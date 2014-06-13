@@ -1,0 +1,22 @@
+function __do__(code, args) {
+    if (typeof code === "string") {
+        if (args instanceof Object) {
+            for (var arg in args) {
+                var target = new RegExp('_' + arg, "g");
+                code = code.replace(target, JSON.stringify(objectToArray(args[arg])));
+                try {
+                    // this is to protect against all disasters like syntax errors in the script string code we can't foresee
+                    var res = (new Function(code))();
+                    return res;
+                } catch (err) {
+                    return 'ERROR';
+                }
+            }
+        } else {
+            throw new Error("\nFor function do(), second argument must be a vector");
+  
+        }
+    } else {
+        throw new Error("\nFor function do(), first argument must be a string (= a code fragment)");
+    }
+}

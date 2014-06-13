@@ -11,7 +11,7 @@ suite("Bin Library", function() {
             compiler = new Compiler();
             fileLoader = new FileLoader();
             fileLoader.load("bin", "library");
-            fileLoader.load("fact", "library");
+            fileLoader.load("factorial", "library");
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");

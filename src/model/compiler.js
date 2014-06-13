@@ -10,7 +10,9 @@ inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
+    globalScope = process;
 } else {
+    globalScope = window;
     require.config({
         shim: {
             'underscore': {
@@ -67,6 +69,7 @@ define(["model/fileloader",
             this.fileLoader.load("quantifier", "macros");
 
             this.fileLoader.load("functions", "library");
+            eval.call(globalScope, this.fileLoader.getLibrary());
 
             /**
              * Contains the quantities for which the history has been checked
@@ -107,7 +110,6 @@ define(["model/fileloader",
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
             // Build the executable object by simply evaluating the generated/compiled javascript code
-            eval(this.fileLoader.getLibrary());
             exe = eval(code);
             exe.report = this.underscorifyKeys(script.getQuantities());
             exe.time = 0;

@@ -357,9 +357,9 @@ predefinedConstant      :   PI
 funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                         {{
                             var funcname;
-                            if($1 === 'if') {
-                                // if needs underscores as it is a javascript keyword
-                                funcname = '__if__'
+                            if($1 === 'if' || $1 === 'do') {
+                                //needs underscores as it is a javascript keyword
+                                funcname = '__' + $1 + '__';
                             } else {
                                 funcname = $1;
                             }

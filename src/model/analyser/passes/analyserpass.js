@@ -23,11 +23,7 @@ define(['model/analyser/passes/pass'], /**@lends Model.Passes.Analyser*/ functio
      * @classdesc Analyses a single line of code and updates the quantities in the script.
      */
     function AnalyserPass() {
-        /**
-         * Regex extracting string-definitions
-         * @type {RegExp}
-         */
-        this.stringregex = /(['"])(.*?)(\1)/g;
+        
     }
 
     AnalyserPass.prototype = new Pass();

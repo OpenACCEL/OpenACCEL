@@ -3,7 +3,7 @@ function bin(x, y) {
         if (b > a) {
             return 0;
         } else {
-            return fact(a) / (fact(b) * fact(a - b));
+            return factorial(a) / (factorial(b) * factorial(a - b));
         }
     });
 }

@@ -30,6 +30,12 @@ define([], /**@lends Model.Passes*/ function() {
 
 
         /**
+         * Regex extracting string-definitions
+         * @type {RegExp}
+         */
+        this.stringregex = /(['"])(.*?)(\1)/g;
+
+        /**
          * Regex to get all quantity identifiers that are NOT functions
          * 
          * Warning!
@@ -107,12 +113,12 @@ define([], /**@lends Model.Passes*/ function() {
         }
 
         var equalsIndex = line.indexOf('=');
-        var unitStart = line.indexOf(';');
-
+        
         // Is a unit defined?
-        if (unitStart == -1) {
+        if (this.getUnits(line) === '') {
             return line.substring(equalsIndex + 1).trim();
         } else {
+            var unitStart = line.lastIndexOf(';');
             return line.substring(equalsIndex + 1, unitStart).trim();
         }
     };
@@ -132,13 +138,16 @@ define([], /**@lends Model.Passes*/ function() {
                 'line is null or undefined');
         }
 
-        var unitStart = line.indexOf(';');
+        // ignore strings
+        var noStrings = line.replace(this.stringregex, '');
+
+        var unitStart = noStrings.lastIndexOf(';');
 
         // Is a unit defined?
         if (unitStart == -1) {
             return '';
         } else {
-            return line.substring(unitStart + 1).trim();
+            return noStrings.substring(unitStart + 1).trim();
         }
     };
 

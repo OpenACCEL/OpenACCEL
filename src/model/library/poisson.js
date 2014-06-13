@@ -7,14 +7,14 @@ function poisson(x, y, z) {
             throw new Error("The poisson of numbers less than 0 are not supported.");
         } else {
             if (!c) {
-                return ((Math.pow(b, a) * Math.exp(-b)) / fact(a));
+                return ((Math.pow(b, a) * Math.exp(-b)) / factorial(a));
             } else {
                 if (b < 20 && a < 20) {
                     var poisson = 0;
                     var expY = Math.exp(-b)
                     var power = 1;
                     for (i = 0; i <= a; i++) {
-                        poisson += expY * power / fact(i);
+                        poisson += expY * power / factorial(i);
                         power *= b;
                     }
                     return poisson;
