@@ -159,23 +159,70 @@ function synchronizeResults(quantities) {
     Report.resultBuffer.hideIfEmpty('#resultdiv');
 }
 
+/**
+ * Number of object-elements the objectToString function
+ * should generate before it is terminated.
+ * @type {Number}
+ */
+var maxPrintElements = 1000;
+
+/**
+ * Create printable version of an object.
+ *
+ * Terminates the string with ...
+ * when maxPrintElements elements has been reached.
+ *
+ * @param  {Object} obj Object to print
+ * @return {String}     Printable string
+ */
 function objectToString(obj) {
-    if (obj instanceof Object) {
-        var results = [];
-        for (var key in obj) {
-            var elem = '';
-            if (!(/^\d+$/.test(key))) {
-                // Key is not a number
-                elem += key + ':';
+    try {
+        // Recursive function calculating the
+        return (function(obj, count, result) {
+            if (obj instanceof Object) {
+                if (count < maxPrintElements) {
+                    result += '[';
+                }
+
+                for (var key in obj) {
+                    if (count >= maxPrintElements) {
+                        // We need to terminate the recursion
+                        // So we throw the result we have so far
+                        // appended with ...
+                        result += '...';
+                        throw result;
+                    }
+                    count++;
+                    var element;
+                    if (obj[key] instanceof Object) {
+                        // Ith this condition we avoid a recursive call in case
+                        // we reach a base case;
+                        element = arguments.callee(obj[key], count, result);
+                    } else {
+                        element = obj[key].toString();
+                    }
+
+
+                    if (isNaN(key)) {
+                        // Key is not a number
+                        result += key + ':';
+                    }
+
+                    result += element + ', ';
+                }
+                // replace the last 
+                result = result.slice(0, -2) + ']';
+                return result;
+            } else {
+                return obj.toString();
             }
-            elem += objectToString(obj[key]);
-            results.push(elem);
-        }
-        return '[' + results.join(',') + ']';
-    } else {
-        return obj.toString();
+        })(obj, 0, '');
+    } catch (result) {
+        // Result was terminated.
+        return result;
     }
 }
+
 
 //------------------------------------------------------------------------------
 
@@ -209,7 +256,7 @@ function selectScriptline(linenr, quantityname) {
 
         //list used standard functions (type = standard function)
         //TODO
-                
+
         //list reverse dependencies (type = regular)
         for (var r in quantity.reverseDeps) {
             Report.addArgto(quantity.reverseDeps[r], 'regular');
@@ -331,7 +378,7 @@ function SliderInput(identifier, quantity, label, val, min, max) {
         min: this.min,
         max: this.max,
         step: this.getStepSize(this.val, this.min, this.max),
-        
+
         quantity: this.quantity, //Non-jquery addition to get the associated quantity within the slide function's scope
         identifier: this.identifier, //Non-jquery addition to get the associated quantity within the slide function's scope
         slide: function(event, ui) {
@@ -381,7 +428,7 @@ CheckboxInput.prototype.getHTML = function() {
         <div id = "userinput' + this.identifier + '">\
             <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
             <div class = "inline checkboxin">\
-                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true'?'checked':'') + '>\
+                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true' ? 'checked' : '') + '>\
                 <label for = "usercheck' + this.identifier + '"></label>\
             </div>\
         </div>\
@@ -463,7 +510,7 @@ ButtonInput.prototype.getHTML = function() {
 };
 ButtonInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, false);
-    
+
     var buttoninput = this;
     $('#userbutton' + buttoninput.identifier).on('mousedown',
         function() {
@@ -609,9 +656,9 @@ var Report = {
 
 /**
  * Constructs a new Tooltip object
- * 
+ *
  * @param {String} id      String to be used as a suffix in the id values of the generated html elements
- * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
+ * @param {String} div     Selector to indicate which element the Tooltip should be associated with
  * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
  *
  * @class
@@ -634,23 +681,29 @@ function Tooltip(id, div, classes) {
         $(this.getHTML('')).insertAfter(this.div);
         $('#tooltip' + this.id).toggle(false);
 
-        $('#tooltip' + this.id).on('click', 
+        $('#tooltip' + this.id).on('click',
             function() {
-                $(this).animate({opacity: 0}, 200, 
+                $(this).animate({
+                        opacity: 0
+                    }, 200,
                     function() {
                         $(this).toggle(false);
                     }
                 )
             }
         );
-        $('#tooltip' + this.id).on('mouseover', 
+        $('#tooltip' + this.id).on('mouseover',
             function() {
-                $(this).animate({opacity: 0.5}, 200);
+                $(this).animate({
+                    opacity: 0.5
+                }, 200);
             }
         );
-        $('#tooltip' + this.id).on('mouseleave', 
+        $('#tooltip' + this.id).on('mouseleave',
             function() {
-                $(this).animate({opacity: 1}, 100);
+                $(this).animate({
+                    opacity: 1
+                }, 100);
             }
         );
     }

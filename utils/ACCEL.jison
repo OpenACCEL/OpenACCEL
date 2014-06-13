@@ -109,6 +109,7 @@ unit        [a-zA-Z]+[0-9]*
         'vDom',
         'vDot',
         'vEigenSystem',
+        'vExtend',
         'vGaussian',
         'vLen',
         'vMake',
