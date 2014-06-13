@@ -19,11 +19,11 @@ if (inNode) {
 // If all requirements are loaded, we may create our 'class'.
 define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHandler) {
     /**
-     * @class DummyDescartesHandler
-     * @classdesc The DummyDescartesHandler class provides DescartesHandlers to DescartesCanvases,
+     * @class ScriptDescartesHandler
+     * @classdesc The ScriptDescartesHandler class provides DescartesHandlers to DescartesCanvases,
      * allowing them to correctly draw any supported model element.
      */
-    function DummyDescartesHandler(modelElement) {
+    function ScriptDescartesHandler(modelElement) {
         /**
          * The DescartesHandlers that can be provided by this class.
          *
@@ -33,15 +33,15 @@ define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHa
     };
 
 
-    DummyDescartesHandler.prototype = new AbstractDescartesHandler();
+    ScriptDescartesHandler.prototype = new AbstractDescartesHandler();
 
     /**
      * Returns whether the script can be compiled and executed.
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    DummyDescartesHandler.prototype.canHandle = function(modelElement) {
-        return true;
+    ScriptDescartesHandler.prototype.canHandle = function(modelElement) {
+        return modelElement instanceof Script;
     };
 
 
@@ -50,8 +50,8 @@ define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHa
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    DummyDescartesHandler.prototype.getInstance = function(modelElement) {
-        return new DummyDescartesHandler(modelElement);
+    ScriptDescartesHandler.prototype.getInstance = function(modelElement) {
+        return new ScriptDescartesHandler(modelElement);
     };
 
 
@@ -60,7 +60,7 @@ define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHa
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    DummyDescartesHandler.prototype.addDescartes = function(div, width, height) {
+    ScriptDescartesHandler.prototype.addDescartes = function(div, width, height) {
         this.descartesInstances.push(new descartes({
             dN: div,
             cW: width,
@@ -69,21 +69,25 @@ define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHa
         this.descartesInstances[this.descartesInstances.length - 1].setUpGraph();
     };
 
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    ScriptDescartesHandler.prototype.clickCallback = function(x, y) {
+
+    };
+
 
     /**
      * Returns whether the script can be compiled and executed.
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    DummyDescartesHandler.prototype.getDrawing = function() {
-        var plot = [];
-        plot['plotType'] = 'bubble';
-        plot['diameter'] = 10;
-        plot['x'] = 50;
-        plot['y'] = 50;
-        return [[plot]]
+    ScriptDescartesHandler.prototype.getDrawing = function() {
+        return this.modelElement.getPlot();
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
-    return DummyDescartesHandler;
+    return ScriptDescartesHandler;
 });

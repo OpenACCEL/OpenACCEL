@@ -17,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHandler) {
+define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecorator"], function(AbstractDescartesHandler, ZoomFitDecorator) {
     /**
      * @class SPEADescartesHandler
      * @classdesc The SPEADescartesHandler class provides DescartesHandlers to DescartesCanvases,
@@ -30,6 +30,8 @@ define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHa
          * @type {array<AbstractDescartesHandler>}
          */
         this.modelElement = modelElement;
+
+        this.decorator = new ZoomFitDecorator();
     };
 
 
