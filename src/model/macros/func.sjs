@@ -14,7 +14,7 @@ macro func {
                 if (exe.$x.hist[0] === undefined || exe.$x.hasChanged) {
                     // initialize the values for user input
                     if (exe.report && exe.report.$x.category === 1) {
-                        exe.$x.hist[0] = exe.report.$x.input.parameters[0];
+                        exe.$x.hist[0] = parseFloat(exe.report.$x.input.parameters[0]);
                     } else {
                          exe.$x.hist[0] = exe.$x.expr();
                     }            
