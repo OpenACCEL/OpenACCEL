@@ -131,9 +131,8 @@ define(["model/script",
 
         /**
          * The Quantity Store used for autosaving the script.
-         * Object must conform to the AbstractQuantityStore interface.
          *
-         * @type {AbstractQuantityStore}
+         * @type {LocalBackupStore}
          */
         this.autoSaveStore = new LocalBackupStore();
 
