@@ -48,11 +48,6 @@ define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartes
          * @type {array<AbstractDescartesHandler>}
          */
         this.clickInfo = "";
-
-        this.propagatables.push({
-            name: "draw",
-            func: this.draw.bind(this)
-        });
     }
 
 
@@ -145,7 +140,6 @@ define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartes
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
     AbstractDescartesHandler.prototype.draw = function() {
-        console.log(this);
         var drawing = this.getDecoratedDrawing();
         for (i in this.descartesInstances) {
             this.descartesInstances[i].draw(drawing);

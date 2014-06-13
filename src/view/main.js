@@ -42,7 +42,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     View.prototype.setUpPlot = function(controller) {
         $('#plotdiv').toggle(true);
         this.descartesCanvas = canvasCreator.createDescartesCanvas(controller.getScript(), 'plot', 300, 300);
-        console.log(this.descartesCanvas)
     };
 
     /**
@@ -51,7 +50,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     View.prototype.drawPlot = function() {
         if (this.descartesCanvas) {
             this.descartesCanvas.handler.modelElement = controller.getScript();
-            this.descartesCanvas.handler.draw();
+            this.descartesCanvas.draw();
         };
     };
 
