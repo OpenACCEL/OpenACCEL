@@ -68,8 +68,12 @@ define([], function() {
          */
         facadify: function() {
             var allFuncs = this.getSubfunctions();
+            var name;
+            var func;
             for (key in allFuncs) {
-                eval("this." + allFuncs[key].name + " = allFuncs[key].func");
+                name = allFuncs[key].name;
+                func = allFuncs[key].func;
+                eval("this." + name + " = func");
             }
         }
     };

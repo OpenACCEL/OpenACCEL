@@ -17,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHandler) {
+define(["view/descartes/abstractdescarteshandler", "model/script"], function(AbstractDescartesHandler, Script) {
     /**
      * @class ScriptDescartesHandler
      * @classdesc The ScriptDescartesHandler class provides DescartesHandlers to DescartesCanvases,

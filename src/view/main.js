@@ -12,10 +12,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
         this.decartesCanvas = null;
 
         $(document).ready(
-            function() {
-                $('#plotdiv').toggle(true);
-                this.descartesCanvas = canvasCreator.createDescartesCanvas(controller.getScript(), 'plot', 300, 300);
-            }
+            function() {}
         );
     }
 
@@ -44,6 +41,14 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     };
 
     /**
+     * Trigger creation of the necessary plot canvases
+     */
+    View.prototype.setUpPlot = function(controller) {
+        $('#plotdiv').toggle(true);
+        this.descartesCanvas = canvasCreator.createDescartesCanvas(controller.getScript(), 'plot', 300, 300);
+    };
+
+    /**
      * Trigger an update of the plot canvas
      */
     View.prototype.drawPlot = function() {
@@ -68,5 +73,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     controller.setAutoExecute(true);
     controller.autoSave = true;
     controller.restoreSavedScript();
+    controller.view.setUpPlot(controller);
 
 });

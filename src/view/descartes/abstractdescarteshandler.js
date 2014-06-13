@@ -55,7 +55,10 @@ define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartes
          */
         this.clickInfo = "";
 
-        this.propagatables.push(this.draw.bind(this));
+        this.propagatables.push({
+            name: "draw",
+            func: this.draw.bind(this)
+        });
     }
 
 
