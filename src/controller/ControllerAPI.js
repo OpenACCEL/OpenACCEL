@@ -330,29 +330,13 @@ define(["model/script",
     Controller.prototype.restoreSavedScript = function() {
     	// Retrieve the definitions of all the stored quantities and add them to the script
     	// Give precedence to individually stored quantities over entire script sources
-    	if (this.autoSaveStore.numQuantities() > 0) {
-            var src = '';
-    		// Get the names of all stored quantities
-    		var storedQuantities = this.autoSaveStore.getQuantities();
-
-    		for (var i = 0; i < storedQuantities.length; i++) {
-                var qtyName = storedQuantities[i];
-    			var qty = this.autoSaveStore.loadQuantity(qtyName);
-
-    			// Add restored quantity to the script
-    			if (qty) {
-	    			src += qty + '\n';
-	    		}
-    		}
-
-            this.setScriptFromSource(src, true);
-    	} else if (this.autoSaveStore.hasScript()) {
+    	if (this.autoSaveStore.hasScript()) {
+    		// Retrieve script source
     		var src = this.autoSaveStore.loadScript();
+
+    		// Restore the script from the retrieved source
     		this.setScriptFromSource(src, true);
     	}
-
-    	// Do not attempt to compile the script now: leave it to the user to inspect the restored
-    	// script and optionally run it now or after modifying it.
     };
 
     /**
@@ -473,7 +457,7 @@ define(["model/script",
 
         // Autosave quantity if enabled
         if (autoSave && this.autoSave && window.localStorage) {
-        	this.autoSaveStore.saveQuantity(qty.name, definition);
+        	this.saveScriptToBackupStore(this.script.getSource());
         }
 
         // Compile script (if script is complete) and optionally autostart
@@ -509,7 +493,7 @@ define(["model/script",
 
         // Remove quantity from autosave store
         if (this.autoSave && window.localStorage) {
-        	this.autoSaveStore.deleteQuantity(qtyName);
+        	this.saveScriptToBackupStore(this.script.getSource());
         }
 
         // Compile script (if script is complete) and optionally autostart
@@ -711,6 +695,7 @@ define(["model/script",
      * @modifies this.script
      * @post A new script has been created, containing all quantities
      * defined in source.
+     * @return {Quantities[]} An array of quantities that have been added to the model.
      */
     Controller.prototype.setScriptFromSource = function(source, restoring) {
         if (typeof(restoring) === 'undefined') {
@@ -720,7 +705,7 @@ define(["model/script",
     	// Stop the current model and create a new script with the
     	// given source
         this.newScript(!restoring);
-        this.script.addSource(source);
+        var added = this.script.addSource(source, restoring);
         this.view.setQuantities(this.script.getQuantities());
 
         // Test whether we're in the process of restoring a script from the backup
@@ -737,6 +722,8 @@ define(["model/script",
                 this.run();
             }
         }
+
+        return added;
     };
 
     /**
@@ -746,7 +733,8 @@ define(["model/script",
      */
     Controller.prototype.saveScriptToBackupStore = function(source) {
     	if (this.useWorkers) {
-
+    		// TODO use web workers to save script to backup store
+    		this.autoSaveStore.saveScript(source);
     	} else {
     		this.autoSaveStore.saveScript(source);
     	}

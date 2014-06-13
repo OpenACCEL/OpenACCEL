@@ -107,16 +107,20 @@ define(["model/analyser/passes/quantitypass",
          * @post quantities contains all the quantities defined in script
          * @return {Quantity} The last quantity defined in the given script.
          */
-        Analyser.prototype.analyse = function(script, quantities) {
+        Analyser.prototype.analyse = function(script, quantities, autoSave) {
             if (!quantities) {
                 throw new Error('Analyser.analyse.pre violated:' +
                     'quantities is null or undefined');
             }
 
-            // Perform the relevant passes on each line
+            // Quantity most recently processed and added. Any comments that follow
+            // are assigned to this quantity 
             var prevQuantity = null;
-            var lines = script.split("\n");
 
+            // List of all quantities parsed from the given source
+            var added = [];
+
+            var lines = script.split("\n");
             lines.forEach((function(line) {
                 line = line.trim();
 
@@ -134,11 +138,13 @@ define(["model/analyser/passes/quantitypass",
                         for (var i = 0; i < this.passes.length; i++) {
                             prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
                         }
+
+                        added.push(prevQuantity);
                     }
                 }
             }).bind(this));
 
-            return prevQuantity;
+            return added;
         };
 
         /**

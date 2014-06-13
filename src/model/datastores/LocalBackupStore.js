@@ -79,9 +79,6 @@ define(["model/datastores/AbstractQuantityStore",
         }
 
         localStorage.setItem(qtyName, def);
-
-        // Delete any saved script source
-        this.clearScriptSource();
     };
 
     /**
@@ -91,9 +88,6 @@ define(["model/datastores/AbstractQuantityStore",
      */
     LocalBackupStore.prototype.saveScript = function(source) {
         localStorage.setItem('scriptSource', source);
-
-        // Delete any saved quantities
-        this.clearQuantities();
     };
 
     /**
@@ -198,13 +192,12 @@ define(["model/datastores/AbstractQuantityStore",
 
     /**
      * Checks whether all quantities in the index really
-     * still exist in the localStorage and creates an empty
-     * index if there is none. Removes any missing
+     * still exist in the localStorage. Removes any missing
      * quantities from the index.
      *
      * @modifies localStorage['quantities']
      * @post All quantities in localStorage['quantities'] are
-     * really present in the store and the index is valid.
+     * really present in the store.
      */
     LocalBackupStore.prototype.validateIndex = function() {
         // Get current index and make sure it exists
@@ -225,9 +218,6 @@ define(["model/datastores/AbstractQuantityStore",
             // Delete all missing quantities from the index array of quantities
             quantities = _.difference(quantities, deleted);
             localStorage.setItem('quantities', JSON.stringify(quantities));
-        } else {
-            // Restore empty index
-            localStorage.setItem('quantities', '[]');
         }
     };
 

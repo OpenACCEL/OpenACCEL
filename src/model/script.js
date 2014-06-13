@@ -200,7 +200,7 @@ define(["model/analyser/analyser",
          * @modifies quantities
          * @post The quantity defined in source has been added to the script, the category of all
          * quantities has been re-evaluated and the script has been recompiled if complete.
-         * @return {Quantity} The quantity defined in the given piece of code.
+         * @return {Quantity} The quantity that has been added to the script.
          * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
          */
         addQuantity: function(source) {
@@ -208,7 +208,7 @@ define(["model/analyser/analyser",
             this.checkSyntax(source);
 
             // Analyse the added line of code and add the defined quantity to the model
-            var qty = this.analyser.analyse(source, this.quantities);
+            var qty = this.analyser.analyse(source, this.quantities)[0];
             this.scriptChanged();
 
             return qty;
@@ -223,7 +223,7 @@ define(["model/analyser/analyser",
          * @modifies quantities
          * @post All quantities defined in source have been added to the model,
          * including any comments.
-         * @return {Quantity} The last quantity defined in the given script.
+         * @return {Quantity[]} An array of quantities that were added to the script.
          * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
          */
         addSource: function(source) {
@@ -231,10 +231,10 @@ define(["model/analyser/analyser",
             this.checkSyntax(source);
 
             // Analyse the added line of code and add the defined quantity to the model
-            var qty = this.analyser.analyse(source, this.quantities);
+            var added = this.analyser.analyse(source, this.quantities);
             this.scriptChanged();
 
-            return qty;
+            return added;
         },
 
         /**
