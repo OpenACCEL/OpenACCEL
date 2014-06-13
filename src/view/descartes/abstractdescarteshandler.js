@@ -23,13 +23,7 @@ define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartes
      * @classdesc The AbstractDescartesHandler class provides DescartesHandlers to DescartesCanvases,
      * allowing them to correctly draw any supported model element.
      */
-    function AbstractDescartesHandler(modelElement) {
-        /**
-         * The DescartesHandlers that can be provided by this class.
-         *
-         * @type {array<AbstractDescartesHandler>}
-         */
-        this.modelElement = modelElement;
+    function AbstractDescartesHandler() {
         /**
          * The DescartesHandlers that can be provided by this class.
          *
@@ -151,6 +145,7 @@ define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartes
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
     AbstractDescartesHandler.prototype.draw = function() {
+        console.log(this);
         var drawing = this.getDecoratedDrawing();
         for (i in this.descartesInstances) {
             this.descartesInstances[i].draw(drawing);

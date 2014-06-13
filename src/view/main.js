@@ -9,11 +9,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
      */
     function View(canvasCreator) {
         this.canvasCreator = canvasCreator;
-        this.decartesCanvas = null;
-
-        $(document).ready(
-            function() {}
-        );
+        this.descartesCanvas = null;
     }
 
     View.prototype = new AbstractView();
@@ -46,14 +42,16 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     View.prototype.setUpPlot = function(controller) {
         $('#plotdiv').toggle(true);
         this.descartesCanvas = canvasCreator.createDescartesCanvas(controller.getScript(), 'plot', 300, 300);
+        console.log(this.descartesCanvas)
     };
 
     /**
      * Trigger an update of the plot canvas
      */
     View.prototype.drawPlot = function() {
-        if (this.decartesCanvas) {
-            this.decartesCanvas.draw();
+        if (this.descartesCanvas) {
+            this.descartesCanvas.handler.modelElement = controller.getScript();
+            this.descartesCanvas.handler.draw();
         };
     };
 
@@ -71,8 +69,8 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     //var canvasCreator = null; //TODO not null
     controller = new Controller(new View(canvasCreator));
     controller.setAutoExecute(true);
-    controller.autoSave = true;
-    controller.restoreSavedScript();
+    // controller.autoSave = true;
+    // controller.restoreSavedScript();
     controller.view.setUpPlot(controller);
 
 });

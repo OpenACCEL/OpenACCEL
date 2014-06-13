@@ -91,6 +91,7 @@ define(["view/descartes/descarteshandlerfactory", "view/descartes/abstractfuncti
                 this.handler.addDescartes(this.div, this.width, this.height);
             }
         }
+        this.facadify();
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
