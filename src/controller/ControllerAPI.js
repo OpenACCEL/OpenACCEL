@@ -200,7 +200,8 @@ define(["model/script",
             // Check whether another iteration should be made
             if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
                 // Present the results to the view
-                this.presentResults(this.script.getOutputQuantities());
+                this.presentResults(this.script.getOutputQuantities())
+                this.view.drawPlot();
 
                 // Signal the executable that one iteration has been completed,
                 // for quantity history functionality
