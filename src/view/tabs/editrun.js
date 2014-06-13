@@ -27,13 +27,7 @@ function deleteQuantity(quantity) {
 var linenr = 0;
 
 function addQuantity(string) {
-    var split = string.split('=');
-
-    //Approximate Script list
-    split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
-    addScriptlistLine(linenr++, split[0], split[0], split[1], '?');
-    scriptlistBuffer.flip();
-
+    setPendingScriptLine(string);
     console.log('Pre-added line: ' + string);
     $('#scriptline').select();
 
@@ -46,6 +40,9 @@ function addQuantity(string) {
                 var syntaxerror = new Tooltip(0, '#scriptline', 'tooltip');
                 syntaxerror.set(e.message);
             }
+
+            console.log('compiled');
+            setPendingScriptLine(null);
         },
         10
     );
@@ -325,6 +322,29 @@ function getScriptlistLineHTML(linenr, quantity, left, right, category) {
  */
 function addScriptlistLine(linenr, quantity, left, right, category) {
     scriptlistBuffer.append(getScriptlistLineHTML(linenr, quantity, left, right, category));
+}
+
+/**TODO
+ * [setPendingScriptLine description]
+ * 
+ * @param {[type]} line [description]
+ */
+function setPendingScriptLine(line) {
+    var pendingline = $('#pendingscriptline');
+
+    if (line == null) {
+        pendingline.animate({height: 0, opacity: 0}, 400, 
+            function() {
+                pendingline.toggle(false);
+                $('#pendingloader').toggle(false);
+            }
+        );
+    } else {
+        $('#pendingscriptline > div').first().html(line);
+        pendingline.toggle(true);
+        $('#pendingloader').toggle(true);
+        pendingline.css({height: '20px', opacity: 1});
+    }
 }
 
 /**

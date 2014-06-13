@@ -7,7 +7,7 @@ body {
 	/*background: #FFFFFF;*/
 	background: #FFDDFF;
 	background: linear-gradient(#FFDDFF, #FFFFFF);
-	font-family: "Arial";
+	font-family: 'Arial';
 	color: #FFFFFF;
 }
 body div {
@@ -37,7 +37,7 @@ body div {
 	display: inline-block;
 	height: 70px;
 	width: 337px;
-	background-image: url("../img/logoV2.png");
+	background-image: url('../img/logoV2.png');
 	background-size: 100%;
 	background-repeat: no-repeat;
 }
@@ -332,9 +332,9 @@ body div {
 }
 
 #scriptlistcontainer {
+	height: 400px;
 	overflow-x: hidden; 
 	overflow-y: auto; 
-	height: 400px;
 	padding-left: 0px;
 	padding-right: 0px;
 }
@@ -368,6 +368,25 @@ body div {
 	display: table-cell;
 	padding-left: 2px;
 	padding-right: 2px;
+}
+
+#pendingscriptline {
+	display: none;
+	height: 0px;
+	padding-left: 2px;
+	padding-right: 2px;
+	border-bottom: 1px black dashed;
+	color: #9933CC;
+}
+
+#pendingloader {
+	display: none;
+	width: 20px;
+	height: 20px;
+	float: right;
+	background-image: url('../img/loadDot.gif'); 
+	background-size: 100%;
+	background-repeat: no-repeat;
 }
 
 #userinput {
