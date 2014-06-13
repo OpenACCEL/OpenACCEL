@@ -89,9 +89,11 @@ define([], /**@lends Model*/ function() {
 
         /**
          * An optional comment explaining the quantity.
-         * @type {String}
+         * Can span multiple lines, each entry in the array is one line
+         *
+         * @type {String[]}
          */
-        this.comment = '';
+        this.comment = [];
 
         /**
          * Whether this quantity has an empty definition. If true, it should be displayed
@@ -157,7 +159,7 @@ define([], /**@lends Model*/ function() {
         this.category = 0;
         this.unit = '';
         this.parameters = [];
-        this.comment = '';
+        this.comment = [];
         this.value = 0;
         this.source = this.name + '=';
         this.isTimeDependent = false;
@@ -173,8 +175,14 @@ define([], /**@lends Model*/ function() {
      */
     Quantity.prototype.getSource = function() {
         var def = this.source;
-        if (this.comment != '') {
-            def += '\n  //' + this.comment;
+        if (this.comment.length > 0) {
+            var comment = '';
+            
+            for (var i=0; i < this.comment.length; i++) {
+                comment += '\n //' + this.comment[i];
+            }
+
+            def += comment;
         }
 
         return def;
@@ -199,8 +207,14 @@ define([], /**@lends Model*/ function() {
         if (includeUnits && this.unit != '') {
             def += ' ; ' + this.unit;
         }
-        if (includeComments && this.comment != '') {
-            def += '\n //' + this.comment;
+        if (includeComments && this.comment.length > 0) {
+            var comment = '';
+            
+            for (var i=0; i < this.comment.length; i++) {
+                comment += '\n //' + this.comment[i];
+            }
+
+            def += comment;
         }
 
         return def;

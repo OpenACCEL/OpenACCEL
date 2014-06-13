@@ -712,7 +712,7 @@ define(["model/script",
         if (!restoring) {
         	// If autosave is enabled, save script to backup store
         	if (this.autoSave) {
-        		this.saveScriptToBackupStore(source);
+        		this.saveScriptToBackupStore(this.script.getSource());
         	}
         	
         	// Compile script and execute immediately if autoExecute is enabled

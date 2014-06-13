@@ -131,7 +131,8 @@ define(["model/analyser/passes/quantitypass",
                         // Ignore comments on first line of script, only handle
                         // those appearing _after_ a quantity definition
                         if (prevQuantity != null) {
-                            prevQuantity.comment = line.substring(2, line.length);
+                            // Comments can span multiple lines!
+                            prevQuantity.comment.push(line.substring(2, line.length));
                         }
                     } else {
                         // Actual quantity definition: apply all passes
