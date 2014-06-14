@@ -176,9 +176,12 @@ var maxPrintElements = 1000;
  * @return {String}     Printable string
  */
 function objectToString(obj) {
+    var result = '';
+    var count = 0;
+
     try {
         // Recursive function calculating the
-        return (function(obj, count, result) {
+        (function(obj) {
             if (obj instanceof Object) {
                 if (count < maxPrintElements) {
                     result += '[';
@@ -190,37 +193,38 @@ function objectToString(obj) {
                         // So we throw the result we have so far
                         // appended with ...
                         result += '...';
-                        throw result;
+                        throw {};
                     }
-                    count++;
-                    var element;
-                    if (obj[key] instanceof Object) {
-                        // Ith this condition we avoid a recursive call in case
-                        // we reach a base case;
-                        element = arguments.callee(obj[key], count, result);
-                    } else {
-                        element = obj[key].toString();
-                    }
-
 
                     if (isNaN(key)) {
                         // Key is not a number
                         result += key + ':';
                     }
 
-                    result += element + ', ';
+                    if (obj[key] instanceof Object) {
+                        // With this condition we avoid a recursive call in case
+                        // we reach a base case;
+                        arguments.callee(obj[key]);
+                    } else {
+                        result += obj[key].toString();
+                    }
+
+                    count++;
+
+                    result += ',';
                 }
                 // replace the last 
-                result = result.slice(0, -2) + ']';
-                return result;
+                if (result.charAt(result.length - 1) === ',') {
+                    result = result.slice(0, -1) + ']';
+                }
             } else {
-                return obj.toString();
+                result += obj.toString();
             }
-        })(obj, 0, '');
-    } catch (result) {
+        })(obj);
+    } catch (e) {
         // Result was terminated.
-        return result;
     }
+    return result;
 }
 
 
