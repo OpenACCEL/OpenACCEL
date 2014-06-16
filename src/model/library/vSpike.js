@@ -1,5 +1,9 @@
 //This function was taken from keesvanoverveld.com
 function vSpike(x, y) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     var r = Math.round(y);
     var p = Math.round(x);
     var rr = [];

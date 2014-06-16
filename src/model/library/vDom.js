@@ -5,6 +5,10 @@
  * @return result	array with the domain (keys) of x
  */
 function vDom(x) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     var keys = Object.keys(x);
     var namedKeys = [];
     var max = -1;

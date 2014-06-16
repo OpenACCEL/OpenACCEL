@@ -1,4 +1,8 @@
 function __do__(code, args) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     if (typeof code === "string") {
         if (args instanceof Object) {
             for (var arg in args) {

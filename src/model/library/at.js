@@ -6,6 +6,10 @@
  * @return 			array with values in x indexed by y
  */
 function at(x, y) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     if (y instanceof Object) {
         // Recursive step, y is an array
         var result = {};

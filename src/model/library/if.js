@@ -7,6 +7,10 @@
  * @return 				ifTrue if condition evaluates to true, ifFalse if condition evaluates to false
  */
 function __if__(condition, ifTrue, ifFalse) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     return zip([condition, ifTrue, ifFalse], function(conditionInner, ifTrueInner, ifFalseInner) {
         if (conditionInner) {
             return ifTrueInner;

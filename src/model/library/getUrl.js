@@ -1,4 +1,8 @@
 function getUrl(url) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     if ((typeof url) == 'string') {
         var comps = url.split('?');
         // comps[0] is the part of the URL. Check if this occurs in the array 

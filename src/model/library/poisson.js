@@ -2,6 +2,10 @@
 
 
 function poisson(x, y, z) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     return zip([x, y, z], function(a, b, c) {
         if (a < 0 || b < 0) {
             throw new Error("The poisson of numbers less than 0 are not supported.");
