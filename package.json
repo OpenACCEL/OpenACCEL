@@ -68,7 +68,7 @@
         "jison" : "0.4.x",
         "jquery": "2.1.x",
         "jsdoc": "3.3.x",
-        "mocha": "1.18.x",
+        "mocha": "1.20.x",
         "requirejs": "2.1.x",
         "sweet.js": "0.6.x",
         "underscore": "1.6.x"
