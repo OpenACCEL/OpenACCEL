@@ -54,10 +54,17 @@ define([], /**@lends Model*/ function() {
         this.mousey = 0;
 
         /**
+         * Whether the mouse button is pressed
+         * @type {Boolean}
+         */
+        this.mouseButtonPressed = false;
+
+        /**
          * Descartes plot object, set by plot-library-function
          * @type {Array}
          */
         this.plot = [];
+
     }
 
 
@@ -186,6 +193,14 @@ define([], /**@lends Model*/ function() {
     Executable.prototype.exists = function(quantity) {
         var localQty = '__' + quantity + '__';
         return !!this[localQty];
+    };
+
+    /**
+     * Sets whether the mouse button is pressed
+     * @param {Boolean} buttonDown whether the mouse button is pressed
+     */
+    Executable.prototype.setMouseButton = function(buttonDown) {
+        this.mouseButtonPressed = buttonDown;
     };
 
 
