@@ -106,7 +106,7 @@ define(["model/fileloader",
 
             // Expand the macros in the parser-outputted code
             // First enclose the code within this container code
-            code = '(function () { exe = {}; ' + code + 'return exe; })()';
+            code = '(function () { exe = {mouseX: 0, mouseY: 0}; ' + code + 'return exe; })()';
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
             // Build the executable object by simply evaluating the generated/compiled javascript code
@@ -130,7 +130,12 @@ define(["model/fileloader",
                         this[qty].hist.length = 0;
                     }
                 }
-            }
+            };
+
+            exe.setMousePos = function(x, y) {
+                this.mouseX = x;
+                this.mouseY = y;
+            };
 
             return {
                 report: script.getQuantities(),

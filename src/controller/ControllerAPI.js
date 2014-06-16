@@ -23,14 +23,14 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/script", 
-		"model/compiler", 
-		"controller/AbstractView", 
+define(["model/script",
+		"model/compiler",
+		"controller/AbstractView",
 		"underscore",
 		"model/datastores/LocalBackupStore",
 		"model/exceptions/RuntimeError"],
-		//"model/workers/AutoSaveWorker"], 
-		/**@lends Controller*/ 
+		//"model/workers/AutoSaveWorker"],
+		/**@lends Controller*/
 		function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError) {
     /**
      * @class Controller
@@ -176,8 +176,24 @@ define(["model/script",
     };
 
     /**
+     * Sets the current position of the mouse cursor inside the
+     * descartes canvas.
+     *
+     * @pre 0 <= x <= width of descartes canvas
+     * @pre 0 <= y <= height of descartes canvas
+     * @param {Number} x The x coordinate of the mouse cursor inside the
+     * descartes canvas, relative to it's origin.
+     * @param {Number} y The y coordinate of the mouse cursor inside the
+     * descartes canvas, relative to it's origin.
+     */
+    Controller.prototype.setMousePos = function(x, y) {
+        this.script.exe.setMousePos(x, y);
+    };
+
+    /**
      * Sets wether the application should use web workers when they are
-     * available on the user's system.
+     * available on the user's system. Currently workers are not used for
+     * anything but this can change in the future
      *
      * @param {Boolean} useWorkers Whether workers should be used when available
      */
@@ -193,8 +209,8 @@ define(["model/script",
      * Starts or resumes execution of the script.
      *
      * @post The script is being executed in a loop if the
-     * script is complete and non-empty. 
-     * The script has been resumed if it was paused and 
+     * script is complete and non-empty.
+     * The script has been resumed if it was paused and
      * otherwise has been started over.
      */
     Controller.prototype.run = function() {
@@ -245,7 +261,7 @@ define(["model/script",
 
     		// Push results to view
     		this.presentResults(results);
-            
+
             // Signal the executable that one iteration has been completed,
 	        // for quantity history functionality
 	        this.script.exe.step();
@@ -425,7 +441,7 @@ define(["model/script",
                 'quantity does not exist')
         }
 
-        //TODO Precondition quantity \in Script 
+        //TODO Precondition quantity \in Script
         return this.script.getQuantity(qtyName);
     };
 
@@ -690,7 +706,7 @@ define(["model/script",
      * @param {String} source List of quantity definitions and optionally
      * comments
      * @param {Boolean} restoring (Optional) Whether we are restoring a script
-     * from the autoSaveStore. Set to true to 
+     * from the autoSaveStore. Set to true to
      * @modifies this.script
      * @post A new script has been created, containing all quantities
      * defined in source.
@@ -714,7 +730,7 @@ define(["model/script",
         	if (this.autoSave) {
         		this.saveScriptToBackupStore(this.script.getSource());
         	}
-        	
+
         	// Compile script and execute immediately if autoExecute is enabled
             this.compileScript(this.script);
             if (this.autoExecute) {
@@ -731,12 +747,7 @@ define(["model/script",
      * @param {String} source The script source to save to the backup store.
      */
     Controller.prototype.saveScriptToBackupStore = function(source) {
-    	if (this.useWorkers) {
-    		// TODO use web workers to save script to backup store
-    		this.autoSaveStore.saveScript(source);
-    	} else {
-    		this.autoSaveStore.saveScript(source);
-    	}
+    	this.autoSaveStore.saveScript(source);
     };
 
     /**
@@ -760,7 +771,7 @@ define(["model/script",
             throw new Error('Controller.prototype.plot.pre :' +
                 'quantity2 is null or undefined')
         }
-        //TODO 
+        //TODO
         //TODO Implementation
         //TODO Tests
     };
@@ -779,7 +790,7 @@ define(["model/script",
             throw new Error('Controller.prototype.generate.pre :' +
                 'iterations is null or undefined')
         }
-        //TODO 
+        //TODO
         //TODO Implementation
         //TODO Tests
     };
