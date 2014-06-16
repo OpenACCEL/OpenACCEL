@@ -21,8 +21,9 @@ define(["model/analyser/analyser",
         "model/quantity", 
         "underscore", 
         "model/parser",
-        "model/exceptions/SyntaxError"], 
-        function(Analyser, Quantity, _, parser, SyntaxError) {
+        "model/exceptions/SyntaxError",
+        "model/exceptions/RuntimeError"], 
+        function(Analyser, Quantity, _, parser, SyntaxError, RuntimeError) {
     /**
      * @class Script
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
@@ -167,6 +168,7 @@ define(["model/analyser/analyser",
          * @param {String} qtyName The name of the quantity of which to return the value
          * @pre this.hasQuantity(qtyName)
          * @pre this.isComplete()
+         * @throws {RuntimeError} If an error occured while evaluating the quantity definition
          * @return this.quantities[qtyName]
          */
         getQuantityValue: function(qtyName) {
@@ -179,7 +181,15 @@ define(["model/analyser/analyser",
                 'script not compiled because incomplete')
             }
 
-            return this.exe['__' + qtyName + '__']();
+            // Try evaluating the value. Throw RuntimeError if an error is thrown
+            var value;
+            try {
+                value = this.exe['__' + qtyName + '__']();
+            } catch(e) {
+                throw new RuntimeError(e.message);
+            }
+
+            return value;
         },
 
         /**
@@ -190,7 +200,7 @@ define(["model/analyser/analyser",
          * @modifies quantities
          * @post The quantity defined in source has been added to the script, the category of all
          * quantities has been re-evaluated and the script has been recompiled if complete.
-         * @return {Quantity} The quantity defined in the given piece of code.
+         * @return {Quantity} The quantity that has been added to the script.
          * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
          */
         addQuantity: function(source) {
@@ -198,7 +208,7 @@ define(["model/analyser/analyser",
             this.checkSyntax(source);
 
             // Analyse the added line of code and add the defined quantity to the model
-            var qty = this.analyser.analyse(source, this.quantities);
+            var qty = this.analyser.analyse(source, this.quantities)[0];
             this.scriptChanged();
 
             return qty;
@@ -213,7 +223,7 @@ define(["model/analyser/analyser",
          * @modifies quantities
          * @post All quantities defined in source have been added to the model,
          * including any comments.
-         * @return {Quantity} The last quantity defined in the given script.
+         * @return {Quantity[]} An array of quantities that were added to the script.
          * @throws {SyntaxError} If the given source is _not_ valid ACCEL code
          */
         addSource: function(source) {
@@ -221,10 +231,10 @@ define(["model/analyser/analyser",
             this.checkSyntax(source);
 
             // Analyse the added line of code and add the defined quantity to the model
-            var qty = this.analyser.analyse(source, this.quantities);
+            var added = this.analyser.analyse(source, this.quantities);
             this.scriptChanged();
 
-            return qty;
+            return added;
         },
 
         /**
@@ -311,6 +321,8 @@ define(["model/analyser/analyser",
          * by quantity name, and containing their current values if the script
          * can be executed. Output values are all "?" if model is incomplete.
          *
+         * @throws {RuntimeError} If an error occured while evaluating the
+         * output quantities
          * @return this.analyser.getOutputQuantities()
          */
         getOutputQuantities: function() {

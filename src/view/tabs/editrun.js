@@ -159,23 +159,74 @@ function synchronizeResults(quantities) {
     Report.resultBuffer.hideIfEmpty('#resultdiv');
 }
 
+/**
+ * Number of object-elements the objectToString function
+ * should generate before it is terminated.
+ * @type {Number}
+ */
+var maxPrintElements = 1000;
+
+/**
+ * Create printable version of an object.
+ *
+ * Terminates the string with ...
+ * when maxPrintElements elements has been reached.
+ *
+ * @param  {Object} obj Object to print
+ * @return {String}     Printable string
+ */
 function objectToString(obj) {
-    if (obj instanceof Object) {
-        var results = [];
-        for (var key in obj) {
-            var elem = '';
-            if (!(/^\d+$/.test(key))) {
-                // Key is not a number
-                elem += key + ':';
+    var result = '';
+    var count = 0;
+
+    try {
+        // Recursive function calculating the
+        (function(obj) {
+            if (obj instanceof Object) {
+                if (count < maxPrintElements) {
+                    result += '[';
+                }
+
+                for (var key in obj) {
+                    if (count >= maxPrintElements) {
+                        // We need to terminate the recursion
+                        // So we throw the result we have so far
+                        // appended with ...
+                        result += '...';
+                        throw {};
+                    }
+
+                    if (isNaN(key)) {
+                        // Key is not a number
+                        result += key + ':';
+                    }
+
+                    if (obj[key] instanceof Object) {
+                        // With this condition we avoid a recursive call in case
+                        // we reach a base case;
+                        arguments.callee(obj[key]);
+                    } else {
+                        result += obj[key].toString();
+                    }
+
+                    count++;
+
+                    result += ',';
+                }
+                // replace the last 
+                if (result.charAt(result.length - 1) === ',') {
+                    result = result.slice(0, -1) + ']';
+                }
+            } else {
+                result += obj.toString();
             }
-            elem += objectToString(obj[key]);
-            results.push(elem);
-        }
-        return '[' + results.join(',') + ']';
-    } else {
-        return obj.toString();
+        })(obj);
+    } catch (e) {
+        // Result was terminated.
     }
+    return result;
 }
+
 
 //------------------------------------------------------------------------------
 

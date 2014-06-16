@@ -109,6 +109,7 @@ unit        [a-zA-Z]+[0-9]*
         'vDom',
         'vDot',
         'vEigenSystem',
+        'vExtend',
         'vGaussian',
         'vLen',
         'vMake',
@@ -436,15 +437,15 @@ vectorElem              :   STRING ':' expr
                         ;
 
 vectorCall              :   scalarTerm '[' expr ']'
-                            { $$ = $1 + $2 + $3 + $4; }
+                            { $$ = 'at(' + $1 + ', ' + $3 + ')'; }
                         |   scalarTerm '.' IDENTIFIER
-                            { $$ = $1 + $2 + $3; }
+                            { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; }
                         |   scalarTerm '.' STDFUNCTION
-                            { $$ = $1 + $2 + $3; }  
+                            { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; }
                         |   scalarTerm '.' INPUTFUNCTION
-                            { $$ = $1 + $2 + $3; }  
+                            { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; } 
                         |   scalarTerm '.' NUMBER
-                            { $$ = $1 + '[' + $3 + ']'; } 
+                            { $$ = 'at(' + $1 + ', ' + $3 + ')'; } 
                         ;
 
 

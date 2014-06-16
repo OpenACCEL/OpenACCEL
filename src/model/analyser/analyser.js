@@ -55,7 +55,7 @@ define(["model/analyser/passes/quantitypass",
              * Object containing a partitioning of all quantities into the
              * different categories.
              *
-             * @type {map<[1-4], map<String, Quantity>>}
+             * @type {Object.<Number, Object.<String, Quantity>>}
              */
             this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
         }
@@ -74,7 +74,7 @@ define(["model/analyser/passes/quantitypass",
          * category
          *
          * @param {Integer} cat The category of which to return all quantities
-         * @return {map<String, Quantity>} Object containing all quantities in
+         * @return {Object.<String, Quantity>} Object containing all quantities in
          * category cat.
          */
         Analyser.prototype.getQuantitiesByCategory = function(cat) {
@@ -107,16 +107,20 @@ define(["model/analyser/passes/quantitypass",
          * @post quantities contains all the quantities defined in script
          * @return {Quantity} The last quantity defined in the given script.
          */
-        Analyser.prototype.analyse = function(script, quantities) {
+        Analyser.prototype.analyse = function(script, quantities, autoSave) {
             if (!quantities) {
                 throw new Error('Analyser.analyse.pre violated:' +
                     'quantities is null or undefined');
             }
 
-            // Perform the relevant passes on each line
+            // Quantity most recently processed and added. Any comments that follow
+            // are assigned to this quantity 
             var prevQuantity = null;
-            var lines = script.split("\n");
 
+            // List of all quantities parsed from the given source
+            var added = [];
+
+            var lines = script.split("\n");
             lines.forEach((function(line) {
                 line = line.trim();
 
@@ -127,18 +131,21 @@ define(["model/analyser/passes/quantitypass",
                         // Ignore comments on first line of script, only handle
                         // those appearing _after_ a quantity definition
                         if (prevQuantity != null) {
-                            prevQuantity.comment = line.substring(2, line.length);
+                            // Comments can span multiple lines!
+                            prevQuantity.comment.push(line.substring(2, line.length));
                         }
                     } else {
                         // Actual quantity definition: apply all passes
                         for (var i = 0; i < this.passes.length; i++) {
                             prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
                         }
+
+                        added.push(prevQuantity);
                     }
                 }
             }).bind(this));
 
-            return prevQuantity;
+            return added;
         };
 
         /**

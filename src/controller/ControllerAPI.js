@@ -27,10 +27,12 @@ define(["model/script",
         "model/compiler",
         "controller/AbstractView",
         "underscore",
-        "model/datastores/LocalQuantityStore"
+        "model/datastores/LocalBackupStore",
+        "model/exceptions/RuntimeError"
     ],
+    //"model/workers/AutoSaveWorker"],
     /**@lends Controller*/
-    function(Script, Compiler, AbstractView, _, LocalQuantityStore) {
+    function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError) {
         /**
          * @class Controller
          * @classdesc Base controller class.
@@ -121,12 +123,19 @@ define(["model/script",
             this.autoSave = false;
 
             /**
-             * The Quantity Store used for autosaving the script.
-             * Object must conform to the AbstractQuantityStore interface.
+             * Whether the application uses web workers or not. DO NOT
+             * SET DIRECTLY. Use setShouldUseWorkers().
              *
-             * @type {AbstractQuantityStore}
+             * @param {Boolean}
              */
-            this.autoSaveStore = new LocalQuantityStore();
+            this.useWorkers = false;
+
+            /**
+             * The Quantity Store used for autosaving the script.
+             *
+             * @type {LocalBackupStore}
+             */
+            this.autoSaveStore = new LocalBackupStore();
 
             /**
              * The currently active tab in the UI.
@@ -156,6 +165,59 @@ define(["model/script",
         };
 
         /**
+         * Sets whether the controller should automatically save the script to the
+         * backup store when adding or removing quantities.
+         *
+         * @param autoSave {Boolean} Whether to automatically save the script to the
+         * backup store
+         * @post this.autoSave = autoSave
+         */
+        Controller.prototype.setAutoSave = function(autoSave) {
+            this.autoSave = autoSave;
+        };
+
+        /**
+         * Sets the current position of the mouse cursor inside the
+         * descartes canvas, for use in the script. Descartes canvas coordinates
+         * are always within the range [0,100].
+         *
+         * @pre 0 <= x <= 100
+         * @pre 0 <= y <= 100
+         * @param {Number} x The x coordinate of the mouse cursor inside the
+         * descartes canvas
+         * @param {Number} y The y coordinate of the mouse cursor inside the
+         * descartes canvas
+         */
+        Controller.prototype.setMousePosInScript = function(x, y) {
+            this.script.exe.setMousePos(x, y);
+        };
+
+        /**
+         * Sets the current left mouse button status.
+         *
+         * @param {Boolean} buttonDown Whether the left mouse button is currently
+         * pressed
+         */
+        Controller.prototype.setMouseButtonInScript = function(buttonDown) {
+            this.script.exe.setMouseButton(buttonDown);
+        };
+
+        /**
+         * Sets wether the application should use web workers when they are
+         * available on the user's system. Currently workers are not used for
+         * anything but this can change in the future
+         *
+         * @param {Boolean} useWorkers Whether workers should be used when available
+         */
+        Controller.prototype.setUseWorkers = function(useWorkers) {
+            if (useWorkers && typeof(Worker) !== 'undefined' && inBrowser) {
+                this.useWorkers = true;
+            } else {
+                this.useWorkers = false;
+            }
+        };
+
+        /**
          * Starts or resumes execution of the script.
          *
          * @post The script is being executed in a loop if the
@@ -175,7 +237,12 @@ define(["model/script",
                     var controller = this;
                     this.runloop = setInterval(
                         function() {
-                            controller.execute();
+                            try {
+                                controller.execute();
+                            } catch (e) {
+                                controller.view.runtimeError(e);
+                                controller.stop();
+                            }
                         }, 1
                     );
                 }
@@ -187,6 +254,8 @@ define(["model/script",
          * them to the view.
          *
          * @pre this.script.isComplete()
+         * @throws {RuntimeError} If an error occured while evaluating one of the
+         * output quantities in the script.
          * @post The view has received the current values of all output quantities.
          */
         Controller.prototype.execute = function() {
@@ -199,9 +268,11 @@ define(["model/script",
 
             // Check whether another iteration should be made
             if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
-                // Present the results to the view
-                this.presentResults(this.script.getOutputQuantities())
-                this.view.drawPlot();
+                // Evaluate the expressions (definitions) of all output quantities
+                var results = this.script.getOutputQuantities();
+
+                // Push results to view
+                this.presentResults(results);
 
                 // Signal the executable that one iteration has been completed,
                 // for quantity history functionality
@@ -249,7 +320,10 @@ define(["model/script",
                 this.status = "Stopped";
                 this.view.setStatus(this.status);
                 this.currentIteration = 1;
-                this.script.exe.reset();
+
+                if (this.script.isCompiled()) {
+                    this.script.exe.reset();
+                }
             }
         };
 
@@ -269,7 +343,7 @@ define(["model/script",
             this.view.setQuantities({});
             this.view.presentResults({});
 
-            if (this.autoSave && window.localStorage && clearStore) {
+            if (clearStore && this.autoSave && window.localStorage) {
                 this.autoSaveStore.clear();
             }
         };
@@ -282,26 +356,14 @@ define(["model/script",
          */
         Controller.prototype.restoreSavedScript = function() {
             // Retrieve the definitions of all the stored quantities and add them to the script
-            if (this.autoSaveStore.numQuantities() > 0) {
-                var src = '';
-                // Get the names of all stored quantities
-                var storedQuantities = this.autoSaveStore.getQuantities();
+            // Give precedence to individually stored quantities over entire script sources
+            if (this.autoSaveStore.hasScript()) {
+                // Retrieve script source
+                var src = this.autoSaveStore.loadScript();
 
-                for (var i = 0; i < storedQuantities.length; i++) {
-                    var qtyName = storedQuantities[i];
-                    var qty = this.autoSaveStore.loadQuantity(qtyName);
-
-                    // Add restored quantity to the script
-                    if (qty) {
-                        src += qty + '\n';
-                    }
-                }
-
-                this.setScriptFromSource(src, false);
+                // Restore the script from the retrieved source
+                this.setScriptFromSource(src, true);
             }
-
-            // Do not attempt to compile the script now: leave it to the user to inspect the restored
-            // script and optionally run it now or after modifying it.
         };
 
         /**
@@ -391,7 +453,7 @@ define(["model/script",
                     'quantity does not exist')
             }
 
-            //TODO Precondition quantity \in Script 
+            //TODO Precondition quantity \in Script
             return this.script.getQuantity(qtyName);
         };
 
@@ -411,7 +473,7 @@ define(["model/script",
                     'definition is null or undefined')
             }
 
-            if (typeof autoSave === 'undefined') {
+            if (typeof(autoSave) === 'undefined') {
                 autoSave = true;
             }
 
@@ -421,8 +483,8 @@ define(["model/script",
             this.view.setQuantities(this.script.getQuantities());
 
             // Autosave quantity if enabled
-            if (this.autoSave && window.localStorage && autoSave) {
-                this.autoSaveStore.saveQuantity(qty.name, definition);
+            if (autoSave && this.autoSave && window.localStorage) {
+                this.saveScriptToBackupStore(this.script.getSource());
             }
 
             // Compile script (if script is complete) and optionally autostart
@@ -458,7 +520,7 @@ define(["model/script",
 
             // Remove quantity from autosave store
             if (this.autoSave && window.localStorage) {
-                this.autoSaveStore.deleteQuantity(qtyName);
+                this.saveScriptToBackupStore(this.script.getSource());
             }
 
             // Compile script (if script is complete) and optionally autostart
@@ -655,30 +717,49 @@ define(["model/script",
          *
          * @param {String} source List of quantity definitions and optionally
          * comments
-         * @param {Boolean} compileAndExecute (Optional) Whether to automatically
-         * (re)compile and execute the script after it has been constructed from
-         * the given source.
+         * @param {Boolean} restoring (Optional) Whether we are restoring a script
+         * from the autoSaveStore. Set to true to
          * @modifies this.script
          * @post A new script has been created, containing all quantities
          * defined in source.
+         * @return {Quantities[]} An array of quantities that have been added to the model.
          */
-        Controller.prototype.setScriptFromSource = function(source, compileAndExecute) {
-            if (typeof compileAndExecute === 'undefined') {
-                compileAndExecute = true;
+        Controller.prototype.setScriptFromSource = function(source, restoring) {
+            if (typeof(restoring) === 'undefined') {
+                restoring = false;
             }
 
             // Stop the current model and create a new script with the
             // given source
-            this.newScript();
-            this.script.addSource(source);
+            this.newScript(!restoring);
+            var added = this.script.addSource(source, restoring);
             this.view.setQuantities(this.script.getQuantities());
 
-            if (compileAndExecute) {
+            // Test whether we're in the process of restoring a script from the backup
+            // store. If we are, don't save it again and don't compile it.
+            if (!restoring) {
+                // If autosave is enabled, save script to backup store
+                if (this.autoSave) {
+                    this.saveScriptToBackupStore(this.script.getSource());
+                }
+
+                // Compile script and execute immediately if autoExecute is enabled
                 this.compileScript(this.script);
                 if (this.autoExecute) {
                     this.run();
                 }
             }
+
+            return added;
+        };
+
+        /**
+         * Saves the given script source to the backup store.
+         *
+         * @param {String} source The script source to save to the backup store.
+         */
+        Controller.prototype.saveScriptToBackupStore = function(source) {
+            this.autoSaveStore.saveScript(source);
         };
 
         /**
@@ -702,7 +783,7 @@ define(["model/script",
                 throw new Error('Controller.prototype.plot.pre :' +
                     'quantity2 is null or undefined')
             }
-            //TODO 
+            //TODO
             //TODO Implementation
             //TODO Tests
         };
@@ -721,7 +802,7 @@ define(["model/script",
                 throw new Error('Controller.prototype.generate.pre :' +
                     'iterations is null or undefined')
             }
-            //TODO 
+            //TODO
             //TODO Implementation
             //TODO Tests
         };

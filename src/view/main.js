@@ -63,9 +63,11 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
         setExecuting(executing);
     };
 
-    canvasCreator = new CanvasCreator();
+    View.prototype.runtimeError = function(err) {
+        console.log("Runtime error: " + err.message);
+    };
 
-    //var canvasCreator = null; //TODO not null
+    canvasCreator = new CanvasCreator();
     controller = new Controller(new View(canvasCreator));
     controller.setAutoExecute(true);
     // controller.autoSave = true;

@@ -126,7 +126,6 @@ define(["model/datastores/AbstractScriptStore",
                 });
             }
         };
-    }
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return ServerScriptStore;
