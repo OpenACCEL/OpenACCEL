@@ -100,7 +100,7 @@ suite("vConcat Library", function() {
             expected[1] = 0;
             expected[2] = 3;
             expected[3] = 4;
-            assert.deepEqual(output.exe.__x__(), expected);
+            assert.deepEqual(output.__x__(), expected);
         });
     });
 });

@@ -67,7 +67,7 @@ suite("vAppend Library", function() {
             expected[0] = 1;
             expected[1] = 0;
             expected[2] = 3;
-            assert.deepEqual(output.exe.__x__(), expected);
+            assert.deepEqual(output.__x__(), expected);
         });
     });
 });

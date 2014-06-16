@@ -99,13 +99,13 @@ suite("@ Library", function() {
         test("should expand for 'x = @([10,30], 0)'", function() {
             var input = "x = @([10,30], 0)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__x__(), 10);
+            assert.equal(output.__x__(), 10);
         });
 
         test("should expand for 'x = [5,4,2], y = [@(x,1), 2, 3], z = @(y,@(x,2))'", function() {
             var input = "x = [5,4,2]\ny = [@(x,1), 2, 3]\nz = @(y,@(x,2))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__z__(), 3);
+            assert.equal(output.__z__(), 3);
         });
     });
 });

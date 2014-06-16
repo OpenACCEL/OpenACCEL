@@ -17,7 +17,7 @@ suite("Pow Library", function() {
     suite("pow", function() {
         test("x = pow(5, 2)", function() {
             var input = "x = pow(5, 2)";
-            var output = compiler.compile(new script(input)).exe.__x__();
+            var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, Math.pow(5, 2));
         });
 
@@ -26,7 +26,7 @@ suite("Pow Library", function() {
             "x = 5\n" + 
             "y = pow(x, 3)\n" +
             "z = pow(y, pow(x, 2))";
-            var output = compiler.compile(new script(input)).exe.__z__();
+            var output = compiler.compile(new script(input)).__z__();
             assert.equal(output, Math.pow(Math.pow(5, 3), Math.pow(5, 2)));
         });
 

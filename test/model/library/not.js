@@ -73,14 +73,14 @@ suite("Not Library", function() {
         test("should expand for 'x = 5, y = not(x)'", function() {
             var input = "x = 5\ny = not(x)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), false);
+            assert.equal(output.__y__(), false);
         });
 
         test("should expand for 'x = 5, y = not(x), z = not(y)'", function() {
             var input = "x = 5\ny = not(x) \nz = not(y)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), false);
-            assert.equal(output.exe.__z__(), true);
+            assert.equal(output.__y__(), false);
+            assert.equal(output.__z__(), true);
         });
 
     });

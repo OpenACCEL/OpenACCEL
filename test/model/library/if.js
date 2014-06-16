@@ -74,20 +74,20 @@ suite("If Library", function() {
         test("should expand for 'x = if(1 == 1,10,30)'", function() {
             var input = "x = if(1 == 1,10,30)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__x__(), 10);
+            assert.equal(output.__x__(), 10);
         });
 
         test("should expand for 'x = 5, y = if(1 == 1,x,4) + 2, z = if(1 == 0,if(1 == 0,x,2),y)'", function() {
             var input = "x = 5\ny = if(1 == 1,x,4) + 2\nz = if(1 == 1,if(1 == 0,x,2),y)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), 7);
-            assert.equal(output.exe.__z__(), 2);
+            assert.equal(output.__y__(), 7);
+            assert.equal(output.__z__(), 2);
         });
 
         test("should expand for 'x = if([1,2], [3,4])'", function() {
             var input = "x = if([1 == 1,1 == 0], [1,2], [3,4])";
             var output = compiler.compile(new script(input));
-            assert.deepEqual(output.exe.__x__(), [1, 4]);
+            assert.deepEqual(output.__x__(), [1, 4]);
         });
     });
 });

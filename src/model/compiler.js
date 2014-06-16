@@ -61,6 +61,16 @@ define(["model/fileloader",
             this.quantities = null;
 
             /**
+             * Contains the quantities for which the history has been checked
+             */
+            this.historyChecked = [];
+
+            /**
+             * The total number of quantities in the script being compiled.
+             */
+            this.totalNumQuantities = 0;
+
+            /**
              * The file loader is reponsible for loading all files, like macros and library functions.
              */
             this.fileLoader = new FileLoader();
@@ -72,23 +82,13 @@ define(["model/fileloader",
 
             this.fileLoader.load("functions", "library");
             eval.call(globalScope, this.fileLoader.getLibrary());
-
-            /**
-             * Contains the quantities for which the history has been checked
-             */
-            this.historyChecked = [];
-
-            /**
-             * The total number of quantities in the script being compiled.
-             */
-            this.totalNumQuantities = 0;
         }
 
         /**
          * Compiles a piece of ACCEL code and outputs an object, containing an executable.
          *
-         * @param {Script} script   The ACCEL script to be compiled.
-         * @return {Object}         An object, containing an executable and information.
+         * @param {Script} script The ACCEL script to be compiled.
+         * @return {Executable} The executable that is the result of compiling the given script.
          */
         Compiler.prototype.compile = function(script) {
             // Save the quantities of the script once so we don't have to query them every time in
@@ -107,16 +107,12 @@ define(["model/fileloader",
             this.determineTimeDependencies();
 
             // Expand the macros in the parser-outputted code
-            // First enclose the code within this container code
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
-            // Build the executable object by simply evaluating the generated/compiled javascript code
+            // Create Executable with the parsed code 
             exe = new Executable(code, script.getQuantities());
 
-            return {
-                report: script.getQuantities(),
-                exe: exe
-            };
+            return exe;
         };
 
         /**

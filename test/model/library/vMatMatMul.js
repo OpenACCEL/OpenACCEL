@@ -179,7 +179,7 @@ suite("vMatMatMul Library", function() {
                 [3, -2]
             ];
             var output = compiler.compile(new Script(input));
-            assert.deepEqual(output.exe.__x__(), expected);
+            assert.deepEqual(output.__x__(), expected);
         });
     });
 });

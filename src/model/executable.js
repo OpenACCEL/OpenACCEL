@@ -51,7 +51,7 @@ define([], /**@lends Model*/ function() {
          * Y-coordinate of the mouse
          * @type {Number}
          */
-        this.mousey = 0;
+        this.mouseY = 0;
 
         /**
          * Whether the mouse button is pressed
@@ -64,7 +64,6 @@ define([], /**@lends Model*/ function() {
          * @type {Array}
          */
         this.plot = [];
-
     }
 
 
@@ -112,7 +111,7 @@ define([], /**@lends Model*/ function() {
         }
         this.time = 0;
         this.mouseX = 0;
-        this.mousey = 0;
+        this.mouseY = 0;
         this.plot = [];
     };
 

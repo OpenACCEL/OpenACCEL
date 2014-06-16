@@ -81,14 +81,14 @@ suite("GreaterThan Library", function() {
         test("should expand for 'x = 5, y = greaterThan(x, 4)'", function() {
             var input = "x = 5\ny = greaterThan(x, 4)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), true);
+            assert.equal(output.__y__(), true);
         });
 
         test("should expand for 'x = 5, y = greaterThan(x, 5), z = greaterThan(x, greaterThan(4, y)'", function() {
             var input = "x = 5\ny = greaterThan(x, 5) \nz = greaterThan(x, greaterThan(4, y))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), false);
-            assert.equal(output.exe.__z__(), true);
+            assert.equal(output.__y__(), false);
+            assert.equal(output.__z__(), true);
         });
 
     });

@@ -17,7 +17,7 @@ suite("Log Library", function() {
     suite("log", function() {
         test("x = log(5)", function() {
             var input = "x = log(5)";
-            var output = compiler.compile(new script(input)).exe.__x__();
+            var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, Math.log(5) / Math.log(10));
         });
 
@@ -26,7 +26,7 @@ suite("Log Library", function() {
             "x = 5\n" + 
             "y = log(x) + 2\n" +
             "z = log(log(x) + log(y))";
-            var output = compiler.compile(new script(input)).exe.__z__();
+            var output = compiler.compile(new script(input)).__z__();
             assert.equal(output, Math.log(Math.log(5) / Math.log(10) + Math.log(Math.log(5) / Math.log(10) + 2) / Math.log(10)) / Math.log(10));
         });
 

@@ -81,14 +81,14 @@ suite("Or Library", function() {
         test("should expand for 'x = true, y = or(x, false)'", function() {
             var input = "x = true\ny = or(x, false)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), true);
+            assert.equal(output.__y__(), true);
         });
 
         test("should expand for 'x = false, y = or(x, false), z = or(x, or(true, y))'", function() {
             var input = "x = false\ny = or(x, false) \nz = or(x, or(true, y))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), false);
-            assert.equal(output.exe.__z__(), true);
+            assert.equal(output.__y__(), false);
+            assert.equal(output.__z__(), true);
         });
 
     });

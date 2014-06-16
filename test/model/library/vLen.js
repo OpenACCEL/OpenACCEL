@@ -71,7 +71,7 @@ suite("vLen Library", function() {
         test("should expand for 'x = vLen(y), y = [1,0,0]'", function() {
             var input = "x = vLen(y)\ny = [1,0,0]";
             var output = compiler.compile(new Script(input));
-            assert.deepEqual(output.exe.__x__(), 3);
+            assert.deepEqual(output.__x__(), 3);
         });
     });
 });

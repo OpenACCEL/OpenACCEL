@@ -52,7 +52,7 @@ suite("vDot Library", function() {
             var input = "x = vDot(z, y)\ny = [1, 1]\nz = [2, 4]";
             expected = 6;
             var output = compiler.compile(new Script(input));
-            assert.deepEqual(output.exe.__x__(), expected);
+            assert.deepEqual(output.__x__(), expected);
         });
     });
 });
