@@ -55,7 +55,7 @@ define(["model/analyser/passes/quantitypass",
              * Object containing a partitioning of all quantities into the
              * different categories.
              *
-             * @type {map<[1-4], map<String, Quantity>>}
+             * @type {Object.<Number, Object.<String, Quantity>>}
              */
             this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
         }
@@ -74,7 +74,7 @@ define(["model/analyser/passes/quantitypass",
          * category
          *
          * @param {Integer} cat The category of which to return all quantities
-         * @return {map<String, Quantity>} Object containing all quantities in
+         * @return {Object.<String, Quantity>} Object containing all quantities in
          * category cat.
          */
         Analyser.prototype.getQuantitiesByCategory = function(cat) {

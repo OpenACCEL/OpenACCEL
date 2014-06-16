@@ -134,8 +134,8 @@ function selectionList(selector, callback) {
     /**
      * [initializeItem description]
      * 
-     * @param  {[type]} i [description]
-     * @return {[type]}   [description]
+     * @param  {type[]} i [description]
+     * @return {type[]}   [description]
      */
     this.initializeItem = function(i) {
         var itemselector = this.selector + 'Item' + i;
@@ -152,7 +152,7 @@ function selectionList(selector, callback) {
     /**
      * Set the items contained in the list
      * 
-     * @param {[String]} items Strings to represent the items in the list
+     * @param {String[]} items Strings to represent the items in the list
      */
     this.set = function(items) {
         this.items = items;
