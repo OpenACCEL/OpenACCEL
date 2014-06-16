@@ -337,7 +337,7 @@ binArith                :  /* Operator precedence defined above */
 /* Scalars */
 scalarTerm              :   scalarVar | funcCall | quantifier | brackets | vectorCall | historyVar | at;
 scalarVar               :   quantityName
-                            { $$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : exe.' + $1 + '())'; }
+                            { $$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : this.' + $1 + '())'; }
                         |   STDFUNCTION
                         |   INPUTFUNCTION
                         ;
@@ -377,7 +377,7 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                         }}
                         |   quantityName '(' expr? (funcCallArgList)* ')'
                         {{
-                            var funcCall = 'exe.' + $1 + $2 + ($3 || '');
+                            var funcCall = 'this.' + $1 + $2 + ($3 || '');
                             if ($4 && $4.length > 0) {
                                 $$ = funcCall + ',' + $4 + $5;
                             } else {
