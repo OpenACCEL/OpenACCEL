@@ -70,8 +70,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     canvasCreator = new CanvasCreator();
     controller = new Controller(new View(canvasCreator));
     controller.setAutoExecute(true);
-    // controller.autoSave = true;
-    // controller.restoreSavedScript();
+    controller.autoSave = true;
+    controller.restoreSavedScript();
     controller.view.setUpPlot(controller);
-
 });

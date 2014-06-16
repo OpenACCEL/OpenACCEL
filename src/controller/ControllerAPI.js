@@ -273,6 +273,7 @@ define(["model/script",
 
                 // Push results to view
                 this.presentResults(results);
+                this.view.drawPlot();
 
                 // Signal the executable that one iteration has been completed,
                 // for quantity history functionality
