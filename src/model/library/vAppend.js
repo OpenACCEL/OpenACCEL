@@ -14,3 +14,5 @@ function vAppend(x, y) {
         return [x, y];
     }
 }
+
+vAppend.base = [];

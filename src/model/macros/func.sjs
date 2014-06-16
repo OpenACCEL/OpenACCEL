@@ -3,21 +3,28 @@ macro func {
     rule {
         ($x = $expr:expr)
     } => {
-        exe.$x = function($x) {
+        exe.$x = function() {
             // If a quantity is time dependant, look up if there exists a previous version.
-            if (exe.__report__ && exe.__report__.$x.isTimeDependent) {
-                if (exe.$x[exe.__time__] === undefined) {
-                    exe.$x[exe.__time__] = $expr;
+            if (exe.report && exe.report.$x.isTimeDependent) {
+                if (exe.$x.hist[exe.time] === undefined) {
+                    exe.$x.hist[exe.time] = exe.$x.expr();
                 }
-                return exe.$x[exe.__time__];
+                return exe.$x.hist[exe.time];
             } else {
-                if (exe.$x[0] === undefined || exe.$x.__hasChanged__) {
-                    exe.$x[0] = ($expr);
-                    exe.$x.__hasChanged__ = false;
+                if (exe.$x.hist[0] === undefined || exe.$x.hasChanged) {
+                    // initialize the values for user input
+                    if (exe.report && exe.report.$x.category === 1) {
+                        exe.$x.hist[0] = parseFloat(exe.report.$x.input.parameters[0]);
+                    } else {
+                         exe.$x.hist[0] = exe.$x.expr();
+                    }            
+                    exe.$x.hasChanged = false;
                 }
-                return exe.$x[0];
+                return exe.$x.hist[0];
             }
         };
+        exe.$x.expr = function() { return $expr; };
+        exe.$x.hist = [];
     }
     rule {
         ($x = $expr:expr ; $dim)
@@ -31,8 +38,9 @@ macro func {
         ($x($xs (,) ...) = $expr:expr)
     } => {
         exe.$x = function($xs (,) ...) {
-            return $expr;
+            return exe.$x.expr($xs (,) ...);
         };
+        exe.$x.expr = function($xs (,) ...) { return $expr; };
     }
     rule {
         ($x($xs (,) ...) = $expr:expr ; $dim)

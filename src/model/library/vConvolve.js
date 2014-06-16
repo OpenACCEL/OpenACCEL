@@ -1,7 +1,7 @@
  //This function was taken from keesvanoverveld.com
 function vConvolve(x, y, n, m) {
-    x = __objectToArray__(x);
-    y = __objectToArray__(y);
+    x = objectToArray(x);
+    y = objectToArray(y);
     if (x instanceof Array) {
         var r = x.length;
         if (y instanceof Array) {

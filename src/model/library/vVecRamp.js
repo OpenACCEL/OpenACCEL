@@ -1,8 +1,8 @@
 //This function was taken from keesvanoverveld.com
 function vVecRamp(x, y, z) {
-    x = __objectToArray__(x);
-    y = __objectToArray__(y);
-    z = __objectToArray__(z);
+    x = objectToArray(x);
+    y = objectToArray(y);
+    z = objectToArray(z);
     // arguments: x is a vector of abcissae
     // y is a vector of ordinates
     // z is an abcissa-value

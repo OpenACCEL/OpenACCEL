@@ -47,7 +47,7 @@ suite("vSequence Library", function() {
             var input = "x = vSequence(3, 7)";
             expected = [3, 4, 5, 6];
             var output = compiler.compile(new Script(input));
-            assert.deepEqual(output.exe.x(), expected);
+            assert.deepEqual(output.exe.__x__(), expected);
         });
     });
 });

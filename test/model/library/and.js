@@ -83,14 +83,14 @@ suite("And Library", function() {
         test("should expand for 'x = 5, y = and(x, true)'", function() {
             var input = "x = 5\ny = and(x, true)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), true);
+            assert.equal(output.exe.__y__(), true);
         });
 
         test("should expand for 'x = 5, y = and(x, true), z = and(y, and(x, false))'", function() {
             var input = "x = 5\ny = and(x, true) \nz = and(y, and(x, false))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), true);
-            assert.equal(output.exe.z(), false);
+            assert.equal(output.exe.__y__(), true);
+            assert.equal(output.exe.__z__(), false);
         });
 
     });

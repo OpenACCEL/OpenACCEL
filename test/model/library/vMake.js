@@ -62,7 +62,7 @@ suite("vMake Library", function() {
             expected[0] = "stuff";
             expected[1] = "stuff";
             var output = compiler.compile(new Script(input));
-            assert.deepEqual(output.exe.x(), expected);
+            assert.deepEqual(output.exe.__x__(), expected);
         });
     });
 });

@@ -1,13 +1,13 @@
-suite("QunatityPass", function() {
+suite("QuantityPass", function() {
 
     var assert;
     var quantityPass;
 
-    setup(function (done) {
-        requirejs(['assert', 'model/passes/analyser/quantitypass'], function(assertModule, QunatityPass) {
-            console.log("Loaded 'QunatityPass' module.");
+    setup(function(done) {
+        requirejs(['assert', 'model/analyser/passes/quantitypass'], function(assertModule, QuantityPass) {
+            console.log("Loaded 'QuantityPass' module.");
             assert = assertModule;
-            quantityPass = new QunatityPass();
+            quantityPass = new QuantityPass();
             done();
         });
     });

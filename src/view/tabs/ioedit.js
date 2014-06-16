@@ -1,5 +1,17 @@
+
+
+//------------------------------------------------------------------------------
+
 function editScript(script) {
-	controller.setScriptFromSource(script)
+	try {
+		controller.setScriptFromSource(script);
+	} catch (e) {
+		if (typeof(e) === 'SyntaxError') {
+			console.log(e.message);
+		} else {
+			console.log(e);
+		}
+	}
 }
 
 var showValues = false;

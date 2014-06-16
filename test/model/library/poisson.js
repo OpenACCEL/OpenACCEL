@@ -15,7 +15,7 @@ suite("Poisson Library", function() {
             fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
-            fileLoader.load("fact", "library");
+            fileLoader.load("factorial", "library");
             done();
         });
     });

@@ -65,6 +65,10 @@ documentation() {
 
 # Deployment.
 deploy() {
+    # Generate ACCEL compiler using Jison
+    echo "Generating ACCEL compiler..."
+    node_modules/.bin/jison utils/ACCEL.jison -o src/model/parser.js -m amd -p lalr
+
     echo "Deploying..."
     mkdir -p                                                                             bin/scripts
 
@@ -96,13 +100,15 @@ deploy() {
 
     # Copy style sheets.
     cp -r src/view/css bin/css/
+
+    
 }
 
 # Post Deployment
 post_deploy() {
     # Set time depency functions in quantitypass.js
     path_functions="src/model/library/functions.js"
-    path_quantitypass="bin/scripts/model/passes/analyser/quantitypass.js"
+    path_quantitypass="bin/scripts/model/analyser/passes/quantitypass.js"
     regex=".isTimeDependent = true;"
     match=$(grep "$regex" "$path_functions")
     funcs=$(echo $match | sed "s@$regex@@g") # remove all occurences of regex from match

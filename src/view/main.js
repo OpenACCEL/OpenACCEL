@@ -32,8 +32,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
      */
     View.prototype.presentResults = function(cat2quantities) {
         synchronizeResults(cat2quantities);
-        //Shows iterative execution
-        console.log('Output');
     };
 
     /**
@@ -45,6 +43,12 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
         setExecuting(executing);
     };
 
+    View.prototype.runtimeError = function(err) {
+        console.log("Runtime error: " + err.message);
+    };
+
     controller = new Controller(new View());
     controller.setAutoExecute(true);
+    controller.autoSave = true;
+    controller.restoreSavedScript();
 });

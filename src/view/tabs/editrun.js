@@ -18,6 +18,8 @@ $(document).ready(
     }
 );
 
+//------------------------------------------------------------------------------
+
 function deleteQuantity(quantity) {
     controller.deleteQuantity(quantity);
 }
@@ -37,7 +39,11 @@ function addQuantity(string) {
 
     setTimeout(
         function() {
-            controller.addQuantity(string);
+            try {
+                controller.addQuantity(string);
+            } catch (e) {
+                console.log(e.message);
+            }
         },
         10
     );
@@ -59,6 +65,8 @@ function newScript() {
 
 function setIterations(iterations) {
     controller.setIterations(iterations);
+    controller.stop();
+    controller.run();
 }
 
 //------------------------------------------------------------------------------
@@ -96,16 +104,16 @@ function synchronizeScriptList(quantities) {
         if (quantity.category == 1) {
             switch (quantity.input.type) {
                 case 'slider':
-                    addInput(new SliderInput(i, quantity.name, quantity.name, parseInt(quantity.input.parameters[0]), parseInt(quantity.input.parameters[1]), parseInt(quantity.input.parameters[2])));
+                    addInput(new SliderInput(i, quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2])));
                     break;
                 case 'check':
                     addInput(new CheckboxInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
                     break;
                 case 'button':
-                    addInput(new ButtonInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                    addInput(new ButtonInput(i, quantity.name, 'Click me', quantity.input.parameters[0]));
                     break;
                 case 'text':
-                    addInput(new TextInput(i, quantity.name, quantity.name));
+                    addInput(new TextInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
                     break;
                 default:
                     //Unknown input type
@@ -136,6 +144,8 @@ function synchronizeScriptList(quantities) {
 function synchronizeResults(quantities) {
     Report.resultBuffer.empty();
 
+    //console.log(quantities);
+
     for (var q in quantities) {
         var quantity = quantities[q];
 
@@ -149,23 +159,74 @@ function synchronizeResults(quantities) {
     Report.resultBuffer.hideIfEmpty('#resultdiv');
 }
 
+/**
+ * Number of object-elements the objectToString function
+ * should generate before it is terminated.
+ * @type {Number}
+ */
+var maxPrintElements = 1000;
+
+/**
+ * Create printable version of an object.
+ *
+ * Terminates the string with ...
+ * when maxPrintElements elements has been reached.
+ *
+ * @param  {Object} obj Object to print
+ * @return {String}     Printable string
+ */
 function objectToString(obj) {
-    if (obj instanceof Object) {
-        var results = [];
-        for (var key in obj) {
-            var elem = '';
-            if (!(/^\d+$/.test(key))) {
-                // Key is not a number
-                elem += key + ':';
+    var result = '';
+    var count = 0;
+
+    try {
+        // Recursive function calculating the
+        (function(obj) {
+            if (obj instanceof Object) {
+                if (count < maxPrintElements) {
+                    result += '[';
+                }
+
+                for (var key in obj) {
+                    if (count >= maxPrintElements) {
+                        // We need to terminate the recursion
+                        // So we throw the result we have so far
+                        // appended with ...
+                        result += '...';
+                        throw {};
+                    }
+
+                    if (isNaN(key)) {
+                        // Key is not a number
+                        result += key + ':';
+                    }
+
+                    if (obj[key] instanceof Object) {
+                        // With this condition we avoid a recursive call in case
+                        // we reach a base case;
+                        arguments.callee(obj[key]);
+                    } else {
+                        result += obj[key].toString();
+                    }
+
+                    count++;
+
+                    result += ',';
+                }
+                // replace the last 
+                if (result.charAt(result.length - 1) === ',') {
+                    result = result.slice(0, -1) + ']';
+                }
+            } else {
+                result += obj.toString();
             }
-            elem += objectToString(obj[key]);
-            results.push(elem);
-        }
-        return '[' + results.join(',') + ']';
-    } else {
-        return obj.toString();
+        })(obj);
+    } catch (e) {
+        // Result was terminated.
     }
+    return result;
 }
+
 
 //------------------------------------------------------------------------------
 
@@ -199,7 +260,7 @@ function selectScriptline(linenr, quantityname) {
 
         //list used standard functions (type = standard function)
         //TODO
-                
+
         //list reverse dependencies (type = regular)
         for (var r in quantity.reverseDeps) {
             Report.addArgto(quantity.reverseDeps[r], 'regular');
@@ -210,61 +271,6 @@ function selectScriptline(linenr, quantityname) {
 
         Report.arglistBuffer.hideIfEmpty('#arglistdiv');
         Report.argtolistBuffer.hideIfEmpty('#argtodiv');
-    }
-}
-
-//------------------------------------------------------------------------------
-
-/**
- * Constructs a buffer object to contain updated content of a div and update the div when desired
- *
- * @param {String} div Id of the div who's content is to be buffered
- * @class
- * @classdesc Buffer class to contain updated content of a div and update the div when desired
- */
-function HTMLbuffer(div) {
-    this.div = div;
-    this.html = '';
-
-    /**
-     * Clears the buffer
-     */
-    this.empty = function() {
-        this.html = '';
-    }
-
-    /**
-     * Checks whether the buffer is empty
-     *
-     * @return {Boolean} True if and only if buffer is empty
-     */
-    this.isEmpty = function() {
-        return (this.html == '');
-    }
-
-    /**
-     * Hides the target html element if the buffer is empty, show otherwise
-     *
-     * @param {String} selector to indicate which element should be hidden
-     */
-    this.hideIfEmpty = function(target) {
-        $(target).toggle(!this.isEmpty());
-    }
-
-    /**
-     * Appends html to the buffer
-     *
-     * @param {String} html String to be appended to the buffer
-     */
-    this.append = function(html) {
-        this.html = this.html + html;
-    }
-
-    /**
-     * Replaces the content in the div with the content in the buffer
-     */
-    this.flip = function() {
-        $(this.div).html(this.html);
     }
 }
 
@@ -350,14 +356,38 @@ function SliderInput(identifier, quantity, label, val, min, max) {
     this.val = val;
     this.min = min;
     this.max = max;
+
+    this.getStepSize = function(val, min, max) {
+        var sum = val + min + max;
+        console.log(sum);
+        //To compensate for javascript's floating point errors we use a correction variable which will temporarily convert floats to ints
+        var correction = 100000;
+        var sumdecimals = (sum * correction - Math.floor(sum) * correction) / correction;
+        console.log(sumdecimals);
+        var precision = 0;
+        while (sumdecimals % 1 != 0) {
+            sumdecimals *= 10;
+            precision++;
+        }
+        //var precision = sumdecimals.toFixed().length;
+        console.log(sumdecimals.toFixed());
+        console.log(precision);
+        console.log(Math.pow(10, -precision));
+        return Math.pow(10, -precision);
+    };
+
     this.properties = {
         range: "min",
         value: this.val,
         min: this.min,
         max: this.max,
+        step: this.getStepSize(this.val, this.min, this.max),
+
         quantity: this.quantity, //Non-jquery addition to get the associated quantity within the slide function's scope
+        identifier: this.identifier, //Non-jquery addition to get the associated quantity within the slide function's scope
         slide: function(event, ui) {
             controller.setUserInputQuantity(quantity, ui.value);
+            $('#userslider' + identifier + 'value').html('(' + ui.value + ')');
         }
     };
 }
@@ -366,6 +396,7 @@ SliderInput.prototype.getHTML = function() {
     return '\
         <div id = "userinput' + this.identifier + '">\
             <div class = "inline">' + this.label + '</div>\
+            <div id = "userslider' + this.identifier + 'value" class = "inline">(' + this.val + ')</div>\
             <div id = "userslider' + this.identifier + '"></div>\
         </div>\
     ';
@@ -401,7 +432,7 @@ CheckboxInput.prototype.getHTML = function() {
         <div id = "userinput' + this.identifier + '">\
             <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
             <div class = "inline checkboxin">\
-                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true'?'checked':'') + '>\
+                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true' ? 'checked' : '') + '>\
                 <label for = "usercheck' + this.identifier + '"></label>\
             </div>\
         </div>\
@@ -476,14 +507,14 @@ ButtonInput.prototype = new Input();
 ButtonInput.prototype.getHTML = function() {
     return '\
         <div id = "userinput' + this.identifier + '">\
-            <label for = "userbutton' + this.identifier + '">' + this.label + '</label>\
+            <label for = "userbutton' + this.identifier + '">' + this.quantity + '</label>\
             <input type = "button" id = "userbutton' + this.identifier + '" class = "buttonin" value = "' + this.label + '">\
         </div>\
     ';
 };
 ButtonInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, false);
-    
+
     var buttoninput = this;
     $('#userbutton' + buttoninput.identifier).on('mousedown',
         function() {
@@ -629,9 +660,9 @@ var Report = {
 
 /**
  * Constructs a new Tooltip object
- * 
+ *
  * @param {String} id      String to be used as a suffix in the id values of the generated html elements
- * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
+ * @param {String} div     Selector to indicate which element the Tooltip should be associated with
  * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
  *
  * @class
@@ -654,23 +685,29 @@ function Tooltip(id, div, classes) {
         $(this.getHTML('')).insertAfter(this.div);
         $('#tooltip' + this.id).toggle(false);
 
-        $('#tooltip' + this.id).on('click', 
+        $('#tooltip' + this.id).on('click',
             function() {
-                $(this).animate({opacity: 0}, 200, 
+                $(this).animate({
+                        opacity: 0
+                    }, 200,
                     function() {
                         $(this).toggle(false);
                     }
                 )
             }
         );
-        $('#tooltip' + this.id).on('mouseover', 
+        $('#tooltip' + this.id).on('mouseover',
             function() {
-                $(this).animate({opacity: 0.5}, 200);
+                $(this).animate({
+                    opacity: 0.5
+                }, 200);
             }
         );
-        $('#tooltip' + this.id).on('mouseleave', 
+        $('#tooltip' + this.id).on('mouseleave',
             function() {
-                $(this).animate({opacity: 1}, 100);
+                $(this).animate({
+                    opacity: 1
+                }, 100);
             }
         );
     }

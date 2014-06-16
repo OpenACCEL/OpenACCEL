@@ -1,8 +1,8 @@
 //This function was taken from keesvanoverveld.com
 function vAggregate(x, y, z) {
-    x = __objectToArray__(x);
-    y = __objectToArray__(y);
-    z = __objectToArray__(z);
+    x = objectToArray(x);
+    y = objectToArray(y);
+    z = objectToArray(z);
     if (x instanceof Array) {
         if (y instanceof Array) {
             if (!(z instanceof Array)) {

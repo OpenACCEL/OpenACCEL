@@ -80,7 +80,7 @@ suite("vDom Library", function() {
             var input = "x = vDom(y)\ny = [1,0,0]";
             expected = [0, 1, 2];
             var output = compiler.compile(new Script(input));
-            assert.deepEqual(output.exe.x(), expected);
+            assert.deepEqual(output.exe.__x__(), expected);
         });
     });
 });

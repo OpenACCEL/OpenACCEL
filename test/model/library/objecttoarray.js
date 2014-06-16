@@ -29,7 +29,7 @@ suite("Object to Array function", function() {
             expected.b = 2;
             expected.c = 3;
 
-            var output = __objectToArray__(input);
+            var output = objectToArray(input);
             assert(expected instanceof Array);
             assert.deepEqual(output, expected);
         });
@@ -40,7 +40,7 @@ suite("Object to Array function", function() {
 
             var expected = [1,2,3];
 
-            var output = __objectToArray__(input);
+            var output = objectToArray(input);
             assert(expected instanceof Array);
             assert.deepEqual(output, expected);
         });
@@ -51,7 +51,7 @@ suite("Object to Array function", function() {
 
             var expected = [1,2,3];
             
-            var output = __objectToArray__(input);
+            var output = objectToArray(input);
             assert(expected instanceof Array);
             assert.deepEqual(output, expected);
         }); 
@@ -63,7 +63,7 @@ suite("Object to Array function", function() {
             var expected = [1,2];
             expected.a = 3;
             
-            var output = __objectToArray__(input);
+            var output = objectToArray(input);
             assert(expected instanceof Array);
             assert.deepEqual(output, expected);
         });
@@ -82,7 +82,7 @@ suite("Object to Array function", function() {
             expected.d = [];
             expected.d.q = 100;
             
-            var output = __objectToArray__(input);
+            var output = objectToArray(input);
             assert(expected instanceof Array);
             assert.deepEqual(output, expected);
         });
@@ -92,7 +92,7 @@ suite("Object to Array function", function() {
             var input = {'0':1, '1':{'0':10,'1':11,'2':12}, '2': 2, '3': {'0':100}};
 
             var expected = [1, [10,11,12], 2, [100]];
-            var output = __objectToArray__(input);
+            var output = objectToArray(input);
             assert(expected instanceof Array);
             assert.deepEqual(output, expected);
         });
@@ -106,7 +106,7 @@ suite("Object to Array function", function() {
             expected[1].b = 11;
             expected.x = 'foobar';
 
-            var output = __objectToArray__(input);
+            var output = objectToArray(input);
             assert(expected instanceof Array);
             assert.deepEqual(output, expected);
         });
@@ -117,7 +117,7 @@ suite("Object to Array function", function() {
 
             var expected = [[[[[[[[[[[[[[[[[[[['hello']]]]]]]]]]]]]]]]]]]]
             
-            var output = __objectToArray__(input);
+            var output = objectToArray(input);
             assert(expected instanceof Array);
             assert.deepEqual(output, expected);
         });                       

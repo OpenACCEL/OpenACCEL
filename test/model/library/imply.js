@@ -83,14 +83,14 @@ suite("Imply Library", function() {
         test("should expand for 'x = 5, y = imply(x, 4)'", function() {
             var input = "x = 5\ny = imply(x, 4)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), 4);
+            assert.equal(output.exe.__y__(), 4);
         });
 
         test("should expand for 'x = 5, y = imply(x, 5), z = imply(x, imply(4, y))'", function() {
             var input = "x = 5\ny = imply(x, 5) \nz = imply(x, imply(4, y))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.y(), 5);
-            assert.equal(output.exe.z(), 5);
+            assert.equal(output.exe.__y__(), 5);
+            assert.equal(output.exe.__z__(), 5);
         });
 
     });
