@@ -184,7 +184,7 @@ define(["model/analyser/analyser",
             // Try evaluating the value. Throw RuntimeError if an error is thrown
             var value;
             try {
-                value = this.exe['__' + qtyName + '__']();
+                value = this.exe.getValue(qtyName);
             } catch(e) {
                 throw new RuntimeError(e.message);
             }
@@ -379,7 +379,7 @@ define(["model/analyser/analyser",
 
             // Only update values if script has been compiled!
             if (this.isCompiled()) {
-                this.exe['__' + qtyName + '__'].hist[0] = value;
+                this.exe.setValue(qtyName, value);
 
                 // Recursively flag the updated user input quantity and all it's reverse
                 // dependencies as changed. First reset memoization datastructure!
@@ -390,7 +390,7 @@ define(["model/analyser/analyser",
                 // we'll have to set hasChanged back to false, as the controller already updates the expression.
                 // There is no need to re-evaulate the expression for this cat 1 input.
                 // If we evaluate it, it gets set to null which is not what we want.
-                this.exe['__' + qtyName + '__'].hasChanged = false;
+                this.exe.setHasChanged(qtyName, false);
             }
         },
 
@@ -408,11 +408,11 @@ define(["model/analyser/analyser",
                 return;
             }
 
-            if (!this.exe['__' + quantity.name + '__']) {
+            if (!this.exe.exists(quantity.name)) {
                 return;
             }
 
-            this.exe['__' + quantity.name + '__'].hasChanged = true;
+            this.exe.setHasChanged(qtyName, true);
             this.flaggedAsChanged.push(quantity.name);
             for (var dep in quantity.reverseDeps) {
                 this.setQuantityChanged(this.quantities[quantity.reverseDeps[dep]], true);

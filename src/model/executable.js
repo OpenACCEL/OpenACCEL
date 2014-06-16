@@ -127,7 +127,7 @@ define([], /**@lends Model*/ function() {
      */
     Executable.prototype.getValue = function(quantity) {
         var localQty = '__' + quantity + '__';
-        if (localQty in this.report) {
+        if (this[localQty]) {
             return this[localQty]();
         } else {
             throw new Error('Executable.prototype.getValue.pre violated :' +
@@ -147,8 +147,8 @@ define([], /**@lends Model*/ function() {
      */
     Executable.prototype.setValue = function(quantity, value) {
         var localQty = '__' + quantity + '__';
-        
-        if (!(localQty in this.report)) {
+
+        if (!(this[localQty])) {
             throw new Error('Executable.prototype.setValue.pre violated :' +
                 'no Quantity named ' + quantity);
         }
@@ -159,6 +159,36 @@ define([], /**@lends Model*/ function() {
 
         return this[localQty].hist[0] = value;
     };
+
+
+    /**
+     * Sets whether the given quantity has changed
+     * @param {String}  quantity   Quantity name
+     * @param {Boolean} hasChanged whether the quantity has changed.
+     */
+    Executable.prototype.setHasChanged = function(quantity, hasChanged) {
+        var localQty = '__' + quantity + '__';
+
+        if (!(this[localQty])) {
+            throw new Error('Executable.prototype.setHasChanged.pre violated :' +
+                'no Quantity named ' + quantity);
+        }
+
+        return this[localQty].hasChanged = hasChanged;
+    };
+
+    /**
+     * Returns whether the given quantity exists.
+     * @param  {String} quantity name of the quantity
+     * @pre             quantity exists in the current executable
+     * @return          Returns whether the given quantity exists.
+     */
+    Executable.prototype.exists = function(quantity) {
+        var localQty = '__' + quantity + '__';
+        return !!this[localQty];
+    };
+
+
 
 
 
