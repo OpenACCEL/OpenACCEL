@@ -182,6 +182,7 @@ unit        [a-zA-Z]+[0-9]*
 "@("                                                        { return '@(';      }
 "+"                                                         { return '+';       }
 "-"                                                         { return '-';       }
+"!="                                                        { return '!=';      }
 "!"                                                         { return '!';       }
 "*"                                                         { return '*';       }
 "/"                                                         { return '/';       }
@@ -191,7 +192,6 @@ unit        [a-zA-Z]+[0-9]*
 ">="                                                        { return '>=';      }
 ">"                                                         { return '>';       }
 "=="                                                        { return '==';      }
-"!="                                                        { return '!=';      }
 "&&"                                                        { return '&&';      }
 "||"                                                        { return '||';      }
 "="                                                         { return '=';       }
