@@ -60,6 +60,18 @@ define([], /**@lends AbstractView*/ function() {
         setStatus: function(status) {},
 
         /**
+         * Whether the view should show the descartes canvas or not.
+         *
+         * @param {Boolean} show Whether to show the plot.
+         */
+        showPlot: function(show) {},
+
+        /**
+         * Sinals the view that a new script object has been created.
+         */
+        loadedNewScript: function() {},
+
+        /**
          * Informs the view that a runtime error has occured.
          *
          * @param {RuntimeError} err The error that occured during runtime.

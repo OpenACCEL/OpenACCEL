@@ -177,17 +177,28 @@ define(["model/script",
 
     /**
      * Sets the current position of the mouse cursor inside the
-     * descartes canvas.
+     * descartes canvas, for use in the script. Descartes canvas coordinates
+     * are always within the range [0,100].
      *
-     * @pre 0 <= x <= width of descartes canvas
-     * @pre 0 <= y <= height of descartes canvas
+     * @pre 0 <= x <= 100
+     * @pre 0 <= y <= 100
      * @param {Number} x The x coordinate of the mouse cursor inside the
-     * descartes canvas, relative to it's origin.
+     * descartes canvas
      * @param {Number} y The y coordinate of the mouse cursor inside the
-     * descartes canvas, relative to it's origin.
+     * descartes canvas
      */
-    Controller.prototype.setMousePos = function(x, y) {
+    Controller.prototype.setMousePosInScript = function(x, y) {
         this.script.exe.setMousePos(x, y);
+    };
+
+    /**
+     * Sets the current left mouse button status. 
+     *
+     * @param {Boolean} buttonDown Whether the left mouse button is currently
+     * pressed
+     */
+    Controller.prototype.setMouseButtonInScript = function(buttonDown) {
+        this.script.exe.setMouseButton(buttonDown);
     };
 
     /**

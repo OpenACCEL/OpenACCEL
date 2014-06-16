@@ -1,3 +1,3 @@
 function cursorY() {
-    return controller.script.exe.mouseX;
+    return exe.mouseY;
 }
