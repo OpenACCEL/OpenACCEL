@@ -3,49 +3,49 @@ macro func {
     rule {
         ($x = $expr:expr)
     } => {
-        exe.$x = function() {
+        this.$x = function() {
             // If a quantity is time dependant, look up if there exists a previous version.
-            if (exe.report && exe.report.$x.isTimeDependent) {
-                if (exe.$x.hist[exe.time] === undefined) {
-                    exe.$x.hist[exe.time] = exe.$x.expr();
+            if (this.report && this.report.$x.isTimeDependent) {
+                if (this.$x.hist[this.time] === undefined) {
+                    this.$x.hist[this.time] = this.$x.expr();
                 }
-                return exe.$x.hist[exe.time];
+                return this.$x.hist[this.time];
             } else {
-                if (exe.$x.hist[0] === undefined || exe.$x.hasChanged) {
+                if (this.$x.hist[0] === undefined || this.$x.hasChanged) {
                     // initialize the values for user input
-                    if (exe.report && exe.report.$x.category === 1) {
-                        exe.$x.hist[0] = parseFloat(exe.report.$x.input.parameters[0]);
+                    if (this.report && this.report.$x.category === 1) {
+                        this.$x.hist[0] = parseFloat(this.report.$x.input.parameters[0]);
                     } else {
-                         exe.$x.hist[0] = exe.$x.expr();
+                         this.$x.hist[0] = this.$x.expr();
                     }            
-                    exe.$x.hasChanged = false;
+                    this.$x.hasChanged = false;
                 }
-                return exe.$x.hist[0];
+                return this.$x.hist[0];
             }
         };
-        exe.$x.expr = function() { return $expr; };
-        exe.$x.hist = [];
+        this.$x.expr = (function() { return $expr; }).bind(this);
+        this.$x.hist = [];
     }
     rule {
         ($x = $expr:expr ; $dim)
     } => {
         func($x = $expr)
-        exe.$x.dim = $dim;
+        this.$x.dim = $dim;
     }
 
     // Function declarations.
     rule {
         ($x($xs (,) ...) = $expr:expr)
     } => {
-        exe.$x = function($xs (,) ...) {
-            return exe.$x.expr($xs (,) ...);
+        this.$x = function($xs (,) ...) {
+            return this.$x.expr($xs (,) ...);
         };
-        exe.$x.expr = function($xs (,) ...) { return $expr; };
+        this.$x.expr = (function($xs (,) ...) { return $expr; }).bind(this);
     }
     rule {
         ($x($xs (,) ...) = $expr:expr ; $dim)
     } => {
         func($x($xs (,) ...) = $expr)
-        exe.$x.dim = $dim;
+        this.$x.dim = $dim;
     }
 }

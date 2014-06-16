@@ -28,13 +28,15 @@ define(["model/fileloader",
         "model/macroexpander",
         "underscore",
         "model/parser",
-        "model/exceptions/SyntaxError"
+        "model/exceptions/SyntaxError",
+        "model/executable"
     ], /**@lends Model*/
     function(FileLoader,
         MacroExpander,
         _,
         parser,
-        SyntaxError) {
+        SyntaxError,
+        Executable) {
 
         /**
          * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
@@ -106,36 +108,10 @@ define(["model/fileloader",
 
             // Expand the macros in the parser-outputted code
             // First enclose the code within this container code
-            code = '(function () { exe = {mouseX: 0, mouseY: 0}; ' + code + 'return exe; })()';
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
             // Build the executable object by simply evaluating the generated/compiled javascript code
-            exe = eval(code);
-            exe.report = this.underscorifyKeys(script.getQuantities());
-            exe.time = 0;
-            exe.step = function() {
-                if (this.report) {
-                    for (var qty in this.report) {
-                        if (this.report[qty].isTimeDependent) {
-                            this[qty]();
-                        }
-                    }
-                }
-                this.time++;
-            };
-
-            exe.reset = function() {
-                for (var qty in this.report) {
-                    if (this[qty].hist) {
-                        this[qty].hist.length = 0;
-                    }
-                }
-            };
-
-            exe.setMousePos = function(x, y) {
-                this.mouseX = x;
-                this.mouseY = y;
-            };
+            exe = new Executable(code, script.getQuantities());
 
             return {
                 report: script.getQuantities(),
@@ -172,19 +148,7 @@ define(["model/fileloader",
             return code;
         };
 
-        /**
-         * Puts two underscores before and after each key of the given object
-         *
-         * @param  {Object} obj object to convert
-         * @return {Object}     converted object.
-         */
-        Compiler.prototype.underscorifyKeys = function(obj) {
-            var obj2 = {};
-            for (var key in obj) {
-                obj2['__' + key + '__'] = obj[key];
-            }
-            return obj2;
-        }
+        
 
         /**
          * Flags all time-dependent quantities in this.quantities as such
