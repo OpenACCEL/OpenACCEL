@@ -389,7 +389,9 @@ define(["model/script",
             this.view.presentResults({});
 
             // Give new script object to descartes
-            this.view.descartesCanvas.setModel(this.script);
+            if (inBrowser) {
+                this.view.descartesCanvas.setModel(this.script);
+            }
 
             if (clearStore && this.autoSave && window.localStorage) {
                 this.autoSaveStore.clear();
@@ -594,7 +596,9 @@ define(["model/script",
                 script.setExecutable(this.compiler.compile(script));
 
                 // Reset descartes canvas
-                this.view.descartesCanvas.resetCanvas();
+                if (inBrowser) {
+                    this.view.descartesCanvas.resetCanvas();
+                }               
 
                 // Hide any shown plot if there is no plot in the new executable anymore
                 if (script.exe.plot.length == 0) {
