@@ -119,8 +119,8 @@ define(["view/descartes/abstractdescarteshandler", "model/script"], function(Abs
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
     ScriptDescartesHandler.prototype.resetCanvas = function() {
-        for (i in descartesInstances) {
-            descartesInstances[i].enforceRedraw();
+        for (i in this.descartesInstances) {
+            this.descartesInstances[i].enforceRedraw();
         }
     };
 
