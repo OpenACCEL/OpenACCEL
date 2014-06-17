@@ -17,11 +17,11 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/abstractdescarteshandler"], function(AbstractDescartesHandler) {
+define(["view/graphics/abstractdescarteshandler"], function(AbstractDescartesHandler) {
 
     /**
      * @class DescartesHandlerFactory
-     * @classdesc The DescartesHandlerFactory class provides DescartesHandlers to DescartesCanvases,
+     * @classdesc The DescartesHandlerFactory class provides DescartesHandlers to Canvases,
      * allowing them to correctly draw any supported model element.
      */
     function DescartesHandlerFactory() {

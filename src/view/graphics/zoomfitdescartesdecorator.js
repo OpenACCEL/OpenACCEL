@@ -17,11 +17,11 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/abstractdescartesdecorator", "view/descartes/zoomdescartesdecorator", "view/descartes/pandescartesdecorator"],
+define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartesdecorator", "view/graphics/pandescartesdecorator"],
     function(AbstractDescartesDecorator, ZoomDescartesDecorator, PanDescartesDecorator) {
         /**
          * @class ZoomFitDescartesDecorator
-         * @classdesc The ZoomFitDescartesDecorator class provides DescartesHandlers to DescartesCanvases,
+         * @classdesc The ZoomFitDescartesDecorator class provides DescartesHandlers to Canvases,
          * allowing them to correctly draw any supported model element.
          */
         function ZoomFitDescartesDecorator() {

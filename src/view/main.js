@@ -1,7 +1,7 @@
 var controller;
 var canvasCreator;
 
-require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/descartes/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
+require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
     /**
      * @class View
      * @classdesc Interface declaring the methods that the view with which the Controller will
@@ -9,7 +9,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
      */
     function View(canvasCreator) {
         this.canvasCreator = canvasCreator;
-        this.descartesCanvas = null;
+        this.canvas = null;
     }
 
     View.prototype = new AbstractView();
@@ -41,14 +41,14 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
      */
     View.prototype.setUpPlot = function(controller) {
         $('#plotdiv').toggle(true);
-        this.descartesCanvas = canvasCreator.createDescartesCanvas(controller.getScript(), 'plot', 300, 300);
+        this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
     };
 
     /**
      * Trigger an update of the plot canvas
      */
     View.prototype.drawPlot = function() {
-        this.descartesCanvas.draw();
+        this.canvas.draw();
     };
 
     View.prototype.showPlot = function(show) {

@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/abstractfunctionpropagator"], function(AbstractFunctionPropagator) {
+define(["view/graphics/abstractfunctionpropagator"], function(AbstractFunctionPropagator) {
     /**
      * @class AbstractDescartesDecorator
-     * @classdesc The AbstractDescartesDecorator class provides DescartesHandlers to DescartesCanvases,
+     * @classdesc The AbstractDescartesDecorator class provides DescartesHandlers to Canvases,
      * allowing them to correctly draw any supported model element.
      */
     function AbstractDescartesDecorator() {

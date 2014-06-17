@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartesDecorator) {
+define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesDecorator) {
     /**
      * @class PanDescartesDecorator
-     * @classdesc The PanDescartesDecorator class provides DescartesHandlers to DescartesCanvases,
+     * @classdesc The PanDescartesDecorator class provides DescartesHandlers to Canvases,
      * allowing them to correctly draw any supported model element.
      */
     function PanDescartesDecorator() {

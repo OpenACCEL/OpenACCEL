@@ -18,10 +18,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartesDecorator) {
+define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesDecorator) {
     /**
      * @class ZoomDescartesDecorator
-     * @classdesc The ZoomDescartesDecorator class provides DescartesHandlers to DescartesCanvases,
+     * @classdesc The ZoomDescartesDecorator class provides DescartesHandlers to Canvases,
      * allowing them to correctly draw any supported model element.
      */
     function ZoomDescartesDecorator() {

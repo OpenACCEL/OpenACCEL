@@ -16,8 +16,8 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/descarteshandlerfactory", "view/descartes/descartescanvas", "view/descartes/scriptdescarteshandler"],
-    function(DescartesHandlerFactory, DescartesCanvas, ScriptDescartesHandler) {
+define(["view/graphics/descarteshandlerfactory", "view/graphics/canvas", "view/graphics/scriptdescarteshandler"],
+    function(DescartesHandlerFactory, Canvas, ScriptDescartesHandler) {
 
         CanvasCreator = function() {
             this.factory = new DescartesHandlerFactory();
@@ -26,8 +26,8 @@ define(["view/descartes/descarteshandlerfactory", "view/descartes/descartescanva
 
         CanvasCreator.prototype = {
 
-            createDescartesCanvas: function(modelElement, div, width, height) {
-                canvas = new DescartesCanvas(modelElement, div, width, height, this.factory);
+            createCanvas: function(modelElement, div, width, height) {
+                canvas = new Canvas(modelElement, div, width, height, this.factory);
                 canvas.facadify();
                 return canvas;
             }

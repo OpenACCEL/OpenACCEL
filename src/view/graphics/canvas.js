@@ -17,13 +17,13 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/descarteshandlerfactory", "view/descartes/abstractfunctionpropagator"], function(DescartesHandlerFactory, AbstractFunctionPropagator) {
+define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunctionpropagator"], function(DescartesHandlerFactory, AbstractFunctionPropagator) {
     /**
      * @class DescartesHandlerFactory
-     * @classdesc The DescartesHandlerFactory class provides DescartesHandlers to DescartesCanvases,
+     * @classdesc The DescartesHandlerFactory class provides DescartesHandlers to Canvases,
      * allowing them to correctly draw any supported model element.
      */
-    function DescartesCanvas(modelElement, div, width, height, factory) {
+    function Canvas(modelElement, div, width, height, factory) {
 
         /**
          * The DescartesHandlers that can be provided by this class.
@@ -62,14 +62,14 @@ define(["view/descartes/descarteshandlerfactory", "view/descartes/abstractfuncti
     }
 
 
-    DescartesCanvas.prototype = new AbstractFunctionPropagator();
+    Canvas.prototype = new AbstractFunctionPropagator();
 
     /**
      * Returns whether the script can be compiled and executed.
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    DescartesCanvas.prototype.canDraw = function() {
+    Canvas.prototype.canDraw = function() {
         return this.handler != null;
     };
 
@@ -78,7 +78,7 @@ define(["view/descartes/descarteshandlerfactory", "view/descartes/abstractfuncti
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    DescartesCanvas.prototype.setModel = function(modelElement) {
+    Canvas.prototype.setModel = function(modelElement) {
         if (this.handler == null) {
             this.handler = this.factory.getHandler(modelElement);
             this.handler.addDescartes(this.div, this.width, this.height);
@@ -95,5 +95,5 @@ define(["view/descartes/descarteshandlerfactory", "view/descartes/abstractfuncti
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
-    return DescartesCanvas;
+    return Canvas;
 });

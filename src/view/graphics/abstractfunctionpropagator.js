@@ -20,7 +20,7 @@ if (inNode) {
 define([], function() {
     /**
      * @class AbstractFunctionPropagator
-     * @classdesc The AbstractFunctionPropagator class provides DescartesHandlers to DescartesCanvases,
+     * @classdesc The AbstractFunctionPropagator class provides DescartesHandlers to Canvases,
      * allowing them to correctly draw any supported model element.
      */
     function AbstractFunctionPropagator() {
