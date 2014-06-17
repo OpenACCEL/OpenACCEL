@@ -77,6 +77,20 @@ define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartes
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
+    ZoomDescartesDecorator.prototype.mapPoint = function(point) {
+        if (this.decorator != null) {
+            point = this.decorator.mapPoint(point);
+        }
+        point.x /= this.horZoom;
+        point.y /= this.verZoom;
+        return point;
+    };
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
     ZoomDescartesDecorator.prototype.zoom = function(isAbsolute, widthFactor, heightFactor) {
         if (isAbsolute) {
             this.horZoom = widthFactor;

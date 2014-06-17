@@ -17,14 +17,14 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecorator", "model/emo/geneticoptimisation", "model/emo/individual"],
-    function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual) {
+define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecorator", "model/emo/geneticoptimisation", "model/emo/individual", "model/emo/individual"],
+    function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual, Distance) {
         /**
-         * @class SPEADescartesHandler
-         * @classdesc The SPEADescartesHandler class provides DescartesHandlers to DescartesCanvases,
+         * @class GeneticOptimisationDescartesHandler
+         * @classdesc The GeneticOptimisationDescartesHandler class provides DescartesHandlers to DescartesCanvases,
          * allowing them to correctly draw any supported model element.
          */
-        function SPEADescartesHandler(modelElement) {
+        function GeneticOptimisationDescartesHandler(modelElement) {
             /**
              * The DescartesHandlers that can be provided by this class.
              *
@@ -49,14 +49,14 @@ define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecora
         };
 
 
-        SPEADescartesHandler.prototype = new AbstractDescartesHandler();
+        GeneticOptimisationDescartesHandler.prototype = new AbstractDescartesHandler();
 
         /**
          * Returns whether the script can be compiled and executed.
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        SPEADescartesHandler.prototype.canHandle = function(modelElement) {
+        GeneticOptimisationDescartesHandler.prototype.canHandle = function(modelElement) {
             return modelElement instanceof GeneticOptimisation;
         };
 
@@ -66,8 +66,8 @@ define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecora
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        SPEADescartesHandler.prototype.getInstance = function(modelElement) {
-            return new SPEADescartesHandler(modelElement);
+        GeneticOptimisationDescartesHandler.prototype.getInstance = function(modelElement) {
+            return new GeneticOptimisationDescartesHandler(modelElement);
         };
 
 
@@ -76,7 +76,7 @@ define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecora
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        SPEADescartesHandler.prototype.addDescartes = function(div, width, height) {
+        GeneticOptimisationDescartesHandler.prototype.addDescartes = function(div, width, height) {
             var click = this.clickCallback.bind(this);
             this.descartesInstances.push(new descartes({
                 dN: div,
@@ -92,8 +92,28 @@ define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecora
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        SPEADescartesHandler.prototype.clickCallback = function(x, y) {
-
+        GeneticOptimisationDescartesHandler.prototype.clickCallback = function(x, y) {
+            var point = this.mapPoint({
+                'x': x,
+                'y': y
+            });
+            var comparablePoint = [];
+            comparablePoint.push({
+                'value': point.x
+            });
+            comparablePoint.push({
+                'value': point.y
+            });
+            var closestDistance = Infinity;
+            var currentDistance = Infinity;
+            for (var i = population.length - 1; i >= 0; i--) {
+                currentDistance = Distance.prototype.euclidian(population[i].outputvector, comparablePoint);
+                if (closestDistance > currentDistance) {
+                    this.clickedIndividual = population[i];
+                }
+            }
+            this.clickInfo = this.clickedIndividual.toString();
+            this.draw();
         };
 
         /**
@@ -101,7 +121,7 @@ define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecora
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        SPEADescartesHandler.prototype.getClickInfo = function(x, y) {
+        GeneticOptimisationDescartesHandler.prototype.getClickInfo = function(x, y) {
             return this.clickInfo;
         };
 
@@ -111,7 +131,7 @@ define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecora
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        SPEADescartesHandler.prototype.getDrawing = function() {
+        GeneticOptimisationDescartesHandler.prototype.getDrawing = function() {
             //PASTED FROM KEES!!!
             var population = this.modelElement.getPopulation();
             var xx = [];
@@ -220,5 +240,5 @@ define(["view/descartes/abstractdescarteshandler", "view/descartes/zoomfitdecora
         };
 
         // Exports are needed, such that other modules may invoke methods from this module file.
-        return SPEADescartesHandler;
+        return GeneticOptimisationDescartesHandler;
     });

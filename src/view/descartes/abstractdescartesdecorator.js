@@ -55,6 +55,18 @@ define(["view/descartes/abstractfunctionpropagator"], function(AbstractFunctionP
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
+    AbstractDescartesDecorator.prototype.mapPoint = function(point) {
+        if (this.decorator != null) {
+            point = this.decorator.mapPoint(point);
+        }
+        return point;
+    };
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
     AbstractDescartesDecorator.prototype.addDecorator = function(decorator) {
         if (this.decorator == null) {
             this.decorator = decorator;

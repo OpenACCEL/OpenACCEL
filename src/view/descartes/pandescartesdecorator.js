@@ -76,6 +76,20 @@ define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartes
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
+    ZoomDescartesDecorator.prototype.mapPoint = function(point) {
+        if (this.decorator != null) {
+            point = this.decorator.mapPoint(point);
+        }
+        point.x -= this.horOffset;
+        point.y -= this.verOffset;
+        return point;
+    };
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
     PanDescartesDecorator.prototype.pan = function(isAbsolute, horOffset, verOffset) {
         if (isAbsolute) {
             this.horOffset = horOffset;

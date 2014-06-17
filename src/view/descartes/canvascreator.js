@@ -16,13 +16,13 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/descartes/descarteshandlerfactory", "view/descartes/descartescanvas", "view/descartes/scriptdescarteshandler", "view/descartes/speadescarteshandler"],
-    function(DescartesHandlerFactory, DescartesCanvas, ScriptDescartesHandler, SPEADescartesHandler) {
+define(["view/descartes/descarteshandlerfactory", "view/descartes/descartescanvas", "view/descartes/scriptdescarteshandler", "view/descartes/geneticoptimisationdescarteshandler"],
+    function(DescartesHandlerFactory, DescartesCanvas, ScriptDescartesHandler, GeneticOptimisationDescartesHandler) {
 
         CanvasCreator = function() {
             this.factory = new DescartesHandlerFactory();
             this.factory.addHandler(new ScriptDescartesHandler());
-            this.factory.addHandler(new SPEADescartesHandler());
+            this.factory.addHandler(new GeneticOptimisationDescartesHandler());
         }
 
         CanvasCreator.prototype = {

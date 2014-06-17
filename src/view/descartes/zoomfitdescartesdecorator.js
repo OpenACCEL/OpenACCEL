@@ -98,12 +98,31 @@ define(["view/descartes/abstractdescartesdecorator", "view/descartes/zoomdescart
                 this.decoratorComponents[1].zoom(true, this.marginZoomAdjust * (horMax - horMin) / 100, this.marginZoomAdjust * (verMax - verMin) / 100);
                 this.decoratorComponents[2].pan(true, this.margin, this.margin);
             }
+            for (var j = 0; j < this.decoratorComponents.length; j++) {
+                plot = this.decoratorComponents[j].decorate(plot);
+            }
             this.fitOnce = false;
             if (this.decorator != null) {
                 plot = this.decorator.decorate(plot);
             }
             return plot;
         };
+
+        /**
+         * Returns whether the script can be compiled and executed.
+         *
+         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         */
+        ZoomDescartesDecorator.prototype.mapPoint = function(point) {
+            if (this.decorator != null) {
+                point = this.decorator.mapPoint(point);
+            }
+            for (var j = this.decoratorComponents.length - 1; j >= 0; j--) {
+                point = this.decoratorComponents[j].mapPoint(point);
+            }
+            return point;
+        };
+
         /**
          * Returns whether the script can be compiled and executed.
          *
@@ -112,6 +131,7 @@ define(["view/descartes/abstractdescartesdecorator", "view/descartes/zoomdescart
         ZoomFitDescartesDecorator.prototype.setAlwaysFit = function(bool) {
             this.alwaysFit = bool;
         };
+
         /**
          * Returns whether the script can be compiled and executed.
          *
@@ -120,6 +140,7 @@ define(["view/descartes/abstractdescartesdecorator", "view/descartes/zoomdescart
         ZoomFitDescartesDecorator.prototype.zoomToFit = function(bool) {
             this.fitOnce = bool;
         };
+
         // Exports are needed, such that other modules may invoke methods from this module file.
         return ZoomFitDescartesDecorator;
     });
