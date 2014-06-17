@@ -117,7 +117,7 @@ define(["model/fileloader",
             exe.step = function() {
                 if (this.report) {
                     for (var qty in this.report) {
-                        if (this.report[qty].isTimeDependent) {
+                        if (this.report[qty].isTimeDependent && this.report[qty].parameters.length === 0) {
                             this[qty]();
                         }
                     }

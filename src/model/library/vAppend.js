@@ -7,9 +7,14 @@
  * @return      	array x with y appended to it
  */
 function vAppend(x, y) {
+
     if (x instanceof Object) {
-        x[vLen(x)] = y;
-        return x;
+        var result = {};
+        for (var key in x) {
+            result[key] = x[key];
+        }
+        result[vLen(x)] = y;
+        return result;
     } else {
         return [x, y];
     }
