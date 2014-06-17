@@ -66,10 +66,15 @@ define(["view/descartes/abstractdescarteshandler", "model/script"], function(Abs
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
     ScriptDescartesHandler.prototype.addDescartes = function(div, width, height) {
+        console.log(controller);
+        var click = this.clickCallback.bind(this);
+        var move = this.moveCallback.bind(this);
         this.descartesInstances.push(new descartes({
             dN: div,
             cW: width,
-            cH: height
+            cH: height,
+            cB: click,
+            cMove: move
         }));
         this.descartesInstances[this.descartesInstances.length - 1].setUpGraph();
     };
@@ -79,8 +84,18 @@ define(["view/descartes/abstractdescarteshandler", "model/script"], function(Abs
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    ScriptDescartesHandler.prototype.clickCallback = function(x, y) {
+    ScriptDescartesHandler.prototype.clickCallback = function(x, y, b) {
+        controller.setMousePosInScript(x * this.coordinateScale, y * this.coordinateScale);
+        controller.setMouseButtonInScript(b);
+    };
 
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    ScriptDescartesHandler.prototype.moveCallback = function(x, y) {
+        controller.setMousePosInScript(x * this.coordinateScale, y * this.coordinateScale);
     };
 
 
