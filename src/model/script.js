@@ -98,6 +98,15 @@ define(["model/analyser/analyser",
 
     Script.prototype = {
         /**
+         * Call once every iteration during script execution.
+         */
+        step: function() {
+            // Reset memoization datastructure for recursively flagging changed quantities
+            // since last iteration. Do this here so it's done once every iteration
+            this.flaggedAsChanged = [];
+        },
+
+        /**
          * Returns whether the script can be compiled and executed.
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
@@ -383,7 +392,6 @@ define(["model/analyser/analyser",
 
                 // Recursively flag the updated user input quantity and all it's reverse
                 // dependencies as changed. First reset memoization datastructure!
-                this.flaggedAsChanged = [];
                 this.setQuantityChanged(this.quantities[qtyName], true);
 
                 // Because of the fact that a cat 1 expression evaluates to 'null' in Jison,

@@ -189,7 +189,9 @@ define(["model/script",
          * descartes canvas
          */
         Controller.prototype.setMousePosInScript = function(x, y) {
-            this.script.exe.setMousePos(x, y);
+            if (this.script.isCompiled()) {
+                this.script.exe.setMousePos(x, y);
+            }
         };
 
         /**
@@ -199,7 +201,9 @@ define(["model/script",
          * pressed
          */
         Controller.prototype.setMouseButtonInScript = function(buttonDown) {
-            this.script.exe.setMouseButton(buttonDown);
+            if (this.script.isCompiled()) {
+                this.script.exe.setMouseButton(buttonDown);
+            }
         };
 
         /**
@@ -226,7 +230,8 @@ define(["model/script",
          * otherwise has been started over.
          */
         Controller.prototype.run = function() {
-            if (this.script.isCompiled()) {
+            // If script is compiled, run the script. Else, compile first
+            if (this.script.isCompiled() && !this.executing) {
                 if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
                     // Update state
                     this.executing = true;
@@ -245,6 +250,12 @@ define(["model/script",
                             }
                         }, 1
                     );
+                }
+            } else {
+                // Compile script and make sure to explicitly run it immediately
+                // afterwards, in case autoexecuting is disabled
+                if (this.script.isComplete() && this.compileScript(this.script)) {
+                    this.run();
                 }
             }
         };
@@ -269,11 +280,21 @@ define(["model/script",
             // Check whether another iteration should be made
             if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
                 // Evaluate the expressions (definitions) of all output quantities
+                this.script.step();
                 var results = this.script.getOutputQuantities();
 
-                // Push results to view
+                // Push results to view and draw plot if there is any
                 this.presentResults(results);
                 this.view.drawPlot();
+
+                // If this is the first iteration of the script, show the plot if
+                // nessecary
+                if (this.currentIteration == 1) {
+                    // Check if there is a plot and show it if there is
+                    if (this.script.exe.plot.length > 0) {
+                        this.view.showPlot(true);
+                    }
+                }
 
                 // Signal the executable that one iteration has been completed,
                 // for quantity history functionality
@@ -545,6 +566,12 @@ define(["model/script",
                 // Compile script and signal script that it has
                 // been compiled
                 script.setExecutable(this.compiler.compile(script).exe);
+
+                // Hide any shown plot if there is no plot in the new executable anymore
+                if (script.exe.plot.length == 0) {
+                    this.view.showPlot(false);
+                }
+
                 return true;
             } else {
                 return false;

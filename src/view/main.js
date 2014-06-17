@@ -54,6 +54,10 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
         };
     };
 
+    View.prototype.showPlot = function(show) {
+        $('div#plotdiv').toggle(show);
+    };
+
     /**
      * Changes UI elements depending on whether the OpenACCEL model is being executed.
      *

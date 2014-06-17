@@ -17,7 +17,7 @@ $(document).ready(
         $('#main').on('tabsactivate', 
             function(event, ui) {
                 switch (ui.newPanel[0].id) {
-                    case 'editrun':
+                    case 'editrun':                  
                         if (controller.autoExecute) {
                             controller.run();
                         }
