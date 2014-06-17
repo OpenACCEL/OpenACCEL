@@ -7,7 +7,6 @@ suite("@ Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'At' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -18,8 +17,13 @@ suite("@ Library", function() {
     });
 
     suite("@", function() {
-
-        test("at function with scalar to index", function() {
+        /**
+         * Getting the index of a scalar should just return the scalar.
+         *
+         * @input       3[1]
+         * @expected    3
+         */
+        test("| At function with scalar to index", function() {
             eval(fileLoader.getContent());
             x = 3;
             y = 1;

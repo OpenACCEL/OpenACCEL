@@ -6,7 +6,6 @@ suite("factorial Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader"], function(Assert, Compiler, FileLoader) {
-            console.log("Loaded 'factorial' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();

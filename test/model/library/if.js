@@ -7,7 +7,6 @@ suite("If Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'If' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();

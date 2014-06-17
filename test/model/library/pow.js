@@ -7,7 +7,6 @@ suite("Pow Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
-            console.log("Loaded 'Pow' module.");
             assert = Assert;
             compiler = new Compiler();
             script = Script;

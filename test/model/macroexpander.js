@@ -6,7 +6,6 @@ suite("Macro Expander", function() {
 
     setup(function (done) {
         requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, MacroExpander, FileLoader) {
-            console.log("Loaded 'MacroExpander' module.");
             assert = Assert;
             macroExpander = new MacroExpander();
             fileLoader = new FileLoader();

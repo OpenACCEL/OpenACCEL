@@ -6,7 +6,6 @@ suite("File Loader", function() {
 
     setup(function (done) {
         requirejs(["assert", "model/fileloader", "os"], function(Assert, FileLoader, OS) {
-            console.log("Loaded 'FileLoader' module.");
             assert = Assert;
             fileLoader = new FileLoader();
             os = OS;

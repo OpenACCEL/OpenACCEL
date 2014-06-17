@@ -7,7 +7,6 @@ suite("Modulo Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
-            console.log("Loaded 'modulo' module.");
             assert = Assert;
             compiler = new Compiler();
             script = Script;

@@ -11,7 +11,6 @@ suite("Atan2 Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
-            console.log("Loaded 'Atan2' module.");
             assert = Assert;
             compiler = new Compiler();
             script = Script;

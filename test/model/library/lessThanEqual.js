@@ -7,7 +7,6 @@ suite("LessThanEqual Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'LessThanEqual' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();

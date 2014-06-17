@@ -7,7 +7,6 @@ suite("Monofunc", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
-            console.log("Loaded 'Monofunc' module.");
             assert = Assert;
             compiler = new Compiler();
             script = Script;

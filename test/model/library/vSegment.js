@@ -7,7 +7,6 @@ suite("vSegment Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'vSegment' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();

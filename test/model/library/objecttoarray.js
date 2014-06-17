@@ -8,7 +8,6 @@ suite("Object to Array function", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader, scriptModule) {
-            console.log("Loaded 'Object to Array' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
