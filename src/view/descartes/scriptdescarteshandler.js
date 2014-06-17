@@ -66,7 +66,6 @@ define(["view/descartes/abstractdescarteshandler", "model/script"], function(Abs
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
     ScriptDescartesHandler.prototype.addDescartes = function(div, width, height) {
-        console.log(controller);
         var click = this.clickCallback.bind(this);
         var move = this.moveCallback.bind(this);
         this.descartesInstances.push(new descartes({
