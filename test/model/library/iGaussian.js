@@ -16,22 +16,18 @@ suite("iGaussian Library", function() {
         });
     });
 
-    suite("iGaussian", function() {
+    /**
+     * Test case for iGaussian.
+     *
+     * @input       iGaussian(2,2,1,4)
+     * @expected    [[0.25,0.25],[0.25,0.25]]
+     */
+    test("| Test #1", function() {
+        eval(fileLoader.getContent());
 
-        /**
-         * Test case for iGaussian.
-         *
-         * input:iGaussian(2,2,1,4)
-         * expected: [[0.25,0.25],[0.25,0.25]]
-         */
-        test("iGaussian(2,2,1,4) = [[0.25,0.25],[0.25,0.25]]", function() {
-            eval(fileLoader.getContent());
+        var expected = [[0.25,0.25],[0.25,0.25]];
+        var result = iGaussian(2,2,1,4);
 
-            var expected = [[0.25,0.25],[0.25,0.25]];
-            var result =iGaussian(2,2,1,4);
-
-            assert.deepEqual(result, expected);
-        });
-
+        assert.deepEqual(result, expected);
     });
 });
