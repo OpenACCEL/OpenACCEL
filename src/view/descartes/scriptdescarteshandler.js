@@ -35,6 +35,11 @@ define(["view/descartes/abstractdescarteshandler", "model/script"], function(Abs
             name: "draw",
             func: this.draw.bind(this)
         });
+
+        this.propagatables.push({
+            name: "resetCanvas",
+            func: this.resetCanvas.bind(this)
+        });
     };
 
 
@@ -105,6 +110,18 @@ define(["view/descartes/abstractdescarteshandler", "model/script"], function(Abs
      */
     ScriptDescartesHandler.prototype.getDrawing = function() {
         return this.modelElement.getPlot();
+    };
+
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    ScriptDescartesHandler.prototype.resetCanvas = function() {
+        for (i in descartesInstances) {
+            descartesInstances[i].enforceRedraw();
+        }
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
