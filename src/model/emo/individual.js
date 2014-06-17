@@ -22,28 +22,43 @@ define([], /**@lends Model.EMO*/ function() {
      * @class
      * @classdesc Class for an individual.
      */
-    function Individual(vector) {
+    function Individual(inputvector, outputvector) {
 
         /**
          * The vector containing the dimensions of an individual.
          *
          * @type {Array}
          */
-        this.vector = vector;
+        this.inputvector = inputvector;
 
         /**
-         * Denotes whether an invidivual is in the Pareto Set.
+         * The vector containing the output elements used in the SPEA algorithm, corresponding
+         * to the input elements in vector.
+         *
+         * @type {Array}
+         */
+        this.outputvector = outputvector;
+
+        /**
+         * Denotes whether an invidivual is in the Pareto Front, i.e. it is non-dominated.
          *
          * @type {Boolean}
          */
-        this.inParetoSet = undefined;
+        this.inParetoFront = false;
 
         /**
-         * Denotes whether an invidivual is in the Pareto Front.
+         * Denotes the strength value of an individual.
          *
-         * @type {Boolean}
+         * @type {Number}
          */
-        this.inParetoFront = undefined;
+        this.strength = 0;
+
+        /**
+         * Denotes the fitness value of an individual.
+         *
+         * @type {Number}
+         */
+        this.fitness = 0;
     }
 
     /**
@@ -53,7 +68,7 @@ define([], /**@lends Model.EMO*/ function() {
      * - for every dimension individual is better than or equal to another individual
      * - for at least one dimension individual is better than another individual
      *
-     * @param  {Individual} individual2 another individual
+     * @param {Individual}  individual2 another individual
      * @pre individual2 != null
      * @pre individual2 != undefined
      * @return {Boolean}    whether an individual dominates another individual.
@@ -62,19 +77,64 @@ define([], /**@lends Model.EMO*/ function() {
         if (!individual2) {
             throw new Error("Individual.dominates.pre is violated: individual2 is null or undefined.");
         }
-        var vector1 = this.vector;
-        var vector2 = individual2.vector;
-        if (vector1.length !== vector2.length) {
+
+        var inputvector1 = this.inputvector;
+        var inputvector2 = individual2.inputvector;
+
+        var outputvector1 = this.outputvector;
+        var outputvector2 = individual2.outputvector;
+
+        outputvector1[0].value = inputvector1[0].value + inputvector1[1].value;
+        outputvector1[1].value = Math.abs(inputvector1[0].value - inputvector1[1].value);
+
+        outputvector2[0].value = inputvector2[0].value + inputvector2[1].value;
+        outputvector2[1].value = Math.abs(inputvector2[0].value - inputvector2[1].value);
+
+        if (outputvector1.length !== outputvector2.length) {
             throw new Error("Cannot compare individuals of unequal dimensions.");
         }
+
         var worse = false;
         var equal = true;
-        for (var i = vector1.length - 1; i >= 0 && !worse; i--) {
-            worse = vector1[i] < vector2[i];
-            equal = (vector1[i] === vector2[i]) && equal;
+        // loop over all dimensions of the output vector
+        // unless individual is already worse than the other
+        for (var i = outputvector1.length - 1; i >= 0 && !worse; i--) {
+            // if the current dimension is to be maximized the individual is worse
+            // when it has a lower value than the other
+            if (outputvector1[i].maximize) {
+                worse = outputvector1[i].value < outputvector2[i].value;
+            }
+            // if the current dimension is to be minimized the individual is worse
+            // when it has a higher value than the other
+            else {
+                worse = outputvector1[i].value > outputvector2[i].value;
+            }
+            // update equal if both values are equal and ensure previous dimensions
+            // are taken into consideration
+            equal = (outputvector1[i].value === outputvector2[i].value) && equal;
         }
+        // return whether the individual dominates another individual
         return (!equal && !worse);
     };
 
-    return Individual;
+    /**
+     * Adds a clone method to every object.
+     * http://stackoverflow.com/a/13844062/2922392
+     *
+     * @return {Object} the cloned object
+     */
+    Object.prototype.clone = function() {
+        var newObj = (this instanceof Array) ? [] : {};
+        for (var i in this) {
+            if (i == 'clone') {
+                continue;
+            }
+            if (this[i] && typeof this[i] == "object") {
+                newObj[i] = this[i].clone();
+            } else {
+                newObj[i] = this[i];
+            }
+        }
+        return newObj;
+    };
 });

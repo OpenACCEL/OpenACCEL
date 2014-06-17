@@ -18,28 +18,26 @@ if (inNode) {
 /*******************************************************************/
 
 define([], /**@lends Model.EMO.Mutation*/ function() {
+
     /**
      * @class Mutation
      * @classdesc A mutation mutates one of the individuals.
      */
-    function Mutation() {
+    function Mutation() {}
 
-        /**
-         * Mutates the individual.
-         *
-         * Should be overridden by other classes.
-         *
-         * @param {Individual} individual   the individual to mutate
-         * @pre individual != null or undefined
-         * @return {Individual} the mutated individual
-         */
-        Mutation.prototype.mutate = function(individual) {
-            if (!individual) {
-                throw new Error('Mutation.mutate().pre violated:' +
-                    'individual is null or undefined');
-            }
-        };
-
-        return Mutation;
-    }
+    /**
+     * Mutates the individual.
+     *
+     * Should be overridden by other classes.
+     *
+     * @param {Individual} individual   the individual to mutate
+     * @pre individual != null or undefined
+     * @return {Individual} the mutated individual
+     */
+    Mutation.prototype.mutate = function(individual) {
+        if (!individual) {
+            throw new Error('Mutation.mutate().pre violated:' +
+                'individual is null or undefined');
+        }
+    };
 });

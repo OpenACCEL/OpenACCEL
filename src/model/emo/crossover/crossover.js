@@ -18,33 +18,36 @@ if (inNode) {
 /*******************************************************************/
 
 define([], /**@lends Model.EMO.CrossOver*/ function() {
+
     /**
      * @class CrossOver
-     * @classdesc A cross-over takes two parents and creates two children.
+     * @classdesc A cross-over takes two parents and produces two children.
      */
-    function CrossOver() {
+    function CrossOver() {}
 
-        /**
-         * Takes two individuals and generates two children,
-         * based on the cross-over principle.
-         *
-         * @param {Individual} individual1  the first individual
-         * @param {Individual} individual2  the second individual
-         * @pre individual1 != null or undefined
-         * @pre individual2 != null or undefined
-         * @return {Individual[]} two individuals, the result of the cross-over
-         */
-        CrossOver.prototype.cross = function(individual1, individual2) {
-            if (!individual1) {
-                throw new Error('CrossOver.cross().pre violated:' +
-                    'individual1 is null or undefined');
-            }
-            if (!individual2) {
-                throw new Error('CrossOver.cross().pre violated:' +
-                    'individual2 is null or undefined');
-            }
-        };
-
-        return CrossOver;
-    }
+    /**
+     * Takes two parents and produces two children,
+     * based on a cross-over principle.
+     *
+     * @param {Individual} parent1  the first parent
+     * @param {Individual} parent2  the second parent
+     * @pre parent1 != null or undefined
+     * @pre parent2 != null or undefined
+     * @pre parent1.inputvector.length == parent2.inputvector.length
+     * @return {Individual[]} the offspring, the result of the cross-over
+     */
+    CrossOver.prototype.produce = function(parent1, parent2) {
+        if (!parent1) {
+            throw new Error('CrossOver.produce().pre violated:' +
+                'parent1 is null or undefined');
+        }
+        if (!parent2) {
+            throw new Error('CrossOver.produce().pre violated:' +
+                'parent2 is null or undefined');
+        }
+        if (parent1.inputvector.length != parent2.inputvector.length) {
+            throw new Error('CrossOver.produce().pre violated:' +
+                'individual 1 and parent2 have vectors of unequal length');
+        }
+    };
 });

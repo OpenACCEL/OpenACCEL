@@ -19,15 +19,16 @@ if (inNode) {
 /*******************************************************************/
 
 define([], /**@lends Model.EMO*/ function() {
+
     /**
      * @class BinaryTournament
-     * @classdesc The BinaryTournament compares the two individuals
+     * @classdesc The BinaryTournament class compares two individuals
      * and returns the strongest one.
      */
     function BinaryTournament() {}
 
     /**
-     * Compares the two individuals and returns the strongest one.
+     * Compares two individuals and selects the strongest one.
      *
      * @param {Individual} individual1  the first individual
      * @param {Individual} individual2  the second individual
@@ -35,16 +36,15 @@ define([], /**@lends Model.EMO*/ function() {
      * @pre individual2 != null or undefined
      * @return {Individual} the strongest individual
      */
-    BinaryTournament.prototype.compare = function(individual1, individual2) {
+    BinaryTournament.prototype.select = function(individual1, individual2) {
         if (!individual1) {
-            throw new Error('BinaryTournament.compare().pre violated:' +
+            throw new Error('BinaryTournament.select().pre violated:' +
                 'individual1 is null or undefined');
         }
         if (!individual2) {
-            throw new Error('BinaryTournament.compare().pre violated:' +
+            throw new Error('BinaryTournament.select().pre violated:' +
                 'individual2 is null or undefined');
         }
+        return individual1.fitness <= individual2.fitness ? individual1 : individual2;
     };
-
-    return BinaryTournament;
 });

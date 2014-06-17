@@ -42,9 +42,17 @@ define([], /**@lends Model.EMO*/ function() {
      * @param  {Number} max the upper bound
      * @return {Number}     a random double between min and max
      */
-    Random.prototype.getRandomDouble = function(min, max) {
-        return (Math.random() * (max - min)) + min;
+    Random.prototype.getRandomDouble = function(min, max, precision) {
+        return parseFloat(((Math.random() * (max - min)) + min).toFixed(precision));
     };
 
-    return Random();
+    /**
+     * Returns a random element from an array
+     *
+     * @param  {Array} array    an array
+     * @return {Object}         a random element from the array
+     */
+    Random.prototype.getRandomElement = function(array) {
+        return array[this.getRandomInt(0, array.length - 1)];
+    };
 });
