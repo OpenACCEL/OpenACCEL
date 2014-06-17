@@ -202,6 +202,38 @@ define([], /**@lends Model*/ function() {
         this.mouseButtonPressed = buttonDown;
     };
 
+    /**
+     * Executes the quantities given in the outputs array, after filling in the values given in the
+     * inputs array. The values are immediately filled in in the output objects.
+     * The values are restored afterwards.
+     *
+     * Needed for SPEA.
+     *
+     * @param  {Array} inputs  array containing object having a 'name' and 'value' field with the with the quantities that
+     *                         should get a value.
+     * @param  {Array} outputs array containing objects that have at leat a 'name' and 'value' field with the output quantities
+     * 
+     */
+    Executable.prototype.executeQuantities = function(inputs, outputs) {
+        var memory = [];
+
+        // Remember the current values of inputs, and set the values to the ones given in input
+        inputs.forEach((function(elem) {
+            memory.push({name: elem.name, value: this.getValue(elem.name)});
+            this.setValue(elem.name, elem.value);
+        }).bind(this));
+
+        // update the values in the output-objects
+        outputs.forEach((function(elem) {
+            elem.value = this.getValue(elem.name);
+        }).bind(this));
+
+        // undo changes
+        memory.forEach((function(elem) {
+            this.setValue(elem.name, elem.value);
+        }).bind(this));
+    };
+
 
 
 
