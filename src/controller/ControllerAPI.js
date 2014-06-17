@@ -99,6 +99,13 @@ define(["model/script",
             this.executing = false;
 
             /**
+             * Whether the script is currently paused.
+             *
+             * @type {Boolean}
+             */
+            this.paused = false;
+
+            /**
              * Unique id for the runloop interval.
              *
              * @type {Integer}
@@ -177,6 +184,15 @@ define(["model/script",
         };
 
         /**
+         * Returns whether the script execution is currently paused.
+         *
+         * @return {Boolean} Whether the script execution is currently paused.
+         */
+        Controller.prototype.isPaused = function() {
+            return this.paused;
+        };
+
+        /**
          * Sets the current position of the mouse cursor inside the
          * descartes canvas, for use in the script. Descartes canvas coordinates
          * are always within the range [0,100].
@@ -222,7 +238,7 @@ define(["model/script",
         };
 
         /**
-         * Starts or resumes execution of the script.
+         * Starts execution of the script from the start.
          *
          * @post The script is being executed in a loop if the
          * script is complete and non-empty.
@@ -230,11 +246,16 @@ define(["model/script",
          * otherwise has been started over.
          */
         Controller.prototype.run = function() {
+            if (this.paused) {
+
+            }
+
             // If script is compiled, run the script. Else, compile first
             if (this.script.isCompiled() && !this.executing) {
                 if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
                     // Update state
                     this.executing = true;
+                    this.paused = false;
                     this.status = "Executing";
                     this.view.setStatus(this.status);
                     this.view.setExecuting(this.executing);
@@ -320,6 +341,7 @@ define(["model/script",
 
                 // Update state
                 this.executing = false;
+                this.paused = true;
                 this.view.setExecuting(this.executing);
                 this.status = "Paused";
                 this.view.setStatus(this.status);
@@ -333,11 +355,12 @@ define(["model/script",
          * @post this.executing == false && this.currentIteration == 1
          */
         Controller.prototype.stop = function() {
-            if (this.executing) {
+            if (this.executing || this.paused) {
                 clearInterval(this.runloop);
 
                 // Update state
                 this.executing = false;
+                this.paused = false;
                 this.view.setExecuting(this.executing);
                 this.status = "Stopped";
                 this.view.setStatus(this.status);
