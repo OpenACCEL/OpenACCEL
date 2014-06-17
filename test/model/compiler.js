@@ -1,12 +1,14 @@
 suite("Compiler", function() {
 
     var assert;
+    var fs;
     var compiler;
     var Script;
 
     setup(function(done) {
-        requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, scriptModule) {
+        requirejs(["assert", "fs", "model/compiler", "model/script"], function(Assert, FS, Compiler, scriptModule) {
             assert = Assert;
+            fs = FS;
             compiler = new Compiler();
             Script = scriptModule;
             done();
@@ -385,6 +387,27 @@ suite("Compiler", function() {
                 var expected = {'t': script.quantities['t'], 'c': script.quantities['c'], 'd': script.quantities['d'],
                     'z': script.quantities['z'], 'y': script.quantities['y'], 'r': script.quantities['r'], 'x': script.quantities['x']};
                 assert.deepEqual(output, expected);
+            });
+        });
+    });
+
+    suite("| Scripts", function() {
+        /**
+         * Try to compile all ACCEL scripts from the original www.keesvanoverveld.com website.
+         */
+        test("| Original ACCEL script compilation", function() {
+            var dir = "./test/model/scripts";
+
+            fs.readdirSync(dir).forEach(function(file) {
+                var code = fs.readFileSync(dir + "/" + file, "utf8");
+                
+                try {
+                    var script = new Script(code);
+                    var output = compiler.compile(script);
+                } catch(e) {
+                    console.log(code);
+                    throw(e);
+                }
             });
         });
     });
