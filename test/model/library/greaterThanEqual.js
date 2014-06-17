@@ -20,9 +20,14 @@ suite("GreaterThanEqual Library", function() {
         });
     });
 
-    suite("greaterThanEqual", function() {
-
-        test("greaterThanEqual function with 2 variables", function() {
+    suite("| Function", function() {
+        /**
+         * Trivial.
+         *
+         * @input       greaterThanEqual(1, 2)
+         * @expected    false
+         */
+        test("| Two variables", function() {
             eval(fileLoader.getContent());
             var x = 1;
             var y = 2;
@@ -30,8 +35,13 @@ suite("GreaterThanEqual Library", function() {
             assert.deepEqual(output, false);
         });
 
-
-        test("greaterThanEqual function with 2 variables", function() {
+        /**
+         * Trivial.
+         *
+         * @input       greaterThanEqual(2, 1)
+         * @expected    true
+         */
+        test("| Two variables", function() {
             eval(fileLoader.getContent());
             var x = 2;
             var y = 1;
@@ -39,7 +49,15 @@ suite("GreaterThanEqual Library", function() {
             assert.deepEqual(output, true);
         });
 
-        test("greaterThanEqual function with a constant and an array", function() {
+        /**
+         * Automapping with a scalar and array.
+         *
+         * @input       x = 3
+         *              x = [2, 3, 4]
+         *              greaterThan(x, y)
+         * @expected    [true, true, false]
+         */
+        test("| Automapping with scalar and array", function() {
             eval(fileLoader.getContent());
             var x = 3
             var y = [2, 3, 4];
@@ -47,7 +65,15 @@ suite("GreaterThanEqual Library", function() {
             assert.deepEqual(output, [true, true, false]);
         });
 
-        test("greaterThanEqual function with 2 array's", function() {
+        /**
+         * Automapping with a scalar and array.
+         *
+         * @input       x = [1, 2, 3]
+         *              x = [2, 3, 4]
+         *              greaterThan(x, y)
+         * @expected    [false, true, true]
+         */
+        test("| Automapping with two arrays", function() {
             eval(fileLoader.getContent());
             var x = [1, 2, 3];
             var y = [3, 2, 1];
@@ -55,7 +81,15 @@ suite("GreaterThanEqual Library", function() {
             assert.deepEqual(output, [false, true, true]);
         });
 
-        test("greaterThanEqual function with an array and a nested array", function() {
+        /**
+         * Automapping with one nested array.
+         *
+         * @input       x = [1, 2, 3]
+         *              x = [3, 2, [1, 4]]
+         *              greaterThan(x, y)
+         * @expected    [false, true, [true, false]]
+         */
+        test("| Automapping with one nested array", function() {
             eval(fileLoader.getContent());
             var x = [1, 2, 3];
             var y = [3, 2, [1, 4]];
@@ -63,7 +97,15 @@ suite("GreaterThanEqual Library", function() {
             assert.deepEqual(output, [false, true, [true, false]]);
         });
 
-        test("greaterThanEqual function with nested array's", function() {
+        /**
+         * Automapping with two nested arrays.
+         *
+         * @input       x = [1, [2, 3], 3]
+         *              x = [3, 2, [1, 4]]
+         *              greaterThan(x, y)
+         * @expected    [false, [true, true], [true, false]]
+         */
+        test("| Automapping with two nested arrays", function() {
             eval(fileLoader.getContent());
             var x = [1, [2, 3], 3];
             var y = [3, 2, [1, 4]];
@@ -75,15 +117,30 @@ suite("GreaterThanEqual Library", function() {
 
     });
 
-    suite("expansion", function() {
-
-        test("should expand for 'x = 5, y = greaterThanEqual(x, 4)'", function() {
+    suite("| Compiled", function() {
+        /**
+         * GreaterThanEqual function should work from the executable.
+         *
+         * @input       x = 5
+         *              y = greaterThan(x, 4)
+         * @expected    y = true
+         */
+        test("| Should expand for 'x = 5, y = greaterThanEqual(x, 4)'", function() {
             var input = "x = 5\ny = greaterThanEqual(x, 4)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), true);
         });
 
-        test("should expand for 'x = 5, y = greaterThanEqual(x, 5), z = greaterThanEqual(x, greaterThanEqual(4, y))'", function() {
+        /**
+         * GreaterThanEqual function should work from the executable.
+         *
+         * @input       x = 5
+         *              y = greaterThan(x, 5)
+         *              z = greaterThan(x, greaterThan(4, y)
+         * @expected    y = true
+         *              z = true
+         */
+        test("| Should expand for 'x = 5, y = greaterThanEqual(x, 5), z = greaterThanEqual(x, greaterThanEqual(4, y))'", function() {
             var input = "x = 5\ny = greaterThanEqual(x, 5) \nz = greaterThanEqual(x, greaterThanEqual(4, y))";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), true);
