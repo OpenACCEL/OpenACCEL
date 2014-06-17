@@ -247,7 +247,7 @@ define(["model/analyser/passes/quantitypass",
             } else if (type === 'check') {
                 parameters = definition.match(/check\(\s*(true|false)\s*\)/);
             } else if (type === 'text') {
-                parameters = definition.match(/input\(\s*(?:\'|\")(\w+)(?:\'|\")\s*\)/);
+                parameters = definition.match(/input\(\s*(?:\'|\")([\w\s]+)(?:\'|\")\s*\)/);
             }
             return parameters.slice(1);
         };
