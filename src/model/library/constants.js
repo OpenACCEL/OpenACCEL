@@ -10,3 +10,5 @@ var getChanTimers = [];
 // entries in the array urlTimers are distinguished by the host. That is, all calls to the keyMap-url are scheduled via the same array urlTimers. For this
 // reason, there should not be two or more calls to getUrl in one script. In case multiple in- or out channels are needed, we can use the keyMap server, but
 // then we need to schedule them based on the key-name. For this reason, we have two extra arrays with timers.
+
+var urlTimers = [];
