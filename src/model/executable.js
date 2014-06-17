@@ -93,6 +93,11 @@ define([], /**@lends Model*/ function() {
                 if (this.report[qty].isTimeDependent && this.report[qty].parameters.length === 0) {
                     this[qty]();
                 }
+
+                // Reset button inputs to false after one iteration
+                if (this.report[qty].input.type == 'button') {
+                    this[qty].hist[0] = false;
+                }
             }
         }
         this.time++;
@@ -112,6 +117,7 @@ define([], /**@lends Model*/ function() {
         this.time = 0;
         this.mouseX = 0;
         this.mouseY = 0;
+        this.mouseButtonPressed = false;
         this.plot = [];
     };
 
