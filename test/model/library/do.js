@@ -16,29 +16,25 @@ suite("do Library", function() {
         });
     });
 
-    suite("do", function() {
+    /**
+     * Test case for do.
+     * 
+     * @input:          __do__('return Math.PI;', ['dummy':[]])
+     * @expected:       Math.PI
+     */
+    test("| __do__('return Math.PI;', ['dummy':[]])=Math.PI", function() {
+        eval(fileLoader.getContent());
+        assert.deepEqual(__do__('return Math.PI;', {'dummy':[]}), Math.PI);
+    });
 
-        /**
-         * Test case for do.
-         * 
-         * input: __do__('return Math.PI;', ['dummy':[]])
-         * expected: Math.PI
-         */
-        test("__do__('return Math.PI;', ['dummy':[]])=Math.PI", function() {
-            eval(fileLoader.getContent());
-            assert.deepEqual(__do__('return Math.PI;', {'dummy':[]}), Math.PI);
-        });
-
-         /**
-         * Test case for do.
-         * 
-         * input: __do__('var k = _arr; return k.sort();', ['arr':[4,3,2,1]])
-         * expected: [1,2,3,4]
-         */
-        test("__do__('var k = _arr; return k.sort();', ['arr':[4,3,2,1]])=[1,2,3,4]", function() {
-            eval(fileLoader.getContent());
-            assert.deepEqual(__do__('var k = _arr; return k.sort();', {'arr':[4,3,2,1]}), [1,2,3,4]);
-        });
-
+     /**
+     * Test case for do.
+     * 
+     * @input:          __do__('var k = _arr; return k.sort();', ['arr':[4,3,2,1]])
+     * @expected:       [1,2,3,4]
+     */
+    test("| __do__('var k = _arr; return k.sort();', ['arr':[4,3,2,1]])=[1,2,3,4]", function() {
+        eval(fileLoader.getContent());
+        assert.deepEqual(__do__('var k = _arr; return k.sort();', {'arr':[4,3,2,1]}), [1,2,3,4]);
     });
 });
