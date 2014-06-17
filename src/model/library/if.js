@@ -11,11 +11,17 @@ function __if__(condition, ifTrue, ifFalse) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    return zip([condition, ifTrue, ifFalse], function(conditionInner, ifTrueInner, ifFalseInner) {
-        if (conditionInner) {
-            return ifTrueInner;
+    function doIf(cond, tr, fa) {
+        if (cond) {
+            return tr;
         } else {
-            return ifFalseInner;
+            return fa;
         }
-    });
+    }
+
+    if (condition instanceof Object) {
+        return zip([condition, ifTrue, ifFalse], doIf);
+    } else {
+        return doIf(condition, ifTrue, ifFalse);
+    }
 }
