@@ -1,0 +1,40 @@
+ 
+nrChSwIE1=nrChIE*nrSwPCh
+    //  [Sw/E]; nr of chimney sweepers in Eindhoven. Assumption: Eindhoven ch.-sweepers sweep Eindhoven chimneys only 
+nrChIE=nrChPFam*nrFamIE
+    //  [Ch/E]; nr of chimneys in Eindhoven. Assumption: ch.-sweepers sweep only chimneys on family houses 
+nrFamIE=nrPIE/nrPPFam
+    //  [Fam/E]; nr of Families in Eindhoven. Assumption: family size is the same everywhere 
+nrPIE=250000
+    //  [P]; nr of people in Eindhoven. Assumption: common knowledge 
+nrPPFam=slider(2.2,2.0,2.4)
+    //  [P/Fam]; nr of people per family. Assumption: common knowledge 
+nrChPFam=1/nrFamPCh
+    //  [Ch/Fam]; nr of chimneys per family. Assumption: algebra 
+nrFamPCh=slider(10,8,12)
+    //  [Fam/Ch]; nr of families per chimney. Assumption: wisdom of the crowds;
+    //  perhaps after correction for ratio in population density in 'crowd' and in 'Eindhoven' 
+nrSwPCh=nrSwPSe*nrSePCh
+    //  [Sw/Ch]; nr of sweepers per chimney. Assumption:
+    //  Introduce time to associate sweeper?s capacity to chimney?s need 
+nrSwPSe=timeP1Se/timeP1Sw
+    //  [Sw*T/Se]; nr of sweepers per service. Assumption: assume average times (i.e., no season influences etc.) 
+timeP1Se=slider(2,1.75,2.25)
+    //  [T/Se]; amount of time per service. Assumption: wisdom of the crowds 
+timeP1Sw=slider(1200,1100,1300)
+    //  [T/(Sw*T)]; amount of capacity (=time) per sweeper. Assumption: one work year is 1600;
+    //  ch.-sweepers also do other things than sweeping 
+nrSePCh=1
+    //  [Se/(Ch*T)]; amount of services per (chimney year). Assumption: insurrence requirements 
+nrChSwIE2=moneySpentInSweeping/annSalary
+    //  [Sw/E]; nr of chimney sweepers in Eindhoven. Assumption: chimney sweepers divide
+    //  the total sweeping money among them, earning a reasonable average salary 
+annSalary=slider(30000,25000,35000)
+    //  [money/(T*Sw)]; amount of money earned per year by one sweeper 
+moneySpentInSweeping=moneySpentPerService*nrAnnualServicesInEindhoven
+    //  [money/(T*E)]; amount of money spent in total per year for services in Eindhoven 
+moneySpentPerService=slider(75,50,120)
+    //  [money/Se]; amount of money spent per service, i.e. cost of having your chinney sweeped 
+nrAnnualServicesInEindhoven=nrSePCh*nrChIE
+    //  [Se/T*A)]; amount of services per year per Eindhoven
+    

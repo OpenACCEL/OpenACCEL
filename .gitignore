@@ -19,6 +19,3 @@ npm-debug.log
 
 # Generated parser should be re-generated every time and shouldn't be included in the repo
 src/model/parser.js
-
-# Downloaded script files.
-test/model/scripts/

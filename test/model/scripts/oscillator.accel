@@ -1,0 +1,58 @@
+ 
+c=slider(5,1,10.0)
+    //  the spring constant 
+delta=slider(0.1,0.001,0.2)
+    //  the time step 
+m=slider(5,1,10)
+    //  the mass 
+mu=slider(0,0,1.5)
+    //  the damping constant 
+reset=button()
+    //  to reset time to 0 
+w_corr=1+mu*delta/m
+    //  
+w_damp=mu*w{2}*delta/(2*m)
+    //  
+z=plot([gr1,gr2,gr3])
+    //  the plotting magic 
+str1=[width:10,col_r:255,x:[mode:'intp'],y:[mode:'shift',ref:1]]
+    //  define the looks of the red curve 
+str2=[width:10,col_b:255,x:[mode:'intp'],y:[mode:'shift',ref:1]]
+    //  define the looks of the blue curve 
+str3=[width:10,col_g:255,x:[mode:'intp'],y:[mode:'shift',ref:1]]
+    //  define the looks of the green curve 
+F=-c*u{1}-mu*v{1}
+    //  Hooke + damping 
+a=F/m
+    //  Newton 
+discr=mu*mu-4*m*c
+    //  to make the difference between real or complex solutions 
+gr1=[str1,[40+10*u]]
+    //  the approximated curve 
+gr2=[str2,[45+10*u_exact]]
+    //  the exact curve 
+gr3=[str3,[50+10*w]]
+    //  
+lambda_img=cond(discr>0,0,sqrt(-discr)/(2*m))
+    //  the imaginary part of the exponential: oscillating part 
+lambda_real=cond(discr>0,(-mu+sqrt(discr))/(2*m),-mu/(2*m))
+    //  the real part of the exponential: damping part 
+t=if(reset,0,t{1}+delta)
+    //  the time 
+u=if(reset,1,u{1}+delta*v)
+    //  discretely updating u 
+u_exact=cond(discr>0,exp(lambda_real*t),exp(lambda_real*t)*cos(lambda_img*t))
+    //  the exact solution: a product of a damping and an oscillation 
+v=if(reset,0,v{1}+delta*a)
+    //  discretely updating v 
+w=if(t<(2*delta),1,(w_unif+w_spring+w_damp)/w_corr)
+    // the trick is, to keep w at least 2 slices equal to 1, to ensure proper
+    // starting condition for the velocity
+w_spring=-c*delta*delta*w{1}/m
+    // the Hook force  
+w_unif=2*w{1}-w{2}
+    // the inertia term
+w_damp=mu*w{2}*delta/(2*m)
+    // the damping term
+w_corr=1+mu*delta/(2*m)
+    // since the damping term is symmetric in w and w{2}, we get a correction factor

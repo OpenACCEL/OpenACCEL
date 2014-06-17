@@ -1,0 +1,24 @@
+pricePerItem=slider(2.874891727697104,0,10)
+    // what do I charge per item 
+supply=slider(2572.4060484208167,0,10000)
+    //  how much do I have in stock
+profit=paretoHor(paretoMax(income-expenses))
+    //  profit should be maximized
+waste=paretoVer(paretoMin(supply-nrSoldItems))
+    //  non-sold copies are waste
+cheapestComp=0.4
+    // cheapest competitor 
+grossPricePerItem=0.6
+    // what I have to pay per item 
+mostExpensiveComp=5.5
+    //  most expensive competitor
+nrSoldTotal=5000
+    //  so many items are sold in total, both by me and by my competitors
+expenses=supply*grossPricePerItem
+    //  I have to pay for all items, irrespective whether I'll sell them or not
+income=nrSoldItems*pricePerItem
+    //  I earn money from selling items
+marketShare=ramp(pricePerItem,cheapestComp,1,mostExpensiveComp,0)
+    //  piecewise linear model predicting how my market share depends on the selling price
+nrSoldItems=min(supply,nrSoldTotal*marketShare)
+    // I cannot sell more items than I have in stock

@@ -1,0 +1,9 @@
+a=plot([graph])
+// plotting a graph - this time with a grid 
+graph=[[grid:[majX:5,minX:17,grMajX:'line',grMinX:'tick',majY:5,minY:17,grMajY:'line',grMinY:'tick'],x:[mode:'intp'],y:[mode:'shift',ref:1]],[p]] 
+// notice the first part, defining a grid
+p=if(click,p{1}+50,p{1}*0.95)
+// this is the same demo as the somple click demo,
+// except we now adorn the image plane with a cartesian grid. 
+click=button()
+// click the button to generate a pulse

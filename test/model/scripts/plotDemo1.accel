@@ -1,0 +1,34 @@
+ 
+s=slider(50,0,100)
+    //  the size of the square and the widths of the two streams 
+xL=slider(50,0,100) 
+xLoc=[xL]
+    //  the horizontal position of one stream 
+yL=slider(50,0,100) 
+yLoc=[yL]
+    //  the vertical position of the other stream 
+a=plot(graphs)
+    //  show a number of visualisation techniques:
+    //  two graphs (consisting of boxes) and one graph consisting of an isolated
+    //  plot element (also a box), everyting under interactive control. 
+ctrl1=[plotType:'bubble',nPoints:60,x:[mode:'intp'],y:[mode:'shift',ref:1],diameter:[mode:'shift',ref:2],col_r:190,tag:[mode:'shift',ref:4],tagy:[mode:'shift',ref:5],pointsize:[mode:'shift',ref:6]]
+    //  ctrl string for the first graph 
+ctrl2=[plotType:'bubble',nPoints:60,y:[mode:'intp'],x:[mode:'shift',ref:1],diameter:[mode:'shift',ref:2],col_g:[value:100]]
+    //  ctrl string for the second graph 
+ctrl3=[plotType:'box',nPoints:1,x:[mode:'data',ref:1],y:[mode:'data',ref:2],width:[mode:'data',ref:3],height:[mode:'data',ref:3],col_r:70,col_g:0,col_b:255,tag:[mode:'data',ref:4]]
+    //  ctrl string for the third graph 
+graph1=[ctrl1,yLoc,[t],xLoc,["a"+random()],[100*random()],[20*random()]]
+    //  graph1 
+graph2=[ctrl2,xLoc,[t],yLoc]
+    //  graph 2 
+graph3=[ctrl3,xLoc,yLoc,[t],["een_text_met_spaties"]]
+    //  graph 3 
+graphs=[graph1,graph2,graph3]
+    //  collecting the graphs into one vector 
+t=t{1}*0.95+s*0.05
+    //  Notice the use of damping to make the behaviours smooth in time:
+    //  this is the inifinite impulse response filter t=t{1}*0.95+s*0.05.
+    //  t is used as a parameter in each of the three graphs,
+    //  hence their similar behaviour (although applying different visual modalities:
+    //  horizontal deviation, vertical deviation and size, respectively,
+    //  for the three graphs.

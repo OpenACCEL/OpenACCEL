@@ -1,0 +1,24 @@
+ 
+x=slider(49.69956362619996,0.0,100)
+    //  x coordinate of intersection point 
+y=slider(16.38675041962415,0.0,100.0)
+    //  y coordinate of intersection point 
+e1=paretoVer(paretoMin(err1)) 
+e2=paretoHor(paretoMin(err2))
+    //  both e1 and e2 should be 0 for an intersection point 
+m1x=0 
+m1y=50 
+m2x=100 
+m2y=50
+    //  these are the two midpoints 
+d1x=x-m1x 
+d1y=y-m1y 
+d2x=x-m2x 
+d2y=y-m2y
+    //  the diffrence vectors, connecting x and y to the two midpoints 
+err1=abs(r1-60) 
+err2=abs(r2-60)
+    //  radius 1 and 2 are both 60 
+r1=pow(d1x*d1x+d1y*d1y,0.5) 
+r2=pow(d2x*d2x+d2y*d2y,0.5)
+    // [['n':'x','x':15.6,'y':91.7],['n':'y','x':11.5,'y':88.2],['n':'e1','x':92.2,'y':39.8],['n':'err1','x':65,'y':59.9],['n':'e2','x':91.9,'y':48.9],['n':'err2','x':75.2,'y':67.9],['n':'m1x','x':28.7,'y':25.1],['n':'m1y','x':33,'y':21.8],['n':'m2x','x':11.1,'y':16],['n':'m2y','x':8,'y':27.7],['n':'d1x','x':44.6,'y':51.8],['n':'d1y','x':46,'y':43.2],['n':'d2x','x':50.2,'y':70.5],['n':'d2y','x':48.2,'y':76.5],['n':'r1','x':57,'y':58.5],['n':'r2','x':69.9,'y':72.8]]

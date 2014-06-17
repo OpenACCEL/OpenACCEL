@@ -1,0 +1,101 @@
+ 
+choice0=slider(0,0,1) 
+choice1=slider(0,0,1) 
+choice2=slider(1,0,1) 
+choice3=slider(0,0,1)
+    //  allows the user to select between product 1 and product 2 in each of the four weeks 
+choice4=0
+xpp0=slider(17,0,20) 
+xpp1=slider(16,0,20) 
+xpp2=slider(16,0,20) 
+xpp3=slider(5,0,20)
+    //  allows the user to select the amount of units planned to produce in each week. Every step
+    //  of +/- 1 corresponds to 10 units more or less. This is a heuristic approach to cover a larger
+    //  part of the solution space, sacrifying somewhat accuracy.
+p1=paretoMax(paretoHor(profit)) 
+    //  The amount of dollars we earn 
+    //  We want the profit to be as large as possible
+p2=paretoMin(paretoVer(inv[0]+inv[1]))
+    //  The amount of units left in the inventory at the
+    // end of the simulation. This should be as few as possible.
+    // (In the original problem setting, this amount was enforced to be 0)
+demand=[[0,0],[75,20],[95,30],[60,45],[90,30]];[[unit/week,unit/week],[unit/week,unit/week],[unit/week,unit/week],[unit/week,unit/week],[unit/week,unit/week]]
+    //  We only sell products from the inventory, so we need the first week to produce initial supply.
+    //  Therefore no demand in the first week. 
+nrHpW=80; hour/week
+    //  number of hours per week 
+nrWeeks=5; week
+    //  we run the simulation for five weeks; 
+prod1=['ST':6.0,'SC':250.0,'PT':0.5,'PC':9.0,'IC':3.0,'FC':15.0,'SP':25.0];[ST:hour/week,SC:dollar,PT:hour/unit,PC:dollar/unit,IC:dollar/unit,FC:dollar/unit,SP:dollar/unit] 
+prod2=['ST':11.0,'SC':400.0,'PT':0.75,'PC':14.0,'IC':3.0,'FC':20.0,'SP':35.0];[ST:hour/week,SC:dollar,PT:hour/unit,PC:dollar/unit,IC:dollar/unit,FC:dollar/unit,SP:dollar/unit] 
+    //  ST: set-up time,
+    //  SC: set-up cost,
+    //  PT: production time,
+    //  PC: production cost,
+    //  IC: inventory holding cost,
+    //  FC: penalty fee for unsatisfied demand,
+    //  SP: selling price 
+choice=[choice0,choice1,choice2,choice3,choice4]
+    //  collection of choices 
+expenses=setUpCosts+productionCosts+inventoryCosts+penaltyForUnsatisfiedDemand
+    //  expenses consist of various contributions 
+income=income{1}+#(i,[0,1],thisWeekSold[i]*prod[i].SP,add)
+    //  income thus far pls income this week 
+inv=#(i,[0,1],thisWeekInventory(i),vAppend)
+    //  inv is needed to represent the state of the inventory of previous week 
+inventoryCosts=inventoryCosts{1}+#(i,[0,1],prod[i].IC*thisWeekInventory(i),add)
+    //  this weeks inventory cost 
+penaltyForUnsatisfiedDemand=penaltyForUnsatisfiedDemand{1}+#(i,[0,1],prod[i].FC*min(zeroUnits,thisWeekDemand(i)-thisWeekSold[i]),add)
+    //  penalty thus far plus penalty this week 
+prod=[prod1,prod2]
+    //  collection of products 
+productionCosts=productionCosts{1}+prod[thisWeekChoice].PC*thisWeekXpa
+    //  prod.-costs thus far plus prod.-costs of this week
+profit=income-expenses 
+setUpCosts=setUpCosts{1}+if(week<nrWeeks,prod[thisWeekChoice].SC,0)
+    //  set up costs thus far plus set up costs this week 
+thisWeekChoice=if(week<nrWeeks,choice[week-deltaWeek],nulChoice)
+    //  for the weeks after the simulation run we arbitrarily choose product 0.
+    //  Realize that the choice-vector indices
+    //  run from 0 ... 4. 
+thisWeekDemand(i)=cond(week<=nrWeeks,demand[week-deltaWeek][i],zeroUnits)
+    //  the demand stops after the last week. Realize that the demand-vector indices
+    //  run from 0 ... 4, the first being zero. Further, we make thisWeekDemand
+    //  a function that returns a single value, not a vector. Hence the argument i to distinguish products. 
+thisWeekInventory(i)=if(week>deltaWeek,inv{1}[i]-thisWeekSold{1}[i]+if(i==thisWeekChoice,thisWeekXpa,zeroUnits),zeroUnits)
+    //  calculate the number of items in the inventory in this for product i as
+    //  * the number of units in the inventory for that product the previous week
+    //  * plus the number of produced units in this week for the product of choice of this week
+    //  * minus the number of sold units in this week
+    //  Notice: if week=1 we don't want to inspect inv 
+thisWeekPlanned=if(week<nrWeeks,xppU[week-deltaWeek],zeroUnits)
+    //  Planned nr. of units in the current week in units/week
+    //  We don't plan anything for weeks later than the last week of the simulation.
+    //  Notice: the actual amount we produce may be less: a week has only 80 hours
+    //  and we take time for setup 
+thisWeekSold=#(i,[0,1],min(thisWeekDemand(i),thisWeekInventory(i)),vAppend)
+    //  nr of sold items, in this week, for each kind of products,
+    //  is the minimum of amount of units in inventory and demand in that week.
+    //  Notice: we only sell products from the inventory, not any products that we produce this week.
+    //  So youngest products were manufactured previous week 
+thisWeekXpa=if(week<nrWeeks,(min((nrHpW-prod[thisWeekChoice].ST)/prod[thisWeekChoice].PT,thisWeekPlanned*perWeek)/perWeek),zeroUnits)
+    //  the actual number of produced units (of whichever item we
+    //  are producing this week) in this week is limited by the amount of available
+    //  hours in a week that remain after having done the setup for each product. 
+week=week{1}+deltaWeek
+    //  increasing week number. This runs from 1 ... 5. 
+xppU=[xpp0*scaleFactor,xpp1*scaleFactor,xpp2*scaleFactor,xpp3*scaleFactor,xpp4*scaleFactor]
+    // Specify nr units, planned to produce, irrespective of the type of product, each week.
+    // The actual number of manufactured units is 10 times the slider value:
+    // this allows a larger coverage of the solution space at the expense of a slightly less accuracy
+scaleFactor=10;unit
+    // This converts one step on a slider to ten units
+deltaWeek=1; week
+    // to make dimensions correct
+zeroUnits=0;unit
+    // to make dimensions correct
+nulChoice=0;1
+    // to make dimensions correct
+perWeek=1;1/week
+   // to make dimensions correct
+   xpp4=0;1

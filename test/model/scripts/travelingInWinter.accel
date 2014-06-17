@@ -1,0 +1,43 @@
+ 
+addDist=slider(100,0,1000)
+    //  [km]; How far do I want to travel further? 
+moneySaved=reducedCosts-addCosts
+    //  [Euro]; Assumption: I spend all costs for not having to heat my house during severe cold,
+    //  by traveling further on my Winter holiday 
+costPerHotelNight=45
+    //  [Euro/night]; I don't need a very expensive hotel.
+    //  Source: http://www.hotelspecials.nl/ 
+costPerMeal=7.5 
+costsSevereCold=51
+    //  [Euro/month]; this is what a cold Winter causes for extra heating costs per month.
+    //  Source: http://www.consumentenbond.nl/test/woning-huishouden 
+dayTrip=400 
+    // how many kilometers do I travel per day
+holidayLength=0.5
+    //  [month]; Source: my CAO 
+kmPerFuel=28.6
+    //  [km/liter]; How efficient does my (very eco) car drive?
+    //  source: http://www2.natuurenmilieu.nl/ 
+pricePerLiterFuel=0.88
+    //  [Euro/liter]; What do I pay for fuel? 
+travelDistanceBetweenMeals=150
+    //  [km]; Source: I get hungry every 150 km 
+addCosts=travelCosts+hotelCosts+mealCosts
+    //  [Euro]; These are the additional costs that I make in travelling further.
+    //  Assumption: ignore that I would also make costs if I would not travel 
+hotelCosts=hotelNights*costPerHotelNight
+    //  Assumption: no discounts for longer stays 
+hotelNights=round(addDist/dayTrip)
+    //  [nights]; Assumption: 'round' instead of 'ceil' or 'floor';
+    //  indeed, if there is a short remaining traject, I won't book a hotel. 
+mealCosts=costPerMeal*nrMeals
+    //  [Euro]; Assumption: no snacks ... 
+nrMeals=ceil(addDist/travelDistanceBetweenMeals)
+    //  [meal]; Assumption: meals occur at regular intervals, and every meal is equally expensive 
+pricePerKm=pricePerLiterFuel/kmPerFuel
+    //  [Euro/km]; Assumption: I ignore that traveling uphill or downhill makes differences 
+reducedCosts=holidayLength*costsSevereCold
+    // what I win by not being at home but stay in a hotel instead 
+travelCosts=addDist*pricePerKm
+    //  [Euro]; Assumption: no costs for writing off, insurance, ...
+    // [['n':'addDist','x':10.9,'y':91.6],['n':'moneySaved','x':94.8,'y':46.5],['n':'reducedCosts','x':63.1,'y':35.4],['n':'addCosts','x':89.5,'y':58.4],['n':'costPerHotelNight','x':13.2,'y':7.5],['n':'costPerMeal','x':5.4,'y':33.6],['n':'costsSevereCold','x':30.4,'y':6],['n':'dayTrip','x':10.2,'y':11.6],['n':'holidayLength','x':35.6,'y':5.7],['n':'kmPerFuel','x':8.5,'y':29.4],['n':'pricePerLiterFuel','x':9.8,'y':19],['n':'travelDistanceBetweenMeals','x':19.5,'y':6.2],['n':'travelCosts','x':78.7,'y':63.8],['n':'hotelCosts','x':77,'y':59],['n':'mealCosts','x':85.2,'y':78.2],['n':'hotelNights','x':47.3,'y':47],['n':'nrMeals','x':65.2,'y':48],['n':'pricePerKm','x':51.2,'y':71.2]]

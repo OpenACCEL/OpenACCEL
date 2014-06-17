@@ -1,0 +1,43 @@
+amp0=slider(0.0,-1.0,1.0)
+// these are amplitudes of the terms x to the power n 
+amp1=slider(0.0,-1.0,1.0) 
+amp2=slider(0.0,-1.0,1.0) 
+amp3=slider(0.0,-1.0,1.0)  
+amp4=slider(0.0,-1.0,1.0)  
+amp5=slider(0.0,-1.0,1.0) 
+amp6=slider(0.0,-1.0,1.0) 
+amp7=slider(0.0,-1.0,1.0) 
+amp8=slider(0.0,-1.0,1.0) 
+p=plot([curve,refCurve])  
+// plotting the curve
+m=9
+// sets the number of components
+n=30
+// sets the number of samples in the graph
+amp=[amp0,amp1,amp2,amp3,amp4,amp5,amp6,amp7,amp8]
+// collect all user-controlled amplitudes into a vector
+curve=[dStr,50*(data+1)]
+// build the curve
+dStr=[width:4,col_r:255,x:[mode:'intp'],y:[mode:'data',ref:1],nPoints:n]
+// control the looks of the curve
+data=#(i,vSequence(0,n),poly(2*(i-n/2)/n),vAppend)
+// calculate n samples of the curve
+poly(i)=#(j,vSequence(0,m),amp[j]*pow(abs(i),j)*polySign(i,j),add)
+// add all components for one sample
+polySign(i,j)=if(i>=0,1,if((j%2)==0,1,-1))
+// to deal with powers of negative arguments
+ref=#(i,vSequence(0,n),0.25*sin((i-n/2)*2*PI/n),vAppend)
+// the refernce curve is a sine curve, so a clever approximation will use odd powers only
+// and an even cleverer approximation will use the terms from the Taylor series: x-x^3/3!+x^5/5! etc.
+// But Pareto obviously has no clue about all of this fine math.
+diffLocal=#(i,vSequence(n/3,2*n/3),abs(data[i]-ref[i]),add)
+// this is an absolute difference measure, looking at the environment of x=0
+diffGlobal=#(i,vSequence(0,n),abs(data[i]-ref[i]),add)
+// this is an absolute difference measure, looking at a large range
+diffLoc=paretoVer(paretoMin(diffLocal))
+diffGlob=paretoHor(paretoMin(diffGlobal))
+// we have 2 pareto quantities so we can have a nice graph
+refCurve=[cStr,50*(ref+1)]
+// this is the curve we want to approximate
+cStr=[width:4,col_g:255,x:[mode:'intp'],y:[mode:'data',ref:1],nPoints:n]
+// control the looks of the reference curve
