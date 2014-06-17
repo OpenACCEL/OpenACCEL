@@ -1,5 +1,5 @@
 /*
- * File containing the GeneticOptimalisation class
+ * File containing the GeneticOptimisation class
  *
  */
 
@@ -20,10 +20,10 @@ define([], /**@lends Model.EMO*/ function() {
 
     /**
      * @class
-     * @classdesc Class for a Genetic Optimalisation algorithm based on
+     * @classdesc Class for a Genetic Optimisation algorithm based on
      * the Strength Pareto Evolutionary Algorithm.
      */
-    function GeneticOptimalisation() {
+    function GeneticOptimisation() {
 
         /**
          * The population.
@@ -73,7 +73,7 @@ define([], /**@lends Model.EMO*/ function() {
         this.frontRatio = 0.5;
     }
 
-    GeneticOptimalisation.prototype.initialise = function() {
+    GeneticOptimisation.prototype.initialise = function() {
         this.mutations.push(new CloseMutation());
         this.mutations.push(new ArbitraryMutation());
         this.mutations.push(new RandomMutation());
@@ -84,21 +84,21 @@ define([], /**@lends Model.EMO*/ function() {
     /**
      * The tournament to be used for the construction of the mating pool.
      */
-    GeneticOptimalisation.prototype.setTournament = function(tournament) {
+    GeneticOptimisation.prototype.setTournament = function(tournament) {
         this.tournament = tournament;
     };
 
     /**
      * The cross-over to be used for the production of offspring.
      */
-    GeneticOptimalisation.prototype.setCrossOver = function(crossover) {
+    GeneticOptimisation.prototype.setCrossOver = function(crossover) {
         this.crossover = crossover;
     };
 
     /**
      * Generates the next generation.
      */
-    GeneticOptimalisation.prototype.nextGeneration = function() {
+    GeneticOptimisation.prototype.nextGeneration = function() {
         this.constructMatingPool();
         this.produceOffspring();
         this.calculateParetoFront();
@@ -111,7 +111,7 @@ define([], /**@lends Model.EMO*/ function() {
     /**
      * Calculates the nondominated individuals.
      */
-    GeneticOptimalisation.prototype.calculateParetoFront = function() {
+    GeneticOptimisation.prototype.calculateParetoFront = function() {
         // save the size of the population
         var size = this.population.length;
         // mark all individuals as nondominated
@@ -149,7 +149,7 @@ define([], /**@lends Model.EMO*/ function() {
      * The fitness value of an individual is determined
      * by the sum of strenth values of its dominators.
      */
-    GeneticOptimalisation.prototype.calculateFitness = function() {
+    GeneticOptimisation.prototype.calculateFitness = function() {
         // calculate the strength values of the population
         this.calculateStrength();
         // save the size of the population
@@ -179,7 +179,7 @@ define([], /**@lends Model.EMO*/ function() {
      * The strength value of an individual is determined
      * by how many others it dominates.
      */
-    GeneticOptimalisation.prototype.calculateStrength = function() {
+    GeneticOptimisation.prototype.calculateStrength = function() {
         // save the size of the population
         var size = this.population.length;
         var individual;
@@ -201,7 +201,7 @@ define([], /**@lends Model.EMO*/ function() {
      *
      * The mating pool is constructed by using the desired tournament with replacement.
      */
-    GeneticOptimalisation.prototype.constructMatingPool = function() {
+    GeneticOptimisation.prototype.constructMatingPool = function() {
         // initialise the mating pool
         this.matingpool = [];
         var individual1;
@@ -222,7 +222,7 @@ define([], /**@lends Model.EMO*/ function() {
      * All nondominated individuals survive.
      * The offspring is produced by applying the desired cross-over.
      */
-    GeneticOptimalisation.prototype.produceOffspring = function() {
+    GeneticOptimisation.prototype.produceOffspring = function() {
         // all nondominated individuals survive
         this.population = this.nondominated.slice();
         var parent1;
@@ -256,7 +256,7 @@ define([], /**@lends Model.EMO*/ function() {
      * Only the dominated individuals are mutated.
      * The offspring is mutated by applying the desired mutation.
      */
-    GeneticOptimalisation.prototype.mutateOffspring = function() {
+    GeneticOptimisation.prototype.mutateOffspring = function() {
         var mutation;
         // loop over all dominated individuals
         for (var i = this.dominated.length - 1; i >= 0; i--) {
@@ -274,7 +274,7 @@ define([], /**@lends Model.EMO*/ function() {
         }
     };
 
-    GeneticOptimalisation.prototype.checkMaxPercentageInParetoFront = function() {
+    GeneticOptimisation.prototype.checkMaxPercentageInParetoFront = function() {
         var index;
         var individual;
         while (this.nondominated.length / this.population.length > this.frontRatio) {
