@@ -565,7 +565,7 @@ define(["model/script",
 
                 // Compile script and signal script that it has
                 // been compiled
-                script.setExecutable(this.compiler.compile(script).exe);
+                script.setExecutable(this.compiler.compile(script));
 
                 // Hide any shown plot if there is no plot in the new executable anymore
                 if (script.exe.plot.length == 0) {
