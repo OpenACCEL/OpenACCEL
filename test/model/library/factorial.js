@@ -84,7 +84,7 @@ suite("Factorial Library", function() {
      *              factorial(x)
      * @expected    error
      */
-    test("factorial function with variable greater than 100", function() {
+    test("| Greater than largest", function() {
         eval(fileLoader.getContent());
         var x = 101;
         expected = /The factorial of numbers less than 0 or greater than 100 are not supported./;
