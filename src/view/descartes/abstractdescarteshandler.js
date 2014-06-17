@@ -48,8 +48,6 @@ define(["view/descartes/abstractdescartesdecorator"], function(AbstractDescartes
          * @type {array<AbstractDescartesHandler>}
          */
         this.clickInfo = "";
-
-        this.coordinateScale = 100;
     }
 
 

@@ -31,6 +31,8 @@ define(["view/descartes/abstractfunctionpropagator"], function(AbstractFunctionP
          * @type {array<AbstractDescartesHandler>}
          */
         this.decorator = null;
+
+        this.coordinateScale = 100;
     };
 
 
