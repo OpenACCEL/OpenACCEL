@@ -16,22 +16,18 @@ suite("iConvolve Library", function() {
         });
     });
 
-    suite("iConvolve", function() {
+    /**
+     * Test case for iConvolve.
+     *
+     * @input       iConvolve([[1,2,3],[1,2,3]],[[4,5,6],[4,5,6]],5,5,0)
+     * @expected    [[58,58,64],[58,58,64]]
+     */
+    test("| Test #1", function() {
+        eval(fileLoader.getContent());
 
-        /**
-         * Test case for iConvolve.
-         *
-         * input:iConvolve([[1,2,3],[1,2,3]],[[4,5,6],[4,5,6]],5,5,0)
-         * expected: [[58,58,64],[58,58,64]]
-         */
-        test("iConvolve([[1,2,3],[1,2,3]],[[4,5,6],[4,5,6]],5,5,0) = [[58,58,64],[58,58,64]]", function() {
-            eval(fileLoader.getContent());
+        var expected = [[58,58,64],[58,58,64]];
+        var result =iConvolve([[1,2,3],[1,2,3]],[[4,5,6],[4,5,6]],5,5,0);
 
-            var expected = [[58,58,64],[58,58,64]];
-            var result =iConvolve([[1,2,3],[1,2,3]],[[4,5,6],[4,5,6]],5,5,0);
-
-            assert.deepEqual(result, expected);
-        });
-
+        assert.deepEqual(result, expected);
     });
 });
