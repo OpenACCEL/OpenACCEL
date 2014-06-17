@@ -16,22 +16,18 @@ suite("iMake Library", function() {
         });
     });
 
-    suite("iMake", function() {
+    /**
+     * Test case for iMake.
+     *
+     * @input       iMake(3,2,2)
+     * @expected    [[3,3],[3,3]]
+     */
+    test("| Test #1", function() {
+        eval(fileLoader.getContent());
 
-        /**
-         * Test case for iMake.
-         *
-         * input:iMake(3,2,2)
-         * expected: [[3,3],[3,3]]
-         */
-        test("iMake(3,2,2) = [[3,3],[3,3]]", function() {
-            eval(fileLoader.getContent());
+        var expected = [[3,3],[3,3]];
+        var result =iMake(3,2,2);
 
-            var expected = [[3,3],[3,3]];
-            var result =iMake(3,2,2);
-
-            assert.deepEqual(result, expected);
-        });
-
+        assert.deepEqual(result, expected);
     });
 });
