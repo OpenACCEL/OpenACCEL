@@ -26,19 +26,20 @@ define(["view/descartes/abstractdescartesdecorator", "view/descartes/zoomdescart
          */
         function ZoomFitDescartesDecorator() {
 
+            this.decoratorComponents = [];
             /**
              * The DescartesHandlers that can be provided by this class.
              *
              * @type {array<AbstractDescartesHandler>}
              */
-            this.addDecorator(new PanDescartesDecorator());
+            this.decoratorComponents.push(new PanDescartesDecorator());
 
             /**
              * The DescartesHandlers that can be provided by this class.
              *
              * @type {array<AbstractDescartesHandler>}
              */
-            this.addDecorator(new ZoomDescartesDecorator());
+            this.decoratorComponents.push(new ZoomDescartesDecorator());
 
             /**
              * The DescartesHandlers that can be provided by this class.
@@ -54,12 +55,9 @@ define(["view/descartes/abstractdescartesdecorator", "view/descartes/zoomdescart
              */
             this.fitOnce = false;
 
-            /**
-             * The DescartesHandlers that can be provided by this class.
-             *
-             * @type {array<AbstractDescartesHandler>}
-             */
-            this.facadify();
+            this.margin = 5;
+
+            this.marginZoomAdjust = 1 - (2 * this.margin / 100);
         }
 
 
@@ -96,8 +94,9 @@ define(["view/descartes/abstractdescartesdecorator", "view/descartes/zoomdescart
                         verMin = Math.min(plot[i][0].y, verMin);
                     }
                 }
-                pan(true, horMin, verMin);
-                zoom(true, (horMax - horMin) / 100, (verMax - verMin) / 100);
+                this.decoratorComponents[0].pan(true, horMin, verMin);
+                this.decoratorComponents[1].zoom(true, this.marginZoomAdjust * (horMax - horMin) / 100, this.marginZoomAdjust * (verMax - verMin) / 100);
+                this.decoratorComponents[2].pan(true, this.margin, this.margin);
             }
             this.fitOnce = false;
             if (this.decorator != null) {
