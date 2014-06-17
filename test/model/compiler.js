@@ -411,4 +411,22 @@ suite("Compiler", function() {
             });
         });
     });
+
+    suite("plot tests", function() {
+
+        test('call to plot', function() {
+            var code = 'a=plot([1,2,3,4])';
+            var script = new Script(code);
+            var exe = compiler.compile(script).exe;
+            script.exe = exe;
+            var expected = [1,2,3,4];
+
+            assert.equal(exe.__a__(),'plot OK');
+            assert.deepEqual(exe.plot, expected);
+            assert.equal(script.getPlot(), exe.plot);
+        });
+
+    });
+
+
 });
