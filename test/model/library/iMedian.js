@@ -16,22 +16,18 @@ suite("iMedian Library", function() {
         });
     });
 
-    suite("iMedian", function() {
+    /**
+     * Test case for iMedian.
+     *
+     * @input       iMedian([[1,2,3,4],[1,2,3,4]],5,0)
+     * @expected    [[2,2,3,3],[2,2,3,3]]
+     */
+    test("| Test #1", function() {
+        eval(fileLoader.getContent());
 
-        /**
-         * Test case for iMedian.
-         *
-         * input:iMedian([[1,2,3,4],[1,2,3,4]],5,0)
-         * expected: [[2,2,3,3],[2,2,3,3]]
-         */
-        test("iMedian([[1,2,3,4],[1,2,3,4]],5,0) = [[2,2,3,3],[2,2,3,3]]", function() {
-            eval(fileLoader.getContent());
+        var expected = [[2,2,3,3],[2,2,3,3]];
+        var result =iMedian([[1,2,3,4],[1,2,3,4]],5,0);
 
-            var expected = [[2,2,3,3],[2,2,3,3]];
-            var result =iMedian([[1,2,3,4],[1,2,3,4]],5,0);
-
-            assert.deepEqual(result, expected);
-        });
-
+        assert.deepEqual(result, expected);
     });
 });
