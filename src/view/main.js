@@ -48,10 +48,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
      * Trigger an update of the plot canvas
      */
     View.prototype.drawPlot = function() {
-        if (this.descartesCanvas) {
-            this.descartesCanvas.handler.modelElement = controller.getScript();
-            this.descartesCanvas.draw();
-        };
+        this.descartesCanvas.draw();
     };
 
     View.prototype.showPlot = function(show) {
@@ -75,6 +72,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/d
     controller = new Controller(new View(canvasCreator));
     controller.setAutoExecute(true);
     controller.autoSave = true;
-    controller.restoreSavedScript();
     controller.view.setUpPlot(controller);
+    controller.restoreSavedScript();
 });
