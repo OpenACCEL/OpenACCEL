@@ -417,7 +417,7 @@ suite("Compiler", function() {
         test('call to plot', function() {
             var code = 'a=plot([1,2,3,4])';
             var script = new Script(code);
-            var exe = compiler.compile(script).exe;
+            var exe = compiler.compile(script);
             script.exe = exe;
             var expected = [1,2,3,4];
 
