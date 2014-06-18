@@ -20,7 +20,8 @@ define([], /**@lends Model.EMO*/ function() {
 
     /**
      * @class
-     * @classdesc Class for the Strength Pareto Evolutionary Algorithm.
+     * @classdesc Class for a Genetic Optimisation algorithm
+     * based on the Strength Pareto Evolutionary Algorithm (SPEA).
      */
     function GeneticOptimisation() {
 
@@ -95,6 +96,12 @@ define([], /**@lends Model.EMO*/ function() {
         this.desiredParetoFrontRatio = 0.2;
     }
 
+    /**
+     * Initialises the Genetic Optimisation algorithm.
+     *
+     * Set up the mutations used.
+     * Calculate the initial Pareto Front and fitness values;
+     */
     GeneticOptimisation.prototype.initialise = function() {
         this.mutations.push(new CloseMutation());
         this.mutations.push(new ArbitraryMutation());
@@ -138,18 +145,25 @@ define([], /**@lends Model.EMO*/ function() {
      * a new random individual.
      */
     GeneticOptimisation.prototype.initialiseNewPopulation = function() {
+        // calculate current and desired amount of individuals in the pareto front
         var currentParetoFrontSize = this.nondominated.length;
         var desiredParetoFrontSize = parseFloat((this.desiredParetoFrontRatio * this.population.length).toFixed(0));
+        // initialise variables
         var individual;
+        var quantity;
+        // check if we have too many individuals in the pareto front
         while (currentParetoFrontSize > desiredParetoFrontSize) {
             individual = Random.prototype.getRandomElement(this.nondominated);
+            // if needed, throw away random individuals in the pareto front
             if (individual.inParetoFront) {
                 for (var i = individual.inputvector.length - 1; i >= 0; i--) {
-                    var quantity = individual.inputvector[i];
+                    // by replacing them with a random individual
+                    quantity = individual.inputvector[i];
                     quantity.value = Random.prototype.getRandomDouble(quantity.minimum, quantity.maximum, quantity.precision);
                 }
+                // recalculate the pareto front
                 this.calculateParetoFront();
-                currentParetoFrontSize--;
+                currentParetoFrontSize = this.nondominated.length;
             }
         }
     };
@@ -160,11 +174,12 @@ define([], /**@lends Model.EMO*/ function() {
     GeneticOptimisation.prototype.calculateParetoFront = function() {
         // save the size of the population
         var size = this.population.length;
+        // initialise variable
+        var individual;
         // mark all individuals as nondominated
         for (var i = size - 1; i >= 0; i--) {
             this.population[i].inParetoFront = true;
         }
-        var individual;
         // compare all individuals with each other
         for (var i = size - 1; i >= 0; i--) {
             for (var j = size - 1; j >= 0; j--) {
@@ -200,10 +215,13 @@ define([], /**@lends Model.EMO*/ function() {
         this.calculateStrength();
         // save the size of the population
         var size = this.population.length;
+        // initialise variables
+        var sum;
+        var individual;
         // compare all individuals with each other
         for (var i = size - 1; i >= 0; i--) {
-            var sum = 0;
-            var individual = this.population[i];
+            sum = 0;
+            individual = this.population[i];
             for (var j = size - 1; j >= 0; j--) {
                 var anotherIndividual = this.population[j];
                 // update fitness if individual is dominated by another
@@ -224,9 +242,11 @@ define([], /**@lends Model.EMO*/ function() {
     GeneticOptimisation.prototype.calculateStrength = function() {
         // save the size of the population
         var size = this.population.length;
+        // initialise variable
+        var individual;
         // compare all individuals with each other
         for (var i = size - 1; i >= 0; i--) {
-            var individual = this.population[i];
+            individual = this.population[i];
             individual.strength = 0;
             for (var j = size - 1; j >= 0; j--) {
                 // update strength if individual dominates another
@@ -243,12 +263,14 @@ define([], /**@lends Model.EMO*/ function() {
      * The mating pool is constructed by using the desired tournament with replacement.
      */
     GeneticOptimisation.prototype.constructMatingPool = function() {
-        // initialise the mating pool
+        // initialise variables
         this.matingpool = [];
+        var individual1;
+        var individual2;
         // fill the mating pool
         while (this.matingpool.length < this.population.length - this.dominated.length) {
-            var individual1 = Random.prototype.getRandomElement(this.population);
-            var individual2 = Random.prototype.getRandomElement(this.population);
+            individual1 = Random.prototype.getRandomElement(this.population);
+            individual2 = Random.prototype.getRandomElement(this.population);
             // run a tournament to determine the winner and add a clone
             // (instead of a reference) to the mating pool
             this.matingpool.push(this.tournament.select(individual1, individual2).clone());
@@ -262,6 +284,7 @@ define([], /**@lends Model.EMO*/ function() {
      * The offspring is produced by applying the desired cross-over.
      */
     GeneticOptimisation.prototype.produceOffspring = function() {
+        // initialise variables
         var offspring = [];
         var parent1;
         var parent2;
@@ -289,6 +312,7 @@ define([], /**@lends Model.EMO*/ function() {
      * The offspring is mutated by applying the desired mutation.
      */
     GeneticOptimisation.prototype.mutateOffspring = function() {
+        // initialise variable
         var mutation;
         // loop over all dominated individuals
         for (var i = this.dominated.length - 1; i >= 0; i--) {
