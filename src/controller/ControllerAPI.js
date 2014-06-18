@@ -34,8 +34,8 @@ define(["model/script",
     /**@lends Controller*/
     function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError) {
         /**
-         * @class Controller
-         * @classdesc Base controller class.
+         * @class
+         * @classdesc The Controller is the intermediar between the Model and the View.
          *
          * @param view {AbstractView} The view with which the controller will communicate
          * to present the results and data. If not provided, the controller will use a
@@ -108,7 +108,7 @@ define(["model/script",
             /**
              * Unique id for the runloop interval.
              *
-             * @type {Integer}
+             * @type {Number}
              */
             this.runloop = null;
 
@@ -133,7 +133,7 @@ define(["model/script",
              * Whether the application uses web workers or not. DO NOT
              * SET DIRECTLY. Use setShouldUseWorkers().
              *
-             * @param {Boolean}
+             * @type {Boolean}
              */
             this.useWorkers = false;
 
@@ -199,9 +199,9 @@ define(["model/script",
          *
          * @pre 0 <= x <= 100
          * @pre 0 <= y <= 100
-         * @param {Number} x The x coordinate of the mouse cursor inside the
+         * @param x {Number} The x coordinate of the mouse cursor inside the
          * descartes canvas
-         * @param {Number} y The y coordinate of the mouse cursor inside the
+         * @param y {Number} The y coordinate of the mouse cursor inside the
          * descartes canvas
          */
         Controller.prototype.setMousePosInScript = function(x, y) {
@@ -213,7 +213,7 @@ define(["model/script",
         /**
          * Sets the current left mouse button status.
          *
-         * @param {Boolean} buttonDown Whether the left mouse button is currently
+         * @param buttonDown {Boolean} Whether the left mouse button is currently
          * pressed
          */
         Controller.prototype.setMouseButtonInScript = function(buttonDown) {
@@ -227,7 +227,7 @@ define(["model/script",
          * available on the user's system. Currently workers are not used for
          * anything but this can change in the future
          *
-         * @param {Boolean} useWorkers Whether workers should be used when available
+         * @param useWorkers {Boolean} Whether workers should be used when available
          */
         Controller.prototype.setUseWorkers = function(useWorkers) {
             if (useWorkers && typeof(Worker) !== 'undefined' && inBrowser) {
@@ -269,7 +269,7 @@ define(["model/script",
                                 controller.view.runtimeError(e);
                                 controller.stop();
                             }
-                        }, 1
+                        }, 5
                     );
                 }
             } else {
@@ -583,7 +583,7 @@ define(["model/script",
         /**
          * Compiles the given script if the todo-list is empty.
          *
-         * @param  {Script} script The script to compile
+         * @param  script {Script} The script to compile
          * @return Whether the script has been compiled
          */
         Controller.prototype.compileScript = function(script) {
@@ -614,7 +614,7 @@ define(["model/script",
         /**
          * Returns the most recent computed value of the given quantity.
          *
-         * @param qtyName = {String} The name of the quantity of which to return the value
+         * @param qtyName {String} The name of the quantity of which to return the value
          * @pre qtyName != null
          * @pre qtyName != undefined
          * @pre this.script.hasQuantity(qtyName)
@@ -703,7 +703,7 @@ define(["model/script",
         /**
          * Loads demo script from the model.
          *
-         * @param name = {String} name of demo script
+         * @param name {String} name of demo script
          * @pre name != null
          * @pre name != undefined
          * @pre name \in model.demoScripts
@@ -722,7 +722,7 @@ define(["model/script",
         /**
          * Saves script on server and, returns a link to the script.
          *
-         * @param name = {String} name of script
+         * @param name {String} name of script
          * @pre name != null
          * @pre name != undefined
          * @pre name \not \in model.savedScripts
@@ -761,9 +761,9 @@ define(["model/script",
          * Returns the source code of the current script, optionally including
          * quantity units and comments.
          *
-         * @param {Boolean} includeUnits Whether to include the quantity units
+         * @param includeUnits {Boolean} Whether to include the quantity units
          * in the output.
-         * @param {Boolean} includeComments (optional) Whether to include the
+         * @param includeComments {Boolean} (optional) Whether to include the
          * comments belonging to the quantities in the output
          * @return {String} The source code of the current script, with or without
          * units and comments as specified.
@@ -776,9 +776,9 @@ define(["model/script",
          * Builds the model defined in the given source code and sets it
          * as the current script.
          *
-         * @param {String} source List of quantity definitions and optionally
+         * @param source {String} List of quantity definitions and optionally
          * comments
-         * @param {Boolean} restoring (Optional) Whether we are restoring a script
+         * @param restoring {Boolean} (Optional) Whether we are restoring a script
          * from the autoSaveStore. Set to true to
          * @modifies this.script
          * @post A new script has been created, containing all quantities
@@ -817,7 +817,7 @@ define(["model/script",
         /**
          * Saves the given script source to the backup store.
          *
-         * @param {String} source The script source to save to the backup store.
+         * @param source {String} The script source to save to the backup store.
          */
         Controller.prototype.saveScriptToBackupStore = function(source) {
             this.autoSaveStore.saveScript(source);
@@ -882,8 +882,8 @@ define(["model/script",
          * Sets the position of a quantity in the network.
          *
          * @param quantity {Object} Quantity
-         * @param x = {Number} Horizontal coordinate of the quantity
-         * @param y = {Number }Vertical coordinate of the quantity
+         * @param x {Number} Horizontal coordinate of the quantity
+         * @param y {Number }Vertical coordinate of the quantity
          * @pre name, x, y != null
          * @pre name, x,y != undefined
          * @post model.quantity.x = x

@@ -1,5 +1,5 @@
 /*
- * Central compiling point. Code goes in, executable and report go out.
+ * Central compiling point. Code goes in, executable goes out.
  *
  * @author Roy Stoof
  */
@@ -30,7 +30,7 @@ define(["model/fileloader",
         "model/parser",
         "model/exceptions/SyntaxError",
         "model/executable"
-    ], /**@lends Model*/
+    ], /**@lends Compiler*/
     function(FileLoader,
         MacroExpander,
         _,
@@ -39,7 +39,12 @@ define(["model/fileloader",
         Executable) {
 
         /**
-         * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
+         * @class
+         * @classdesc The Compiler compiles the raw ACCEL source code of the script into
+         * executable Javascript code.
+         *
+         * Compilation is done by first parsing the source code using a lexical scanner and parser
+         * and subsequently expanding the macro's that the parser put in. 
          */
         function Compiler() {
             /**
