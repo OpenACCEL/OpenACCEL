@@ -57,7 +57,12 @@ define(["model/analyser/passes/quantitypass",
              *
              * @type {Object.<Number, Object.<String, Quantity>>}
              */
-            this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
+            this.categories = {
+                1: {},
+                2: {},
+                3: {},
+                4: {}
+            };
         }
 
         /**
@@ -85,7 +90,12 @@ define(["model/analyser/passes/quantitypass",
          * Resets this.categories to initial empty value.
          */
         Analyser.prototype.resetCategoryStores = function() {
-            this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
+            this.categories = {
+                1: {},
+                2: {},
+                3: {},
+                4: {}
+            };
         };
 
         /**
@@ -256,6 +266,27 @@ define(["model/analyser/passes/quantitypass",
             }
 
             return parameters.slice(1);
+        };
+
+        Analyser.prototype.findPareto = function(quantity) {
+            if (!quantity) {
+                throw new Error('Analyser.findPareto.pre violated: ' +
+                    'quantity is null or undefined');
+            }
+            var definition = quantity.definition;
+            if (definition.match(/pareto/)) {
+                quantity.pareto.isPareto = true;
+                if (definition.match(/paretoMin\(/)) {
+                    quantity.pareto.isMaximize = false;
+                } else if (definition.match(/paretoMax\(/)) {
+                    quantity.pareto.isMaximize = true;
+                }
+                if (definition.match(/paretoHor\(/)) {
+                    quantity.pareto.isHorizontal = true;
+                } else if (definition.match(/paretoVer\(/)) {
+                    quantity.pareto.isVertical = true;
+                }
+            }
         };
 
         // Exports all macros.
