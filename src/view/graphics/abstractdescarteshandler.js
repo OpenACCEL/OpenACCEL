@@ -29,12 +29,6 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
          *
          * @type {array<AbstractDescartesHandler>}
          */
-        this.descartes = null;
-        /**
-         * The DescartesHandlers that can be provided by this class.
-         *
-         * @type {array<AbstractDescartesHandler>}
-         */
         this.descartesInstances = [];
         /**
          * The DescartesHandlers that can be provided by this class.
@@ -99,6 +93,20 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
         this.descartesInstances[this.descartesInstances.length - 1].setUpGraph();
     };
 
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    AbstractDescartesHandler.prototype.clickCallback = function(x, y, b) {};
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    AbstractDescartesHandler.prototype.moveCallback = function(x, y) {};
+
 
     /**
      * Returns whether the script can be compiled and executed.
@@ -108,6 +116,7 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     AbstractDescartesHandler.prototype.removeDescartes = function(div) {
         for (i in this.descartesInstances) {
             if (this.descartesInstances[i].divName == this.div) {
+                this.descartesInstances[i].eraseGraph();
                 this.descartesInstances.splice(i, 1);
             }
         }
@@ -164,6 +173,18 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
      */
     AbstractDescartesHandler.prototype.getClickInfo = function() {
         return this.clickInfo;
+    };
+
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    AbstractDescartesHandler.prototype.resetCanvas = function() {
+        for (i in this.descartesInstances) {
+            this.descartesInstances[i].enforceRedraw();
+        }
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
