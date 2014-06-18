@@ -57,7 +57,12 @@ define(["model/analyser/passes/quantitypass",
              *
              * @type {Object.<Number, Object.<String, Quantity>>}
              */
-            this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
+            this.categories = {
+                1: {},
+                2: {},
+                3: {},
+                4: {}
+            };
         }
 
         /**
@@ -85,7 +90,12 @@ define(["model/analyser/passes/quantitypass",
          * Resets this.categories to initial empty value.
          */
         Analyser.prototype.resetCategoryStores = function() {
-            this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
+            this.categories = {
+                1: {},
+                2: {},
+                3: {},
+                4: {}
+            };
         };
 
         /**
@@ -247,11 +257,20 @@ define(["model/analyser/passes/quantitypass",
             } else if (type === 'check') {
                 parameters = definition.match(/check\(\s*(true|false)\s*\)/);
             } else if (type === 'text') {
-                parameters = definition.match(/input\(\s*(?:\'|\")(.+)(?:\'|\")\s*\)/);
+                parameters = definition.match(/input\(\s*(.*)\s*\)/);
 
-                // If we are dealing with a number in stead of a string, return the number as a string.
-                if (!parameters) {
-                    parameters = definition.match(/input\(\s*(-*\s*\d+[.\d]*)\s*/);
+                if (parameters) {
+                    if (parameters[1] === 'PI') {
+                        parameters[1] = Math.PI;
+                    } else if (parameters[1] === 'E') {
+                        parameters[1] = Math.E;
+                    } else {
+                        try {
+                            parameters[1] = JSON.parse(parameters[1].replace(/'/g, '"'));
+                        } catch (e) {
+                            parameters = [];
+                        }
+                    }
                 }
             }
 

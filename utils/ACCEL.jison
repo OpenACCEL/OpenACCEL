@@ -258,7 +258,7 @@ scriptFinalLine         :   quantity
 
 
 /** Single ACCEL script lines */
-quantity                :   quantityDef | quantityFuncDef;
+quantity                :   quantityDef | quantityFuncDef | inputQuantityDef;
 quantityFuncDef         :   funcDef '=' expr
                             { $$ = $1 + $2 + $3; }
                         ;
@@ -280,6 +280,12 @@ funcDefAdditionalArg    :   ',' dummy
                             { $$ = $2 }
                         ;
 quantityDef             :   quantityName '=' expr (UNIT)?
+                        {{ 
+                            var defStr = $1 + $2 + $3;
+                            $$ = defStr;
+                        }}
+                        ;
+inputQuantityDef        :   quantityName '=' inputCall (UNIT)?
                         {{ 
                             var defStr = $1 + $2 + $3;
                             $$ = defStr;
@@ -371,10 +377,6 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                                 $$ = funcCall + $5;
                             }
                         }}
-                        |   INPUTFUNCTION '(' expr? (funcCallArgList)* ')'
-                        {{
-                            $$ = 'null';
-                        }}
                         |   quantityName '(' expr? (funcCallArgList)* ')'
                         {{
                             var funcCall = 'this.' + $1 + $2 + ($3 || '');
@@ -385,7 +387,15 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                             }
                        }}   
                         ;
+inputCall               :   INPUTFUNCTION '(' scalarConst? (inputCallArgList)* ')'
+                        {{
+                            $$ = 'null';
+                        }}
+                        ;
 funcCallArgList         :   ',' expr
+                            { $$ = $2; }
+                        ;
+inputCallArgList        :   ',' scalarConst
                             { $$ = $2; }
                         ;
 

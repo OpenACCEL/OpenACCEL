@@ -31,8 +31,10 @@ macro func {
                         // default value as floats
                         if (this.report.$x.input.type == 'button') {
                             this.$x.hist[0] = false;
+                        } else if (this.report.$x.input.type == 'text') {
+                            this.$x.hist[0] = this.report.$x.input.parameters[0];
                         } else {
-                            this.$x.hist[0] = parseFloat(this.report.$x.input.parameters[0]);
+                            this.$x.hist[0] = JSON.parse(this.report.$x.input.parameters[0]);
                         }
                     } else {
                          this.$x.hist[0] = this.$x.expr();
