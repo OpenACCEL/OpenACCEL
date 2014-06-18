@@ -94,7 +94,7 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunction
         this.facadify();
     };
 
-    Canvas.prototype.discard() {
+    Canvas.prototype.discard = function() {
         this.handler.removeDescartes(this.div);
     }
 

@@ -98,14 +98,14 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    ScriptDescartesHandler.prototype.clickCallback = function(x, y, b) {};
+    AbstractDescartesHandler.prototype.clickCallback = function(x, y, b) {};
 
     /**
      * Returns whether the script can be compiled and executed.
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    ScriptDescartesHandler.prototype.moveCallback = function(x, y) {};
+    AbstractDescartesHandler.prototype.moveCallback = function(x, y) {};
 
 
     /**
@@ -181,7 +181,7 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    ScriptDescartesHandler.prototype.resetCanvas = function() {
+    AbstractDescartesHandler.prototype.resetCanvas = function() {
         for (i in this.descartesInstances) {
             this.descartesInstances[i].enforceRedraw();
         }
