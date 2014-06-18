@@ -41,6 +41,13 @@ define(["model/emo/crossover/crossover",
         this.population = [];
 
         /**
+         * Reference to the executable.
+         *
+         * @type {Executable}
+         */
+        this.executable = {};
+
+        /**
          * The external dominated set.
          *
          * @type {Array}
@@ -110,7 +117,8 @@ define(["model/emo/crossover/crossover",
      * Set up the mutations used.
      * Calculate the initial Pareto Front and fitness values;
      */
-    GeneticOptimisation.prototype.initialise = function() {
+    GeneticOptimisation.prototype.initialise = function(script) {
+        this.executable = script.exe;
         this.mutations.push(new CloseMutation());
         this.mutations.push(new ArbitraryMutation());
         this.mutations.push(new RandomMutation());
@@ -184,6 +192,11 @@ define(["model/emo/crossover/crossover",
         var size = this.population.length;
         // initialise variable
         var individual;
+        // calculate output values
+        for (var i = size - 1; i >= 0; i--) {
+            individual = this.population[i];
+            this.executable.executeQuantities(individual.inputvector, individual.outputvector);
+        }
         // mark all individuals as nondominated
         for (var i = size - 1; i >= 0; i--) {
             this.population[i].inParetoFront = true;

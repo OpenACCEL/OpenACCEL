@@ -78,17 +78,8 @@ define([], /**@lends Model.EMO*/ function() {
             throw new Error("Individual.dominates.pre is violated: individual2 is null or undefined.");
         }
 
-        var inputvector1 = this.inputvector;
-        var inputvector2 = individual2.inputvector;
-
         var outputvector1 = this.outputvector;
         var outputvector2 = individual2.outputvector;
-
-        outputvector1[0].value = inputvector1[0].value + inputvector1[1].value;
-        outputvector1[1].value = Math.abs(inputvector1[0].value - inputvector1[1].value);
-
-        outputvector2[0].value = inputvector2[0].value + inputvector2[1].value;
-        outputvector2[1].value = Math.abs(inputvector2[0].value - inputvector2[1].value);
 
         if (outputvector1.length !== outputvector2.length) {
             throw new Error("Cannot compare individuals of unequal dimensions.");
@@ -123,20 +114,20 @@ define([], /**@lends Model.EMO*/ function() {
      *
      * @return {Object} the cloned object
      */
-    Object.prototype.clone = function() {
-        var newObj = (this instanceof Array) ? [] : {};
-        for (var i in this) {
-            if (i == 'clone') {
-                continue;
-            }
-            if (this[i] && typeof this[i] == "object") {
-                newObj[i] = this[i].clone();
-            } else {
-                newObj[i] = this[i];
-            }
-        }
-        return newObj;
-    };
+    // Object.prototype.clone = function() {
+    //     var newObj = (this instanceof Array) ? [] : {};
+    //     for (var i in this) {
+    //         if (i == 'clone') {
+    //             continue;
+    //         }
+    //         if (this[i] && typeof this[i] == "object") {
+    //             newObj[i] = this[i].clone();
+    //         } else {
+    //             newObj[i] = this[i];
+    //         }
+    //     }
+    //     return newObj;
+    // };
 
     return Individual;
 });
