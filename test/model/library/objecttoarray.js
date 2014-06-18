@@ -19,6 +19,12 @@ suite("Object to Array function", function() {
 
     suite("__objectToArray()__", function() {
 
+        /**
+         * Test case for ObjectToArray.
+         * 
+         * @input objectToArray({a:1, b:2, c:3})
+         * @expected [a:1, b:2, c:3] 
+         */
         test("Object with only named keys", function() {
             eval(fileLoader.getContent());
             var input = {a:1, b:2, c:3};
@@ -33,6 +39,12 @@ suite("Object to Array function", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for ObjectToArray.
+         * 
+         * @input objectToArray({'0':1, '1':2, '2':3})
+         * @expected [1,2,3] 
+         */
         test("Object with only numerical keys", function() {
             eval(fileLoader.getContent());
             var input = {'0':1, '1':2, '2':3};
@@ -44,6 +56,12 @@ suite("Object to Array function", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for ObjectToArray.
+         * 
+         * @input objectToArray({'0':1, '2':3, '1':2})
+         * @expected [1,2,3] 
+         */
         test("Object with only numerical keys shuffled", function() {
             eval(fileLoader.getContent());
             var input = {'0':1, '2':3, '1':2};
@@ -55,6 +73,12 @@ suite("Object to Array function", function() {
             assert.deepEqual(output, expected);
         }); 
 
+        /**
+         * Test case for ObjectToArray.
+         * 
+         * @input objectToArray({'0':1, a:3, '1':2})
+         * @expected [1, 2, a:3] 
+         */
         test("Object mixed keys", function() {
             eval(fileLoader.getContent());
             var input = {'0':1, a:3, '1':2};
@@ -67,6 +91,12 @@ suite("Object to Array function", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for ObjectToArray.
+         * 
+         * @input objectToArray({a:1, b:{x:10,y:11,z:12}, c: 2, d: {q:100}})
+         * @expected [a:1, b: [x:10, y: 11, z: 12], c:2, d:[q:100]]
+         */
         test("Nested objects named", function() {
             eval(fileLoader.getContent());
             var input = {a:1, b:{x:10,y:11,z:12}, c: 2, d: {q:100}};
@@ -86,6 +116,12 @@ suite("Object to Array function", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for ObjectToArray.
+         * 
+         * @input objectToArray({'0':1, '1':{'0':10,'1':11,'2':12}, '2': 2, '3': {'0':100}})
+         * @expected [1, [10,11,12], 2, [100]]
+         */
         test("Nested objects numeric", function() {
             eval(fileLoader.getContent());
             var input = {'0':1, '1':{'0':10,'1':11,'2':12}, '2': 2, '3': {'0':100}};
@@ -96,6 +132,12 @@ suite("Object to Array function", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for ObjectToArray.
+         * 
+         * @input objectToArray({'0':1, '1':{a:10,b:11,'0':12}, x: 'foobar'})
+         * @expected [1, [12], a:10, b:11, x: 'foobar']
+         */
         test("Nested objects mixed", function() {
             eval(fileLoader.getContent());
             var input = {'0':1, '1':{a:10,b:11,'0':12}, x: 'foobar'};
@@ -110,6 +152,12 @@ suite("Object to Array function", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for ObjectToArray.
+         * 
+         * @input objectToArray({'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':'hello'}}}}}}}}}}}}}}}}}}}})
+         * @expected [[[[[[[[[[[[[[[[[[[['hello']]]]]]]]]]]]]]]]]]]]
+         */
         test("Deep nesting", function() {
             eval(fileLoader.getContent());
             var input = {'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':{'0':'hello'}}}}}}}}}}}}}}}}}}}}

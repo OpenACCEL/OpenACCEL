@@ -19,6 +19,12 @@ suite("vMake Library", function() {
 
     suite("vMake", function() {
 
+        /**
+         * Test case for vMake.
+         *
+         * @input vMake(2,3)
+         * @expected [2,2,2]
+         */
         test("create an array with 3 times the number 2", function() {
             eval(fileLoader.getContent());
             x = 2;
@@ -31,6 +37,12 @@ suite("vMake Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMake.
+         *
+         * @input vMake("bla",3)
+         * @expected ["bla", "bla", "bla"]
+         */
         test("create an array with 3 times the string 'bla'", function() {
             eval(fileLoader.getContent());
             x = "bla";
@@ -43,6 +55,12 @@ suite("vMake Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMake.
+         *
+         * @input vMake(2,-3)
+         * @expected {}
+         */
         test("create an empty array with attempted negative number of elements", function() {
             eval(fileLoader.getContent());
             x = 2;
@@ -55,6 +73,12 @@ suite("vMake Library", function() {
 
     suite("expansion", function() {
 
+        /**
+         * Test case for expansion of vMake.
+         *
+         * @input x = vMake('stuff', 2)
+         * @expected x = ["stuff", "stuff"]
+         */
         test("should expand for 'x = vMake('stuff', 2)'", function() {
             var input = "x = vMake('stuff', 2)";
             expected = {};

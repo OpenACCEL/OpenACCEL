@@ -21,6 +21,12 @@ suite("Poisson Library", function() {
 
     suite("poisson", function() {
 
+        /**
+         * Test case for poisson.
+         *
+         * @input poisson(3,4, false)
+         * @expected 64 * Math.exp(-4) / 6
+         */
         test("poisson function calculating the density.", function() {
             eval(fileLoader.getContent());
             var x = 3;
@@ -31,6 +37,12 @@ suite("Poisson Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for poisson.
+         *
+         * @input poisson(3,4, true)
+         * @expected 64 * Math.exp(-4) / 6 + 16 * Math.exp(-4) / 2 + 4 * Math.exp(-4) / 1 + 1 * Math.exp(-4) / 1
+         */
         test("poisson function calculating the density.", function() {
             eval(fileLoader.getContent());
             var x = 3;
@@ -41,6 +53,12 @@ suite("Poisson Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for poisson.
+         *
+         * @input poisson(-1,1, true)
+         * @expected /The poisson of numbers less than 0 are not supported./
+         */
         test("poisson function with variables less than 0", function() {
             eval(fileLoader.getContent());
             var x = -1;
@@ -52,6 +70,12 @@ suite("Poisson Library", function() {
             }, expected);
         });
 
+        /**
+         * Test case for poisson.
+         *
+         * @input poisson(1,-1, false)
+         * @expected /The poisson of numbers less than 0 are not supported./
+         */
         test("poisson function with variables less than 0", function() {
             eval(fileLoader.getContent());
             var x = 1;

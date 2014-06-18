@@ -23,8 +23,8 @@ suite("vTranspose Library", function() {
          * Test case based on example from help documentation.
          *
          * 
-         * input:vTranspose([[1,10,100],[2,20,200],[3,30,300]])
-         * expected: [[1,2,3],[10,20,30],[100,200,300]]
+         * @input:vTranspose([[1,10,100],[2,20,200],[3,30,300]])
+         * @expected: [[1,2,3],[10,20,30],[100,200,300]]
          */
         test("vTranspose([[1,10,100],[2,20,200],[3,30,300]]) = [[1,2,3],[10,20,30],[100,200,300]]", function() {
             eval(fileLoader.getContent());

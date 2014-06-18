@@ -21,14 +21,14 @@ suite("vNormSq Library", function() {
         /**
          * Test case for vNormSq.
          *
-         * input:vNormSq([1,2,3,4])
-         * expected: 30
+         * @input:vNormSq([1,2,3,4])
+         * @expected: 30
          */
         test("vNormSq([1,2,3,4]) = 30", function() {
             eval(fileLoader.getContent());
 
             var expected = 30;
-            var result =vNormSq([1,2,3,4]);
+            var result = vNormSq([1, 2, 3, 4]);
 
             assert.deepEqual(result, expected);
         });
@@ -36,8 +36,8 @@ suite("vNormSq Library", function() {
         /**
          * Test case for vNormSq.
          *
-         * input:vNormSq(5)
-         * expected: 25
+         * @input:vNormSq(5)
+         * @expected: 25
          */
         test("vNormSq(5) = 25", function() {
             eval(fileLoader.getContent());

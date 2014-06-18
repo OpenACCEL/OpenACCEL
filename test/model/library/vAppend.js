@@ -20,6 +20,12 @@ suite("vAppend Library", function() {
 
     suite("vAppend", function() {
 
+        /**
+         * Test case for vAppend, scalar.
+         *
+         * @input vAppend(1, 2)
+         * @expected [1, 2]
+         */
         test("append a scalar to a scalar", function() {
             eval(fileLoader.getContent());
             x = 1;
@@ -28,6 +34,12 @@ suite("vAppend Library", function() {
             assert.deepEqual(output, [1, 2]);
         });
 
+        /**
+         * Test case for vAppend, vector.
+         *
+         * @input vAppend([1, 2], 4)
+         * @expected [1,2,4]
+         */
         test("append a scalar to a vector", function() {
             eval(fileLoader.getContent());
             x = {};
@@ -42,6 +54,12 @@ suite("vAppend Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vAppend, 2 vectors.
+         *
+         * @input vAppend([1, 2], [4,5])
+         * @expected [1,2, [4,5]]
+         */
         test("append a vector to a vector", function() {
             eval(fileLoader.getContent());
             x = {};
@@ -59,6 +77,14 @@ suite("vAppend Library", function() {
 
     suite("expansion", function() {
 
+        /**
+         * Test case for expansion of vAppend.
+         *
+         * @input x = vAppend(y, z)
+         *        y = [1,0]
+         *        z = 3
+         * @expected x = [1,0,3]
+         */
         test("should expand for 'x = vAppend(y, z), y = [1,0], z = 3'", function() {
             var input = "x = vAppend(y, z)\ny = [1,0]\nz = 3";
             var output = compiler.compile(new Script(input));

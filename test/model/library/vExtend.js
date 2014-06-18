@@ -20,14 +20,14 @@ suite("vExtend Library", function() {
         /**
          * Test case for vExtend.
          *
-         * input:vExtend([1,2,3,4],[5,6])
-         * expected: [1,2,3,4,5,6]
+         * @input:vExtend([1,2,3,4],[5,6])
+         * @expected: [1,2,3,4,5,6]
          */
         test("vExtend([1,2,3,4],[5,6]) = [1,2,3,4,5,6]", function() {
             eval(fileLoader.getContent());
 
-            var expected = [1,2,3,4,5,6];
-            var result = vExtend([1,2,3,4],[5,6]);
+            var expected = [1, 2, 3, 4, 5, 6];
+            var result = vExtend([1, 2, 3, 4], [5, 6]);
 
             assert.deepEqual(result, expected);
         });
@@ -35,14 +35,23 @@ suite("vExtend Library", function() {
         /**
          * Test case for vExtend.
          *
-         * input:vExtend([x:3,y:5],[t:6])
-         * expected: [x:3,y:5,t:6]
+         * @input:vExtend([x:3,y:5],[t:6])
+         * @expected: [x:3,y:5,t:6]
          */
         test("vExtend([x:3,y:5],[t:6]) = [x:3,y:5,t:6]", function() {
             eval(fileLoader.getContent());
 
-            var expected = objectToArray({x:3,y:5,t:6});
-            var result = vExtend(objectToArray({x:3,y:5}),objectToArray({t:6}));
+            var expected = objectToArray({
+                x: 3,
+                y: 5,
+                t: 6
+            });
+            var result = vExtend(objectToArray({
+                x: 3,
+                y: 5
+            }), objectToArray({
+                t: 6
+            }));
 
             assert.deepEqual(result, expected);
         });

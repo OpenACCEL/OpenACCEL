@@ -20,22 +20,33 @@ suite("vEigenSystem Library", function() {
         /**
          * Test case for vEigenSystem.
          *
-         * input:vEigenSystem([[4,4],[2,2]])
-         * expected: [[6,0],[0,0],[[0.89,-0.75],[0.45,0.75]]]
+         * @input:vEigenSystem([[4,4],[2,2]])
+         * @expected: [[6,0],[0,0],[[0.89,-0.75],[0.45,0.75]]]
          */
         test("m=vEigenSystem([[4,4],[2,2]]) = [[6,0],[0,0],[[0.89,-0.75],[0.45,0.75]]]", function() {
             eval(fileLoader.getContent());
 
-            var expected = [[6,0],[0,0],[[0.89,-0.75],[0.45,0.75]]];
-            var result = vEigenSystem([[4,4],[2,2]]);
+            var expected = [
+                [6, 0],
+                [0, 0],
+                [
+                    [0.89, -0.75],
+                    [0.45, 0.75]
+                ]
+            ];
+            var result = vEigenSystem([
+                [4, 4],
+                [2, 2]
+            ]);
             var delta = 0.01;
+
             function check(actual, exp) {
                 if (actual instanceof Object) {
                     for (var key in actual) {
                         check(actual[key], exp[key]);
                     }
                 } else {
-                    assert(Math.abs(actual - exp) < delta );
+                    assert(Math.abs(actual - exp) < delta);
                 }
             }
 

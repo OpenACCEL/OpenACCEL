@@ -20,6 +20,12 @@ suite("vDot Library", function() {
 
     suite("vDot", function() {
 
+        /**
+         * Test case for vDot, two vectors.
+         *
+         * @input vDot([2,5], [3,7])
+         * @expected 41
+         */
         test("dot product of two vectors", function() {
             eval(fileLoader.getContent());
             x = [2, 5];
@@ -29,6 +35,12 @@ suite("vDot Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vDot, two named vectors.
+         *
+         * @input vDot([a: 2,b: 3, c: 4], [a:2, b: 3, d :4])
+         * @expected 13
+         */
         test("dot product of two named vectors", function() {
             eval(fileLoader.getContent());
             x = {};
@@ -47,6 +59,14 @@ suite("vDot Library", function() {
 
     suite("expansion", function() {
 
+        /**
+         * Test case for expansion of vDot.
+         *
+         * @input x = vDot(z, y)
+         *        y = [[1, 1],[0, -1]]
+         *        z = [[2, 4],[3, 5]]
+         * @expected 6
+         */
         test("should expand for 'x = vDot(z, y), y = [[1, 1],[0, -1]], z = [[2, 4],[3, 5]]'", function() {
             var input = "x = vDot(z, y)\ny = [1, 1]\nz = [2, 4]";
             expected = 6;

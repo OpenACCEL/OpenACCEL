@@ -14,17 +14,32 @@ suite("Log Library", function() {
         });
     });
     suite("log", function() {
+
+        /**
+         * Test case for log.
+         *
+         * @input x = log(5)
+         * @expected Math.log(5) / Math.log(10)
+         */
         test("x = log(5)", function() {
             var input = "x = log(5)";
             var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, Math.log(5) / Math.log(10));
         });
 
+        /**
+         * Test case for log.
+         *
+         * @input x = 5
+         *        y = log(x) + 2
+         *        z = log(log(x) + log(y))
+         * @expected z = Math.log(Math.log(5) / Math.log(10) + Math.log(Math.log(5) / Math.log(10) + 2) / Math.log(10))
+         */
         test("x = 5, y = log(x) + 2, z = log(log(x) + log(y))", function() {
-            var input = 
-            "x = 5\n" + 
-            "y = log(x) + 2\n" +
-            "z = log(log(x) + log(y))";
+            var input =
+                "x = 5\n" +
+                "y = log(x) + 2\n" +
+                "z = log(log(x) + log(y))";
             var output = compiler.compile(new script(input)).__z__();
             assert.equal(output, Math.log(Math.log(5) / Math.log(10) + Math.log(Math.log(5) / Math.log(10) + 2) / Math.log(10)) / Math.log(10));
         });

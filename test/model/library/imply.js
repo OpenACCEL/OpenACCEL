@@ -22,6 +22,12 @@ suite("Imply Library", function() {
 
     suite("imply", function() {
 
+        /**
+         * Test case for imply.
+         *
+         * @input   imply(true, true)
+         * @expected true
+         */
         test("imply function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = true;
@@ -30,6 +36,12 @@ suite("Imply Library", function() {
             assert.deepEqual(output, true);
         });
 
+        /**
+         * Test case for imply.
+         *
+         * @input   imply(true, false)
+         * @expected false
+         */
         test("imply function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = true;
@@ -38,6 +50,12 @@ suite("Imply Library", function() {
             assert.deepEqual(output, false);
         });
 
+        /**
+         * Test case for imply.
+         *
+         * @input   imply([true,false], 1)
+         * @expected [1,true]
+         */
         test("imply function with a constant and an array", function() {
             eval(fileLoader.getContent());
             var x = [true, false];
@@ -46,6 +64,12 @@ suite("Imply Library", function() {
             assert.deepEqual(output, [1, true]);
         });
 
+        /**
+         * Test case for imply.
+         *
+         * @input   imply([true, true, false, false], [true, false, true, false])
+         * @expected [true, false, true, true]
+         */
         test("imply function with array's", function() {
             eval(fileLoader.getContent());
             var x = [true, true, false, false];
@@ -54,6 +78,12 @@ suite("Imply Library", function() {
             assert.deepEqual(output, [true, false, true, true]);
         });
 
+        /**
+         * Test case for imply.
+         *
+         * @input   imply([true, false], [true, [true, false]])
+         * @expected [true, [true, true]]
+         */
         test("imply function with an array and a nested array", function() {
             eval(fileLoader.getContent());
             var x = [true, false];
@@ -62,6 +92,12 @@ suite("Imply Library", function() {
             assert.deepEqual(output, [true, [true, true]]);
         });
 
+        /**
+         * Test case for imply.
+         *
+         * @input   imply([[true, false], false], [true, [true, false]])
+         * @expected [[true,true], [true, true]]
+         */
         test("imply function with nested array's", function() {
             eval(fileLoader.getContent());
             var x = [
@@ -79,12 +115,28 @@ suite("Imply Library", function() {
 
     suite("expansion", function() {
 
+        /**
+         * Test case for expansion of imply.
+         *
+         * @input   x = 5
+         *          y = imply(x,4)
+         * @expected y = 4
+         */
         test("should expand for 'x = 5, y = imply(x, 4)'", function() {
             var input = "x = 5\ny = imply(x, 4)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), 4);
         });
 
+        /**
+         * Test case for expansion of imply.
+         *
+         * @input   x = 5
+         *          y = imply(x,5)
+         *          z = imply(x, imply(4, y))
+         * @expected y = 5
+         *           z = 5
+         */
         test("should expand for 'x = 5, y = imply(x, 5), z = imply(x, imply(4, y))'", function() {
             var input = "x = 5\ny = imply(x, 5) \nz = imply(x, imply(4, y))";
             var output = compiler.compile(new script(input));

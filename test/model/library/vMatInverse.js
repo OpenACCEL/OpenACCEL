@@ -20,8 +20,8 @@ suite("vMatInverse Library", function() {
         /**
          * Test case for vMatInverse.
          *
-         * input: vMatInverse(vMatInverse([[3,4,5],[23,56,67],[1,8,7]]))
-         * expected: [[3.0,4.0,5.0],[23,56,67],[1.0,8,7]]
+         * @input: vMatInverse(vMatInverse([[3,4,5],[23,56,67],[1,8,7]]))
+         * @expected: [[3.0,4.0,5.0],[23,56,67],[1.0,8,7]]
          */
         test("vMatInverse(vMatInverse([[3,4,5],[23,56,67],[1,8,7]])) = [[3.0,4.0,5.0],[23,56,67],[1.0,8,7]]", function() {
             eval(fileLoader.getContent());

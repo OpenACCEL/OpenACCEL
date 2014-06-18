@@ -21,8 +21,8 @@ suite("vConvolve Library", function() {
         /**
          * Test case for vConvolve.
          *
-         * input: vConvolve([1, 2, 3, 2, 1], [-1, 0, 1], 3, 0)
-         * expected: [-2, -1, 1, 2, 0]
+         * @input: vConvolve([1, 2, 3, 2, 1], [-1, 0, 1], 3, 0)
+         * @expected: [-2, -1, 1, 2, 0]
          */
         test("vConvolve([1, 2, 3, 2, 1], [-1, 0, 1], 3, 0) = [-2, -1, 1, 2, 0]", function() {
             eval(fileLoader.getContent());
@@ -36,13 +36,13 @@ suite("vConvolve Library", function() {
         /**
          * Test case for vConvolve.
          *
-         * input: vConvolve([1,2,3,2,1],[-1,0,1],3,1)
-         * expected: [0,1,2,2,0]
+         * @input: vConvolve([1,2,3,2,1],[-1,0,1],3,1)
+         * @expected: [0,1,2,2,0]
          */
         test("vConvolve([1,2,3,2,1],[-1,0,1],3,1) = [0,1,2,2,0]", function() {
             eval(fileLoader.getContent());
 
-            var expected = [0,1,2,2,0];
+            var expected = [0, 1, 2, 2, 0];
             var result = vConvolve([1, 2, 3, 2, 1], [-1, 0, 1], 3, 1);
 
             assert.deepEqual(result, expected);
@@ -51,14 +51,14 @@ suite("vConvolve Library", function() {
         /**
          * Test case for vConvolve.
          *
-         * input: vConvolve([1,2,3,2,1],[-1,0,1],3,2)
-         * expected: value=[0,0,1,2,0]
+         * @input: vConvolve([1,2,3,2,1],[-1,0,1],3,2)
+         * @expected: value=[0,0,1,2,0]
          */
         test("vConvolve([1,2,3,2,1],[-1,0,1],3,2) = value=[0,0,1,2,0]", function() {
             eval(fileLoader.getContent());
 
-            var expected = value=[0,0,1,2,0];
-            var result = vConvolve([1,2,3,2,1],[-1,0,1],3,2);
+            var expected = value = [0, 0, 1, 2, 0];
+            var result = vConvolve([1, 2, 3, 2, 1], [-1, 0, 1], 3, 2);
 
             assert.deepEqual(result, expected);
         });
