@@ -1,10 +1,13 @@
+var tooltips = {};
+
 $(document).ready(
     function() {
         $('#main').tabs();
 
         $('#main').on('tabsbeforeactivate', 
             function(event, ui) {
-                switch (ui.oldPanel[0].id) {
+                leaving = ui.oldPanel[0].id;
+                switch (leaving) {
                     case 'editrun':
                         // Pause script when leaving edit/run tab
                         controller.pause();
@@ -24,19 +27,31 @@ $(document).ready(
                     default:
                         break;
                 }
+
+                //Tooltips stored and hidden
+                tooltips[leaving] = $('.tooltipcontainer').filter(":visible");
+                tooltips[leaving].toggle(false);
             }
         );
 
         $('#main').on('tabsactivate', 
             function(event, ui) {
-                switch (ui.newPanel[0].id) {
-                    case 'editrun':                  
-                        if (controller.isPaused()) {
+                entering = ui.newPanel[0].id;
+                switch (entering) {
+                    case 'editrun':
+                        if (controller.isPaused() && controller.autoExecute) {
                             controller.run();
                         }
                         break;
                     default:
                         break;
+                }
+
+                //Tooltips loaded and shown
+                try {
+                    tooltips[entering].toggle(true);
+                } catch(e) {
+
                 }
             }
         );
@@ -100,11 +115,158 @@ function HTMLbuffer(div) {
      * Replaces the content in the div with the content in the buffer
      */
     this.flip = function() {
-        $(this.div).html(this.html);
+        var target = $(this.div);
+        if (target.html() !== this.html) {
+            target.html(this.html);
+        }
     }
 }
 
 //------------------------------------------------------------------------------
+
+/**
+ * Constructs a new Tooltip object
+ * 
+ * @param {String} id      String to be used as a suffix in the id values of the generated html elements
+ * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
+ * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
+ *
+ * @class
+ * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
+ */
+function Tooltip(id, classes, x, y) {
+    this.id = id;
+    this.classes = classes;
+    this.x = x;
+    this.y = y;
+
+    this.getHTML = function(message) {
+        return '\
+            <div class = "tooltipcontainer">\
+                <div id = "tooltip' + this.id + '" class = "tooltip ' + this.classes + '">\
+                    ' + message + '\
+                </div>\
+            </div>\
+        ';
+    }
+
+    this.initialize = function() {
+        $(document.body).append(this.getHTML(''));
+
+        var tooltip = $('#tooltip' + this.id);
+        tooltip.toggle(false);
+
+        tooltip.parent().css(
+            {
+                'padding-left': -20 + this.x,
+                'padding-top': 10 + this.y
+            }
+        );
+
+        tooltip.on('click', 
+            function() {
+                $(this).animate({padding: '+=8'}, 50, 
+                    function() {
+                        $(this).animate({opacity: 0, width: 0, height: 0}, 200, 
+                            function() {
+                                //$(this).toggle(false);
+                                $(this).parent().remove();
+                            }
+                        )
+                    }
+                )
+            }
+        );
+        tooltip.on('mouseenter', 
+            function() {
+                $(this).animate({opacity: 0.8}, 200);
+            }
+        );
+        tooltip.on('mouseleave', 
+            function() {
+                $(this).animate({opacity: 1}, 100);
+            }
+        );
+    }
+
+    this.initialize();
+
+    this.set = function(message) {
+        $('#tooltip' + this.id).html(message);
+        $('#tooltip' + this.id).toggle(true);
+    }
+}
+
+//--------
+
+/**
+ * [ValueList description]
+ * @param {[type]} selector [description]
+ */
+function ValueList(selector) {
+    this.selector = selector;
+    this.initialized = false;
+    this.size = 0;
+
+    /**
+     * Buffer to contain HTML for the required list
+     * 
+     * @type {HTMLbuffer}
+     */
+    this.buffer = new HTMLbuffer(selector);
+
+    this.getEntryHTML = function(i, left, right) {
+        return '\
+            <div id = "' + this.selector.substring(1) + 'Entry' + i + '">\
+                <div class = "ellipsis max256w">' + left + '</div>\
+                <div class = "operator"> = </div>\
+                <div class = "ellipsis max128w resultvalue">' + right + '</div>\
+            </div>\
+        ';
+    };
+
+    this.initialize = function(size) {
+        this.buffer.empty();
+
+        for (var i = 0; i < size; i++) {
+            this.buffer.append(this.getEntryHTML(i, '', ''));
+        }
+
+        this.buffer.flip();
+
+        var entries = $(this.selector + ' > div');
+        var i = 0;
+        entries.children(':last-child').on('click', {id: i++},
+            function(e) {
+                $('.infomessage').parent().remove();
+
+                var resultvalue = $(this);
+                var location = resultvalue.offset();
+                var fullvalue = new Tooltip(e.data.id, 'infomessage', location.left + 10, location.top + resultvalue.height());
+                fullvalue.set(resultvalue.html());
+            }
+        );
+
+        this.initialized = true;
+    };
+
+    this.set = function(values) {
+        var newsize = Object.keys(values).length;
+
+        if (!this.initialized || newsize != this.size) {
+            this.size = newsize;
+            this.initialize(this.size);
+        }
+        
+        var entries = $(this.selector + ' > div');
+        var i = 0;
+        for (var v in values) {
+            var columns = entries.eq(i++).children();
+            columns.eq(0).text(v);
+            columns.eq(2).html(values[v]);
+        }
+    };
+}
 
 /**
  * Class to generate a list of selectable items
@@ -112,7 +274,7 @@ function HTMLbuffer(div) {
  * @param  {String}   selector Element to put the list in
  * @param  {Function} callback Function to be called when an item is clicked
  */
-function selectionList(selector, callback) {
+function SelectionList(selector, callback) {
     this.selector = selector;
     this.callback = callback;
 
@@ -155,8 +317,6 @@ function selectionList(selector, callback) {
 
         $(itemselector).on('click', {list: this},
             function(e) {
-                // console.log(this);
-                // console.log(e);
                 e.data.list.callback(this);
             }
         );
@@ -184,63 +344,18 @@ function selectionList(selector, callback) {
     };
 }
 
-/**
- * Constructs a new Tooltip object
- * 
- * @param {String} id      String to be used as a suffix in the id values of the generated html elements
- * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
- * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
- *
- * @class
- * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
- */
-function Tooltip(id, div, classes) {
-    this.id = id;
-    this.div = div;
-    this.classes = classes;
+//--------
 
-    this.getHTML = function(message) {
-        return '\
-            <div id = "tooltip' + this.id + '" class = "' + this.classes + '">\
-                ' + message + '\
-            </div>\
-        ';
-    }
+function deselect() {
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+}
 
-    this.initialize = function() {
-        $(this.getHTML('')).insertAfter(this.div);
-        $('#tooltip' + this.id).toggle(false);
-
-        $('#tooltip' + this.id).on('click', 
-            function() {
-                $(this).animate({opacity: 0}, 200, 
-                    function() {
-                        //$(this).toggle(false);
-                        $(this).remove();
-                    }
-                )
-            }
-        );
-        $('#tooltip' + this.id).on('mouseover', 
-            function() {
-                $(this).animate({opacity: 0.5}, 200);
-            }
-        );
-        $('#tooltip' + this.id).on('mouseleave', 
-            function() {
-                $(this).animate({opacity: 1}, 100);
-            }
-        );
-    }
-
-    this.initialize();
-
-    this.set = function(message) {
-        $('#tooltip' + this.id).html(message);
-        $('#tooltip' + this.id).toggle(true);
-    }
-
-    this.remove = function() {
-        $('#tooltip' + this.id).remove();
-    }
+function selectContent(selector) {
+    var element = $(selector)[0];
+    var range = document.createRange();
+    range.selectNodeContents(element);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
 }
