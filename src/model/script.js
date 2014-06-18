@@ -23,9 +23,10 @@ define(["model/analyser/analyser",
         "model/parser",
         "model/exceptions/SyntaxError",
         "model/exceptions/RuntimeError"], 
+        /** @lends Model.Script */
         function(Analyser, Quantity, _, parser, SyntaxError, RuntimeError) {
     /**
-     * @class Script
+     * @class
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
      * compiled executable and source code.
      *

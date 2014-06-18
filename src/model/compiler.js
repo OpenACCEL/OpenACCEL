@@ -30,7 +30,7 @@ define(["model/fileloader",
         "model/parser",
         "model/exceptions/SyntaxError",
         "model/executable"
-    ], /**@lends Compiler*/
+    ], /**@lends Model.Compiler */
     function(FileLoader,
         MacroExpander,
         _,

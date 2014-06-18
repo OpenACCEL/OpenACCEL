@@ -18,7 +18,7 @@ if (inNode) {
 /*******************************************************************/
 
 define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
-        /**@lends Model.Passes.Analyser*/
+        /**@lends Model.Analyser.Passes*/
         function(_, AnalyserPass, Quantity) {
     /**
      * @class

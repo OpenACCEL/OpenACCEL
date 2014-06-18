@@ -20,7 +20,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["module", fileModule], /**@lends Model*/ function(module, fs) {
+define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) {
     /**
      * @class
      * @classdesc Classes can be defined as objects. Indiciate this using the @class param.

@@ -27,10 +27,10 @@ define(["model/analyser/passes/quantitypass",
         "model/quantity",
         'underscore'
     ],
-    /**@lends Analyser*/
+    /**@lends Model.Analyser*/
     function(QuantityPass, DependencyPass, Quantity, _) {
         /**
-         * @class Analyser
+         * @class
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
          */
         function Analyser() {

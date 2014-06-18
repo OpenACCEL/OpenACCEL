@@ -50,6 +50,7 @@ define(["model/script",
              *
              * @type {AbstractView}
              */
+            this.view;
             if (typeof view !== 'undefined') {
                 this.view = view;
             } else {

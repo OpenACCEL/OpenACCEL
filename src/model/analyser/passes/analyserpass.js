@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/analyser/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
+define(['model/analyser/passes/pass'], /**@lends Model.Analyser.Passes*/ function(Pass) {
     /**
      * @class
      * @classdesc Analyses a single line of code and updates the quantities in the script.
