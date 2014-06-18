@@ -93,6 +93,20 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
         this.descartesInstances[this.descartesInstances.length - 1].setUpGraph();
     };
 
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    ScriptDescartesHandler.prototype.clickCallback = function(x, y, b) {};
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
+    ScriptDescartesHandler.prototype.moveCallback = function(x, y) {};
+
 
     /**
      * Returns whether the script can be compiled and executed.
