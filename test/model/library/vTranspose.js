@@ -84,7 +84,7 @@ suite("vTranspose Library", function() {
             eval(fileLoader.getContent());
 
             var expected = objectToArray({'x':[1,10],'y':[2,20]});
-            var input = objectToArray([{'x':1,'y':2},{'x':10,'y':20}]);
+            var input = objectToArray({'0':{'x':1,'y':2},'1':{'x':10,'y':20}});
 
             var result =vTranspose(input);
 

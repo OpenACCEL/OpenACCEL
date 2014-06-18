@@ -39,14 +39,10 @@ function vAggregate(x, y, z) {
                 }
                 return r;
             } else {
-                runOK = false;
                 throw new Error("vAggregate: third argument must be a scalar.");
-                return errOb;
             }
         }
     } else {
-        runOK = false;
         throw new Error("vAggregate: first argument must be a vector");
-        return errOb;
     }
 }
