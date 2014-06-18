@@ -50,4 +50,6 @@ define([], /**@lends Model.EMO.CrossOver*/ function() {
                 'individual 1 and parent2 have vectors of unequal length');
         }
     };
+
+    return CrossOver;
 });

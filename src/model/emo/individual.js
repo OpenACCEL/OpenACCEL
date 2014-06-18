@@ -137,4 +137,6 @@ define([], /**@lends Model.EMO*/ function() {
         }
         return newObj;
     };
+
+    return Individual;
 });

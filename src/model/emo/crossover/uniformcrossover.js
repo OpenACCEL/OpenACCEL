@@ -68,4 +68,6 @@ define([], /**@lends Model.EMO.CrossOver*/ function() {
         }
         return [offspring1, offspring2];
     };
+
+    return UniformCrossOver;
 });

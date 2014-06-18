@@ -47,4 +47,6 @@ define([], /**@lends Model.EMO*/ function() {
         }
         return individual1.fitness <= individual2.fitness ? individual1 : individual2;
     };
+
+    return BinaryTournament;
 });

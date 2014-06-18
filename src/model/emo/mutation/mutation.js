@@ -40,4 +40,6 @@ define([], /**@lends Model.EMO.Mutation*/ function() {
                 'individual is null or undefined');
         }
     };
+
+    return Mutation;
 });

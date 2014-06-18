@@ -50,4 +50,6 @@ define([], /**@lends Model.EMO.Mutation*/ function() {
         }
         return individual;
     };
+
+    return RandomMutation;
 });

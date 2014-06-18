@@ -55,4 +55,6 @@ define([], /**@lends Model.EMO*/ function() {
     Random.prototype.getRandomElement = function(array) {
         return array[this.getRandomInt(0, array.length - 1)];
     };
+
+    return Random;
 });

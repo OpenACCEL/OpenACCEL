@@ -329,4 +329,6 @@ define([], /**@lends Model.EMO*/ function() {
             mutation.mutate(this.dominated[i]);
         }
     };
+
+    return GeneticOptimisation;
 });

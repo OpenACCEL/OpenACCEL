@@ -41,4 +41,6 @@ define([], /**@lends Model.emo*/ function() {
             return Math.sqrt(sum);
         };
     }
+
+    return Distance;
 });

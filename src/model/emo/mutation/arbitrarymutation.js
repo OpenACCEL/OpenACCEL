@@ -48,4 +48,6 @@ define([], /**@lends Model.EMO.Mutation*/ function() {
         quantity.value = Random.prototype.getRandomDouble(quantity.minimum, quantity.maximum, quantity.precision);
         return individual;
     };
+
+    return ArbitraryMutation;
 });

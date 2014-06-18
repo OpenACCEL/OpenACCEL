@@ -81,4 +81,6 @@ define([], /**@lends Model.EMO.Mutation*/ function() {
         quantity.value = newValue;
         return individual;
     };
+
+    return CloseMutation;
 });
