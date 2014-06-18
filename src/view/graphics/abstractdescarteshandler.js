@@ -29,12 +29,6 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
          *
          * @type {array<AbstractDescartesHandler>}
          */
-        this.descartes = null;
-        /**
-         * The DescartesHandlers that can be provided by this class.
-         *
-         * @type {array<AbstractDescartesHandler>}
-         */
         this.descartesInstances = [];
         /**
          * The DescartesHandlers that can be provided by this class.
