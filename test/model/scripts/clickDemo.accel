@@ -1,0 +1,9 @@
+ 
+a=plot([graph]) 
+graph=[[x:[mode:'intp',low:10,high:90],y:[mode:'shift',ref:1]],20+[p]] 
+but=button()
+p=if(but,p{1}+50,p{1}*0.95)
+// notice that the value of p is a low-pass, infinite impulse response
+// filtered version of the button signal. That means:
+// theoretically, it takes for ever
+// before the value is back to 0.

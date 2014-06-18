@@ -31,12 +31,11 @@ define(["model/script",
         "controller/AbstractView",
         "underscore"
     ],
-    //"model/workers/AutoSaveWorker"],
     /**@lends Controller*/
     function(Script, Compiler, LocalBackupStore, RuntimeError, GeneticOptimisation, AbstractView, _) {
         /**
          * @class Controller
-         * @classdesc Base controller class.
+         * @classdesc The Controller is the intermediar between the Model and the View.
          *
          * @param view {AbstractView} The view with which the controller will communicate
          * to present the results and data. If not provided, the controller will use a
@@ -107,9 +106,16 @@ define(["model/script",
             this.executing = false;
 
             /**
+             * Whether the script is currently paused.
+             *
+             * @type {Boolean}
+             */
+            this.paused = false;
+
+            /**
              * Unique id for the runloop interval.
              *
-             * @type {Integer}
+             * @type {Number}
              */
             this.runloop = null;
 
@@ -185,29 +191,42 @@ define(["model/script",
         };
 
         /**
+         * Returns whether the script execution is currently paused.
+         *
+         * @return {Boolean} Whether the script execution is currently paused.
+         */
+        Controller.prototype.isPaused = function() {
+            return this.paused;
+        };
+
+        /**
          * Sets the current position of the mouse cursor inside the
          * descartes canvas, for use in the script. Descartes canvas coordinates
          * are always within the range [0,100].
          *
          * @pre 0 <= x <= 100
          * @pre 0 <= y <= 100
-         * @param {Number} x The x coordinate of the mouse cursor inside the
+         * @param x {Number} The x coordinate of the mouse cursor inside the
          * descartes canvas
-         * @param {Number} y The y coordinate of the mouse cursor inside the
+         * @param y {Number} The y coordinate of the mouse cursor inside the
          * descartes canvas
          */
         Controller.prototype.setMousePosInScript = function(x, y) {
-            this.script.exe.setMousePos(x, y);
+            if (this.script.isCompiled()) {
+                this.script.exe.setMousePos(x, y);
+            }
         };
 
         /**
          * Sets the current left mouse button status.
          *
-         * @param {Boolean} buttonDown Whether the left mouse button is currently
+         * @param buttonDown {Boolean} Whether the left mouse button is currently
          * pressed
          */
         Controller.prototype.setMouseButtonInScript = function(buttonDown) {
-            this.script.exe.setMouseButton(buttonDown);
+            if (this.script.isCompiled()) {
+                this.script.exe.setMouseButton(buttonDown);
+            }
         };
 
         /**
@@ -215,7 +234,7 @@ define(["model/script",
          * available on the user's system. Currently workers are not used for
          * anything but this can change in the future
          *
-         * @param {Boolean} useWorkers Whether workers should be used when available
+         * @param useWorkers {Boolean} Whether workers should be used when available
          */
         Controller.prototype.setUseWorkers = function(useWorkers) {
             if (useWorkers && typeof(Worker) !== 'undefined' && inBrowser) {
@@ -226,7 +245,7 @@ define(["model/script",
         };
 
         /**
-         * Starts or resumes execution of the script.
+         * Starts execution of the script from the start.
          *
          * @post The script is being executed in a loop if the
          * script is complete and non-empty.
@@ -234,10 +253,16 @@ define(["model/script",
          * otherwise has been started over.
          */
         Controller.prototype.run = function() {
-            if (this.script.isCompiled()) {
+            if (this.paused) {
+
+            }
+
+            // If script is compiled, run the script. Else, compile first
+            if (this.script.isCompiled() && !this.executing) {
                 if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
                     // Update state
                     this.executing = true;
+                    this.paused = false;
                     this.status = "Executing";
                     this.view.setStatus(this.status);
                     this.view.setExecuting(this.executing);
@@ -251,8 +276,14 @@ define(["model/script",
                                 controller.view.runtimeError(e);
                                 controller.stop();
                             }
-                        }, 1
+                        }, 5
                     );
+                }
+            } else {
+                // Compile script and make sure to explicitly run it immediately
+                // afterwards, in case autoexecuting is disabled
+                if (this.script.isComplete() && this.compileScript(this.script)) {
+                    this.run();
                 }
             }
         };
@@ -277,10 +308,21 @@ define(["model/script",
             // Check whether another iteration should be made
             if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
                 // Evaluate the expressions (definitions) of all output quantities
+                this.script.step();
                 var results = this.script.getOutputQuantities();
 
-                // Push results to view
+                // Push results to view and draw plot if there is any
                 this.presentResults(results);
+                this.view.drawPlot();
+
+                // If this is the first iteration of the script, show the plot if
+                // nessecary
+                if (this.currentIteration == 1) {
+                    // Check if there is a plot and show it if there is
+                    if (this.script.exe.plot.length > 0) {
+                        this.view.showPlot(true);
+                    }
+                }
 
                 // Signal the executable that one iteration has been completed,
                 // for quantity history functionality
@@ -306,6 +348,7 @@ define(["model/script",
 
                 // Update state
                 this.executing = false;
+                this.paused = true;
                 this.view.setExecuting(this.executing);
                 this.status = "Paused";
                 this.view.setStatus(this.status);
@@ -319,11 +362,12 @@ define(["model/script",
          * @post this.executing == false && this.currentIteration == 1
          */
         Controller.prototype.stop = function() {
-            if (this.executing) {
+            if (this.executing || this.paused) {
                 clearInterval(this.runloop);
 
                 // Update state
                 this.executing = false;
+                this.paused = false;
                 this.view.setExecuting(this.executing);
                 this.status = "Stopped";
                 this.view.setStatus(this.status);
@@ -350,6 +394,11 @@ define(["model/script",
             this.script = new Script();
             this.view.setQuantities({});
             this.view.presentResults({});
+
+            // Give new script object to descartes
+            if (inBrowser) {
+                this.view.canvas.setModel(this.script);
+            }
 
             if (clearStore && this.autoSave && window.localStorage) {
                 this.autoSaveStore.clear();
@@ -541,7 +590,7 @@ define(["model/script",
         /**
          * Compiles the given script if the todo-list is empty.
          *
-         * @param  {Script} script The script to compile
+         * @param  script {Script} The script to compile
          * @return Whether the script has been compiled
          */
         Controller.prototype.compileScript = function(script) {
@@ -552,6 +601,17 @@ define(["model/script",
                 // Compile script and signal script that it has
                 // been compiled
                 script.setExecutable(this.compiler.compile(script));
+
+                // Reset descartes canvas
+                if (inBrowser) {
+                    this.view.canvas.resetCanvas();
+                }
+
+                // Hide any shown plot if there is no plot in the new executable anymore
+                if (script.exe.plot.length == 0) {
+                    this.view.showPlot(false);
+                }
+
                 return true;
             } else {
                 return false;
@@ -561,7 +621,7 @@ define(["model/script",
         /**
          * Returns the most recent computed value of the given quantity.
          *
-         * @param qtyName = {String} The name of the quantity of which to return the value
+         * @param qtyName {String} The name of the quantity of which to return the value
          * @pre qtyName != null
          * @pre qtyName != undefined
          * @pre this.script.hasQuantity(qtyName)
@@ -650,7 +710,7 @@ define(["model/script",
         /**
          * Loads demo script from the model.
          *
-         * @param name = {String} name of demo script
+         * @param name {String} name of demo script
          * @pre name != null
          * @pre name != undefined
          * @pre name \in model.demoScripts
@@ -669,7 +729,7 @@ define(["model/script",
         /**
          * Saves script on server and, returns a link to the script.
          *
-         * @param name = {String} name of script
+         * @param name {String} name of script
          * @pre name != null
          * @pre name != undefined
          * @pre name \not \in model.savedScripts
@@ -736,6 +796,60 @@ define(["model/script",
             if (typeof(restoring) === 'undefined') {
                 restoring = false;
             }
+        };
+
+
+        /**
+         * Returns the Script object currently managed by this controller.
+         *
+         * @return {Script} this.script
+         */
+        Controller.prototype.getScript = function() {
+            return this.script;
+        };
+
+        /**
+         * Returns the original source code of the current script, exactly as it
+         * was entered by the user. For more functionality, see scriptToString().
+         *
+         * @return {String} this.getScript().getSource()
+         */
+        Controller.prototype.getScriptSource = function() {
+            return this.script.getSource();
+        };
+
+        /**
+         * Returns the source code of the current script, optionally including
+         * quantity units and comments.
+         *
+         * @param includeUnits {Boolean} Whether to include the quantity units
+         * in the output.
+         * @param includeComments {Boolean} (optional) Whether to include the
+         * comments belonging to the quantities in the output
+         * @return {String} The source code of the current script, with or without
+         * units and comments as specified.
+         */
+        Controller.prototype.scriptToString = function(includeUnits, includeComments) {
+            return this.script.toString(includeUnits, includeComments);
+        };
+
+        /**
+         * Builds the model defined in the given source code and sets it
+         * as the current script.
+         *
+         * @param source {String} List of quantity definitions and optionally
+         * comments
+         * @param restoring {Boolean} (Optional) Whether we are restoring a script
+         * from the autoSaveStore. Set to true to
+         * @modifies this.script
+         * @post A new script has been created, containing all quantities
+         * defined in source.
+         * @return {Quantities[]} An array of quantities that have been added to the model.
+         */
+        Controller.prototype.setScriptFromSource = function(source, restoring) {
+            if (typeof(restoring) === 'undefined') {
+                restoring = false;
+            }
 
             // Stop the current model and create a new script with the
             // given source
@@ -764,7 +878,7 @@ define(["model/script",
         /**
          * Saves the given script source to the backup store.
          *
-         * @param {String} source The script source to save to the backup store.
+         * @param source {String} The script source to save to the backup store.
          */
         Controller.prototype.saveScriptToBackupStore = function(source) {
             this.autoSaveStore.saveScript(source);
@@ -836,8 +950,8 @@ define(["model/script",
          * Sets the position of a quantity in the network.
          *
          * @param quantity {Object} Quantity
-         * @param x = {Number} Horizontal coordinate of the quantity
-         * @param y = {Number }Vertical coordinate of the quantity
+         * @param x {Number} Horizontal coordinate of the quantity
+         * @param y {Number }Vertical coordinate of the quantity
          * @pre name, x, y != null
          * @pre name, x,y != undefined
          * @post model.quantity.x = x

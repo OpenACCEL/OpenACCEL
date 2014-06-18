@@ -1,0 +1,72 @@
+maxX=50
+minX=-50
+maxY=50
+minY=-50
+nAtoms=slider(10,2,60)
+rho0=slider(2,1,15)
+time=if(nAtoms!=nAtoms{1},1,time{1}+1)
+// nr of atoms; moving the slider (re)starts the simulation
+plotResult=plot([[[plotType:'bubble',nPoints:nAtoms,x:[mode:'data',ref:1],y:[mode:'data',ref:2],diameter:[mode:'data',ref:3],col_r:[mode:'data',ref:4],col_g:[mode:'data',ref:5],col_b:[mode:'data',ref:6]],50+@(vTranspose(r),'x'),50+vTranspose(r).y,2*rho,col.red,col.grn,col.blu]])
+    // one graph consisting of as many blobs as there are atoms. The x and y coordinates are
+    // taken from the 'x'- and 'y'-components of the r-vector that has to be transposed in order to get
+    // the x-s and y-s in two separate vectors. 
+    // By having nPoints as element of the plot string, we enforce 
+    // a whole new plot when we change nAtoms
+tVec(i,j)=r{1}[j]-r{1}[i]
+    // the vector pointing from atom i to atom j, with coefficients x and y
+cpl=#(i,vSequence(0,nAtoms),cplOneMolecule(i),vAppend)
+    // the couplings matrix containing all info about the relations to atom i,
+    // that is: 'close' to indicate if these two atoms are in a collision-state;
+    // if close is true, 'force' is the current reaction force between them.
+tMat=#(i,vSequence(0,nAtoms),tMatOneMolecule(i),vAppend)
+    // the tMatrix contains, for every pair, i-j, the t-vector between the centres
+tMatOneMolecule(i)=#(j,vSequence(0,nAtoms),tVec(i,j),vAppend)
+    // the tMatOneMolecule vector contains, for every atom, 
+    // the the t-vectors between its centre and the other centres
+touch(i,j)=((vNormEuclid(tMat[i][j])<(rho[i]+rho[j])) && (i!=j) && vDot(tMat[i][j],p{1}[i]/m[i]-p{1}[j]/m[j])>0)
+    // condition for colliding contact. Three terms:
+    // 1. Are the atoms close enough?
+    // 2. No self-collision?
+    // 3. Is the relative velocity opposite to the vector connecting the centres?
+cplOneMolecule(i)=#(j,vSequence(0,nAtoms),cond(touch(i,j),['close':true,'force':(mpt(i,j)/m1m2tt(i,j))*tMat[i][j]],['close':false,'force':0]),vAppend)
+    // the cplOneMolecule vector contains, for atom i, the info for the collisions between this
+    // atom and all other atoms.
+    // It sets the value to the boolean 'close', and if close==true, the
+    // current force vector. The derivation of the force vector
+    // is based on conservation of momentum, angular momentum and kinetic energy
+    // in a coordinate-free version.
+mpt(i,j)=-2*vDot(m[j]*p{1}[i]-m[i]*p{1}[j],tMat[i][j])
+    // the product (((m1p2-m2p1)t),t): the numerator of the force vector
+m1m2tt(i,j)=(m[i]+m[j])*vDot(tMat[i][j],tMat[i][j])
+    // the product (m1+m2)(t,t): the denominator of the force vector
+f=#(i,vSequence(0,nAtoms),forceOnOneMolecule(i),vAppend)
+    //  calculate the forces for all atoms by concatenating
+forceOnOneMolecule(i)=#(j,vSequence(0,nAtoms),cond(cpl[i][j].close,cpl[i][j].force,0),add)
+    //  adding the forces due to all other of atoms 
+rho=if((time==1)||(rho0!=rho0{1}),vConcat([10],#(i,vSequence(0,nAtoms-1),rho0,vAppend)),rho{1})
+    // the radii of the atoms
+m=if((time==1)||(rho0!=rho0{1}),#(i,vSequence(0,nAtoms),pow((rho0/3),3),vAppend),m{1})
+    //  the masses of the atoms; first one is heavy, rest is light
+col=if(time==1,['red':#(i,vSequence(0,nAtoms),200+50*random(),vAppend),'grn':vConcat([0],#(i,vSequence(0,nAtoms-1),200+50*random(),vAppend)),'blu':vConcat([0],#(i,vSequence(0,nAtoms-1),200+50*random(),vAppend))],col{1})
+// colors of the atoms: first one is red, rest is white
+r=if(time>1,r{1}+p/m,#(i,vSequence(0,nAtoms),['x':-40+80*random(),'y':-40+80*random()],vAppend))
+    //  r is obtained by integrating v; at the starting time (==1) give the initial random positions 
+p=if(time>1,wallCollide(p{1}+f),vConcat([['x':0,'y':0],['x':0.01*nAtoms*pow(rho0,3),'y':0.001*nAtoms*pow(rho0,3)]],#(i,vSequence(0,nAtoms-2),['x':0,'y':0],vAppend)))
+    // p is obtained by integrating f; at the starting time give the initial momenta. The only
+    // non-vanishing initial momentum is the momentum of one of the lighter atoms. The momentum
+    // of this atom is proportional to the total number of atoms, so that independent of
+    // the number of atoms, the average momentum will be the same; it is also proportional 
+    // to the mass of the (majority of the) atoms, so that velocity will be average
+wallCollide(a)=wallCollideLeft(wallCollideRight(wallCollideBottom(wallCollideTop(a))))
+    // the collisions with all walls
+wallCollideLeft(a)=#(i,vDom(a),cond((r{1}[i].x>(minX+rho[i])||a[i].x>0),a[i],['x':-a[i].x,'y':a[i].y]),vAppend)
+// collide left wall
+wallCollideRight(a)=#(i,vDom(a),cond((r{1}[i].x<(maxX-rho[i])||a[i].x<0),a[i],['x':-a[i].x,'y':a[i].y]),vAppend)
+// collide right wall
+wallCollideBottom(a)=#(i,vDom(a),cond((r{1}[i].y>(minY+rho[i])||a[i].y>0),a[i],['x':a[i].x,'y':-a[i].y]),vAppend)
+// collide bottom wall
+wallCollideTop(a)=#(i,vDom(a),cond((r{1}[i].y<(maxY-rho[i])||a[i].y<0),a[i],['x':a[i].x,'y':-a[i].y]),vAppend)
+// collide top wall
+
+
+    

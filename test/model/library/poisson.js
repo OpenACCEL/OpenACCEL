@@ -6,7 +6,6 @@ suite("Poisson Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader"], function(Assert, Compiler, FileLoader) {
-            console.log("Loaded 'Poisson' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();

@@ -6,7 +6,20 @@ $(document).ready(
             function(event, ui) {
                 switch (ui.oldPanel[0].id) {
                     case 'editrun':
+                        // Pause script when leaving edit/run tab
                         controller.pause();
+                        break;
+                    case 'ioedit':
+                        // Build script from inputted source when leaving IO/edit
+                        try {
+                            controller.setScriptFromSource($('#scriptarea').val());
+                        } catch (e) {
+                            if (typeof(e) === 'SyntaxError') {
+                                console.log(e.message);
+                            } else {
+                                console.log(e);
+                            }
+                        }
                         break;
                     default:
                         break;
@@ -17,8 +30,8 @@ $(document).ready(
         $('#main').on('tabsactivate', 
             function(event, ui) {
                 switch (ui.newPanel[0].id) {
-                    case 'editrun':
-                        if (controller.autoExecute) {
+                    case 'editrun':                  
+                        if (controller.isPaused()) {
                             controller.run();
                         }
                         break;

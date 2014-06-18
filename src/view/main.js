@@ -1,17 +1,19 @@
 var controller;
+var canvasCreator;
 
-require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends View*/ function(Controller, AbstractView) {
+require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
     /**
      * @class View
-     * @classdesc Interface declaring the methods that the view with which the Controller will 
+     * @classdesc Interface declaring the methods that the view with which the Controller will
      * communicate should implement.
      */
-    function View() {
-        
+    function View(canvasCreator) {
+        this.canvasCreator = canvasCreator;
+        this.canvas = null;
     }
 
     View.prototype = new AbstractView();
-    
+
     /**
      * Uses the given map of quantities to update the UI lists.
      *
@@ -35,6 +37,25 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
     };
 
     /**
+     * Trigger creation of the necessary plot canvases
+     */
+    View.prototype.setUpPlot = function(controller) {
+        $('#plotdiv').toggle(true);
+        this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
+    };
+
+    /**
+     * Trigger an update of the plot canvas
+     */
+    View.prototype.drawPlot = function() {
+        this.canvas.draw();
+    };
+
+    View.prototype.showPlot = function(show) {
+        $('div#plotdiv').toggle(show);
+    };
+
+    /**
      * Changes UI elements depending on whether the OpenACCEL model is being executed.
      *
      * @param executing Boolean indicating whether the OpenACCEL model is being executed.
@@ -47,8 +68,10 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
         console.log("Runtime error: " + err.message);
     };
 
-    controller = new Controller(new View());
+    canvasCreator = new CanvasCreator();
+    controller = new Controller(new View(canvasCreator));
     controller.setAutoExecute(true);
     controller.autoSave = true;
+    controller.view.setUpPlot(controller);
     controller.restoreSavedScript();
 });

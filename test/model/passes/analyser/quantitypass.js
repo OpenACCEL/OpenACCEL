@@ -5,7 +5,6 @@ suite("QuantityPass", function() {
 
     setup(function(done) {
         requirejs(['assert', 'model/analyser/passes/quantitypass'], function(assertModule, QuantityPass) {
-            console.log("Loaded 'QuantityPass' module.");
             assert = assertModule;
             quantityPass = new QuantityPass();
             done();

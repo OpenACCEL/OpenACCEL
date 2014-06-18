@@ -1,0 +1,29 @@
+profit=paretoMax(paretoHor(income-expenses))
+// assume a single shot transaction 
+income=nrSoldCopies*price 
+// all items same price
+nrSoldCopies=min(supply,demand) 
+// we cannot sell more than we produce
+demand=potentialMarket*marketShare 
+// assume potential market does not increase due to our product
+potentialMarket=1000;item 
+// from market survey
+marketShare=ramp(price,priceCheapestCompetitor,maxShare,mostExpensiveCompetitor,minShare) 
+// assume quality is equal for all products in the market; 
+maxShare=1
+minShare=0
+// customer chooses random with bias towards price
+priceCheapestCompetitor=0.5 ; euro/item
+// from market survey
+mostExpensiveCompetitor=1.5 ; euro/item
+// from market survey
+price=slider(0.8,0.2,2.5) ; euro/item
+// free choice
+expenses=supply*costPrice 
+// assume no fixed costs
+supply=slider(10,0,2000) ; item
+// how many will we produce? 
+costPrice=0.4 ; euro/item
+// materials etc.
+unsold=paretoMin(paretoVer(supply-nrSoldCopies))
+// should be low for ethical reasons (sustainability)

@@ -7,7 +7,6 @@ suite("iSpike Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'iSpike' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -17,22 +16,18 @@ suite("iSpike Library", function() {
         });
     });
 
-    suite("iSpike", function() {
+    /**
+     * Test case for iSpike.
+     *
+     * @input       iSpike(0,0,3,3)
+     * @expected    [[1,0,0],[0,0,0],[0,0,0]]
+     */
+    test("| Test #1", function() {
+        eval(fileLoader.getContent());
 
-        /**
-         * Test case for iSpike.
-         *
-         * input:iSpike(0,0,3,3)
-         * expected: [[1,0,0],[0,0,0],[0,0,0]]
-         */
-        test("iSpike(0,0,3,3) = [[1,0,0],[0,0,0],[0,0,0]]", function() {
-            eval(fileLoader.getContent());
+        var expected = [[1,0,0],[0,0,0],[0,0,0]];
+        var result =iSpike(0,0,3,3);
 
-            var expected = [[1,0,0],[0,0,0],[0,0,0]];
-            var result =iSpike(0,0,3,3);
-
-            assert.deepEqual(result, expected);
-        });
-
+        assert.deepEqual(result, expected);
     });
 });

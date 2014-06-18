@@ -1,0 +1,31 @@
+bf=slider(1.5,0,5)
+    //  birt rate of fox (horizontal) 
+br=slider(3,0,5)
+    //  birth rate of rabit (vertical) 
+df=slider(1,0,5)
+    //  death rate of fox (horizontal) 
+dr=slider(1,0,5)
+    //  death rate of rabit (vertical) 
+dt=slider(0.15,0.01,0.2) 
+    // how fast does time move forward?
+reset=button()
+    //  to restart the game 
+p=plot([gboth,gfox,grab])
+    //  the graph 
+plf=f
+    //  for debugging 
+plr=r
+    //  for debugging 
+f=if((time<2)||reset,150,max(0.01,f{1}+dt*(bf*f{1}*r{1}-df*f{1})))
+    // lotka volterra for fox 
+gboth=[[nPoints:50,plotType:'bubble',diameter:5,x:[mode:'shift',ref:1],y:[mode:'shift',ref:2]],10+3*[f],10+3*[r]]
+    // draw the cyclic curve for the both species  
+gfox=[[y:[mode:'intp'],x:[mode:'shift',ref:1],width:5,col_r:255],10+3*[f]]
+    //  draw the fox population scrolling vertically
+grab=[[x:[mode:'intp'],y:[mode:'shift',ref:1],width:5,col_b:255],10+3*[r]]
+    //  draw the rabbit population scrolling horizontally
+r=if((time<2)||reset,150,max(0.01,r{1}+dt*(br*r{1}-dr*f{1}*r{1})))
+    // lotka volterra for rabbit 
+time=time{1}+1
+    // from here to eternity
+

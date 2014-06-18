@@ -1,0 +1,11 @@
+x=paretoHor(paretoMax(a+b))
+y=paretoVer(paretoMin(abs(a-b)))
+// a simple problem with trade-offs:
+// how can the sum of a and b be maximised whereas their difference
+// is minimised: obviously by making them equal, and both the
+// same as the maximal value of the admitted intervals (the sliders). 
+// Verify that the SPEA algorithm soon finds 
+// approximations to this configurations - without the guarantee to ever find the 
+// exact solution
+a=slider(50,0,100)
+b=slider(50,0,100)

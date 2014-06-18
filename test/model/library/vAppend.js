@@ -8,7 +8,6 @@ suite("vAppend Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'vAppend' module.");
             assert = assertModule;
             compiler = new module();
             fileLoader = new FileLoader();

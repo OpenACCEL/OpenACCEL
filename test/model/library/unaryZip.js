@@ -7,7 +7,6 @@ suite("UnaryZip", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, MacroExpander, FileLoader) {
-            console.log("Loaded 'UnaryZip' module.");
             assert = Assert;
             macroExpander = new MacroExpander();
             fileLoader = new FileLoader();

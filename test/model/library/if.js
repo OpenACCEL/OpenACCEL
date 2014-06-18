@@ -7,7 +7,6 @@ suite("If Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'If' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -39,6 +38,15 @@ suite("If Library", function() {
             var ifFalse = 3;
             output = __if__(condition, ifTrue, ifFalse);
             assert.deepEqual(output, 3);
+        });
+
+        test("if function with true conditions, and arrays as options", function() {
+            eval(fileLoader.getContent());
+            var condition = true;
+            var ifTrue = [1,2,3];
+            var ifFalse = [];
+            output = __if__(condition, ifTrue, ifFalse);
+            assert.deepEqual(output, [1,2,3]);
         });
 
         test("if function with array condition, using multiaryZip", function() {

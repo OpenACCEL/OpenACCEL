@@ -1,0 +1,59 @@
+s0=slider(0,0,9) 
+s1=slider(0,0,8) 
+s2=slider(0,0,7) 
+s3=slider(0,0,6) 
+s4=slider(0,0,5) 
+s5=slider(0,0,4) 
+s6=slider(0,0,3) 
+s7=slider(0,0,2) 
+s8=slider(0,0,1) 
+// every slider gives a choice for the next city to be chosen.
+// s0 has choice from all cities;
+// s1 has a choice for the remaining cities after s0 has been visited
+// s2 has a choice for the remaining cities after s0 and s1 have been visited
+// et cetera.
+shoPaH=paretoHor(paretoMin(routeLen)) 
+// the path should be as short as possible
+shoPaV=paretoVer(paretoMin(routeLen)) 
+// we want to plot a pareto plot, so we have the same
+// value occur in two quantities, one plot
+// horizontally 
+s9=0
+// For the last city, there is no other choice. 
+// We could have put s9=slider(0,0,0), but a lider of zero length is not really a slider.
+complement(s,t)=#(i,vDom(s),if(!occurIn(t,i),i,[]),vConcat) 
+// The function complement(p,q) computes the vector complement of the vectors 
+// p and q, that is: the vector of all elements from p that don't occur in q.
+// This represents the cities I have not yet visited once I have visited the cities in q,
+// where p is the full set of cities.
+// Notice the use of the empty vector: []. Concatenating the empty vector to a set doesn't alter that vector.
+// If we would have used vAppend instead, it would have inserted an element (being the empty vector),
+// which is not what we want.
+occurIn(t,n)=#(i,vDom(t),t[i]==n,or) 
+// Checks if an element n occurs in a vector t. 
+// We use a quantified expression with 'or' as operator: it is the disjoint of all terms,
+// where every term states if an element of t equals the probe element n.
+path(n)=cond(n>0,vAppend(path(n-1),complement(vSeq(0,10),path(n-1))[selection[n]]),[selection[0]]) 
+// This actually computes the path of n cities recursively, as a path of n-1 cities to which
+// we concatenate one further city. For n=0, the first city is returned - in the form of a
+// vector with one element. This is [selection[0]].
+// For n>0, it appends the path of length n-1 with one element, selected from
+// the cities we have not yet visited. This vector of cities is calculated by complement(...).
+// Realise that the output of complement(...) is a vector; we have to select one 
+// element of that vector. Hence the occurrence of [...] after 
+// complement(...). The element that we select from complement(...) is given by the index selection[n],
+// and the vector selection contains the values of each of the sliders. Notice that for increasing
+// n, selection[n] can take fewer and fewer values.
+route=path(9) 
+// This call to path(9) constructs, for the current setting of all sliders, the
+// path that corresponds to these sliders.
+routeLen=#(i,vSeq(1,10),abs(route[i]-route[i-1]),add) 
+// This is naive. It assumes that all cities are next to each other, with one
+// kilometer in between to subsequent ones. In a real traveling salesman 
+// problem, here should come the calculation of the distance between
+// city i and i-1.
+selection=[s0,s1,s2,s3,s4,s5,s6,s7,s8,s9]
+// neeededto group all slider values into one vector.
+resRoute=route
+// we want to see the actual route as a result, not only its length
+startEnd=['start':route[0],'end':route[9]]

@@ -7,7 +7,6 @@ suite("Memoization", function() {
         requirejs(["assert", "model/memoization"], function(Assert, Memoization) {
             assert = Assert;
             memoization = Memoization;
-            console.log("Loaded 'Memoization' module.");
             done();
         });
     });

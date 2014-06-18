@@ -1,0 +1,4 @@
+x=slider(10,0,20)
+p=putChan('example1',[m,x,4])
+q=getChan('example2')
+m=input('type text')

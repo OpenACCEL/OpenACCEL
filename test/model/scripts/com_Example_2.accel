@@ -1,0 +1,3 @@
+x=slider(10,0,20)
+p=putChan('example',[3,x,4])
+q=getChan('example')

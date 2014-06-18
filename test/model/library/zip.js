@@ -7,7 +7,6 @@ suite("Zip", function() {
 
     setup(function(done) {
         requirejs(["assert", "benchmark", "model/macroexpander", "model/fileloader"], function(Assert, Benchmark, MacroExpander, FileLoader) {
-            console.log("Loaded 'Zip' module.");
             assert = Assert;
             benchmark = Benchmark;
             macroExpander = new MacroExpander();

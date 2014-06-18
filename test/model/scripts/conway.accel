@@ -1,0 +1,31 @@
+DS=slider(40,10,80)
+    //  this is the resolution of the playground. Notice: the number of pixels to be calculated grows quadratically with DS!
+    //  the blur kernel: the integral is just little less than 1 
+createMin=slider(3,0,8)
+// if empty cell surrounded by at least createMin: create new one
+createMax=slider(3,0,8)
+// if empty cell surrounded by at most createMax: create new one
+dieMin=slider(1,0,8)
+// if occupied cell surrounded by at most dieMin: kill one
+dieMax=slider(4,0,8)
+// if occupied cell surrounded by at least dieMax: kill one
+a=plot([[[plotType:'image',scaleX:1,scaleY:1,mapR:[mode:'data',ref:1],mapG:[mode:'data',ref:1],mapB:[mode:'data',ref:1]],255*mB]])
+    //  a scalable image with variable pixels size 
+env=[[1,1,1],[1,0,1],[1,1,1]]
+    //  the kernel to compute the neighborhood 
+neighbours=iConvolve(mB{1},env,1,1,0)
+   // calculate the environment
+newGen=#(i,vSequence(0,DS),newGenRow(i),vAppend)
+   // a complete new generation
+newGenRow(i)=#(j,vSequence(0,DS),newCell(i,j,mB{1}[i][j],neighbours[i][j]),vAppend)
+   // one row of a new generation
+newCell(i,j,curr,neigh)=cond(curr==1,cond((neigh<=dieMin) || (neigh>=dieMax),0,1),cond((neigh>=createMin) && (neigh<=createMax),1,0))
+mB=if(p<2||DS!=DS{1},start,newGen)
+    //  a median filter plus a random, blurred spike 
+p=if(reStart,1,p{1}+1)
+    //  the timer 
+reStart=button()
+// restart the game
+start=cond(p<2||DS{1}!=DS,#(i,vSequence(0,DS),#(j,vSequence(0,DS),round(random()-0.35),vAppend),vAppend),start{1})
+    //  to start things off. For the wow-stuff: see 
+    // http://en.wikipedia.org/wiki/File:Conways_game_of_life_breeder_animation.gif

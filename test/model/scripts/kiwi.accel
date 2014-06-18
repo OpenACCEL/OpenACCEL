@@ -1,0 +1,39 @@
+ 
+amStops=slider(2,1.0,3.0); stop
+    //  How many intermediate stops from Wellington to Amsterdam? 
+densityKerosine=slider(795,780,810); kg/m3
+    //  How many kg / m3 is kerosine? 
+effCarbonMass=slider(7,2,9)
+    //  In Kerosine, every carbon atom contributes how many atomic mass units? In CO2 this amount is 6+8+8=22 
+   // but perhaps the fuel is a mixture of c6-chains and shorter chains
+tankRadius=slider(1,0.1,1.3); m
+    //  Necessary for estimating the volume in a fuel truck 
+truckLength=slider(13,11,15); m/truck
+    //  Necessary for estimating the volume in a fuel truck 
+Ratio=amCO2pKiwi/massKiwi
+    //  If this number is >1, the claim is correct that importing kiwis generates more CO2 than the mass of the kiwis 
+amFueltrucksPStop=2; truck/stop
+    //  Assume that, for fueling a plane, we need two full fuel trucks 
+amM3PPlane=15; m3
+    //  According to Boeing data, the area in a freight carrier is 15 m3 
+massKiwi=0.076; kg
+    //  the mass of a single kiwi, about 76 grams 
+volKiwi=0.000102; m3
+    //  the volume of a kiwi, about 1 tenth of a liter 
+amCO2Pplane=amKerosinePPlane*wCO2PwKerosine; kg
+    //  the amount of kilograms CO2 being produced by a plane full of kiwis by taking the amount
+    //  of fuel and multiplying it by the conversion factor to get from kerosine to CO2 
+amCO2pKiwi=amCO2Pplane/amKiwiPPlane; kg 
+amFueltrucksPPlane=amStops*amFueltrucksPStop; truck
+    //  assume that, irrespective of the number of stops,
+    //  every stop contributes this many fully loaded fuel trucks 
+amKerosinePFueltruck=volumePFueltruck*densityKerosine; kg/truck
+    //  the amount of kerosine is estimated by assuming the truck to be a cylinder 
+amKerosinePPlane=amKerosinePFueltruck*amFueltrucksPPlane; kg
+    //  this is the amount of kerosine in a plane 
+amKiwiPM3=1/volKiwi; 1/m3 
+amKiwiPPlane=amKiwiPM3*amM3PPlane 
+volumePFueltruck=PI*pow(tankRadius,2)*truckLength; m3/truck
+    //  the volume of a cylinder 
+wCO2PwKerosine=22/effCarbonMass
+    //  the molecular weight of C02 is 22

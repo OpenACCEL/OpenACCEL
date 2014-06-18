@@ -153,7 +153,7 @@ unit        [a-zA-Z]+[0-9]*
 
 (\"[^"]*\")|(\'[^']*\')                                     { return 'STRING';      }
 
-\;\s*((1|({unit}(\.{unit})?))(\s*\/\s*({unit}(\.{unit})?))?) { yytext = this.matches[1]; return 'UNIT'; }
+\;.* { yytext = this.matches[1]; return 'UNIT'; }
 
 \bPI\b                                                      { return 'PI';          }
 \bE\b                                                       { return 'E';           }

@@ -7,7 +7,6 @@ suite("Min Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'Min' module.");
             assert = Assert;
             compiler = new Compiler();
             script = Script;

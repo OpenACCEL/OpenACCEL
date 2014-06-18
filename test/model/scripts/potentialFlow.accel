@@ -1,0 +1,177 @@
+ 
+ch00=check(true)
+// This demo simulates the flow of water in a network of
+// pipes, each with given flow capacity, in dependency
+// of the taps in the network that are switched open. 
+// Nodes 00 and 33 represent water sources.
+// By default, 00 is switched on, and 33 is switched off.
+// All other nodes are intermediate points. When switched
+// off, the pressure is determined by the network; when switched
+// we tap so much water that the pressure drops to the
+// value designated by 'p0'. For all nodes, except 00 and 33,
+// the value for p0 is set to 1 (bar), that is: atmospheric
+// pressure, so the tap is set to fully open running.
+// The sources (00 and optionally 33) are set to 20 bar.
+// All checkboxes determine whether a tap point is switched open or not.
+ch10=check(false)
+ch20=check(false)
+ch30=check(false)
+ch01=check(false)  
+ch11=check(false)
+ch21=check(false)
+ch31=check(false)
+ch02=check(false)  
+ch12=check(false)
+ch22=check(false)
+ch32=check(false)
+ch03=check(false)  
+ch13=check(false)
+ch23=check(false)
+ch33=check(false)
+    
+d=plot([plotEdges,plotNodes])
+    // Does all the plotting: we plot plotNodes and and plotEdges. These are derived from
+    // nodes and edges. In this derivation, we
+    // * convert pressure to radius (for nodes)
+    // * flow (=pressure diffrence over and edge) to width for edges
+    // * convert active or not active to color (for nodes)
+    // * get the x and y coordinates for the endpoints of the edges from
+    // combining the information from the sEdges and sNodes objects.    
+eStr=[plotType:'vector',type:'segment',x1:[mode:'data',ref:1],x2:[mode:'data',ref:2],y1:[mode:'data',ref:3],y2:[mode:'data',ref:4],width:[mode:'data',ref:5],col_r:[mode:'data',ref:6],tag:[mode:'data',ref:7]]
+    //  This string controls the looks of the plotEdges
+nStr=[plotType:'bubble',x:[mode:'data',ref:1],y:[mode:'data',ref:2],diameter:[mode:'data',ref:3],col_b:[mode:'data',ref:4],tag:[mode:'data',ref:5]]
+    //  This string controls the looks of the plotNodes
+seH0_1=['e1':0,'e2':1,'cap':1,'t':'00-01']
+   // This and the following definitions set up the static
+   // part, i.e. the non-time varying part, of all 24 edges (='pipes'). 
+   // * e1: the index of the begin node
+   // * e2: the index of the end node
+   // * cap: the flow capacity, say determined as '1/friction' in some unit
+   // * t: the text label, for identifying the edge in the image.
+   // The dynamic part, that is added to form 'edges' from 'sEdges'
+   // contains the width and the color of the edges.
+seH1_2=['e1':1,'e2':2,'cap':1,'t':'01-02']
+seH2_3=['e1':2,'e2':3,'cap':1,'t':'02-03']
+seH4_5=['e1':4,'e2':5,'cap':1,'t':'10-11']
+seH5_6=['e1':5,'e2':6,'cap':1,'t':'11-12']
+seH6_7=['e1':6,'e2':7,'cap':1,'t':'12-13']
+seH8_9=['e1':8,'e2':9,'cap':1,'t':'20-21']
+seH9_10=['e1':9,'e2':10,'cap':1,'t':'21-22']
+seH10_11=['e1':10,'e2':11,'cap':1,'t':'22-23']
+seH12_13=['e1':12,'e2':13,'cap':1,'t':'30-31']
+seH13_14=['e1':13,'e2':14,'cap':1,'t':'31-32']
+seH14_15=['e1':14,'e2':15,'cap':1,'t':'32-33']    
+seV0_4=['e1':0,'e2':4,'cap':1,'t':'00-10']
+seV4_8=['e1':4,'e2':8,'cap':1,'t':'10-20']
+seV8_12=['e1':8,'e2':12,'cap':1,'t':'20-30']
+seV1_5=['e1':1,'e2':5,'cap':1,'t':'01-11']
+seV5_9=['e1':5,'e2':9,'cap':1,'t':'11-21']
+seV9_13=['e1':9,'e2':13,'cap':1,'t':'21-31']
+seV2_6=['e1':2,'e2':6,'cap':1,'t':'02-12']
+seV6_10=['e1':6,'e2':10,'cap':1,'t':'12-22']
+seV10_14=['e1':10,'e2':14,'cap':1,'t':'22-32']
+seV3_7=['e1':3,'e2':7,'cap':1,'t':'03-13']
+seV7_11=['e1':7,'e2':11,'cap':1,'t':'13-23']
+seV11_15=['e1':11,'e2':15,'cap':1,'t':'23-33']    
+sn00=['x':20,'y':20,'t':'00','p0':20] 
+  // This and the following definitions set up the static part,
+  // i.e. the non-time varying part, of all 16 nodes (='tap points' or 
+  // 'pressure sources'. 
+  // x: the geometric x coordinate of the point
+  // y: the geometric y-coordinate of the point
+  // t: the name tag, printed for easier identification of the node
+  // p0: the pressure when the check box for this node is set to 'true',
+  // that is: the pressure to which this tap point drops when the
+  // tap is set open. For the 2 source nodes, this is 20 bar; for all other
+  // nodes it is 1 bar.
+sn10=['x':20,'y':40,'t':'10','p0':1]
+sn20=['x':20,'y':60,'t':'20','p0':1]
+sn30=['x':20,'y':80,'t':'30','p0':1]
+sn01=['x':40,'y':20,'t':'01','p0':1] 
+sn11=['x':40,'y':40,'t':'11','p0':1]
+sn21=['x':40,'y':60,'t':'21','p0':1]
+sn31=['x':40,'y':80,'t':'31','p0':1]
+sn02=['x':60,'y':20,'t':'02','p0':1] 
+sn12=['x':60,'y':40,'t':'12','p0':1]
+sn22=['x':60,'y':60,'t':'22','p0':1]
+sn32=['x':60,'y':80,'t':'32','p0':1]
+sn03=['x':80,'y':20,'t':'03','p0':1] 
+sn13=['x':80,'y':40,'t':'13','p0':1]
+sn23=['x':80,'y':60,'t':'23','p0':1]
+sn33=['x':80,'y':80,'t':'33','p0':20]  
+ch=[ch00,ch01,ch02,ch03,ch10,ch11,ch12,ch13,ch20,ch21,ch22,ch23,ch30,ch31,ch32,ch33]
+    // This groups all switches (checkboxes) to a vector, so that we can index them. 
+csurR=#(i,vDom(sNodes),surR(i),vAppend)
+    // This assembles the sum of surrounding flow capacities, computed
+    // by the user-defined function surR(), into a vector, one element per node.
+eT=vTranspose(edges)
+    // This transposes the edges-vector: from a vector of tuples, one tuple per edge, to a vector of vectors,
+    // one vector per edge property. So there is a property eT.t, for instance, referring to all edge tags.
+    // The vectors at indices 0 and 1, respectively, are the ones representing the pressure difference over 
+    // the edge (pipe), scaled between 0 and 255, and its absolute value. The first is used as the color (the red
+    // component; the sign of the flow direction designates red or green); the second as the width for rendering 
+    // the edge.
+edges=#(i,vDom(sEdges),vAppend(vAppend(sEdges[i],128+40*(nodes[sEdges[i].e2][0]-nodes[sEdges[i].e1][0])),0.1+abs(nodes[sEdges[i].e1][0]-nodes[sEdges[i].e2][0])),vAppend)
+    // Constructs the edges-vector by taking the elements of the sEdges (=the static parts), and to 
+    // each element, appending two more properties. The first property appended is the pressure difference, 
+    // the second property appended is the absolute value of the pressure difference. 
+    // The diffrence serves to color the edges. Green means: flowing in the direction from 
+    // lower left to upper right; orange/red means flowing in the opposite direction.
+    // To find the pressure for
+    // calculating the pressure difference we inspect the nodes[]-vector: the index of the node is given by
+    // the e1 or e2 propoerty, taken from the sEdges; from the node, we take the (dynamic) property at
+    // index 0.
+nT=vTranspose(nodes)
+    // This transposes the nodes-vector: from a vector of tuples, one tuple per node, to a vector of vectors,
+    // one vector per node property. Se there is a property nT.t, for instance, referring to all node tags.
+    // The vectors at indices 0, 1, and 2, repsectively, are the ones representing the actual (dynamic) pressure,
+    // the color of the node (depending on whether the node is switched on or off), and the associated boolean,
+    // taken from the ch-vector, and therefore indirectly from the switches (checkboxes). 
+    // In the rendering of a node, the first two serve to determine the diameter of the bubble, rendered for
+    // this node, and its color.    
+newP(i)=if(nodes{1}[i][2],sNodes[i].p0,newPaux(i)) 
+    // This calculates a new estimate for the pressure in a node. It inspects the setting of property at index
+    // 2 for this node: this is the boolean determining whether the node is 'free' to become equal to the
+    // weighted average of its neighbors (this will be calculated by newPaux(i), or whether it should take
+    // the designated value of this node's p0.
+newPaux(i)=#(j,vDom(sEdges),if(sEdges[j].e1==i,press(sEdges[j].e2)*sEdges[j].cap,0)+if(sEdges[j].e2==i,press(sEdges[j].e1)*sEdges[j].cap,0),add)/csurR[i]
+    // This calculates the weighted average of the pressures in all surrounding nodes. It does so by
+    // iterating over all edges, and finding those for which the current node is either the begin (e1) or end
+    // point (e2). For each, the pressure is multiplied by the flow capacity of the associated 'pipe',
+    // and thus a weighted sum is calculated. This sum is divided by csurR[i] for this node; the latter
+    // factor is the sum of the flow capacities of the surrounding pipes to make newPaux a weighted average.
+nodes=#(i,vDom(sNodes),vAppend(vAppend(vAppend(sNodes[i],newP(i)),if(ch[i],250,0)),ch[i]),vAppend)
+    // This builds the nodes vector by starting from the static (=non time varying) part of the information, for each
+    // node, and appending three new properties: at index 0 the new pressure (calculated by calling the user 
+    // defined function newP(); at index 1 a value, 250 or 0 depending on whether this node is 'switched on',
+    // and finally at index 2 the boolean that tells whether this node is switched on. The value of this
+    // boolean is inspected in the function newP().
+plotEdges=[eStr,xb,xe,yb,ye,eT[1],eT[0],eT.t]
+    // This builds the plotEdges vector by aggregating the instruction string eStr and the property-vectors
+    // containing, first the coordinates of the end points of the edges (xb,xe,yb,ye: this is static information), 
+    // and next the two vectors with dynamic propoerties (width and color) and finally another static property:
+    // the name tages eT.t.
+plotNodes=[nStr,nT.x,nT.y,nT[0],nT[1],nT.t]
+    // This builds the plotNodes vector by aggregating the instruction string nStr and the property-vectors
+    // containing, first the coordinates of the bubbles representing the nodes (nT.x, nT.y: this is static 
+    // information); next two propoerties with dynamic information (size and color for each bubble), and finally
+    // again a static property: the name tag nT.t.
+press(i)=nodes{1}[i][0]
+    // To avoid cyclic (=a-causal) depedency, we need to inspect the pressure as it was at the previous time point.
+    // Hence we use nodes{1}. The index i selects the right node, and the index 0 extracts the
+    // first dynamically appended property: the calculated pressure.    
+sEdges=[seH0_1,seH1_2,seH2_3,seH4_5,seH5_6,seH6_7,seH8_9,seH9_10,seH10_11,seH12_13,seH13_14,seH14_15,seV0_4,seV4_8,seV8_12,seV1_5,seV5_9,seV9_13,seV2_6,seV6_10,seV10_14,seV3_7,seV7_11,seV11_15]
+    //  This aggregates all edges into one vector so that we can index them
+sNodes=[sn00,sn01,sn02,sn03,sn10,sn11,sn12,sn13,sn20,sn21,sn22,sn23,sn30,sn31,sn32,sn33]
+    //  This aggregates all nodes into one vector so that we can index them
+surR(i)=#(j,vDom(sEdges),if(sEdges[j].e1==i,sEdges[j].cap,0)+if(sEdges[j].e2==i,sEdges[j].cap,0),add)
+    //  This calculates the sum of the surrounding flow capacities of node i. This is needed when
+    // computing the weighted averages of pressures to estimate the next value for a pressure in a node.
+xb=#(i,vDom(sEdges),sNodes[sEdges[i].e1].x,vAppend)
+    //  Extract the x-coordinates of the begin nodes of all edges, and aggregate them into one vector
+xe=#(i,vDom(sEdges),sNodes[sEdges[i].e2].x,vAppend)
+    //  Extract the x-coordinates of the end nodes of all edges, and aggregate them into one vector
+yb=#(i,vDom(sEdges),sNodes[sEdges[i].e1].y,vAppend)
+    //  Extract the y-coordinates of the begin nodes of all edges, and aggregate them into one vector
+ye=#(i,vDom(sEdges),sNodes[sEdges[i].e2].y,vAppend)
+    //  Extract the y-coordinates of the end nodes of all edges, and aggregate them into one vector

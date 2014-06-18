@@ -1,0 +1,9 @@
+ 
+a=plot([graphs]) 
+graphs=['grid:{majR:4,grMajR:line,minR:20,grMinR:tick,majPhi:8,grMajPhi:line,minPhi:32,grMinPhi:tick},plotType:ring,nPoints:30,x:{value:50},y:{value:50},r:{mode:data,ref:1},phi:{mode:data,ref:2},col_r:{mode:data,ref:3}',[r1,r2,r3,r4],[r4,r3,r2,r1],[50,100,150,200]] 
+r1=slider(5,0,20) 
+r2=slider(5,0,20) 
+r3=slider(5,0,20) 
+r4=slider(5,0,20)
+
+

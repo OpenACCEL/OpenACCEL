@@ -1,0 +1,14 @@
+amDetDmp = 	amAnWshs * detPWsh
+//[Mkg/year] ; amount of detergent dumped annually in Netherlands. Assumption: Washing laundry is the only way detergent gets into the environment
+amAnWshs = 	amAnWshsPFam * nrFamIH
+//[wash/year] ; amount of annula washes in Netherlands. Assumption: No institutional laundry washing, only families
+nrFamIH =	nrPIH / nrPPFam
+//[Mfam] ; amount of million families in Netherlands. 
+nrPIH = slider(17,16.5,17.5)
+// [Mpeople]; amount of million people in Nertherlands. Assumption: common knowledge
+nrPPFam=slider(2.2,2,2.4)
+//[people/fam]; number of people per family. Assumption: wisdom of the crowds
+amAnWshsPFam = slider(100,80,120)
+//[wash/year]; number of washes per family per year. Assumption: wisdom of the crowds
+detPWsh = slider(0.17,0.14,0.20)
+//[kg/wash]; amount (kg) of detergent per wash. Assumption: wisdom of the crowds

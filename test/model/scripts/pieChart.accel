@@ -1,0 +1,9 @@
+ 
+a=plot([graphs]) 
+graphs=[[plotType:'ring',nPoints:30,x:50,y:50,r:[mode:'data',ref:1],tag:[mode:'data',ref:4],phi:[mode:'data',ref:2],col_r:[mode:'data',ref:3]],[r1,r2,r3,r4],[r4,r3,r2,r1],[50,100,150,200],['north','east','south','west']] 
+// the pie chart has both variable segment diameter, segment angle, and segment colour.
+// All these modalities can be used independently to convey information.
+r1=slider(5,0,20) 
+r2=slider(5,0,20)
+r3=slider(5,0,20)
+r4=slider(5,0,20)

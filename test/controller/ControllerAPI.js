@@ -56,6 +56,7 @@ suite("ControllerAPI", function() {
          */
         test("| Add quantities", function() {
             var input = "a = b + 10 ";
+            controller.newScript();
             controller.addQuantity(input);
             var input = "b = 10";
             controller.addQuantity(input);

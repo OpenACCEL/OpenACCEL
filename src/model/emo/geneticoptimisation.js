@@ -16,7 +16,15 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model.EMO*/ function() {
+define(["model/emo/crossover/crossover",
+    "model/emo/crossover/uniformcrossover",
+    "model/emo/mutation/mutation",
+    "model/emo/mutation/closemutation",
+    "model/emo/mutation/arbitrarymutation",
+    "model/emo/mutation/randommutation",
+    "model/emo/tournament/binarytournament",
+    "model/emo/individual"
+], /**@lends Model.EMO*/ function(CrossOver, UniformCrossOver, Mutation, CloseMutation, ArbitraryMutation, RandomMutation, BinaryTournament, Individual) {
 
     /**
      * @class
