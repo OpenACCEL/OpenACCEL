@@ -76,7 +76,7 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
-    ZoomDescartesDecorator.prototype.mapPoint = function(point) {
+    PanDescartesDecorator.prototype.mapPoint = function(point) {
         if (this.decorator != null) {
             point = this.decorator.mapPoint(point);
         }
