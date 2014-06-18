@@ -20,7 +20,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model*/ function() {
+define([], /**@lends AbstractScriptStore*/ function() {
     /**
      * @class
      * @classdesc 

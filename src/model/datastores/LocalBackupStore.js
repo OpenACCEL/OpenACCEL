@@ -1,5 +1,5 @@
 /*
- * A QuantityStore that stores quantities in localStorage.
+ * An AbstractScriptStore implementati that stores quantities in localStorage.
  *
  * @author Edward Brinkmann
  *
@@ -21,8 +21,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/datastores/AbstractQuantityStore", 
-        "underscore"], /**@lends Model*/ function(AbstractQuantityStore, _) {
+define(["underscore"], /**@lends LocalBackupStore */ function(_) {
     /**
      * @class
      * @classdesc This class can load and save quantities to localStorage.
@@ -39,8 +38,6 @@ define(["model/datastores/AbstractQuantityStore",
             }
         }
     }
-
-    LocalBackupStore.prototype = new AbstractQuantityStore();
 
     /**
      * Returns an array containing the names of all the quantities in this store.
