@@ -112,18 +112,6 @@ define(["view/graphics/abstractdescarteshandler", "model/script"], function(Abst
         return this.modelElement.getPlot();
     };
 
-
-    /**
-     * Returns whether the script can be compiled and executed.
-     *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
-     */
-    ScriptDescartesHandler.prototype.resetCanvas = function() {
-        for (i in this.descartesInstances) {
-            this.descartesInstances[i].enforceRedraw();
-        }
-    };
-
     // Exports are needed, such that other modules may invoke methods from this module file.
     return ScriptDescartesHandler;
 });
