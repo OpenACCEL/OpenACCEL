@@ -94,6 +94,10 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunction
         this.facadify();
     };
 
+    Canvas.prototype.discard() {
+        this.handler.removeDescartes(this.div);
+    }
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Canvas;
 });

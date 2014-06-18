@@ -102,6 +102,7 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     AbstractDescartesHandler.prototype.removeDescartes = function(div) {
         for (i in this.descartesInstances) {
             if (this.descartesInstances[i].divName == this.div) {
+                this.descartesInstances[i].eraseGraph();
                 this.descartesInstances.splice(i, 1);
             }
         }
