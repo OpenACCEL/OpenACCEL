@@ -39,14 +39,6 @@ unit        [a-zA-Z]+[0-9]*
         'button'
     ];
 
-    /** List of all ACCEL pareto functions */
-    yy.paretofunctions = [
-        'paretoHor',
-        'paretoMax',
-        'paretoMin',
-        'paretoVer'
-    ]
-
     /** List of all built-in ACCEL functions */
     yy.stdfunctions = [
         /** Functions */
@@ -94,6 +86,10 @@ unit        [a-zA-Z]+[0-9]*
         'not',
         'notEqual',
         'or',
+        'paretoHor',
+        'paretoMax',
+        'paretoMin',
+        'paretoVer',
         'plot',
         'poisson',
         'pow',
@@ -143,7 +139,6 @@ unit        [a-zA-Z]+[0-9]*
     ];
     yy.reservedwords.push.apply(yy.reservedwords, yy.inputfunctions);
     yy.reservedwords.push.apply(yy.reservedwords, yy.stdfunctions);
-    yy.reservedwords.push.apply(yy.reservedwords, yy.paretofunctions);
 %}               
 
 
@@ -169,8 +164,6 @@ unit        [a-zA-Z]+[0-9]*
                                                                     return 'STDFUNCTION'; 
                                                                 } else if (yy.inputfunctions.indexOf(yytext) > -1) {
                                                                     return 'INPUTFUNCTION';
-                                                                } else if (yy.paretofunctions.indexOf(yytext) > -1) {
-                                                                    return 'PARETOFUNCTION';
                                                                 } else { 
                                                                     return 'IDENTIFIER'; 
                                                                 } 
@@ -272,7 +265,7 @@ quantityFuncDef         :   funcDef '=' expr
 quantityName            :   IDENTIFIER
                             { $$ = '__' + $1 + '__'; } 
                         ;                    
-dummy                   : STDFUNCTION | INPUTFUNCTION | PARETOFUNCTION | quantityName;
+dummy                   : STDFUNCTION | INPUTFUNCTION | quantityName;
 funcDef                 :  quantityName '(' dummy (funcDefAdditionalArg)* ')'
                         {{
                             var funcName = $1 + $2 + $3;
@@ -381,10 +374,6 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                         |   INPUTFUNCTION '(' expr? (funcCallArgList)* ')'
                         {{
                             $$ = 'null';
-                        }}
-                        |   PARETOFUNCTION '(' expr ')'
-                        {{
-                            $$ = $3;
                         }}
                         |   quantityName '(' expr? (funcCallArgList)* ')'
                         {{
