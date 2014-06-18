@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/emo/crossover/crossover"], /**@lends Model.EMO.CrossOver*/ function(CrossOver) {
+define(["model/emo/crossover/crossover", "model/emo/cloneobject"], /**@lends Model.EMO.CrossOver*/ function(CrossOver, CloneObject) {
 
     /**
      * @class UniformCrossOver
@@ -47,8 +47,8 @@ define(["model/emo/crossover/crossover"], /**@lends Model.EMO.CrossOver*/ functi
         // initialise the offspring by cloning the parents
         // ensures all general information,
         // i.e. precision, minimum, maximum, maximization, are copied over
-        var offspring1 = parent1.clone();
-        var offspring2 = parent2.clone();
+        var offspring1 = CloneObject(parent1);
+        var offspring2 = CloneObject(parent2);
         var parent;
         var dimension = parent1.inputvector.length;
         // loop over all dimensions of the input vector

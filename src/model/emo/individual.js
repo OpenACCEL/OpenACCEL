@@ -108,26 +108,5 @@ define([], /**@lends Model.EMO*/ function() {
         return (!equal && !worse);
     };
 
-    /**
-     * Adds a clone method to every object.
-     * http://stackoverflow.com/a/13844062/2922392
-     *
-     * @return {Object} the cloned object
-     */
-    // Object.prototype.clone = function() {
-    //     var newObj = (this instanceof Array) ? [] : {};
-    //     for (var i in this) {
-    //         if (i == 'clone') {
-    //             continue;
-    //         }
-    //         if (this[i] && typeof this[i] == "object") {
-    //             newObj[i] = this[i].clone();
-    //         } else {
-    //             newObj[i] = this[i];
-    //         }
-    //     }
-    //     return newObj;
-    // };
-
     return Individual;
 });

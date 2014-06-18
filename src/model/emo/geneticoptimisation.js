@@ -23,8 +23,9 @@ define(["model/emo/crossover/crossover",
     "model/emo/mutation/arbitrarymutation",
     "model/emo/mutation/randommutation",
     "model/emo/tournament/binarytournament",
-    "model/emo/individual"
-], /**@lends Model.EMO*/ function(CrossOver, UniformCrossOver, Mutation, CloseMutation, ArbitraryMutation, RandomMutation, BinaryTournament, Individual) {
+    "model/emo/individual",
+    "model/emo/cloneobject"
+], /**@lends Model.EMO*/ function(CrossOver, UniformCrossOver, Mutation, CloseMutation, ArbitraryMutation, RandomMutation, BinaryTournament, Individual, CloneObject) {
 
     /**
      * @class
@@ -294,7 +295,7 @@ define(["model/emo/crossover/crossover",
             individual2 = Random.prototype.getRandomElement(this.population);
             // run a tournament to determine the winner and add a clone
             // (instead of a reference) to the mating pool
-            this.matingpool.push(this.tournament.select(individual1, individual2).clone());
+            this.matingpool.push(CloneObject(this.tournament.select(individual1, individual2)));
         }
     };
 
