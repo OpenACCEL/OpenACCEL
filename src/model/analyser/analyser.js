@@ -124,7 +124,7 @@ define(["model/analyser/passes/quantitypass",
             }
 
             // Quantity most recently processed and added. Any comments that follow
-            // are assigned to this quantity 
+            // are assigned to this quantity
             var prevQuantity = null;
 
             // List of all quantities parsed from the given source
@@ -275,7 +275,6 @@ define(["model/analyser/passes/quantitypass",
             }
             var definition = quantity.definition;
             if (definition.match(/pareto/) !== null) {
-                console.log('WOLOLOLO');
                 quantity.pareto.isPareto = true;
                 if (definition.match(/paretoMin\(/) !== null) {
                     quantity.pareto.isMaximize = false;
