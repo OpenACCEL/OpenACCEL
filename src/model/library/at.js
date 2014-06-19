@@ -7,7 +7,7 @@
  */
 function at(x, y) {
     if (arguments.length != arguments.callee.length) {
-        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+        throw new Error('Wrong number of arguments for ' + '@' +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     if (y instanceof Object) {

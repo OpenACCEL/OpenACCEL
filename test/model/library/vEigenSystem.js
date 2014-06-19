@@ -40,17 +40,17 @@ suite("vEigenSystem Library", function() {
             ]);
             var delta = 0.01;
 
-            function check(actual, exp) {
+            function checkIt(actual, exp) {
                 if (actual instanceof Object) {
                     for (var key in actual) {
-                        check(actual[key], exp[key]);
+                        checkIt(actual[key], exp[key]);
                     }
                 } else {
                     assert(Math.abs(actual - exp) < delta);
                 }
             }
 
-            check(result, expected);
+            checkIt(result, expected);
         });
 
     });
