@@ -279,7 +279,7 @@ define(["model/script",
                         controller.view.runtimeError(e);
                         controller.stop();
                     }
-                }, 2
+                }, 16
             );
         };
 
