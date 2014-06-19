@@ -129,7 +129,7 @@ define(["model/emo/crossover/crossover",
         var inputvector = [];
         var outputvector = [];
         // loop over all the quantities
-        for (var i = quantities.length - 1; i >= 0; i--) {
+        for (var i in quantities) {
             quantity = quantities[i];
             // check if the quantity is a pareto quantity
             if (quantity.pareto.isPareto) {

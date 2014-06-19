@@ -138,7 +138,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
          */
         GeneticOptimisationDescartesHandler.prototype.getDrawing = function() {
             //PASTED FROM KEES!!!
-            var population = this.modelElement.getPopulation();
+            var population = this.modelElement.population;
             var xx = [];
             var yy = [];
             var rr = [];
@@ -152,14 +152,14 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
             var bbP = [];
             var ddP = [];
             for (var i = population.length - 1; i >= 0; i--) {
-                if (population[i].inParetoFront()) {
+                if (population[i].inParetoFront) {
                     xxP.push(population[i].outputvector[0].value);
                     yyP.push(population[i].outputvector[1].value);
                 } else {
                     xx.push(population[i].outputvector[0].value);
                     yy.push(population[i].outputvector[1].value);
                 }
-                if (population[i].inParetoFront()) {
+                if (population[i].inParetoFront) {
                     if (population[i].equals(this.clickedIndividual)) {
                         rrP.push(255);
                         ggP.push(255);
