@@ -28,11 +28,13 @@ macro func {
                     // Initialize the values for user input
                     if (this.report && this.report.$x.category === 1) {
                         // Initialise button values to false (Boolean) and other inputs to their given
-                        // default value
+                        // default value as floats
                         if (this.report.$x.input.type == 'button') {
                             this.$x.hist[0] = false;
-                        } else {
+                        } else if (this.report.$x.input.type == 'text') {
                             this.$x.hist[0] = this.report.$x.input.parameters[0];
+                        } else {
+                            this.$x.hist[0] = JSON.parse(this.report.$x.input.parameters[0]);
                         }
                     } else {
                          this.$x.hist[0] = this.$x.expr();
@@ -62,9 +64,17 @@ macro func {
         ($x($xs (,) ...) = $expr:expr)
     } => {
         this.$x = function($xs (,) ...) {
-            return this.$x.expr($xs (,) ...);
+            // Memoization
+            var hash = JSON.stringify($xs (,) ...);
+            var cache = this.$x.cache;
+
+            return (hash in cache) ? cache[hash] : cache[hash] = this.$x.expr($xs (,) ...);
         };
+
         this.$x.expr = (function($xs (,) ...) { return $expr; }).bind(this);
+
+        // Memoization datastructure
+        this.$x.cache = {};
     }
 
     // Function declarations including units

@@ -119,6 +119,11 @@ define([], /**@lends Model*/ function() {
                 if (this.report[qty].input.type == 'button') {
                     this[qty].hist[0] = false;
                 }
+
+                // Clear memoization cache of user functions
+                if (typeof this[qty].cache !== 'undefined') {
+                    this[qty].cache = {};
+                }
             }
         }
 
