@@ -131,8 +131,8 @@ define(["model/emo/crossover/crossover",
         // loop over all the quantities
         for (var i in quantities) {
             quantity = quantities[i];
-            // check if the quantity is a pareto quantity
-            if (quantity.pareto.isPareto) {
+            // check if the quantity is a user defined function (cat 1)
+            if (quantity.category == 1) {
                 // initialise the input
                 input.name = quantity.name;
                 input.value = 0;
@@ -140,12 +140,15 @@ define(["model/emo/crossover/crossover",
                 input.maximum = quantity.input[2];
                 // TODO: implement precision in quantity
                 input.precision = 2;
-                // initialise the outputvector
-                output.maximize = quantity.pareto.isMaximize;
-                // push input and output to their responding vectors
+                // push input to the inputvector
                 inputvector.push(input);
+            }
+            // check if the quantity is a pareto quantity (cat 4)
+            if (quantity.pareto.isPareto) {
+                // initialise the output
+                output.maximize = quantity.pareto.isMaximize;
+                // push output to the outputvector
                 outputvector.push(output);
-
             }
         }
         // create the initial population
