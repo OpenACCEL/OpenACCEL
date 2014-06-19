@@ -230,6 +230,17 @@ define(["model/script",
         };
 
         /**
+         * Sets the current plot status.
+         *
+         * @param status {String} Report of any errors occured while plotting
+         */
+        Controller.prototype.setPlotStatusInScript = function(status) {
+            if (this.script.isCompiled()) {
+                this.script.exe.setPlotStatus(status);
+            }
+        };
+
+        /**
          * Sets wether the application should use web workers when they are
          * available on the user's system. Currently workers are not used for
          * anything but this can change in the future

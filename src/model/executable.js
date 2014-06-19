@@ -77,6 +77,12 @@ define([], /**@lends Model*/ function() {
          * @type {Array}
          */
         this.plot = [];
+
+        /**
+         * Graphics plot object, set by the library function plot()
+         * @type {Array}
+         */
+        this.plotStatus = '';
     }
 
 
@@ -144,6 +150,7 @@ define([], /**@lends Model*/ function() {
         this.mouseY = 0;
         this.mouseButtonPressed = false;
         this.plot = [];
+        this.plotStatus = '';
     };
 
     /**
@@ -235,6 +242,14 @@ define([], /**@lends Model*/ function() {
      */
     Executable.prototype.setMouseButton = function(buttonDown) {
         this.mouseButtonPressed = buttonDown;
+    };
+
+    /**
+     * Sets report of the plot function
+     * @param {String} status any errors that have occurred while plotting
+     */
+    Executable.prototype.setPlotStatus = function(status) {
+        this.plotStatus = status;
     };
 
     /**

@@ -118,6 +118,23 @@ define(["view/graphics/abstractdescarteshandler", "model/script"], function(Abst
      *
      * @return this.analyser.scriptComplete && this.quantities.length > 0
      */
+    ScriptDescartesHandler.prototype.draw = function() {
+        var drawing = this.getDecoratedDrawing();
+        var status = '';
+        for (var i = this.descartesInstances.length - 1; i >= 0; i--) {
+            this.descartesInstances[i].draw(drawing);
+            status = this.descartesInstances[i].getStatusReport();
+        }
+        this.drawReport = status;
+        controller.setPlotStatusInScript(this.drawReport);
+    };
+
+
+    /**
+     * Returns whether the script can be compiled and executed.
+     *
+     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     */
     ScriptDescartesHandler.prototype.resetCanvas = function() {
         for (i in this.descartesInstances) {
             this.descartesInstances[i].enforceRedraw();
