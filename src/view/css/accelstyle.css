@@ -19,8 +19,6 @@ body div {
 
 #container {
 	position: relative;
-	left: calc(50% - 1000px / 2);
-	width: 1000px;
 }
 
 #top {
@@ -48,7 +46,6 @@ body div {
 #main ul{
 	position: relative;
 	z-index: 1;
-	/*display: block;*/
 	margin-left: -40px;
 }
 #main ul li {
@@ -79,7 +76,7 @@ body div {
 	padding-top: 20px;
 	padding-left: 10px;
 	padding-right: 10px;
-	padding-bottom: 10px;
+	padding-bottom: 20px;
 	-webkit-border-top-right-radius: 30px;
 	-moz-border-radius-topright: 30px;
 	border-top-right-radius: 30px;

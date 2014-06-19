@@ -25,30 +25,31 @@ html
         #container
             #top
                 #logo
-            #main
-                ul
-                    li
-                        a(href = '#intro') Intro
-                    li
-                        a(href = '#editrun') Edit / Run script
-                    li
-                        a(href = '#helpdemo') Help / Demo
-                    li
-                        a(href = '#ioedit') IO / Edit
-                    li
-                        a(href = '#analysis') Analysis
-                    li
-                        a(href = '#optimisation') Genetic Optimisation
-                    li
-                        a(href = '#simulation') Simulation
-                    li
-                        a(href = '#network') Network
+            div
+                #main.inline
+                    ul
+                        li
+                            a(href = '#intro') Intro
+                        li
+                            a(href = '#editrun') Edit / Run script
+                        li
+                            a(href = '#helpdemo') Help / Demo
+                        li
+                            a(href = '#ioedit') IO / Edit
+                        li
+                            a(href = '#analysis') Analysis
+                        li
+                            a(href = '#optimisation') Genetic Optimisation
+                        li
+                            a(href = '#simulation') Simulation
+                        li
+                            a(href = '#network') Network
 
-                include tabs/intro.jade
-                include tabs/editrun.jade
-                include tabs/helpdemo.jade
-                include tabs/ioedit.jade
-                include tabs/analysis.jade
-                include tabs/optimisation.jade
-                include tabs/simulation.jade
-                include tabs/network.jade
+                    include tabs/intro.jade
+                    include tabs/editrun.jade
+                    include tabs/helpdemo.jade
+                    include tabs/ioedit.jade
+                    include tabs/analysis.jade
+                    include tabs/optimisation.jade
+                    include tabs/simulation.jade
+                    include tabs/network.jade
