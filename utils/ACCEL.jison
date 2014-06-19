@@ -17,8 +17,8 @@
 /** Macros used in the lexer */
 digit       [0-9]
 esc         \\\\
-int         (-)?(?:[0-9]|[1-9][0-9]+)
-exp         (?:[eE][-+]?[0-9]+)
+int         (?:\d+)
+exp         (?:[eE][0-9]+)
 frac        (?:\.[0-9]+)
 unit        [a-zA-Z]+[0-9]*  
 
@@ -387,7 +387,7 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                             }
                        }}   
                         ;
-inputCall               :   INPUTFUNCTION '(' scalarConst? (inputCallArgList)* ')'
+inputCall               :   INPUTFUNCTION '(' (scalarConst | (('+'|'-') NUMBER))? (inputCallArgList)* ')'
                         {{
                             $$ = 'null';
                         }}
@@ -395,7 +395,7 @@ inputCall               :   INPUTFUNCTION '(' scalarConst? (inputCallArgList)* '
 funcCallArgList         :   ',' expr
                             { $$ = $2; }
                         ;
-inputCallArgList        :   ',' scalarConst
+inputCallArgList        :   ',' (scalarConst | (('+'|'-') NUMBER))
                             { $$ = $2; }
                         ;
 
