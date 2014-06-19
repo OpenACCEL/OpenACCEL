@@ -925,7 +925,7 @@ define(["model/script",
          * Initialises GeneticOptimisation.
          */
         Controller.prototype.initGeneticOptimisation = function() {
-            this.GeneticOptimisation.initialise(this.getScript().exe);
+            this.GeneticOptimisation.initialise(this.getScript());
         };
 
         /**
