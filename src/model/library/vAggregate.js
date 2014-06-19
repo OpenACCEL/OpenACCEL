@@ -4,9 +4,6 @@ function vAggregate(x, y, z) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    x = objectToArray(x);
-    y = objectToArray(y);
-    z = objectToArray(z);
     if (x instanceof Array) {
         if (y instanceof Array) {
             if (!(z instanceof Array)) {

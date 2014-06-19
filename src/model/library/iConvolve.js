@@ -4,10 +4,6 @@ function iConvolve(x,y,n1,n2,m) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    x = objectToArray(x);
-    y = objectToArray(y);
-    n1 = objectToArray(n1);
-    n2 = objectToArray(n2);
     if (x instanceof Array) {
         var r1 = x.length;
         if (x[0] instanceof Array) {

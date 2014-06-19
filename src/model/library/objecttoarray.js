@@ -7,7 +7,7 @@
  * @return {Array}      converted array
  */
 function objectToArray(obj) {
-    if (obj instanceof Object && !(obj instanceof Array)) {
+    if (!(obj instanceof Array) && obj instanceof Object) {
         var array = []; // Initialize the array
         for (var key in obj) {
             // go through each element in the object

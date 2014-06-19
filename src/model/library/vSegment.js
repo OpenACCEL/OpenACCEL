@@ -4,7 +4,6 @@ function vSegment(x, y, z) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    x = objectToArray(x);
     if (x instanceof Array) {
         if (!(y instanceof Array)) {
             if (!(z instanceof Array)) {

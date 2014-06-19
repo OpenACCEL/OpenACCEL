@@ -3,7 +3,6 @@ function vEigenSystem(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    x = objectToArray(x);
     if (x instanceof Array) {
         var t = [];
         var n = x.length;

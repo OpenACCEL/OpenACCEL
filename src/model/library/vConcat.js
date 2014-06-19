@@ -12,9 +12,6 @@ function vConcat(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    x = objectToArray(x);
-    y = objectToArray(y);
-
     var p = [];
     if (!(x instanceof Array)) {
         p.push(x);

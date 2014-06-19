@@ -4,7 +4,6 @@ function vNormFlat(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    x = objectToArray(x);
     if (x instanceof Array) {
         // we support also strings that are to be concatenated.
         // Hence the initialisation cannot simply be var a=0; we must leave the type of a open until after
