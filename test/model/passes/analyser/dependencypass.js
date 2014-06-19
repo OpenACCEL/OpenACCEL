@@ -167,7 +167,7 @@ suite("DependencyPass", function() {
                 dependencies: [],
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: ['a','g','h']
+                reverseDeps: ['a', 'g', 'h']
             },
             f: {
                 name: 'f',
@@ -184,7 +184,7 @@ suite("DependencyPass", function() {
                 name: 'g',
                 LHS: 'g',
                 parameters: [],
-                dependencies: ['b','c'],
+                dependencies: ['b', 'c'],
                 definition: '[2, b, x:c]',
                 source: 'g = [2, b, x:c]',
                 todo: false,
@@ -195,7 +195,7 @@ suite("DependencyPass", function() {
                 name: 'h',
                 LHS: 'h',
                 parameters: [],
-                dependencies: ['b','c'],
+                dependencies: ['b', 'c'],
                 definition: '[b, x:[1, y:c, b], 3]',
                 source: 'h = [b, x:[1, y:c, b], 3]',
                 todo: false,
@@ -217,7 +217,7 @@ suite("DependencyPass", function() {
                 name: 'j',
                 LHS: 'j',
                 parameters: [],
-                dependencies: ['f','a'],
+                dependencies: ['f', 'a'],
                 definition: 'f(a) + sin(1)',
                 source: 'j = f(a) + sin(1)',
                 todo: false,
@@ -239,7 +239,8 @@ suite("DependencyPass", function() {
         };
 
         /**
-         * Test case for analyse()
+         * Test case for analyse().
+         *
          */
         test('analyze()', function() {
             var result = beginReport;
@@ -248,7 +249,7 @@ suite("DependencyPass", function() {
                 // Parse quantity name from line
                 var equalsIndex = line.indexOf('=');
                 var lhs = line.substring(0, equalsIndex).trim();
-                var qtyName =  lhs.match(/(\w*[a-zA-Z_]\w*(?!\w*\s*:))/g)[0];
+                var qtyName = lhs.match(/(\w*[a-zA-Z_]\w*(?!\w*\s*:))/g)[0];
                 var quantity = result[qtyName];
 
                 quantity = dependencyPass.analyse(line, quantity, result);
