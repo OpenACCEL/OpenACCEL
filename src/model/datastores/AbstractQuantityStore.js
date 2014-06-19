@@ -34,6 +34,7 @@ define([], /**@lends AbstractQuantityStore*/ function() {
          * Returns an array containing the names of all the quantities in this store.
          *
          * @return {String[]} An array containing all the quantity names in the store.
+         * @abstract
          */
         getQuantities: function() {},
 
@@ -42,6 +43,7 @@ define([], /**@lends AbstractQuantityStore*/ function() {
          *
          * @param {String} qtyname The name of the quantity to store.
          * @param {String} def The definition of the quantity to store.
+         * @abstract
          */
         saveQuantity: function(qtyName, def) {},
 
@@ -51,6 +53,7 @@ define([], /**@lends AbstractQuantityStore*/ function() {
          * @param {String} qtyName The name of the quantity to load from the store
          * @return The definition of the quantity with name qtyName, or null if there
          * is no quantity in the store named qtyName.
+         * @abstract
          */
         loadQuantity: function(qtyName) {},
 
@@ -58,6 +61,7 @@ define([], /**@lends AbstractQuantityStore*/ function() {
          * Deletes the quantity with the given name from the store.
          *
          * @param {String} qtyName The name of the quantity to delete
+         * @abstract
          */
         deleteQuantity: function(qtyName) {},
 
@@ -65,6 +69,7 @@ define([], /**@lends AbstractQuantityStore*/ function() {
          * Returns whether a quantity with name qtyName exists in the store.
          *
          * @return Whether there is a quantity named qtyName present in the store.
+         * @abstract
          */
         hasQuantity: function(qtyName) {},
 
@@ -72,6 +77,7 @@ define([], /**@lends AbstractQuantityStore*/ function() {
          * Returns the number of quantities stored in this store.
          *
          * @return The number of quantities currently stored in the store.
+         * @abstract
          */
         numQuantities: function() {}
     };
