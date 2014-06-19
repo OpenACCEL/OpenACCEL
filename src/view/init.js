@@ -197,7 +197,7 @@ function Tooltip(id, classes, x, y) {
     }
 }
 
-//--------
+//------------------------------------------------------------------------------
 
 /**
  * [ValueList description]
@@ -344,7 +344,7 @@ function SelectionList(selector, callback) {
     };
 }
 
-//--------
+//------------------------------------------------------------------------------
 
 function deselect() {
     var sel = window.getSelection();
@@ -362,4 +362,17 @@ function selectContent(selector) {
 
 function encodeHTML(string) {
     return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function getPrecision(number) {        
+    //To compensate for javascript's floating point errors we use a correction variable which will temporarily convert floats to ints
+    var correction = 100000;
+    var numberdecimals = (number * correction - Math.floor(number) * correction) / correction;
+    var precision = 0;
+
+    while (numberdecimals % 1 != 0) {
+        numberdecimals *= 10;
+        precision++;
+    }
+    return precision;
 }

@@ -394,23 +394,12 @@ function SliderInput(identifier, quantity, label, val, min, max) {
     this.min = min;
     this.max = max;
 
-    this.getStepSize = function(val, min, max) {
-        var sum = val + min + max;
-        console.log(sum);
-        //To compensate for javascript's floating point errors we use a correction variable which will temporarily convert floats to ints
-        var correction = 100000;
-        var sumdecimals = (sum * correction - Math.floor(sum) * correction) / correction;
-        console.log(sumdecimals);
-        var precision = 0;
-        while (sumdecimals % 1 != 0) {
-            sumdecimals *= 10;
-            precision++;
-        }
-        //var precision = sumdecimals.toFixed().length;
-        console.log(sumdecimals.toFixed());
-        console.log(precision);
-        console.log(Math.pow(10, -precision));
-        return Math.pow(10, -precision);
+    this.getStepSize = function(val, min, max) {      
+        var stepsizes = [Math.pow(10, -getPrecision(val)),
+                         Math.pow(10, -getPrecision(min)),
+                         Math.pow(10, -getPrecision(max))];
+
+        return Math.min.apply(Math, stepsizes);
     };
 
     this.properties = {

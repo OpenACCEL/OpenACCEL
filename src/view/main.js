@@ -49,9 +49,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      * @param {Boolean} show Whether to show the plot.
      */
     View.prototype.showPlot = function(show) {
-        console.log('showplot');
-        console.log(show);
-        console.log($('#plotdiv'));
         $('#plotdiv').toggle(show);
     };
 
