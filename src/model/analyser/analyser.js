@@ -249,32 +249,13 @@ define(["model/analyser/passes/quantitypass",
         Analyser.prototype.findInputParameters = function(definition, type) {
             if (!definition) {
                 throw new Error('Analyser.findInputParameters.pre violated:' +
-                    'definition is null or undefined')
+                    'definition is null or undefined');
             }
             var parameters = [];
-            if (type === 'slider') {
-                parameters = definition.match(/slider\((\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*\)/);
-            } else if (type === 'check') {
-                parameters = definition.match(/check\(\s*(true|false)\s*\)/);
-            } else if (type === 'text') {
-                parameters = definition.match(/input\(\s*(.*)\s*\)/);
-
-                if (parameters) {
-                    if (parameters[1] === 'PI') {
-                        parameters[1] = Math.PI;
-                    } else if (parameters[1] === 'E') {
-                        parameters[1] = Math.E;
-                    } else {
-                        try {
-                            parameters[1] = JSON.parse(parameters[1].replace(/'/g, '"'));
-                        } catch (e) {
-                            parameters = [];
-                        }
-                    }
-                }
+            if (type) {
+                parameters = (new Function('return ' + definition))();
             }
-
-            return parameters.slice(1);
+            return parameters;
         };
 
         // Exports all macros.
