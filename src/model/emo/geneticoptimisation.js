@@ -119,6 +119,38 @@ define(["model/emo/crossover/crossover",
      * Calculate the initial Pareto Front and fitness values;
      */
     GeneticOptimisation.prototype.initialise = function(script) {
+        // TODO: implement set population size
+        var size = 10;
+        // initialise variables
+        var quantities = script.getQuantities();
+        var quantity;
+        var input;
+        var output;
+        var inputvector = [];
+        var outputvector = [];
+        // loop over all the quantities
+        for (var i = quantities.length - 1; i >= 0; i--) {
+            quantity = quantities[i];
+            // check if the quantity is a pareto quantity
+            if (quantity.pareto.isPareto) {
+                // initialise the input
+                input.name = quantity.name;
+                input.value = 0;
+                input.minimum = quantity.input[1];
+                input.maximum = quantity.input[2];
+                // TODO: implement precision in quantity
+                input.precision = 2;
+                // initialise the outputvector
+                output.maximize = quantity.pareto.isMaximize;
+                // push input and output to their responding vectors
+                inputvector.push(input);
+                outputvector.push(output);
+
+            }
+        }
+        // create the initial population
+        this.createPopulation(inputvector, outputvector, size);
+        // initialise variables
         this.executable = script.exe;
         this.mutations.push(new CloseMutation());
         this.mutations.push(new ArbitraryMutation());
@@ -128,17 +160,40 @@ define(["model/emo/crossover/crossover",
     };
 
     /**
-     * The tournament to be used for the construction of the mating pool.
+     * Creates the initial population.
+     *
+     * @param  {Array}  inputvector  the inputvector for each individual
+     * @param  {Array}  outputvector the outputvector for each individual
+     * @param  {Number} size         the population size
      */
-    GeneticOptimisation.prototype.setTournament = function(tournament) {
-        this.tournament = tournament;
-    };
-
-    /**
-     * The cross-over to be used for the production of offspring.
-     */
-    GeneticOptimisation.prototype.setCrossOver = function(crossover) {
-        this.crossover = crossover;
+    GeneticOptimisation.prototype.createPopulation = function(inputvector, outputvector, size) {
+        // generate as many individuals as needed
+        for (var i = size - 1; i >= 0; i--) {
+            // loop over the inputvector
+            var _inputvector = [];
+            var inputquantity;
+            for (var j = inputvector.length - 1; j >= 0; j--) {
+                // copy inputvector
+                for (var key in inputvector) {
+                    inputquantity[key] = inputvector[j][key];
+                }
+                // generate random value
+                inputquantity.value = Random.prototype.getRandomDouble(inputquantity.minimum, inputquantity.maximum, inputquantity.precision);
+                _inputvector.push(inputquantity);
+            }
+            // loop over the outputvector
+            var _outputvector = [];
+            var outputquantity;
+            for (var j = outputvector.length - 1; j >= 0; j--) {
+                // copy outputvector
+                for (var key in outputvector) {
+                    outputquantity[key] = outputvector[j][key];
+                }
+                _outputvector.push(outputquantity);
+            }
+            // add the newly created individual to the population
+            this.population.push(new Individual(_inputvector, _outputvector));
+        }
     };
 
     /**
