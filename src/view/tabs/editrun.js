@@ -433,7 +433,7 @@ CheckboxInput.prototype.getHTML = function() {
         <div id = "userinput' + this.identifier + '">\
             <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
             <div class = "inline checkboxin">\
-                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true' ? 'checked' : '') + '>\
+                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == true ? 'checked' : '') + '>\
                 <label for = "usercheck' + this.identifier + '"></label>\
             </div>\
         </div>\

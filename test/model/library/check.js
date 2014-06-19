@@ -20,12 +20,12 @@ suite("check Library", function() {
      * Input without errors: true
      *
      * @input       check(true)
-     * @expected    ['true']
+     * @expected    [true]
      */
     test("| Input without errors: true", function() {
         eval(fileLoader.getContent());
 
-        var expected = ['true'];
+        var expected = [true];
         var result = check(true);
 
         assert.deepEqual(result, expected);
@@ -35,12 +35,12 @@ suite("check Library", function() {
      * Input without errors: false
      *
      * @input       check(false)
-     * @expected    ['false']
+     * @expected    [false]
      */
     test("| Input without errors: false", function() {
         eval(fileLoader.getContent());
 
-        var expected = ['false'];
+        var expected = [false];
         var result = check(false);
 
         assert.deepEqual(result, expected);

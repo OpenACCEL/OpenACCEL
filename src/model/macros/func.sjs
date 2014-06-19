@@ -28,13 +28,11 @@ macro func {
                     // Initialize the values for user input
                     if (this.report && this.report.$x.category === 1) {
                         // Initialise button values to false (Boolean) and other inputs to their given
-                        // default value as floats
+                        // default value
                         if (this.report.$x.input.type == 'button') {
                             this.$x.hist[0] = false;
-                        } else if (this.report.$x.input.type == 'text') {
-                            this.$x.hist[0] = this.report.$x.input.parameters[0];
                         } else {
-                            this.$x.hist[0] = JSON.parse(this.report.$x.input.parameters[0]);
+                            this.$x.hist[0] = this.report.$x.input.parameters[0];
                         }
                     } else {
                          this.$x.hist[0] = this.$x.expr();

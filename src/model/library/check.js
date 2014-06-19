@@ -16,7 +16,7 @@ function check(def) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     if (typeof def === 'boolean') {
-        return [JSON.stringify(def)];
+        return [def];
     } else {
         throw new Error('Argument of check must be true or false');
     }
