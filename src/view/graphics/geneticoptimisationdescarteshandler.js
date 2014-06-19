@@ -98,21 +98,38 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
         GeneticOptimisationDescartesHandler.prototype.clickCallback = function(x, y) {
+            var quantities = controller.getScript().getQuantities();
+            var horQuantity;
+            var verQuantity;
+            for (var i in quantities) {
+                if (quantities[i].pareto.isHorizontal) {
+                    horQuantity = i;
+                }
+                if (quantities[i].pareto.isVertical) {
+                    verQuantity = i;
+                }
+            }
+            var horKey = 0;
+            var verKey = 0;
+            var currentIndividual;
+            var population = this.modelElement.population;
             var point = this.mapPoint({
                 'x': x,
                 'y': y
             });
-            var comparablePoint = [];
-            comparablePoint.push({
-                'value': point.x
-            });
-            comparablePoint.push({
-                'value': point.y
-            });
             var closestDistance = Infinity;
             var currentDistance = Infinity;
             for (var i = population.length - 1; i >= 0; i--) {
-                currentDistance = Distance.prototype.euclidian(population[i].outputvector, comparablePoint);
+                currentIndividual = population[i];
+                for (var j = currentIndividual.outputvector.length - 1; j >= 0; j--) {
+                    if (currentIndividual.outputvector[j].name == horQuantity) {
+                        horKey = j;
+                    }
+                    if (currentIndividual.outputvector[j].name == verQuantity) {
+                        verKey = j;
+                    }
+                }
+                currentDistance = (population[i].outputvector[horKey].value - point.x) * (population[i].outputvector[horKey].value - point.x) + (population[i].outputvector[verKey].value - point.y) * (population[i].outputvector[verKey].value - point.y);
                 if (closestDistance > currentDistance) {
                     this.clickedIndividual = population[i];
                 }
@@ -137,56 +154,64 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
         GeneticOptimisationDescartesHandler.prototype.getDrawing = function() {
-            //PASTED FROM KEES!!!
-            var population = this.modelElement.population;
-            var xx = [];
-            var yy = [];
-            var rr = [];
-            var gg = [];
-            var bb = [];
-            var dd = [];
-            var xxP = [];
-            var yyP = [];
-            var rrP = [];
-            var ggP = [];
-            var bbP = [];
-            var ddP = [];
-            for (var i = population.length - 1; i >= 0; i--) {
-                if (population[i].inParetoFront) {
-                    xxP.push(population[i].outputvector[0].value);
-                    yyP.push(population[i].outputvector[1].value);
-                } else {
-                    xx.push(population[i].outputvector[0].value);
-                    yy.push(population[i].outputvector[1].value);
+            var quantities = controller.getScript().getQuantities();
+            var horQuantity;
+            var verQuantity;
+            for (var i in quantities) {
+                if (quantities[i].pareto.isHorizontal) {
+                    horQuantity = i;
                 }
-                if (population[i].inParetoFront) {
-                    if (population[i].equals(this.clickedIndividual)) {
-                        rrP.push(255);
-                        ggP.push(255);
-                        bbP.push(255);
-                    } else {
-                        rrP.push(255);
-                        ggP.push(0);
-                        bbP.push(0);
-                        ddP.push(2);
-                    }
-                } else {
-                    if (population[i].equals(this.clickedIndividual)) {
-                        rrP.push(255);
-                        ggP.push(255);
-                        bbP.push(255);
-                        ddP.push(1);
-                    } else {
-                        rr.push(0);
-                        gg.push(150);
-                        bb.push(150);
-                        dd.push(1);
-                    }
+                if (quantities[i].pareto.isVertical) {
+                    verQuantity = i;
                 }
             }
-            // we pass the number of points as a parameter to enforce descartes always to draw the full set. Otherwise,
-            // we run the risk that if the nr of points increases (e.g. because the user requests more solutions),
-            // descartes decides not to re-parse the control string, and therefore does not re-allocate the arrays of elements.
+            var horKey = 0;
+            var verKey = 0;
+            var population = this.modelElement.population;
+            var inFront;
+            var currentIndividual;
+            var xCoords = [];
+            var yCoords = [];
+            var redVals = [];
+            var greenVals = [];
+            var blueVals = [];
+            var diameters = [];
+
+            for (var i = population.length - 1; i >= 0; i--) {
+                currentIndividual = population[i];
+                for (var j = currentIndividual.outputvector.length - 1; j >= 0; j--) {
+                    if (currentIndividual.outputvector[j].name == horQuantity) {
+                        horKey = j;
+                    }
+                    if (currentIndividual.outputvector[j].name == verQuantity) {
+                        verKey = j;
+                    }
+                }
+                xCoords.push(currentIndividual.outputvector[horKey].value);
+                yCoords.push(currentIndividual.outputvector[verKey].value);
+                inFront = currentIndividual.inParetoFront;
+                if (currentIndividual.equals(this.clickedIndividual)) {
+                    redVals.push(255);
+                    greenVals.push(255);
+                    blueVals.push(255);
+                } else {
+                    if (inFront) {
+                        redVals.push(255);
+                        greenVals.push(0);
+                        blueVals.push(0);
+                    } else {
+                        redVals.push(0);
+                        greenVals.push(150);
+                        blueVals.push(150);
+                    }
+                }
+                if (inFront) {
+                    diameters.push(2);
+                } else {
+                    diameters.push(1);
+                }
+            }
+
             var ctrl = {
                 'plotType': 'bubble',
                 'col_r': {
@@ -214,34 +239,8 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                     'ref': 2
                 }
             };
-            var ctrlP = {
-                'plotType': 'bubble',
-                'col_r': {
-                    'mode': 'data',
-                    'ref': 3
-                },
-                'col_g': {
-                    'mode': 'data',
-                    'ref': 4
-                },
-                'col_b': {
-                    'mode': 'data',
-                    'ref': 5
-                },
-                'diameter': {
-                    'mode': 'data',
-                    'ref': 6
-                },
-                'x': {
-                    'mode': 'data',
-                    'ref': 1
-                },
-                'y': {
-                    'mode': 'data',
-                    'ref': 2
-                }
-            };
-            return [[ctrl, xx, yy, rr, gg, bb, dd], [ctrlP, xxP, yyP, rrP, ggP, bbP, ddP]];
+
+            return [[ctrl, xCoords, yCoords, redVals, greenVals, blueVals, diameters]];
         };
 
         // Exports are needed, such that other modules may invoke methods from this module file.
