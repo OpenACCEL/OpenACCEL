@@ -494,7 +494,7 @@ TextInput.prototype.initialize = function() {
     $('#usertext' + textinput.identifier).on('input',
         function() {
             var val = this.value
-            if ($.isNumeric(val)) {
+            if ($.isNumeric(val) && !(/[a-zA-Z]/.test(val))) {
                 val = parseFloat(val);
             }
             controller.setUserInputQuantity(textinput.quantity, val);
