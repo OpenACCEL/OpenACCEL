@@ -4,13 +4,13 @@ $(document).ready(
     function() {
         $('#main').tabs();
 
-        $('#main').on('tabsbeforeactivate', 
+        $('#main').on('tabsbeforeactivate',
             function(event, ui) {
                 leaving = ui.oldPanel[0].id;
                 switch (leaving) {
                     case 'editrun':
                         // Pause script when leaving edit/run tab
-                        controller.pause();
+                        controller.pause(true);
                         break;
                     case 'ioedit':
                         // Build script from inputted source when leaving IO/edit
@@ -34,13 +34,13 @@ $(document).ready(
             }
         );
 
-        $('#main').on('tabsactivate', 
+        $('#main').on('tabsactivate',
             function(event, ui) {
                 entering = ui.newPanel[0].id;
                 switch (entering) {
                     case 'editrun':
-                        if (controller.isPaused() && controller.autoExecute) {
-                            controller.run();
+                        if (controller.autoExecute) {
+                            controller.run(true);
                         }
                         break;
                     default:
@@ -126,9 +126,9 @@ function HTMLbuffer(div) {
 
 /**
  * Constructs a new Tooltip object
- * 
+ *
  * @param {String} id      String to be used as a suffix in the id values of the generated html elements
- * @param {String} div     Selector to indicate which element the Tooltip should be associated with 
+ * @param {String} div     Selector to indicate which element the Tooltip should be associated with
  * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
  *
  * @class
@@ -163,11 +163,11 @@ function Tooltip(id, classes, x, y) {
             }
         );
 
-        tooltip.on('click', 
+        tooltip.on('click',
             function() {
-                $(this).animate({padding: '+=8'}, 50, 
+                $(this).animate({padding: '+=8'}, 50,
                     function() {
-                        $(this).animate({opacity: 0, width: 0, height: 0}, 200, 
+                        $(this).animate({opacity: 0, width: 0, height: 0}, 200,
                             function() {
                                 //$(this).toggle(false);
                                 $(this).parent().remove();
@@ -177,12 +177,12 @@ function Tooltip(id, classes, x, y) {
                 )
             }
         );
-        tooltip.on('mouseenter', 
+        tooltip.on('mouseenter',
             function() {
                 $(this).animate({opacity: 0.8}, 200);
             }
         );
-        tooltip.on('mouseleave', 
+        tooltip.on('mouseleave',
             function() {
                 $(this).animate({opacity: 1}, 100);
             }
@@ -210,7 +210,7 @@ function ValueList(selector) {
 
     /**
      * Buffer to contain HTML for the required list
-     * 
+     *
      * @type {HTMLbuffer}
      */
     this.buffer = new HTMLbuffer(selector);
@@ -257,7 +257,7 @@ function ValueList(selector) {
             this.size = newsize;
             this.initialize(this.size);
         }
-        
+
         var entries = $(this.selector + ' > div');
         var i = 0;
         for (var v in values) {
@@ -270,7 +270,7 @@ function ValueList(selector) {
 
 /**
  * Class to generate a list of selectable items
- * 
+ *
  * @param  {String}   selector Element to put the list in
  * @param  {Function} callback Function to be called when an item is clicked
  */
@@ -280,14 +280,14 @@ function SelectionList(selector, callback) {
 
     /**
      * Buffer to contain HTML for the required list
-     * 
+     *
      * @type {HTMLbuffer}
      */
     this.buffer = new HTMLbuffer(this.selector);
 
     /**
      * Generates HTML for an item in the required list of selectable links
-     * 
+     *
      * @param  {String} item String to represent an item in the list
      * @return {String}      HTML for an item in the required list of selectable links
      */
@@ -299,7 +299,7 @@ function SelectionList(selector, callback) {
 
     /**
      * Adds an item to the list of selectable links
-     * 
+     *
      * @param {String} item String to represent an item in the list
      */
     this.addItem = function(i, item) {
@@ -308,7 +308,7 @@ function SelectionList(selector, callback) {
 
     /**
      * [initializeItem description]
-     * 
+     *
      * @param  {type[]} i [description]
      * @return {type[]}   [description]
      */
@@ -324,7 +324,7 @@ function SelectionList(selector, callback) {
 
     /**
      * Set the items contained in the list
-     * 
+     *
      * @param {String[]} items Strings to represent the items in the list
      */
     this.set = function(items) {
