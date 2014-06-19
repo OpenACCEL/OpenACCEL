@@ -194,14 +194,14 @@ define(["model/emo/crossover/crossover",
                 // copy outputvector
                 for (var key in outputvector[j]) {
                     outputquantity[key] = outputvector[j][key];
-                    _outputvector.push(outputquantity);
                 }
+                _outputvector.push(outputquantity);
             }
             // add the newly created individual to the population
             this.population.push(new Individual(_inputvector, _outputvector));
-            // calculate output values
-            this.calculateOutputValues();
         }
+        // calculate output values
+        this.calculateOutputValues();
     };
 
     /**
