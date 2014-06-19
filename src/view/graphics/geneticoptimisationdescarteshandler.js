@@ -17,8 +17,8 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescartesdecorator", "model/emo/geneticoptimisation", "model/emo/individual", "model/emo/distance"],
-    function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual, Distance) {
+define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescartesdecorator", "model/emo/geneticoptimisation", "model/emo/individual"],
+    function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual) {
         /**
          * @class GeneticOptimisationDescartesHandler
          * @classdesc The GeneticOptimisationDescartesHandler class provides DescartesHandlers to DescartesCanvases,
@@ -41,8 +41,8 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
             });
 
             this.propagatables.push({
-                name: "getClickInfo",
-                func: this.getClickInfo.bind(this)
+                name: "getClickedIndividual",
+                func: this.getClickedIndividual.bind(this)
             });
 
             this.propagatables.push({
@@ -111,14 +111,16 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
             }
             var horKey = 0;
             var verKey = 0;
-            var currentIndividual;
             var population = this.modelElement.population;
+            var currentIndividual;
             var point = this.mapPoint({
                 'x': x,
                 'y': y
             });
             var closestDistance = Infinity;
-            var currentDistance = Infinity;
+            var currentHorDistance = Infinity;
+            var currentVerDistance = Infinity;
+            var currentSquareDistance = Infinity;
             for (var i = population.length - 1; i >= 0; i--) {
                 currentIndividual = population[i];
                 for (var j = currentIndividual.outputvector.length - 1; j >= 0; j--) {
@@ -129,8 +131,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                         verKey = j;
                     }
                 }
-                currentDistance = (population[i].outputvector[horKey].value - point.x) * (population[i].outputvector[horKey].value - point.x) + (population[i].outputvector[verKey].value - point.y) * (population[i].outputvector[verKey].value - point.y);
-                if (closestDistance > currentDistance) {
+                var currentHorDistance = currentIndividual.outputvector[horKey].value - point.x;
+                var currentVerDistance = currentIndividual.outputvector[verKey].value - point.y;
+                currentSquareDistance = currentHorDistance * currentHorDistance + currentVerDistance * currentVerDistance;
+                if (closestDistance > currentSquareDistance) {
                     this.clickedIndividual = population[i];
                 }
             }
@@ -143,8 +147,8 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        GeneticOptimisationDescartesHandler.prototype.getClickInfo = function(x, y) {
-            return this.clickInfo;
+        GeneticOptimisationDescartesHandler.prototype.getClickedIndividual = function() {
+            return this.clickedIndividual;
         };
 
 
