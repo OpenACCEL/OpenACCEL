@@ -149,7 +149,7 @@ define(["model/analyser/passes/quantitypass",
                         for (var i = 0; i < this.passes.length; i++) {
                             prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
                         }
-
+                        this.findPareto(prevQuantity);
                         added.push(prevQuantity);
                     }
                 }
@@ -274,16 +274,17 @@ define(["model/analyser/passes/quantitypass",
                     'quantity is null or undefined');
             }
             var definition = quantity.definition;
-            if (definition.match(/pareto/) !== []) {
+            if (definition.match(/pareto/) !== null) {
+                console.log('WOLOLOLO');
                 quantity.pareto.isPareto = true;
-                if (definition.match(/paretoMin\(/) !== []) {
+                if (definition.match(/paretoMin\(/) !== null) {
                     quantity.pareto.isMaximize = false;
-                } else if (definition.match(/paretoMax\(/) !== []) {
+                } else if (definition.match(/paretoMax\(/) !== null) {
                     quantity.pareto.isMaximize = true;
                 }
-                if (definition.match(/paretoHor\(/) !== []) {
+                if (definition.match(/paretoHor\(/) !== null) {
                     quantity.pareto.isHorizontal = true;
-                } else if (definition.match(/paretoVer\(/) !== []) {
+                } else if (definition.match(/paretoVer\(/) !== null) {
                     quantity.pareto.isVertical = true;
                 }
             }
