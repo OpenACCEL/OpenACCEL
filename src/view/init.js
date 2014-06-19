@@ -62,7 +62,7 @@ $(document).ready(
                 switch (entering) {
                     case 'editrun':
                         if (controller.autoExecute) {
-                            controller.run(true);
+                            controller.resume(true);
                         }
                         break;
                     default:
