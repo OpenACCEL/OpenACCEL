@@ -97,56 +97,6 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        GeneticOptimisationDescartesHandler.prototype.clickCallback = function(x, y) {
-            var quantities = controller.getScript().getQuantities();
-            var horQuantity;
-            var verQuantity;
-            for (var i in quantities) {
-                if (quantities[i].pareto.isHorizontal) {
-                    horQuantity = i;
-                }
-                if (quantities[i].pareto.isVertical) {
-                    verQuantity = i;
-                }
-            }
-            var horKey = 0;
-            var verKey = 0;
-            var population = this.modelElement.population;
-            var currentIndividual;
-            var point = this.mapPoint({
-                'x': x,
-                'y': y
-            });
-            var closestDistance = Infinity;
-            var currentHorDistance = Infinity;
-            var currentVerDistance = Infinity;
-            var currentSquareDistance = Infinity;
-            for (var i = population.length - 1; i >= 0; i--) {
-                currentIndividual = population[i];
-                for (var j = currentIndividual.outputvector.length - 1; j >= 0; j--) {
-                    if (currentIndividual.outputvector[j].name == horQuantity) {
-                        horKey = j;
-                    }
-                    if (currentIndividual.outputvector[j].name == verQuantity) {
-                        verKey = j;
-                    }
-                }
-                var currentHorDistance = currentIndividual.outputvector[horKey].value - point.x;
-                var currentVerDistance = currentIndividual.outputvector[verKey].value - point.y;
-                currentSquareDistance = currentHorDistance * currentHorDistance + currentVerDistance * currentVerDistance;
-                if (closestDistance > currentSquareDistance) {
-                    this.clickedIndividual = population[i];
-                }
-            }
-            this.clickInfo = this.clickedIndividual.toString();
-            this.draw();
-        };
-
-        /**
-         * Returns whether the script can be compiled and executed.
-         *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
-         */
         GeneticOptimisationDescartesHandler.prototype.getClickedIndividual = function() {
             return this.clickedIndividual;
         };
@@ -157,10 +107,11 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        GeneticOptimisationDescartesHandler.prototype.getDrawing = function() {
+        GeneticOptimisationDescartesHandler.prototype.getHorVerKeys = function() {
             var quantities = controller.getScript().getQuantities();
             var horQuantity;
             var verQuantity;
+
             for (var i in quantities) {
                 if (quantities[i].pareto.isHorizontal) {
                     horQuantity = i;
@@ -169,11 +120,79 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                     verQuantity = i;
                 }
             }
+
             var horKey = 0;
             var verKey = 0;
+            var currentName;
+            var population = this.modelElement.population;
+
+            if (population.length > 0) {
+                for (var j = population[0].outputvector.length - 1; j >= 0; j--) {
+                    currentName = population[0].outputvector[j].name;
+                    if (currentName == horQuantity) {
+                        horKey = j;
+                    }
+                    if (currentName == verQuantity) {
+                        verKey = j;
+                    }
+                }
+            }
+            return [horkey, verKey];
+        };
+
+        /**
+         * Returns whether the script can be compiled and executed.
+         *
+         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         */
+        GeneticOptimisationDescartesHandler.prototype.clickCallback = function(x, y) {
+            var horVerKeys = this.getHorVerKeys();
+            var horKey = horVerKeys[0];
+            var verKey = horVerKeys[1];
+
+            var point = this.mapPoint({
+                'x': x,
+                'y': y
+            });
+
+            var population = this.modelElement.population;
+            var currentIndividual;
+
+            var closestDistance = Infinity;
+            var currentHorDistance = Infinity;
+            var currentVerDistance = Infinity;
+            var currentSquareDistance = Infinity;
+
+            for (var i = population.length - 1; i >= 0; i--) {
+                currentIndividual = population[i];
+
+                var currentHorDistance = currentIndividual.outputvector[horKey].value - point.x;
+                var currentVerDistance = currentIndividual.outputvector[verKey].value - point.y;
+                currentSquareDistance = currentHorDistance * currentHorDistance + currentVerDistance * currentVerDistance;
+
+                if (closestDistance > currentSquareDistance) {
+                    this.clickedIndividual = population[i];
+                }
+            }
+            this.clickInfo = this.clickedIndividual.toString();
+            this.draw();
+        };
+
+
+        /**
+         * Returns whether the script can be compiled and executed.
+         *
+         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         */
+        GeneticOptimisationDescartesHandler.prototype.getDrawing = function() {
+            var horVerKeys = this.getHorVerKeys();
+            var horKey = horVerKeys[0];
+            var verKey = horVerKeys[1];
+
             var population = this.modelElement.population;
             var inFront;
             var currentIndividual;
+
             var xCoords = [];
             var yCoords = [];
             var redVals = [];
@@ -183,17 +202,12 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
 
             for (var i = population.length - 1; i >= 0; i--) {
                 currentIndividual = population[i];
-                for (var j = currentIndividual.outputvector.length - 1; j >= 0; j--) {
-                    if (currentIndividual.outputvector[j].name == horQuantity) {
-                        horKey = j;
-                    }
-                    if (currentIndividual.outputvector[j].name == verQuantity) {
-                        verKey = j;
-                    }
-                }
+
                 xCoords.push(currentIndividual.outputvector[horKey].value);
                 yCoords.push(currentIndividual.outputvector[verKey].value);
+
                 inFront = currentIndividual.inParetoFront;
+
                 if (currentIndividual.equals(this.clickedIndividual)) {
                     redVals.push(255);
                     greenVals.push(255);
