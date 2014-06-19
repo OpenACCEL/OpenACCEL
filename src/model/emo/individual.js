@@ -115,13 +115,12 @@ define([], /**@lends Model.EMO*/ function() {
      * - all their category 1 quantities are equal
      *
      * @param  {Individual} individual2 another individual
-     * @pre individual2 != null
-     * @pre individual2 != undefined
      * @return {Boolean}                whether an individual is equal to another individual
      */
     Individual.prototype.equals = function(individual2) {
+        // no individual to compare
         if (!individual2) {
-            throw new Error("Individual.dominates.pre is violated: individual2 is null or undefined.");
+            return false;
         }
 
         var inputvector1 = this.inputvector;
