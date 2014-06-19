@@ -42,8 +42,8 @@ define([], /**@lends Model.EMO*/ function() {
      * @param  {Number} max the upper bound
      * @return {Number}     a random double between min and max
      */
-    Random.prototype.getRandomDouble = function(min, max, precision) {
-        return parseFloat(((Math.random() * (max - min)) + min).toFixed(precision));
+    Random.prototype.getRandomDouble = function(min, max) {
+        return (Math.random() * (max - min)) + min;
     };
 
     /**

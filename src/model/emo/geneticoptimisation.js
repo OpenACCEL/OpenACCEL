@@ -24,8 +24,9 @@ define(["model/emo/crossover/crossover",
     "model/emo/mutation/randommutation",
     "model/emo/tournament/binarytournament",
     "model/emo/individual",
+    "model/emo/random",
     "model/emo/cloneobject"
-], /**@lends Model.EMO*/ function(CrossOver, UniformCrossOver, Mutation, CloseMutation, ArbitraryMutation, RandomMutation, BinaryTournament, Individual, CloneObject) {
+], /**@lends Model.EMO*/ function(CrossOver, UniformCrossOver, Mutation, CloseMutation, ArbitraryMutation, RandomMutation, BinaryTournament, Individual, Random, CloneObject) {
 
     /**
      * @class
@@ -119,13 +120,14 @@ define(["model/emo/crossover/crossover",
      * Calculate the initial Pareto Front and fitness values;
      */
     GeneticOptimisation.prototype.initialise = function(script) {
+        this.executable = script.exe;
         // TODO: implement set population size
         var size = 10;
         // initialise variables
         var quantities = script.getQuantities();
         var quantity;
-        var input;
-        var output;
+        var inputquantity;
+        var outputquantity;
         var inputvector = [];
         var outputvector = [];
         // loop over all the quantities
@@ -133,28 +135,29 @@ define(["model/emo/crossover/crossover",
             quantity = quantities[i];
             // check if the quantity is a user defined function (cat 1)
             if (quantity.category == 1) {
-                // initialise the input
-                input.name = quantity.name;
-                input.value = 0;
-                input.minimum = quantity.input[1];
-                input.maximum = quantity.input[2];
-                // TODO: implement precision in quantity
-                input.precision = 2;
-                // push input to the inputvector
-                inputvector.push(input);
+                // initialise the inputquantity
+                inputquantity = {};
+                inputquantity.name = quantity.name;
+                inputquantity.value = quantity.value;
+                inputquantity.minimum = quantity.input.parameters[1];
+                inputquantity.maximum = quantity.input.parameters[2];
+                // push inputquantity to the inputvector
+                inputvector.push(inputquantity);
             }
             // check if the quantity is a pareto quantity (cat 4)
-            if (quantity.pareto.isPareto) {
-                // initialise the output
-                output.maximize = quantity.pareto.isMaximize;
-                // push output to the outputvector
-                outputvector.push(output);
+            else if (quantity.pareto.isPareto) {
+                // initialise the outputquantity
+                outputquantity = {};
+                outputquantity.name = quantity.name;
+                outputquantity.value = quantity.value;
+                outputquantity.maximize = quantity.pareto.isMaximize;
+                // push outputquantity to the outputvector
+                outputvector.push(outputquantity);
             }
         }
         // create the initial population
         this.createPopulation(inputvector, outputvector, size);
         // initialise variables
-        this.executable = script.exe;
         this.mutations.push(new CloseMutation());
         this.mutations.push(new ArbitraryMutation());
         this.mutations.push(new RandomMutation());
@@ -174,28 +177,41 @@ define(["model/emo/crossover/crossover",
         for (var i = size - 1; i >= 0; i--) {
             // loop over the inputvector
             var _inputvector = [];
-            var inputquantity;
             for (var j = inputvector.length - 1; j >= 0; j--) {
+                var inputquantity = {};
                 // copy inputvector
-                for (var key in inputvector) {
+                for (var key in inputvector[j]) {
                     inputquantity[key] = inputvector[j][key];
                 }
-                // generate random value
-                inputquantity.value = Random.prototype.getRandomDouble(inputquantity.minimum, inputquantity.maximum, inputquantity.precision);
+                // generate random input value
+                inputquantity.value = Random.prototype.getRandomDouble(inputquantity.minimum, inputquantity.maximum);
                 _inputvector.push(inputquantity);
             }
             // loop over the outputvector
             var _outputvector = [];
-            var outputquantity;
             for (var j = outputvector.length - 1; j >= 0; j--) {
+                var outputquantity = {};
                 // copy outputvector
-                for (var key in outputvector) {
+                for (var key in outputvector[j]) {
                     outputquantity[key] = outputvector[j][key];
+                    _outputvector.push(outputquantity);
                 }
-                _outputvector.push(outputquantity);
             }
             // add the newly created individual to the population
             this.population.push(new Individual(_inputvector, _outputvector));
+            // calculate output values
+            this.calculateOutputValues();
+        }
+    };
+
+    /**
+     * Calculate the output values for every individual in the population.
+     */
+    GeneticOptimisation.prototype.calculateOutputValues = function() {
+        // loop over the population
+        for (var i = this.population.length - 1; i >= 0; i--) {
+            individual = this.population[i];
+            this.executable.executeQuantities(individual.inputvector, individual.outputvector);
         }
     };
 
@@ -234,7 +250,7 @@ define(["model/emo/crossover/crossover",
                 for (var i = individual.inputvector.length - 1; i >= 0; i--) {
                     // by replacing them with a random individual
                     quantity = individual.inputvector[i];
-                    quantity.value = Random.prototype.getRandomDouble(quantity.minimum, quantity.maximum, quantity.precision);
+                    quantity.value = Random.prototype.getRandomDouble(quantity.minimum, quantity.maximum);
                 }
                 // recalculate the pareto front
                 this.calculateParetoFront();
@@ -252,10 +268,7 @@ define(["model/emo/crossover/crossover",
         // initialise variable
         var individual;
         // calculate output values
-        for (var i = size - 1; i >= 0; i--) {
-            individual = this.population[i];
-            this.executable.executeQuantities(individual.inputvector, individual.outputvector);
-        }
+        this.calculateOutputValues();
         // mark all individuals as nondominated
         for (var i = size - 1; i >= 0; i--) {
             this.population[i].inParetoFront = true;
