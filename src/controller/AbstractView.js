@@ -47,6 +47,32 @@ define([], /**@lends AbstractView*/ function() {
          */
         presentResults: function(cat2quantities) {},
 
+
+
+        /**
+         * Should create the necessary plot canvasses
+         *
+         * @abstract
+         */
+        setUpPlot: function() {},
+
+        /**
+         * Indicates whether the view should show the plot canvas or not.
+         *
+         * @param {Boolean} show Whether to show the plot.
+         * @abstract
+         */
+        showPlot: function(show) {},
+
+        /**
+         * Should trigger an update of the plot canvas
+         *
+         * @abstract
+         */
+        drawPlot: function() {},
+
+
+
         /**
          * Should change UI elements depending on whether the OpenACCEL model is being executed.
          *
@@ -56,38 +82,16 @@ define([], /**@lends AbstractView*/ function() {
         setExecuting: function(executing) {},
 
         /**
-         * Should create the necessary plot canvases
-         *
-         * @param {Boolean} show Whether to show the plot.
-         * @abstract
-         */
-        setUpPlot: function(controller) {},
-
-        /**
-         * Should trigger an update of the plot canvas
-         *
-         * @abstract
-         */
-        drawPlot: function() {},
-
-        /**
          * Informs the view about the current status of the program. This could be for instance
          * "Compiling", "Determining quantity categories", etc.
+         *
          * @abstract
          */
         setStatus: function(status) {},
 
         /**
-         * Whether the view should show the descartes canvas or not.
-         *
-         * @param {Boolean} show Whether to show the plot.
-         * @abstract
-         */
-        showPlot: function(show) {},
-
-        /**
          * Signals the view that a new script object has been created.
-         *
+         * 
          * @abstract
          */
         loadedNewScript: function() {},

@@ -43,6 +43,8 @@ function addQuantity(string) {
 
             console.log('compiled');
             setPendingScriptLine(null);
+
+            selectContent('#scriptline');
         },
         10
     );
@@ -321,6 +323,9 @@ function getScriptlistLineHTML(linenr, quantity, left, right, category) {
  * @param {Number} category Category to which the left-hand side belongs
  */
 function addScriptlistLine(linenr, quantity, left, right, category) {
+    //Secure right hand from input
+    right = encodeHTML(right);
+
     scriptlistBuffer.append(getScriptlistLineHTML(linenr, quantity, left, right, category));
 }
 

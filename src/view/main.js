@@ -1,5 +1,5 @@
-var controller;
-var canvasCreator;
+var controller = null;
+var canvasCreator = null;
 
 require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
     /**
@@ -37,22 +37,30 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     };
 
     /**
-     * Trigger creation of the necessary plot canvases
+     * Creates the necessary plot canvases
      */
-    View.prototype.setUpPlot = function(controller) {
-        $('#plotdiv').toggle(true);
+    View.prototype.setUpPlot = function() {
         this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
     };
 
     /**
-     * Trigger an update of the plot canvas
+     * Show the plot canvas or hide it depending on the value of the passed parameter.
+     *
+     * @param {Boolean} show Whether to show the plot.
      */
-    View.prototype.drawPlot = function() {
-        this.canvas.draw();
+    View.prototype.showPlot = function(show) {
+        console.log('showplot');
+        console.log(show);
+        console.log($('#plotdiv'));
+        $('#plotdiv').toggle(show);
     };
 
-    View.prototype.showPlot = function(show) {
-        $('div#plotdiv').toggle(show);
+    /**
+     * Updates the plot canvas
+     */
+    View.prototype.drawPlot = function() {
+        this.showPlot(true);
+        this.canvas.draw();
     };
 
     /**
@@ -64,14 +72,20 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
         setExecuting(executing);
     };
 
+    /**
+     * Displays the passed runtime error to the user.
+     *
+     * @param {RuntimeError} err The error that occured during runtime.
+     */
     View.prototype.runtimeError = function(err) {
         console.log("Runtime error: " + err.message);
     };
 
     canvasCreator = new CanvasCreator();
     controller = new Controller(new View(canvasCreator));
+    controller.view.setUpPlot();
+    
     controller.setAutoExecute(true);
     controller.autoSave = true;
-    controller.view.setUpPlot(controller);
     controller.restoreSavedScript();
 });

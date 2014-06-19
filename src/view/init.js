@@ -359,3 +359,7 @@ function selectContent(selector) {
     sel.removeAllRanges();
     sel.addRange(range);
 }
+
+function encodeHTML(string) {
+    return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
