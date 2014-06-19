@@ -108,5 +108,40 @@ define([], /**@lends Model.EMO*/ function() {
         return (!equal && !worse);
     };
 
+    /**
+     * Returns whether an individual is equal to another individual.
+     *
+     * An individual is equal to another individual if:
+     * - all their category 1 quantities are equal
+     *
+     * @param  {Individual} individual2 another individual
+     * @pre individual2 != null
+     * @pre individual2 != undefined
+     * @return {Boolean}                whether an individual is equal to another individual
+     */
+    Individual.prototype.equals = function(individual2) {
+        if (!individual2) {
+            throw new Error("Individual.dominates.pre is violated: individual2 is null or undefined.");
+        }
+
+        var inputvector1 = this.inputvector;
+        var inputvector2 = individual2.inputvector;
+
+        if (inputvector1.length !== inputvector2.length) {
+            throw new Error("Cannot compare individuals of unequal dimensions.");
+        }
+
+        // compare all category 1 quantities
+        for (var i = inputvector1.length - 1; i >= 0; i--) {
+            if (inputvector1[i].value != inputvector2[i].value) {
+                // unequal category 1 value, not equal
+                return false;
+            }
+        }
+
+        // no unequal category 1 values, equal
+        return true;
+    };
+
     return Individual;
 });
