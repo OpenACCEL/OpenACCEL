@@ -27,7 +27,7 @@ suite("vDom Library", function() {
          */
         test("get the domain of an array with only numeric indices", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[0] = 1;
             x[1] = 2;
             x[2] = 3;
@@ -44,7 +44,7 @@ suite("vDom Library", function() {
          */
         test("get the domain of an array with mixed indices", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[0] = 1;
             x[1] = 2;
             x["a"] = 3;
@@ -61,7 +61,7 @@ suite("vDom Library", function() {
          */
         test("get the domain of an array with only non-numeric indices", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x["a"] = 1;
             x["b"] = 2;
             x["c"] = 3;
@@ -78,7 +78,7 @@ suite("vDom Library", function() {
          */
         test("get the domain of an array with a high number index", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[5] = 1;
             output = vDom(x);
             expected = [0, 1, 2, 3, 4, 5];
@@ -93,7 +93,7 @@ suite("vDom Library", function() {
          */
         test("get the domain of an array with a high number index and named indices", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[5] = 1;
             x["a"] = 1;
             x["b"] = 2;

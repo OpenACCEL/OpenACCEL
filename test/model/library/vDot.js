@@ -43,11 +43,11 @@ suite("vDot Library", function() {
          */
         test("dot product of two named vectors", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x['a'] = 2;
             x['b'] = 3;
             x['c'] = 4;
-            y = {};
+            y = [];
             y['a'] = 2;
             y['b'] = 3;
             y['d'] = 4;

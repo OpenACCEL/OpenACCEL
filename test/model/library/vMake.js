@@ -30,7 +30,7 @@ suite("vMake Library", function() {
             x = 2;
             y = 3;
             output = vMake(x, y);
-            expected = {};
+            expected = [];
             expected[0] = 2;
             expected[1] = 2;
             expected[2] = 2;
@@ -48,7 +48,7 @@ suite("vMake Library", function() {
             x = "bla";
             y = 3;
             output = vMake(x, y);
-            expected = {};
+            expected = [];
             expected[0] = "bla";
             expected[1] = "bla";
             expected[2] = "bla";
@@ -81,7 +81,7 @@ suite("vMake Library", function() {
          */
         test("should expand for 'x = vMake('stuff', 2)'", function() {
             var input = "x = vMake('stuff', 2)";
-            expected = {};
+            expected = [];
             expected[0] = "stuff";
             expected[1] = "stuff";
             var output = compiler.compile(new Script(input));
