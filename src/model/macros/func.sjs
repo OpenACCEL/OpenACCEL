@@ -65,7 +65,7 @@ macro func {
     } => {
         this.$x = function($xs (,) ...) {
             // Memoization
-            var hash = JSON.stringify($xs (,) ...);
+            var hash = arguments;
             var cache = this.$x.cache;
 
             return (hash in cache) ? cache[hash] : cache[hash] = this.$x.expr($xs (,) ...);
