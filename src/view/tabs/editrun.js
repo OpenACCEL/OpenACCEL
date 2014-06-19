@@ -206,7 +206,11 @@ function objectToString(obj) {
                         // we reach a base case;
                         arguments.callee(obj[key]);
                     } else {
-                        result += obj[key].toString();
+                        if (typeof obj[key] === 'string') {
+                            result += '\'' + obj[key].toString() + '\'';
+                        } else {
+                            result += obj[key].toString();
+                        }
                     }
 
                     count++;
@@ -219,7 +223,12 @@ function objectToString(obj) {
                 }
                 result += ']';
             } else {
-                result += obj.toString();
+                if (typeof obj === 'string') {
+                    result += '\'' + obj.toString() + '\'';
+                } else {
+                    result += obj.toString();
+                }
+
             }
         })(obj);
     } catch (e) {
@@ -484,7 +493,11 @@ TextInput.prototype.initialize = function() {
     var textinput = this;
     $('#usertext' + textinput.identifier).on('input',
         function() {
-            controller.setUserInputQuantity(textinput.quantity, this.value);
+            var val = this.value
+            if ($.isNumeric(val)) {
+                val = parseFloat(val);
+            }
+            controller.setUserInputQuantity(textinput.quantity, val);
         }
     );
 };
