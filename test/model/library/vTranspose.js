@@ -82,9 +82,16 @@ suite("vTranspose Library", function() {
          */
         test("vTranspose([['x':1,'y':2],['x':10,'y':20]) = ['x':[1,10],'y':[2,20]]", function() {
             eval(fileLoader.getContent());
+            var e  = [];
+            e.x = [1,10];
+            e.y = [2,20]
+            var expected = e;
+            var i1 = [];
+            i1.x = 1; i1.y = 2;
+            var i2 = [];
+            i2.x = 10; i2.y = 20;
 
-            var expected = objectToArray({'x':[1,10],'y':[2,20]});
-            var input = objectToArray({'0':{'x':1,'y':2},'1':{'x':10,'y':20}});
+            var input = [i1, i2];
 
             var result =vTranspose(input);
 

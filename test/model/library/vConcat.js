@@ -42,12 +42,12 @@ suite("vConcat Library", function() {
          */
         test("concatinate a scalar to a vector", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[0] = 1;
             x[1] = 2;
             y = 4;
             output = vConcat(x, y);
-            expected = {};
+            expected = [];
             expected[0] = 1;
             expected[1] = 2;
             expected[2] = 4;
@@ -62,12 +62,12 @@ suite("vConcat Library", function() {
          */
         test("concatinate a vector to a scalar", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[0] = 1;
             x[1] = 2;
             y = 4;
             output = vConcat(y, x);
-            expected = {};
+            expected = [];
             expected[0] = 4;
             expected[1] = 1;
             expected[2] = 2;
@@ -82,12 +82,12 @@ suite("vConcat Library", function() {
          */
         test("concatinate a vector to a vector", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[0] = 1;
             x[1] = 2;
             y = [4, 5];
             output = vConcat(x, y);
-            expected = {};
+            expected = [];
             expected[0] = 1;
             expected[1] = 2;
             expected[2] = 4;
@@ -102,14 +102,14 @@ suite("vConcat Library", function() {
          */
         test("concatinate a named vector to a named vector", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[0] = 1;
             x['a'] = 2;
-            y = {};
+            y = [];
             y[4] = 4;
             y['b'] = 5;
             output = vConcat(x, y);
-            expected = {};
+            expected = [];
             expected[0] = 1;
             expected[1] = 2;
             expected[2] = 4;
@@ -131,7 +131,7 @@ suite("vConcat Library", function() {
         test("should expand for 'x = vConcat(y, z), y = [1,0], z = [3,4]'", function() {
             var input = "x = vConcat(y, z)\ny = [1,0]\nz = [3,4]";
             var output = compiler.compile(new Script(input));
-            expected = {};
+            expected = [];
             expected[0] = 1;
             expected[1] = 0;
             expected[2] = 3;

@@ -42,12 +42,12 @@ suite("vAppend Library", function() {
          */
         test("append a scalar to a vector", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[0] = 1;
             x[1] = 2;
             y = 4;
             output = vAppend(x, y);
-            expected = {};
+            expected = [];
             expected[0] = 1;
             expected[1] = 2;
             expected[2] = 4;
@@ -62,12 +62,12 @@ suite("vAppend Library", function() {
          */
         test("append a vector to a vector", function() {
             eval(fileLoader.getContent());
-            x = {};
+            x = [];
             x[0] = 1;
             x[1] = 2;
             y = [4, 5];
             output = vAppend(x, y);
-            expected = {};
+            expected = [];
             expected[0] = 1;
             expected[1] = 2;
             expected[2] = [4, 5];
@@ -88,7 +88,7 @@ suite("vAppend Library", function() {
         test("should expand for 'x = vAppend(y, z), y = [1,0], z = 3'", function() {
             var input = "x = vAppend(y, z)\ny = [1,0]\nz = 3";
             var output = compiler.compile(new Script(input));
-            expected = {};
+            expected = [];
             expected[0] = 1;
             expected[1] = 0;
             expected[2] = 3;
