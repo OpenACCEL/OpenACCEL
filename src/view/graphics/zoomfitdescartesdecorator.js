@@ -40,6 +40,7 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
              * @type {array<AbstractDescartesHandler>}
              */
             this.decoratorComponents.push(new ZoomDescartesDecorator());
+            this.decoratorComponents.push(new PanDescartesDecorator());
 
             /**
              * The DescartesHandlers that can be provided by this class.
