@@ -412,7 +412,7 @@ brackets                :   '(' expr ')'
 
 /** Vectors */
 vectorExpr              :   '[' (vectorArgList)? ']'
-                            { $$ = '{' + ($2 || '') + '}'; };
+                            { $$ = 'objectToArray({' + ($2 || '') + '})'; };
 vectorArgList           :   vectorElem (vectorAdditionalArg)*
                         {{ 
                             var counter = 0;

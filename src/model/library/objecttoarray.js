@@ -1,5 +1,5 @@
 /**
- * Converts an object to array.recursively
+ * Converts an object to array
  *
  * If the object is a scalar value, we just return the value
  * 
@@ -12,7 +12,7 @@ function objectToArray(obj) {
         for (var key in obj) {
             // go through each element in the object
             // and add them to the array at the same key
-            array[key] = objectToArray(obj[key]);
+            array[key] = obj[key];
         }
         return array;
     } else {
