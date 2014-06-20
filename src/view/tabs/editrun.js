@@ -13,7 +13,7 @@ $(document).ready(
         Report.arglistBuffer.hideIfEmpty('#arglistdiv');
         Report.argtolistBuffer.hideIfEmpty('#argtodiv');
         userinputBuffer.hideIfEmpty('#userinputdiv');
-        Report.resultBuffer.hideIfEmpty('#resultdiv');
+        Report.resultList.buffer.hideIfEmpty('#resultdiv');
         $('#plotdiv').toggle(false);
     }
 );
@@ -27,26 +27,32 @@ function deleteQuantity(quantity) {
 var linenr = 0;
 
 function addQuantity(string) {
-    var split = string.split('=');
+    setPendingScriptLine(string);
 
-    //Approximate Script list
-    split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
-    addScriptlistLine(linenr++, split[0], split[0], split[1], '?');
-    scriptlistBuffer.flip();
+    string = string.trim();
+    if (string === '') {
+        //Do nothing if nothing was entered
+        setPendingScriptLine(null);
+    } else {
+        setTimeout(
+            function() {
+                $('.tooltipcontainer > div').filter(":visible").trigger('click');
 
-    console.log('Pre-added line: ' + string);
-    $('#scriptline').select();
+                try {
+                    controller.addQuantity(string);
+                } catch (error) {
+                    console.log(error);
+                    handleError(error);
+                }
 
-    setTimeout(
-        function() {
-            try {
-                controller.addQuantity(string);
-            } catch (e) {
-                console.log(e.message);
-            }
-        },
-        10
-    );
+                console.log('compiled');
+                setPendingScriptLine(null);
+
+                selectContent('#scriptline');
+            },
+            10
+        );
+    }
 }
 
 function toggleExecution(action) {
@@ -132,7 +138,7 @@ function synchronizeScriptList(quantities) {
     Report.arglistBuffer.hideIfEmpty('#arglistdiv');
     Report.argtolistBuffer.hideIfEmpty('#argtodiv');
     userinputBuffer.hideIfEmpty('#userinputdiv');
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
+    Report.resultList.buffer.hideIfEmpty('#resultdiv');
     $('#plotdiv').toggle(false);
 }
 
@@ -142,21 +148,15 @@ function synchronizeScriptList(quantities) {
  * @param  {Object} quantities All category 2 quantities registered in the model
  */
 function synchronizeResults(quantities) {
-    Report.resultBuffer.empty();
-
-    //console.log(quantities);
+    var resultValues = {};
 
     for (var q in quantities) {
         var quantity = quantities[q];
-
-        try {
-            Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
-        } catch (e) {
-            console.log(e);
-        }
+        resultValues[quantity.name] = objectToString(controller.getQuantityValue(quantity.name));
     }
-    Report.resultBuffer.flip();
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
+
+    Report.resultList.set(resultValues);
+    Report.resultList.buffer.hideIfEmpty('#resultdiv');
 }
 
 /**
@@ -322,7 +322,33 @@ function getScriptlistLineHTML(linenr, quantity, left, right, category) {
  * @param {Number} category Category to which the left-hand side belongs
  */
 function addScriptlistLine(linenr, quantity, left, right, category) {
+    //Secure right hand from input
+    right = encodeHTML(right);
+
     scriptlistBuffer.append(getScriptlistLineHTML(linenr, quantity, left, right, category));
+}
+
+/**TODO
+ * [setPendingScriptLine description]
+ * 
+ * @param {[type]} line [description]
+ */
+function setPendingScriptLine(line) {
+    var pendingline = $('#pendingscriptline');
+
+    if (line == null) {
+        pendingline.animate({height: 0, opacity: 0}, 400, 
+            function() {
+                pendingline.toggle(false);
+                $('#pendingloader').toggle(false);
+            }
+        );
+    } else {
+        $('#pendingscriptline > div').first().html(line);
+        pendingline.toggle(true);
+        $('#pendingloader').toggle(true);
+        pendingline.css({height: '20px', opacity: 1});
+    }
 }
 
 /**
@@ -367,23 +393,12 @@ function SliderInput(identifier, quantity, label, val, min, max) {
     this.min = min;
     this.max = max;
 
-    this.getStepSize = function(val, min, max) {
-        var sum = val + min + max;
-        console.log(sum);
-        //To compensate for javascript's floating point errors we use a correction variable which will temporarily convert floats to ints
-        var correction = 100000;
-        var sumdecimals = (sum * correction - Math.floor(sum) * correction) / correction;
-        console.log(sumdecimals);
-        var precision = 0;
-        while (sumdecimals % 1 != 0) {
-            sumdecimals *= 10;
-            precision++;
-        }
-        //var precision = sumdecimals.toFixed().length;
-        console.log(sumdecimals.toFixed());
-        console.log(precision);
-        console.log(Math.pow(10, -precision));
-        return Math.pow(10, -precision);
+    this.getStepSize = function(val, min, max) {      
+        var stepsizes = [Math.pow(10, -getPrecision(val)),
+                         Math.pow(10, -getPrecision(min)),
+                         Math.pow(10, -getPrecision(max))];
+
+        return Math.min.apply(Math, stepsizes);
     };
 
     this.properties = {
@@ -530,19 +545,9 @@ ButtonInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, false);
 
     var buttoninput = this;
-    $('#userbutton' + buttoninput.identifier).on('mousedown',
+    $('#userbutton' + buttoninput.identifier).on('click',
         function() {
             controller.setUserInputQuantity(buttoninput.quantity, true);
-        }
-    );
-    $('#userbutton' + buttoninput.identifier).on('mouseup',
-        function() {
-            controller.setUserInputQuantity(buttoninput.quantity, false);
-        }
-    );
-    $('#userbutton' + buttoninput.identifier).on('mouseleave',
-        function() {
-            controller.setUserInputQuantity(buttoninput.quantity, false);
         }
     );
 };
@@ -585,7 +590,7 @@ function initInputs() {
 }
 
 /**
- * Object containing methods to modify the contents of the #results element
+ * Object containing tools to modify the contents of the todo list, argument lists and result list
  * @type {Object}
  */
 var Report = {
@@ -656,84 +661,9 @@ var Report = {
     },
 
     /**
-     * Buffer to contain updated #result content
-     * @type {HTMLbuffer}
+     * List to allow for value updates without reconstruction of the HTML
+     * 
+     * @type ValueList
      */
-    resultBuffer: new HTMLbuffer('#result'),
-
-    /**
-     * Adds a resulting quantity to the #result element
-     *
-     * @param {String} quantity Left-hand of the equation
-     * @param {String} result   Right-hand side of the equation
-     */
-    addResult: function(quantity, result) {
-        Report.resultBuffer.append(this.getEquationHTML(quantity, result));
-    },
+    resultList: new ValueList('#result')
 };
-
-/**
- * Constructs a new Tooltip object
- *
- * @param {String} id      String to be used as a suffix in the id values of the generated html elements
- * @param {String} div     Selector to indicate which element the Tooltip should be associated with
- * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
- *
- * @class
- * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
- */
-function Tooltip(id, div, classes) {
-    this.id = id;
-    this.div = div;
-    this.classes = classes;
-
-    this.getHTML = function(message) {
-        return '\
-            <div id = "tooltip' + this.id + '" class = "' + this.classes + '">\
-                ' + message + '\
-            </div>\
-        ';
-    }
-
-    this.initialize = function() {
-        $(this.getHTML('')).insertAfter(this.div);
-        $('#tooltip' + this.id).toggle(false);
-
-        $('#tooltip' + this.id).on('click',
-            function() {
-                $(this).animate({
-                        opacity: 0
-                    }, 200,
-                    function() {
-                        $(this).toggle(false);
-                    }
-                )
-            }
-        );
-        $('#tooltip' + this.id).on('mouseover',
-            function() {
-                $(this).animate({
-                    opacity: 0.5
-                }, 200);
-            }
-        );
-        $('#tooltip' + this.id).on('mouseleave',
-            function() {
-                $(this).animate({
-                    opacity: 1
-                }, 100);
-            }
-        );
-    }
-
-    this.initialize();
-
-    this.set = function(message) {
-        $('#tooltip' + this.id).html(message);
-        $('#tooltip' + this.id).toggle(true);
-    }
-
-    this.remove = function() {
-        $('#tooltip' + this.id).remove();
-    }
-}

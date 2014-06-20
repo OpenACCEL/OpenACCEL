@@ -107,6 +107,14 @@ define(["model/script",
             this.paused = false;
 
             /**
+             * Whether, if the script is paused, it has
+             * been paused by the system.
+             *
+             * @type {Boolean}
+             */
+            this.pausedBySystem = false;
+
+            /**
              * Unique id for the runloop interval.
              *
              * @type {Number}
@@ -194,6 +202,17 @@ define(["model/script",
         };
 
         /**
+         * Returns whether the script execution has been paused by
+         * the system
+         *
+         * @return {Boolean} Whether the script has been paused
+         * by the system.
+         */
+        Controller.prototype.isPausedBySystem = function() {
+            return this.pausedBySystem;
+        };
+
+        /**
          * Sets the current position of the mouse cursor inside the
          * descartes canvas, for use in the script. Descartes canvas coordinates
          * are always within the range [0,100].
@@ -260,7 +279,7 @@ define(["model/script",
             // start at the beginning again
             if (this.numIterations > 0 && this.currentIteration >= this.numIterations) {
                 this.reset();
-            } 
+            }
 
             // Update state
             this.executing = true;
@@ -281,6 +300,19 @@ define(["model/script",
                     }
                 }, 16
             );
+        };
+
+        /**
+         * Resumes script execution when paused, optionally only when
+         * paused by the user (instead of the system).
+         *
+         * @param userOnly {Boolean} Whether to only resume the script
+         * when it has been paused by the user.
+         */
+        Controller.prototype.resume = function(userOnly) {
+            if (this.paused && (!this.pausedBySystem || !userOnly)) {
+                this.run();
+            }
         };
 
         /**
@@ -335,15 +367,23 @@ define(["model/script",
          * Pauses the script but does not clear history or resets
          * the current iteration.
          *
-         * @post this.executing == false
+         * @param pausedBySystem {Boolean} (Optional) Whether the script is being
+         * paused by the system (else: paused by user)
+         * @post this.executing == false && this.paused == true &&
+         * this.pausedBySystem == pausedBySystem
          */
-        Controller.prototype.pause = function() {
+        Controller.prototype.pause = function(pausedBySystem) {
+            if (typeof pausedBySystem === 'undefined') {
+                pausedBySystem = false;
+            }
+
             if (this.executing) {
                 clearInterval(this.runloop);
 
                 // Update state
                 this.executing = false;
                 this.paused = true;
+                this.pausedBySystem = pausedBySystem;
                 this.view.setExecuting(this.executing);
                 this.status = "Paused";
                 this.view.setStatus(this.status);

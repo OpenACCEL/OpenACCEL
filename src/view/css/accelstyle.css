@@ -7,7 +7,10 @@ body {
 	/*background: #FFFFFF;*/
 	background: #FFDDFF;
 	background: linear-gradient(#FFDDFF, #FFFFFF);
-	font-family: "Arial";
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	font-family: 'Arial';
+	font-size: 14px;
 	color: #FFFFFF;
 }
 body div {
@@ -16,8 +19,6 @@ body div {
 
 #container {
 	position: relative;
-	left: calc(50% - 1000px / 2);
-	width: 1000px;
 }
 
 #top {
@@ -37,7 +38,7 @@ body div {
 	display: inline-block;
 	height: 70px;
 	width: 337px;
-	background-image: url("../img/logoV2.png");
+	background-image: url('../img/logoV2.png');
 	background-size: 100%;
 	background-repeat: no-repeat;
 }
@@ -45,7 +46,6 @@ body div {
 #main ul{
 	position: relative;
 	z-index: 1;
-	/*display: block;*/
 	margin-left: -40px;
 }
 #main ul li {
@@ -55,6 +55,7 @@ body div {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
+	font-size: 16px;
 	background: #662266;
 	background: linear-gradient(#993399, #662266);
 }
@@ -66,11 +67,7 @@ body div {
 }
 #main ul li a{
 	padding: 5px;
-	font-size: 16px;
 	color: #FFFFFF;
-	/*background: #FFDDFF;
-	border: 1px solid #9933CC;
-	color: #000000;*/
 	text-decoration: none;
 }
 #main > div {
@@ -79,7 +76,7 @@ body div {
 	padding-top: 20px;
 	padding-left: 10px;
 	padding-right: 10px;
-	padding-bottom: 10px;
+	padding-bottom: 20px;
 	-webkit-border-top-right-radius: 30px;
 	-moz-border-radius-topright: 30px;
 	border-top-right-radius: 30px;
@@ -229,22 +226,29 @@ body div {
 	color: #FFFFFF;
 }
 
-.tooltip {
+.tooltipcontainer {
 	position: absolute;
+	top: 0;
+	left: 0;
 	z-index: 10000;
+	pointer-events: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.tooltip {
+	position: relative;
 	width: 200px;
 	padding: 8px;
-	background: #FF1144;
-	color: #331144;
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
-	border: #662266 solid 1px;
 	cursor: pointer;
+	box-shadow: 4px 4px 8px #000000;
+	pointer-events: auto;
 }
-/*.tooltip:hover {
-	background: #FFDDFF;
-}*/
 .tooltip:after { /* Tooltip tip */
 	content: '';
 	position: absolute;
@@ -253,14 +257,10 @@ body div {
 	z-index: 10000;
 	border-style: solid;
 	border-width: 0px 10px 10px;
-	border-color: #FF1144 transparent;
 	display: block;
 	width: 0px;
 }
-/*.tooltip:hover:after {
-	border-color: #FFDDFF transparent;
-}*/
-.tooltip:before { /* Tooltip border */
+.tooltip:before { /* Tooltip border */ 
 	content: '';
 	position: absolute;
 	top: -12px;
@@ -268,9 +268,36 @@ body div {
 	z-index: 1000;
 	border-style: solid;
 	border-width: 0px 11px 11px;
-	border-color: #662266 transparent;
 	display: block;
 	width: 0;
+}
+
+.errormessage {
+	background: #993399;
+	background: linear-gradient(#993399, #662266);
+	color: #FFFFFF;
+	border: #662266 solid 1px;
+}
+.errormessage:after {
+	border-color: #993399 transparent;
+}
+.errormessage:before {
+	border-color: #662266 transparent;
+}
+
+.datamessage {
+	background: #FFDDFF;
+	background: linear-gradient(#FFDDFF, #FFFFFF);
+	color: #331144;
+	border: #FFFFFF solid 1px;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+.datamessage:after {
+	border-color: #FFDDFF transparent;
+}
+.datamessage:before {
+	border-color: #FFFFFF transparent;
 }
 
 .divtable {
@@ -291,6 +318,10 @@ body div {
     text-overflow: ellipsis;
 }
 
+.max128w {
+	max-width: 128px;
+}
+
 .max256w{
 	max-width: 256px;
 }
@@ -302,7 +333,7 @@ body div {
 */
 
 * {
-	border: 0px black solid;
+	border: 0px #000000 solid;
 }
 
 /**
@@ -319,7 +350,22 @@ body div {
 }
 
 #scriptline {
+	position: relative;
 	width: 640px;
+	height: 16px;
+	color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+}
+#scriptline br {
+    display:none;
+}
+#scriptline * {
+    display:inline;
+    white-space:nowrap;
+    visibility: hidden;
+    width: 0;
+    height: 0;
 }
 
 #scriptoptions {
@@ -331,10 +377,15 @@ body div {
 	width: 60px;
 }
 
+#scriptlistdiv .textin {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
 #scriptlistcontainer {
+	height: 400px;
 	overflow-x: hidden; 
 	overflow-y: auto; 
-	height: 400px;
 	padding-left: 0px;
 	padding-right: 0px;
 }
@@ -344,7 +395,7 @@ body div {
 	padding-left: 0px;
 	padding-right: 0px;
 	min-width: 250px;
-	color: black;
+	color: #000000;
 	/*font-size: 14px;*/
 }
 #scriptlist input {
@@ -370,12 +421,38 @@ body div {
 	padding-right: 2px;
 }
 
+#pendingscriptline {
+	display: none;
+	height: 0px;
+	padding-left: 2px;
+	padding-right: 2px;
+	border-bottom: 1px #000000 dashed;
+	color: #9933CC;
+}
+
+#pendingloader {
+	display: none;
+	width: 20px;
+	height: 20px;
+	float: right;
+	background-image: url('../img/loadDot.gif'); 
+	background-size: 100%;
+	background-repeat: no-repeat;
+}
+
 #userinput {
 	color: #331144;
 }
 
 #result .operator {
 	color: #FFDDFF;
+}
+
+.resultvalue {
+	cursor: pointer;
+}
+.resultvalue:hover {
+	font-weight: bold;
 }
 
 .operator {

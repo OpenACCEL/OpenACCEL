@@ -3,10 +3,11 @@
     div
         .inline
             .label Script line
-            input(type = 'text')#scriptline.textin
+            //input(type = 'text')#scriptline.textin
+            #scriptline.inline.textin(contenteditable)
         .inline
             .label &nbsp;
-            input(type = 'button', value = 'Enter', onclick = 'addQuantity($("#scriptline").val())')#enterline.buttonin
+            input(type = 'button', value = 'Enter', onclick = 'addQuantity($("#scriptline").text())')#enterline.buttonin
         #scriptoptions
             .inline
                 .label &nbsp;
@@ -21,14 +22,18 @@
     .inline
         #scriptlistdiv
             .label Listing
-            .textin#scriptlistcontainer
-                #scriptlist
+            .textin
+                #pendingscriptline
+                    .inline
+                    #pendingloader.inline
+                #scriptlistcontainer
+                    #scriptlist
 
     .inline100
         #tododiv
             .label To do
             .report
-                #todolist.divtable
+                #todolist.verticalmenu
         #arglistdiv
             .label Arg. of&nbsp;
                 .inline.quantityname
