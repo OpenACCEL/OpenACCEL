@@ -278,7 +278,7 @@ define(["model/script",
             // start at the beginning again
             if (this.numIterations > 0 && this.currentIteration >= this.numIterations) {
                 this.reset();
-            } 
+            }
 
             // Update state
             this.executing = true;
@@ -986,6 +986,7 @@ define(["model/script",
             for (var i = iterations - 1; i >= 0; i--) {
                 this.geneticOptimisation.nextGeneration();
             }
+            this.view.drawOptimisationPlot();
         };
 
         /**
