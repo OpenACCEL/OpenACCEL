@@ -938,6 +938,7 @@ define(["model/script",
                 throw new Error('Controller.prototype.initialiseGeneticOptimisation.pre :' +
                     'population size is less than or equal to zero');
             }
+            this.compileScript(this.getScript());
             this.geneticOptimisation.initialise(this.getScript(), populationSize);
         };
 
