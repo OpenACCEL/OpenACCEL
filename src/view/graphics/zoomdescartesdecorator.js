@@ -1,6 +1,6 @@
 /*
- * notice: still needs support
- for more descarte plottypes
+ * notice: still needs support for more descarte plottypes
+ * TODO: JSDoc
  * @author Leo van Gansewinkel
  */
 

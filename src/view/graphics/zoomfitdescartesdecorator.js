@@ -1,5 +1,5 @@
 /*
- *
+ * TODO: JSDoc
  * @author Leo van Gansewinkel
  */
 
@@ -101,8 +101,9 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
                     }
                 }
                 this.decoratorComponents[0].pan(true, horMin, verMin);
-                this.decoratorComponents[1].zoom(true, this.marginZoomAdjust * (horMax - horMin) / 100, this.marginZoomAdjust * (verMax - verMin) / 100);
-                this.decoratorComponents[2].pan(true, this.margin, this.margin);
+                this.decoratorComponents[1].zoom(true, this.marginZoomAdjust * this.coordinateScale / (horMax - horMin),
+                    this.marginZoomAdjust * this.coordinateScale / (verMax - verMin));
+                this.decoratorComponents[2].pan(true, -this.margin, -this.margin);
             }
             for (var j = 0; j < this.decoratorComponents.length; j++) {
                 plot = this.decoratorComponents[j].decorate(plot);

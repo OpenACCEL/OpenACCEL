@@ -1,5 +1,6 @@
 /*
  * notice: still needs support for more descarte plottypes
+ * TODO: JSDoc
  * @author Leo van Gansewinkel
  */
 
@@ -52,17 +53,17 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
         for (i in plot) {
             if (plot[i][0].x instanceof Object) {
                 for (j in plot[i][plot[i][0].x.ref]) {
-                    plot[i][plot[i][0].x.ref][j] += this.horOffset;
+                    plot[i][plot[i][0].x.ref][j] -= this.horOffset;
                 }
             } else {
-                plot[i][0].x += this.horOffset;
+                plot[i][0].x -= this.horOffset;
             }
             if (plot[i][0].y instanceof Object) {
                 for (j in plot[i][plot[i][0].y.ref]) {
-                    plot[i][plot[i][0].y.ref][j] += this.verOffset;
+                    plot[i][plot[i][0].y.ref][j] -= this.verOffset;
                 }
             } else {
-                plot[i][0].y += this.verOffset;
+                plot[i][0].y -= this.verOffset;
             }
         }
         if (this.decorator != null) {
@@ -80,8 +81,8 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
         if (this.decorator != null) {
             point = this.decorator.mapPoint(point);
         }
-        point.x -= this.horOffset;
-        point.y -= this.verOffset;
+        point.x += this.horOffset;
+        point.y += this.verOffset;
         return point;
     };
 

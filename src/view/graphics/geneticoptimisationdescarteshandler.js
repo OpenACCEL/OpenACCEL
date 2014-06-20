@@ -19,37 +19,63 @@ if (inNode) {
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescartesdecorator", "model/emo/geneticoptimisation", "model/emo/individual"],
     function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual) {
+
         /**
          * @class GeneticOptimisationDescartesHandler
-         * @classdesc The GeneticOptimisationDescartesHandler class provides DescartesHandlers to DescartesCanvases,
-         * allowing them to correctly draw any supported model element.
+         * @classdesc The GeneticOptimisationDescartesHandler class handles the drawing of GeneticOptimisation objects.
          */
         function GeneticOptimisationDescartesHandler(modelElement) {
+
             /**
-             * The DescartesHandlers that can be provided by this class.
+             * The initial GeneticOptimisation object this handler will be drawing.
              *
-             * @type {array<AbstractDescartesHandler>}
+             * @type {GeneticOptimisation}
              */
             this.modelElement = modelElement;
 
+            /**
+             * The decorator this needs to facilitate zoom fitting.
+             *
+             * @type {GeneticOptimisation}
+             */
             this.decorator = new ZoomFitDecorator();
+
+            /**
+             * The default setting of zoom fitting, we zoomfit at all times.
+             *
+             * @type {GeneticOptimisation}
+             */
             this.decorator.setAlwaysFit(true);
 
+            /**
+             * Propagate the draw function to (probably) the Canvas class.
+             */
             this.propagatables.push({
                 name: "draw",
                 func: this.draw.bind(this)
             });
 
+            /**
+             * Propagate the getClickedIndividual function to (probably) the Canvas class.
+             */
             this.propagatables.push({
                 name: "getClickedIndividual",
                 func: this.getClickedIndividual.bind(this)
             });
 
+            /**
+             * Propagate the resetCanvas function to (probably) the Canvas class.
+             */
             this.propagatables.push({
                 name: "resetCanvas",
                 func: this.resetCanvas.bind(this)
             });
 
+            /**
+             * The Individual that was last clicked on.
+             *
+             * @type {Individual}
+             */
             this.clickedIndividual = null;
         };
 
