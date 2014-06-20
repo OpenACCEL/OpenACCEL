@@ -22,12 +22,12 @@ suite("Atan2 Library", function() {
      * Quick atan2 test.
      *
      * @input       y = atan2(4, 8)
-     * @expected    y = Math.atan2(8, 4)
+     * @expected    y = Math.atan2(4, 8)
      */
     test("| Atan2(4,8)", function() {
         var input = "y = atan2(4,8)";
         var output = compiler.compile(new script(input)).__y__();
-        assert.equal(output, Math.atan2(8, 4));
+        assert.equal(output, Math.atan2(4, 8));
     });
 
     /**
@@ -36,7 +36,7 @@ suite("Atan2 Library", function() {
      * @input       x = 5
      *              y = atan2(x, 7) + 2
      *              z = atan2(3, atan2(x, y))
-     * @expected    z = Math.atan2(Math.atan2(Math.atan2(7, 5) + 2, 5), 3)
+     * @expected    z = Math.atan2(3, Math.atan2(5, Math.atan2(5, 7) + 2))
      */
     test("| Atan2 chaining", function() {
         var input = 
@@ -44,6 +44,6 @@ suite("Atan2 Library", function() {
         "y = atan2(x, 7) + 2\n" +
         "z = atan2(3, atan2(x, y))";
         var output = compiler.compile(new script(input)).__z__();
-        assert.equal(output, Math.atan2(Math.atan2(Math.atan2(7, 5) + 2, 5), 3));
+        assert.equal(output, Math.atan2(3, Math.atan2(5, Math.atan2(5, 7) + 2)));
     });
 });
