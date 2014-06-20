@@ -3,5 +3,8 @@ function atan2(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-	return Math.atan2(y, x);
+    return zip([x, y], function(a, b) {
+        return Math.atan2(a, b);
+    });
+
 }
