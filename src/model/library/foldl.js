@@ -1,7 +1,7 @@
 function foldl(a, func) {
     var result = func.base;
-    if (a instanceof Object) {
-        var length = vLen(a);
+    if (a instanceof Array) {
+        var length = a.length;
         for (var i = 0; i < length; i++) {
             result = func(result, a[i]);
         }

@@ -9,7 +9,7 @@ suite("Macro Expander", function() {
             assert = Assert;
             macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
-            fileLoader.load("testAdd", "macros");
+            fileLoader.load("testAdd", "testmacros");
             done();
         });
     });

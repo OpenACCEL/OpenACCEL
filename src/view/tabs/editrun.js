@@ -206,7 +206,11 @@ function objectToString(obj) {
                         // we reach a base case;
                         arguments.callee(obj[key]);
                     } else {
-                        result += obj[key].toString();
+                        if (typeof obj[key] === 'string') {
+                            result += '\'' + obj[key].toString() + '\'';
+                        } else {
+                            result += obj[key].toString();
+                        }
                     }
 
                     count++;
@@ -219,7 +223,12 @@ function objectToString(obj) {
                 }
                 result += ']';
             } else {
-                result += obj.toString();
+                if (typeof obj === 'string') {
+                    result += '\'' + obj.toString() + '\'';
+                } else {
+                    result += obj.toString();
+                }
+
             }
         })(obj);
     } catch (e) {
@@ -433,7 +442,7 @@ CheckboxInput.prototype.getHTML = function() {
         <div id = "userinput' + this.identifier + '">\
             <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
             <div class = "inline checkboxin">\
-                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true' ? 'checked' : '') + '>\
+                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == true ? 'checked' : '') + '>\
                 <label for = "usercheck' + this.identifier + '"></label>\
             </div>\
         </div>\
@@ -484,7 +493,11 @@ TextInput.prototype.initialize = function() {
     var textinput = this;
     $('#usertext' + textinput.identifier).on('input',
         function() {
-            controller.setUserInputQuantity(textinput.quantity, this.value);
+            var val = this.value
+            if ($.isNumeric(val) && !(/[a-zA-Z]/.test(val))) {
+                val = parseFloat(val);
+            }
+            controller.setUserInputQuantity(textinput.quantity, val);
         }
     );
 };

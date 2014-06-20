@@ -21,14 +21,14 @@ suite("vSegment Library", function() {
         /**
          * Test case for vSegment.
          *
-         * input:vSegment([1,2,3,4,5],1,2)
-         * expected: [2]
+         * @input:vSegment([1,2,3,4,5],1,2)
+         * @expected: [2]
          */
         test("vSegment([1,2,3,4,5],1,2) = [2]", function() {
             eval(fileLoader.getContent());
 
             var expected = [2];
-            var result =vSegment([1,2,3,4,5],1,2);
+            var result = vSegment([1, 2, 3, 4, 5], 1, 2);
 
             assert.deepEqual(result, expected);
         });
@@ -36,14 +36,16 @@ suite("vSegment Library", function() {
         /**
          * Test case for vSegment.
          *
-         * input:vSegment([1,[2,3,4,5],3,4,5],1,2)
-         * expected: [[2,3,4,5]]
+         * @input:vSegment([1,[2,3,4,5],3,4,5],1,2)
+         * @expected: [[2,3,4,5]]
          */
         test("vSegment([1,[2,3,4,5],3,4,5],1,2) = [[2,3,4,5]]", function() {
             eval(fileLoader.getContent());
 
-            var expected = [[2,3,4,5]];
-            var result =vSegment([1,[2,3,4,5],3,4,5],1,2);
+            var expected = [
+                [2, 3, 4, 5]
+            ];
+            var result = vSegment([1, [2, 3, 4, 5], 3, 4, 5], 1, 2);
 
             assert.deepEqual(result, expected);
         });
@@ -51,14 +53,14 @@ suite("vSegment Library", function() {
         /**
          * Test case for vSegment.
          *
-         * input:vSegment([1,2,3],1,0)
-         * expected: []
+         * @input:vSegment([1,2,3],1,0)
+         * @expected: []
          */
         test("vSegment([1,2,3],1,0) = []", function() {
             eval(fileLoader.getContent());
 
             var expected = [];
-            var result =vSegment([1,2,3],1,0);
+            var result = vSegment([1, 2, 3], 1, 0);
 
             assert.deepEqual(result, expected);
         });
@@ -66,14 +68,14 @@ suite("vSegment Library", function() {
         /**
          * Test case for vSegment.
          *
-         * input:vSegment([], 0, 4)
-         * expected: [0, 0, 0, 0]
+         * @input:vSegment([], 0, 4)
+         * @expected: [0, 0, 0, 0]
          */
         test("vSegment([], 0, 4) = [0, 0, 0, 0]", function() {
             eval(fileLoader.getContent());
 
             var expected = [0, 0, 0, 0];
-            var result =vSegment([], 0, 4);
+            var result = vSegment([], 0, 4);
 
             assert.deepEqual(result, expected);
         });

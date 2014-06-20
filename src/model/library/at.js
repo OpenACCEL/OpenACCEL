@@ -7,19 +7,19 @@
  */
 function at(x, y) {
     if (arguments.length != arguments.callee.length) {
-        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+        throw new Error('Wrong number of arguments for ' + '@' +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (y instanceof Object) {
+    if (y instanceof Array) {
         // Recursive step, y is an array
-        var result = {};
+        var result = [];
         for (var key in y) {
             result[key] = at(x, y[key]);
         }
         return result;
     } else {
         // Base: y is a scalar
-        if (x instanceof Object) {
+        if (x instanceof Array) {
             if (x[y] === undefined) {
                 return [];
             } else {

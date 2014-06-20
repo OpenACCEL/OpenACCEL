@@ -23,13 +23,13 @@ suite("ramp Library", function() {
         /**
          * Test case for ramp.
          * Based on an example of the help documentation
-         * 
-         * input: ramp(0.5,0,0,1,1)
-         * expected: 0.5
+         *
+         * @input: ramp(0.5,0,0,1,1)
+         * @expected: 0.5
          */
         test("Example from help ramp(0.5,0,0,1,1)=0.5", function() {
             eval(fileLoader.getContent());
-            assert.deepEqual(ramp(0.5,0,0,1,1), 0.5);
+            assert.deepEqual(ramp(0.5, 0, 0, 1, 1), 0.5);
         });
 
     });

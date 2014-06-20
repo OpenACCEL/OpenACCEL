@@ -16,7 +16,15 @@ suite("Max Library", function() {
 
     suite("expansion", function() {
 
-        test("should expand for 'x = 5, y = min(x,4) + 2, z = min(min(x,2),y)'", function() {
+        /**
+         * Test case for min.
+         *
+         * @input x = 5
+         *        y = max(x,4) + 2
+         *        z = max(max(x,2),y)
+         * @expected z = Math.max(Math.max(5, 2), Math.max(5, 4) + 2)
+         */
+        test("should expand for 'x = 5, y = max(x,4) + 2, z = max(max(x,2),y)'", function() {
             var input = "x = 5\ny = max(x,4) + 2\nz = max(max(x,2),y)";
             var output = compiler.compile(new script(input));
             assert.equal(Math.max(Math.max(5, 2), Math.max(5, 4) + 2), output.__z__());

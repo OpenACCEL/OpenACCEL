@@ -22,14 +22,14 @@ suite("vNormEuclid Library", function() {
          * Test case for vNormEuclid.
          * Based on an example of the help documentation
          *
-         * input:vNormEuclid([2,2,2])
-         * expected: 2 sqrt(3)
+         * @input:vNormEuclid([2,2,2])
+         * @expected: 2 sqrt(3)
          */
         test("vNormEuclid([2,2,2]) = 2 sqrt(3)", function() {
             eval(fileLoader.getContent());
 
             var expected = 2 * Math.sqrt(3);
-            var result =vNormEuclid([2,2,2]);
+            var result = vNormEuclid([2, 2, 2]);
 
             assert.deepEqual(result, expected);
         });
@@ -37,14 +37,14 @@ suite("vNormEuclid Library", function() {
         /**
          * Test case for vNormEuclid.
          *
-         * input:vNormEuclid(42)
-         * expected: 42
+         * @input:vNormEuclid(42)
+         * @expected: 42
          */
         test("vNormEuclid(42) = 42", function() {
             eval(fileLoader.getContent());
 
             var expected = 42;
-            var result =vNormEuclid(42);
+            var result = vNormEuclid(42);
 
             assert.deepEqual(result, expected);
         });

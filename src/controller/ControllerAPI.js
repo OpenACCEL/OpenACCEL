@@ -50,6 +50,7 @@ define(["model/script",
              *
              * @type {AbstractView}
              */
+            this.view;
             if (typeof view !== 'undefined') {
                 this.view = view;
             } else {
@@ -264,39 +265,40 @@ define(["model/script",
          * otherwise has been started over.
          */
         Controller.prototype.run = function() {
-            if (this.paused) {
-
+            if (this.executing) {
+                return;
             }
 
-            // If script is compiled, run the script. Else, compile first
-            if (this.script.isCompiled() && !this.executing) {
-                if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
-                    // Update state
-                    this.executing = true;
-                    this.paused = false;
-                    this.status = "Executing";
-                    this.view.setStatus(this.status);
-                    this.view.setExecuting(this.executing);
-
-                    var controller = this;
-                    this.runloop = setInterval(
-                        function() {
-                            try {
-                                controller.execute();
-                            } catch (e) {
-                                controller.view.runtimeError(e);
-                                controller.stop();
-                            }
-                        }, 5
-                    );
-                }
-            } else {
-                // Compile script and make sure to explicitly run it immediately
-                // afterwards, in case autoexecuting is disabled
-                if (this.script.isComplete() && this.compileScript(this.script)) {
-                    this.run();
-                }
+            // If script isn't compiled yet compile it now
+            if (!this.script.isCompiled()) {
+                this.compileScript(this.script)
             }
+
+            // If the execution has reached the last iteration and has stopped there,
+            // start at the beginning again
+            if (this.numIterations > 0 && this.currentIteration >= this.numIterations) {
+                this.reset();
+            } 
+
+            // Update state
+            this.executing = true;
+            this.paused = false;
+            this.status = "Executing";
+            this.view.setStatus(this.status);
+            this.view.setExecuting(this.executing);
+
+            // Start runloop
+            var controller = this;
+            this.runloop = setInterval(
+                function() {
+                    try {
+                        controller.execute();
+                    } catch (e) {
+                        controller.view.runtimeError(e);
+                        controller.stop();
+                    }
+                }, 16
+            );
         };
 
         /**
@@ -367,8 +369,8 @@ define(["model/script",
         };
 
         /**
-         * Stops script execution if currently executing,
-         * Resets current iteration to 1
+         * Stops script execution if currently executing and resets
+         * the script.
          *
          * @post this.executing == false && this.currentIteration == 1
          */
@@ -382,11 +384,22 @@ define(["model/script",
                 this.view.setExecuting(this.executing);
                 this.status = "Stopped";
                 this.view.setStatus(this.status);
-                this.currentIteration = 1;
 
-                if (this.script.isCompiled()) {
-                    this.script.exe.reset();
-                }
+                // Reset the execution state
+                this.reset();
+            }
+        };
+
+        /**
+         * Resets the state of the appliation, restarting execution
+         * from the beginning.
+         */
+        Controller.prototype.reset = function(first_argument) {
+            this.currentIteration = 1;
+
+            // If compiled, reset the Executable object
+            if (this.script.isCompiled()) {
+                this.script.exe.reset();
             }
         };
 

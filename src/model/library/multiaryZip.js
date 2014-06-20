@@ -9,7 +9,7 @@ function multiaryZip(x, func) {
     var numArgs = x.length;
     var allScalar = true;
     for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
-        if (x[inKey] instanceof Object) {
+        if (x[inKey] instanceof Array) {
             // Determine if there is an array in the input.
             allScalar = false;
             break;
@@ -20,14 +20,14 @@ function multiaryZip(x, func) {
         return func.apply(this, x);
     } else {
         // Return variable.
-        var result = {};
+        var result = [];
         // Set of keys that are valid candidates for matching with the rest of the input,
         // thus having a potential place in the output.
         var referenceKeys;
         // Number of keys in the set of referenceKeys.
         var numKeys;
         for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
-            if (x[inKey] instanceof Object) {
+            if (x[inKey] instanceof Array) {
                 // Keys of contender for input of reference found.
                 referenceKeys = Object.keys(x[inKey]);
                 numKeys = referenceKeys.length;
@@ -46,7 +46,7 @@ function multiaryZip(x, func) {
             isCommonKey = true;
             // Loop over all inputs in x.
             for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
-                if (x[inKey] instanceof Object) {
+                if (x[inKey] instanceof Array) {
                     // Check if keys contained in all objects
                     if (x[inKey][referenceKeys[resultKey]] !== undefined) {
                         recursiveInput[inKey] = x[inKey][referenceKeys[resultKey]];

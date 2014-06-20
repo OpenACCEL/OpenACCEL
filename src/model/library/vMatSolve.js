@@ -4,7 +4,6 @@ function vMatSolve(mm, v) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     var isOK = true;
-    mm = objectToArray(mm);
     if (mm instanceof Array) {
         var t = [];
         var u = [];

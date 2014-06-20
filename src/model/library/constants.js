@@ -12,3 +12,7 @@ var getChanTimers = [];
 // then we need to schedule them based on the key-name. For this reason, we have two extra arrays with timers.
 
 var urlTimers = [];
+
+var E = Math.E;
+
+var PI = Math.PI;

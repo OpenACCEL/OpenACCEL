@@ -27,10 +27,10 @@ define(["model/analyser/passes/quantitypass",
         "model/quantity",
         'underscore'
     ],
-    /**@lends Analyser*/
+    /**@lends Model.Analyser*/
     function(QuantityPass, DependencyPass, Quantity, _) {
         /**
-         * @class Analyser
+         * @class
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
          */
         function Analyser() {
@@ -249,23 +249,13 @@ define(["model/analyser/passes/quantitypass",
         Analyser.prototype.findInputParameters = function(definition, type) {
             if (!definition) {
                 throw new Error('Analyser.findInputParameters.pre violated:' +
-                    'definition is null or undefined')
+                    'definition is null or undefined');
             }
             var parameters = [];
-            if (type === 'slider') {
-                parameters = definition.match(/slider\((\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*\)/);
-            } else if (type === 'check') {
-                parameters = definition.match(/check\(\s*(true|false)\s*\)/);
-            } else if (type === 'text') {
-                parameters = definition.match(/input\(\s*(?:\'|\")(.+)(?:\'|\")\s*\)/);
-
-                // If we are dealing with a number in stead of a string, return the number as a string.
-                if (!parameters) {
-                    parameters = definition.match(/input\(\s*(-*\s*\d+[.\d]*)\s*/);
-                }
+            if (type) {
+                parameters = (new Function('return ' + definition))();
             }
-
-            return parameters.slice(1);
+            return parameters;
         };
 
         Analyser.prototype.findPareto = function(quantity) {

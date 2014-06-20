@@ -3,7 +3,7 @@ suite("ControllerAPI", function() {
     var assert;
     var controller;
 
-    setup(function (done) {
+    setup(function(done) {
         requirejs(["assert", "controller/ControllerAPI"], function(Assert, ControllerAPI) {
             assert = Assert;
             controller = new ControllerAPI();
@@ -52,7 +52,7 @@ suite("ControllerAPI", function() {
          *
          * @input: Two quantities: a = b + 10
          *                         b = 10
-         * expected: 20.
+         * @expected: 20.
          */
         test("| Add quantities", function() {
             var input = "a = b + 10 ";
@@ -78,7 +78,7 @@ suite("ControllerAPI", function() {
         test("| Constructor", function() {
             var expected = 0;
             var output = controller.numIterations;
-            assert.equal(output,expected);
+            assert.equal(output, expected);
             var output = controller.executing;
             assert.equal(output, false);
         });

@@ -17,8 +17,8 @@
 /** Macros used in the lexer */
 digit       [0-9]
 esc         \\\\
-int         (-)?(?:[0-9]|[1-9][0-9]+)
-exp         (?:[eE][-+]?[0-9]+)
+int         (?:\d+)
+exp         (?:[eE][0-9]+)
 frac        (?:\.[0-9]+)
 unit        [a-zA-Z]+[0-9]*  
 
@@ -258,7 +258,7 @@ scriptFinalLine         :   quantity
 
 
 /** Single ACCEL script lines */
-quantity                :   quantityDef | quantityFuncDef;
+quantity                :   quantityDef | quantityFuncDef | inputQuantityDef;
 quantityFuncDef         :   funcDef '=' expr
                             { $$ = $1 + $2 + $3; }
                         ;
@@ -280,6 +280,12 @@ funcDefAdditionalArg    :   ',' dummy
                             { $$ = $2 }
                         ;
 quantityDef             :   quantityName '=' expr (UNIT)?
+                        {{ 
+                            var defStr = $1 + $2 + $3;
+                            $$ = defStr;
+                        }}
+                        ;
+inputQuantityDef        :   quantityName '=' inputCall (UNIT)?
                         {{ 
                             var defStr = $1 + $2 + $3;
                             $$ = defStr;
@@ -371,10 +377,6 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                                 $$ = funcCall + $5;
                             }
                         }}
-                        |   INPUTFUNCTION '(' expr? (funcCallArgList)* ')'
-                        {{
-                            $$ = 'null';
-                        }}
                         |   quantityName '(' expr? (funcCallArgList)* ')'
                         {{
                             var funcCall = 'this.' + $1 + $2 + ($3 || '');
@@ -385,7 +387,15 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                             }
                        }}   
                         ;
+inputCall               :   INPUTFUNCTION '(' (scalarConst | (('+'|'-') NUMBER))? (inputCallArgList)* ')'
+                        {{
+                            $$ = 'null';
+                        }}
+                        ;
 funcCallArgList         :   ',' expr
+                            { $$ = $2; }
+                        ;
+inputCallArgList        :   ',' (scalarConst | (('+'|'-') NUMBER))
                             { $$ = $2; }
                         ;
 
@@ -402,7 +412,7 @@ brackets                :   '(' expr ')'
 
 /** Vectors */
 vectorExpr              :   '[' (vectorArgList)? ']'
-                            { $$ = '{' + ($2 || '') + '}'; };
+                            { $$ = 'objectToArray({' + ($2 || '') + '})'; };
 vectorArgList           :   vectorElem (vectorAdditionalArg)*
                         {{ 
                             var counter = 0;

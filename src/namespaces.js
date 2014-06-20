@@ -17,19 +17,26 @@
  */
 
 /**
- * Passes are classes that process a script.
+ * Classes belinging to the Analyser component
  * 
- * @namespace Model.Passes
+ * @namespace Model.Analyser
  */
 
 /**
- * Passes for the preprocessor.
- * @namespace Model.Passes.Preprocessor
+ * Classes belinging to the Script component
+ * 
+ * @namespace Model.Script
  */
 
 /**
- * Passes for the analyser.
- * @namespace Model.Passes.Analyser
+ * Classes belinging to the Compiler component
+ * 
+ * @namespace Model.Compiler
+ */
+
+/**
+ * Passes of the Analyser component
+ * @namespace Model.Analyser.Passes
  */
 
 /**

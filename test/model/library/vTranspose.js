@@ -23,8 +23,8 @@ suite("vTranspose Library", function() {
          * Test case based on example from help documentation.
          *
          * 
-         * input:vTranspose([[1,10,100],[2,20,200],[3,30,300]])
-         * expected: [[1,2,3],[10,20,30],[100,200,300]]
+         * @input:vTranspose([[1,10,100],[2,20,200],[3,30,300]])
+         * @expected: [[1,2,3],[10,20,30],[100,200,300]]
          */
         test("vTranspose([[1,10,100],[2,20,200],[3,30,300]]) = [[1,2,3],[10,20,30],[100,200,300]]", function() {
             eval(fileLoader.getContent());
@@ -82,9 +82,16 @@ suite("vTranspose Library", function() {
          */
         test("vTranspose([['x':1,'y':2],['x':10,'y':20]) = ['x':[1,10],'y':[2,20]]", function() {
             eval(fileLoader.getContent());
+            var e  = [];
+            e.x = [1,10];
+            e.y = [2,20]
+            var expected = e;
+            var i1 = [];
+            i1.x = 1; i1.y = 2;
+            var i2 = [];
+            i2.x = 10; i2.y = 20;
 
-            var expected = objectToArray({'x':[1,10],'y':[2,20]});
-            var input = objectToArray([{'x':1,'y':2},{'x':10,'y':20}]);
+            var input = [i1, i2];
 
             var result =vTranspose(input);
 

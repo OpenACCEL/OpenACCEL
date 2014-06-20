@@ -23,9 +23,10 @@ define(["model/analyser/analyser",
         "model/parser",
         "model/exceptions/SyntaxError",
         "model/exceptions/RuntimeError"], 
+        /** @lends Model.Script */
         function(Analyser, Quantity, _, parser, SyntaxError, RuntimeError) {
     /**
-     * @class Script
+     * @class
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
      * compiled executable and source code.
      *
@@ -391,7 +392,7 @@ define(["model/analyser/analyser",
                 this.exe.setValue(qtyName, value);
 
                 // Recursively flag the updated user input quantity and all it's reverse
-                // dependencies as changed. First reset memoization datastructure!
+                // dependencies as changed
                 this.setQuantityChanged(this.quantities[qtyName], true);
 
                 // Because of the fact that a cat 1 expression evaluates to 'null' in Jison,

@@ -20,6 +20,12 @@ suite("vMatMatMul Library", function() {
 
     suite("vMatMatMul", function() {
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul(2,3)
+         * @expected 6
+         */
         test("multiply two scalars", function() {
             eval(fileLoader.getContent());
             x = 2;
@@ -29,6 +35,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul(3,[1,2,4])
+         * @expected [3, ,6 12]
+         */
         test("multiply a scalar by a vector", function() {
             eval(fileLoader.getContent());
             x = 3;
@@ -38,6 +50,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul([1, 2, 4],3)
+         * @expected [3, 6, 12]
+         */
         test("multiply a vector by a scalar", function() {
             eval(fileLoader.getContent());
             x = [1, 2, 4];
@@ -47,6 +65,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul([3, 4], [1, 2])
+         * @expected 11
+         */
         test("multiply two vectors", function() {
             eval(fileLoader.getContent());
             x = [3, 4];
@@ -56,6 +80,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul(2, [[3,4],[4,5],[9,8]])
+         * @expected [[6,8],[8,10],[18,16]]
+         */
         test("multiply a scalar by a matrix", function() {
             eval(fileLoader.getContent());
             x = 2;
@@ -73,6 +103,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul([[3,4],[4,5],[9,8]], 2)
+         * @expected [[6,8],[8,10],[18,16]]
+         */
         test("multiply multiply a matrix by a scalar", function() {
             eval(fileLoader.getContent());
             x = [
@@ -90,6 +126,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul([2,3], [[4,4],[3,5]])
+         * @expected [17,23]
+         */
         test("multiply a vector by a matrix", function() {
             eval(fileLoader.getContent());
             x = [2, 3];
@@ -102,6 +144,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul([[4,4], [3,5], [2,3])
+         * @expected [20,21]
+         */
         test("multiply a matrix by a vector", function() {
             eval(fileLoader.getContent());
             x = [
@@ -114,6 +162,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul([[2,4],[3,5]], [[1,1],[0,-1]])
+         * @expected [[2,-2], [3,-2]]
+         */
         test("multiply two matrices", function() {
             eval(fileLoader.getContent());
             x = [
@@ -132,6 +186,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul([[2,3,4]], [[5],[6],[7]])
+         * @expected [56]
+         */
         test("multiply two vectors as matrices, row by column (dot product)", function() {
             eval(fileLoader.getContent());
             x = [
@@ -149,6 +209,12 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vMatMatMul.
+         *
+         * @input vMatMatMul([[5],[6],[7]], [[2,3,4]])
+         * @expected [[10,15,20],[12,18,24],[14,21,28]]
+         */
         test("multiply two vectors as matrices, column by row", function() {
             eval(fileLoader.getContent());
             x = [
@@ -171,6 +237,14 @@ suite("vMatMatMul Library", function() {
 
     suite("expansion", function() {
 
+        /**
+         * Test expansion of vMatMatMul.
+         *
+         * @input x = vMatMatMul(z, y)
+         *        y = [[1, 1],[0, -1]]
+         *        z = [[2, 4],[3, 5]]
+         * @expected x = [[2,-2],[3,-2]]
+         */
         test("should expand for 'x = vMatMatMul(z, y), y = [[1, 1],[0, -1]], z = [[2, 4],[3, 5]]'", function() {
             var input = "x = vMatMatMul(z, y)\ny = [[1, 1],[0, -1]]\nz = [[2, 4],[3, 5]]";
             expected = [

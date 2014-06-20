@@ -30,7 +30,7 @@ define(["model/fileloader",
         "model/parser",
         "model/exceptions/SyntaxError",
         "model/executable"
-    ], /**@lends Compiler*/
+    ], /**@lends Model.Compiler */
     function(FileLoader,
         MacroExpander,
         _,
@@ -80,11 +80,7 @@ define(["model/fileloader",
              */
             this.fileLoader = new FileLoader();
 
-            this.fileLoader.load("cond", "macros");
-            this.fileLoader.load("func", "macros");
-            this.fileLoader.load("history", "macros");
-            this.fileLoader.load("quantifier", "macros");
-
+            this.fileLoader.load("macros", "macros");
             this.fileLoader.load("functions", "library");
             eval.call(globalScope, this.fileLoader.getLibrary());
         }
@@ -174,22 +170,19 @@ define(["model/fileloader",
          * @param {Boolean} timeDependent Whether to mark quantity and it's reverse dependencies as time dependent or not.
          */
         Compiler.prototype.setTimeDependent = function(quantity, timeDependent) {
-            // Base case: if all quantities have been checked
+            // Base case: this quantity and all of it's reverse dependencies 
+            // have already been marked as time-dependent
             if (this.historyChecked.indexOf(quantity.name) >= 0) {
-                //console.log(quantity.name + " already checked");
                 return;
             }
 
             quantity.isTimeDependent = timeDependent;
             this.historyChecked.push(quantity.name);
             //console.log ("Starting " + quantity.name);
-            for (var dep in quantity.reverseDeps) {
-                //console.log("Going to dependency " + this.quantities[quantity.reverseDeps[dep]].name);
-                this.setTimeDependent(this.quantities[quantity.reverseDeps[dep]], timeDependent);
+            for (var depIndex in quantity.reverseDeps) {
+                var depName = quantity.reverseDeps[depIndex];
+                this.setTimeDependent(this.quantities[depName], timeDependent);
             }
-
-            //console.log ("Finished " + quantity.name);
-            //console.log ("History log: " + this.historyChecked);
         };
 
         /**

@@ -19,7 +19,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model*/ function() {
+define([], /**@lends Model.Script */ function() {
     /**
      * @class
      * @classdesc Represents a single quantity of the Script.

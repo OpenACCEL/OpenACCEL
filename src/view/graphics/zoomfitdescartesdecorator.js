@@ -143,8 +143,8 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        ZoomFitDescartesDecorator.prototype.zoomToFit = function(bool) {
-            this.fitOnce = bool;
+        ZoomFitDescartesDecorator.prototype.zoomToFit = function() {
+            this.fitOnce = true;
         };
 
         // Exports are needed, such that other modules may invoke methods from this module file.

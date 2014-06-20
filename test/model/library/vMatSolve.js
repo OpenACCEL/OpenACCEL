@@ -20,14 +20,17 @@ suite("vMatSolve Library", function() {
         /**
          * Test case for vMatSolve.
          *
-         * input:vMatSolve([[1,2],[3,4]],[1,2])
-         * expected: [0,0.50]
+         * @input:vMatSolve([[1,2],[3,4]],[1,2])
+         * @expected: [0,0.50]
          */
         test("m=vMatSolve([[1,2],[3,4]],[1,2]) = [0,0.50]", function() {
             eval(fileLoader.getContent());
 
-            var expected = [0,0.50];
-            var result = vMatSolve([[1,2],[3,4]],[1,2]);
+            var expected = [0, 0.50];
+            var result = vMatSolve([
+                [1, 2],
+                [3, 4]
+            ], [1, 2]);
 
             assert.deepEqual(result, expected);
         });

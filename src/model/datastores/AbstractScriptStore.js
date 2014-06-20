@@ -20,7 +20,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model*/ function() {
+define([], /**@lends AbstractScriptStore*/ function() {
     /**
      * @class
      * @classdesc 
@@ -34,6 +34,7 @@ define([], /**@lends Model*/ function() {
          * Returns an array containing the names of all the scripts in this store.
          *
          * @return {String[]} An array containing all the script names in the store.
+         * @abstract
          */
         getScripts: function() {},
 
@@ -43,6 +44,7 @@ define([], /**@lends Model*/ function() {
          *
          * @param {String} name The name to give to the script to be stored
          * @param {String} source The source of the script to save in the store.
+         * @abstract
          */
         saveScript: function(name, source) {},
 
@@ -52,6 +54,7 @@ define([], /**@lends Model*/ function() {
          * @param {String} name The name of the script to load from the store
          * @return {String} The source of the script with name name, or null if there
          * is no script in the store with this name.
+         * @abstract
          */
         loadScript: function(name) {}  
     }

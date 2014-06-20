@@ -34,6 +34,7 @@ define([], /**@lends AbstractView*/ function() {
          * @param quantities {map<String, Quantity>} All the quantities
          * currently in the model, including todo quantities with empty
          * definitions.
+         * @abstract
          */
         setQuantities: function(quantities) {},
 
@@ -42,6 +43,7 @@ define([], /**@lends AbstractView*/ function() {
          *
          * @param cat2quantities {map<String, Quantity>} A map of all output
          * quantities in the script.
+         * @abstract
          */
         presentResults: function(cat2quantities) {},
 
@@ -49,22 +51,29 @@ define([], /**@lends AbstractView*/ function() {
          * Should change UI elements depending on whether the OpenACCEL model is being executed.
          *
          * @param executing Boolean indicating whether the OpenACCEL model is being executed.
+         * @abstract
          */
         setExecuting: function(executing) {},
 
         /**
          * Should create the necessary plot canvases
+         *
+         * @param {Boolean} show Whether to show the plot.
+         * @abstract
          */
         setUpPlot: function(controller) {},
 
         /**
          * Should trigger an update of the plot canvas
+         *
+         * @abstract
          */
         drawPlot: function() {},
 
         /**
          * Informs the view about the current status of the program. This could be for instance
          * "Compiling", "Determining quantity categories", etc.
+         * @abstract
          */
         setStatus: function(status) {},
 
@@ -72,11 +81,14 @@ define([], /**@lends AbstractView*/ function() {
          * Whether the view should show the descartes canvas or not.
          *
          * @param {Boolean} show Whether to show the plot.
+         * @abstract
          */
         showPlot: function(show) {},
 
         /**
-         * Sinals the view that a new script object has been created.
+         * Signals the view that a new script object has been created.
+         *
+         * @abstract
          */
         loadedNewScript: function() {},
 
@@ -84,6 +96,7 @@ define([], /**@lends AbstractView*/ function() {
          * Informs the view that a runtime error has occured.
          *
          * @param {RuntimeError} err The error that occured during runtime.
+         * @abstract
          */
         runtimeError: function(err) {}
     };

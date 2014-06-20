@@ -1,5 +1,4 @@
 function plot(x) {
-    x = objectToArray(x);
     if (x instanceof Array) {
         exe.plot = x;
         if (exe.plotStatus === '') {

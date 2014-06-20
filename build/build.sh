@@ -89,6 +89,10 @@ deploy() {
     rm -f src/model/library/functions.js
     cat src/model/library/* > src/model/library/functions.js
 
+    # Generate single file containing all macros.
+    rm -f src/model/macros/macros.sjs
+    cat src/model/macros/* > src/model/macros/macros.sjs
+
     # Copy scripts.
     cp -r src/* bin/scripts
     find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
