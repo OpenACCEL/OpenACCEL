@@ -121,7 +121,7 @@ define([], /**@lends Model*/ function() {
                     this.report[qty].value = false;
                     this[qty].hist[this.time] = false;
                 }
-                
+
                 // Clear memoization cache of user functions
                 this[qty].cache = {};
             }
@@ -263,25 +263,18 @@ define([], /**@lends Model*/ function() {
      *
      */
     Executable.prototype.executeQuantities = function(inputs, outputs) {
-        var memory = [];
+        // do one step forward into the future
+        this.step();
 
-        // Remember the current values of inputs, and set the values to the ones given in input
+        // set the values to the ones given in input
         inputs.forEach((function(elem) {
-            memory.push({
-                name: elem.name,
-                value: this.getValue(elem.name)
-            });
             this.setValue(elem.name, elem.value);
         }).bind(this));
 
         // update the values in the output-objects
         outputs.forEach((function(elem) {
+            this.setHasChanged(elem.name);
             elem.value = this.getValue(elem.name);
-        }).bind(this));
-
-        // undo changes
-        memory.forEach((function(elem) {
-            this.setValue(elem.name, elem.value);
         }).bind(this));
     };
 
