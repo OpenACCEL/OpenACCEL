@@ -42,13 +42,13 @@ body div {
 	background-repeat: no-repeat;
 }
 
-#main ul{
+#main > ul{
 	position: relative;
 	z-index: 1;
 	/*display: block;*/
 	margin-left: -40px;
 }
-#main ul li {
+#main > ul li {
 	display: inline;
 	margin-right: 4px;
 	padding: 5px;
@@ -58,13 +58,13 @@ body div {
 	background: #662266;
 	background: linear-gradient(#993399, #662266);
 }
-#main ul li:hover {
+#main > ul li:hover {
 	background: #9933CC;
 }
-#main ul li.ui-tabs-active {
+#main > ul li.ui-tabs-active {
 	background: #9933CC;
 }
-#main ul li a{
+#main > ul li a{
 	padding: 5px;
 	font-size: 16px;
 	color: #FFFFFF;
@@ -171,6 +171,7 @@ body div {
 	border-radius: 4px;
 	border-top: 1px #331144 solid;
 	background: #FFFFFF;
+	color: black;
 }
 
 .buttonin {
@@ -536,5 +537,53 @@ body div {
 	resize: none;
 	border: none;
 	padding: 0px;
+	font-size: 12px;
+}
+
+/**
+ * 
+ * Genetic Optimisation
+ * 
+ */
+
+#GOsidebar .group {
+	padding-top: 8px;
+}
+
+#GOsidebar .buttonin {
+	width: 100%;
+	margin-top: 8px;
+}
+
+#mutationvalue > ul {
+	list-style: none;
+	margin-top: 0px;
+	margin-bottom: 8px;
+	padding-left: 20px;
+}
+
+.legendbox {
+	position: relative;
+	top: 4px;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-right: 8px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	border: 1px #331144 solid;
+}
+
+#mutation .ui-slider-range:first-child {
+	background: #331144;
+}
+
+#mutation .ui-slider-range {
+	background: #9900AA;
+}
+
+.slidervalue {
+	font-style: italic;
 	font-size: 12px;
 }
