@@ -80,18 +80,22 @@ macro func {
         ($x($xs (,) ...) = $expr:expr)
     } => {
         this.$x = function($xs (,) ...) {
-            // Memoization
-            var args = Array.prototype.slice.call(arguments),
-                hash = "",
-                i = args.length;
-
-            var currentArg = null;
-            while (i--) {
-                currentArg = args[i];
-                hash += (currentArg === Object(currentArg)) ? JSON.stringify(currentArg) : currentArg;
+            // Support memoization only for 'primitive types', not objects
+            var args = Array.prototype.slice.call(arguments);
+            var obj = false;
+            for (var i=args.length; i>=0; i--) {
+                if (args[i] instanceof Object) {
+                    obj = true;
+                    break;
+                }
             }
 
-            return (hash in this.$x.cache) ? this.$x.cache[hash] : this.$x.cache[hash] = this.$x.expr.apply(this, args);
+            if (!obj) {
+                hash = JSON.stringify(args);
+                return (hash in this.$x.cache) ? this.$x.cache[hash] : this.$x.cache[hash] = this.$x.expr($xs (,) ...);
+            } else {
+                return this.$x.expr($xs (,) ...);
+            }
         };
 
         this.$x.expr = (function($xs (,) ...) { return $expr; }).bind(this);

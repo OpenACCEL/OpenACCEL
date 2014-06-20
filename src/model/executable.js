@@ -117,6 +117,10 @@ define([], /**@lends Model*/ function() {
                 }
                 
                 // Clear memoization cache of user functions
+                for (var c in this[qty].cache) {
+                    delete this[qty].cache[c];
+                }
+
                 this[qty].cache = {};
             }
         }
