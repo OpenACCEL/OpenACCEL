@@ -47,7 +47,7 @@ define(["model/emo/crossover/crossover",
          *
          * @type {Number}
          */
-        this.populationSize = 10;
+        this.populationSize = 25;
 
 
         /**
@@ -104,14 +104,14 @@ define(["model/emo/crossover/crossover",
          *
          * @type {Number}
          */
-        this.closeMutationProbability = 0.75;
+        this.closeMutationProbability = 0.70;
 
         /**
          * Probability for an arbitrary mutation.
          *
          * @type {Number}
          */
-        this.arbitraryMutationProbability = 0.875;
+        this.arbitraryMutationProbability = 0.85;
 
         /**
          * Desired pareto front ratio.
