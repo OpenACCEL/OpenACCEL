@@ -105,21 +105,17 @@ define([], /**@lends Model*/ function() {
     Executable.prototype.step = function() {
         if (this.report) {
             for (var qty in this.report) {
+                // Evaluate all quantities that are time dependent
                 if (this.report[qty].isTimeDependent && this.report[qty].parameters.length === 0) {
                     this[qty]();
                 }
 
-                // Store values of input quantities in their history manually each
-                // iteration
-                if (this.report[qty].category == 1) {
-                    this[qty].hist[this.time] = this.report[qty].value;
+                // Reset buttons after one iteration
+                if (this.report[qty].input.type === 'button') {
+                    this.report[qty].value = false;
+                    this[qty].hist[this.time] = false;
                 }
-
-                // Reset button input values to false after one iteration
-                if (this.report[qty].input.type == 'button') {
-                    this[qty].hist[0] = false;
-                }
-
+                
                 // Clear memoization cache of user functions
                 if (typeof this[qty].cache !== 'undefined') {
                     this[qty].cache = {};
@@ -175,7 +171,6 @@ define([], /**@lends Model*/ function() {
             throw new Error('Executable.prototype.getValue.pre violated :' +
                 'no Quantity named ' + quantity);
         }
-
     };
 
 
@@ -199,7 +194,7 @@ define([], /**@lends Model*/ function() {
                 quantity + ' is a user-defined function');
         }
 
-        return this[localQty].hist[0] = value;
+        return this[localQty].hist[this.time] = value;
     };
 
 

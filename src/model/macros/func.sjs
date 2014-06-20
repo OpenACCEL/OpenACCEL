@@ -17,10 +17,18 @@ macro func {
             // return the evaluated value. Else evaluate it now. This is a form of memoization/caching.
             // Input quantities are time dependent but do not have an executable library function: their
             // value is set by the controller when the corresponding input element is changed by the user in the UI.
-            if (this.report && this.report.$x.isTimeDependent && this.report.$x.category != 1) {
+            if (this.report && this.report.$x.isTimeDependent) {
+                // If the current time-step value has not been evaluated yet, do it now
                 if (this.$x.hist[this.time] === undefined) {
-                    // Store current value of evaluated expression in history and return this value
-                    this.$x.hist[this.time] = this.$x.expr();
+                    // For non-input quantities, evaluate the expression of this quantity and store it
+                    // in the history datastructure
+                    if (this.report.$x.category !== 1) {
+                        this.$x.hist[this.time] = this.$x.expr();
+                    } else {
+                        // For input quantities, which do not have executable library functions,
+                        // retrieve the current value from the report and store it in the history
+                        this.$x.hist[this.time] = this.report.$x.value;
+                    }
                 }
 
                 return this.$x.hist[this.time];
@@ -28,18 +36,7 @@ macro func {
                 // Quantity value does not change with time: check if it has been evaluated already
                 // and hasn't changed (applicable to user input). Else evaluate it now and store result
                 if (this.$x.hist[0] === undefined || this.$x.hasChanged) {
-                    // Initialize the values for user input
-                    if (this.report && this.report.$x.category === 1) {
-                        // Initialise button values to false (Boolean) and other inputs to their given
-                        // default value as floats
-                        if (this.report.$x.input.type == 'button') {
-                            this.$x.hist[0] = false;
-                        } else {
-                            this.$x.hist[0] = this.report.$x.input.parameters[0];
-                        }
-                    } else {
-                         this.$x.hist[0] = this.$x.expr();
-                    }
+                    this.$x.hist[0] = this.$x.expr();
                     this.$x.hasChanged = false;
                 }
 
@@ -49,7 +46,19 @@ macro func {
 
         // Function that evaluates the given expression in the context of 'this'
         this.$x.expr = (function() { return $expr; }).bind(this);
+
+        // Initialise history array
         this.$x.hist = [];
+
+        // Initialize the values for user input
+        if (this.report && this.report.$x.category === 1) {
+            // Initialise initial values of user input quantities
+            if (this.report.$x.input.type == 'button') {
+                this.$x.hist[0] = false;
+            } else {
+                this.$x.hist[0] = this.report.$x.input.parameters[0];
+            }
+        }
     }
 
     // Quantity definitions including units

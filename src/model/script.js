@@ -392,7 +392,7 @@ define(["model/analyser/analyser",
                 this.exe.setValue(qtyName, value);
 
                 // Recursively flag the updated user input quantity and all it's reverse
-                // dependencies as changed. First reset memoization datastructure!
+                // dependencies as changed
                 this.setQuantityChanged(this.quantities[qtyName], true);
 
                 // Because of the fact that a cat 1 expression evaluates to 'null' in Jison,
