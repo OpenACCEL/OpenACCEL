@@ -15,11 +15,11 @@ $(document).ready(
                 min: 1,
                 max: 500,
                 step: 1,
-                slide: function(event, ui) {
+                slide: function(event, ui) {                    
+                    $('#populationsizevalue').html('(' + ui.value + ')');
+
                     geneticOptimisationValues.population = ui.value;
                     //No controller call until the associated button is pressed
-                    
-                    $('#populationsizevalue').html('(' + ui.value + ')');
                 }
             }
         );
@@ -31,11 +31,11 @@ $(document).ready(
                 min: 1,
                 max: 100,
                 step: 1,
-                slide: function(event, ui) {
+                slide: function(event, ui) {                    
+                    $('#stepsizevalue').html('(' + ui.value + ')');
+
                     geneticOptimisationValues.stepsize = ui.value;
                     //No controller call until the associated button is pressed
-                    
-                    $('#stepsizevalue').html('(' + ui.value + ')');
                 }
             }
         );
@@ -47,11 +47,13 @@ $(document).ready(
                 min: 1,
                 max: 100,
                 step: 1,
-                slide: function(event, ui) {
-                    geneticOptimisationValues.crossover = ui.value;
-                    //TODO add controller call - controller.setCrossover(crossover);
-                    
+                slide: function(event, ui) {                  
                     $('#crossovervalue').html('(' + ui.value + '%)');
+
+                    geneticOptimisationValues.crossover = ui.value;
+                    try {
+                        controller.setCrossover(geneticOptimisationValues.crossover);
+                    } catch(e) {}
                 }
             }
         );
@@ -67,10 +69,7 @@ $(document).ready(
                 min: 0,
                 max: 100,
                 step: 1,
-                slide: function(event, ui) {
-                    geneticOptimisationValues.mutation = ui.values;
-                    //TODO add controller call - controller.setMutation(close, arbitrary, random);
-                    
+                slide: function(event, ui) {                    
                     var close = ui.values[0];
                     var arbitrary = ui.values[1] - close;
                     var random = 100 - arbitrary - close;
@@ -97,6 +96,11 @@ $(document).ready(
                             </li>\
                         </ul>\
                     ');
+
+                    geneticOptimisationValues.mutation = ui.values;
+                    try {
+                        controller.setMutation(geneticOptimisationValues.mutation);
+                    } catch(e) {}
                 }
             }
         );
@@ -108,11 +112,13 @@ $(document).ready(
                 min: 1,
                 max: 100,
                 step: 1,
-                slide: function(event, ui) {
-                    geneticOptimisationValues.maxfront = ui.value;
-                    //TODO add controller call - controller.setMaxfront(maxfront);
-                    
+                slide: function(event, ui) {                   
                     $('#maxfrontvalue').html('(' + ui.value + '%)');
+
+                    geneticOptimisationValues.maxfront = ui.value;
+                    try {
+                        controller.setMaxfront(geneticOptimisationValues.maxfront);
+                    } catch(e) {}
                 }
             }
         );

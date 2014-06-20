@@ -560,6 +560,7 @@ body div {
 	margin-top: 0px;
 	margin-bottom: 8px;
 	padding-left: 20px;
+	font-size: 12px;
 }
 
 .legendbox {
@@ -585,5 +586,4 @@ body div {
 
 .slidervalue {
 	font-style: italic;
-	font-size: 12px;
 }
