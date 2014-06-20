@@ -93,6 +93,13 @@ define(["model/emo/crossover/crossover",
         this.crossover = new UniformCrossOver();
 
         /**
+         * The probability for a cross-over used for the cross-over procedure.
+         *
+         * @type {Number}
+         */
+        this.crossoverProbability = 0.9;
+
+        /**
          * The mutations used for the mutation procedure.
          *
          * @type {Array}

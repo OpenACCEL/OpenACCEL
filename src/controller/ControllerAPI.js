@@ -990,6 +990,34 @@ define(["model/script",
         };
 
         /**
+         * Set the probability for the cross-over.
+         *
+         * @param {Number} crossoverProbability the probability for a cross-over
+         */
+        Controller.prototype.setCrossover = function(crossoverProbability) {
+            this.geneticOptimisation.crossoverProbability = crossoverProbability / 100;
+        };
+
+        /**
+         * Set the probability for the mutations.
+         *
+         * @param {Array} mutation the array containing the mutation probability
+         */
+        Controller.prototype.setMutation = function(mutation) {
+            this.geneticOptimisation.closeMutationProbability = mutation[0] / 100;
+            this.geneticOptimisation.arbitraryMutationProbability = mutation[1] / 100;
+        };
+
+        /**
+         * Set the desired Pareto Front ratio.
+         *
+         * @param {Number} desiredParetoFrontRatio the desired pareto front ratio
+         */
+        Controller.prototype.setMaxfront = function(desiredParetoFrontRatio) {
+            this.geneticOptimisation.desiredParetoFrontRatio = desiredParetoFrontRatio / 100;
+        };
+
+        /**
          * Gets list of quantities and their position in the network
          *
          * @return {Object} List Quantities and their position
