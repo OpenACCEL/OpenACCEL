@@ -124,7 +124,7 @@ define(["model/analyser/passes/quantitypass",
             }
 
             // Quantity most recently processed and added. Any comments that follow
-            // are assigned to this quantity 
+            // are assigned to this quantity
             var prevQuantity = null;
 
             // List of all quantities parsed from the given source
@@ -188,7 +188,7 @@ define(["model/analyser/passes/quantitypass",
                     // The quantity has an input element, so it is category 1
                     category = 1;
                     qty.input.parameters = this.findInputParameters(qty.definition, qty.input.type);
-                } else if (qty.reverseDeps.length === 0) {
+                } else if (qty.reverseDeps.length === 0 && qty.parameters.length === 0) {
                     // If there are no quantities that depend on this quantity, it is category
                     // 2 (output)
                     category = 2;
