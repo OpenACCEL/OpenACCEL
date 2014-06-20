@@ -158,6 +158,7 @@ define(["model/emo/crossover/crossover",
         // create the initial population
         this.createPopulation(inputvector, outputvector, size);
         // initialise variables
+        this.mutations = [];
         this.mutations.push(new CloseMutation());
         this.mutations.push(new ArbitraryMutation());
         this.mutations.push(new RandomMutation());
@@ -173,6 +174,8 @@ define(["model/emo/crossover/crossover",
      * @param  {Number} size         the population size
      */
     GeneticOptimisation.prototype.createPopulation = function(inputvector, outputvector, size) {
+        // initialise population
+        this.population = [];
         // generate as many individuals as needed
         for (var i = size - 1; i >= 0; i--) {
             // loop over the inputvector
