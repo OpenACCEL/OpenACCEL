@@ -922,6 +922,15 @@ define(["model/script",
         };
 
         /**
+         * Returns the Genetic Optimisation object currently managed by this controller.
+         *
+         * @return {GeneticOptimisation} this.geneticOptimisation
+         */
+        Controller.prototype.getGeneticOptimisation = function() {
+            return this.geneticOptimisation;
+        };
+
+        /**
          * Initialises the Genetic Optimisation algorithm.
          *
          * @param {Number} populationSize the desired population size
@@ -940,6 +949,7 @@ define(["model/script",
             }
             this.compileScript(this.getScript());
             this.geneticOptimisation.initialise(this.getScript(), populationSize);
+            this.view.drawOptimisationPlot();
         };
 
         /**
