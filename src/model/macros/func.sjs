@@ -75,10 +75,17 @@ macro func {
     } => {
         this.$x = function($xs (,) ...) {
             // Memoization
-            var hash = JSON.stringify(arguments);
-            var cache = this.$x.cache;
+            var args = Array.prototype.slice.call(arguments),
+                hash = "",
+                i = args.length;
 
-            return (hash in cache) ? cache[hash] : cache[hash] = this.$x.expr($xs (,) ...);
+            var currentArg = null;
+            while (i--) {
+                currentArg = args[i];
+                hash += (currentArg === Object(currentArg)) ? JSON.stringify(currentArg) : currentArg;
+            }
+
+            return (hash in this.$x.cache) ? this.$x.cache[hash] : this.$x.cache[hash] = this.$x.expr.apply(this, args);
         };
 
         this.$x.expr = (function($xs (,) ...) { return $expr; }).bind(this);
