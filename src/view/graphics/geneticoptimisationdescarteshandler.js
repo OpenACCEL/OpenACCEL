@@ -137,7 +137,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                     }
                 }
             }
-            return [horkey, verKey];
+            return [horKey, verKey];
         };
 
         /**
@@ -258,7 +258,9 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                 }
             };
 
-            return [[ctrl, xCoords, yCoords, redVals, greenVals, blueVals, diameters]];
+            return [
+                [ctrl, xCoords, yCoords, redVals, greenVals, blueVals, diameters]
+            ];
         };
 
         // Exports are needed, such that other modules may invoke methods from this module file.
