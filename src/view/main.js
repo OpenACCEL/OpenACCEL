@@ -42,8 +42,8 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      */
     View.prototype.setUpPlot = function(controller) {
         $('#plotdiv').toggle(true);
-        this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
         this.optimisationCanvas = canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
+        this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
     };
 
     /**
