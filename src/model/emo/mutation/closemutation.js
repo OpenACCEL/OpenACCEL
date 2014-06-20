@@ -19,7 +19,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/emo/mutation/mutation"], /**@lends Model.EMO.Mutation*/ function(Mutation) {
+define(["model/emo/mutation/mutation", "model/emo/random"], /**@lends Model.EMO.Mutation*/ function(Mutation, Random) {
 
     /**
      * @class CloseMutation

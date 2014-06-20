@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["model/emo/crossover/crossover", "model/emo/cloneobject"], /**@lends Model.EMO.CrossOver*/ function(CrossOver, CloneObject) {
+define(["model/emo/crossover/crossover", "model/emo/random", "model/emo/cloneobject"], /**@lends Model.EMO.CrossOver*/ function(CrossOver, Random, CloneObject) {
 
     /**
      * @class UniformCrossOver
