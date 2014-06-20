@@ -126,8 +126,10 @@ define(["model/emo/crossover/crossover",
      *
      * Set up the mutations used.
      * Calculate the initial Pareto Front and fitness values;
+     * @param  {Script} script          the script containing all the quantities
+     * @param  {Number} populationSize  the population size
      */
-    GeneticOptimisation.prototype.initialise = function(script) {
+    GeneticOptimisation.prototype.initialise = function(script, populationSize) {
         // initialise variables
         var quantities = script.getQuantities();
         var quantity;
