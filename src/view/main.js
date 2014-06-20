@@ -41,14 +41,13 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      */
     View.prototype.setUpPlot = function(controller) {
         $('#plotdiv').toggle(true);
-        this.canvas = canvasCreator.createCanvas(controller.geneticOptimisation, 'plot', 300, 300);
+        this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
     };
 
     /**
      * Trigger an update of the plot canvas
      */
     View.prototype.drawPlot = function() {
-        controller.geneticOptimisation.initialise(controller.getScript());
         this.canvas.draw();
     };
 

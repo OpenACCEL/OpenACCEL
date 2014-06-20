@@ -408,7 +408,7 @@ define(["model/script",
 
             // Give new script object to descartes
             if (inBrowser) {
-                //this.view.canvas.setModel(this.script);
+                this.view.canvas.setModel(this.script);
             }
 
             if (clearStore && this.autoSave && window.localStorage) {
