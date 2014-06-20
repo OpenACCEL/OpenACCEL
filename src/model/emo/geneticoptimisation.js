@@ -43,6 +43,14 @@ define(["model/emo/crossover/crossover",
         this.population = [];
 
         /**
+         * The population size.
+         *
+         * @type {Number}
+         */
+        this.populationSize = 10;
+
+
+        /**
          * Reference to the executable.
          *
          * @type {Executable}
@@ -120,9 +128,6 @@ define(["model/emo/crossover/crossover",
      * Calculate the initial Pareto Front and fitness values;
      */
     GeneticOptimisation.prototype.initialise = function(script) {
-        this.executable = script.exe;
-        // TODO: implement set population size
-        var size = 10;
         // initialise variables
         var quantities = script.getQuantities();
         var quantity;
@@ -156,7 +161,8 @@ define(["model/emo/crossover/crossover",
             }
         }
         // create the initial population
-        this.createPopulation(inputvector, outputvector, size);
+        this.executable = script.exe;
+        this.createPopulation(inputvector, outputvector, this.populationSize);
         // initialise variables
         this.mutations = [];
         this.mutations.push(new CloseMutation());

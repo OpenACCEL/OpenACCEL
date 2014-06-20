@@ -922,10 +922,23 @@ define(["model/script",
         };
 
         /**
-         * Initialises GeneticOptimisation.
+         * Initialises the Genetic Optimisation algorithm.
+         *
+         * @param {Number} populationSize the desired population size
+         * @pre populationSize != null
+         * @pre populationSize != undefined
+         * @pre populationSize > 0
          */
-        Controller.prototype.initGeneticOptimisation = function() {
-            this.GeneticOptimisation.initialise(this.getScript());
+        Controller.prototype.initialiseGeneticOptimisation = function(populationSize) {
+            if (!populationSize) {
+                throw new Error('Controller.prototype.initialiseGeneticOptimisation.pre :' +
+                    'population size is null or undefined');
+            }
+            if (populationSize <= 0) {
+                throw new Error('Controller.prototype.initialiseGeneticOptimisation.pre :' +
+                    'population size is less than or equal to zero');
+            }
+            this.geneticOptimisation.initialise(this.getScript(), populationSize);
         };
 
         /**
