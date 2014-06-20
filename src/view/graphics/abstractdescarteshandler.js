@@ -18,28 +18,33 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesDecorator) {
+
     /**
      * @class AbstractDescartesHandler
-     * @classdesc The AbstractDescartesHandler class provides DescartesHandlers to Canvases,
-     * allowing them to correctly draw any supported model element.
+     * @classdesc The AbstractDescartesHandler provides the basic functionality for extensions
+     * to draw specific objects with descartes.
      */
     function AbstractDescartesHandler() {
+
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The descartes objects this handler sends its drawings to, corresponds to multiple canvases.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {Array<descartes>}
          */
         this.descartesInstances = [];
+
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The error report of descartes.draw().
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {String}
          */
         this.drawReport = "";
+
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The information stored by the last click event, can be used to show tags belonging to
+         * drawn objects.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {String}
          */
         this.clickInfo = "";
     }
@@ -48,29 +53,31 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     AbstractDescartesHandler.prototype = new AbstractDescartesDecorator();
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns whether this handler is capable of drawing the given object.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param modelElement {Object} The object of which we want to know if it can be drawn.
+     * @return {boolean} true if this handler can draw modelElement, false if not
      */
     AbstractDescartesHandler.prototype.canHandle = function(modelElement) {
         return false;
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns a new instance of this object, accomodating for the given object.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param modelElement {Object} The object to be accomodated.
+     * @return {AbstractDescartesHandler} The handler assigned to draw modelElement.
      */
     AbstractDescartesHandler.prototype.getInstance = function(modelElement) {
         return new AbstractDescartesHandler(modelElement);
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Switches which object this handler accomodates, given that it can do so.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param modelElement {Object} The object to be accomodated.
+     * @pre canHandle(modelElement), this handler can accomodate for modelElement
+     * @post this.modelElement = modelElement, modelElement is now accomodated by this handler
      */
     AbstractDescartesHandler.prototype.setModel = function(modelElement) {
         if (this.canHandle(modelElement)) {
@@ -78,11 +85,13 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
         }
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Adds a new descartes object to the array of descartes objects to be drawn to.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param div {String} The div in the html file in which the new descartes object must draw.
+     * @param width {float} The width in pixels over which the new descartes object must draw.
+     * @param height {float} The height in pixels over which the new descartes object must draw.
+     * @modifies descartesInstances {Array<descartes>} The new descartes object gets appended to this.
      */
     AbstractDescartesHandler.prototype.addDescartes = function(div, width, height) {
         this.descartesInstances.push(new descartes({
@@ -94,24 +103,22 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     };
 
     /**
-     * Returns whether the script can be compiled and executed.
-     *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * The click callback to be used by descartes when the mouse is clicked over it.
      */
     AbstractDescartesHandler.prototype.clickCallback = function(x, y, b) {};
 
     /**
-     * Returns whether the script can be compiled and executed.
-     *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * The move callback to be used by descartes when the mouse moves over it.
      */
     AbstractDescartesHandler.prototype.moveCallback = function(x, y) {};
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Removes a descartes object from descartesInstances and erases its graph.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param div {String} The name of the div in which the desired descartes object is located.
+     * @modifies descartesInstances {Array<descartes>}
+     * @pre Exists_i[ i in descartesInstances : descartesInstances[i].divName == div]
+     * @post !Exists_i[ i in descartesInstances : descartesInstances[i].divName == div]
      */
     AbstractDescartesHandler.prototype.removeDescartes = function(div) {
         for (i in this.descartesInstances) {
@@ -122,31 +129,29 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
         }
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns the raw drawing made from the modelElement of this handler, according to this handler.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @return {Array<Array<Object>>} The drawing to be drawn by descartes.
      */
     AbstractDescartesHandler.prototype.getDrawing = function() {
         return [];
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns the decorated drawing made from the modelElement of this handler, according to this handler
+     * and its decorators.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @return {Array<Array<Object>>} The drawing to be drawn by descartes.
      */
     AbstractDescartesHandler.prototype.getDecoratedDrawing = function() {
         return this.decorate(this.getDrawing());
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Sends getDecoratedDrawing() to all descartes objects in descartesInstances.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @modifies ForAll_i[descartesInstances[i]] {descartes} Previous drawing is overwritten by getDecoratedDrawing().
      */
     AbstractDescartesHandler.prototype.draw = function() {
         var drawing = this.getDecoratedDrawing();
@@ -155,31 +160,30 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
         }
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns the drawReport of this handler.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @return this.drawReport {String}
      */
     AbstractDescartesHandler.prototype.getDrawReport = function() {
         return this.drawReport;
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns the clickInfo of this handler.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @return this.clickInfo {String}
      */
+
     AbstractDescartesHandler.prototype.getClickInfo = function() {
         return this.clickInfo;
     };
 
-
     /**
-     * Returns whether the script can be compiled and executed.
+     * Forces all descartesInstances to redraw, emptying their buffers. This is needed to
+     * not use old input artifacts for drawing.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @modifies ForAll_i[descartesInstances[i]] {descartes} The descartes objects of which the buffers are emptied.
      */
     AbstractDescartesHandler.prototype.resetCanvas = function() {
         for (i in this.descartesInstances) {

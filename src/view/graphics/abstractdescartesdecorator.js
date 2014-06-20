@@ -18,20 +18,25 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractfunctionpropagator"], function(AbstractFunctionPropagator) {
+
     /**
      * @class AbstractDescartesDecorator
-     * @classdesc The AbstractDescartesDecorator class provides DescartesHandlers to Canvases,
-     * allowing them to correctly draw any supported model element.
+     * @classdesc The AbstractDescartesDecorator facilitates alteratiion of existing descartes drawings.
      */
     function AbstractDescartesDecorator() {
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The next AbstractDescartesDecorator in the decorator chain.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {AbstractDescartesDecorator}
          */
         this.decorator = null;
 
+        /**
+         * The factor of the input normalisation over the output normalisation of descartes.
+         *
+         * @type {float}
+         */
         this.coordinateScale = 100;
     };
 
@@ -39,9 +44,10 @@ define(["view/graphics/abstractfunctionpropagator"], function(AbstractFunctionPr
     AbstractDescartesDecorator.prototype = new AbstractFunctionPropagator();
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns the input, adjusted according to this decorator.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param plot {Array<Array<Object>>} The drawing to be adjusted
+     * @return plot {Array<Array<Object>>} The adjusted drawing
      */
     AbstractDescartesDecorator.prototype.decorate = function(plot) {
         if (this.decorator != null) {
@@ -51,9 +57,13 @@ define(["view/graphics/abstractfunctionpropagator"], function(AbstractFunctionPr
     };
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns a point with coordinates, inversely adjusted by this decorator.
+     * These points come from descartes through callbacks, hence they must undergo inverse
+     * adjustment to match the original drawing context.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param point {Object} The point to be inversely adjusted, containing an 'x', a 'y' and
+     * possibly a 'z' coordinate.
+     * @return point {Object} The inversely adjusted point.
      */
     AbstractDescartesDecorator.prototype.mapPoint = function(point) {
         if (this.decorator != null) {
@@ -63,9 +73,11 @@ define(["view/graphics/abstractfunctionpropagator"], function(AbstractFunctionPr
     };
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Adds a new AbstractDescartesDecorator to the end of the decorator chain containing
+     * this decorator.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param decorator {AbstractDescartesDecorator} The decorator to be added to the chain
+     * @post decorator can be called called recursively by decorate(), mapPoint() and addDecorator()
      */
     AbstractDescartesDecorator.prototype.addDecorator = function(decorator) {
         if (this.decorator == null) {
