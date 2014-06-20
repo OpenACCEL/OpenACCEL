@@ -119,7 +119,7 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
          *
          * @return this.analyser.scriptComplete && this.quantities.length > 0
          */
-        ZoomDescartesDecorator.prototype.mapPoint = function(point) {
+        ZoomFitDescartesDecorator.prototype.mapPoint = function(point) {
             if (this.decorator != null) {
                 point = this.decorator.mapPoint(point);
             }

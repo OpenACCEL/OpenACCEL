@@ -151,8 +151,8 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
             var verKey = horVerKeys[1];
 
             var point = this.mapPoint({
-                'x': x,
-                'y': y
+                'x': x * this.coordinateScale,
+                'y': y * this.coordinateScale
             });
 
             var population = this.modelElement.population;
@@ -171,6 +171,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                 currentSquareDistance = currentHorDistance * currentHorDistance + currentVerDistance * currentVerDistance;
 
                 if (closestDistance > currentSquareDistance) {
+                    closestDistance = currentSquareDistance;
                     this.clickedIndividual = population[i];
                 }
             }
