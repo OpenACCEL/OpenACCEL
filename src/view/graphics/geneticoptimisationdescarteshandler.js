@@ -174,7 +174,6 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                     this.clickedIndividual = population[i];
                 }
             }
-            this.clickInfo = this.clickedIndividual.toString();
             this.draw();
         };
 
