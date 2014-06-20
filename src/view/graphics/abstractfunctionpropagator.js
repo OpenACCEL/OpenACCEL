@@ -20,14 +20,14 @@ if (inNode) {
 define([], function() {
     /**
      * @class AbstractFunctionPropagator
-     * @classdesc The AbstractFunctionPropagator class provides DescartesHandlers to Canvases,
-     * allowing them to correctly draw any supported model element.
+     * @classdesc The AbstractFunctionPropagator provides basic functionality for extended classes to
+     * propagate their functions to other AbstractFunctionPropagators, which can then use them as their own.
      */
     function AbstractFunctionPropagator() {
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The functions and their names to be propagated for facade creation.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {array<Object<String, function>>}
          */
         this.propagatables = [];
     }
@@ -36,9 +36,10 @@ define([], function() {
     AbstractFunctionPropagator.prototype = {
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Returns the propagatables of all AbstractFunctionPropagators this propagator has, recursively.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @return allFuncs {array<Object<String, function>>}
+         * [ f | Exists_i,j[this[i] instance of AbstractFunctionPropagator : this[i].getFunctions()[j] == f]]
          */
         getSubfunctions: function() {
             var allFuncs = [];
@@ -51,9 +52,11 @@ define([], function() {
         },
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Returns the propagatables of all AbstractFunctionPropagators this propagator has, recursively.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @return allFuncs {array<Object<String, function>>}
+         * [ f | Exists_i,j[(this[i] instance of AbstractFunctionPropagator => this[i].getFunctions()[j] == f]) ||
+         * f in this.propagatables]
          */
         getFunctions: function() {
             var allFuncs = this.propagatables;
@@ -62,9 +65,10 @@ define([], function() {
         },
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Makes all functions returned by this.getSubfunctions() accessible in this object under the enclosed name.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @modiefies this {AbstractFunctionPropagator} Functions from this.getSubfunctions() are added to this.
+         * @post ForAll_i[ i in getSubfunctions() : this[getSubfunctions()[i].name] == getSubfunctions()[i].func]
          */
         facadify: function() {
             var allFuncs = this.getSubfunctions();
