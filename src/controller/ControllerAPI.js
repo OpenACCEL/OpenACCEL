@@ -942,22 +942,26 @@ define(["model/script",
         };
 
         /**
-         * Generates a number of iterations of GeneticOptimisation.
+         * Generates a number of iterations of the Genetic Optimisation algorithm.
          *
          * @param iterations {Number} number of iterations
          * @pre model.Script contains pareto definitions
          * @pre iterations != null
          * @pre iterations != undefined
-         * @return {Object} List Quantities
+         * @pre iterations > 0
          */
-        Controller.prototype.generate = function(iterations) {
+        Controller.prototype.nextGeneration = function(iterations) {
             if (!iterations) {
-                throw new Error('Controller.prototype.generate.pre :' +
-                    'iterations is null or undefined')
+                throw new Error('Controller.prototype.nextGeneration.pre :' +
+                    'iterations is null or undefined');
             }
-            //TODO
-            //TODO Implementation
-            //TODO Tests
+            if (iterations <= 0) {
+                throw new Error('Controller.prototype.nextGeneration.pre :' +
+                    'number of iterations is less than or equal to zero');
+            }
+            for (var i = iterations - 1; i >= 0; i--) {
+                this.geneticOptimisation.nextGeneration();
+            }
         };
 
         /**
