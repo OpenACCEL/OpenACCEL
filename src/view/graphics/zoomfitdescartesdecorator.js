@@ -49,17 +49,17 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
              */
             this.alwaysFit = false;
 
-            this.propagatables.push({
-                name: "zoomToFit",
-                func: this.zoomToFit.bind(this)
-            });
-
             /**
              * The DescartesHandlers that can be provided by this class.
              *
              * @type {array<AbstractDescartesHandler>}
              */
             this.fitOnce = false;
+
+            this.propagatables.push({
+                name: "zoomToFit",
+                func: this.zoomToFit.bind(this)
+            });
 
             this.margin = 5;
 
