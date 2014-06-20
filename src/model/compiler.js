@@ -80,11 +80,7 @@ define(["model/fileloader",
              */
             this.fileLoader = new FileLoader();
 
-            this.fileLoader.load("cond", "macros");
-            this.fileLoader.load("func", "macros");
-            this.fileLoader.load("history", "macros");
-            this.fileLoader.load("quantifier", "macros");
-
+            this.fileLoader.load("macros", "macros");
             this.fileLoader.load("functions", "library");
             eval.call(globalScope, this.fileLoader.getLibrary());
         }

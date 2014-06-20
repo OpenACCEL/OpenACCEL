@@ -29,7 +29,7 @@ suite("File Loader", function() {
          */
         test("| Macro content matching", function() {
             var content = "// This macro is for testing purpose only." + os.EOL + "macro add {" + os.EOL + "    rule { ($x) } => { $x + 1 }" + os.EOL + "}";
-            fileLoader.load("testAdd", "macros");
+            fileLoader.load("testAdd", "testmacros");
             assert.equal(content, fileLoader.macros["testAdd"]);
         });
     });
@@ -39,7 +39,7 @@ suite("File Loader", function() {
          * Clearing should remove all macros from the cache.
          */
         test("| Clear", function() {
-            fileLoader.load("testAdd", "macros");
+            fileLoader.load("testAdd", "testmacros");
             fileLoader.clear();
             assert.equal("", fileLoader.getMacros());
         });
@@ -51,10 +51,10 @@ suite("File Loader", function() {
             fileLoader.clear();
 
             var content = "// This macro is for testing purpose only." + os.EOL + "macro add {" + os.EOL + "    rule { ($x) } => { $x + 1 }" + os.EOL + "}";
-            fileLoader.load("testAdd", "macros");
+            fileLoader.load("testAdd", "testmacros");
 
             var content2 = "// This macro is for testing purpose only." + os.EOL + "macro add {" + os.EOL + "    rule { ($x) } => { $x + 2 }" + os.EOL + "}";
-            fileLoader.load("testAdd2", "macros");
+            fileLoader.load("testAdd2", "testmacros");
 
             assert.equal(content + content2, fileLoader.getMacros());
         });

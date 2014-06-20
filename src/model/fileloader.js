@@ -63,6 +63,10 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 location = "../../test/model/util";
                 extension = ".js";
                 break;
+            case "testmacros":
+                location = "../../test/model/macros";
+                extension = ".sjs";
+                break;
             default:
                 type = "library";
                 location = "library";
@@ -111,7 +115,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
 
         // If the contents have been read, we can store them and return true, else we failed and return false.
         if (content) {
-            if (type == "macros") {
+            if (type == "macros" || type == "testmacros") {
                 this.macros[file] = content.toString();
             } else {
                 this.library[file] = content.toString();
