@@ -22,6 +22,82 @@ function resizeContainer() {
     );
 }
 
+//------------------------------------------------------------------------------
+
+function syntaxErrorMessage(id, error, selector) {
+    this.id = id;
+
+    var errorContainer = $(selector);
+
+    var source = errorContainer.html();
+    var errorLines = source.split('\n');
+    var errorEnd = errorLines[error.lastLine - 1];
+
+    errorLines[error.firstLine - 1] = errorEnd.substr(0, error.endPos) + '<span id = "errorlocation' + this.id + '"></span>' + errorEnd.substr(error.endPos);
+    
+    var newsource = errorLines.join('\n');
+    errorContainer.html(newsource);
+
+    var errorlocation = $('#errorlocation' + this.id);
+    var pos = errorlocation.offset();
+
+    this.x = pos.left;
+    this.y = 16 + pos.top;
+    this.text = '';
+    if (error.found == '') {
+        this.text = '<span style = "color: #FF1144;">Syntax Error</span> Expected expression or operator at position ' + error.endPos + '.';
+    } else {
+        this.text = '<span style = "color: #FF1144;">Syntax Error</span> Unexpected \"' + error.found + '\" at position ' + error.startPos + ' to ' + error.endPos + '.'; /*' in line ' + error.firstLine;*/
+    }
+}
+
+function runtimeErrorMessage(id, error, selector) {
+    this.x = 0;
+    this.y = 0;
+
+    if (false) { //TODO check if attributable to single quantity definition
+
+    } else {
+        //Default display location
+        var errorlocation = $(selector);
+        var pos = errorlocation.offset();
+
+        this.x = 0 + pos.left;
+        this.y = 24 + pos.top;
+    }
+
+    this.text = '<span style = "color: #FF1144;">Runtime Error</span> ' + error.message;
+}
+
+function handleError(error) {
+    var errormsg = null;
+
+    switch(error.constructor.name) {
+        case 'SyntaxError':
+            errormsg = new syntaxErrorMessage(errorCount, error, '#scriptline');
+            break;
+        case 'TypeError':
+            //previously thrown when excessive whitespace was input 
+            break;
+        case 'RuntimeError':
+            errormsg = new runtimeErrorMessage(errorCount, error, '#runscript')
+            break;
+        default:
+            errormsg = {
+                id: errorCount,
+                x: 0,
+                y: 16,
+                text: '<span style = "color: #FF1144;">Unknown error</span> Something went wrong internally during compilation.'
+            };
+            break;
+    }
+
+    var errorTooltip = new Tooltip(errorCount++, 'errormessage', errormsg.x, errormsg.y);
+    errorTooltip.set(errormsg.text);
+}
+
+//------------------------------------------------------------------------------
+
 $(document).ready(
     function() {
         $('#main').tabs();
@@ -39,6 +115,7 @@ $(document).ready(
                         try {
                             controller.setScriptFromSource($('#scriptarea').val());
                         } catch (e) {
+
                             if (typeof(e) === 'SyntaxError') {
                                 console.log(e.message);
                             } else {
@@ -269,11 +346,11 @@ function ValueList(selector) {
         var i = 0;
         entries.children(':last-child').on('click', {id: i++},
             function(e) {
-                $('.infomessage').parent().remove();
+                $('.datamessage').parent().remove();
 
                 var resultvalue = $(this);
                 var location = resultvalue.offset();
-                var fullvalue = new Tooltip(e.data.id, 'infomessage', location.left + 10, location.top + resultvalue.height());
+                var fullvalue = new Tooltip(e.data.id, 'datamessage', location.left + 10, location.top + resultvalue.height());
                 fullvalue.set(resultvalue.html());
             }
         );

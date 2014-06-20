@@ -28,26 +28,31 @@ var linenr = 0;
 
 function addQuantity(string) {
     setPendingScriptLine(string);
-    console.log('Pre-added line: ' + string);
-    $('#scriptline').select();
 
-    setTimeout(
-        function() {
-            try {
-                controller.addQuantity(string);
-            } catch (e) {
-                console.log(e);
-                var syntaxerror = new Tooltip(0, '#scriptline', 'tooltip');
-                syntaxerror.set(e.message);
-            }
+    string = string.trim();
+    if (string === '') {
+        //Do nothing if nothing was entered
+        setPendingScriptLine(null);
+    } else {
+        setTimeout(
+            function() {
+                $('.tooltipcontainer > div').filter(":visible").trigger('click');
 
-            console.log('compiled');
-            setPendingScriptLine(null);
+                try {
+                    controller.addQuantity(string);
+                } catch (error) {
+                    console.log(error);
+                    handleError(error);
+                }
 
-            selectContent('#scriptline');
-        },
-        10
-    );
+                console.log('compiled');
+                setPendingScriptLine(null);
+
+                selectContent('#scriptline');
+            },
+            10
+        );
+    }
 }
 
 function toggleExecution(action) {
@@ -546,19 +551,9 @@ ButtonInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, false);
 
     var buttoninput = this;
-    $('#userbutton' + buttoninput.identifier).on('mousedown',
+    $('#userbutton' + buttoninput.identifier).on('click',
         function() {
             controller.setUserInputQuantity(buttoninput.quantity, true);
-        }
-    );
-    $('#userbutton' + buttoninput.identifier).on('mouseup',
-        function() {
-            controller.setUserInputQuantity(buttoninput.quantity, false);
-        }
-    );
-    $('#userbutton' + buttoninput.identifier).on('mouseleave',
-        function() {
-            controller.setUserInputQuantity(buttoninput.quantity, false);
         }
     );
 };

@@ -248,8 +248,6 @@ body div {
 	cursor: pointer;
 	box-shadow: 4px 4px 8px #000000;
 	pointer-events: auto;
-	word-break: break-all;
-	word-wrap: break-word;
 }
 .tooltip:after { /* Tooltip tip */
 	content: '';
@@ -287,16 +285,18 @@ body div {
 	border-color: #662266 transparent;
 }
 
-.infomessage {
+.datamessage {
 	background: #FFDDFF;
 	background: linear-gradient(#FFDDFF, #FFFFFF);
 	color: #331144;
 	border: #FFFFFF solid 1px;
+	word-break: break-all;
+	word-wrap: break-word;
 }
-.infomessage:after {
+.datamessage:after {
 	border-color: #FFDDFF transparent;
 }
-.infomessage:before {
+.datamessage:before {
 	border-color: #FFFFFF transparent;
 }
 
@@ -375,6 +375,11 @@ body div {
 
 #iterations {
 	width: 60px;
+}
+
+#scriptlistdiv .textin {
+	padding-left: 0px;
+	padding-right: 0px;
 }
 
 #scriptlistcontainer {

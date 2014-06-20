@@ -74,8 +74,9 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      *
      * @param {RuntimeError} err The error that occured during runtime.
      */
-    View.prototype.runtimeError = function(err) {
-        console.log("Runtime error: " + err.message);
+    View.prototype.runtimeError = function(error) {
+        console.log(error);
+        handleError(error);
     };
 
     canvasCreator = new CanvasCreator();
