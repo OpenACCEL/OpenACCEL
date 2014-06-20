@@ -21,3 +21,5 @@ function check(def) {
         throw new Error('Argument of check must be true or false');
     }
 }
+
+check.isTimeDependent = true;

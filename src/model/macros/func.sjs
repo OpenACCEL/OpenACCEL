@@ -13,8 +13,11 @@ macro func {
     } => {
         // Add method to Executable (this) object that returns the value for this quantity
         this.$x = function() {
-            // If a quantity is time dependant, look up if there exists a previous version.
-            if (this.report && this.report.$x.isTimeDependent) {
+            // If a quantity is time dependant and is not an input quantity, check if it already has been evaluated and if yes
+            // return the evaluated value. Else evaluate it now. This is a form of memoization/caching.
+            // Input quantities are time dependent but do not have an executable library function: their
+            // value is set by the controller when the corresponding input element is changed by the user in the UI.
+            if (this.report && this.report.$x.isTimeDependent && this.report.$x.category != 1) {
                 if (this.$x.hist[this.time] === undefined) {
                     // Store current value of evaluated expression in history and return this value
                     this.$x.hist[this.time] = this.$x.expr();
@@ -31,10 +34,8 @@ macro func {
                         // default value as floats
                         if (this.report.$x.input.type == 'button') {
                             this.$x.hist[0] = false;
-                        } else if (this.report.$x.input.type == 'text') {
-                            this.$x.hist[0] = this.report.$x.input.parameters[0];
                         } else {
-                            this.$x.hist[0] = JSON.parse(this.report.$x.input.parameters[0]);
+                            this.$x.hist[0] = this.report.$x.input.parameters[0];
                         }
                     } else {
                          this.$x.hist[0] = this.$x.expr();

@@ -30,3 +30,5 @@ function slider(def, min, max) {
             ' (Default = ' + def + ', lower = ' + min + ', upper = ' + max + ')');
     }
 }
+
+slider.isTimeDependent = true;
