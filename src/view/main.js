@@ -49,6 +49,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      * @param {Boolean} show Whether to show the plot.
      */
     View.prototype.showPlot = function(show) {
+        console.log('showPlot: ' + show);
         $('#plotdiv').toggle(show);
     };
 
@@ -56,7 +57,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      * Updates the plot canvas
      */
     View.prototype.drawPlot = function() {
-        this.showPlot(true);
         this.canvas.draw();
     };
 

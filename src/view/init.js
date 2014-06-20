@@ -69,6 +69,8 @@ function runtimeErrorMessage(id, error, selector) {
     this.text = '<span style = "color: #FF1144;">Runtime Error</span> ' + error.message;
 }
 
+var errorCount = 0;
+
 function handleError(error) {
     var errormsg = null;
 

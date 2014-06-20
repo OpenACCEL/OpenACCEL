@@ -13,7 +13,7 @@ $(document).ready(
         Report.arglistBuffer.hideIfEmpty('#arglistdiv');
         Report.argtolistBuffer.hideIfEmpty('#argtodiv');
         userinputBuffer.hideIfEmpty('#userinputdiv');
-        Report.resultBuffer.hideIfEmpty('#resultdiv');
+        Report.resultList.buffer.hideIfEmpty('#resultdiv');
         $('#plotdiv').toggle(false);
     }
 );
@@ -138,7 +138,7 @@ function synchronizeScriptList(quantities) {
     Report.arglistBuffer.hideIfEmpty('#arglistdiv');
     Report.argtolistBuffer.hideIfEmpty('#argtodiv');
     userinputBuffer.hideIfEmpty('#userinputdiv');
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
+    Report.resultList.buffer.hideIfEmpty('#resultdiv');
     $('#plotdiv').toggle(false);
 }
 
@@ -148,21 +148,15 @@ function synchronizeScriptList(quantities) {
  * @param  {Object} quantities All category 2 quantities registered in the model
  */
 function synchronizeResults(quantities) {
-    Report.resultBuffer.empty();
-
-    //console.log(quantities);
+    var resultValues = {};
 
     for (var q in quantities) {
         var quantity = quantities[q];
-
-        try {
-            Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
-        } catch (e) {
-            console.log(e);
-        }
+        resultValues[quantity.name] = objectToString(controller.getQuantityValue(quantity.name));
     }
-    Report.resultBuffer.flip();
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
+
+    Report.resultList.set(resultValues);
+    Report.resultList.buffer.hideIfEmpty('#resultdiv');
 }
 
 /**
@@ -596,7 +590,7 @@ function initInputs() {
 }
 
 /**
- * Object containing methods to modify the contents of the #results element
+ * Object containing tools to modify the contents of the todo list, argument lists and result list
  * @type {Object}
  */
 var Report = {
@@ -667,18 +661,9 @@ var Report = {
     },
 
     /**
-     * Buffer to contain updated #result content
-     * @type {HTMLbuffer}
+     * List to allow for value updates without reconstruction of the HTML
+     * 
+     * @type ValueList
      */
-    resultBuffer: new HTMLbuffer('#result'),
-
-    /**
-     * Adds a resulting quantity to the #result element
-     *
-     * @param {String} quantity Left-hand of the equation
-     * @param {String} result   Right-hand side of the equation
-     */
-    addResult: function(quantity, result) {
-        Report.resultBuffer.append(this.getEquationHTML(quantity, result));
-    },
+    resultList: new ValueList('#result')
 };
