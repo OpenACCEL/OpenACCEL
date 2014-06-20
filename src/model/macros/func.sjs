@@ -17,29 +17,33 @@ macro func {
             // return the evaluated value. Else evaluate it now. This is a form of memoization/caching.
             // Input quantities are time dependent but do not have an executable library function: their
             // value is set by the controller when the corresponding input element is changed by the user in the UI.
-            var history = this.$x.hist;
+            var quantity = this.$x;
+            var history = quantity.hist;
 
             if (this.report && this.report.$x.isTimeDependent) {
+                var report = this.report.$x;
+                var time = this.time;
+                
                 // If the current time-step value has not been evaluated yet, do it now
-                if (history[this.time] === undefined) {
+                if (history[time] === undefined) {
                     // For non-input quantities, evaluate the expression of this quantity and store it
                     // in the history datastructure
-                    if (this.report.$x.category !== 1) {
-                        history[this.time] = this.$x.expr();
+                    if (report.category !== 1) {
+                        history[time] = quantity.expr();
                     } else {
                         // For input quantities, which do not have executable library functions,
                         // retrieve the current value from the report and store it in the history
-                        history[this.time] = this.report.$x.value;
+                        history[time] = report.value;
                     }
                 }
 
-                return history[this.time];
+                return history[time];
             } else {
                 // Quantity value does not change with time: check if it has been evaluated already
                 // and hasn't changed (applicable to user input). Else evaluate it now and store result
-                if (history[0] === undefined || this.$x.hasChanged) {
-                    history[0] = this.$x.expr();
-                    this.$x.hasChanged = false;
+                if (history[0] === undefined || quantity.hasChanged) {
+                    history[0] = quantity.expr();
+                    quantity.hasChanged = false;
                 }
 
                 return history[0];
@@ -76,6 +80,8 @@ macro func {
         ($x($xs (,) ...) = $expr:expr)
     } => {
         this.$x = function($xs (,) ...) {
+            var quantity = this.$x;
+
             // Support memoization only for 'primitive types', not objects
             var args = Array.prototype.slice.call(arguments);
             var obj = false;
@@ -88,9 +94,9 @@ macro func {
 
             if (!obj) {
                 hash = JSON.stringify(args);
-                return (hash in this.$x.cache) ? this.$x.cache[hash] : this.$x.cache[hash] = this.$x.expr($xs (,) ...);
+                return (hash in quantity.cache) ? quantity.cache[hash] : quantity.cache[hash] = quantity.expr($xs (,) ...);
             } else {
-                return this.$x.expr($xs (,) ...);
+                return quantity.expr($xs (,) ...);
             }
         };
 
