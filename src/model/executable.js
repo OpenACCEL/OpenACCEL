@@ -276,6 +276,8 @@ define([], /**@lends Model*/ function() {
             this.setHasChanged(elem.name);
             elem.value = this.getValue(elem.name);
         }).bind(this));
+
+        this.reset();
     };
 
     return Executable;
