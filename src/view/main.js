@@ -42,10 +42,8 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      */
     View.prototype.setUpPlot = function(controller) {
         $('#plotdiv').toggle(true);
-        //WARNING: The following two initialisations are order sensitive, it is not yet known what causes this.
-        //The optimisationCanvas should be made before the regular canvas.
-        this.optimisationCanvas = canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
         this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
+        this.optimisationCanvas = canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
     };
 
     /**

@@ -25,6 +25,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
          * @classdesc The GeneticOptimisationDescartesHandler class handles the drawing of GeneticOptimisation objects.
          */
         function GeneticOptimisationDescartesHandler(modelElement) {
+            /**
+             * First we must reset propagatables, otherwise these are shared among all subclasses of AbstractFunctionPropagator.
+             */
+            this.propagatables = [];
 
             /**
              * The initial GeneticOptimisation object this handler will be drawing.
@@ -83,29 +87,33 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
         GeneticOptimisationDescartesHandler.prototype = new AbstractDescartesHandler();
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Returns whether this handler is capable of drawing the given object.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param modelElement {Object} The object of which we want to know if it can be drawn.
+         * @return {boolean} modelElement instance of GeneticOptimisation
          */
         GeneticOptimisationDescartesHandler.prototype.canHandle = function(modelElement) {
             return modelElement instanceof GeneticOptimisation;
         };
 
-
         /**
-         * Returns whether the script can be compiled and executed.
+         * Returns a new instance of this object, accomodating for the given object.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param modelElement {GeneticOptimisation} The object to be accomodated.
+         * @return {GeneticOptimisationDescartesHandler} The handler assigned to draw modelElement.
          */
         GeneticOptimisationDescartesHandler.prototype.getInstance = function(modelElement) {
             return new GeneticOptimisationDescartesHandler(modelElement);
         };
 
-
         /**
-         * Returns whether the script can be compiled and executed.
+         * Adds a new descartes object to the array of descartes objects to be drawn to.
+         * This handler also includes a click callback.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param div {String} The div in the html file in which the new descartes object must draw.
+         * @param width {float} The width in pixels over which the new descartes object must draw.
+         * @param height {float} The height in pixels over which the new descartes object must draw.
+         * @modifies descartesInstances {Array<descartes>} The new descartes object gets appended to this.
          */
         GeneticOptimisationDescartesHandler.prototype.addDescartes = function(div, width, height) {
             var click = this.clickCallback.bind(this);
@@ -119,57 +127,13 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
         };
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * The click callback to be used by descartes when the mouse is clicked over it.
+         * This callback sets this.clickedIndividual to the Individual represented by the point closest to the click.
+         * The distance used here is euclidean distance.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
-         */
-        GeneticOptimisationDescartesHandler.prototype.getClickedIndividual = function() {
-            return this.clickedIndividual;
-        };
-
-
-        /**
-         * Returns whether the script can be compiled and executed.
-         *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
-         */
-        GeneticOptimisationDescartesHandler.prototype.getHorVerKeys = function() {
-            var quantities = controller.getScript().getQuantities();
-            var horQuantity;
-            var verQuantity;
-
-            for (var i in quantities) {
-                if (quantities[i].pareto.isHorizontal) {
-                    horQuantity = i;
-                }
-                if (quantities[i].pareto.isVertical) {
-                    verQuantity = i;
-                }
-            }
-
-            var horKey = 0;
-            var verKey = 0;
-            var currentName;
-            var population = this.modelElement.population;
-
-            if (population.length > 0) {
-                for (var j = population[0].outputvector.length - 1; j >= 0; j--) {
-                    currentName = population[0].outputvector[j].name;
-                    if (currentName == horQuantity) {
-                        horKey = j;
-                    }
-                    if (currentName == verQuantity) {
-                        verKey = j;
-                    }
-                }
-            }
-            return [horKey, verKey];
-        };
-
-        /**
-         * Returns whether the script can be compiled and executed.
-         *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param x {float} The mouse position on the x axis, normalised to [0...1].
+         * @param y {float} The mouse position on the y axis, normalised to [0...1].
+         * @modifies this.clickedIndividual {Individual} Changed to the Individual closest to the click.
          */
         GeneticOptimisationDescartesHandler.prototype.clickCallback = function(x, y) {
             var horVerKeys = this.getHorVerKeys();
@@ -204,11 +168,66 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
             this.draw();
         };
 
+        /**
+         * Returns the most recently clicked Individual, as determined according to this.clickCallBack.
+         *
+         * @return this.clickedIndividual {Individual}
+         */
+        GeneticOptimisationDescartesHandler.prototype.getClickedIndividual = function() {
+            return this.clickedIndividual;
+        };
+
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Returns the keys used in the output vectors of the Individuals of the GeneticOptimisation
+         * that correspond to the quantities set as paretoHor and paretoVer.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @return [horKey, verKey] {Array<float>} Both keys used in the output vectors:
+         * The key used for the paretoHor quantity on index 0.
+         * The key used for the paretoVer quantity on index 1.
+         */
+        GeneticOptimisationDescartesHandler.prototype.getHorVerKeys = function() {
+            var quantities = controller.getScript().getQuantities();
+            var horQuantity;
+            var verQuantity;
+
+            for (var i in quantities) {
+                if (quantities[i].pareto.isHorizontal) {
+                    horQuantity = i;
+                }
+                if (quantities[i].pareto.isVertical) {
+                    verQuantity = i;
+                }
+            }
+
+            var horKey = 0;
+            var verKey = 0;
+            var currentName;
+            var population = this.modelElement.population;
+
+            if (population.length > 0) {
+                for (var j = population[0].outputvector.length - 1; j >= 0; j--) {
+                    currentName = population[0].outputvector[j].name;
+                    if (currentName == horQuantity) {
+                        horKey = j;
+                    }
+                    if (currentName == verQuantity) {
+                        verKey = j;
+                    }
+                }
+            }
+            return [horKey, verKey];
+        };
+
+
+        /**
+         * Returns the descartes drawing of the Individuals in this.modelElement.population.
+         * The individuals are here represented by their paretoHor and paretoVer quantities as positions
+         * on the x and y axis, respectively. Any Individual in the pareto front has a different colour and
+         * diameter from the Individuals outside of the pareto front. The point corresponding to
+         * this.clickedIndividual is highlighted with yet another different colour.
+         *
+         * @return {Array<Array<Object>>} The descartes drawing based on this.modelElement.population.
          */
         GeneticOptimisationDescartesHandler.prototype.getDrawing = function() {
             var horVerKeys = this.getHorVerKeys();

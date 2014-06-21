@@ -25,6 +25,10 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
          * allowing them to correctly draw any supported model element.
          */
         function ZoomFitDescartesDecorator() {
+            /**
+             * First we must reset propagatables, otherwise these are shared among all subclasses of AbstractFunctionPropagator.
+             */
+            this.propagatables = [];
 
             this.decoratorComponents = [];
             /**
