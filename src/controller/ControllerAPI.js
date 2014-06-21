@@ -1,6 +1,7 @@
 /*
  * File containing the Controller Class
  *
+ * @author Edward
  * @author Loct
  */
 
@@ -28,11 +29,12 @@ define(["model/script",
         "controller/AbstractView",
         "underscore",
         "model/datastores/LocalBackupStore",
-        "model/exceptions/RuntimeError"
+        "model/exceptions/RuntimeError",
+        "controller/operation"
     ],
     //"model/workers/AutoSaveWorker"],
     /**@lends Controller*/
-    function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError) {
+    function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError, Operation) {
         /**
          * @class
          * @classdesc The Controller is the intermediar between the Model and the View.
@@ -166,7 +168,41 @@ define(["model/script",
              * @type {String}
              */
             this.status = "";
+
+            /**
+             * The operations that the Controller has performed.
+             * Stored for providing undo support.
+             *
+             * @type {Array}
+             */
+            this.operations = [];
+
+            /**
+             * Whether the controller is currently busy undoing
+             * an operation.
+             *
+             * @type {Boolean}
+             */
+            this.performingUndo = false;
         }
+
+        /**
+         * Neutralises the effects of the most recently executed command
+         * by performing the inverse operation.
+         */
+        Controller.prototype.undo = function() {
+            if (this.operations.length == 0) {
+                return;
+            }
+
+            this.performingUndo = true;
+
+            // Retrieve most recently executed command from stack
+            var undoOperation = this.operations.pop();
+
+            // Perform the undo operation for this command
+            undoOperation.undo.apply(this, undoOperation.undoArgs);
+        };
 
         /**
          * Sets whether the controller should automatically execute the script
@@ -561,7 +597,7 @@ define(["model/script",
         };
 
         /**
-         * Adds a quantity to the model.
+         * Adds a quantity to the model from the given definition.
          *
          * @param definition {String} A single line of ACCEL script which contains the
          * definition of the quantity to be added
@@ -580,10 +616,39 @@ define(["model/script",
                 autoSave = true;
             }
 
-            // Stop script, add quantity to script and update quantities in view
+            if (!this.performingUndo) {
+                // Check whether the quantity already exists in the script
+                var equalsIndex = definition.indexOf('=');
+                var lhs = definition.substring(0, equalsIndex).trim();
+
+                var varRegex = new RegExp(/(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*:))/g);
+                lhs = lhs.replace(/(['"])(.*?)(\1)/g, ""); // remove string definitions
+                var qtyName = varRegex.exec(lhs)[0];
+
+                var redefining = this.script.hasQuantity(qtyName);
+                var currentDef;
+                if (redefining) {
+                    currentDef = this.script.quantities[qtyName].source;
+                }
+            }
+
+            // Stop script, add quantity to it and push updated set of quantities to view
             this.stop();
             var qty = this.script.addQuantity(definition);
             this.view.setQuantities(this.script.getQuantities());
+
+            // Create operation in order to be able to undo this operation later, but only if
+            // we're not busy undoing already!
+            if (!this.performingUndo) {
+                if (redefining) {
+                    var operation = new Operation(this.addQuantity, this.addQuantity, [definition], [currentDef]);
+                    this.operations.push(operation);
+                } else {
+                    var operation = new Operation(this.addQuantity, this.deleteQuantity, [definition], [qty.name]);
+                    this.operations.push(operation);
+                }
+            }
+            this.performingUndo = false;
 
             // Autosave quantity if enabled
             if (autoSave && this.autoSave && window.localStorage) {
@@ -608,7 +673,7 @@ define(["model/script",
          */
         Controller.prototype.deleteQuantity = function(qtyName) {
             if (!qtyName) {
-                throw new Error('Controller.prototype.addQuantityuantity.pre violated :' +
+                throw new Error('Controller.prototype.addQuantity.pre violated :' +
                     'qtyName is null or undefined')
             }
             if (!this.script.hasQuantity(qtyName)) {
@@ -618,8 +683,17 @@ define(["model/script",
 
             // Stop script, delete quantity from script and update quantities in view
             this.stop();
+            var definition = this.script.getQuantity(qtyName).source;
             this.script.deleteQuantity(qtyName);
             this.view.setQuantities(this.script.getQuantities());
+
+            // Create operation in order to be able to undo this operation later, but only if
+            // we're not busy undoing already!
+            if (!this.performingUndo) {
+                var operation = new Operation(this.deleteQuantity, this.addQuantity, [qtyName], [definition]);
+                this.operations.push(operation);
+            }
+            this.performingUndo = false;
 
             // Remove quantity from autosave store
             if (this.autoSave && window.localStorage) {
