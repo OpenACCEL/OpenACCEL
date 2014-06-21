@@ -217,7 +217,7 @@ function objectToString(obj) {
 
                     result += ',';
                 }
-                // replace the last 
+                // replace the last
                 if (result.charAt(result.length - 1) === ',') {
                     result = result.slice(0, -1);
                 }
@@ -330,14 +330,14 @@ function addScriptlistLine(linenr, quantity, left, right, category) {
 
 /**TODO
  * [setPendingScriptLine description]
- * 
+ *
  * @param {[type]} line [description]
  */
 function setPendingScriptLine(line) {
     var pendingline = $('#pendingscriptline');
 
     if (line == null) {
-        pendingline.animate({height: 0, opacity: 0}, 400, 
+        pendingline.animate({height: 0, opacity: 0}, 400,
             function() {
                 pendingline.toggle(false);
                 $('#pendingloader').toggle(false);
@@ -393,7 +393,7 @@ function SliderInput(identifier, quantity, label, val, min, max) {
     this.min = min;
     this.max = max;
 
-    this.getStepSize = function(val, min, max) {      
+    this.getStepSize = function(val, min, max) {
         var stepsizes = [Math.pow(10, -getPrecision(val)),
                          Math.pow(10, -getPrecision(min)),
                          Math.pow(10, -getPrecision(max))];
@@ -662,7 +662,7 @@ var Report = {
 
     /**
      * List to allow for value updates without reconstruction of the HTML
-     * 
+     *
      * @type ValueList
      */
     resultList: new ValueList('#result')

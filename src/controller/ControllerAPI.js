@@ -30,11 +30,11 @@ define(["model/script",
         "underscore",
         "model/datastores/LocalBackupStore",
         "model/exceptions/RuntimeError",
-        "controller/operation"
+        "controller/QuantityOperation"
     ],
     //"model/workers/AutoSaveWorker"],
     /**@lends Controller*/
-    function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError, Operation) {
+    function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError, QuantityOperation) {
         /**
          * @class
          * @classdesc The Controller is the intermediar between the Model and the View.
@@ -184,15 +184,37 @@ define(["model/script",
              * @type {Boolean}
              */
             this.performingUndo = false;
+
+            /**
+             * How many operations should be stored at any time.
+             *
+             * @type {Number}
+             */
+            this.numUndoableItems = 5;
+
+            /**
+             * Used for keeping track of undo items
+             *
+             * @type {Number}
+             */
+            this.undoOffset = 0;
         }
 
         /**
          * Neutralises the effects of the most recently executed command
          * by performing the inverse operation.
+         *
+         * @return {Boolean} Whether an operation has been undone
          */
         Controller.prototype.undo = function() {
-            if (this.operations.length == 0) {
-                return;
+            if (this.operations.length-this.undoOffset == 0) {
+                // Remove any remaining undo items not being used
+                if (this.undoOffset>0) {
+                    this.operations.length = 0;
+                    this.undoOffset = 0;
+                }
+
+                return false;
             }
 
             this.performingUndo = true;
@@ -202,6 +224,61 @@ define(["model/script",
 
             // Perform the undo operation for this command
             undoOperation.undo.apply(this, undoOperation.undoArgs);
+            return true;
+        };
+
+        /**
+         * Reverts multiple executed opertaions
+         *
+         * @param  {Integer} amount The number of operations to undo
+         * @return {[type]}        [description]
+         */
+        Controller.prototype.undoMultiple = function(amount) {
+            // Undo the last #amount of iterations, with a maximum of
+            // min(this.numUndoableItems, this.operations.length)
+            var numOperations = (amount < this.operations.length-this.undoOffset) ? amount :
+                this.operations.length-this.undoOffset;
+
+            for (var i = numOperations - 1; i >= 0; i--) {
+                this.undo();
+            };
+        };
+
+        /**
+         * Returns the operations that can currently be undone
+         *
+         * @return {Array.Operations} An array of Operation objects
+         * that represent undoable actions, in chronological order:
+         * the newest undoable item is the last one in the array.
+         */
+        Controller.prototype.getUndoableItems = function() {
+            // Enforce maximum number of undoable items
+            var undoItems = this.operations;
+            if (this.undoOffset > 0) {
+                undoItems = undoItems.slice(this.undoOffset);
+            }
+
+            return undoItems;
+        };
+
+        /**
+         * Stores the given operation such that it can be undone
+         * in the future. Used internally, do not call!
+         *
+         * @param  {Operation} operation The operation to store
+         */
+        Controller.prototype.storeOperation = function(operation) {
+            this.operations.push(operation);
+
+            // Keep number of stored operations within bounds
+            if (this.operations.length-this.undoOffset > this.numUndoableItems) {
+                if (this.operations.length > this.numUndoableItems+10) {
+                    this.operations = this.operations.slice(-this.numUndoableItems);
+                    this.undoOffset = 0;
+                } else {
+                    this.undoOffset = this.operations.length-this.numUndoableItems;
+                }
+            }
         };
 
         /**
@@ -477,6 +554,10 @@ define(["model/script",
             this.view.setQuantities({});
             this.view.presentResults({});
 
+            // Clear undo items
+            this.operations.length = 0;
+            this.undoOffset = 0;
+
             // Give new script object to descartes
             if (inBrowser) {
                 this.view.canvas.setModel(this.script);
@@ -625,7 +706,7 @@ define(["model/script",
                 lhs = lhs.replace(/(['"])(.*?)(\1)/g, ""); // remove string definitions
                 var qtyName = varRegex.exec(lhs)[0];
 
-                var redefining = this.script.hasQuantity(qtyName);
+                var redefining = this.script.hasQuantity(qtyName) && !this.script.quantities[qtyName].todo;
                 var currentDef;
                 if (redefining) {
                     currentDef = this.script.quantities[qtyName].source;
@@ -640,12 +721,17 @@ define(["model/script",
             // Create operation in order to be able to undo this operation later, but only if
             // we're not busy undoing already!
             if (!this.performingUndo) {
+                var descr;
                 if (redefining) {
-                    var operation = new Operation(this.addQuantity, this.addQuantity, [definition], [currentDef]);
-                    this.operations.push(operation);
+                    descr = "Redefine quantity '" + qty.name + "': " + qty.definition;
+                    var operation = new QuantityOperation(this.addQuantity, this.addQuantity, [definition],
+                        [currentDef], descr, qty);
+                    this.storeOperation(operation);
                 } else {
-                    var operation = new Operation(this.addQuantity, this.deleteQuantity, [definition], [qty.name]);
-                    this.operations.push(operation);
+                    descr = "Add quantity '" + qty.name + "'";
+                    var operation = new QuantityOperation(this.addQuantity, this.deleteQuantity, [definition],
+                        [qty.name], descr, qty);
+                    this.storeOperation(operation);
                 }
             }
             this.performingUndo = false;
@@ -683,15 +769,17 @@ define(["model/script",
 
             // Stop script, delete quantity from script and update quantities in view
             this.stop();
-            var definition = this.script.getQuantity(qtyName).source;
+            var qty = this.script.getQuantity(qtyName);
             this.script.deleteQuantity(qtyName);
             this.view.setQuantities(this.script.getQuantities());
 
             // Create operation in order to be able to undo this operation later, but only if
             // we're not busy undoing already!
             if (!this.performingUndo) {
-                var operation = new Operation(this.deleteQuantity, this.addQuantity, [qtyName], [definition]);
-                this.operations.push(operation);
+                var descr = "Delete quantity '" + qty.name + "'";
+                var operation = new QuantityOperation(this.deleteQuantity, this.addQuantity, [qtyName], [qty.source],
+                    descr, qty);
+                this.storeOperation(operation);
             }
             this.performingUndo = false;
 

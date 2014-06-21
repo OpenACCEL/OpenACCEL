@@ -23,10 +23,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([], /**@lends Operation*/ function() {
+define(["controller/Operation"], /**@lends QuantityOperation*/ function(Operation) {
     /**
      * @class
-     * @classdesc An operation that the Controller can perform
+     * @classdesc An operation on a Quantity that the Controller can perform
      * and undo.
      *
      * @param {Function} execute The operation to perform
@@ -35,27 +35,33 @@ define([], /**@lends Operation*/ function() {
      * @param {Array} args Array of arguments to pass to execute
      * @param {Array} undoArgs Array of arguments to pass to undo
      * @param {String} description A textual description of the operation
+     * @param {Quantity} quantity The quantity on which this operation is
+     * performed
      */
-    function Operation(execute, undo, args, undoArgs, description) {
+    function QuantityOperation(execute, undo, args, undoArgs, description, quantity) {
         this.execute = execute;
         this.undo = undo;
         this.args = args;
         this.undoArgs = undoArgs;
         this.description = description;
+        this.quantity = quantity;
     }
+
+    QuantityOperation.prototype = new Operation();
 
     /**
      * Resets this object to empty values.
      *
      * @post All class variables have been set to null.
      */
-    Operation.prototype.reset = function() {
+    QuantityOperation.prototype.reset = function() {
         this.execute = null;
         this.undo = null;
         this.args = null;
         this.undoArgs = null;
         this.description = "";
+        this.quantity = null;
     };
 
-    return Operation;
+    return QuantityOperation;
 });
