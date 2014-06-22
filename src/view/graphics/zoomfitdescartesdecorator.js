@@ -1,5 +1,5 @@
 /*
- * TODO: JSDoc
+ *
  * @author Leo van Gansewinkel
  */
 
@@ -19,59 +19,93 @@ if (inNode) {
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartesdecorator", "view/graphics/pandescartesdecorator"],
     function(AbstractDescartesDecorator, ZoomDescartesDecorator, PanDescartesDecorator) {
+
         /**
          * @class ZoomFitDescartesDecorator
-         * @classdesc The ZoomFitDescartesDecorator class provides DescartesHandlers to Canvases,
-         * allowing them to correctly draw any supported model element.
+         * @classdesc The ZoomFitDescartesDecorator decorates descartes drawings by zooming and panning
+         * as to fit all drawing elements in the canvas with some margin.
          */
         function ZoomFitDescartesDecorator() {
+
             /**
              * First we must reset propagatables, otherwise these are shared among all subclasses of AbstractFunctionPropagator.
              */
             this.propagatables = [];
 
-            this.decoratorComponents = [];
             /**
-             * The DescartesHandlers that can be provided by this class.
+             * The decorator components this composite decorator borrows functionality from.
              *
-             * @type {array<AbstractDescartesHandler>}
+             * @type {Array<AbstractDescartesDecorator>}
+             */
+            this.decoratorComponents = [];
+
+            /**
+             * First we add a PanDescartesDecorator to set the origin of the canvas.
              */
             this.decoratorComponents.push(new PanDescartesDecorator());
 
             /**
-             * The DescartesHandlers that can be provided by this class.
-             *
-             * @type {array<AbstractDescartesHandler>}
+             * Then we add a ZoomDescartesDecorator to scale on that origin to fit everything exactly.
              */
             this.decoratorComponents.push(new ZoomDescartesDecorator());
+
+            /**
+             * Finally we add another PanDescartesDecorator to enable a margin on the fit.
+             */
             this.decoratorComponents.push(new PanDescartesDecorator());
 
             /**
-             * The DescartesHandlers that can be provided by this class.
+             * Whether or not we always apply zoom fitting to a drawing.
              *
-             * @type {array<AbstractDescartesHandler>}
+             * @type {boolean}
              */
             this.alwaysFit = false;
 
             /**
-             * The DescartesHandlers that can be provided by this class.
+             * Whether or not the next drawing iteration will form the base of the zoom fit adjustment from then on.
              *
-             * @type {array<AbstractDescartesHandler>}
+             * @type {boolean}
              */
             this.fitOnce = false;
 
+            /**
+             * Margin in percentage of the canvas to set around the zoom fit.
+             *
+             * @type {float}
+             */
+            this.margin = 0;
+
+            /**
+             * The adjustment factor with which the zoom has to be adjusted to allow for the margin.
+             *
+             * @type {array<AbstractDescartesHandler>}
+             */
+            this.marginZoomAdjust = 1;
+
+            /**
+             * Set the margin and marginZoomAdjust to a default with a margin of 5%.
+             */
             this.setZoomFitMargin(5);
 
+            /**
+             * Propagate the setAlwaysFit function to (probably) the Canvas class.
+             */
             this.propagatables.push({
                 name: "setAlwaysFit",
                 func: this.setAlwaysFit.bind(this)
             });
 
+            /**
+             * Propagate the zoomToFit function to (probably) the Canvas class.
+             */
             this.propagatables.push({
                 name: "zoomToFit",
                 func: this.zoomToFit.bind(this)
             });
 
+            /**
+             * Propagate the setZoomFitMargin function to (probably) the Canvas class.
+             */
             this.propagatables.push({
                 name: "setZoomFitMargin",
                 func: this.setZoomFitMargin.bind(this)
@@ -82,9 +116,13 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
         ZoomFitDescartesDecorator.prototype = new AbstractDescartesDecorator();
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Returns the input, adjusted such that all points fit within the canvas inside of a certain margin
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param plot {Array<Array<Object>>} The drawing to be adjusted.
+         * @modifies fitOnce {boolean} Gets set to false after this decoration.
+         * @return plot {Array<Array<Object>>} The drawing adjusted by zooming and panning to fit everything
+         * in the canvas, given that alwaysFit or fitOnce are true. Reuses old adjustments if neither alwaysFit
+         * nor fitOnce are true.
          */
         ZoomFitDescartesDecorator.prototype.decorate = function(plot) {
             if (this.alwaysFit || this.fitOnce) {
@@ -128,9 +166,14 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
         };
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Returns a point with coordinates, inversely adjusted by this decorator.
+         * These points come from descartes through callbacks, hence they must undergo inverse
+         * adjustment to match the original drawing context.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param point {Object} The point to be inversely adjusted, containing an 'x', a 'y' and
+         * possibly a 'z' coordinate.
+         * @return point {Object} The inversely adjusted point, applying the set of decorator components'
+         * mapPoint functions in reverse order.
          */
         ZoomFitDescartesDecorator.prototype.mapPoint = function(point) {
             if (this.decorator != null) {
@@ -143,27 +186,30 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
         };
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Sets this.alwaysFit to a new value.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param bool {boolean} The new value for alwaysFit.
+         * @modifies this.alwaysFit {boolean} gets set to bool
          */
         ZoomFitDescartesDecorator.prototype.setAlwaysFit = function(bool) {
             this.alwaysFit = bool;
         };
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Sets this.fitOnce to true.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @modifies this.fitOnce {boolean} gets set to true
          */
         ZoomFitDescartesDecorator.prototype.zoomToFit = function() {
             this.fitOnce = true;
         };
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Sets this.marin to a new value, and adjusts this.marginZoomAdjust accordingly.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param margin {float} The new value of this.margin.
+         * @modifies this.margin {float} gets set to margin
+         * @modifies this.marginZoomAdjust {float} is changed to accomodate for this.margin from all sides.
          */
         ZoomFitDescartesDecorator.prototype.setZoomFitMargin = function(margin) {
             this.margin = margin;
