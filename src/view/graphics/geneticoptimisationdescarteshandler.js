@@ -17,8 +17,8 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescartesdecorator", "model/emo/geneticoptimisation", "model/emo/individual"],
-    function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual) {
+define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescartesdecorator", "model/emo/geneticoptimisation", "model/emo/individual", "model/emo/cloneobject"],
+    function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual, CloneObject) {
 
         /**
          * @class GeneticOptimisationDescartesHandler
@@ -165,6 +165,9 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                     this.clickedIndividual = population[i];
                 }
             }
+
+            //Dereference clickedIndividual
+            this.clickedIndividual = new CloneObject(this.clickedIndividual);
             this.draw();
         };
 
