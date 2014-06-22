@@ -231,7 +231,6 @@ define(["model/script",
          * Reverts multiple executed opertaions
          *
          * @param  {Integer} amount The number of operations to undo
-         * @return {[type]}        [description]
          */
         Controller.prototype.undoMultiple = function(amount) {
             // Undo the last #amount of iterations, with a maximum of

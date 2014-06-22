@@ -314,10 +314,6 @@ function Tooltip(id, classes, x, y) {
 
 //------------------------------------------------------------------------------
 
-/**
- * [ValueList description]
- * @param {[type]} selector [description]
- */
 function ValueList(selector) {
     this.selector = selector;
     this.initialized = false;
@@ -421,12 +417,6 @@ function SelectionList(selector, callback) {
         this.buffer.append(this.getItemHTML(i, item));
     };
 
-    /**
-     * [initializeItem description]
-     *
-     * @param  {type[]} i [description]
-     * @return {type[]}   [description]
-     */
     this.initializeItem = function(i) {
         var itemselector = this.selector + 'Item' + i;
 
