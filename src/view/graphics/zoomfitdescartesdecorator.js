@@ -65,9 +65,7 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
                 func: this.zoomToFit.bind(this)
             });
 
-            this.margin = 5;
-
-            this.marginZoomAdjust = 1 - (2 * this.margin / 100);
+            this.setZoomFitMargin(5);
         }
 
 
@@ -150,6 +148,16 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
          */
         ZoomFitDescartesDecorator.prototype.zoomToFit = function() {
             this.fitOnce = true;
+        };
+
+        /**
+         * Returns whether the script can be compiled and executed.
+         *
+         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         */
+        ZoomFitDescartesDecorator.prototype.setZoomFitMargin = function(margin) {
+            this.margin = margin;
+            this.marginZoomAdjust = 1 - (2 * this.margin / this.coordinateScale);
         };
 
         // Exports are needed, such that other modules may invoke methods from this module file.
