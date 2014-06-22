@@ -60,12 +60,22 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
              */
             this.fitOnce = false;
 
+            this.setZoomFitMargin(5);
+
+            this.propagatables.push({
+                name: "setAlwaysFit",
+                func: this.setAlwaysFit.bind(this)
+            });
+
             this.propagatables.push({
                 name: "zoomToFit",
                 func: this.zoomToFit.bind(this)
             });
 
-            this.setZoomFitMargin(5);
+            this.propagatables.push({
+                name: "setZoomFitMargin",
+                func: this.setZoomFitMargin.bind(this)
+            });
         }
 
 
