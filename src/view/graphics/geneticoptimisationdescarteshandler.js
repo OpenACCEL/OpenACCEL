@@ -179,14 +179,13 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
 
 
         /**
-         * Returns the keys used in the output vectors of the Individuals of the GeneticOptimisation
-         * that correspond to the quantities set as paretoHor and paretoVer.
+         * Returns the quantities set as paretoHor and paretoVer.
          *
-         * @return [horKey, verKey] {Array<float>} Both keys used in the output vectors:
-         * The key used for the paretoHor quantity on index 0.
-         * The key used for the paretoVer quantity on index 1.
+         * @return [horQuantity, verQuantity] {Array<Quantity>} Both quantities used for paretoHor and paretoVer:
+         * The paretoHor quantity on index 0.
+         * The paretoVer quantity on index 1.
          */
-        GeneticOptimisationDescartesHandler.prototype.getHorVerKeys = function() {
+        GeneticOptimisationDescartesHandler.prototype.getHorVerQuantities = function() {
             var quantities = controller.getScript().getQuantities();
             var horQuantity;
             var verQuantity;
@@ -200,6 +199,21 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                 }
             }
 
+            return [horQuantity, verQuantity];
+        };
+
+
+        /**
+         * Returns the keys used in the output vectors of the Individuals of the GeneticOptimisation
+         * that correspond to the quantities set as paretoHor and paretoVer.
+         *
+         * @return [horKey, verKey] {Array<float>} Both keys used in the output vectors:
+         * The key used for the paretoHor quantity on index 0.
+         * The key used for the paretoVer quantity on index 1.
+         */
+        GeneticOptimisationDescartesHandler.prototype.getHorVerKeys = function() {
+            var horVerQuantities = this.getHorVerQuantities();
+
             var horKey = 0;
             var verKey = 0;
             var currentName;
@@ -208,10 +222,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
             if (population.length > 0) {
                 for (var j = population[0].outputvector.length - 1; j >= 0; j--) {
                     currentName = population[0].outputvector[j].name;
-                    if (currentName == horQuantity) {
+                    if (currentName == horVerQuantities[0]) {
                         horKey = j;
                     }
-                    if (currentName == verQuantity) {
+                    if (currentName == horVerQuantities[1]) {
                         verKey = j;
                     }
                 }
