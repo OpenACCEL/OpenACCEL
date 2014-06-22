@@ -165,9 +165,6 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
                     this.clickedIndividual = population[i];
                 }
             }
-
-            //Dereference clickedIndividual.
-            this.clickedIndividual = new Individual(this.clickedIndividual.inputvector, this.clickedIndividual.outputvector);
             this.draw();
         };
 
