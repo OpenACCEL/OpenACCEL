@@ -147,5 +147,25 @@ $(document).ready(
                 controller.nextGeneration(geneticOptimisationValues.stepsize);
             }
         );
+
+        $('#plotGO').on('click',
+            function() {
+                var individual = view.optimisationCanvas.getClickedIndividual();
+                console.log(individual);
+            }
+        );
+
+        $('#smartzoomGO').on('click',
+            function() {
+                //controller.;
+            }
+        );
+
+        $('#zoomtofitGO').on('click',
+            function() {
+                //controller.;
+            }
+        );
     }
 );
+

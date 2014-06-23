@@ -1,3 +1,4 @@
+var view = null;
 var controller = null;
 var canvasCreator = null;
 
@@ -93,8 +94,10 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     };
 
     canvasCreator = new CanvasCreator();
-    controller = new Controller(new View(canvasCreator));
-    controller.view.setUpPlot();
+
+    view = new View(canvasCreator);
+    controller = new Controller(view);
+    view.setUpPlot();
     
     controller.setAutoExecute(true);
     controller.autoSave = true;
