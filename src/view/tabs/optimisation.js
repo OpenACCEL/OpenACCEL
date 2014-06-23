@@ -160,15 +160,15 @@ $(document).ready(
                 //individual.inputvector
                 //name          value           minimum        maximum
                 
-                individualPropertiesBuffer.append('<h4>Category I quantities</h4><div class = "divtable">');
-
                 individualPropertiesBuffer.append('\
-                    <div>\
-                        <div><em>name</em></div>\
-                        <div><em>value</em></div>\
-                        <div><em>minimum</em></div>\
-                        <div><em>maximum</em></div>\
-                    </div>\
+                    <h4>Category I quantities</h4>\
+                    <div class = "divtable">\
+                        <div>\
+                            <div><em>name</em></div>\
+                            <div><em>value</em></div>\
+                            <div><em>minimum</em></div>\
+                            <div><em>maximum</em></div>\
+                        </div>\
                 ');
 
                 for (var q in individual.inputvector) {
@@ -187,14 +187,14 @@ $(document).ready(
                 //individual.outputvector
                 //name          value           maximized/minimized
                 
-                individualPropertiesBuffer.append('<h4>Category II quantities</h4><div class = "divtable">');
-
                 individualPropertiesBuffer.append('\
-                    <div>\
-                        <div><em>name</em></div>\
-                        <div><em>value</em></div>\
-                        <div><em>optimisation</em></div>\
-                    </div>\
+                    <h4>Category II quantities</h4>\
+                    <div class = "divtable">\
+                        <div>\
+                            <div><em>name</em></div>\
+                            <div><em>value</em></div>\
+                            <div><em>optimisation</em></div>\
+                        </div>\
                 ');
 
                 for (var q in individual.outputvector) {
