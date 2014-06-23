@@ -6,6 +6,8 @@ var geneticOptimisationValues = {
     maxfront: 20
 }
 
+var individualPropertiesBuffer = new HTMLbuffer('#propertiesGO');
+
 $(document).ready(
     function() {
         $('#populationsize').slider(
@@ -152,6 +154,62 @@ $(document).ready(
             function() {
                 var individual = view.optimisationCanvas.getClickedIndividual();
                 console.log(individual);
+
+                individualPropertiesBuffer.empty();
+
+                //individual.inputvector
+                //name          value           minimum        maximum
+                
+                individualPropertiesBuffer.append('<h4>Category I quantities</h4><div class = "divtable">');
+
+                individualPropertiesBuffer.append('\
+                    <div>\
+                        <div><em>name</em></div>\
+                        <div><em>value</em></div>\
+                        <div><em>minimum</em></div>\
+                        <div><em>maximum</em></div>\
+                    </div>\
+                ');
+
+                for (var q in individual.inputvector) {
+                    individualPropertiesBuffer.append('\
+                        <div>\
+                            <div class = "max128w ellipsis">' + individual.inputvector[q].name + '</div>\
+                            <div class = "max128w ellipsis">' + individual.inputvector[q].value + '</div>\
+                            <div class = "max128w ellipsis">' + individual.inputvector[q].minimum + '</div>\
+                            <div class = "max128w ellipsis">' + individual.inputvector[q].maximum + '</div>\
+                        </div>\
+                    ');
+                }
+
+                individualPropertiesBuffer.append('</div>');
+
+                //individual.outputvector
+                //name          value           maximized/minimized
+                
+                individualPropertiesBuffer.append('<h4>Category II quantities</h4><div class = "divtable">');
+
+                individualPropertiesBuffer.append('\
+                    <div>\
+                        <div><em>name</em></div>\
+                        <div><em>value</em></div>\
+                        <div><em>optimisation</em></div>\
+                    </div>\
+                ');
+
+                for (var q in individual.outputvector) {
+                    individualPropertiesBuffer.append('\
+                        <div>\
+                            <div class = "max128w ellipsis">' + individual.outputvector[q].name + '</div>\
+                            <div class = "max128w ellipsis">' + individual.outputvector[q].value + '</div>\
+                            <div class = "max128w ellipsis">' + (individual.outputvector[q].maximize ? 'Maximized' : 'Minimized') + '</div>\
+                        </div>\
+                    ');
+                }
+
+                individualPropertiesBuffer.append('</div>');
+
+                individualPropertiesBuffer.flip();
             }
         );
 
