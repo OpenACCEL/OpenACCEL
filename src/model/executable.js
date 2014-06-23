@@ -267,19 +267,25 @@ define([], /**@lends Model*/ function() {
      *
      */
     Executable.prototype.executeQuantities = function(inputs, outputs) {
+        this.reset();
         // do one step forward into the future
         this.step();
 
         // set the values to the ones given in input
-        inputs.forEach((function(elem) {
+        for (var key in inputs) {
+            var elem = inputs[key];
             this.setValue(elem.name, elem.value);
-        }).bind(this));
+        }
+
+        
+
 
         // update the values in the output-objects
-        outputs.forEach((function(elem) {
-            this.setHasChanged(elem.name);
+        for (var key in outputs) {
+            var elem = outputs[key];
+            this.setHasChanged(elem.name, true);
             elem.value = this.getValue(elem.name);
-        }).bind(this));
+        }
 
         this.reset();
     };
