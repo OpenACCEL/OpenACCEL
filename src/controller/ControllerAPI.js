@@ -324,11 +324,11 @@ define(["model/script",
          * Resumes script execution when paused, optionally only when
          * paused by the user (instead of the system).
          *
-         * @param userOnly {Boolean} Whether to only resume the script
-         * when it has been paused by the user.
+         * @param systemOnly {Boolean} Whether to only resume the script
+         * when it has been paused by the system.
          */
-        Controller.prototype.resume = function(userOnly) {
-            if (this.paused && (!this.pausedBySystem || !userOnly)) {
+        Controller.prototype.resume = function(systemOnly) {
+            if (this.paused && (this.pausedBySystem || !systemOnly)) {
                 this.run();
             }
         };
@@ -875,11 +875,10 @@ define(["model/script",
                     this.saveScriptToBackupStore(this.script.getSource());
                 }
 
-                // Compile script and execute immediately if autoExecute is enabled
                 this.compileScript(this.script);
-                if (this.autoExecute) {
+                /*if (this.autoExecute) {
                     this.run();
-                }
+                }*/
             }
 
             return added;

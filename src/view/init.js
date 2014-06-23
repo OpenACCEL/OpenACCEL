@@ -110,7 +110,8 @@ $(document).ready(
                 leaving = ui.oldPanel[0].id;
                 switch (leaving) {
                     case 'editrun':
-                        // Pause script when leaving edit/run tab
+                        // Pause script when leaving edit/run tab, indicating it has
+                        // been paused automatically by the system and not by the user
                         controller.pause(true);
                         break;
                     case 'ioedit':
@@ -141,8 +142,15 @@ $(document).ready(
                 entering = ui.newPanel[0].id;
                 switch (entering) {
                     case 'editrun':
+                        // If autoexecute is true, resume script only when it has been paused
+                        // by the system, and start executing when it is not paused but compiled
                         if (controller.autoExecute) {
-                            controller.resume(true);
+                            if (controller.isPaused()) {
+                                controller.resume(true);
+                            } else {
+                                controller.run();
+                            }
+                            
                         }
                         break;
                     default:
