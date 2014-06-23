@@ -5,6 +5,7 @@
  * @param  {Array}      x       array of inputs used in the function of interest, each of which may be an array itself
  * @param  {Function}   func    function that should be applied
  * @return {Array}              resulting array
+ * @memberof Model.Library
  */
 function zip(x, func) {
     var numArgs = x.length;

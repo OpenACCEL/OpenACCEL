@@ -1,10 +1,3 @@
-/**
- * @memberof Model.Library
- * Returns the elements in x indexed by y.
- * @param  x		array with values to be gotten
- * @param  y		array with indexes
- * @return 			array with values in x indexed by y
- */
 function at(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + '@' +

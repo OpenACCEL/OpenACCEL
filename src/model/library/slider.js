@@ -6,7 +6,7 @@
  * In this way, the Analyser can easily extract the arguments
  * and check the arguments for errors
  *
- * @memerof Model.Library
+ * @memberof Model.Library
  * @pre min <= def <= max
  * @param  {Number} def Deafault value of the slider
  * @param  {Number} min Lower bound

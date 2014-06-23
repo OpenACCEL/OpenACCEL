@@ -1,6 +1,3 @@
-// TODO: UNIT checking, since poisson function should not allow arguments with units.
-
-
 function poisson(x, y, z) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
