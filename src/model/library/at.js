@@ -18,6 +18,9 @@ function at(x, y) {
         }
         return result;
     } else {
+        if (!isNaN(y)) {
+            y = Math.round(y);
+        }
         // Base: y is a scalar
         if (x instanceof Array) {
             if (x[y] === undefined) {
