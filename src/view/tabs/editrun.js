@@ -304,7 +304,7 @@ function getScriptlistLineHTML(linenr, quantity, left, right, category) {
     return '\
         <input type="radio" name="script" id="line' + linenr + '" value="' + left + ' = ' + right + '">\
         <label for="line' + linenr + '" onclick = "selectScriptline(' + linenr + ', \'' + quantity + '\');">\
-            <div class="inline ellipsis max256w">' + left + '</div>\
+            <div class="inline ellipsis max128w">' + left + '</div>\
             <div class="inline operator">=</div>\
             <div class="inline ellipsis max256w">' + right + '</div>\
             <div class="inline comment">(cat.=' + category + ')</div>\
@@ -597,7 +597,7 @@ var Report = {
     getEquationHTML: function(left, right) {
         return '\
             <div>\
-                <div class="ellipsis max256w">' + left + '</div>\
+                <div class="ellipsis max128w">' + left + '</div>\
                 <div class="operator"> = </div>\
                 <div class="ellipsis max256w">' + right + '</div>\
             </div>\
@@ -607,7 +607,7 @@ var Report = {
     getPropertyListHTML: function(x, property) {
         return '\
             <div>\
-                <div class="ellipsis max256w">' + x + '</div>\
+                <div class="ellipsis max128w">' + x + '</div>\
                 <div class="property">' + property + '</div>\
             </div>\
         ';

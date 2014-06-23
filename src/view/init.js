@@ -328,7 +328,7 @@ function ValueList(selector) {
     this.getEntryHTML = function(i, left, right) {
         return '\
             <div id = "' + this.selector.substring(1) + 'Entry' + i + '">\
-                <div class = "ellipsis max256w">' + left + '</div>\
+                <div class = "ellipsis max128w">' + left + '</div>\
                 <div class = "operator"> = </div>\
                 <div class = "ellipsis max128w resultvalue">' + right + '</div>\
             </div>\
