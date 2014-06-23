@@ -17,9 +17,9 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescartesdecorator", "model/emo/geneticoptimisation", "model/emo/individual", "model/emo/cloneobject"],
+define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdescartesdecorator", "model/emo/geneticoptimisation", "model/emo/individual", "model/emo/cloneobject"],
     /* @lends View.Graphics */
-    function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual, CloneObject) {
+    function(AbstractDescartesHandler, QuarterFitDecorator, GeneticOptimisation, Individual, CloneObject) {
 
         /**
          * @class GeneticOptimisationDescartesHandler
@@ -43,14 +43,22 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
              *
              * @type {GeneticOptimisation}
              */
-            this.decorator = new ZoomFitDecorator();
+            this.decorator = new QuarterFitDecorator();
 
             /**
-             * The default setting of zoom fitting, we zoomfit at all times.
+             * The default setting of zoom fitting, we zoomfit initially.
              *
              * @type {GeneticOptimisation}
              */
-            this.decorator.setAlwaysFit(true);
+            this.decorator.zoomToFit();
+
+            /**
+             * Propagate the smartZoom function to (probably) the Canvas class.
+             */
+            this.propagatables.push({
+                name: "smartZoom",
+                func: this.smartZoom.bind(this)
+            });
 
             /**
              * Propagate the draw function to (probably) the Canvas class.
@@ -324,6 +332,24 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescarte
             return [
                 [ctrl, xCoords, yCoords, redVals, greenVals, blueVals, diameters]
             ];
+        };
+
+        /**
+         * Uses quarter zooming to put all points into the quarter in opposite direction of the optimisation.
+         *
+         * @modifies {this.decorator.quarter}
+         */
+        GeneticOptimisationDescartesHandler.prototype.smartZoom = function() {
+            var horVerQuantities = this.getHorVerQuantities();
+            var quarter = 2;
+            if (horVerQuantities[0].pareto.isMaximised) {
+                quarter -= 1;
+            }
+            if (horVerQuantities[1].pareto.isMaximised) {
+                quarter += 2;
+            }
+
+            this.decorator.setQuarter(quarter);
         };
 
         // Exports are needed, such that other modules may invoke methods from this module file.
