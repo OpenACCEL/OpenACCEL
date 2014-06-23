@@ -21,7 +21,7 @@ if (inNode) {
 define([], /**@lends Model.EMO*/ function() {
 
     /**
-     * @class BinaryTournament
+     * @class
      * @classdesc The BinaryTournament class compares two individuals
      * and returns the strongest one.
      */

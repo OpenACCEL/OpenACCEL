@@ -18,11 +18,11 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartesdecorator", "view/graphics/pandescartesdecorator"],
-    /* @lends View.Graphics */
+    /** @lends View.Graphics */
     function(AbstractDescartesDecorator, ZoomDescartesDecorator, PanDescartesDecorator) {
 
         /**
-         * @class ZoomFitDescartesDecorator
+         * @class
          * @classdesc The ZoomFitDescartesDecorator decorates descartes drawings by zooming and panning
          * as to fit all drawing elements in the canvas with some margin.
          */

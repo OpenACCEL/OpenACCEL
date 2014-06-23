@@ -22,7 +22,7 @@ if (inNode) {
 define(["model/emo/mutation/mutation", "model/emo/random"], /**@lends Model.EMO.Mutation*/ function(Mutation, Random) {
 
     /**
-     * @class CloseMutation
+     * @class
      * @classdesc The close mutation mutates one arbitrary category I quantity
      * and gives it a value close to the original value in the domain
      * of that category.

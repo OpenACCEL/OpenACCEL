@@ -11,7 +11,7 @@
  */
 
 /**
- * Library function.
+ * Library functions.
  *
  * @namespace Model.Library
  */
@@ -40,9 +40,45 @@
  */
 
 /**
+ * Classes fo the genetic algorithm
+ * @namespace Model.EMO
+ */
+
+/**
+ * Classes for Crossover of genetic optimization.
+ * @namespace Model.EMO.CrossOver
+ */
+
+/**
+ * Classes for Mutation of genetic optimization.
+ * @namespace Model.EMO.Mutation
+ */
+
+/**
+ * Classes for errors
+ * @namespace Model.Error
+ */
+
+/**
+ * Classes for the network component
+ * @namespace Model.Network
+ */
+
+/**
+ * Classes for data storage
+ * @namespace Model.Datastores
+ */
+
+/**
  * Classes for the Controller in the Model-View-Controller system.
  *
  * @namespace Controller
+ */
+
+/**
+ * Classes for the View in the Model-View-Controller system.
+ *
+ * @namespace View
  */
 
 /**
@@ -50,3 +86,5 @@
  *
  * @namespace View.Graphics
  */
+
+

@@ -20,7 +20,7 @@ if (inNode) {
 define(["model/emo/crossover/crossover", "model/emo/random", "model/emo/cloneobject"], /**@lends Model.EMO.CrossOver*/ function(CrossOver, Random, CloneObject) {
 
     /**
-     * @class UniformCrossOver
+     * @class
      * @classdesc A UniformCrossOver takes two parents and produces two children,
      * based on a fixed mix ratio between the two parents.
      */

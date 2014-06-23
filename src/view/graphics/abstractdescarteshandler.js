@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ function(AbstractDescartesDecorator) {
+define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */ function(AbstractDescartesDecorator) {
 
     /**
-     * @class AbstractDescartesHandler
+     * @class
      * @classdesc The AbstractDescartesHandler provides the basic functionality for extensions
      * to draw specific objects with descartes.
      */

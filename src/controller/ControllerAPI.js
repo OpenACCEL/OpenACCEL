@@ -34,7 +34,7 @@ define(["model/script",
     /**@lends Controller*/
     function(Script, Compiler, LocalBackupStore, RuntimeError, GeneticOptimisation, AbstractView, _) {
         /**
-         * @class Controller
+         * @class
          * @classdesc The Controller is the intermediar between the Model and the View.
          *
          * @param view {AbstractView} The view with which the controller will communicate

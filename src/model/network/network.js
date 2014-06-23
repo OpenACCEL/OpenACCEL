@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /** @lends Network */ function() {
+define([], /** @lends Model.Network */ function() {
 
     /**
      * @class

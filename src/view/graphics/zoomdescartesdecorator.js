@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ function(AbstractDescartesDecorator) {
+define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */ function(AbstractDescartesDecorator) {
 
     /**
-     * @class ZoomDescartesDecorator
+     * @class
      * @classdesc The ZoomDescartesDecorator decorates descartes drawings by multiplying
      * the x and y co-ordinates.
      *

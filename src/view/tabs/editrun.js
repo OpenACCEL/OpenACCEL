@@ -328,11 +328,7 @@ function addScriptlistLine(linenr, quantity, left, right, category) {
     scriptlistBuffer.append(getScriptlistLineHTML(linenr, quantity, left, right, category));
 }
 
-/**TODO
- * [setPendingScriptLine description]
- * 
- * @param {[type]} line [description]
- */
+
 function setPendingScriptLine(line) {
     var pendingline = $('#pendingscriptline');
 

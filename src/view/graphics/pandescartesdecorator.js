@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ function(AbstractDescartesDecorator) {
+define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */ function(AbstractDescartesDecorator) {
 
     /**
-     * @class PanDescartesDecorator
+     * @class
      * @classdesc The PanDescartesDecorator decorates descartes drawings by linearly translating
      * the x and y co-ordinates.
      *
