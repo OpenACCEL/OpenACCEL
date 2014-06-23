@@ -17,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([], function() {
+define([], /* @lends View.Graphics */ function() {
     /**
      * @class AbstractFunctionPropagator
      * @classdesc The AbstractFunctionPropagator provides basic functionality for extended classes to

@@ -18,6 +18,7 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartesdecorator", "view/graphics/pandescartesdecorator"],
+    /* @lends View.Graphics */
     function(AbstractDescartesDecorator, ZoomDescartesDecorator, PanDescartesDecorator) {
 
         /**

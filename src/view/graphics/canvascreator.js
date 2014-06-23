@@ -18,6 +18,7 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/descarteshandlerfactory", "view/graphics/canvas", "view/graphics/scriptdescarteshandler", "view/graphics/geneticoptimisationdescarteshandler"],
+    /* @lends View.Graphics */
     function(DescartesHandlerFactory, Canvas, ScriptDescartesHandler, GeneticOptimisationDescartesHandler) {
 
         /**

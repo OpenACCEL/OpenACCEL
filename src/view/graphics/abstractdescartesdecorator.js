@@ -17,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractfunctionpropagator"], function(AbstractFunctionPropagator) {
+define(["view/graphics/abstractfunctionpropagator"], /* @lends View.Graphics */ function(AbstractFunctionPropagator) {
 
     /**
      * @class AbstractDescartesDecorator

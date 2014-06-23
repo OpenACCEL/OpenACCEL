@@ -18,6 +18,7 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescarteshandler", "view/graphics/zoomfitdescartesdecorator", "model/emo/geneticoptimisation", "model/emo/individual", "model/emo/cloneobject"],
+    /* @lends View.Graphics */
     function(AbstractDescartesHandler, ZoomFitDecorator, GeneticOptimisation, Individual, CloneObject) {
 
         /**

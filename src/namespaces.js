@@ -6,31 +6,31 @@
 
 /**
  * Classes for the Model in the Model-View-Controller system.
- * 
+ *
  * @namespace Model
  */
 
 /**
  * Library function.
- * 
+ *
  * @namespace Model.Library
  */
 
 /**
  * Classes belinging to the Analyser component
- * 
+ *
  * @namespace Model.Analyser
  */
 
 /**
  * Classes belinging to the Script component
- * 
+ *
  * @namespace Model.Script
  */
 
 /**
  * Classes belinging to the Compiler component
- * 
+ *
  * @namespace Model.Compiler
  */
 
@@ -41,6 +41,12 @@
 
 /**
  * Classes for the Controller in the Model-View-Controller system.
- * 
+ *
  * @namespace Controller
+ */
+
+/**
+ * Classes adapting the descartes graphics library into the view.
+ *
+ * @namespace View.Graphics
  */

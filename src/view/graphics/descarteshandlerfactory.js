@@ -17,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescarteshandler"], function(AbstractDescartesHandler) {
+define(["view/graphics/abstractdescarteshandler"], /* @lends View.Graphics */ function(AbstractDescartesHandler) {
 
     /**
      * @class DescartesHandlerFactory
