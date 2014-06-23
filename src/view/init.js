@@ -3,7 +3,8 @@ var tooltips = {};
 function resizeContainer() {
     var windowWidth = $(window).innerWidth();
     var fixedWidth = 900;
-    var newMaxWidth = Math.max(fixedWidth, windowWidth * 0.8);
+    var variableWidth = windowWidth * 0.8;
+    var newMaxWidth = Math.max(fixedWidth, variableWidth);
 
     var container = $('#container');
     var content = $('#main');
@@ -17,7 +18,8 @@ function resizeContainer() {
 
     container.css(
         {
-            'left': Math.max(0, (windowWidth - newMaxWidth) / 2)
+            'left': Math.max(0, (windowWidth - newMaxWidth) / 2),
+            'width': variableWidth
         }
     );
 }
