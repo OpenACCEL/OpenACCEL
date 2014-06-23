@@ -36,7 +36,7 @@ function addQuantity(string) {
     } else {
         setTimeout(
             function() {
-                $('.tooltipcontainer > div').filter(":visible").trigger('click');
+                $('.tooltipcontainer > .errormessage').filter(":visible").trigger('click');
 
                 try {
                     controller.addQuantity(string);

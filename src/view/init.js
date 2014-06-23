@@ -94,6 +94,7 @@ function handleError(error) {
             break;
     }
 
+    $('.tooltipcontainer > .errormessage').filter(":visible").trigger('click');
     var errorTooltip = new Tooltip(errorCount++, 'errormessage', errormsg.x, errormsg.y);
     errorTooltip.set(errormsg.text);
 }
