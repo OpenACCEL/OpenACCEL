@@ -251,9 +251,9 @@ function selectScriptline(linenr, quantityname) {
         var quantity = controller.getQuantity(quantityname);
 
         var scriptline = $('#scriptline');
-        scriptline.val(quantity.source);
+        scriptline.text(quantity.source);
 
-        $('.quantityname').html(quantityname);
+        $('.quantityname').text(quantityname);
 
         Report.arglistBuffer.empty();
         Report.argtolistBuffer.empty();
