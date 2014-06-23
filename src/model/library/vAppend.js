@@ -12,10 +12,8 @@ function vAppend(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     if (x instanceof Array) {
-        var result = [];
-        for (var key in x) {
-            result[key] = x[key];
-        }
+        // TODO: Shallow copy, shouldn't this be a deep copy?
+        var result = x.slice();
         result[x.length] = y;
         return result;
     } else {
