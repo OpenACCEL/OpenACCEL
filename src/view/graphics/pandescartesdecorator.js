@@ -49,8 +49,8 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
     /**
      * Returns the input, with all x and y co-ordinates translated by horOffset and verOffset.
      *
-     * @param plot {Object[]][]} The drawing to be adjusted.
-     * @return plot {Object[]][]} The drawing with all x co-ordinates adjusted by -horOffset
+     * @param plot {Object[]} The drawing to be adjusted.
+     * @return plot {Object[]} The drawing with all x co-ordinates adjusted by -horOffset
      * and y co-ordinates adjusted by -verOffset.
      */
     PanDescartesDecorator.prototype.decorate = function(plot) {

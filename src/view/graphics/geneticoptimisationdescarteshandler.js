@@ -255,7 +255,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
          * diameter from the Individuals outside of the pareto front. The point corresponding to
          * this.clickedIndividual is highlighted with yet another different colour.
          *
-         * @return {Object[][]} The descartes drawing based on this.modelElement.population.
+         * @return {Object[]} The descartes drawing based on this.modelElement.population.
          */
         GeneticOptimisationDescartesHandler.prototype.getDrawing = function() {
             var horVerKeys = this.getHorVerKeys();

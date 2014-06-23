@@ -49,8 +49,8 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
     /**
      * Returns the input, with all x and y co-ordinates scaled by horZoom and verZoom respectively.
      *
-     * @param plot {Object[][]} The drawing to be adjusted.
-     * @return plot {Object[][]} The drawing with all x co-ordinates multiplied by horZoom
+     * @param plot {Object[]} The drawing to be adjusted.
+     * @return plot {Object[]} The drawing with all x co-ordinates multiplied by horZoom
      * and all y co-ordinates multiplied by verZoom.
      */
     ZoomDescartesDecorator.prototype.decorate = function(plot) {

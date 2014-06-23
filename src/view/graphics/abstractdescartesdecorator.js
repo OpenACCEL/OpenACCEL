@@ -46,8 +46,8 @@ define(["view/graphics/abstractfunctionpropagator"], /** @lends View.Graphics */
     /**
      * Returns the input, adjusted according to this decorator.
      *
-     * @param plot {Object[][]} The drawing to be adjusted
-     * @return plot {Object[][]} The adjusted drawing
+     * @param plot {Object[]} The drawing to be adjusted
+     * @return plot {Object[]} The adjusted drawing
      */
     AbstractDescartesDecorator.prototype.decorate = function(plot) {
         if (this.decorator != null) {

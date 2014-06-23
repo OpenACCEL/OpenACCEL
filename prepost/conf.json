@@ -4,7 +4,7 @@
     },
     "source": {
         "include": [],
-        "exclude": ["/src/model/library/functions.js"],
+        "exclude": ["src/model/library/functions.js"],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },

@@ -132,7 +132,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
     /**
      * Returns the raw drawing made from the modelElement of this handler, according to this handler.
      *
-     * @return {Object[][]} The drawing to be drawn by descartes.
+     * @return {Object[]} The drawing to be drawn by descartes.
      */
     AbstractDescartesHandler.prototype.getDrawing = function() {
         return [];
@@ -142,7 +142,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * Returns the decorated drawing made from the modelElement of this handler, according to this handler
      * and its decorators.
      *
-     * @return {Object[][]} The drawing to be drawn by descartes.
+     * @return {Object[]} The drawing to be drawn by descartes.
      */
     AbstractDescartesHandler.prototype.getDecoratedDrawing = function() {
         return this.decorate(this.getDrawing());
