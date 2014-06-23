@@ -52,7 +52,7 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/canvas", "view/g
              * Returns a newly created canvas which can draw the given modelElement, given that the handler exists.
              * The created canvas also already supports the functionality of its handler.
              *
-             * @return canvas {Canvas} The canvas created by this.
+             * @return {Canvas} The canvas created by this.
              */
             createCanvas: function(modelElement, div, width, height) {
                 canvas = new Canvas(modelElement, div, width, height, this.factory);

@@ -36,14 +36,14 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunction
         /**
          * The width of this canvas in pixels.
          *
-         * @type {float}
+         * @type {Number}
          */
         this.width = width;
 
         /**
          * The height of this canvas in pixels.
          *
-         * @type {float}
+         * @type {Number}
          */
         this.height = height;
 

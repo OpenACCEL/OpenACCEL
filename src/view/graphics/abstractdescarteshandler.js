@@ -29,7 +29,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
         /**
          * The descartes objects this handler sends its drawings to, corresponds to multiple canvases.
          *
-         * @type {Array<descartes>}
+         * @type {Descartes[]}
          */
         this.descartesInstances = [];
 
@@ -89,9 +89,9 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * Adds a new descartes object to the array of descartes objects to be drawn to.
      *
      * @param div {String} The div in the html file in which the new descartes object must draw.
-     * @param width {float} The width in pixels over which the new descartes object must draw.
-     * @param height {float} The height in pixels over which the new descartes object must draw.
-     * @modifies descartesInstances {Array<descartes>} The new descartes object gets appended to this.
+     * @param width {Number} The width in pixels over which the new descartes object must draw.
+     * @param height {Number} The height in pixels over which the new descartes object must draw.
+     * @modifies descartesInstances The new descartes object gets appended to this.
      */
     AbstractDescartesHandler.prototype.addDescartes = function(div, width, height) {
         this.descartesInstances.push(new descartes({
@@ -132,7 +132,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
     /**
      * Returns the raw drawing made from the modelElement of this handler, according to this handler.
      *
-     * @return {Array<Array<Object>>} The drawing to be drawn by descartes.
+     * @return {Object[][]} The drawing to be drawn by descartes.
      */
     AbstractDescartesHandler.prototype.getDrawing = function() {
         return [];
@@ -142,7 +142,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * Returns the decorated drawing made from the modelElement of this handler, according to this handler
      * and its decorators.
      *
-     * @return {Array<Array<Object>>} The drawing to be drawn by descartes.
+     * @return {Object[][]} The drawing to be drawn by descartes.
      */
     AbstractDescartesHandler.prototype.getDecoratedDrawing = function() {
         return this.decorate(this.getDrawing());

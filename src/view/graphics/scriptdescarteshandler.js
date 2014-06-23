@@ -60,7 +60,7 @@ define(["view/graphics/abstractdescarteshandler", "model/script"], /** @lends Vi
      * Returns whether this handler is capable of drawing the given object.
      *
      * @param modelElement {Object} The object of which we want to know if it can be drawn.
-     * @return {boolean} modelElement instance of Script
+     * @return {boolean} instance of Script
      */
     ScriptDescartesHandler.prototype.canHandle = function(modelElement) {
         return modelElement instanceof Script;
@@ -81,8 +81,8 @@ define(["view/graphics/abstractdescarteshandler", "model/script"], /** @lends Vi
      * This handler also includes a click callback and a move callback.
      *
      * @param div {String} The div in the html file in which the new descartes object must draw.
-     * @param width {float} The width in pixels over which the new descartes object must draw.
-     * @param height {float} The height in pixels over which the new descartes object must draw.
+     * @param width {Number} The width in pixels over which the new descartes object must draw.
+     * @param height {Number} The height in pixels over which the new descartes object must draw.
      * @modifies descartesInstances {Array<descartes>} The new descartes object gets appended to this.
      */
     ScriptDescartesHandler.prototype.addDescartes = function(div, width, height) {
@@ -101,11 +101,11 @@ define(["view/graphics/abstractdescarteshandler", "model/script"], /** @lends Vi
     /**
      * The click callback to be used by descartes when the mouse is clicked over it.
      *
-     * @param x {float} The mouse position on the x axis, normalised to [0...1].
-     * @param y {float} The mouse position on the y axis, normalised to [0...1].
+     * @param x {Number} The mouse position on the x axis, normalised to [0...1].
+     * @param y {Number} The mouse position on the y axis, normalised to [0...1].
      * @param b {boolean} The mousebutton status.
-     * @modifies modelElement.exe.mouseX {float} The mouse position on the x axis is set to x * 100.
-     * @modifies modelElement.exe.mouseY {float} The mouse position on the y axis is set to y * 100.
+     * @modifies modelElement.exe.mouseX {Number} The mouse position on the x axis is set to x * 100.
+     * @modifies modelElement.exe.mouseY {Number} The mouse position on the y axis is set to y * 100.
      * @modifies modelElement.exe.mouseB {boolean} The mousebutton status is set to b.
      */
     ScriptDescartesHandler.prototype.clickCallback = function(x, y, b) {
@@ -116,10 +116,10 @@ define(["view/graphics/abstractdescarteshandler", "model/script"], /** @lends Vi
     /**
      * The move callback to be used by descartes when the mouse moves over it.
      *
-     * @param x {float} The mouse position on the x axis, normalised to [0...1].
-     * @param y {float} The mouse position on the y axis, normalised to [0...1].
-     * @modifies modelElement.exe.mouseX {float} The mouse position on the x axis is set to x * 100.
-     * @modifies modelElement.exe.mouseY {float} The mouse position on the y axis is set to y * 100.
+     * @param x {Number} The mouse position on the x axis, normalised to [0...1].
+     * @param y {Number} The mouse position on the y axis, normalised to [0...1].
+     * @modifies modelElement.exe.mouseX {Number} The mouse position on the x axis is set to x * 100.
+     * @modifies modelElement.exe.mouseY {Number} The mouse position on the y axis is set to y * 100.
      */
     ScriptDescartesHandler.prototype.moveCallback = function(x, y) {
         controller.setMousePosInScript(x * this.coordinateScale, y * this.coordinateScale);
