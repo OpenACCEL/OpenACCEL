@@ -77,6 +77,12 @@ define([], /**@lends Model*/ function() {
          * @type {Array}
          */
         this.plot = [];
+
+        /**
+         * Graphics plot object, set by the library function plot()
+         * @type {Array}
+         */
+        this.plotStatus = '';
     }
 
 
@@ -115,7 +121,7 @@ define([], /**@lends Model*/ function() {
                     this.report[qty].value = false;
                     this[qty].hist[this.time] = false;
                 }
-                
+
                 // Clear memoization cache of user functions
                 for (var c in this[qty].cache) {
                     delete this[qty].cache[c];
@@ -147,6 +153,7 @@ define([], /**@lends Model*/ function() {
         this.mouseY = 0;
         this.mouseButtonPressed = false;
         this.plot = [];
+        this.plotStatus = '';
     };
 
     /**
@@ -239,6 +246,43 @@ define([], /**@lends Model*/ function() {
         this.mouseButtonPressed = buttonDown;
     };
 
-    return Executable;
+    /**
+     * Sets report of the plot function
+     * @param {String} status any errors that have occurred while plotting
+     */
+    Executable.prototype.setPlotStatus = function(status) {
+        this.plotStatus = status;
+    };
 
+    /**
+     * Executes the quantities given in the outputs array, after filling in the values given in the
+     * inputs array. The values are immediately filled in in the output objects.
+     * The values are restored afterwards.
+     *
+     * Needed for SPEA.
+     *
+     * @param  {Array} inputs  array containing object having a 'name' and 'value' field with the with the quantities that
+     *                         should get a value.
+     * @param  {Array} outputs array containing objects that have at leat a 'name' and 'value' field with the output quantities
+     *
+     */
+    Executable.prototype.executeQuantities = function(inputs, outputs) {
+        // do one step forward into the future
+        this.step();
+
+        // set the values to the ones given in input
+        inputs.forEach((function(elem) {
+            this.setValue(elem.name, elem.value);
+        }).bind(this));
+
+        // update the values in the output-objects
+        outputs.forEach((function(elem) {
+            this.setHasChanged(elem.name);
+            elem.value = this.getValue(elem.name);
+        }).bind(this));
+
+        this.reset();
+    };
+
+    return Executable;
 });

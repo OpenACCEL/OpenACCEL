@@ -37,9 +37,11 @@ define(["view/graphics/abstractdescarteshandler"], function(AbstractDescartesHan
     DescartesHandlerFactory.prototype = {
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Returns a DescartesHandler which can handle the given modelElement, with it as its modelElement.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param modelElement {Object} The modelElement to be drawn by the returned handler.
+         * @return {AbstractDescartesHandler} The handler that can draw modelElement.
+         * @pre Exists_i[ i in this.handlers : handlers[i].canHandle(modelElement)]
          */
         getHandler: function(modelElement) {
             for (i in this.handlers) {
@@ -51,9 +53,10 @@ define(["view/graphics/abstractdescarteshandler"], function(AbstractDescartesHan
         },
 
         /**
-         * Returns whether the script can be compiled and executed.
+         * Adds a DescartesHandler to the set of handlers, such that more different modelElements can be provided with handlers.
          *
-         * @return this.analyser.scriptComplete && this.quantities.length > 0
+         * @param handler {AbstractDescartesHandler}
+         * @modifies this.handlers {array<AbstractDescartesHandler>} This gets handler added to it.
          */
         addHandler: function(handler) {
             if (handler instanceof AbstractDescartesHandler) {

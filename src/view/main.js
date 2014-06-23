@@ -10,6 +10,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     function View(canvasCreator) {
         this.canvasCreator = canvasCreator;
         this.canvas = null;
+        this.optimisationCanvas = null;
     }
 
     View.prototype = new AbstractView();
@@ -41,6 +42,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      */
     View.prototype.setUpPlot = function() {
         this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
+        this.optimisationCanvas = canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
     };
 
     /**
@@ -58,6 +60,17 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      */
     View.prototype.drawPlot = function() {
         this.canvas.draw();
+    };
+
+    /**
+     * Trigger an update of the optimisation plot canvas
+     */
+    View.prototype.drawOptimisationPlot = function() {
+        this.optimisationCanvas.draw();
+    };
+
+    View.prototype.showOptimisationPlot = function(show) {
+        $('#plotGOdiv').toggle(show);
     };
 
     /**

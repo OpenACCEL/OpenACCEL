@@ -149,7 +149,7 @@ define(["model/analyser/passes/quantitypass",
                         for (var i = 0; i < this.passes.length; i++) {
                             prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
                         }
-
+                        this.findPareto(prevQuantity);
                         added.push(prevQuantity);
                     }
                 }
@@ -256,6 +256,27 @@ define(["model/analyser/passes/quantitypass",
                 parameters = (new Function('return ' + definition))();
             }
             return parameters;
+        };
+
+        Analyser.prototype.findPareto = function(quantity) {
+            if (!quantity) {
+                throw new Error('Analyser.findPareto.pre violated: ' +
+                    'quantity is null or undefined');
+            }
+            var definition = quantity.definition;
+            if (definition.match(/pareto/) !== null) {
+                quantity.pareto.isPareto = true;
+                if (definition.match(/paretoMin\(/) !== null) {
+                    quantity.pareto.isMaximize = false;
+                } else if (definition.match(/paretoMax\(/) !== null) {
+                    quantity.pareto.isMaximize = true;
+                }
+                if (definition.match(/paretoHor\(/) !== null) {
+                    quantity.pareto.isHorizontal = true;
+                } else if (definition.match(/paretoVer\(/) !== null) {
+                    quantity.pareto.isVertical = true;
+                }
+            }
         };
 
         // Exports all macros.

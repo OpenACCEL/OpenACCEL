@@ -1,3 +1,45 @@
 #optimisation
-	h1 Genetic optimisation
-	
+	script(src = 'scripts/view/tabs/optimisation.js')
+	#GOsidebar.inline(style = 'width: 200px')
+		div
+			.label Initialisation
+			.group
+				div
+					.inline Population size&nbsp;
+					#populationsizevalue.inline.slidervalue
+					#populationsize.GOcontrol
+				input(type = 'button', value = 'Initialise')#initGO.buttonin
+
+		div
+			.label Generations
+			.group
+				div
+					.inline Generations per click&nbsp;
+					#stepsizevalue.inline.slidervalue
+					#stepsize.GOcontrol
+				input(type = 'button', value = 'Generate next')#stepGO.buttonin
+
+		div
+			.label Algorithm settings
+			#settingsGO.group
+				div
+					.inline Crossover&nbsp;
+					#crossovervalue.inline.slidervalue
+					#crossover.GOcontrol
+				div
+					.inline Mutation distribution&nbsp;
+					#mutationvalue.inline.slidervalue
+					#mutation.GOcontrol
+				div
+					.inline Maximum on front&nbsp;
+					#maxfrontvalue.inline.slidervalue
+					#maxfront.GOcontrol
+
+	.inline
+		.label Visualisation
+		#plotGOdiv.group
+			#plotGO(style = 'width: 400px; heigth: 400px; background: #CCCCCC;')
+
+	.inline
+		.label Individual properties
+		#propertiesGO.group(style = 'width: 200px')

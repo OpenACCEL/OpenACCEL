@@ -1,5 +1,5 @@
 /*
- * notice: still needs support for more descarte plottypes
+ *
  * @author Leo van Gansewinkel
  */
 
@@ -18,24 +18,27 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesDecorator) {
+
     /**
      * @class PanDescartesDecorator
-     * @classdesc The PanDescartesDecorator class provides DescartesHandlers to Canvases,
-     * allowing them to correctly draw any supported model element.
+     * @classdesc The PanDescartesDecorator decorates descartes drawings by linearly translating
+     * the x and y co-ordinates.
+     *
+     * This class does not yet support all descartes plotTypes.
      */
     function PanDescartesDecorator() {
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The offset used as the new 0 point for the horizontal axis.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {float}
          */
         this.horOffset = 0;
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The offset used as the new 0 point for the vertical axis.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {float}
          */
         this.verOffset = 0;
     }
@@ -44,25 +47,27 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     PanDescartesDecorator.prototype = new AbstractDescartesDecorator();
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns the input, with all x and y co-ordinates translated by horOffset and verOffset.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param plot {Array<Array<Object>>} The drawing to be adjusted.
+     * @return plot {Array<Array<Object>>} The drawing with all x co-ordinates adjusted by -horOffset
+     * and y co-ordinates adjusted by -verOffset.
      */
     PanDescartesDecorator.prototype.decorate = function(plot) {
         for (i in plot) {
             if (plot[i][0].x instanceof Object) {
                 for (j in plot[i][plot[i][0].x.ref]) {
-                    plot[i][plot[i][0].x.ref][j] += this.horOffset;
+                    plot[i][plot[i][0].x.ref][j] -= this.horOffset;
                 }
             } else {
-                plot[i][0].x += this.horOffset;
+                plot[i][0].x -= this.horOffset;
             }
             if (plot[i][0].y instanceof Object) {
                 for (j in plot[i][plot[i][0].y.ref]) {
-                    plot[i][plot[i][0].y.ref][j] += this.verOffset;
+                    plot[i][plot[i][0].y.ref][j] -= this.verOffset;
                 }
             } else {
-                plot[i][0].y += this.verOffset;
+                plot[i][0].y -= this.verOffset;
             }
         }
         if (this.decorator != null) {
@@ -72,23 +77,31 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     };
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns a point with coordinates, inversely adjusted by this decorator.
+     * These points come from descartes through callbacks, hence they must undergo inverse
+     * adjustment to match the original drawing context.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param point {Object} The point to be inversely adjusted, containing an 'x', a 'y' and
+     * possibly a 'z' coordinate.
+     * @return point {Object} The point adjusted by +horOffset on the x co-ordinates and +verOffset on the y co-ordinates.
      */
     PanDescartesDecorator.prototype.mapPoint = function(point) {
         if (this.decorator != null) {
             point = this.decorator.mapPoint(point);
         }
-        point.x -= this.horOffset;
-        point.y -= this.verOffset;
+        point.x += this.horOffset;
+        point.y += this.verOffset;
         return point;
     };
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Either sets the horizontal and vertical offsets or adjusts them
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param isAbsolute {boolean} If the new offsets should override or adjust the old ones.
+     * @param horOffset {float} The new horizontal offset if isAbsolute, or offset adjustment if not.
+     * @param verOffset {float} The new vertical offset if isAbsolute, or offset adjustment if not.
+     * @modifies this.horOffset {float} Gets overwritten with horOffset or summed with it.
+     * @modifies this.verOffset {float} Gets overwritten with verOffset or summed with it.
      */
     PanDescartesDecorator.prototype.pan = function(isAbsolute, horOffset, verOffset) {
         if (isAbsolute) {

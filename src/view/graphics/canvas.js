@@ -1,5 +1,5 @@
 /*
- * x
+ *
  * @author Leo van Gansewinkel
  */
 
@@ -18,45 +18,51 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunctionpropagator"], function(DescartesHandlerFactory, AbstractFunctionPropagator) {
+
     /**
-     * @class DescartesHandlerFactory
-     * @classdesc The DescartesHandlerFactory class provides DescartesHandlers to Canvases,
-     * allowing them to correctly draw any supported model element.
+     * @class Canvas
+     * @classdesc The Canvas class forms an abstraction from the specific DescartesHandler classes.
+     * All reachable functionality needed from the DescartesHandlers is propagated to this class, to be used top level.
      */
     function Canvas(modelElement, div, width, height, factory) {
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The div in the html file in which this canvas is to be located.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {String}
          */
         this.div = div;
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The width of this canvas in pixels.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {float}
          */
         this.width = width;
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The height of this canvas in pixels.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {float}
          */
         this.height = height;
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The factory from which this canvas can get the right DescartesHandler for modelElement.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {DescactesHandlerFactory}
          */
         this.factory = factory;
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The DescartesHandler which draws modelElement for this canvas.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {AbstractDescactesHandler}
+         */
+        this.handler = null;
+
+        /**
+         * Get an appropriate handler and set modelElement as its modelElement.
          */
         this.setModel(modelElement);
     }
@@ -65,18 +71,22 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunction
     Canvas.prototype = new AbstractFunctionPropagator();
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns whether this canvas can be drawn on by a DescartesHandler for the last modelElement that was set.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @return {boolean} this.handler != null
      */
     Canvas.prototype.canDraw = function() {
         return this.handler != null;
     };
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Sets the modelElement to be drawn on this canvas to modelElement.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param modelElement {Object} The new modelElement to be drawn on this canvas.
+     * @modifies this.handler {AbstractDescartesHandler} The handler either gets replaced by a new handler that
+     * can draw modelElement, or gets modelElement to be drawn if it already can do so.
+     * @modifies this {Canvas} This canvas gets all the propagated functionality of its new handler
+     * (see FunctionPropagator).
      */
     Canvas.prototype.setModel = function(modelElement) {
         if (this.handler == null) {

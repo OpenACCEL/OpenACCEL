@@ -143,6 +143,21 @@ define([], /**@lends Model.Script */ function() {
             type: null,
             parameters: []
         };
+
+        /**
+         * This object contains the information about the pareto quantities.
+         * isPareto indicates whether this quantity is a Pareto quantity.
+         * isMaximize indicates whether this quantity should be maximized, if false it should be minimized
+         * isHorizontal indicates whether the quantity is plotted horizontally
+         * isVertical indicates whether the quantity is plotted vertically.
+         * @type {Object}
+         */
+        this.pareto = {
+            isPareto: false,
+            isMaximize: false,
+            isHorizontal: false,
+            isVertical: false
+        };
     }
 
     /**
@@ -177,8 +192,8 @@ define([], /**@lends Model.Script */ function() {
         var def = this.source;
         if (this.comment.length > 0) {
             var comment = '';
-            
-            for (var i=0; i < this.comment.length; i++) {
+
+            for (var i = 0; i < this.comment.length; i++) {
                 comment += '\n //' + this.comment[i];
             }
 
@@ -209,8 +224,8 @@ define([], /**@lends Model.Script */ function() {
         }
         if (includeComments && this.comment.length > 0) {
             var comment = '';
-            
-            for (var i=0; i < this.comment.length; i++) {
+
+            for (var i = 0; i < this.comment.length; i++) {
                 comment += '\n //' + this.comment[i];
             }
 

@@ -25,16 +25,16 @@ if (inNode) {
 // If all requirements are loaded, we may create our 'class'.
 define(["model/script",
         "model/compiler",
-        "controller/AbstractView",
-        "underscore",
         "model/datastores/LocalBackupStore",
-        "model/exceptions/RuntimeError"
+        "model/exceptions/RuntimeError",
+        "model/emo/geneticoptimisation",
+        "controller/AbstractView",
+        "underscore"
     ],
-    //"model/workers/AutoSaveWorker"],
     /**@lends Controller*/
-    function(Script, Compiler, AbstractView, _, LocalBackupStore, RuntimeError) {
+    function(Script, Compiler, LocalBackupStore, RuntimeError, GeneticOptimisation, AbstractView, _) {
         /**
-         * @class
+         * @class Controller
          * @classdesc The Controller is the intermediar between the Model and the View.
          *
          * @param view {AbstractView} The view with which the controller will communicate
@@ -71,6 +71,13 @@ define(["model/script",
              * @type {Script}
              */
             this.script = new Script();
+
+            /**
+             * The GeneticOptimisation object used to do Genetic Optimization.
+             *
+             * @type {GeneticOptimisation}
+             */
+            this.geneticOptimisation = new GeneticOptimisation();
 
             /**
              * The number of iterations that the script should perform.
@@ -142,7 +149,7 @@ define(["model/script",
              * Whether the application uses web workers or not. DO NOT
              * SET DIRECTLY. Use setShouldUseWorkers().
              *
-             * @type {Boolean}
+             * @param {Boolean}
              */
             this.useWorkers = false;
 
@@ -239,6 +246,17 @@ define(["model/script",
         Controller.prototype.setMouseButtonInScript = function(buttonDown) {
             if (this.script.isCompiled()) {
                 this.script.exe.setMouseButton(buttonDown);
+            }
+        };
+
+        /**
+         * Sets the current plot status.
+         *
+         * @param status {String} Report of any errors occured while plotting
+         */
+        Controller.prototype.setPlotStatusInScript = function(status) {
+            if (this.script.isCompiled()) {
+                this.script.exe.setPlotStatus(status);
             }
         };
 
@@ -814,6 +832,60 @@ define(["model/script",
          * Returns the source code of the current script, optionally including
          * quantity units and comments.
          *
+         * @param {Boolean} includeUnits Whether to include the quantity units
+         * in the output.
+         * @param {Boolean} includeComments (optional) Whether to include the
+         * comments belonging to the quantities in the output
+         * @return {String} The source code of the current script, with or without
+         * units and comments as specified.
+         */
+        Controller.prototype.scriptToString = function(includeUnits, includeComments) {
+            return this.script.toString(includeUnits, includeComments);
+        };
+
+        /**
+         * Builds the model defined in the given source code and sets it
+         * as the current script.
+         *
+         * @param {String} source List of quantity definitions and optionally
+         * comments
+         * @param {Boolean} restoring (Optional) Whether we are restoring a script
+         * from the autoSaveStore. Set to true to
+         * @modifies this.script
+         * @post A new script has been created, containing all quantities
+         * defined in source.
+         * @return {Quantities[]} An array of quantities that have been added to the model.
+         */
+        Controller.prototype.setScriptFromSource = function(source, restoring) {
+            if (typeof(restoring) === 'undefined') {
+                restoring = false;
+            }
+        };
+
+
+        /**
+         * Returns the Script object currently managed by this controller.
+         *
+         * @return {Script} this.script
+         */
+        Controller.prototype.getScript = function() {
+            return this.script;
+        };
+
+        /**
+         * Returns the original source code of the current script, exactly as it
+         * was entered by the user. For more functionality, see scriptToString().
+         *
+         * @return {String} this.getScript().getSource()
+         */
+        Controller.prototype.getScriptSource = function() {
+            return this.script.getSource();
+        };
+
+        /**
+         * Returns the source code of the current script, optionally including
+         * quantity units and comments.
+         *
          * @param includeUnits {Boolean} Whether to include the quantity units
          * in the output.
          * @param includeComments {Boolean} (optional) Whether to include the
@@ -903,22 +975,86 @@ define(["model/script",
         };
 
         /**
-         * Generates a number of iterations of SPEA.
+         * Returns the Genetic Optimisation object currently managed by this controller.
+         *
+         * @return {GeneticOptimisation} this.geneticOptimisation
+         */
+        Controller.prototype.getGeneticOptimisation = function() {
+            return this.geneticOptimisation;
+        };
+
+        /**
+         * Initialises the Genetic Optimisation algorithm.
+         *
+         * @param {Number} populationSize the desired population size
+         * @pre populationSize != null
+         * @pre populationSize != undefined
+         * @pre populationSize > 0
+         */
+        Controller.prototype.initialiseGeneticOptimisation = function(populationSize) {
+            if (!populationSize) {
+                throw new Error('Controller.prototype.initialiseGeneticOptimisation.pre :' +
+                    'population size is null or undefined');
+            }
+            if (populationSize <= 0) {
+                throw new Error('Controller.prototype.initialiseGeneticOptimisation.pre :' +
+                    'population size is less than or equal to zero');
+            }
+            this.compileScript(this.getScript());
+            this.geneticOptimisation.initialise(this.getScript(), populationSize);
+            this.view.drawOptimisationPlot();
+        };
+
+        /**
+         * Generates a number of iterations of the Genetic Optimisation algorithm.
          *
          * @param iterations {Number} number of iterations
          * @pre model.Script contains pareto definitions
          * @pre iterations != null
          * @pre iterations != undefined
-         * @return {Object} List Quantities
+         * @pre iterations > 0
          */
-        Controller.prototype.generate = function(iterations) {
+        Controller.prototype.nextGeneration = function(iterations) {
             if (!iterations) {
-                throw new Error('Controller.prototype.generate.pre :' +
-                    'iterations is null or undefined')
+                throw new Error('Controller.prototype.nextGeneration.pre :' +
+                    'iterations is null or undefined');
             }
-            //TODO
-            //TODO Implementation
-            //TODO Tests
+            if (iterations <= 0) {
+                throw new Error('Controller.prototype.nextGeneration.pre :' +
+                    'number of iterations is less than or equal to zero');
+            }
+            for (var i = iterations - 1; i >= 0; i--) {
+                this.geneticOptimisation.nextGeneration();
+            }
+            this.view.drawOptimisationPlot();
+        };
+
+        /**
+         * Set the probability for the cross-over.
+         *
+         * @param {Number} crossoverProbability the probability for a cross-over
+         */
+        Controller.prototype.setCrossover = function(crossoverProbability) {
+            this.geneticOptimisation.crossoverProbability = crossoverProbability / 100;
+        };
+
+        /**
+         * Set the probability for the mutations.
+         *
+         * @param {Array} mutation the array containing the mutation probability
+         */
+        Controller.prototype.setMutation = function(mutation) {
+            this.geneticOptimisation.closeMutationProbability = mutation[0] / 100;
+            this.geneticOptimisation.arbitraryMutationProbability = mutation[1] / 100;
+        };
+
+        /**
+         * Set the desired Pareto Front ratio.
+         *
+         * @param {Number} desiredParetoFrontRatio the desired pareto front ratio
+         */
+        Controller.prototype.setMaxfront = function(desiredParetoFrontRatio) {
+            this.geneticOptimisation.desiredParetoFrontRatio = desiredParetoFrontRatio / 100;
         };
 
         /**

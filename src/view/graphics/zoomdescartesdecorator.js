@@ -1,6 +1,5 @@
 /*
- * notice: still needs support
- for more descarte plottypes
+ *
  * @author Leo van Gansewinkel
  */
 
@@ -19,24 +18,27 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesDecorator) {
+
     /**
      * @class ZoomDescartesDecorator
-     * @classdesc The ZoomDescartesDecorator class provides DescartesHandlers to Canvases,
-     * allowing them to correctly draw any supported model element.
+     * @classdesc The ZoomDescartesDecorator decorates descartes drawings by multiplying
+     * the x and y co-ordinates.
+     *
+     * This class does not yet support all descartes plotTypes.
      */
     function ZoomDescartesDecorator() {
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The factor at which the horizontal axis is scaled.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {float}
          */
         this.horZoom = 1;
 
         /**
-         * The DescartesHandlers that can be provided by this class.
+         * The factor at which the vertical axis is scaled.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {float}
          */
         this.verZoom = 1;
     }
@@ -45,9 +47,11 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     ZoomDescartesDecorator.prototype = new AbstractDescartesDecorator();
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns the input, with all x and y co-ordinates scaled by horZoom and verZoom respectively.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param plot {Array<Array<Object>>} The drawing to be adjusted.
+     * @return plot {Array<Array<Object>>} The drawing with all x co-ordinates multiplied by horZoom
+     * and all y co-ordinates multiplied by verZoom.
      */
     ZoomDescartesDecorator.prototype.decorate = function(plot) {
         for (i in plot) {
@@ -73,9 +77,14 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     };
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Returns a point with coordinates, inversely adjusted by this decorator.
+     * These points come from descartes through callbacks, hence they must undergo inverse
+     * adjustment to match the original drawing context.
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param point {Object} The point to be inversely adjusted, containing an 'x', a 'y' and
+     * possibly a 'z' coordinate.
+     * @return point {Object} The point with its x co-ordinate divided by horZoom and its y co-ordinate
+     * divided by verZoom.
      */
     ZoomDescartesDecorator.prototype.mapPoint = function(point) {
         if (this.decorator != null) {
@@ -87,9 +96,13 @@ define(["view/graphics/abstractdescartesdecorator"], function(AbstractDescartesD
     };
 
     /**
-     * Returns whether the script can be compiled and executed.
+     * Either sets the horizontal and vertical zooms or adjusts them
      *
-     * @return this.analyser.scriptComplete && this.quantities.length > 0
+     * @param isAbsolute {boolean} If the new zooms should override or adjust the old ones.
+     * @param widthFactor {float} The new horizontal zoom if isAbsolute, or zoom adjustment if not.
+     * @param heightFactor {float} The new vertical zoom if isAbsolute, or zoom adjustment if not.
+     * @modifies this.horZoom {float} Gets overwritten with widthFactor or multiplied by it.
+     * @modifies this.verZoom {float} Gets overwritten with heightFactor or multiplied by it.
      */
     ZoomDescartesDecorator.prototype.zoom = function(isAbsolute, widthFactor, heightFactor) {
         if (isAbsolute) {
