@@ -135,7 +135,7 @@ define(["model/script",
              *
              * @type {Boolean}
              */
-            this.autoExecute = false; // TODO default=true
+            this.autoExecute = false;
 
             /**
              * Whether each quantity should be saved to localStorage when it's
@@ -345,7 +345,7 @@ define(["model/script",
         Controller.prototype.execute = function() {
             // Extra check to make sure that the model is complete and we are
             // really (still) executing
-            if (!this.executing || !this.script.isCompiled()) {
+            if (!this.script.isCompiled()) {
                 this.stop();
                 return;
             }
@@ -847,60 +847,6 @@ define(["model/script",
          * Builds the model defined in the given source code and sets it
          * as the current script.
          *
-         * @param {String} source List of quantity definitions and optionally
-         * comments
-         * @param {Boolean} restoring (Optional) Whether we are restoring a script
-         * from the autoSaveStore. Set to true to
-         * @modifies this.script
-         * @post A new script has been created, containing all quantities
-         * defined in source.
-         * @return {Quantities[]} An array of quantities that have been added to the model.
-         */
-        Controller.prototype.setScriptFromSource = function(source, restoring) {
-            if (typeof(restoring) === 'undefined') {
-                restoring = false;
-            }
-        };
-
-
-        /**
-         * Returns the Script object currently managed by this controller.
-         *
-         * @return {Script} this.script
-         */
-        Controller.prototype.getScript = function() {
-            return this.script;
-        };
-
-        /**
-         * Returns the original source code of the current script, exactly as it
-         * was entered by the user. For more functionality, see scriptToString().
-         *
-         * @return {String} this.getScript().getSource()
-         */
-        Controller.prototype.getScriptSource = function() {
-            return this.script.getSource();
-        };
-
-        /**
-         * Returns the source code of the current script, optionally including
-         * quantity units and comments.
-         *
-         * @param includeUnits {Boolean} Whether to include the quantity units
-         * in the output.
-         * @param includeComments {Boolean} (optional) Whether to include the
-         * comments belonging to the quantities in the output
-         * @return {String} The source code of the current script, with or without
-         * units and comments as specified.
-         */
-        Controller.prototype.scriptToString = function(includeUnits, includeComments) {
-            return this.script.toString(includeUnits, includeComments);
-        };
-
-        /**
-         * Builds the model defined in the given source code and sets it
-         * as the current script.
-         *
          * @param source {String} List of quantity definitions and optionally
          * comments
          * @param restoring {Boolean} (Optional) Whether we are restoring a script
@@ -1000,6 +946,7 @@ define(["model/script",
                 throw new Error('Controller.prototype.initialiseGeneticOptimisation.pre :' +
                     'population size is less than or equal to zero');
             }
+            
             this.compileScript(this.getScript());
             this.geneticOptimisation.initialise(this.getScript(), populationSize);
             this.view.drawOptimisationPlot();
