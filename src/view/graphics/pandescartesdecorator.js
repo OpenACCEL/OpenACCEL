@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ function(AbstractDescartesDecorator) {
+define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */ function(AbstractDescartesDecorator) {
 
     /**
-     * @class PanDescartesDecorator
+     * @class
      * @classdesc The PanDescartesDecorator decorates descartes drawings by linearly translating
      * the x and y co-ordinates.
      *
@@ -31,14 +31,14 @@ define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ 
         /**
          * The offset used as the new 0 point for the horizontal axis.
          *
-         * @type {float}
+         * @type {Number}
          */
         this.horOffset = 0;
 
         /**
          * The offset used as the new 0 point for the vertical axis.
          *
-         * @type {float}
+         * @type {Number}
          */
         this.verOffset = 0;
     }
@@ -49,8 +49,8 @@ define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ 
     /**
      * Returns the input, with all x and y co-ordinates translated by horOffset and verOffset.
      *
-     * @param plot {Array<Array<Object>>} The drawing to be adjusted.
-     * @return plot {Array<Array<Object>>} The drawing with all x co-ordinates adjusted by -horOffset
+     * @param plot {Object[]][]} The drawing to be adjusted.
+     * @return plot {Object[]][]} The drawing with all x co-ordinates adjusted by -horOffset
      * and y co-ordinates adjusted by -verOffset.
      */
     PanDescartesDecorator.prototype.decorate = function(plot) {
@@ -98,10 +98,10 @@ define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ 
      * Either sets the horizontal and vertical offsets or adjusts them
      *
      * @param isAbsolute {boolean} If the new offsets should override or adjust the old ones.
-     * @param horOffset {float} The new horizontal offset if isAbsolute, or offset adjustment if not.
-     * @param verOffset {float} The new vertical offset if isAbsolute, or offset adjustment if not.
-     * @modifies this.horOffset {float} Gets overwritten with horOffset or summed with it.
-     * @modifies this.verOffset {float} Gets overwritten with verOffset or summed with it.
+     * @param horOffset {Number} The new horizontal offset if isAbsolute, or offset adjustment if not.
+     * @param verOffset {Number} The new vertical offset if isAbsolute, or offset adjustment if not.
+     * @modifies this.horOffset {Number} Gets overwritten with horOffset or summed with it.
+     * @modifies this.verOffset {Number} Gets overwritten with verOffset or summed with it.
      */
     PanDescartesDecorator.prototype.pan = function(isAbsolute, horOffset, verOffset) {
         if (isAbsolute) {

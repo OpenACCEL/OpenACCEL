@@ -3,7 +3,8 @@ var tooltips = {};
 function resizeContainer() {
     var windowWidth = $(window).innerWidth();
     var fixedWidth = 900;
-    var newMaxWidth = Math.max(fixedWidth, windowWidth * 0.8);
+    var variableWidth = windowWidth * 0.8;
+    var newMaxWidth = Math.max(fixedWidth, variableWidth);
 
     var container = $('#container');
     var content = $('#main');
@@ -17,7 +18,8 @@ function resizeContainer() {
 
     container.css(
         {
-            'left': Math.max(0, (windowWidth - newMaxWidth) / 2)
+            'left': Math.max(0, (windowWidth - newMaxWidth) / 2),
+            'width': variableWidth
         }
     );
 }
@@ -110,7 +112,8 @@ $(document).ready(
                 leaving = ui.oldPanel[0].id;
                 switch (leaving) {
                     case 'editrun':
-                        // Pause script when leaving edit/run tab
+                        // Pause script when leaving edit/run tab, indicating it has
+                        // been paused automatically by the system and not by the user
                         controller.pause(true);
                         break;
                     case 'ioedit':
@@ -141,8 +144,15 @@ $(document).ready(
                 entering = ui.newPanel[0].id;
                 switch (entering) {
                     case 'editrun':
+                        // If autoexecute is true, resume script only when it has been paused
+                        // by the system, and start executing when it is not paused but compiled
                         if (controller.autoExecute) {
-                            controller.resume(true);
+                            if (controller.isPaused()) {
+                                controller.resume(true);
+                            } else {
+                                controller.run();
+                            }
+                            
                         }
                         break;
                     default:
@@ -310,10 +320,7 @@ function Tooltip(id, classes, x, y) {
 
 //------------------------------------------------------------------------------
 
-/**
- * [ValueList description]
- * @param {[type]} selector [description]
- */
+
 function ValueList(selector) {
     this.selector = selector;
     this.initialized = false;
@@ -417,12 +424,7 @@ function SelectionList(selector, callback) {
         this.buffer.append(this.getItemHTML(i, item));
     };
 
-    /**
-     * [initializeItem description]
-     *
-     * @param  {type[]} i [description]
-     * @return {type[]}   [description]
-     */
+    
     this.initializeItem = function(i) {
         var itemselector = this.selector + 'Item' + i;
 

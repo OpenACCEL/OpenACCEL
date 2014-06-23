@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescarteshandler"], /* @lends View.Graphics */ function(AbstractDescartesHandler) {
+define(["view/graphics/abstractdescarteshandler"], /** @lends View.Graphics */ function(AbstractDescartesHandler) {
 
     /**
-     * @class DescartesHandlerFactory
+     * @class
      * @classdesc The DescartesHandlerFactory class provides DescartesHandlers to Canvases,
      * allowing them to correctly draw any supported model element.
      */
@@ -28,7 +28,7 @@ define(["view/graphics/abstractdescarteshandler"], /* @lends View.Graphics */ fu
         /**
          * The DescartesHandlers that can be provided by this class.
          *
-         * @type {array<AbstractDescartesHandler>}
+         * @type {AbstractDescartesHandler[]}
          */
         this.handlers = [];
     }
@@ -56,7 +56,7 @@ define(["view/graphics/abstractdescarteshandler"], /* @lends View.Graphics */ fu
          * Adds a DescartesHandler to the set of handlers, such that more different modelElements can be provided with handlers.
          *
          * @param handler {AbstractDescartesHandler}
-         * @modifies this.handlers {array<AbstractDescartesHandler>} This gets handler added to it.
+         * @modifies this.handlers {AbstractDescartesHandler[]} This gets handler added to it.
          */
         addHandler: function(handler) {
             if (handler instanceof AbstractDescartesHandler) {

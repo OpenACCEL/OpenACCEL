@@ -6,9 +6,9 @@
  * In this way, the Analyser can easily extract the arguments
  * and check the arguments for errors
  *
- * @memerof Model.Library
  * @param  {Number|String|Boolean} def Default value of input field
  * @return {Array}     Singleton array with def
+ * @memberof Model.Library
  */
 function input(def) {
     if (arguments.length != arguments.callee.length) {

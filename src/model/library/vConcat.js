@@ -1,12 +1,3 @@
-/**
- * @memberof Model.Library
- * Returns the concatination of arrays x and y.
- * Named indices are concatinated as if they were numerical indices above the maximum of the original array.
- * This function requires vLen to be loaded.
- * @param  x        the front array to be concatinated to
- * @param  y        the back array to concatinate
- * @return result 	concatination of arrays x and y
- */
 function vConcat(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +

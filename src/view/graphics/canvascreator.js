@@ -18,11 +18,11 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/descarteshandlerfactory", "view/graphics/canvas", "view/graphics/scriptdescarteshandler", "view/graphics/geneticoptimisationdescarteshandler"],
-    /* @lends View.Graphics */
+    /** @lends View.Graphics */
     function(DescartesHandlerFactory, Canvas, ScriptDescartesHandler, GeneticOptimisationDescartesHandler) {
 
         /**
-         * @class CanvasCreator
+         * @class
          * @classdesc The CanvasCreator class forms an abstracted environment for creating instances of the Canvas class.
          * All facilities needed to do so are loaded upon construction.
          */
@@ -52,7 +52,7 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/canvas", "view/g
              * Returns a newly created canvas which can draw the given modelElement, given that the handler exists.
              * The created canvas also already supports the functionality of its handler.
              *
-             * @return canvas {Canvas} The canvas created by this.
+             * @return {Canvas} The canvas created by this.
              */
             createCanvas: function(modelElement, div, width, height) {
                 canvas = new Canvas(modelElement, div, width, height, this.factory);

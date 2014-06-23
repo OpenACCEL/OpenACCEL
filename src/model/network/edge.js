@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /** @lends Edge */ function() {
+define([], /** @lends Model.Network */ function() {
 
     /**
      * @class

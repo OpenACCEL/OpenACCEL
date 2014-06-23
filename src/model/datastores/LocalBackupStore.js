@@ -21,7 +21,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["underscore"], /**@lends LocalBackupStore */ function(_) {
+define(["underscore"], /**@lends Model.Datastores*/ function(_) {
     /**
      * @class
      * @classdesc This class can load and save quantities to localStorage.

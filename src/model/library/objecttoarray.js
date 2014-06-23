@@ -2,7 +2,8 @@
  * Converts an object to array
  * NOT recursive.
  * If the object is a scalar value, we just return the value
- * 
+ *
+ * @memberof Model.Library
  * @param  {Object} obj object to convert
  * @return {Array}      converted array
  */

@@ -22,7 +22,7 @@ if (inNode) {
 define(["model/emo/mutation/mutation", "model/emo/random"], /**@lends Model.EMO.Mutation*/ function(Mutation, Random) {
 
     /**
-     * @class ArbitraryMutation
+     * @class
      * @classdesc The arbitrary mutation mutates one arbitrary
      * category I quantity and gives it a random value in the domain
      * of that category.

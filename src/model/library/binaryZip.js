@@ -1,5 +1,5 @@
 /**
- * @memberof Model.Library
+ * 
  * Applies the given function on the given array. The function is aplied recursively,
  * so also to nested arrays.
  * @param  {Array}   a        array taking the role of the first input of the function

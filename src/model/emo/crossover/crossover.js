@@ -20,7 +20,7 @@ if (inNode) {
 define([], /**@lends Model.EMO.CrossOver*/ function() {
 
     /**
-     * @class CrossOver
+     * @class
      * @classdesc A cross-over takes two parents and produces two children.
      */
     function CrossOver() {}

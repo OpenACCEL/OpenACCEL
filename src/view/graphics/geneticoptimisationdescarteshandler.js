@@ -22,7 +22,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
     function(AbstractDescartesHandler, QuarterFitDecorator, GeneticOptimisation, Individual, CloneObject) {
 
         /**
-         * @class GeneticOptimisationDescartesHandler
+         * @class
          * @classdesc The GeneticOptimisationDescartesHandler class handles the drawing of GeneticOptimisation objects.
          */
         function GeneticOptimisationDescartesHandler(modelElement) {
@@ -183,7 +183,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
         /**
          * Returns the most recently clicked Individual, as determined according to this.clickCallBack.
          *
-         * @return this.clickedIndividual {Individual}
+         * @return {Individual} this.clickedIndividual 
          */
         GeneticOptimisationDescartesHandler.prototype.getClickedIndividual = function() {
             return this.clickedIndividual;
@@ -193,7 +193,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
         /**
          * Returns the quantities set as paretoHor and paretoVer.
          *
-         * @return [horQuantity, verQuantity] {Array<Quantity>} Both quantities used for paretoHor and paretoVer:
+         * @return {Quantity[]} Both quantities used for paretoHor and paretoVer:
          * The paretoHor quantity on index 0.
          * The paretoVer quantity on index 1.
          */
@@ -219,7 +219,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
          * Returns the keys used in the output vectors of the Individuals of the GeneticOptimisation
          * that correspond to the quantities set as paretoHor and paretoVer.
          *
-         * @return [horKey, verKey] {Array<float>} Both keys used in the output vectors:
+         * @return {Number[]} Both keys used in the output vectors:
          * The key used for the paretoHor quantity on index 0.
          * The key used for the paretoVer quantity on index 1.
          */
@@ -253,7 +253,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
          * diameter from the Individuals outside of the pareto front. The point corresponding to
          * this.clickedIndividual is highlighted with yet another different colour.
          *
-         * @return {Array<Array<Object>>} The descartes drawing based on this.modelElement.population.
+         * @return {Object[][]} The descartes drawing based on this.modelElement.population.
          */
         GeneticOptimisationDescartesHandler.prototype.getDrawing = function() {
             var horVerKeys = this.getHorVerKeys();

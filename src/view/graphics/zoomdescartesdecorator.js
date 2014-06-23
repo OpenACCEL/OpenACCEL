@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ function(AbstractDescartesDecorator) {
+define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */ function(AbstractDescartesDecorator) {
 
     /**
-     * @class ZoomDescartesDecorator
+     * @class
      * @classdesc The ZoomDescartesDecorator decorates descartes drawings by multiplying
      * the x and y co-ordinates.
      *
@@ -31,14 +31,14 @@ define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ 
         /**
          * The factor at which the horizontal axis is scaled.
          *
-         * @type {float}
+         * @type {Number}
          */
         this.horZoom = 1;
 
         /**
          * The factor at which the vertical axis is scaled.
          *
-         * @type {float}
+         * @type {Number}
          */
         this.verZoom = 1;
     }
@@ -49,8 +49,8 @@ define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ 
     /**
      * Returns the input, with all x and y co-ordinates scaled by horZoom and verZoom respectively.
      *
-     * @param plot {Array<Array<Object>>} The drawing to be adjusted.
-     * @return plot {Array<Array<Object>>} The drawing with all x co-ordinates multiplied by horZoom
+     * @param plot {Object[][]} The drawing to be adjusted.
+     * @return plot {Object[][]} The drawing with all x co-ordinates multiplied by horZoom
      * and all y co-ordinates multiplied by verZoom.
      */
     ZoomDescartesDecorator.prototype.decorate = function(plot) {
@@ -99,10 +99,10 @@ define(["view/graphics/abstractdescartesdecorator"], /* @lends View.Graphics */ 
      * Either sets the horizontal and vertical zooms or adjusts them
      *
      * @param isAbsolute {boolean} If the new zooms should override or adjust the old ones.
-     * @param widthFactor {float} The new horizontal zoom if isAbsolute, or zoom adjustment if not.
-     * @param heightFactor {float} The new vertical zoom if isAbsolute, or zoom adjustment if not.
-     * @modifies this.horZoom {float} Gets overwritten with widthFactor or multiplied by it.
-     * @modifies this.verZoom {float} Gets overwritten with heightFactor or multiplied by it.
+     * @param widthFactor {Number} The new horizontal zoom if isAbsolute, or zoom adjustment if not.
+     * @param heightFactor {Number} The new vertical zoom if isAbsolute, or zoom adjustment if not.
+     * @modifies this.horZoom {Number} Gets overwritten with widthFactor or multiplied by it.
+     * @modifies this.verZoom {Number} Gets overwritten with heightFactor or multiplied by it.
      */
     ZoomDescartesDecorator.prototype.zoom = function(isAbsolute, widthFactor, heightFactor) {
         if (isAbsolute) {

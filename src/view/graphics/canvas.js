@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunctionpropagator"], /* @lends View.Graphics */ function(DescartesHandlerFactory, AbstractFunctionPropagator) {
+define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunctionpropagator"], /** @lends View.Graphics */ function(DescartesHandlerFactory, AbstractFunctionPropagator) {
 
     /**
-     * @class Canvas
+     * @class
      * @classdesc The Canvas class forms an abstraction from the specific DescartesHandler classes.
      * All reachable functionality needed from the DescartesHandlers is propagated to this class, to be used top level.
      */
@@ -36,14 +36,14 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunction
         /**
          * The width of this canvas in pixels.
          *
-         * @type {float}
+         * @type {Number}
          */
         this.width = width;
 
         /**
          * The height of this canvas in pixels.
          *
-         * @type {float}
+         * @type {Number}
          */
         this.height = height;
 

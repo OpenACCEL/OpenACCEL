@@ -18,7 +18,7 @@ if (inNode) {
 
 define(["model/datastores/AbstractScriptStore", 
         "jquery",
-        "model/exceptions/NetworkError"], /**@lends ServerScriptStore*/ 
+        "model/exceptions/NetworkError"], /**@lends Model.Datastores*/ 
         function(AbstractScriptStore, $, NetworkError) {
     /**
      * @class

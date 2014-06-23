@@ -16,9 +16,9 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model*/ function() {
+define([], /**@lends Model.Error*/ function() {
     /**
-     * @class RuntimeError
+     * @class
      * @classdesc An error that occured during model execution
      */
 

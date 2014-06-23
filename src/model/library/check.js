@@ -6,7 +6,7 @@
  * In this way, the Analyser can easily extract the arguments
  * and check the arguments for errors
  *
- * @memerof Model.Library
+ * @memberof Model.Library
  * @param  {Boolean} def default value of the checkbox
  * @return {Array}     Singleton array with def
  */

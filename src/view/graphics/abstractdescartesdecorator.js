@@ -17,10 +17,10 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["view/graphics/abstractfunctionpropagator"], /* @lends View.Graphics */ function(AbstractFunctionPropagator) {
+define(["view/graphics/abstractfunctionpropagator"], /** @lends View.Graphics */ function(AbstractFunctionPropagator) {
 
     /**
-     * @class AbstractDescartesDecorator
+     * @class
      * @classdesc The AbstractDescartesDecorator facilitates alteratiion of existing descartes drawings.
      */
     function AbstractDescartesDecorator() {
@@ -46,8 +46,8 @@ define(["view/graphics/abstractfunctionpropagator"], /* @lends View.Graphics */ 
     /**
      * Returns the input, adjusted according to this decorator.
      *
-     * @param plot {Array<Array<Object>>} The drawing to be adjusted
-     * @return plot {Array<Array<Object>>} The adjusted drawing
+     * @param plot {Object[][]} The drawing to be adjusted
+     * @return plot {Object[][]} The adjusted drawing
      */
     AbstractDescartesDecorator.prototype.decorate = function(plot) {
         if (this.decorator != null) {

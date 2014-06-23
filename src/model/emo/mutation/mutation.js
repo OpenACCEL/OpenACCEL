@@ -20,7 +20,7 @@ if (inNode) {
 define([], /**@lends Model.EMO.Mutation*/ function() {
 
     /**
-     * @class Mutation
+     * @class
      * @classdesc A mutation mutates one of the individuals.
      */
     function Mutation() {}

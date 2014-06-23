@@ -6,7 +6,7 @@
  * In this way, the Analyser can easily extract the arguments
  * and check the arguments for errors
  *
- * @memerof Model.Library
+ * @memberof Model.Library
  * @return {Array}     Empty array
  */
 function button() {

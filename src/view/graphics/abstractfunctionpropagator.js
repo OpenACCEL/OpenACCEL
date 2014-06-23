@@ -17,9 +17,9 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([], /* @lends View.Graphics */ function() {
+define([], /** @lends View.Graphics */ function() {
     /**
-     * @class AbstractFunctionPropagator
+     * @class
      * @classdesc The AbstractFunctionPropagator provides basic functionality for extended classes to
      * propagate their functions to other AbstractFunctionPropagators, which can then use them as their own.
      */
@@ -27,7 +27,7 @@ define([], /* @lends View.Graphics */ function() {
         /**
          * The functions and their names to be propagated for facade creation.
          *
-         * @type {array<Object<String, function>>}
+         * @type {Object[]}
          */
         this.propagatables = [];
     }
@@ -38,7 +38,7 @@ define([], /* @lends View.Graphics */ function() {
         /**
          * Returns the propagatables of all AbstractFunctionPropagators this propagator has, recursively.
          *
-         * @return allFuncs {array<Object<String, function>>}
+         * @return allFuncs {Object[]}
          * [ f | Exists_i,j[this[i] instance of AbstractFunctionPropagator : this[i].getFunctions()[j] == f]]
          */
         getSubfunctions: function() {
@@ -54,7 +54,7 @@ define([], /* @lends View.Graphics */ function() {
         /**
          * Returns the propagatables of all AbstractFunctionPropagators this propagator has, recursively.
          *
-         * @return allFuncs {array<Object<String, function>>}
+         * @return allFuncs {Object[]}
          * [ f | Exists_i,j[(this[i] instance of AbstractFunctionPropagator => this[i].getFunctions()[j] == f]) ||
          * f in this.propagatables]
          */

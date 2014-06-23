@@ -18,11 +18,11 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartesdecorator", "view/graphics/pandescartesdecorator"],
-    /* @lends View.Graphics */
+    /** @lends View.Graphics */
     function(AbstractDescartesDecorator, ZoomDescartesDecorator, PanDescartesDecorator) {
 
         /**
-         * @class ZoomFitDescartesDecorator
+         * @class
          * @classdesc The ZoomFitDescartesDecorator decorates descartes drawings by zooming and panning
          * as to fit all drawing elements in the canvas with some margin.
          */
@@ -36,7 +36,7 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
             /**
              * The decorator components this composite decorator borrows functionality from.
              *
-             * @type {Array<AbstractDescartesDecorator>}
+             * @type {AbstractDescartesDecorator[]}
              */
             this.decoratorComponents = [];
 
@@ -72,7 +72,7 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
             /**
              * Margin in percentage of the canvas to set around the zoom fit.
              *
-             * @type {float}
+             * @type {Number}
              */
             this.margin = 0;
 
@@ -119,9 +119,9 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
         /**
          * Returns the input, adjusted such that all points fit within the canvas inside of a certain margin
          *
-         * @param plot {Array<Array<Object>>} The drawing to be adjusted.
+         * @param plot {Object[][]} The drawing to be adjusted.
          * @modifies fitOnce {boolean} Gets set to false after this decoration.
-         * @return plot {Array<Array<Object>>} The drawing adjusted by zooming and panning to fit everything
+         * @return plot {Object[][]} The drawing adjusted by zooming and panning to fit everything
          * in the canvas, given that alwaysFit or fitOnce are true. Reuses old adjustments if neither alwaysFit
          * nor fitOnce are true.
          */
@@ -208,9 +208,9 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
         /**
          * Sets this.marin to a new value, and adjusts this.marginZoomAdjust accordingly.
          *
-         * @param margin {float} The new value of this.margin.
-         * @modifies this.margin {float} gets set to margin
-         * @modifies this.marginZoomAdjust {float} is changed to accomodate for this.margin from all sides.
+         * @param margin {Number} The new value of this.margin.
+         * @modifies this.margin {Number} gets set to margin
+         * @modifies this.marginZoomAdjust {Number} is changed to accomodate for this.margin from all sides.
          */
         ZoomFitDescartesDecorator.prototype.setZoomFitMargin = function(margin) {
             this.margin = margin;
