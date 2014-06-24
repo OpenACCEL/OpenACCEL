@@ -136,7 +136,6 @@ define(["view/graphics/zoomfitdescartesdecorator", "view/graphics/pandescartesde
                         this.decoratorComponents[1].pan(true, 0, 0);
                         break;
                 }
-                alert(this.quarter);
             }
             for (var j = 0; j < this.decoratorComponents.length; j++) {
                 plot = this.decoratorComponents[j].decorate(plot);

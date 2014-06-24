@@ -273,11 +273,21 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
             var blueVals = [];
             var diameters = [];
 
+            var xValue;
+            var yValue
+
             for (var i = population.length - 1; i >= 0; i--) {
                 currentIndividual = population[i];
 
-                xCoords.push(currentIndividual.outputvector[horKey].value);
-                yCoords.push(currentIndividual.outputvector[verKey].value);
+                xValue = currentIndividual.outputvector[horKey].value;
+                yValue = currentIndividual.outputvector[verKey].value;
+
+                if (!((typeof(xValue) == 'number') && (typeof(yValue) == 'number'))) {
+                    continue;
+                }
+
+                xCoords.push(xValue);
+                yCoords.push(yValue);
 
                 inFront = currentIndividual.inParetoFront;
 
