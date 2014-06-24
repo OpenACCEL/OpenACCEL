@@ -73,6 +73,16 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
         $('#plotGOdiv').toggle(show);
     };
 
+    View.prototype.smartZoomOptimisation = function() {
+        this.optimisationCanvas.smartZoom();
+        this.drawOptimisationPlot();
+    };
+
+    View.prototype.zoomToFitOptimisation = function(show) {
+        this.optimisationCanvas.zoomToFit();
+        this.drawOptimisationPlot();
+    };
+
     /**
      * Changes UI elements depending on whether the OpenACCEL model is being executed.
      *

@@ -114,6 +114,8 @@ define(["view/graphics/zoomfitdescartesdecorator", "view/graphics/pandescartesde
          */
         QuarterFitDescartesDecorator.prototype.decorate = function(plot) {
             if (this.alwaysFit || this.fitOnce) {
+                // Adjust the zoom fit margin by quarterPanAdjust and a scaled version of this.margin, to prevent points from falling off the canvas.
+                this.decoratorComponents[0].setZoomFitMargin(this.quarterPanAdjust + this.margin * 2 * this.quarterPanAdjust / this.coordinateScale);
                 this.decoratorComponents[0].zoomToFit();
                 switch (this.quarter) {
                     case 1:
@@ -129,9 +131,12 @@ define(["view/graphics/zoomfitdescartesdecorator", "view/graphics/pandescartesde
                         this.decoratorComponents[1].pan(true, -this.quarterPanAdjust, this.quarterPanAdjust);
                         break;
                     default:
+                        // Adjust the zoom fit margin back to only this.margin.
+                        this.decoratorComponents[0].setZoomFitMargin(this.margin);
                         this.decoratorComponents[1].pan(true, 0, 0);
                         break;
                 }
+                alert(this.quarter);
             }
             for (var j = 0; j < this.decoratorComponents.length; j++) {
                 plot = this.decoratorComponents[j].decorate(plot);
@@ -164,13 +169,6 @@ define(["view/graphics/zoomfitdescartesdecorator", "view/graphics/pandescartesde
         QuarterFitDescartesDecorator.prototype.setQuarter = function(quarter) {
             this.fitOnce = true;
             this.quarter = quarter;
-        };
-
-        /**
-         * Propagate the input to this.decoratorComponents[0] as hardcoded facade.
-         */
-        QuarterFitDescartesDecorator.prototype.setZoomFitMargin = function(margin) {
-            this.decoratorComponents[0].setZoomFitMargin(margin);
         };
 
         // Exports are needed, such that other modules may invoke methods from this module file.

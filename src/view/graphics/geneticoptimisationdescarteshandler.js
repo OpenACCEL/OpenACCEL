@@ -183,7 +183,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
         /**
          * Returns the most recently clicked Individual, as determined according to this.clickCallBack.
          *
-         * @return {Individual} this.clickedIndividual 
+         * @return {Individual} this.clickedIndividual
          */
         GeneticOptimisationDescartesHandler.prototype.getClickedIndividual = function() {
             return this.clickedIndividual;
@@ -204,10 +204,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
 
             for (var i in quantities) {
                 if (quantities[i].pareto.isHorizontal) {
-                    horQuantity = i;
+                    horQuantity = quantities[i];
                 }
                 if (quantities[i].pareto.isVertical) {
-                    verQuantity = i;
+                    verQuantity = quantities[i];
                 }
             }
 
@@ -225,6 +225,8 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
          */
         GeneticOptimisationDescartesHandler.prototype.getHorVerKeys = function() {
             var horVerQuantities = this.getHorVerQuantities();
+            var horName = horVerQuantities[0].name;
+            var verName = horVerQuantities[1].name;
 
             var horKey = 0;
             var verKey = 0;
@@ -234,10 +236,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
             if (population.length > 0) {
                 for (var j = population[0].outputvector.length - 1; j >= 0; j--) {
                     currentName = population[0].outputvector[j].name;
-                    if (currentName == horVerQuantities[0]) {
+                    if (currentName == horName) {
                         horKey = j;
                     }
-                    if (currentName == horVerQuantities[1]) {
+                    if (currentName == verName) {
                         verKey = j;
                     }
                 }
@@ -342,10 +344,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
         GeneticOptimisationDescartesHandler.prototype.smartZoom = function() {
             var horVerQuantities = this.getHorVerQuantities();
             var quarter = 2;
-            if (horVerQuantities[0].pareto.isMaximised) {
+            if (horVerQuantities[0].pareto.isMaximize) {
                 quarter -= 1;
             }
-            if (horVerQuantities[1].pareto.isMaximised) {
+            if (horVerQuantities[1].pareto.isMaximize) {
                 quarter += 2;
             }
 

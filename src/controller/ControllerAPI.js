@@ -945,7 +945,7 @@ define(["model/script",
                 throw new Error('Controller.prototype.initialiseGeneticOptimisation.pre :' +
                     'population size is less than or equal to zero');
             }
-            
+
             this.compileScript(this.getScript());
             this.geneticOptimisation.initialise(this.getScript(), populationSize);
             this.view.drawOptimisationPlot();
@@ -1001,6 +1001,20 @@ define(["model/script",
          */
         Controller.prototype.setMaxfront = function(desiredParetoFrontRatio) {
             this.geneticOptimisation.desiredParetoFrontRatio = desiredParetoFrontRatio / 100;
+        };
+
+        /**
+         * Smart zooms the view's optimisation canvas.
+         */
+        Controller.prototype.smartZoomGO = function() {
+            this.view.smartZoomOptimisation();
+        };
+
+        /**
+         * Zoom fits the view's optimisation canvas.
+         */
+        Controller.prototype.zoomToFitGO = function() {
+            this.view.zoomToFitOptimisation();
         };
 
         /**
