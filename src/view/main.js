@@ -52,7 +52,6 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
      * @param {Boolean} show Whether to show the plot.
      */
     View.prototype.showPlot = function(show) {
-        console.log('showPlot: ' + show);
         $('#plotdiv').toggle(show);
     };
 
@@ -98,7 +97,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     view = new View(canvasCreator);
     controller = new Controller(view);
     view.setUpPlot();
-    
+
     controller.setAutoExecute(true);
     controller.autoSave = true;
     controller.restoreSavedScript();
