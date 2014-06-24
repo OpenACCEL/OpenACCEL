@@ -139,12 +139,8 @@ $(document).ready(
         $('#plotGO').on('click',
             function() {
                 var individual = view.optimisationCanvas.getClickedIndividual();
-                console.log(individual);
 
                 individualPropertiesBuffer.empty();
-
-                //individual.inputvector
-                //name          value           minimum        maximum
 
                 individualPropertiesBuffer.append('\
                     <h4>Category I quantities</h4>\
@@ -169,9 +165,6 @@ $(document).ready(
                 }
 
                 individualPropertiesBuffer.append('</div>');
-
-                //individual.outputvector
-                //name          value           maximized/minimized
 
                 individualPropertiesBuffer.append('\
                     <h4>Category II quantities</h4>\
