@@ -341,6 +341,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
                 }
             };
 
+            if (population.length > 0 && xCoords.length == 0) {
+                throw new Error("Could not draw genetic optimisation population, a pareto variable is non-numeric.")
+            }
+
             return [
                 [ctrl, xCoords, yCoords, redVals, greenVals, blueVals, diameters]
             ];
