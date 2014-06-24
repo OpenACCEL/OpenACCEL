@@ -171,6 +171,7 @@ define(["model/emo/crossover/crossover",
         }
         // create the initial population
         this.executable = script.exe;
+        this.populationSize = populationSize;
         this.createPopulation(inputvector, outputvector, this.populationSize);
         // initialise variables
         this.mutations = [];
