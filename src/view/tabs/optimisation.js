@@ -3,7 +3,7 @@ var geneticOptimisationValues = {
     stepsize: 1,
     crossover: 90,
     mutation: [70, 85],
-    maxfront: 20
+    maxfront: 50
 }
 
 var individualPropertiesBuffer = new HTMLbuffer('#propertiesGO');

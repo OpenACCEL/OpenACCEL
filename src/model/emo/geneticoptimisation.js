@@ -49,7 +49,6 @@ define(["model/emo/crossover/crossover",
          */
         this.populationSize = 25;
 
-
         /**
          * Reference to the executable.
          *
@@ -125,7 +124,7 @@ define(["model/emo/crossover/crossover",
          *
          * @type {Number}
          */
-        this.desiredParetoFrontRatio = 0.2;
+        this.desiredParetoFrontRatio = 0.5;
     }
 
     /**
