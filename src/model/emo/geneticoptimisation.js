@@ -224,17 +224,6 @@ define(["model/emo/crossover/crossover",
     };
 
     /**
-     * Calculate the output values for every individual in the population.
-     */
-    GeneticOptimisation.prototype.calculateOutputValues = function() {
-        // loop over the population
-        for (var i = this.population.length - 1; i >= 0; i--) {
-            individual = this.population[i];
-            this.executable.executeQuantities(individual.inputvector, individual.outputvector);
-        }
-    };
-
-    /**
      * Generates the next generation.
      */
     GeneticOptimisation.prototype.nextGeneration = function() {
@@ -274,97 +263,6 @@ define(["model/emo/crossover/crossover",
                 // recalculate the pareto front
                 this.calculateParetoFront();
                 currentParetoFrontSize = this.nondominated.length;
-            }
-        }
-    };
-
-    /**
-     * Calculates the nondominated individuals.
-     */
-    GeneticOptimisation.prototype.calculateParetoFront = function() {
-        // save the size of the population
-        var size = this.population.length;
-        // initialise variable
-        var individual;
-        // calculate output values
-        this.calculateOutputValues();
-        // mark all individuals as nondominated
-        for (var i = size - 1; i >= 0; i--) {
-            this.population[i].inParetoFront = true;
-        }
-        // compare all individuals with each other
-        for (var i = size - 1; i >= 0; i--) {
-            for (var j = size - 1; j >= 0; j--) {
-                individual = this.population[j];
-                // if they are dominated mark them as such
-                if (this.population[i].dominates(individual)) {
-                    individual.inParetoFront = false;
-                }
-            }
-        }
-        // initialise the dominated and nondominated set
-        this.dominated = [];
-        this.nondominated = [];
-        // update the dominated and nondominated set
-        for (var i = size - 1; i >= 0; i--) {
-            individual = this.population[i];
-            if (individual.inParetoFront) {
-                this.nondominated.push(individual);
-            } else {
-                this.dominated.push(individual);
-            }
-        }
-    };
-
-    /**
-     * Calculates the fitness values.
-     *
-     * The fitness value of an individual is determined
-     * by the sum of strenth values of its dominators.
-     */
-    GeneticOptimisation.prototype.calculateFitness = function() {
-        // calculate the strength values of the population
-        this.calculateStrength();
-        // save the size of the population
-        var size = this.population.length;
-        // initialise variables
-        var sum;
-        var individual;
-        // compare all individuals with each other
-        for (var i = size - 1; i >= 0; i--) {
-            sum = 0;
-            individual = this.population[i];
-            for (var j = size - 1; j >= 0; j--) {
-                var anotherIndividual = this.population[j];
-                // update fitness if individual is dominated by another
-                if (anotherIndividual.dominates(individual)) {
-                    sum += anotherIndividual.strength;
-                }
-            }
-            individual.fitness = sum;
-        }
-    };
-
-    /**
-     * Calculates strength values.
-     *
-     * The strength value of an individual is determined
-     * by how many others it dominates.
-     */
-    GeneticOptimisation.prototype.calculateStrength = function() {
-        // save the size of the population
-        var size = this.population.length;
-        // initialise variable
-        var individual;
-        // compare all individuals with each other
-        for (var i = size - 1; i >= 0; i--) {
-            individual = this.population[i];
-            individual.strength = 0;
-            for (var j = size - 1; j >= 0; j--) {
-                // update strength if individual dominates another
-                if (individual.dominates(this.population[j])) {
-                    individual.strength++;
-                }
             }
         }
     };
@@ -439,6 +337,108 @@ define(["model/emo/crossover/crossover",
             }
             // apply the mutation
             mutation.mutate(this.dominated[i]);
+        }
+    };
+
+    /**
+     * Calculates the nondominated individuals.
+     */
+    GeneticOptimisation.prototype.calculateParetoFront = function() {
+        // save the size of the population
+        var size = this.population.length;
+        // initialise variable
+        var individual;
+        // calculate output values
+        this.calculateOutputValues();
+        // mark all individuals as nondominated
+        for (var i = size - 1; i >= 0; i--) {
+            this.population[i].inParetoFront = true;
+        }
+        // compare all individuals with each other
+        for (var i = size - 1; i >= 0; i--) {
+            for (var j = size - 1; j >= 0; j--) {
+                individual = this.population[j];
+                // if they are dominated mark them as such
+                if (this.population[i].dominates(individual)) {
+                    individual.inParetoFront = false;
+                }
+            }
+        }
+        // initialise the dominated and nondominated set
+        this.dominated = [];
+        this.nondominated = [];
+        // update the dominated and nondominated set
+        for (var i = size - 1; i >= 0; i--) {
+            individual = this.population[i];
+            if (individual.inParetoFront) {
+                this.nondominated.push(individual);
+            } else {
+                this.dominated.push(individual);
+            }
+        }
+    };
+
+    /**
+     * Calculate the output values for every individual in the population.
+     */
+    GeneticOptimisation.prototype.calculateOutputValues = function() {
+        // loop over the population
+        for (var i = this.population.length - 1; i >= 0; i--) {
+            individual = this.population[i];
+            this.executable.executeQuantities(individual.inputvector, individual.outputvector);
+        }
+    };
+
+    /**
+     * Calculates the fitness values.
+     *
+     * The fitness value of an individual is determined
+     * by the sum of strenth values of its dominators.
+     */
+    GeneticOptimisation.prototype.calculateFitness = function() {
+        // calculate the strength values of the population
+        this.calculateStrength();
+        // save the size of the population
+        var size = this.population.length;
+        // initialise variables
+        var sum;
+        var individual;
+        // compare all individuals with each other
+        for (var i = size - 1; i >= 0; i--) {
+            sum = 0;
+            individual = this.population[i];
+            for (var j = size - 1; j >= 0; j--) {
+                var anotherIndividual = this.population[j];
+                // update fitness if individual is dominated by another
+                if (anotherIndividual.dominates(individual)) {
+                    sum += anotherIndividual.strength;
+                }
+            }
+            individual.fitness = sum;
+        }
+    };
+
+    /**
+     * Calculates strength values.
+     *
+     * The strength value of an individual is determined
+     * by how many others it dominates.
+     */
+    GeneticOptimisation.prototype.calculateStrength = function() {
+        // save the size of the population
+        var size = this.population.length;
+        // initialise variable
+        var individual;
+        // compare all individuals with each other
+        for (var i = size - 1; i >= 0; i--) {
+            individual = this.population[i];
+            individual.strength = 0;
+            for (var j = size - 1; j >= 0; j--) {
+                // update strength if individual dominates another
+                if (individual.dominates(this.population[j])) {
+                    individual.strength++;
+                }
+            }
         }
     };
 
