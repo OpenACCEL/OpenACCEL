@@ -235,22 +235,25 @@ define(["model/emo/crossover/crossover",
     /**
      * Initialises the new population.
      *
-     * When there are too many individuals in the pareto front,
+     * When there are too many individuals on the pareto front,
      * i.e. when desiredParetoFrontSize is exceeded,
      * a random individual from the pareto front is replaced by
      * a new random individual.
      */
     GeneticOptimisation.prototype.initialiseNewPopulation = function() {
-        // calculate current and desired amount of individuals in the pareto front
+        // calculate current and desired amount of individuals on the pareto front
         var currentParetoFrontSize = this.nondominated.length;
         var desiredParetoFrontSize = parseFloat((this.desiredParetoFrontRatio * this.population.length).toFixed(0));
         // initialise variables
         var individual;
         var quantity;
-        // check if we have too many individuals in the pareto front
-        while (currentParetoFrontSize > desiredParetoFrontSize) {
+        // to avoid an infinite loop give up after this many iterations
+        var maxIterations = this.population.length;
+        var iterations = 0;
+        // check if we have too many individuals on the pareto front
+        while (currentParetoFrontSize > desiredParetoFrontSize && iterations < maxIterations) {
             individual = Random.prototype.getRandomElement(this.nondominated);
-            // if needed, throw away random individuals in the pareto front
+            // if needed, throw away a random individual on the pareto front
             if (individual.inParetoFront) {
                 for (var i = individual.inputvector.length - 1; i >= 0; i--) {
                     // by replacing them with a random individual
@@ -261,6 +264,7 @@ define(["model/emo/crossover/crossover",
                 this.calculateParetoFront();
                 currentParetoFrontSize = this.nondominated.length;
             }
+            iterations++;
         }
     };
 
