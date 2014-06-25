@@ -219,8 +219,6 @@ define(["model/emo/crossover/crossover",
             // add the newly created individual to the population
             this.population.push(new Individual(_inputvector, _outputvector));
         }
-        // calculate output values
-        this.calculateOutputValues();
     };
 
     /**
