@@ -945,8 +945,10 @@ define(["model/script",
                 throw new Error('Controller.prototype.initialiseGeneticOptimisation.pre :' +
                     'population size is less than or equal to zero');
             }
-            // compile the script
-            this.compileScript(this.getScript());
+            // compile the script if necessary
+            if (!this.getScript().isCompiled()) {
+                this.compileScript(this.getScript());
+            }
             // initialise the genetic optimisation algorithm
             this.geneticOptimisation.initialise(this.getScript(), populationSize);
             // plot with smart zoom
