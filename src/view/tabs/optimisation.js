@@ -127,6 +127,8 @@ $(document).ready(
         $('#initGO').on('click',
             function() {
                 controller.initialiseGeneticOptimisation(geneticOptimisationValues.population);
+                individualPropertiesBuffer.empty();
+                individualPropertiesBuffer.flip();
             }
         );
 
