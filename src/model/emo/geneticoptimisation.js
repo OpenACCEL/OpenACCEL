@@ -298,6 +298,15 @@ define(["model/emo/crossover/crossover",
         var parent2;
         // loop over pairs of individuals in the mating pool
         for (var i = this.matingpool.length - 1; i >= 0; i -= 2) {
+            // apply cross-over probability
+            if (Math.random() > this.crossoverProbability) {
+                // let one parent survive to the next generation
+                this.population[i] = this.matingpool[i];
+                // increment i since we only took one parent from the mating pool
+                i++;
+                // continue with the next pair in the mating pool
+                continue;
+            }
             parent1 = this.matingpool[i];
             parent2 = this.matingpool[i - 1];
             // no second parent available anymore, mating pool has odd length
