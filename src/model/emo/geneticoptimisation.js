@@ -276,7 +276,7 @@ define(["model/emo/crossover/crossover",
         var individual1;
         var individual2;
         // fill the mating pool
-        while (this.matingpool.length < this.population.length - this.dominated.length) {
+        while (this.matingpool.length < this.population.length - this.nondominated.length) {
             individual1 = Random.prototype.getRandomElement(this.population);
             individual2 = Random.prototype.getRandomElement(this.population);
             // run a tournament to determine the winner and add a clone
