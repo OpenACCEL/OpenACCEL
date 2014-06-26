@@ -135,6 +135,7 @@ $(document).ready(
         $('#stepGO').on('click',
             function() {
                 controller.nextGeneration(geneticOptimisationValues.stepsize);
+                $('#plotGO').trigger('click');
             }
         );
 
@@ -143,6 +144,11 @@ $(document).ready(
                 var individual = view.optimisationCanvas.getClickedIndividual();
 
                 individualPropertiesBuffer.empty();
+
+                if (individual == null) {
+                    individualPropertiesBuffer.flip();
+                    return;
+                }
 
                 individualPropertiesBuffer.append('\
                     <h4>Category I quantities</h4>\

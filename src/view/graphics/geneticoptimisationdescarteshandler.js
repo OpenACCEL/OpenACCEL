@@ -266,6 +266,8 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
             var inFront;
             var currentIndividual;
 
+            var popHasClickedIndividual = false;
+
             var xCoords = [];
             var yCoords = [];
             var redVals = [];
@@ -292,6 +294,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
                 inFront = currentIndividual.inParetoFront;
 
                 if (currentIndividual.equals(this.clickedIndividual)) {
+                    popHasClickedIndividual = true;
                     redVals.push(255);
                     greenVals.push(255);
                     blueVals.push(255);
@@ -340,6 +343,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
                     'ref': 2
                 }
             };
+
+            if (!popHasClickedIndividual) {
+                this.clickedIndividual = null;
+            }
 
             if (population.length > 0 && xCoords.length == 0) {
                 throw new Error("Could not draw genetic optimisation population, a pareto variable is non-numeric.")
