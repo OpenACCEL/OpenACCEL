@@ -4,6 +4,15 @@ function modulo(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     return zip([x, y], function(a, b) {
-        return a % b;
+        if (b != 0.0) {
+            var mm = a % b;
+            if (mm >= 0) {
+                return mm;
+            } else {
+                return mm + b;
+            }
+        } else {
+            throw new Error("\ndivision by zero in modulo");
+        }
     });
 }

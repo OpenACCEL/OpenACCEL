@@ -4,6 +4,6 @@ function uniminus(x) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     return unaryZip(x, function(a) {
-        return -1*a;
+        return -a;
     });
 }
