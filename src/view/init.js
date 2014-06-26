@@ -63,9 +63,10 @@ function runtimeErrorMessage(id, error, selector) {
         //Default display location
         var errorlocation = $(selector);
         var pos = errorlocation.offset();
+        console.log(pos);
 
-        this.x = 0 + pos.left;
-        this.y = 24 + pos.top;
+        this.x = -92 + pos.left + errorlocation.width();
+        this.y = 48 + pos.top;
     }
 
     this.text = '<span style = "color: #FF1144;">Runtime Error</span> ' + error.message;
@@ -75,6 +76,7 @@ var errorCount = 0;
 
 function handleError(error) {
     var errormsg = null;
+    errorCount++;
 
     switch(error.constructor.name) {
         case 'SyntaxError':
@@ -84,7 +86,10 @@ function handleError(error) {
             //previously thrown when excessive whitespace was input 
             break;
         case 'RuntimeError':
-            errormsg = new runtimeErrorMessage(errorCount, error, '#runscript')
+            errormsg = new runtimeErrorMessage(errorCount, error, '#scriptoptions');
+            break;
+        case 'Error':
+            errormsg = new runtimeErrorMessage(errorCount, error, '#scriptoptions')
             break;
         default:
             errormsg = {
