@@ -93,6 +93,13 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     };
 
     /**
+     * Resets the view to accomodate the new loaded script.
+     */
+    View.prototype.loadedNewScript = function() {
+        resetEditRun();
+    };
+
+    /**
      * Displays the passed runtime error to the user.
      *
      * @param {RuntimeError} err The error that occured during runtime.

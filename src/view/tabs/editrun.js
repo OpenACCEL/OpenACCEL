@@ -247,6 +247,9 @@ function objectToString(obj) {
  * @param  {String} value To be put in the #scriptline element
  */
 function selectScriptline(linenr, quantityname) {
+    Report.arglistBuffer.empty();
+    Report.argtolistBuffer.empty();
+
     if ($('#line' + linenr).length > 0) {
         var quantity = controller.getQuantity(quantityname);
 
@@ -254,9 +257,6 @@ function selectScriptline(linenr, quantityname) {
         scriptline.text(quantity.source);
 
         $('.quantityname').text(quantityname);
-
-        Report.arglistBuffer.empty();
-        Report.argtolistBuffer.empty();
 
         //list parameters (type = dummy)
         for (var p in quantity.parameters) {
@@ -275,13 +275,41 @@ function selectScriptline(linenr, quantityname) {
         for (var r in quantity.reverseDeps) {
             Report.addArgto(quantity.reverseDeps[r], 'regular');
         }
+    }        
 
-        Report.arglistBuffer.flip();
-        Report.argtolistBuffer.flip();
+    Report.arglistBuffer.flip();
+    Report.argtolistBuffer.flip();
 
-        Report.arglistBuffer.hideIfEmpty('#arglistdiv');
-        Report.argtolistBuffer.hideIfEmpty('#argtodiv');
-    }
+    Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+    Report.argtolistBuffer.hideIfEmpty('#argtodiv');
+}
+
+/**
+ * Deselects the previously selected line and hides the argument lists
+ */
+function deselectScriptline() {
+    selectScriptline(null, null);
+    $('#scriptline').text('');
+
+    Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+    Report.argtolistBuffer.hideIfEmpty('#argtodiv');
+}
+
+/**
+ * Resets the edit/run tab to it's initial state
+ */
+function resetEditRun() {
+    synchronizeScriptList(null);
+    synchronizeResults(null);
+    selectScriptline(null, null);
+    $('#scriptline').text('');
+
+    Report.todolistBuffer.hideIfEmpty('#tododiv');
+    Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+    Report.argtolistBuffer.hideIfEmpty('#argtodiv');
+    userinputBuffer.hideIfEmpty('#userinputdiv');
+    Report.resultList.buffer.hideIfEmpty('#resultdiv');
+    $('#plotdiv').toggle(false);
 }
 
 //------------------------------------------------------------------------------
