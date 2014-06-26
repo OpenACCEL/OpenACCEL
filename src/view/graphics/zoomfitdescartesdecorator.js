@@ -151,6 +151,9 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
                         verMin = Math.min(plot[i][0].y, verMin);
                     }
                 }
+                if (horMax + verMax == Infinity || horMin + verMin == -Infinity) {
+                    throw new Error("The drawing co-ordinates suggest zooming out infinitely, cannot zoom infinitely.");
+                }
                 this.decoratorComponents[0].pan(true, horMin, verMin);
                 this.decoratorComponents[1].zoom(true, this.marginZoomAdjust * this.coordinateScale / (horMax - horMin),
                     this.marginZoomAdjust * this.coordinateScale / (verMax - verMin));
