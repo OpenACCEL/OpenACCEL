@@ -974,10 +974,22 @@ define(["model/script",
                 throw new Error('Controller.prototype.nextGeneration.pre :' +
                     'number of iterations is less than or equal to zero');
             }
-            for (var i = iterations - 1; i >= 0; i--) {
-                this.geneticOptimisation.nextGeneration();
-            }
+            // for (var i = iterations - 1; i >= 0; i--) {
+            //     this.geneticOptimisation.nextGeneration();
+            // }
+            // this.view.drawOptimisationPlot();
+            console.log("doneNext");
+            this.geneticOptimisation.nextGeneration();
             this.view.drawOptimisationPlot();
+            var that = this;
+            setTimeout(function() {
+                iterations--;
+                if (iterations > 0) {
+                    that.nextGeneration(iterations);
+                    console.log("doNext");
+                }
+            }, 1);
+
         };
 
         /**

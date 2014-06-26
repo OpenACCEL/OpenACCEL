@@ -21,7 +21,7 @@ function getChan(x) {
                     $.ajax({
                         url: cmpUrl,
                         success: function(data, status) {
-                            getChanTimers[i].returnValue = JSON.parse(data);
+                            getChanTimers[i].returnValue = objectToArray(JSON.parse(data));
                         },
                         error: function(status) {
                             alert('ajax reports a problem retrieving data from channel ' + x + '; status=' + status.response);
@@ -48,7 +48,7 @@ function getChan(x) {
             $.ajax({
                 url: cmpUrl,
                 success: function(data, status) {
-                    getChanTimers[i].returnValue = JSON.parse(data);
+                    getChanTimers[i].returnValue = objectToArray(JSON.parse(data));
                 },
                 error: function(status) {
                     alert('ajax reports a problem retrieving data from channel; status=' + status.response);
@@ -59,7 +59,7 @@ function getChan(x) {
             return "error";
         }
     } else {
-        errorString += ("\nargument of getChan() must be a string");
+        throw new Error("\nargument of getChan() must be a string");
     }
 
 }
