@@ -41,6 +41,13 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
          * @type {Number}
          */
         this.verZoom = 1;
+
+        /**
+         * The maximum factor we scale at to prevent rounding issues and division by 0.
+         *
+         * @type {Number}
+         */
+        this.maxFactor = 1000000;
     }
 
 
@@ -112,6 +119,8 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
             this.horZoom *= widthFactor;
             this.verZoom *= heightFactor;
         }
+        this.horZoom = Math.min(this.maxFactor, this.horZoom);
+        this.verZoom = Math.min(this.maxFactor, this.verZoom);
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
