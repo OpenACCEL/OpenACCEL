@@ -25,6 +25,8 @@ function replaceSpecial(s) {
     result = result.replace(/([#$%&_{}])/g, function(sym) {
         return "\\" + sym;
     });
+    result = result.replace("<", "$\\langle$");
+    result = result.replace(">", "$\\rangle$");
     return result;
 
 }
@@ -286,7 +288,7 @@ exports.publish = function(taffydata) {
     data = taffydata;
 
     // First handle all global definitions
-    output += handleGlobals();
+    //output += handleGlobals();
 
     var namespaces = getData().filter({
         kind: "namespace"

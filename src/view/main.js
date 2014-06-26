@@ -4,7 +4,7 @@ var canvasCreator = null;
 
 require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
     /**
-     * @class View
+     * @class
      * @classdesc Interface declaring the methods that the view with which the Controller will
      * communicate should implement.
      */

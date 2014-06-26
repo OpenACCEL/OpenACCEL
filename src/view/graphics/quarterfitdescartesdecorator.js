@@ -18,11 +18,11 @@ if (inNode) {
 
 // If all requirements are loaded, we may create our 'class'.
 define(["view/graphics/zoomfitdescartesdecorator", "view/graphics/pandescartesdecorator"],
-    /* @lends View.Graphics */
+    /** @lends View.Graphics */
     function(ZoomFitDescartesDecorator, PanDescartesDecorator) {
 
         /**
-         * @class QuarterFitDescartesDecorator
+         * @class
          * @classdesc The QuarterFitDescartesDecorator decorates descartes drawings by zooming and panning
          * as to fit all drawing elements in the canvas with some margin or with some margin in one of the quarters of the canvas.
          */
@@ -106,9 +106,9 @@ define(["view/graphics/zoomfitdescartesdecorator", "view/graphics/pandescartesde
         /**
          * Returns the input, adjusted such that all points fit within the canvas inside of a certain margin
          *
-         * @param plot {Object[][]} The drawing to be adjusted.
+         * @param plot {Object[]} The drawing to be adjusted.
          * @modifies fitOnce {boolean} Gets set to false after this decoration.
-         * @return {Object[][]} The drawing adjusted by zooming and panning to fit everything
+         * @return {Object[]} The drawing adjusted by zooming and panning to fit everything
          * in the canvas, given that alwaysFit or fitOnce are true. Reuses old adjustments if neither alwaysFit
          * nor fitOnce are true.
          */

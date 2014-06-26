@@ -1,3 +1,5 @@
+
+
 var tooltips = {};
 
 function resizeContainer() {
@@ -198,6 +200,7 @@ $(document).ready(
 /**
  * Constructs a buffer object to contain updated content of a div and update the div when desired
  *
+ * @memberof View
  * @param {String} div Id of the div who's content is to be buffered
  * @class
  * @classdesc Buffer class to contain updated content of a div and update the div when desired
@@ -260,6 +263,7 @@ function HTMLbuffer(div) {
  * @param {String} div     Selector to indicate which element the Tooltip should be associated with
  * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
  *
+ * @memberof View
  * @class
  * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
  */
@@ -337,6 +341,7 @@ function ValueList(selector) {
     /**
      * Buffer to contain HTML for the required list
      *
+     * @memberof View
      * @type {HTMLbuffer}
      */
     this.buffer = new HTMLbuffer(selector);
@@ -397,6 +402,7 @@ function ValueList(selector) {
 /**
  * Class to generate a list of selectable items
  *
+ * @memberof View
  * @param  {String}   selector Element to put the list in
  * @param  {Function} callback Function to be called when an item is clicked
  */

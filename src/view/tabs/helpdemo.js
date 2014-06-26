@@ -98,6 +98,7 @@ var demoScriptList = new SelectionList('#demoscripts', loadDemoScript);
 
 /**
  * Buffer to contain #helptext content
+ * @memberof View
  * @type {HTMLbuffer}
  */
 var helpTextBuffer = new HTMLbuffer('#helptext');

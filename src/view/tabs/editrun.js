@@ -88,6 +88,7 @@ function setExecuting(executing) {
 /**
  * Synchronize the content of the #scriptlist div with the model
  *
+ * @memberof View
  * @param  {Object} quantities All quantities registered in the model
  */
 function synchronizeScriptList(quantities) {
@@ -145,6 +146,7 @@ function synchronizeScriptList(quantities) {
 /**
  * Synchronize the content of the #result div with the model
  *
+ * @memberof View
  * @param  {Object} quantities All category 2 quantities registered in the model
  */
 function synchronizeResults(quantities) {
@@ -162,6 +164,8 @@ function synchronizeResults(quantities) {
 /**
  * Number of object-elements the objectToString function
  * should generate before it is terminated.
+ *
+ * @memberof View
  * @type {Number}
  */
 var maxPrintElements = 1000;
@@ -172,6 +176,7 @@ var maxPrintElements = 1000;
  * Terminates the string with ...
  * when maxPrintElements elements has been reached.
  *
+ * @memberof View
  * @param  {Object} obj Object to print
  * @return {String}     Printable string
  */
@@ -243,6 +248,7 @@ function objectToString(obj) {
 /**
  * Selects indicated line and puts it's contents in the #scriptline element
  *
+ * @memberof View
  * @param  {Number} line  Identifier of the to be selected line
  * @param  {String} value To be put in the #scriptline element
  */
@@ -286,6 +292,7 @@ function selectScriptline(linenr, quantityname) {
 
 /**
  * Deselects the previously selected line and hides the argument lists
+ * @memberof View
  */
 function deselectScriptline() {
     selectScriptline(null, null);
@@ -297,6 +304,7 @@ function deselectScriptline() {
 
 /**
  * Resets the edit/run tab to it's initial state
+ * @memberof View
  */
 function resetEditRun() {
     synchronizeScriptList(null);
@@ -316,6 +324,7 @@ function resetEditRun() {
 
 /**
  * Buffer to contain updated #scriptlist content
+ * @memberof View
  * @type {HTMLbuffer}
  */
 var scriptlistBuffer = new HTMLbuffer('#scriptlist');
@@ -323,6 +332,7 @@ var scriptlistBuffer = new HTMLbuffer('#scriptlist');
 /**
  * Generates HTML for a line of ACCEL code to be added to the listing in the #scriptlist element
  *
+ * @memberof View
  * @param {Number} line     Line number to identify this line of code
  * @param {String} left     Left-hand of the equation
  * @param {String} right    Right-hand side of the equation
@@ -344,6 +354,7 @@ function getScriptlistLineHTML(linenr, quantity, left, right, category) {
 /**
  * Adds HTML for a line of ACCEL code to the buffer
  *
+ * @memberof View
  * @param {Number} line     Line number to identify this line of code
  * @param {String} left     Left-hand of the equation
  * @param {String} right    Right-hand side of the equation
@@ -377,6 +388,7 @@ function setPendingScriptLine(line) {
 
 /**
  * Buffer to contain updated #userinput content
+ * @memberof View
  * @type {HTMLbuffer}
  */
 var userinputBuffer = new HTMLbuffer('#userinput');
@@ -384,6 +396,7 @@ var userinputBuffer = new HTMLbuffer('#userinput');
 /**
  * Constructs a base input element
  *
+ * @memberof View
  * @class
  * @classdesc Base input element to be extended
  */
@@ -405,6 +418,7 @@ Input.prototype.initialize = function() {};
  * @param {Number} min        Minimal value of the slider
  * @param {Number} max        Maximal value of the slider
  *
+ * @memberof View
  * @class
  * @classdesc Dynamic slider input class to be generated according to ACCEL script requirements
  */
@@ -464,6 +478,7 @@ SliderInput.prototype.initialize = function() {
  * @param {String}  label      String to be used as a label for the input element in the UI
  * @param {Boolean} val        Initial value of the checkbox
  *
+ * @memberof View
  * @class
  * @classdesc Dynamic checkbox input class to be generated according to ACCEL script requirements
  */
@@ -507,6 +522,7 @@ CheckboxInput.prototype.initialize = function() {
  * @param {String} label      String to be used as a label for the input element in the UI
  * @param {String} val        Initial value of the text input field
  *
+ * @memberof View
  * @class
  * @classdesc Dynamic text input class to be generated according to ACCEL script requirements
  */
@@ -548,6 +564,7 @@ TextInput.prototype.initialize = function() {
  * @param {Object} quantity   Object which the input element affects
  * @param {String} label      String to be used as a label for the input element in the UI
  *
+ * @memberof View
  * @class
  * @classdesc Dynamic button input class to be generated according to ACCEL script requirements
  */
@@ -578,12 +595,14 @@ ButtonInput.prototype.initialize = function() {
 
 /**
  * Array of input javascript objects
+ * @memberof View
  * @type {Array}
  */
 var inputs = [];
 
 /**
  * Removes the existing input elements and empties the associated buffer
+ * @memberof View
  */
 function resetInputs() {
     userinputBuffer.empty();
@@ -594,6 +613,7 @@ function resetInputs() {
 /**
  * Adds a dynamic input element to the #userinput element
  *
+ * @memberof View
  * @param {Object} elements    Object with functions to generate the corresponding HTML to be put in #userinput
  */
 function addInput(element) {
@@ -604,6 +624,7 @@ function addInput(element) {
 
 /**
  * Initializes the added input elements
+ * @memberof View
  */
 function initInputs() {
     userinputBuffer.flip();
@@ -615,6 +636,7 @@ function initInputs() {
 
 /**
  * Object containing tools to modify the contents of the todo list, argument lists and result list
+ * @memberof View
  * @type {Object}
  */
 var Report = {

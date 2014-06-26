@@ -17,9 +17,9 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([], /**@lends AbstractView*/ function() {
+define([], /**@lends Controller*/ function() {
     /**
-     * @class AbstractView
+     * @class
      * @classdesc Interface declaring the methods that the view with which the Controller will
      * communicate should implement.
      */
