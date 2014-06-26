@@ -1,4 +1,13 @@
 
+.disabled {
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+#main > ul .disabled:hover {
+	background: #662266;
+	background: linear-gradient(#993399, #662266);
+}
+
 html {
 	height: 100%;
 }
@@ -446,7 +455,7 @@ body div {
 }
 
 #userinput {
-	color: #331144;
+	color: #FFFFFF;
 }
 
 #result .operator {
@@ -555,8 +564,8 @@ body div {
 }
 
 .checkboxin label:after {
-	filter: alpha(opacity=20);
-	opacity: 0.2;
+	filter: alpha(opacity=10);
+	opacity: 0.1;
 
 	content: '';
 	position: absolute;
@@ -565,7 +574,7 @@ body div {
 	background: transparent;
 	top: 2px;
 	left: 2px;
-	border: 3px solid #331144;
+	border: 3px solid #FFFFFF;
 	border-top: none;
 	border-right: none;
 
@@ -577,8 +586,8 @@ body div {
 }
 
 .checkboxin label:hover::after {
-	filter: alpha(opacity=50);
-	opacity: 0.5;
+	filter: alpha(opacity=40);
+	opacity: 0.4;
 }
 
 .checkboxin input[type=checkbox]:checked + label:after {
