@@ -146,8 +146,8 @@ define(["model/emo/crossover/crossover",
         // loop over all the quantities
         for (var i in quantities) {
             quantity = quantities[i];
-            // check if the quantity is a user defined function (cat 1)
-            if (quantity.category == 1) {
+            // check if the quantity is a slider (cat 1)
+            if (quantity.category == 1 && quantity.input.type == "slider") {
                 // initialise the inputquantity
                 inputquantity = {};
                 inputquantity.name = quantity.name;
