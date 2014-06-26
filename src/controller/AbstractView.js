@@ -47,8 +47,6 @@ define([], /**@lends AbstractView*/ function() {
          */
         presentResults: function(cat2quantities) {},
 
-
-
         /**
          * Should create the necessary plot canvasses
          *
@@ -71,8 +69,6 @@ define([], /**@lends AbstractView*/ function() {
          */
         drawPlot: function() {},
 
-
-
         /**
          * Should change UI elements depending on whether the OpenACCEL model is being executed.
          *
@@ -91,7 +87,7 @@ define([], /**@lends AbstractView*/ function() {
 
         /**
          * Signals the view that a new script object has been created.
-         * 
+         *
          * @abstract
          */
         loadedNewScript: function() {},

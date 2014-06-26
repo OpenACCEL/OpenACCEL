@@ -458,6 +458,7 @@ define(["model/script",
             this.script = new Script();
             this.view.setQuantities({});
             this.view.presentResults({});
+            this.view.loadedNewScript();
 
             // Give new script object to descartes
             if (inBrowser) {
