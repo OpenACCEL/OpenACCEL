@@ -183,7 +183,6 @@ $(document).ready(
             }
         );
 
-        console.log($('.disabled'));
         $('.disabled').attr('disabled', 'disabled').off('click');
         $('.disabled').children().attr('disabled', 'disabled').off('click');
     }

@@ -334,7 +334,7 @@ function getScriptlistLineHTML(linenr, quantity, left, right, category) {
         <label for="line' + linenr + '" onclick = "selectScriptline(' + linenr + ', \'' + quantity + '\');">\
             <div class="inline ellipsis max128w">' + left + '</div>\
             <div class="inline operator">=</div>\
-            <div class="inline ellipsis max256w">' + right + '</div>\
+            <div class="inline ellipsis max128w">' + right + '</div>\
             <div class="inline comment">(cat.=' + category + ')</div>\
             <a onclick="deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>\
         </label>\
@@ -618,16 +618,6 @@ function initInputs() {
  * @type {Object}
  */
 var Report = {
-    getEquationHTML: function(left, right) {
-        return '\
-            <div>\
-                <div class="ellipsis max128w">' + left + '</div>\
-                <div class="operator"> = </div>\
-                <div class="ellipsis max256w">' + right + '</div>\
-            </div>\
-        ';
-    },
-
     getPropertyListHTML: function(x, property) {
         return '\
             <div>\
