@@ -974,19 +974,15 @@ define(["model/script",
                 throw new Error('Controller.prototype.nextGeneration.pre :' +
                     'number of iterations is less than or equal to zero');
             }
-            // for (var i = iterations - 1; i >= 0; i--) {
-            //     this.geneticOptimisation.nextGeneration();
-            // }
-            // this.view.drawOptimisationPlot();
-            console.log("doneNext");
             this.geneticOptimisation.nextGeneration();
             this.view.drawOptimisationPlot();
-            var that = this;
+            // 'this' is outside the scope of the setTimeout function
+            var _this = this;
+            // set a timeout of 1ms to allow the plot to update between generations
             setTimeout(function() {
                 iterations--;
                 if (iterations > 0) {
-                    that.nextGeneration(iterations);
-                    console.log("doNext");
+                    _this.nextGeneration(iterations);
                 }
             }, 1);
 
