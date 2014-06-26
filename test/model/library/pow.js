@@ -30,6 +30,30 @@ suite("Pow Library", function() {
         /**
          * Test case for pow.
          *
+         * @input pow(-2, 3)
+         * @expected 8
+         */
+        test("x = pow(-2, 3)", function() {
+            var input = "x = pow(-2, 3)";
+            var output = compiler.compile(new script(input)).__x__();
+            assert.equal(output, 8);
+        });
+
+        /**
+         * Test case for pow.
+         *
+         * @input pow(-2, 0.5)
+         * @expected Math.pow(2, 0.5)
+         */
+        test("x = pow(-2, 0.5)", function() {
+            var input = "x = pow(-2, 0.5)";
+            var output = compiler.compile(new script(input)).__x__();
+            assert.equal(output, Math.pow(2, 0.5));
+        });
+
+        /**
+         * Test case for pow.
+         *
          * @input x = 5
          *        y = pow(x, 3)
          *        z = pow(y, pow(x, 2))
