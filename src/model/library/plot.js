@@ -1,4 +1,6 @@
 function plot(x) {
+    exe.hasPlot = true;
+
     if (x instanceof Array) {
         exe.plot = x;
         if (exe.plotStatus === '') {

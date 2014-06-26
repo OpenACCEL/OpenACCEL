@@ -79,6 +79,14 @@ define([], /**@lends Model*/ function() {
         this.plot = [];
 
         /**
+         * Whether the executable contains a plot function that is
+         * being called.
+         *
+         * @type {Boolean}
+         */
+        this.hasPlot = false;
+
+        /**
          * Graphics plot object, set by the library function plot()
          * @type {Array}
          */
@@ -154,6 +162,8 @@ define([], /**@lends Model*/ function() {
         this.mouseButtonPressed = false;
         this.plot = [];
         this.plotStatus = '';
+
+        // Do not reset hasPlot
     };
 
     /**
@@ -277,7 +287,7 @@ define([], /**@lends Model*/ function() {
             this.setValue(elem.name, elem.value);
         }
 
-        
+
 
 
         // update the values in the output-objects

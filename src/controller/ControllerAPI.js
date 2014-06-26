@@ -364,7 +364,7 @@ define(["model/script",
                 // nessecary
                 if (this.currentIteration == 1) {
                     // Check if there is a plot and show it if there is
-                    if (this.script.exe.plot.length > 0) {
+                    if (this.script.exe.hasPlot) {
                         this.view.showPlot(true);
                     }
                 }
