@@ -85,6 +85,8 @@ function setExecuting(executing) {
     }
 }
 
+var lineNumber = {};
+
 /**
  * Synchronize the content of the #scriptlist div with the model
  *
@@ -93,6 +95,7 @@ function setExecuting(executing) {
  */
 function synchronizeScriptList(quantities) {
     scriptlistBuffer.empty();
+    lineNumber = {};
     Report.todolistBuffer.empty();
     resetInputs();
 
@@ -104,7 +107,9 @@ function synchronizeScriptList(quantities) {
         if (quantity.todo) {
             Report.addTodo(quantity.name);
         } else {
-            addScriptlistLine(i++, quantity.name, quantity.LHS, quantity.definition, quantity.category);
+            i++;
+            lineNumber[quantity.name] = i;
+            addScriptlistLine(i, quantity.name, quantity.LHS, quantity.definition, quantity.category);
         }
 
         //User Input
@@ -640,13 +645,20 @@ function initInputs() {
  * @type {Object}
  */
 var Report = {
-    getPropertyListHTML: function(x, property) {
+    /**
+     * Generates HTML for an item in the list of todos
+     * 
+     * @param {String} quantity Quantity which is to be implemented
+     */
+    getTodoListHTML: function(quantity) {
         return '\
-            <div>\
-                <div class="ellipsis max128w">' + x + '</div>\
-                <div class="property">' + property + '</div>\
+            <div onclick = "Report.onclickTodo(\'' + quantity + '\')" class = "hoverbold">\
+                <div class="ellipsis max128w">' + quantity + '</div>\
             </div>\
         ';
+    },
+    onclickTodo: function(quantity) {
+        $('#scriptline').html(quantity + ' =&nbsp;');
     },
 
     /**
@@ -661,7 +673,28 @@ var Report = {
      * @param {String} quantity Quantity to be implemented
      */
     addTodo: function(quantity) {
-        Report.todolistBuffer.append(this.getPropertyListHTML(quantity, ''));
+        Report.todolistBuffer.append(this.getTodoListHTML(quantity));
+    },
+
+    /**
+     * Generates HTML for an item in a list of quantities with a certain property
+     * 
+     * @param  {String} quantity Quantity of which a property is being displayed
+     * @param  {String} property Property of the associated quantity
+     */
+    getPropertyListHTML: function(quantity, property) {
+        return '\
+            <div onclick = "Report.onclickProperty(\'' + quantity + '\')" class = "hoverbold">\
+                <div class="ellipsis max128w">' + quantity + '</div>\
+                <div class="property">' + property + '</div>\
+            </div>\
+        ';
+    },
+    onclickProperty: function(quantity) {
+        console.log(quantity);
+        var i = lineNumber[quantity];
+        selectScriptline(i, quantity);
+        $('#line' + i).trigger('click');
     },
 
     /**

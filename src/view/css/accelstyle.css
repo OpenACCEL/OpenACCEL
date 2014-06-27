@@ -470,6 +470,13 @@ body div {
 	font-weight: bold;
 }
 
+.hoverbold {
+	cursor: pointer;
+}
+.hoverbold:hover {
+	font-weight: bold;
+}
+
 .operator {
 	color: #AA00AA;
 }
