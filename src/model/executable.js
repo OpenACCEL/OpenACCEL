@@ -269,26 +269,27 @@ define([], /**@lends Model*/ function() {
      * inputs array. The values are immediately filled in in the output objects.
      * The values are restored afterwards.
      *
-     * Needed for SPEA.
+     * Needed for Genetic Optimisation.
      *
-     * @param  {Array} inputs  array containing object having a 'name' and 'value' field with the with the quantities that
-     *                         should get a value.
-     * @param  {Array} outputs array containing objects that have at leat a 'name' and 'value' field with the output quantities
+     * @param {Array}   inputs  array containing object having a 'name' and 'value' field with the with the quantities that
+     *                          should get a value.
+     * @param {Array}   outputs array containing objects that have at leat a 'name' and 'value' field with the output quantities
      *
+     * @param {Number}  steps   the number of iterations before executing the quantities
      */
-    Executable.prototype.executeQuantities = function(inputs, outputs) {
+    Executable.prototype.executeQuantities = function(inputs, outputs, steps) {
         this.reset();
-        // do one step forward into the future
-        this.step();
+
+        // do as many steps as needed
+        for (var i = steps - 1; i >= 0; i--) {
+            this.step();
+        }
 
         // set the values to the ones given in input
         for (var key in inputs) {
             var elem = inputs[key];
             this.setValue(elem.name, elem.value);
         }
-
-
-
 
         // update the values in the output-objects
         for (var key in outputs) {

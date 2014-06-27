@@ -541,6 +541,7 @@ define(["model/script",
 
             this.stop();
             this.numIterations = iterations;
+            this.geneticOptimisation.numIterations = iterations;
             if (this.autoExecute) {
                 this.run();
             }

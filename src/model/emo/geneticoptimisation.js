@@ -50,6 +50,13 @@ define(["model/emo/crossover/crossover",
         this.populationSize = 25;
 
         /**
+         * The number of iterations per generation.
+         *
+         * @type {Number}
+         */
+        this.numIterations = 1;
+
+        /**
          * Reference to the executable.
          *
          * @type {Executable}
@@ -395,7 +402,7 @@ define(["model/emo/crossover/crossover",
         // loop over the population
         for (var i = this.population.length - 1; i >= 0; i--) {
             individual = this.population[i];
-            this.executable.executeQuantities(individual.inputvector, individual.outputvector);
+            this.executable.executeQuantities(individual.inputvector, individual.outputvector, this.numIterations);
         }
     };
 
