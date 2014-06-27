@@ -57,7 +57,7 @@ macro func {
          * The maximum size of the history array for this quantity.
          * @type {Number}
          */
-        this.$x.timespan = 1;
+        this.$x.timespan = 0;
 
         // Initialize the values for user input
         if (this.report && this.report.$x.category === 1) {

@@ -137,7 +137,7 @@ define([], /**@lends Model*/ function() {
      * Progress the history one step in the executable.
      *
      * @param qty The quantity whose history to advance with one step.
-     * @pre qty.hist !== undefined
+     * @pre qty.hist !== undefined && qty.hist.length > 0
      */
     Executable.prototype.historyStep = function(qty) {
         // All history values have been set, and we need to shift the histories.
@@ -145,7 +145,7 @@ define([], /**@lends Model*/ function() {
 
         // + 1, because the hist array also contains the present value (t{0}),
         // and therefore the array has one element more than the timespan number gives.
-        if (this[qty].hist.length > this[qty].timespan + 1) {
+        if (this[qty].hist.length - 1 > this[qty].timespan) {
             this[qty].hist.length -= 1;
         }
 
@@ -167,7 +167,7 @@ define([], /**@lends Model*/ function() {
         for (var qty in this.report) {
             if (this[qty].hist) {
                 this[qty].hist.length = 0;
-                this[qty].timespan = 1;
+                this[qty].timespan = 0;
             }
         }
 
