@@ -26,13 +26,14 @@ if (inNode) {
 define(["model/script",
         "model/compiler",
         "model/datastores/LocalBackupStore",
+        "model/exceptions/SyntaxError",
         "model/exceptions/RuntimeError",
         "model/emo/geneticoptimisation",
         "controller/AbstractView",
         "underscore"
     ],
     /**@lends Controller*/
-    function(Script, Compiler, LocalBackupStore, RuntimeError, GeneticOptimisation, AbstractView, _) {
+    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, _) {
         /**
          * @class
          * @classdesc The Controller is the intermediar between the Model and the View.
@@ -858,11 +859,15 @@ define(["model/script",
          * @post A new script has been created, containing all quantities
          * defined in source.
          * @return {Quantities[]} An array of quantities that have been added to the model.
+         * @throws {SyntaxError} If the script is not syntactically correct
          */
         Controller.prototype.setScriptFromSource = function(source, restoring) {
             if (typeof(restoring) === 'undefined') {
                 restoring = false;
             }
+
+            // First make sure the script is correct before emptying the current script
+            this.checkSyntax(source);
 
             // Stop the current model and create a new script with the
             // given source
@@ -885,6 +890,17 @@ define(["model/script",
             }
 
             return added;
+        };
+
+        /**
+         * Returns whether the syntax of the script is correct and throws
+         * a SyntaxError if not.
+         * @param  {String} source  The ACCEL script of which to check the syntax
+         * @return {Boolean}        Whether the given script is syntactically correct
+         * @throws {SyntaxError}    If source is not syntactically correct
+         */
+        Controller.prototype.checkSyntax = function(source) {
+            return this.script.checkSyntax(source);
         };
 
         /**
