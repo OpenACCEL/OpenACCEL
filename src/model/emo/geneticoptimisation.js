@@ -399,6 +399,8 @@ define(["model/emo/crossover/crossover",
      * Calculate the output values for every individual in the population.
      */
     GeneticOptimisation.prototype.calculateOutputValues = function() {
+        // initialise variable
+        var individual;
         // loop over the population
         for (var i = this.population.length - 1; i >= 0; i--) {
             individual = this.population[i];
