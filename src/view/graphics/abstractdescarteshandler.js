@@ -189,7 +189,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
         for (i in this.descartesInstances) {
             this.descartesInstances[i].enforceRedraw();
         }
-};
+    };
     /**
      * Empties the canvas of any drawings.
      *
@@ -197,7 +197,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      */
     AbstractDescartesHandler.prototype.clearCanvas = function(divName) {
         for (i in this.descartesInstances) {
-            this.descartesInstances[i].wipeGraph(divName);
+            this.descartesInstances[i].whipeGraph(divName);
         }
     };
 
