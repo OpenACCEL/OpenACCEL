@@ -185,9 +185,19 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      *
      * @modifies ForAll_i[descartesInstances[i]] {descartes} The descartes objects of which the buffers are emptied.
      */
-    AbstractDescartesHandler.prototype.resetCanvas = function() {
+    AbstractDescartesHandler.prototype.clearBuffers = function() {
         for (i in this.descartesInstances) {
             this.descartesInstances[i].enforceRedraw();
+        }
+};
+    /**
+     * Empties the canvas of any drawings.
+     *
+     * @modifies ForAll_i[descartesInstances[i]] {descartes} The descartes objects of which the canvas is cleared.
+     */
+    AbstractDescartesHandler.prototype.clearCanvas = function(divName) {
+        for (i in this.descartesInstances) {
+            this.descartesInstances[i].wipeGraph(divName);
         }
     };
 

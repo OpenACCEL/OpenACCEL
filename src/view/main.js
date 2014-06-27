@@ -56,6 +56,13 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     };
 
     /**
+     * Clears the plot canvas
+     */
+    View.prototype.clearPlot = function() {
+        this.canvas.clearCanvas();
+    };
+
+    /**
      * Updates the plot canvas
      */
     View.prototype.drawPlot = function() {
@@ -71,6 +78,10 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
 
     View.prototype.showOptimisationPlot = function(show) {
         $('#plotGOdiv').toggle(show);
+    };
+
+    View.prototype.clearOptimisationPlot = function() {
+        this.optimisationCanvas.clearCanvas();
     };
 
     View.prototype.smartZoomOptimisation = function() {

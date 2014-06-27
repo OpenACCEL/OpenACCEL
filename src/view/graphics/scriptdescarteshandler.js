@@ -45,11 +45,11 @@ define(["view/graphics/abstractdescarteshandler", "model/script"], /** @lends Vi
         });
 
         /**
-         * Propagate the resetCanvas function to (probably) the Canvas class.
+         * Propagate the clearBuffers function to (probably) the Canvas class.
          */
         this.propagatables.push({
-            name: "resetCanvas",
-            func: this.resetCanvas.bind(this)
+            name: "clearBuffers",
+            func: this.clearBuffers.bind(this)
         });
     };
 

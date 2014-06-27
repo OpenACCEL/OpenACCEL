@@ -670,7 +670,7 @@ define(["model/script",
 
                 // Reset descartes canvas
                 if (inBrowser) {
-                    this.view.canvas.resetCanvas();
+                    this.view.canvas.clearBuffers();
                 }
 
                 // Hide any shown plot if there is no plot in the new executable anymore

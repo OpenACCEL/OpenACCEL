@@ -106,7 +106,18 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunction
 
     Canvas.prototype.discard = function() {
         this.handler.removeDescartes(this.div);
-    }
+    };
+
+    /**
+     * Empties the canvas of any drawings.
+     *
+     * @modifies this.handler {AbstractDescartesHandler} The handler of this canvas.
+     */
+    Canvas.prototype.clearCanvas = function() {
+        if (this.handler) {
+            this.handler.clearCanvas(this.div);
+        }
+    };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Canvas;
