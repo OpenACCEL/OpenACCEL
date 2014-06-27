@@ -118,34 +118,44 @@ define([], /**@lends Model*/ function() {
                     this[qty]();
                 }
 
-                if(this[qty].hist)
-                {
-                    // All history values have been set, and we need to shift the histories.
-                    this[qty].hist.unshift(undefined)
-
-                    // + 1, because the hist array also contains the present value (t{0}),
-                    // and therefore the array has one element more than the timespan number gives.
-                    if (this[qty].hist.length > this[qty].timespan + 1) {
-                        this[qty].hist.length -= 1;
+                // Update the history if the quantity has one
+                if(this[qty].hist) {
+                    this.historyStep(qty);
+                } else { // No history means we're dealing with a user-defined function with cache
+                    // Clear memoization cache of user functions
+                    for (var c in this[qty].cache) {
+                        delete this[qty].cache[c];
                     }
 
-                    // Reset buttons after one iteration.
-                    // A button stays on true when pressed, but it should only be true for one iteration.
-                    if (this.report[qty].input.type === 'button') {
-                        this.report[qty].value = false;
-                        this[qty].hist[0] = false;
-                    }
+                    this[qty].cache = {};
                 }
-
-                // Clear memoization cache of user functions
-                for (var c in this[qty].cache) {
-                    delete this[qty].cache[c];
-                }
-
-                this[qty].cache = {};
             }
         }
     };
+
+    /**
+     * Progress the history one step in the executable.
+     *
+     * @param qty The quantity whose history to advance with one step.
+     * @pre qty.hist !== undefined
+     */
+    Executable.prototype.historyStep = function(qty) {
+        // All history values have been set, and we need to shift the histories.
+        this[qty].hist.unshift(undefined)
+
+        // + 1, because the hist array also contains the present value (t{0}),
+        // and therefore the array has one element more than the timespan number gives.
+        if (this[qty].hist.length > this[qty].timespan + 1) {
+            this[qty].hist.length -= 1;
+        }
+
+        // Reset buttons after one iteration.
+        // A button stays on true when pressed, but it should only be true for one iteration.
+        if (this.report[qty].input.type === 'button') {
+            this.report[qty].value = false;
+            this[qty].hist[0] = false;
+        }
+    }
 
     /**
      * Resets the executable.
@@ -217,7 +227,8 @@ define([], /**@lends Model*/ function() {
                 quantity + ' is a user-defined function');
         }
 
-        return this[localQty].hist[0] = value;
+        this[localQty].hist[0] = value;
+        this.report[localQty].value = value;
     };
 
 
@@ -284,15 +295,15 @@ define([], /**@lends Model*/ function() {
     Executable.prototype.executeQuantities = function(inputs, outputs, steps) {
         this.reset();
 
-        // do as many steps as needed
-        for (var i = steps - 1; i >= 0; i--) {
-            this.step();
-        }
-
         // set the values to the ones given in input
         for (var key in inputs) {
             var elem = inputs[key];
             this.setValue(elem.name, elem.value);
+        }
+
+        // do as many steps as needed
+        for (var i = steps - 1; i >= 0; i--) {
+            this.step();
         }
 
         // update the values in the output-objects
