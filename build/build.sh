@@ -20,6 +20,7 @@ quickbuild() {
 # Testing.
 test() {
     clean
+    jade
     deploy
     post_deploy
     echo "Testing..."
@@ -104,7 +105,7 @@ deploy() {
     # Copy style sheets.
     cp -r src/view/css bin/css/
 
-    
+
 }
 
 # Post Deployment
