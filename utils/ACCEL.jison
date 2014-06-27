@@ -151,7 +151,7 @@ unit        [a-zA-Z]+[0-9]*
 
 \/\/([^\n])*                                                { yytext = yytext.slice(2); return 'COMMENT'; }
 
-(\"[^"]*\")|(\'[^']*\')                                     { return 'STRING';      }
+(["][^\"]*["])|(['][^\']*['])                               { return 'STRING';      }
 
 \;.* { yytext = this.matches[1]; return 'UNIT'; }
 
@@ -260,7 +260,11 @@ scriptFinalLine         :   quantity
 /** Single ACCEL script lines */
 quantity                :   quantityDef | quantityFuncDef | inputQuantityDef;
 quantityFuncDef         :   funcDef '=' expr
-                            { $$ = $1 + $2 + $3; }
+                        {{
+                            // clear the parameter array after a function defin ition has been processed.
+                            yy.params = [];
+                            $$ = $1 + $2 + $3;
+                        }}
                         ;
 quantityName            :   IDENTIFIER
                             { $$ = '__' + $1 + '__'; } 
@@ -268,8 +272,14 @@ quantityName            :   IDENTIFIER
 dummy                   : STDFUNCTION | INPUTFUNCTION | quantityName;
 funcDef                 :  quantityName '(' dummy (funcDefAdditionalArg)* ')'
                         {{
+                            // Initialize parameter array.
+                            // This is to validate whether variables in an expression are 
+                            // references to other quantities or parameters
+                            yy.params = [];
+                            yy.params.push($3);
                             var funcName = $1 + $2 + $3;
                             if ($4 && $4.length > 0) {
+                                yy.params.push.apply(yy.params, $4);
                                 $$ = funcName + ',' + $4 + $5;
                             } else {
                                 $$ = funcName + $5;
@@ -344,8 +354,20 @@ binArith                :  /* Operator precedence defined above */
 scalarTerm              :   scalarVar | funcCall | quantifier | brackets | vectorCall | historyVar | at;
 scalarVar               :   quantityName
                             { $$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : this.' + $1 + '())'; }
-                        |   STDFUNCTION
-                        |   INPUTFUNCTION
+                        |   (STDFUNCTION | INPUTFUNCTION)
+                        {{ 
+                            // check if this function name is used as a parameter
+                            // which ia allowed. But using a function name as quantity
+                            // is not.
+                            if (yy.params && yy.params.indexOf($1) > -1) {
+                                $$ = $1
+                            } else {
+                                yy.parseError($1 + ' is a standard ACCEL function', {
+                                    text: $1,
+                                    loc: this._$
+                                });
+                            }
+                        }}
                         ;
 historyVar              :   scalarVar '{' expr '}'
                             { $$ = "history(" + $1 + "," + $3 + ")"; }
