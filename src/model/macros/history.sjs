@@ -1,6 +1,6 @@
 macro history {
     rule {
-        (((typeof $quantity:ident !== 'undefined') ? $quantity:ident : this.$quantity:ident()), $time:expr)
+        (this.$quantity:ident(), $time:expr)
     } => {
         (function() {
             var time = $time;

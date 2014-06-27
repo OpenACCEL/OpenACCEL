@@ -32,7 +32,6 @@ function syntaxErrorMessage(id, error, selector) {
     this.id = id;
 
     var errorContainer = $(selector);
-
     var source = errorContainer.html();
     var errorLines = source.split('\n');
     var errorEnd = errorLines[error.lastLine - 1];
@@ -44,6 +43,8 @@ function syntaxErrorMessage(id, error, selector) {
 
     var errorlocation = $('#errorlocation' + this.id);
     var pos = errorlocation.offset();
+
+    errorContainer.children().remove();
 
     this.x = pos.left;
     this.y = 16 + pos.top;

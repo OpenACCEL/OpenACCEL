@@ -27,6 +27,7 @@ unit        [a-zA-Z]+[0-9]*
 %{
     /** Define error handler */
     yy.parser.parseError = this.parseError = yy.parseError = function(message, hash) {
+        yy.dummies = [];
         throw {message: message, hash: hash};
     }
 
@@ -145,7 +146,7 @@ unit        [a-zA-Z]+[0-9]*
 
 %%
 /* --------- Lexer definitions section --------- */
-[ \t]                                                       { /* Ignore all whitespace characters except newlines */; }
+[^\S\n]+                                                    { /* Ignore all whitespace characters except newlines */ }
 (\r)?\n                                                     { return 'LINEBREAK';   }
 {int}{frac}?{exp}?\b                                        { return 'NUMBER';      }
 
@@ -258,28 +259,42 @@ scriptFinalLine         :   quantity
 
 
 /** Single ACCEL script lines */
-quantity                :   quantityDef | quantityFuncDef | inputQuantityDef;
+quantity                :   (quantityDef | quantityFuncDef | inputQuantityDef)
+                        {{
+                            // clear dummies after line has been processed
+                            yy.dummies = [];
+                            $$ = $1;
+                        }}
+                        ;
 quantityFuncDef         :   funcDef '=' expr
                         {{
-                            // clear the parameter array after a function defin ition has been processed.
-                            yy.params = [];
                             $$ = $1 + $2 + $3;
                         }}
                         ;
 quantityName            :   IDENTIFIER
                             { $$ = '__' + $1 + '__'; } 
                         ;                    
-dummy                   : STDFUNCTION | INPUTFUNCTION | quantityName;
+dummy                   : (STDFUNCTION | INPUTFUNCTION | quantityName)
+                        {{
+                            // intiialize dummies array
+                            if (!yy.dummies) {
+                                yy.dummies = [];   
+                            }
+                            if (yy.dummies.indexOf($1) > -1) {
+                                // already defined, which is not allowed
+                                yy.parseError($1 + ' is already defined as dummy-variable', {
+                                    text: $1,
+                                    loc: this._$
+                                });
+                            }
+                            yy.dummies.push($1);
+                            $$ = $1;
+
+                        }};
 funcDef                 :  quantityName '(' dummy (funcDefAdditionalArg)* ')'
                         {{
-                            // Initialize parameter array.
-                            // This is to validate whether variables in an expression are 
-                            // references to other quantities or parameters
-                            yy.params = [];
-                            yy.params.push($3);
                             var funcName = $1 + $2 + $3;
                             if ($4 && $4.length > 0) {
-                                yy.params.push.apply(yy.params, $4);
                                 $$ = funcName + ',' + $4 + $5;
                             } else {
                                 $$ = funcName + $5;
@@ -353,14 +368,22 @@ binArith                :  /* Operator precedence defined above */
 /* Scalars */
 scalarTerm              :   scalarVar | funcCall | quantifier | brackets | vectorCall | historyVar | at;
 scalarVar               :   quantityName
-                            { $$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : this.' + $1 + '())'; }
+                        {{
+                            if (yy.dummies && yy.dummies.indexOf($1) > -1) {
+                                $$ = $1;
+                            } else {
+                                $$ = 'this.' + $1 + '()';
+                            }
+
+                            //$$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : this.' + $1 + '())';
+                        }}
                         |   (STDFUNCTION | INPUTFUNCTION)
                         {{ 
-                            // check if this function name is used as a parameter
-                            // which ia allowed. But using a function name as quantity
+                            // check if this function name is used as a parameter or dummy
+                            // which is allowed. But using a function name as quantity
                             // is not.
-                            if (yy.params && yy.params.indexOf($1) > -1) {
-                                $$ = $1
+                            if (yy.dummies && yy.dummies.indexOf($1) > -1) {
+                                $$ = $1;
                             } else {
                                 yy.parseError($1 + ' is a standard ACCEL function', {
                                     text: $1,
@@ -370,7 +393,16 @@ scalarVar               :   quantityName
                         }}
                         ;
 historyVar              :   scalarVar '{' expr '}'
-                            { $$ = "history(" + $1 + "," + $3 + ")"; }
+                        {{  
+                            if (yy.dummies && yy.dummies.indexOf($1) > -1) {
+                                // Cannot ask for the history of a parameter
+                                yy.parseError('Dummy variables cannot have history', {
+                                    text: 'history of ' + $1,
+                                    loc: this._$
+                                });
+                            } 
+                            $$ = "history(" + $1 + "," + $3 + ")";
+                        }}
                         ;
 scalarConst             :   NUMBER | STRING | predefinedConstant;
 predefinedConstant      :   PI
@@ -422,7 +454,12 @@ inputCallArgList        :   ',' (scalarConst | (('+'|'-') NUMBER))
                         ;
 
 quantifier              :  '#(' dummy ',' expr ',' expr ',' STDFUNCTION ')'
-                            { $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9; }
+                            {{
+                                // Remove the dummy variable from the list of
+                                var idx = yy.dummies.indexOf($2);
+                                yy.dummies.splice(idx,1);
+                                $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9;
+                            }}
                         ;
 at                      :   '@(' expr  ','  expr  ')'
                             { $$ = 'at(' + $2 + $3 + $4 +  $5; }
@@ -440,7 +477,7 @@ vectorArgList           :   vectorElem (vectorAdditionalArg)*
                             var counter = 0;
 
                             function createElement(elemObj) {
-                                return (elemObj.index || '\'' + counter++ + '\'') + ':' + elemObj.value
+                                return (elemObj.index || '\'' + counter++ + '\'') + ':' + elemObj.value;
                             }
 
                             var result = createElement($1);
