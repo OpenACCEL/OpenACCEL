@@ -7,7 +7,13 @@ macro history {
             if (time < 1) {
                 throw new Error('For delayed quantities, the value must be at least 1');
             }
-            var historyValue = this.$quantity.hist[this.time - time];
+
+            var quantity = this.$quantity;
+            if (time > quantity.timespan) {
+                quantity.timespan = time;
+            }
+
+            var historyValue = quantity.hist[time];
             if (historyValue === undefined) {
                 return 0;
             } else {

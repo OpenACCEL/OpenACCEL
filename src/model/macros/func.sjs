@@ -22,22 +22,19 @@ macro func {
 
             if (this.report && this.report.$x.isTimeDependent) {
                 var report = this.report.$x;
-                var time = this.time;
                 
                 // If the current time-step value has not been evaluated yet, do it now
-                if (history[time] === undefined) {
+                if (history[0] === undefined) {
                     // For non-input quantities, evaluate the expression of this quantity and store it
                     // in the history datastructure
                     if (report.category !== 1) {
-                        history[time] = quantity.expr();
+                        history[0] = quantity.expr();
                     } else {
                         // For input quantities, which do not have executable library functions,
                         // retrieve the current value from the report and store it in the history
-                        history[time] = report.value;
+                        history[0] = report.value;
                     }
                 }
-
-                return history[time];
             } else {
                 // Quantity value does not change with time: check if it has been evaluated already
                 // and hasn't changed (applicable to user input). Else evaluate it now and store result
@@ -45,9 +42,9 @@ macro func {
                     history[0] = quantity.expr();
                     quantity.hasChanged = false;
                 }
-
-                return history[0];
             }
+
+            return history[0];
         };
 
         // Function that evaluates the given expression in the context of 'this'
@@ -55,6 +52,12 @@ macro func {
 
         // Initialise history array
         this.$x.hist = [];
+
+        /**
+         * The maximum size of the history array for this quantity.
+         * @type {Number}
+         */
+        this.$x.timespan = 1;
 
         // Initialize the values for user input
         if (this.report && this.report.$x.category === 1) {

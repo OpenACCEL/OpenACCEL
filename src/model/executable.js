@@ -49,12 +49,6 @@ define([], /**@lends Model*/ function() {
         this.report = this.underscorifyKeys(report);
 
         /**
-         * Current time-step of the runtime execution
-         * @type {Number}
-         */
-        this.time = 0;
-
-        /**
          * X-coordinate of the mouse inside the graphics canvas
          * @type {Number}
          */
@@ -124,10 +118,23 @@ define([], /**@lends Model*/ function() {
                     this[qty]();
                 }
 
-                // Reset buttons after one iteration
-                if (this.report[qty].input.type === 'button') {
-                    this.report[qty].value = false;
-                    this[qty].hist[this.time] = false;
+                if(this[qty].hist)
+                {
+                    // All history values have been set, and we need to shift the histories.
+                    this[qty].hist.unshift(undefined)
+
+                    // + 1, because the hist array also contains the present value (t{0}),
+                    // and therefore the array has one element more than the timespan number gives.
+                    if (this[qty].hist.length > this[qty].timespan + 1) {
+                        this[qty].hist.length -= 1;
+                    }
+
+                    // Reset buttons after one iteration.
+                    // A button stays on true when pressed, but it should only be true for one iteration.
+                    if (this.report[qty].input.type === 'button') {
+                        this.report[qty].value = false;
+                        this[qty].hist[0] = false;
+                    }
                 }
 
                 // Clear memoization cache of user functions
@@ -138,9 +145,6 @@ define([], /**@lends Model*/ function() {
                 this[qty].cache = {};
             }
         }
-
-        // Increase current timestep
-        this.time++;
     };
 
     /**
@@ -153,10 +157,10 @@ define([], /**@lends Model*/ function() {
         for (var qty in this.report) {
             if (this[qty].hist) {
                 this[qty].hist.length = 0;
+                this[qty].timespan = 1;
             }
         }
 
-        this.time = 0;
         this.mouseX = 0;
         this.mouseY = 0;
         this.mouseButtonPressed = false;
@@ -213,7 +217,7 @@ define([], /**@lends Model*/ function() {
                 quantity + ' is a user-defined function');
         }
 
-        return this[localQty].hist[this.time] = value;
+        return this[localQty].hist[0] = value;
     };
 
 
