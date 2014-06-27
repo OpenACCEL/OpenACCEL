@@ -116,6 +116,8 @@ $(document).ready(
 
         $('#main').on('tabsbeforeactivate',
             function(event, ui) {
+                $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
+
                 leaving = ui.oldPanel[0].id;
                 switch (leaving) {
                     case 'editrun':
