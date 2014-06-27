@@ -671,6 +671,7 @@ define(["model/script",
                 // Reset descartes canvas
                 if (inBrowser) {
                     this.view.canvas.clearBuffers();
+                    this.view.clearOptimisationPlot();
                 }
 
                 // Hide any shown plot if there is no plot in the new executable anymore
