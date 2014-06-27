@@ -23,7 +23,7 @@ function getUrl(url) {
                     $.ajax({
                         url: cmpUrl,
                         success: function(data, status) {
-                            urlTimers[i].returnValue = JSON.parse(data);
+                            urlTimers[i].returnValue = objectToArray(JSON.parse(data));
                         },
                         error: function(status) {
                             alert('ajax reports a problem retrieving data from server; status=' + status.response);
@@ -50,7 +50,7 @@ function getUrl(url) {
             $.ajax({
                 url: cmpUrl,
                 success: function(data, status) {
-                    urlTimers[i].returnValue = JSON.parse(data);
+                    urlTimers[i].returnValue = objectToArray(JSON.parse(data));
                 },
                 error: function(status) {
                     alert('ajax reports a problem retrieving data from server; status=' + status.response);
