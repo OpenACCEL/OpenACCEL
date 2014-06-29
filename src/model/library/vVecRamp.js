@@ -1,8 +1,9 @@
 //This function was taken from keesvanoverveld.com
 function vVecRamp(x, y, z) {
-    x = objectToArray(x);
-    y = objectToArray(y);
-    z = objectToArray(z);
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     // arguments: x is a vector of abcissae
     // y is a vector of ordinates
     // z is an abcissa-value

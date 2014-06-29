@@ -7,7 +7,6 @@ suite("vNormalize Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'vNormalize' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -23,14 +22,14 @@ suite("vNormalize Library", function() {
          * Test case for vNormalize.
          * Based on an example of the help documentation
          *
-         * input: vNormalize([1,1,1])
-         * expected: [0.58,0.58,0.58]
+         * @input: vNormalize([1,1,1])
+         * @expected: [0.58,0.58,0.58]
          */
         test("vNormalize([1,1,1]) = [0.58,0.58,0.58]", function() {
             eval(fileLoader.getContent());
 
-            var expected = [0.58,0.58,0.58];
-            var result = vNormalize([1,1,1]);
+            var expected = [0.58, 0.58, 0.58];
+            var result = vNormalize([1, 1, 1]);
 
             result = result.map(function(num) {
                 var i = 1;
@@ -47,8 +46,8 @@ suite("vNormalize Library", function() {
         /**
          * Test case for vNormalize.
          *
-         * input: vNormalize([])
-         * expected: []
+         * @input: vNormalize([])
+         * @expected: []
          */
         test("vNormalize([]]) = []", function() {
             eval(fileLoader.getContent());
@@ -59,12 +58,12 @@ suite("vNormalize Library", function() {
             assert.deepEqual(result, expected);
         });
 
-        
+
         /**
          * Test case for vNormalize.
          *
-         * input: vNormalize(5)
-         * expected: 1
+         * @input: vNormalize(5)
+         * @expected: 1
          */
         test("vNormalize(5) = 1", function() {
             eval(fileLoader.getContent());

@@ -5,11 +5,11 @@ let quantifier = macro {
         (function() {
             var domain = $domain;
 
-            var zipResult = unaryZip(domain, function($dummy) {
+            var zipResult = unaryZip(domain, (function($dummy) {
                 return $exp;
-            });
+            }).bind(this));
 
             return foldl(zipResult, $func);
-        })()
+        }).call(this)
     }
 }

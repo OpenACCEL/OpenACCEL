@@ -7,7 +7,6 @@ suite("vNormFlat Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'vNormFlat' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -23,14 +22,14 @@ suite("vNormFlat Library", function() {
          * Test case for vNormFlat.
          * Based on an example of the help documentation
          *
-         * input:vNormFlat([1,-1,1,-1,1,-1])
-         * expected: 0
+         * @input:vNormFlat([1,-1,1,-1,1,-1])
+         * @expected: 0
          */
         test("vNormFlat([1,-1,1,-1,1,-1]) = 0", function() {
             eval(fileLoader.getContent());
 
             var expected = 0;
-            var result =vNormFlat([1,-1,1,-1,1,-1]);
+            var result = vNormFlat([1, -1, 1, -1, 1, -1]);
 
             assert.deepEqual(result, expected);
         });
@@ -38,8 +37,8 @@ suite("vNormFlat Library", function() {
         /**
          * Test case for vNormFlat.
          *
-         * input:vNormFlat(42)
-         * expected: 42
+         * @input:vNormFlat(42)
+         * @expected: 42
          */
         test("vNormFlat(42) = 42", function() {
             eval(fileLoader.getContent());
@@ -53,8 +52,8 @@ suite("vNormFlat Library", function() {
         /**
          * Test case for vNormFlat.
          *
-         * input:vNormFlat(['a', 'b', 'c'])
-         * expected: 'abc'
+         * @input:vNormFlat(['a', 'b', 'c'])
+         * @expected: 'abc'
          */
         test("vNormFlat(['a', 'b', 'c']) = 'abc'", function() {
             eval(fileLoader.getContent());
@@ -68,8 +67,8 @@ suite("vNormFlat Library", function() {
         /**
          * Test case for vNormFlat.
          *
-         * input:vNormFlat([y:'a', x:'b', 'c'])
-         * expected: 'cba'
+         * @input:vNormFlat([y:'a', x:'b', 'c'])
+         * @expected: 'cba'
          */
         test("vNormFlat([y:'a', x:'b', 'c']) = 'cba'", function() {
             eval(fileLoader.getContent());

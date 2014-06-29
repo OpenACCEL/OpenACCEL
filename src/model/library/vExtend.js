@@ -1,6 +1,8 @@
 function vExtend(x, y) {
-    x = objectToArray(x);
-    y = objectToArray(y);
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     if (!(x instanceof Array)) {
         if (y instanceof Array) {
             var p = [];
@@ -35,3 +37,5 @@ function vExtend(x, y) {
         return p;
     }
 }
+
+vExtend.base = []

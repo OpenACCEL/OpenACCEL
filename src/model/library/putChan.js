@@ -1,5 +1,10 @@
 function putChan(myChannelName,myValue) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     if ((typeof myChannelName) == 'string') {
+        var value = arrayToObject(myValue);
         var fnd = false;
         for (var i = 0; i < putChanTimers.length; i++) {
             if (putChanTimers[i].chanName == myChannelName) {
@@ -11,7 +16,7 @@ function putChan(myChannelName,myValue) {
                     return myValue;
                 } else {
                     // we can call the server again.
-                    var encodedData = JSON.stringify(myValue);
+                    var encodedData = JSON.stringify(value);
                     var cmpUrl = "php/keyMapDBI.php?task=setTerm&key=" + myChannelName + "&term=" + encodedData + "&zghekjrtpoi=" + Math.random();
                     $.ajax({
                         url: cmpUrl
@@ -27,11 +32,11 @@ function putChan(myChannelName,myValue) {
             var chanDate = new Date();
             var chanTime = chanDate.getTime();
             putChanTimers[k] = {
-                'returnValue': myValue,
+                'returnValue': value,
                 'time': chanTime,
                 'chanName': myChannelName
             };
-            var encodedData = JSON.stringify(myValue);
+            var encodedData = JSON.stringify(value);
             var cmpUrl = "php/keyMapDBI.php?task=setTerm&key=" + myChannelName + "&term=" + encodedData + "&zghekjrtpoi=" + Math.random();
             $.ajax({
                 url: cmpUrl
@@ -39,8 +44,6 @@ function putChan(myChannelName,myValue) {
             return myValue;
         }
     } else {
-        runOK = false;
-        errorString += ("\nfirst argument of putChan() must be a string");
-        return errOb;
+        throw new Error("\nfirst argument of putChan() must be a string");
     }
 }

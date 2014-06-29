@@ -7,7 +7,6 @@ suite("And Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'And' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -21,9 +20,15 @@ suite("And Library", function() {
         });
     });
 
-    suite("and", function() {
-
-        test("and function with 2 variables", function() {
+    suite("| Function", function() {
+        /**
+         * true AND true == true
+         *
+         * @input:      x = true
+         *              y = true
+         * @expected:   and(x, y) == true
+         */
+        test("| And function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = true;
             var y = true;
@@ -31,7 +36,14 @@ suite("And Library", function() {
             assert.deepEqual(output, true);
         });
 
-        test("and function with 2 variables", function() {
+        /**
+         * true AND false == false
+         *
+         * @input:      x = true
+         *              y = false
+         * @expected:   and(x, y) == false
+         */
+        test("| And function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = true;
             var y = false;
@@ -39,7 +51,14 @@ suite("And Library", function() {
             assert.deepEqual(output, false);
         });
 
-        test("and function with a constant and an array", function() {
+        /**
+         * true AND [true, false] == [true, false]
+         *
+         * @input:      x = true
+         *              y = [true, false]
+         * @expected:   and(x, y) == [true, false]
+         */
+        test("| And function with a constant and an array", function() {
             eval(fileLoader.getContent());
             var x = true;
             var y = [true, false];
@@ -47,7 +66,14 @@ suite("And Library", function() {
             assert.deepEqual(output, [true, false]);
         });
 
-        test("and function with array's", function() {
+        /**
+         * [true, true, false, false] AND [true, false, true, false] == [true, false, false, false]
+         *
+         * @input:      x = [true, true, false, false]
+         *              y = [true, false, true, false]
+         * @expected:   and(x, y) == [true, false, true, false]
+         */
+        test("| And function with array's", function() {
             eval(fileLoader.getContent());
             var x = [true, true, false, false];
             var y = [true, false, true, false];
@@ -55,7 +81,14 @@ suite("And Library", function() {
             assert.deepEqual(output, [true, false, false, false]);
         });
 
-        test("and function with an array and a nested array", function() {
+        /**
+         * [true, false] AND [true, [true, false]] == [true, [false, false]]
+         *
+         * @input:      x = [true, false]
+         *              y = [true, [true, false]]
+         * @expected:   and(x, y) == [true, [false, false]]
+         */
+        test("| And function with an array and a nested array", function() {
             eval(fileLoader.getContent());
             var x = [true, false];
             var y = [true, [true, false]];
@@ -63,6 +96,13 @@ suite("And Library", function() {
             assert.deepEqual(output, [true, [false, false]]);
         });
 
+        /**
+         * [[true, false], false] AND [true, [true, false]] == [[true, false], [false, false]]
+         *
+         * @input:      x = [[true, false], false]
+         *              y = [true, [true, false]]
+         * @expected:   and(x, y) == [[true, false], [false, false]]
+         */
         test("and function with nested array's", function() {
             eval(fileLoader.getContent());
             var x = [
@@ -75,23 +115,36 @@ suite("And Library", function() {
                 [false, false]
             ]);
         });
-
     });
 
-    suite("expansion", function() {
-
-        test("should expand for 'x = 5, y = and(x, true)'", function() {
+    suite("| Compiled", function() {
+        /**
+         * And function should work from the executable.
+         *
+         * @input:      x = 5
+         *              y = and(x, true)
+         * @expected:   y = true
+         */
+        test("| Should expand for 'x = 5, y = and(x, true)'", function() {
             var input = "x = 5\ny = and(x, true)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), true);
+            assert.equal(output.__y__(), true);
         });
 
-        test("should expand for 'x = 5, y = and(x, true), z = and(y, and(x, false))'", function() {
+        /**
+         * And function should work from the executable.
+         *
+         * @input:      x = 5
+         *              y = and(x, true)
+         *              z = and(y, and(x, false))
+         * @expected:   y = true
+         *              z = false
+         */
+        test("| Should expand for 'x = 5, y = and(x, true), z = and(y, and(x, false))'", function() {
             var input = "x = 5\ny = and(x, true) \nz = and(y, and(x, false))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), true);
-            assert.equal(output.exe.__z__(), false);
+            assert.equal(output.__y__(), true);
+            assert.equal(output.__z__(), false);
         });
-
     });
 });

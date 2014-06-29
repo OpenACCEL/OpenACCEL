@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model.Passes*/ function() {
+define([], /**@lends Model.Analyser.Passes*/ function() {
     /**
      * @class
      * @classdesc Base class for passes of the preprocessor.

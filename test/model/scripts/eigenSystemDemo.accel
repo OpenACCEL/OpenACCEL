@@ -1,0 +1,15 @@
+m=[[1,0,0],[0,c,s],[0,-s,c]]
+c=cos(alpha*PI)
+s=sin(alpha*PI)
+alpha=slider(0.10,0,1)
+// this link to trigonometry illustrates
+// the connection between rotations and (complex)
+// eigenvalues.
+b=vEigenSystem(m)
+// b is a vector of vectors. The first
+// is the vector of real parts of the eigenvalues
+// the second is the vector of imaginary parts
+// the rest is a matrix containing the eigenvectors.
+realE=@(b,0)
+imgE=@(b,1)
+eigVector=@(b,2)

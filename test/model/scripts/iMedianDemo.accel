@@ -1,0 +1,20 @@
+ 
+DS=slider(45,10,100)
+    //  this is the resolution of the playground. Notice: the number of pixels to be calculated grows quadratically with DS!
+c=slider(5,0,10)
+    // this controls the chance of dark blobs vs light blobs 
+scal=slider(1,1,10)
+    //  the pixel size 
+a=plot([[[plotType:'image',scaleX:round(scal),scaleY:round(scal),mapR:[mode:'data',ref:1],mapG:[mode:'data',ref:1],mapB:[mode:'data',ref:1]],mB]])
+    //  a scalable image with variable pixels size 
+amp=50*round(c-10*random())
+    //  amplitudes of the random spikes 
+blur=[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]
+    //  the blur kernel 
+mB=if(p<2||DS!=DS{1},start,iMedian(mB{1},1,2)+amp*iConvolve(iSpike(DS*random(),DS*random(),DS,DS),blur,2,2,2))
+    //  a median filter plus a random, blurred spike 
+p=p{1}+1
+    //  the timer 
+start=cond(p<2||DS{1}!=DS,#(i,vSequence(0,DS),#(j,vSequence(0,DS),50*round(10*random()-4),vAppend),vAppend),start{1})
+    //  to start things off. I really don't know why the random should not
+    //  be symmetrical, but experience shows that with symmetric random, the image in the long run dies out

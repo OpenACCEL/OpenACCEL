@@ -1,0 +1,57 @@
+ 
+nrPeople=vLen(pl)
+    //  how many people are in the room at any point in time 
+pl=if(reset||vLen(pl{1})==0,peopleStart,newPeople)
+    //  new distribution or initial distribution, when clicked on reset 
+nrTrials=if(reset||vLen(pl{1})==0,0,nrTrials{1}+1)
+    //  to do experiments checking how long evacuation lasts 
+pNrTrials=nrTrials
+    //  to print the number of trials 
+reset=button()
+    //  reset button to generate new initial distribution 
+newPeople=#(i,vDom(pl{1}),if(closeToDoor(i),[],[move(i)]),vConcat)
+    //  aggregate everybody who is still in the room with its moved location
+    //  people who have left the room are not represented. So [move(i)] is
+    //  a moved version of person i; [] is used to indicate that no element is concatenated. 
+move(p)=tryMove(p,prefV(p))
+    //  see in what direction the person p would like to move, and move if possible in that direction.
+    //  return a complete, moved, person. If moving is not possible,
+    //  return the original, non-moved person. 
+tryMove(p,v)=if(free(p,pl{1}[p]+v),pl{1}[p]+v,pl{1}[p])
+    //  if moving over a vector v is possible, apply this move, otherwise stay put 
+free(myId,myNewLoc)=#(i,vDom(pl{1}),if(myId==i,true,distOK(myNewLoc,pl{1}[i])),and)
+    //  check if nobody is an obstacle. I cannot block myself, and someone is not an obstacle if he is sufficiently remote 
+distOK(myLoc,otherLoc)=vNormEuclid(myLoc-otherLoc)>rad
+    //  people are represented by circles with radius rad 
+rad=3
+    //  the radius of a person 
+peopleStart=#(i,vSeq(0,N),[10+80*random(),10+80*random()],vAppend)
+    //  a new population consists of N people, randomly distributed over space 
+N=slider(100,10,150)
+    //  how many people will be in the room initially 
+door=[loc:[doorX,0],size:[doorWidth,10]]
+    //  the door is a rectangle with a centre, a width and a height 
+doorX=slider(50,0,100) 
+doorWidth=slider(20,5,80)
+    //  the dimensions of the door 
+closeToDoor(p)=(pl{1}[p][0]-rad>door.loc[0]-door.size[0])&&(pl{1}[p][0]+rad<door.loc[0]+door.size[0])&&(pl{1}[p][1]>door.loc[1]-door.size[1])&&(pl{1}[p][1]<door.loc[1]+door.size[1])
+    //  you are close to the door if your location is within the rectangle of that door 
+prefV(p)=if(vNormEuclid(door.loc-pl{1}[p])<panic*100*random(),step*vNormalize([door.loc[0]+2*(doorWidth-rad)*(random()-0.5),door.loc[1]]-pl{1}[p]),step*[random()-0.5,random()-0.5])
+    //  if you are closer to the door, the chance that you move towards the door is larger.
+    //  Moving towards the door means: nmove towards any random point within the x-interval of the door
+    //  If far away, move in a random direction.
+    //  Your attempted moves per iteration have the same length.
+    //  If you are far from a door, you moving direction is random 
+step=2
+    //  how much distance is covered in one step 
+panic=slider(1,0.5,5)
+    //  the larger the value of panic, the bigger the chance that an individual wants to rush for the door 
+peopleX=#(i,vDom(pl),pl[i][0],vAppend) 
+peopleY=#(i,vDom(pl),pl[i][1],vAppend)
+    //  the x- and y coordinates of the people, ready to be plotted 
+plotDoor=[[plotType:'hbar',xBase:doorX-doorWidth/2,y:0,width:doorWidth,height:15,col_g:0]]
+    //  plot the door 
+plotPeople=[[plotType:'bubble',nPoints:vLen(pl),x:[mode:'data',ref:1],y:[mode:'data',ref:2],diameter:2*rad-2],peopleX,peopleY]
+    //  plot the people 
+result=plot([plotDoor,plotPeople])
+    //  plotting everything

@@ -1,0 +1,7 @@
+d=slider(5,0,100)
+// the logical screen width is 100, so the diameter maximally fills the entire screen 
+x=slider(50,0,100) 
+// the location of the circle moves from fully left to fully right with slider x
+plotResult=plot([[[plotType:'bubble',x:[mode:'data',ref:2],y:50,diameter:[mode:'data',ref:1]],[d],[x]]])
+// this illustrates that the default coordinates, both cartesian and for diameters,
+// are between 0 and 100

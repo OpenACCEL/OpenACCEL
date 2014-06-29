@@ -7,7 +7,6 @@ suite("Not Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'Not' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -23,6 +22,12 @@ suite("Not Library", function() {
 
     suite("not", function() {
 
+        /**
+         * Test case for not.
+         *
+         * @input not(true)
+         * @expected false
+         */
         test("not function with 1 variable", function() {
             eval(fileLoader.getContent());
             var x = true;
@@ -30,7 +35,12 @@ suite("Not Library", function() {
             assert.deepEqual(output, false);
         });
 
-
+        /**
+         * Test case for not.
+         *
+         * @input not(3 == 4)
+         * @expected true
+         */
         test("not function with 1 variable", function() {
             eval(fileLoader.getContent());
             var x = (3 == 4);
@@ -38,6 +48,12 @@ suite("Not Library", function() {
             assert.deepEqual(output, true);
         });
 
+        /**
+         * Test case for not.
+         *
+         * @input not([true, false])
+         * @expected [false, true]
+         */
         test("not function with an array", function() {
             eval(fileLoader.getContent());
             var x = [true, false];
@@ -45,6 +61,12 @@ suite("Not Library", function() {
             assert.deepEqual(output, [false, true]);
         });
 
+        /**
+         * Test case for not.
+         *
+         * @input not((1 == 2), (3 == 3))
+         * @expected [true, false]
+         */
         test("not function with an", function() {
             eval(fileLoader.getContent());
             var x = [(1 == 2), (3 == 3)];
@@ -52,6 +74,12 @@ suite("Not Library", function() {
             assert.deepEqual(output, [true, false]);
         });
 
+        /**
+         * Test case for not.
+         *
+         * @input not([true, [true, false], false])
+         * @expected [false, [false, true], true]
+         */
         test("not function with a nested array", function() {
             eval(fileLoader.getContent());
             var x = [true, [true, false], false];
@@ -59,6 +87,12 @@ suite("Not Library", function() {
             assert.deepEqual(output, [false, [false, true], true]);
         });
 
+        /**
+         * Test case for not.
+         *
+         * @input not((1 == 2), [(2 == 3), (3 == 3)], (4 == 4))
+         * @expected [true, [true, false], false]
+         */
         test("not function with a nested array", function() {
             eval(fileLoader.getContent());
             var x = [(1 == 2), [(2 == 3), (3 == 3)], (4 == 4)];
@@ -70,17 +104,33 @@ suite("Not Library", function() {
 
     suite("expansion", function() {
 
+        /**
+         * Test case for expansion of not.
+         *
+         * @input x = 5
+         *        y = not(x)
+         * @expected y = false
+         */
         test("should expand for 'x = 5, y = not(x)'", function() {
             var input = "x = 5\ny = not(x)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), false);
+            assert.equal(output.__y__(), false);
         });
 
+        /**
+         * Test case for expansion of not.
+         *
+         * @input x = 5
+         *        y = not(x)
+         *        z = not(y)
+         * @expected y = false
+         *           z = true
+         */
         test("should expand for 'x = 5, y = not(x), z = not(y)'", function() {
             var input = "x = 5\ny = not(x) \nz = not(y)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), false);
-            assert.equal(output.exe.__z__(), true);
+            assert.equal(output.__y__(), false);
+            assert.equal(output.__z__(), true);
         });
 
     });

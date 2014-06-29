@@ -1,5 +1,5 @@
 /**
- * @memberof Model.Library
+ * 
  * Applies the given function on the given array. The function is aplied recursively,
  * so also to nested arrays.
  * @param  {Array}   a        array taking the role of the first input of the function
@@ -10,12 +10,12 @@
  * @memberof Model.Library
  */
 function binaryZip(a, b, func) {
-    var isScalarA = !(a instanceof Object);
-    var isScalarB = !(b instanceof Object);
+    var isScalarA = !(a instanceof Array);
+    var isScalarB = !(b instanceof Array);
 
     if (!isScalarA || !isScalarB) {
         // Recursive step, a or b is an array
-        var result = {};
+        var result = [];
         if (isScalarA) {
             // Case, a is a scalar, b is an array
             for (var key in b) {

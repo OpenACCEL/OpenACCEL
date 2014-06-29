@@ -1,21 +1,21 @@
-/**
- * @memberof Model.Library
- * Returns the elements in x indexed by y.
- * @param  x		array with values to be gotten
- * @param  y		array with indexes
- * @return 			array with values in x indexed by y
- */
 function at(x, y) {
-    if (y instanceof Object) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + '@' +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
+    if (y instanceof Array) {
         // Recursive step, y is an array
-        var result = {};
+        var result = [];
         for (var key in y) {
             result[key] = at(x, y[key]);
         }
         return result;
     } else {
+        if (!isNaN(y)) {
+            y = Math.round(y);
+        }
         // Base: y is a scalar
-        if (x instanceof Object) {
+        if (x instanceof Array) {
             if (x[y] === undefined) {
                 return [];
             } else {

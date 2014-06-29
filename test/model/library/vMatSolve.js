@@ -7,7 +7,6 @@ suite("vMatSolve Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'vMatSolve' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -21,14 +20,17 @@ suite("vMatSolve Library", function() {
         /**
          * Test case for vMatSolve.
          *
-         * input:vMatSolve([[1,2],[3,4]],[1,2])
-         * expected: [0,0.50]
+         * @input:vMatSolve([[1,2],[3,4]],[1,2])
+         * @expected: [0,0.50]
          */
         test("m=vMatSolve([[1,2],[3,4]],[1,2]) = [0,0.50]", function() {
             eval(fileLoader.getContent());
 
-            var expected = [0,0.50];
-            var result = vMatSolve([[1,2],[3,4]],[1,2]);
+            var expected = [0, 0.50];
+            var result = vMatSolve([
+                [1, 2],
+                [3, 4]
+            ], [1, 2]);
 
             assert.deepEqual(result, expected);
         });

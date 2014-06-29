@@ -7,7 +7,6 @@ suite("vSpike Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'vSpike' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -22,14 +21,14 @@ suite("vSpike Library", function() {
         /**
          * Test case for vSpike.
          *
-         * input:vSpike(0,5)
-         * expected: [1,0,0,0,0]
+         * @input:vSpike(0,5)
+         * @expected: [1,0,0,0,0]
          */
         test("vSpike(0,5) = [1,0,0,0,0]", function() {
             eval(fileLoader.getContent());
 
-            var expected = [1,0,0,0,0];
-            var result =vSpike(0,5);
+            var expected = [1, 0, 0, 0, 0];
+            var result = vSpike(0, 5);
 
             assert.deepEqual(result, expected);
         });

@@ -6,7 +6,6 @@ suite("File Loader", function() {
 
     setup(function (done) {
         requirejs(["assert", "model/fileloader", "os"], function(Assert, FileLoader, OS) {
-            console.log("Loaded 'FileLoader' module.");
             assert = Assert;
             fileLoader = new FileLoader();
             os = OS;
@@ -14,33 +13,48 @@ suite("File Loader", function() {
         });
     });
 
-    suite("loading of macro files", function() {
-        test("should equal true", function() {
+    suite("| Macros", function() {
+        /**
+         * Loading of existing macro files should return true.
+         *
+         * @input: Load func macro.
+         * @expected: true.
+         */
+        test("| Load single 'func' macro", function() {
             assert.equal(true, fileLoader.load("func", "macros"));
         });
 
-        test("should match content of macro file", function() {
+        /**
+         * The contents of the loaded macro should match.
+         */
+        test("| Macro content matching", function() {
             var content = "// This macro is for testing purpose only." + os.EOL + "macro add {" + os.EOL + "    rule { ($x) } => { $x + 1 }" + os.EOL + "}";
-            fileLoader.load("testAdd", "macros");
+            fileLoader.load("testAdd", "testmacros");
             assert.equal(content, fileLoader.macros["testAdd"]);
         });
     });
 
-    suite("utility functions", function() {
-        test("clear", function() {
-            fileLoader.load("testAdd", "macros");
+    suite("| Utility", function() {
+        /**
+         * Clearing should remove all macros from the cache.
+         */
+        test("| Clear", function() {
+            fileLoader.load("testAdd", "testmacros");
             fileLoader.clear();
             assert.equal("", fileLoader.getMacros());
         });
 
-        test("concatenation", function() {
+        /**
+         * Concatenation should concatenate all macros into a single string.
+         */
+        test("| Concatenation", function() {
             fileLoader.clear();
 
             var content = "// This macro is for testing purpose only." + os.EOL + "macro add {" + os.EOL + "    rule { ($x) } => { $x + 1 }" + os.EOL + "}";
-            fileLoader.load("testAdd", "macros");
+            fileLoader.load("testAdd", "testmacros");
 
             var content2 = "// This macro is for testing purpose only." + os.EOL + "macro add {" + os.EOL + "    rule { ($x) } => { $x + 2 }" + os.EOL + "}";
-            fileLoader.load("testAdd2", "macros");
+            fileLoader.load("testAdd2", "testmacros");
 
             assert.equal(content + content2, fileLoader.getMacros());
         });

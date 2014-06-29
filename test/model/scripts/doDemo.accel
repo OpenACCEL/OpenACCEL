@@ -1,0 +1,13 @@
+s1=slider(1.0,0,10) 
+s2=slider(1.0,0,10) 
+s3=slider(1.0,0,10) 
+s4=slider(1.0,0,10)
+// four sliders returning floating point values between 0 and 10
+p=3*do(script,args)
+// the output of the function 'do' is a vector; this vector is multiplied by 3
+script='var v=_arr;var ready=false;while(!ready){ready=true;for(var i=1;i<v.length;i++){if(v[i]<v[i-1]){var swap=v[i];v[i]=v[i-1];v[i-1]=swap;ready=false;}}}return v'
+// the script takes an argument '_arr' which is a vector, and next implements a 
+// simple bubble sort algorithm to sort the contents of _arr and returns the result
+args=['arr':[s1,s2,s3,s4]]
+// the four slider values are provided as elements of the vector 'arr' which is used
+// to define the value of '_arr' in the script

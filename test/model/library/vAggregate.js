@@ -7,7 +7,6 @@ suite("vAggregate Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'vAggregate' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -22,9 +21,9 @@ suite("vAggregate Library", function() {
         /**
          * Test case for vAggregate.
          * Based on an example of the help documentation
-         * 
-         * input: vAggregate([1,2,3,4],[10,[20,21,22]],1)
-         * expected: [1, 10, [20, 21, 22], 2, 3, 4]
+         *
+         * @input: vAggregate([1,2,3,4],[10,[20,21,22]],1)
+         * @expected: [1, 10, [20, 21, 22], 2, 3, 4]
          */
         test("Example from help vAggregate([1,2,3,4],[10,[20,21,22]],1)=[1,10,[20,21,22],2,3,4]", function() {
             eval(fileLoader.getContent());

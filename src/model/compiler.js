@@ -1,5 +1,5 @@
 /*
- * Central compiling point. Code goes in, executable and report go out.
+ * Central compiling point. Code goes in, executable goes out.
  *
  * @author Roy Stoof
  */
@@ -28,16 +28,23 @@ define(["model/fileloader",
         "model/macroexpander",
         "underscore",
         "model/parser",
-        "model/exceptions/SyntaxError"
-    ], /**@lends Model*/
+        "model/exceptions/SyntaxError",
+        "model/executable"
+    ], /**@lends Model.Compiler */
     function(FileLoader,
         MacroExpander,
         _,
         parser,
-        SyntaxError) {
+        SyntaxError,
+        Executable) {
 
         /**
-         * The pre-processor performs passes on the code for analysis purposes, as well as making it ready for the macroExpander.
+         * @class
+         * @classdesc The Compiler compiles the raw ACCEL source code of the script into
+         * executable Javascript code.
+         *
+         * Compilation is done by first parsing the source code using a lexical scanner and parser
+         * and subsequently expanding the macro's that the parser put in. 
          */
         function Compiler() {
             /**
@@ -59,19 +66,6 @@ define(["model/fileloader",
             this.quantities = null;
 
             /**
-             * The file loader is reponsible for loading all files, like macros and library functions.
-             */
-            this.fileLoader = new FileLoader();
-
-            this.fileLoader.load("cond", "macros");
-            this.fileLoader.load("func", "macros");
-            this.fileLoader.load("history", "macros");
-            this.fileLoader.load("quantifier", "macros");
-
-            this.fileLoader.load("functions", "library");
-            eval.call(globalScope, this.fileLoader.getLibrary());
-
-            /**
              * Contains the quantities for which the history has been checked
              */
             this.historyChecked = [];
@@ -80,13 +74,22 @@ define(["model/fileloader",
              * The total number of quantities in the script being compiled.
              */
             this.totalNumQuantities = 0;
+
+            /**
+             * The file loader is reponsible for loading all files, like macros and library functions.
+             */
+            this.fileLoader = new FileLoader();
+
+            this.fileLoader.load("macros", "macros");
+            this.fileLoader.load("functions", "library");
+            eval.call(globalScope, this.fileLoader.getLibrary());
         }
 
         /**
          * Compiles a piece of ACCEL code and outputs an object, containing an executable.
          *
-         * @param {Script} script   The ACCEL script to be compiled.
-         * @return {Object}         An object, containing an executable and information.
+         * @param {Script} script The ACCEL script to be compiled.
+         * @return {Executable} The executable that is the result of compiling the given script.
          */
         Compiler.prototype.compile = function(script) {
             // Save the quantities of the script once so we don't have to query them every time in
@@ -105,42 +108,12 @@ define(["model/fileloader",
             this.determineTimeDependencies();
 
             // Expand the macros in the parser-outputted code
-            // First enclose the code within this container code
-            code = '(function () { exe = {mouseX: 0, mouseY: 0}; ' + code + 'return exe; })()';
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
-            // Build the executable object by simply evaluating the generated/compiled javascript code
-            exe = eval(code);
-            exe.report = this.underscorifyKeys(script.getQuantities());
-            exe.time = 0;
-            exe.step = function() {
-                if (this.report) {
-                    for (var qty in this.report) {
-                        if (this.report[qty].isTimeDependent) {
-                            this[qty]();
-                        }
-                    }
-                }
-                this.time++;
-            };
+            // Create Executable with the parsed code 
+            exe = new Executable(code, script.getQuantities());
 
-            exe.reset = function() {
-                for (var qty in this.report) {
-                    if (this[qty].hist) {
-                        this[qty].hist.length = 0;
-                    }
-                }
-            };
-
-            exe.setMousePos = function(x, y) {
-                this.mouseX = x;
-                this.mouseY = y;
-            };
-
-            return {
-                report: script.getQuantities(),
-                exe: exe
-            };
+            return exe;
         };
 
         /**
@@ -172,19 +145,7 @@ define(["model/fileloader",
             return code;
         };
 
-        /**
-         * Puts two underscores before and after each key of the given object
-         *
-         * @param  {Object} obj object to convert
-         * @return {Object}     converted object.
-         */
-        Compiler.prototype.underscorifyKeys = function(obj) {
-            var obj2 = {};
-            for (var key in obj) {
-                obj2['__' + key + '__'] = obj[key];
-            }
-            return obj2;
-        }
+        
 
         /**
          * Flags all time-dependent quantities in this.quantities as such
@@ -209,22 +170,19 @@ define(["model/fileloader",
          * @param {Boolean} timeDependent Whether to mark quantity and it's reverse dependencies as time dependent or not.
          */
         Compiler.prototype.setTimeDependent = function(quantity, timeDependent) {
-            // Base case: if all quantities have been checked
+            // Base case: this quantity and all of it's reverse dependencies 
+            // have already been marked as time-dependent
             if (this.historyChecked.indexOf(quantity.name) >= 0) {
-                //console.log(quantity.name + " already checked");
                 return;
             }
 
             quantity.isTimeDependent = timeDependent;
             this.historyChecked.push(quantity.name);
             //console.log ("Starting " + quantity.name);
-            for (var dep in quantity.reverseDeps) {
-                //console.log("Going to dependency " + this.quantities[quantity.reverseDeps[dep]].name);
-                this.setTimeDependent(this.quantities[quantity.reverseDeps[dep]], timeDependent);
+            for (var depIndex in quantity.reverseDeps) {
+                var depName = quantity.reverseDeps[depIndex];
+                this.setTimeDependent(this.quantities[depName], timeDependent);
             }
-
-            //console.log ("Finished " + quantity.name);
-            //console.log ("History log: " + this.historyChecked);
         };
 
         /**

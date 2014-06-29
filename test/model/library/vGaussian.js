@@ -7,7 +7,6 @@ suite("vGaussian Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'vGaussian' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -22,9 +21,9 @@ suite("vGaussian Library", function() {
         /**
          * Test case for vGuassian.
          * Based on an example of the help documentation
-         * 
-         * input: vGaussian(6,3)
-         * expected: [0.14,0.17,0.19,0.19,0.17,0.14]
+         *
+         * @input: vGaussian(6,3)
+         * @expected: [0.14,0.17,0.19,0.19,0.17,0.14]
          */
         test("Example from help vGaussian(6,3)=[0.14,0.17,0.19,0.19,0.17,0.14]", function() {
             eval(fileLoader.getContent());
@@ -50,9 +49,9 @@ suite("vGaussian Library", function() {
         /**
          * Test case for vGuassian.
          * Based on an example of the help documentation
-         * 
-         * input: vGaussian(10,3)
-         * expected: [0.048, 0.074, 0.10, 0.13, 0.14, 0.14, 0.13, 0.10, 0.074, 0.048]
+         *
+         * @input: vGaussian(10,3)
+         * @expected: [0.048, 0.074, 0.10, 0.13, 0.14, 0.14, 0.13, 0.10, 0.074, 0.048]
          */
         test("Example from help vGaussian(8,3)=[0.048,0.074,0.10,0.13,0.14,0.14,0.13,0.10,0.074,0.048]", function() {
             eval(fileLoader.getContent());

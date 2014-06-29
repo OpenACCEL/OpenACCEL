@@ -1,17 +1,21 @@
-var controller;
+var view = null;
+var controller = null;
+var canvasCreator = null;
 
-require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends View*/ function(Controller, AbstractView) {
+require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
     /**
-     * @class View
-     * @classdesc Interface declaring the methods that the view with which the Controller will 
+     * @class
+     * @classdesc Interface declaring the methods that the view with which the Controller will
      * communicate should implement.
      */
-    function View() {
-        
+    function View(canvasCreator) {
+        this.canvasCreator = canvasCreator;
+        this.canvas = null;
+        this.optimisationCanvas = null;
     }
 
     View.prototype = new AbstractView();
-    
+
     /**
      * Uses the given map of quantities to update the UI lists.
      *
@@ -35,6 +39,62 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
     };
 
     /**
+     * Creates the necessary plot canvases
+     */
+    View.prototype.setUpPlot = function() {
+        this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
+        this.optimisationCanvas = canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
+    };
+
+    /**
+     * Show the plot canvas or hide it depending on the value of the passed parameter.
+     *
+     * @param {Boolean} show Whether to show the plot.
+     */
+    View.prototype.showPlot = function(show) {
+        $('#plotdiv').toggle(show);
+    };
+
+    /**
+     * Clears the plot canvas
+     */
+    View.prototype.clearPlot = function() {
+        this.canvas.clearCanvas();
+    };
+
+    /**
+     * Updates the plot canvas
+     */
+    View.prototype.drawPlot = function() {
+        this.canvas.draw();
+    };
+
+    /**
+     * Trigger an update of the optimisation plot canvas
+     */
+    View.prototype.drawOptimisationPlot = function() {
+        this.optimisationCanvas.draw();
+    };
+
+    View.prototype.showOptimisationPlot = function(show) {
+        $('#plotGOdiv').toggle(show);
+    };
+
+    View.prototype.clearOptimisationPlot = function() {
+        this.optimisationCanvas.clearCanvas();
+    };
+
+    View.prototype.smartZoomOptimisation = function() {
+        this.optimisationCanvas.smartZoom();
+        this.drawOptimisationPlot();
+    };
+
+    View.prototype.zoomToFitOptimisation = function(show) {
+        this.optimisationCanvas.zoomToFit();
+        this.drawOptimisationPlot();
+    };
+
+    /**
      * Changes UI elements depending on whether the OpenACCEL model is being executed.
      *
      * @param executing Boolean indicating whether the OpenACCEL model is being executed.
@@ -43,11 +103,29 @@ require(["../controller/ControllerAPI", "../controller/AbstractView"], /**@lends
         setExecuting(executing);
     };
 
-    View.prototype.runtimeError = function(err) {
-        console.log("Runtime error: " + err.message);
+    /**
+     * Resets the view to accomodate the new loaded script.
+     */
+    View.prototype.loadedNewScript = function() {
+        resetEditRun();
     };
 
-    controller = new Controller(new View());
+    /**
+     * Displays the passed runtime error to the user.
+     *
+     * @param {RuntimeError} err The error that occured during runtime.
+     */
+    View.prototype.runtimeError = function(error) {
+        console.log(error);
+        handleError(error);
+    };
+
+    canvasCreator = new CanvasCreator();
+
+    view = new View(canvasCreator);
+    controller = new Controller(view);
+    view.setUpPlot();
+
     controller.setAutoExecute(true);
     controller.autoSave = true;
     controller.restoreSavedScript();

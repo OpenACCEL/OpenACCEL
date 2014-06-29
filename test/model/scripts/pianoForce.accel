@@ -1,0 +1,37 @@
+ 
+numberKeys=slider(5,1,90)
+    //  the number of keys on the piano 
+groundFrequency=slider(25,15.0,30.0); 1/sec
+    //  the frequency of the lowest note 
+freq=#(i,vSeq(0,numberKeys),groundFrequency*pow(twt,i),vAppend); [Hz,Hz,Hz,Hz,Hz]
+    //  between two subsequent notes, there is a frequency ratio of 12th-root of 2 
+twt=pow(2,1/12)
+    //  frequency ratio between two subsequent notes 
+length=#(i,vSeq(0,numberKeys),if(i<numberKeys/2,lLong,lShort),vAppend); [m,m,m,m,m] 
+lShort=0.2; m
+    //  length of a short string 
+lLong=1.0; m
+    //  length of a long string
+    //  lower half of strings is 1 meter; upper half is 50 cm 
+diameter=#(i,vSeq(0,numberKeys),if(i<numberKeys/3,dThick,if(i<2*numberKeys/3,dThin,dVeryThin)),vAppend); [m,m,m,m,m]
+    //  lower third is wound copper (3mm); mid part is bare steel (0.5 mm); upper third part is bare steel (0.3 mm) 
+dThick=0.004; m 
+dThin=0.0008; m 
+dVeryThin=0.0005; m 
+nstrings=#(i,vSeq(0,numberKeys),if(i<numberKeys/3,nString1,if(i<2*numberKeys/3,nString2,nString3)),vAppend); [1,1,1,1,1] 
+nString1=1 
+nString2=2 
+nString3=3 
+density=#(i,vSeq(0,numberKeys),if(i<numberKeys/3,densityCu,densityFe),vAppend); [kg/m3,kg/m3,kg/m3,kg/m3,kg/m3]
+    //  lower third part is made of copper; top two third made of steel 
+densityCu=8000; kg/m3 
+densityFe=9000; kg/m3 
+force=#(i,vSeq(0,numberKeys),nstrings[i]*length[i]*freq[i]*diameter[i]*length[i]*freq[i]*diameter[i]*PIu*density[i],vAppend); [m.Hz2.kg,m.Hz2.kg,m.Hz2.kg,m.Hz2.kg,m.Hz2.kg]
+    //  for a single string: force = 4 * length^2 freq^2 * density * area,
+    //  where area = PI*diameter^2/4 
+PIu=PI
+    //  otherwise the unit of PI is undetermined 
+totForce=#(i,vSeq(0,numberKeys),force[i],add)/tonU
+    //  express in tonnes; notice that, by dividing through tonU, the answer should be unit-less! 
+tonU=9810; kg.m/sec2
+    // this incorporates that a ton is 1000 kg, and that 1 kg corresponds to 9.81 N = 9.81 kg.m/s2

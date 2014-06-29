@@ -1,0 +1,19 @@
+p=slider(4,1,40) 
+// serts the argument for which Fibonacci and Factorial
+// are computed.
+fac=f(p)
+f(x)=cond(x<=1,1,x*f(x-1))
+// factorial works bith a single recursion: 
+// every evaluation requires one other evaluation.
+// This goes pretty fase (although not as fast
+// as an implementation without recursion at all ...
+fibona=fib(p)
+fib(x)=cond(x<=1,1,fib(x-1)+fib(x-2))
+// fibonacci requires, for every evaluation, TWO
+// earlier values. This has an extremely big 
+// performance burden. Notice that, depending on
+// the speed of your machine, you won't get
+// much further than p=25 or so - or the computations
+// will simply take too long.
+// Obviously, there are much more efficient implementations
+// for Fibonacci.

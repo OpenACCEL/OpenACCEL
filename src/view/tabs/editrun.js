@@ -13,7 +13,7 @@ $(document).ready(
         Report.arglistBuffer.hideIfEmpty('#arglistdiv');
         Report.argtolistBuffer.hideIfEmpty('#argtodiv');
         userinputBuffer.hideIfEmpty('#userinputdiv');
-        Report.resultBuffer.hideIfEmpty('#resultdiv');
+        Report.resultList.buffer.hideIfEmpty('#resultdiv');
         $('#plotdiv').toggle(false);
     }
 );
@@ -27,26 +27,32 @@ function deleteQuantity(quantity) {
 var linenr = 0;
 
 function addQuantity(string) {
-    var split = string.split('=');
+    setPendingScriptLine(string);
 
-    //Approximate Script list
-    split = [split[0].split(' ').join(''), split[1].split(' ').join('')];
-    addScriptlistLine(linenr++, split[0], split[0], split[1], '?');
-    scriptlistBuffer.flip();
+    string = string.trim();
+    if (string === '') {
+        //Do nothing if nothing was entered
+        setPendingScriptLine(null);
+    } else {
+        setTimeout(
+            function() {
+                $('.tooltipcontainer > .errormessage').filter(":visible").trigger('click');
 
-    console.log('Pre-added line: ' + string);
-    $('#scriptline').select();
+                try {
+                    controller.addQuantity(string);
+                } catch (error) {
+                    console.log(error);
+                    handleError(error);
+                }
 
-    setTimeout(
-        function() {
-            try {
-                controller.addQuantity(string);
-            } catch (e) {
-                console.log(e.message);
-            }
-        },
-        10
-    );
+                console.log('compiled');
+                setPendingScriptLine(null);
+
+                selectContent('#scriptline');
+            },
+            10
+        );
+    }
 }
 
 function toggleExecution(action) {
@@ -79,13 +85,17 @@ function setExecuting(executing) {
     }
 }
 
+var lineNumber = {};
+
 /**
  * Synchronize the content of the #scriptlist div with the model
  *
+ * @memberof View
  * @param  {Object} quantities All quantities registered in the model
  */
 function synchronizeScriptList(quantities) {
     scriptlistBuffer.empty();
+    lineNumber = {};
     Report.todolistBuffer.empty();
     resetInputs();
 
@@ -97,7 +107,9 @@ function synchronizeScriptList(quantities) {
         if (quantity.todo) {
             Report.addTodo(quantity.name);
         } else {
-            addScriptlistLine(i++, quantity.name, quantity.LHS, quantity.definition, quantity.category);
+            i++;
+            lineNumber[quantity.name] = i;
+            addScriptlistLine(i, quantity.name, quantity.LHS, quantity.definition, quantity.category);
         }
 
         //User Input
@@ -132,36 +144,33 @@ function synchronizeScriptList(quantities) {
     Report.arglistBuffer.hideIfEmpty('#arglistdiv');
     Report.argtolistBuffer.hideIfEmpty('#argtodiv');
     userinputBuffer.hideIfEmpty('#userinputdiv');
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
+    Report.resultList.buffer.hideIfEmpty('#resultdiv');
     $('#plotdiv').toggle(false);
 }
 
 /**
  * Synchronize the content of the #result div with the model
  *
+ * @memberof View
  * @param  {Object} quantities All category 2 quantities registered in the model
  */
 function synchronizeResults(quantities) {
-    Report.resultBuffer.empty();
-
-    //console.log(quantities);
+    var resultValues = {};
 
     for (var q in quantities) {
         var quantity = quantities[q];
-
-        try {
-            Report.addResult(quantity.name, objectToString(controller.getQuantityValue(quantity.name)));
-        } catch (e) {
-            console.log(e);
-        }
+        resultValues[quantity.name] = objectToString(controller.getQuantityValue(quantity.name));
     }
-    Report.resultBuffer.flip();
-    Report.resultBuffer.hideIfEmpty('#resultdiv');
+
+    Report.resultList.set(resultValues);
+    Report.resultList.buffer.hideIfEmpty('#resultdiv');
 }
 
 /**
  * Number of object-elements the objectToString function
  * should generate before it is terminated.
+ *
+ * @memberof View
  * @type {Number}
  */
 var maxPrintElements = 1000;
@@ -172,6 +181,7 @@ var maxPrintElements = 1000;
  * Terminates the string with ...
  * when maxPrintElements elements has been reached.
  *
+ * @memberof View
  * @param  {Object} obj Object to print
  * @return {String}     Printable string
  */
@@ -206,7 +216,11 @@ function objectToString(obj) {
                         // we reach a base case;
                         arguments.callee(obj[key]);
                     } else {
-                        result += obj[key].toString();
+                        if (typeof obj[key] === 'string') {
+                            result += '\'' + obj[key].toString() + '\'';
+                        } else {
+                            result += obj[key].toString();
+                        }
                     }
 
                     count++;
@@ -215,10 +229,16 @@ function objectToString(obj) {
                 }
                 // replace the last 
                 if (result.charAt(result.length - 1) === ',') {
-                    result = result.slice(0, -1) + ']';
+                    result = result.slice(0, -1);
                 }
+                result += ']';
             } else {
-                result += obj.toString();
+                if (typeof obj === 'string') {
+                    result += '\'' + obj.toString() + '\'';
+                } else {
+                    result += obj.toString();
+                }
+
             }
         })(obj);
     } catch (e) {
@@ -233,20 +253,21 @@ function objectToString(obj) {
 /**
  * Selects indicated line and puts it's contents in the #scriptline element
  *
+ * @memberof View
  * @param  {Number} line  Identifier of the to be selected line
  * @param  {String} value To be put in the #scriptline element
  */
 function selectScriptline(linenr, quantityname) {
+    Report.arglistBuffer.empty();
+    Report.argtolistBuffer.empty();
+
     if ($('#line' + linenr).length > 0) {
         var quantity = controller.getQuantity(quantityname);
 
         var scriptline = $('#scriptline');
-        scriptline.val(quantity.source);
+        scriptline.text(quantity.source);
 
-        $('.quantityname').html(quantityname);
-
-        Report.arglistBuffer.empty();
-        Report.argtolistBuffer.empty();
+        $('.quantityname').text(quantityname);
 
         //list parameters (type = dummy)
         for (var p in quantity.parameters) {
@@ -265,19 +286,50 @@ function selectScriptline(linenr, quantityname) {
         for (var r in quantity.reverseDeps) {
             Report.addArgto(quantity.reverseDeps[r], 'regular');
         }
+    }        
 
-        Report.arglistBuffer.flip();
-        Report.argtolistBuffer.flip();
+    Report.arglistBuffer.flip();
+    Report.argtolistBuffer.flip();
 
-        Report.arglistBuffer.hideIfEmpty('#arglistdiv');
-        Report.argtolistBuffer.hideIfEmpty('#argtodiv');
-    }
+    Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+    Report.argtolistBuffer.hideIfEmpty('#argtodiv');
+}
+
+/**
+ * Deselects the previously selected line and hides the argument lists
+ * @memberof View
+ */
+function deselectScriptline() {
+    selectScriptline(null, null);
+    $('#scriptline').text('');
+
+    Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+    Report.argtolistBuffer.hideIfEmpty('#argtodiv');
+}
+
+/**
+ * Resets the edit/run tab to it's initial state
+ * @memberof View
+ */
+function resetEditRun() {
+    synchronizeScriptList(null);
+    synchronizeResults(null);
+    selectScriptline(null, null);
+    $('#scriptline').text('');
+
+    Report.todolistBuffer.hideIfEmpty('#tododiv');
+    Report.arglistBuffer.hideIfEmpty('#arglistdiv');
+    Report.argtolistBuffer.hideIfEmpty('#argtodiv');
+    userinputBuffer.hideIfEmpty('#userinputdiv');
+    Report.resultList.buffer.hideIfEmpty('#resultdiv');
+    $('#plotdiv').toggle(false);
 }
 
 //------------------------------------------------------------------------------
 
 /**
  * Buffer to contain updated #scriptlist content
+ * @memberof View
  * @type {HTMLbuffer}
  */
 var scriptlistBuffer = new HTMLbuffer('#scriptlist');
@@ -285,6 +337,7 @@ var scriptlistBuffer = new HTMLbuffer('#scriptlist');
 /**
  * Generates HTML for a line of ACCEL code to be added to the listing in the #scriptlist element
  *
+ * @memberof View
  * @param {Number} line     Line number to identify this line of code
  * @param {String} left     Left-hand of the equation
  * @param {String} right    Right-hand side of the equation
@@ -294,9 +347,9 @@ function getScriptlistLineHTML(linenr, quantity, left, right, category) {
     return '\
         <input type="radio" name="script" id="line' + linenr + '" value="' + left + ' = ' + right + '">\
         <label for="line' + linenr + '" onclick = "selectScriptline(' + linenr + ', \'' + quantity + '\');">\
-            <div class="inline ellipsis max256w">' + left + '</div>\
+            <div class="inline ellipsis max128w">' + left + '</div>\
             <div class="inline operator">=</div>\
-            <div class="inline ellipsis max256w">' + right + '</div>\
+            <div class="inline ellipsis max128w">' + right + '</div>\
             <div class="inline comment">(cat.=' + category + ')</div>\
             <a onclick="deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>\
         </label>\
@@ -306,17 +359,41 @@ function getScriptlistLineHTML(linenr, quantity, left, right, category) {
 /**
  * Adds HTML for a line of ACCEL code to the buffer
  *
+ * @memberof View
  * @param {Number} line     Line number to identify this line of code
  * @param {String} left     Left-hand of the equation
  * @param {String} right    Right-hand side of the equation
  * @param {Number} category Category to which the left-hand side belongs
  */
 function addScriptlistLine(linenr, quantity, left, right, category) {
+    //Secure right hand from input
+    right = encodeHTML(right);
+
     scriptlistBuffer.append(getScriptlistLineHTML(linenr, quantity, left, right, category));
+}
+
+
+function setPendingScriptLine(line) {
+    var pendingline = $('#pendingscriptline');
+
+    if (line == null) {
+        pendingline.animate({height: 0, opacity: 0}, 400, 
+            function() {
+                pendingline.toggle(false);
+                $('#pendingloader').toggle(false);
+            }
+        );
+    } else {
+        $('#pendingscriptline > div').first().html(line);
+        pendingline.toggle(true);
+        $('#pendingloader').toggle(true);
+        pendingline.css({height: '20px', opacity: 1});
+    }
 }
 
 /**
  * Buffer to contain updated #userinput content
+ * @memberof View
  * @type {HTMLbuffer}
  */
 var userinputBuffer = new HTMLbuffer('#userinput');
@@ -324,6 +401,7 @@ var userinputBuffer = new HTMLbuffer('#userinput');
 /**
  * Constructs a base input element
  *
+ * @memberof View
  * @class
  * @classdesc Base input element to be extended
  */
@@ -345,6 +423,7 @@ Input.prototype.initialize = function() {};
  * @param {Number} min        Minimal value of the slider
  * @param {Number} max        Maximal value of the slider
  *
+ * @memberof View
  * @class
  * @classdesc Dynamic slider input class to be generated according to ACCEL script requirements
  */
@@ -357,23 +436,12 @@ function SliderInput(identifier, quantity, label, val, min, max) {
     this.min = min;
     this.max = max;
 
-    this.getStepSize = function(val, min, max) {
-        var sum = val + min + max;
-        console.log(sum);
-        //To compensate for javascript's floating point errors we use a correction variable which will temporarily convert floats to ints
-        var correction = 100000;
-        var sumdecimals = (sum * correction - Math.floor(sum) * correction) / correction;
-        console.log(sumdecimals);
-        var precision = 0;
-        while (sumdecimals % 1 != 0) {
-            sumdecimals *= 10;
-            precision++;
-        }
-        //var precision = sumdecimals.toFixed().length;
-        console.log(sumdecimals.toFixed());
-        console.log(precision);
-        console.log(Math.pow(10, -precision));
-        return Math.pow(10, -precision);
+    this.getStepSize = function(val, min, max) {      
+        var stepsizes = [Math.pow(10, -getPrecision(val)),
+                         Math.pow(10, -getPrecision(min)),
+                         Math.pow(10, -getPrecision(max))];
+
+        return Math.min.apply(Math, stepsizes);
     };
 
     this.properties = {
@@ -415,6 +483,7 @@ SliderInput.prototype.initialize = function() {
  * @param {String}  label      String to be used as a label for the input element in the UI
  * @param {Boolean} val        Initial value of the checkbox
  *
+ * @memberof View
  * @class
  * @classdesc Dynamic checkbox input class to be generated according to ACCEL script requirements
  */
@@ -432,7 +501,7 @@ CheckboxInput.prototype.getHTML = function() {
         <div id = "userinput' + this.identifier + '">\
             <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
             <div class = "inline checkboxin">\
-                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == 'true' ? 'checked' : '') + '>\
+                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == true ? 'checked' : '') + '>\
                 <label for = "usercheck' + this.identifier + '"></label>\
             </div>\
         </div>\
@@ -458,6 +527,7 @@ CheckboxInput.prototype.initialize = function() {
  * @param {String} label      String to be used as a label for the input element in the UI
  * @param {String} val        Initial value of the text input field
  *
+ * @memberof View
  * @class
  * @classdesc Dynamic text input class to be generated according to ACCEL script requirements
  */
@@ -483,7 +553,11 @@ TextInput.prototype.initialize = function() {
     var textinput = this;
     $('#usertext' + textinput.identifier).on('input',
         function() {
-            controller.setUserInputQuantity(textinput.quantity, this.value);
+            var val = this.value
+            if ($.isNumeric(val) && !(/[a-zA-Z]/.test(val))) {
+                val = parseFloat(val);
+            }
+            controller.setUserInputQuantity(textinput.quantity, val);
         }
     );
 };
@@ -495,6 +569,7 @@ TextInput.prototype.initialize = function() {
  * @param {Object} quantity   Object which the input element affects
  * @param {String} label      String to be used as a label for the input element in the UI
  *
+ * @memberof View
  * @class
  * @classdesc Dynamic button input class to be generated according to ACCEL script requirements
  */
@@ -516,31 +591,23 @@ ButtonInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, false);
 
     var buttoninput = this;
-    $('#userbutton' + buttoninput.identifier).on('mousedown',
+    $('#userbutton' + buttoninput.identifier).on('click',
         function() {
             controller.setUserInputQuantity(buttoninput.quantity, true);
-        }
-    );
-    $('#userbutton' + buttoninput.identifier).on('mouseup',
-        function() {
-            controller.setUserInputQuantity(buttoninput.quantity, false);
-        }
-    );
-    $('#userbutton' + buttoninput.identifier).on('mouseleave',
-        function() {
-            controller.setUserInputQuantity(buttoninput.quantity, false);
         }
     );
 };
 
 /**
  * Array of input javascript objects
+ * @memberof View
  * @type {Array}
  */
 var inputs = [];
 
 /**
  * Removes the existing input elements and empties the associated buffer
+ * @memberof View
  */
 function resetInputs() {
     userinputBuffer.empty();
@@ -551,6 +618,7 @@ function resetInputs() {
 /**
  * Adds a dynamic input element to the #userinput element
  *
+ * @memberof View
  * @param {Object} elements    Object with functions to generate the corresponding HTML to be put in #userinput
  */
 function addInput(element) {
@@ -561,6 +629,7 @@ function addInput(element) {
 
 /**
  * Initializes the added input elements
+ * @memberof View
  */
 function initInputs() {
     userinputBuffer.flip();
@@ -571,27 +640,25 @@ function initInputs() {
 }
 
 /**
- * Object containing methods to modify the contents of the #results element
+ * Object containing tools to modify the contents of the todo list, argument lists and result list
+ * @memberof View
  * @type {Object}
  */
 var Report = {
-    getEquationHTML: function(left, right) {
+    /**
+     * Generates HTML for an item in the list of todos
+     * 
+     * @param {String} quantity Quantity which is to be implemented
+     */
+    getTodoListHTML: function(quantity) {
         return '\
-            <div>\
-                <div class="ellipsis max256w">' + left + '</div>\
-                <div class="operator"> = </div>\
-                <div class="ellipsis max256w">' + right + '</div>\
+            <div onclick = "Report.onclickTodo(\'' + quantity + '\')" class = "hoverbold">\
+                <div class="ellipsis max128w">' + quantity + '</div>\
             </div>\
         ';
     },
-
-    getPropertyListHTML: function(x, property) {
-        return '\
-            <div>\
-                <div class="ellipsis max256w">' + x + '</div>\
-                <div class="property">' + property + '</div>\
-            </div>\
-        ';
+    onclickTodo: function(quantity) {
+        $('#scriptline').html(quantity + ' =&nbsp;');
     },
 
     /**
@@ -606,7 +673,28 @@ var Report = {
      * @param {String} quantity Quantity to be implemented
      */
     addTodo: function(quantity) {
-        Report.todolistBuffer.append(this.getPropertyListHTML(quantity, ''));
+        Report.todolistBuffer.append(this.getTodoListHTML(quantity));
+    },
+
+    /**
+     * Generates HTML for an item in a list of quantities with a certain property
+     * 
+     * @param  {String} quantity Quantity of which a property is being displayed
+     * @param  {String} property Property of the associated quantity
+     */
+    getPropertyListHTML: function(quantity, property) {
+        return '\
+            <div onclick = "Report.onclickProperty(\'' + quantity + '\')" class = "hoverbold">\
+                <div class="ellipsis max128w">' + quantity + '</div>\
+                <div class="property">' + property + '</div>\
+            </div>\
+        ';
+    },
+    onclickProperty: function(quantity) {
+        console.log(quantity);
+        var i = lineNumber[quantity];
+        selectScriptline(i, quantity);
+        $('#line' + i).trigger('click');
     },
 
     /**
@@ -642,84 +730,9 @@ var Report = {
     },
 
     /**
-     * Buffer to contain updated #result content
-     * @type {HTMLbuffer}
+     * List to allow for value updates without reconstruction of the HTML
+     * 
+     * @type ValueList
      */
-    resultBuffer: new HTMLbuffer('#result'),
-
-    /**
-     * Adds a resulting quantity to the #result element
-     *
-     * @param {String} quantity Left-hand of the equation
-     * @param {String} result   Right-hand side of the equation
-     */
-    addResult: function(quantity, result) {
-        Report.resultBuffer.append(this.getEquationHTML(quantity, result));
-    },
+    resultList: new ValueList('#result')
 };
-
-/**
- * Constructs a new Tooltip object
- *
- * @param {String} id      String to be used as a suffix in the id values of the generated html elements
- * @param {String} div     Selector to indicate which element the Tooltip should be associated with
- * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
- *
- * @class
- * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
- */
-function Tooltip(id, div, classes) {
-    this.id = id;
-    this.div = div;
-    this.classes = classes;
-
-    this.getHTML = function(message) {
-        return '\
-            <div id = "tooltip' + this.id + '" class = "' + this.classes + '">\
-                ' + message + '\
-            </div>\
-        ';
-    }
-
-    this.initialize = function() {
-        $(this.getHTML('')).insertAfter(this.div);
-        $('#tooltip' + this.id).toggle(false);
-
-        $('#tooltip' + this.id).on('click',
-            function() {
-                $(this).animate({
-                        opacity: 0
-                    }, 200,
-                    function() {
-                        $(this).toggle(false);
-                    }
-                )
-            }
-        );
-        $('#tooltip' + this.id).on('mouseover',
-            function() {
-                $(this).animate({
-                    opacity: 0.5
-                }, 200);
-            }
-        );
-        $('#tooltip' + this.id).on('mouseleave',
-            function() {
-                $(this).animate({
-                    opacity: 1
-                }, 100);
-            }
-        );
-    }
-
-    this.initialize();
-
-    this.set = function(message) {
-        $('#tooltip' + this.id).html(message);
-        $('#tooltip' + this.id).toggle(true);
-    }
-
-    this.remove = function() {
-        $('#tooltip' + this.id).remove();
-    }
-}

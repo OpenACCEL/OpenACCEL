@@ -1,0 +1,13 @@
+mm=slider(10,0,100) 
+// this sets the y-coordinate of the centre of the sine wave
+nn=slider(10,0,100) 
+// this sets the x-coordinate of the centre of the sine wave
+a=plot([[[grid:[majX:5,minX:17,grMajX:'line',grMinX:'tick',majY:5,minY:17,grMajY:'line',grMinY:'tick'],plotType:'image',scaleX:7,scaleY:7,mapG:[mode:'tfihs',ref:1],mapR:[mode:'data',ref:1],mapA:[mode:'intp']],b]])
+// notice how the grid-functionality of Descartes is compatible with the image plotType.
+// Also, notice how the green channel uses (inverse) shifting;
+// the red channel views the sine wave,
+// and the blue channel is a mere interpolated ramp. 
+b=#(n,vSequence(0,40),#(m,vSequence(0,40),255*sin(sqrt((n-nn)*(n-nn)+(m-mm)*(m-mm))),vAppend),vAppend) 
+// produce a sine wave that is a function of the distance to the point (nn,mm)
+p=p{1}+1
+// a timer

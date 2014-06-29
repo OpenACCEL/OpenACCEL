@@ -7,7 +7,6 @@ suite("vNormAbs Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'vNormAbs' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -23,14 +22,14 @@ suite("vNormAbs Library", function() {
          * Test case for vNormAbs.
          * Based on an example of the help documentation
          *
-         * input: vNormAbs([1,-1,1,-1,1,-1])
-         * expected: 6
+         * @input: vNormAbs([1,-1,1,-1,1,-1])
+         * @expected: 6
          */
         test("vNormAbs([1,-1,1,-1,1,-1]) = 6", function() {
             eval(fileLoader.getContent());
 
             var expected = 6;
-            var result = vNormAbs([1,-1,1,-1,1,-1]);
+            var result = vNormAbs([1, -1, 1, -1, 1, -1]);
 
             assert.deepEqual(result, expected);
         });
@@ -38,8 +37,8 @@ suite("vNormAbs Library", function() {
         /**
          * Test case for vNormAbs.
          *
-         * input: vNormAbs([1, -1, x:1, y: -1])
-         * expected: 4
+         * @input: vNormAbs([1, -1, x:1, y: -1])
+         * @expected: 4
          */
         test("vNormAbs([1, -1, x:1, y: -1]) = 4", function() {
             eval(fileLoader.getContent());
@@ -56,8 +55,8 @@ suite("vNormAbs Library", function() {
         /**
          * Test case for vNormAbs.
          *
-         * input: vNormAbs(-42)
-         * expected: 42
+         * @input: vNormAbs(-42)
+         * @expected: 42
          */
         test("vNormAbs(-42) = 42", function() {
             eval(fileLoader.getContent());

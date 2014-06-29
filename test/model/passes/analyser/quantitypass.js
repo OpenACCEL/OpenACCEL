@@ -5,7 +5,6 @@ suite("QuantityPass", function() {
 
     setup(function(done) {
         requirejs(['assert', 'model/analyser/passes/quantitypass'], function(assertModule, QuantityPass) {
-            console.log("Loaded 'QuantityPass' module.");
             assert = assertModule;
             quantityPass = new QuantityPass();
             done();
@@ -13,6 +12,14 @@ suite("QuantityPass", function() {
     });
 
     suite('Quantity Pass', function() {
+        /**
+         * Test case for quantity pass.
+         *
+         * @input x = 5
+         * @expected 'x' in quantities == true &&
+         *           result.name == 'x' &&
+         *           result.parameters.length == 0
+         */
         test('one single character quantity', function() {
             var input = 'x = 5';
             var quantities = {};
@@ -24,6 +31,14 @@ suite("QuantityPass", function() {
             assert(result.parameters.length === 0);
         });
 
+        /**
+         * Test case for quantity pass.
+         *
+         * @input f(x) = x
+         * @expected 'f' in quantities == true &&
+         *           result.name == 'f' &&
+         *           result.parameters == ['x']
+         */
         test('one single character function, one parameter', function() {
             var input = 'f(x) = x';
             var quantities = {};
@@ -35,6 +50,16 @@ suite("QuantityPass", function() {
             assert.deepEqual(result.parameters, ['x']);
         });
 
+        /**
+         * Test case for quantity pass.
+         *
+         * @input f(x,y,z) = x + y + z
+         * @expected 'f' in quantities &&
+         *           result.name = 'f' &&
+         *           result.parameters.indexOf('x') > - 1 &&
+         *           result.parameters.indexOf('y') > - 1 &&
+         *           result.parameters.indexOf('z') > - 1
+         */
         test('one single character function, multiple parameters', function() {
             var input = 'f(x,y,z) = x + y + z';
             var quantities = {};
@@ -48,6 +73,14 @@ suite("QuantityPass", function() {
             assert(result.parameters.indexOf('z') > -1);
         });
 
+        /**
+         * Test case for quantity pass.
+         *
+         * @input r2d2 = 5
+         * @expected 'r2d2' in quantities &&
+         *           'r2d2' == result.name &&
+         *           result.parameters.length == 0
+         */
         test('one multi character quantity', function() {
             var input = 'r2d2 = 5';
             var quantities = {};
@@ -59,6 +92,14 @@ suite("QuantityPass", function() {
             assert(result.parameters.length === 0);
         });
 
+        /**
+         * Test case for quantity pass.
+         *
+         * @input 'r2d2(x) = x'
+         * @expected 'r2d2' in quantities &&
+         *           'r2d2' == result.name &&
+         *           result.parameters == ['x']
+         */
         test('one multi character function, one parameter', function() {
             var input = 'r2d2(x) = x';
             var quantities = {};
@@ -70,6 +111,16 @@ suite("QuantityPass", function() {
             assert.deepEqual(result.parameters, ['x']);
         });
 
+        /**
+         * Test case for quantity pass.
+         *
+         * @input r2d2(x,y,z) = x + y + z
+         * @expected quantities[result.name] &&
+         *           quantitites['r2d2'].name = 'r2d2' &&
+         *           result.parameters.indexOf('x') > -1 &&
+         *           result.parameters.indexOf('y') > -1 &&
+         *           result.parameters.indexOf('z') > -1
+         */
         test('one multi character function, multiple parameters', function() {
             var input = 'r2d2(x,y,z) = x + y + z';
             var quantities = {};

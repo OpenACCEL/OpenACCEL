@@ -7,7 +7,6 @@ suite("UnaryZip", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/macroexpander", "model/fileloader"], function(Assert, MacroExpander, FileLoader) {
-            console.log("Loaded 'UnaryZip' module.");
             assert = Assert;
             macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
@@ -23,6 +22,12 @@ suite("UnaryZip", function() {
             return x * x;
         }
 
+        /**
+         * Test case for unaryZip, scalar.
+         *
+         * @input unaryZip(5, square)
+         * @expected 25
+         */
         test("unaryZip(): scalar", function() {
             eval(fileLoader.getContent());
             var input = 5;
@@ -31,6 +36,12 @@ suite("UnaryZip", function() {
             assert.equal(output, expected);
         });
 
+        /**
+         * Test case for unaryZip, unnamed vector.
+         *
+         * @input unaryZip([2, 3, 4], square)
+         * @expected [4, 9, 16]
+         */
         test("unaryZip(): unnamed vector", function() {
             eval(fileLoader.getContent());
             var input = [2, 3, 4];
@@ -39,6 +50,12 @@ suite("UnaryZip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for unaryZip, named vector.
+         *
+         * @input unaryZip([x:2, y:3, z:4], square)
+         * @expected [x:4, y:9, z:16]
+         */
         test("unaryZip(): named vector", function() {
             eval(fileLoader.getContent());
             var input = [];
@@ -53,6 +70,12 @@ suite("UnaryZip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for unaryZip, named + unnamed vector.
+         *
+         * @input unaryZip([2, 3, z:4], square)
+         * @expected [4, 9, z:16]
+         */
         test("unaryZip(): named + unnamed vector", function() {
             eval(fileLoader.getContent());
             var input = [2, 3];
@@ -63,6 +86,12 @@ suite("UnaryZip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for unaryZip, nested vector.
+         *
+         * @input unaryZip([1, [2, [3, 4], 5], 6, [7, 8]], square)
+         * @expected [1, [4, [9, 16], 25], 36, [49, 64]]
+         */
         test("unaryZip(): Nested vector", function() {
             eval(fileLoader.getContent());
             var input = [1, [2, [3, 4], 5], 6, [7, 8]];
@@ -71,6 +100,12 @@ suite("UnaryZip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for unaryZip, nested vector.
+         *
+         * @input unaryZip([2,[x:3, y:4], square)
+         * @expected [4, [x:9, y: 16]]
+         */
         test("unaryZip(): Nested vector", function() {
             eval(fileLoader.getContent());
             var input = [2];

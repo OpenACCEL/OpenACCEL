@@ -1,0 +1,11 @@
+ 
+p1=slider(5,0,50) 
+p2=slider(5,0,50) 
+p3=slider(2,1,10) 
+a=plot(graphs) 
+gr1=[[plotType:'hbar',nPoints:8,width:[mode:'shift',ref:1],y:[mode:'intp'],col_r:[mode:'shift',ref:2],height:[mode:'tfihs',ref:3],tag:[mode:'data',ref:4]],[p1],[p2],[p3],labels]
+    //  a barchart consisting of horizontal bars 
+gr2=[[plotType:'vbar',nPoints:8,height:[mode:'shift',ref:2],x:[mode:'intp'],col_b:[mode:'shift',ref:1],width:[mode:'tfihs',ref:3],tag:[mode:'data',ref:4]],[p1],[p2],[p3],labels]
+    //  a barchart consisting of vertical bars 
+graphs=[gr1,gr2] 
+labels=#(i,vSequence(0,20),"["+i+"_"+round(p1)+"_"+round(p2)+"]",vAppend)

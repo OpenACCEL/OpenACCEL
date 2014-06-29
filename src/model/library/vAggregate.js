@@ -1,8 +1,9 @@
 //This function was taken from keesvanoverveld.com
 function vAggregate(x, y, z) {
-    x = objectToArray(x);
-    y = objectToArray(y);
-    z = objectToArray(z);
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     if (x instanceof Array) {
         if (y instanceof Array) {
             if (!(z instanceof Array)) {
@@ -35,14 +36,10 @@ function vAggregate(x, y, z) {
                 }
                 return r;
             } else {
-                runOK = false;
                 throw new Error("vAggregate: third argument must be a scalar.");
-                return errOb;
             }
         }
     } else {
-        runOK = false;
         throw new Error("vAggregate: first argument must be a vector");
-        return errOb;
     }
 }

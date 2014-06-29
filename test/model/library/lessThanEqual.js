@@ -7,7 +7,6 @@ suite("LessThanEqual Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'LessThanEqual' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -23,6 +22,12 @@ suite("LessThanEqual Library", function() {
 
     suite("lessThanEqual", function() {
 
+        /**
+         * Test case for lessThanEqual.
+         *
+         * @input lessThanEqual(1,2)
+         * @expected true
+         */
         test("lessThanEqual function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = 1;
@@ -31,7 +36,12 @@ suite("LessThanEqual Library", function() {
             assert.deepEqual(output, true);
         });
 
-
+        /**
+         * Test case for lessThanEqual.
+         *
+         * @input lessThanEqual(2,1)
+         * @expected false
+         */
         test("lessThanEqual function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = 2;
@@ -40,6 +50,12 @@ suite("LessThanEqual Library", function() {
             assert.deepEqual(output, false);
         });
 
+        /**
+         * Test case for lessThanEqual.
+         *
+         * @input lessThanEqual(3,[2,3,4])
+         * @expected [false, true, true]
+         */
         test("lessThanEqual function with a constant and an array", function() {
             eval(fileLoader.getContent());
             var x = 3
@@ -48,6 +64,12 @@ suite("LessThanEqual Library", function() {
             assert.deepEqual(output, [false, true, true]);
         });
 
+        /**
+         * Test case for lessThanEqual.
+         *
+         * @input lessThanEqual([1, 2, 3],[3, 2, 1])
+         * @expected [true, true, false]
+         */
         test("lessThanEqual function with 2 array's", function() {
             eval(fileLoader.getContent());
             true
@@ -57,6 +79,12 @@ suite("LessThanEqual Library", function() {
             assert.deepEqual(output, [true, true, false]);
         });
 
+        /**
+         * Test case for lessThanEqual.
+         *
+         * @input lessThanEqual([1, 2, 3],[3, 2, [1, 4]])
+         * @expected [true, true, [false, true]]
+         */
         test("lessThanEqual function with an array and a nested array", function() {
             eval(fileLoader.getContent());
             var x = [1, 2, 3];
@@ -65,6 +93,12 @@ suite("LessThanEqual Library", function() {
             assert.deepEqual(output, [true, true, [false, true]]);
         });
 
+        /**
+         * Test case for lessThanEqual.
+         *
+         * @input lessThanEqual([1, [2, 3], 3],[3, 2, [1, 4]])
+         * @expected [true, [true, false],[false, true]]
+         */
         test("lessThanEqual function with nested array's", function() {
             eval(fileLoader.getContent());
             var x = [1, [2, 3], 3];
@@ -79,17 +113,33 @@ suite("LessThanEqual Library", function() {
 
     suite("expansion", function() {
 
+        /**
+         * Test case for expansion of lessThanEqual.
+         *
+         * @input x = 5
+         *        y = lessThanEqual(x, 4)
+         * @expected y = false
+         */
         test("should expand for 'x = 5, y = lessThanEqual(x, 4)'", function() {
             var input = "x = 5\ny = lessThanEqual(x, 4)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), false);
+            assert.equal(output.__y__(), false);
         });
 
+        /**
+         * Test case for expansion of lessThanEqual.
+         *
+         * @input x = 5
+         *        y = lessThanEqual(x, 5)
+         *        z = lessThanEqual(x, lessThanEqual(4, y))
+         * @expected y = true
+         *           z = false
+         */
         test("should expand for 'x = 5, y = lessThanEqual(x, 5), z = lessThanEqual(x, lessThanEqual(4, y))'", function() {
             var input = "x = 5\ny = lessThanEqual(x, 5) \nz = lessThanEqual(x, lessThanEqual(4, y))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__y__(), true);
-            assert.equal(output.exe.__z__(), false);
+            assert.equal(output.__y__(), true);
+            assert.equal(output.__z__(), false);
         });
 
     });

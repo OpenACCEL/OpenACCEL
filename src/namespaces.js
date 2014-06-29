@@ -6,34 +6,85 @@
 
 /**
  * Classes for the Model in the Model-View-Controller system.
- * 
+ *
  * @namespace Model
  */
 
 /**
- * Library function.
- * 
+ * Library functions.
+ *
  * @namespace Model.Library
  */
 
 /**
- * Passes are classes that process a script.
- * 
- * @namespace Model.Passes
+ * Classes belinging to the Analyser component
+ *
+ * @namespace Model.Analyser
  */
 
 /**
- * Passes for the preprocessor.
- * @namespace Model.Passes.Preprocessor
+ * Classes belinging to the Script component
+ *
+ * @namespace Model.Script
  */
 
 /**
- * Passes for the analyser.
- * @namespace Model.Passes.Analyser
+ * Classes belinging to the Compiler component
+ *
+ * @namespace Model.Compiler
+ */
+
+/**
+ * Passes of the Analyser component
+ * @namespace Model.Analyser.Passes
+ */
+
+/**
+ * Classes fo the genetic algorithm
+ * @namespace Model.EMO
+ */
+
+/**
+ * Classes for Crossover of genetic optimization.
+ * @namespace Model.EMO.CrossOver
+ */
+
+/**
+ * Classes for Mutation of genetic optimization.
+ * @namespace Model.EMO.Mutation
+ */
+
+/**
+ * Classes for errors
+ * @namespace Model.Error
+ */
+
+/**
+ * Classes for the network component
+ * @namespace Model.Network
+ */
+
+/**
+ * Classes for data storage
+ * @namespace Model.Datastores
  */
 
 /**
  * Classes for the Controller in the Model-View-Controller system.
- * 
+ *
  * @namespace Controller
  */
+
+/**
+ * Classes for the View in the Model-View-Controller system.
+ *
+ * @namespace View
+ */
+
+/**
+ * Classes adapting the descartes graphics library into the view.
+ *
+ * @namespace View.Graphics
+ */
+
+

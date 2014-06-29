@@ -20,13 +20,14 @@ quickbuild() {
 # Testing.
 test() {
     clean
+    jade
     deploy
     post_deploy
     echo "Testing..."
     case "$1" in
-        "") node_modules/.bin/mocha test/ -u tdd --recursive --grep @benchmark --invert ;;
+        "") node_modules/.bin/mocha test/ -R list -u tdd --recursive --grep @benchmark --invert ;;
         *)  file=$(find test/ -name "$1".js)
-            node_modules/.bin/mocha $file -u tdd -r test/require.js --grep @benchmark --invert ;;
+            node_modules/.bin/mocha $file -R list -u tdd -r test/require.js --grep @benchmark --invert ;;
     esac
 }
 
@@ -90,6 +91,10 @@ deploy() {
     rm -f src/model/library/functions.js
     cat src/model/library/* > src/model/library/functions.js
 
+    # Generate single file containing all macros.
+    rm -f src/model/macros/macros.sjs
+    cat src/model/macros/* > src/model/macros/macros.sjs
+
     # Copy scripts.
     cp -r src/* bin/scripts
     find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
@@ -101,7 +106,7 @@ deploy() {
     # Copy style sheets.
     cp -r src/view/css bin/css/
 
-    
+
 }
 
 # Post Deployment

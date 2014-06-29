@@ -7,7 +7,6 @@ suite("Pow Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/script"], function(Assert, Compiler, Script) {
-            console.log("Loaded 'Pow' module.");
             assert = Assert;
             compiler = new Compiler();
             script = Script;
@@ -15,18 +14,57 @@ suite("Pow Library", function() {
         });
     });
     suite("pow", function() {
+
+        /**
+         * Test case for pow.
+         *
+         * @input pow(5,2)
+         * @expected Math.pow(5, 2)
+         */
         test("x = pow(5, 2)", function() {
             var input = "x = pow(5, 2)";
-            var output = compiler.compile(new script(input)).exe.__x__();
+            var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, Math.pow(5, 2));
         });
 
+        /**
+         * Test case for pow.
+         *
+         * @input pow(-2, 3)
+         * @expected 8
+         */
+        test("x = pow(-2, 3)", function() {
+            var input = "x = pow(-2, 3)";
+            var output = compiler.compile(new script(input)).__x__();
+            assert.equal(output, 8);
+        });
+
+        /**
+         * Test case for pow.
+         *
+         * @input pow(-2, 0.5)
+         * @expected Math.pow(2, 0.5)
+         */
+        test("x = pow(-2, 0.5)", function() {
+            var input = "x = pow(-2, 0.5)";
+            var output = compiler.compile(new script(input)).__x__();
+            assert.equal(output, Math.pow(2, 0.5));
+        });
+
+        /**
+         * Test case for pow.
+         *
+         * @input x = 5
+         *        y = pow(x, 3)
+         *        z = pow(y, pow(x, 2))
+         * @expected Math.pow(Math.pow(5, 3), Math.pow(5, 2))
+         */
         test("x = 5; y = y = pow(x, 3);z = z = pow(y, pow(x, 2))", function() {
-            var input = 
-            "x = 5\n" + 
-            "y = pow(x, 3)\n" +
-            "z = pow(y, pow(x, 2))";
-            var output = compiler.compile(new script(input)).exe.__z__();
+            var input =
+                "x = 5\n" +
+                "y = pow(x, 3)\n" +
+                "z = pow(y, pow(x, 2))";
+            var output = compiler.compile(new script(input)).__z__();
             assert.equal(output, Math.pow(Math.pow(5, 3), Math.pow(5, 2)));
         });
 

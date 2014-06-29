@@ -5,7 +5,6 @@ suite('pass.js', function() {
 
     setup(function(done) {
         requirejs(['assert', 'model/analyser/passes/pass'], function(Assert, Pass) {
-            console.log('Loaded \'Pass\' module.');
             assert = Assert;
             pass = new Pass();
             done();

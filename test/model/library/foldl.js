@@ -21,107 +21,175 @@ suite("Foldl", function() {
             fileLoader.load("max", "library");
             fileLoader.load("min", "library");
             fileLoader.load("vLen", "library");
-            console.log("Loaded 'Foldl' module.");
             done();
         });
     });
 
-    suite("folding:", function() {
+    /**
+     * Summing.
+     *
+     * @input       foldl([1, 2, 3, 4, 5])
+     * @expected    15
+     */
+    test("| Summing", function() {
+        eval(fileLoader.getContent());
+        var input = [1, 2, 3, 4, 5];
+        var output = foldl(input, add);
+        var expected = 15;
+        assert.equal(output, expected);
+    });
 
-        test("foldl(array, function): add", function() {
-            eval(fileLoader.getContent());
-            var input = [1, 2, 3, 4, 5];
-            var output = foldl(input, add);
-            var expected = 15;
-            assert.equal(output, expected);
-        });
+    /**
+     * Summing nested.
+     *
+     * @input       foldl([1, 1], [2, 2], [3, 3], [4, 4], [5, 5])
+     * @expected    [15, 15]
+     */
+    test("| Summing nested", function() {
+        eval(fileLoader.getContent());
+        var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
+        var output = foldl(input, add);
+        var expected = [15, 15];
+        assert.deepEqual(output, expected);
+    });
 
-        test("foldl(array, function): add nested", function() {
-            eval(fileLoader.getContent());
-            var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
-            var output = foldl(input, add);
-            var expected = [15, 15];
-            assert.deepEqual(output, expected);
-        });
+    /**
+     * Product.
+     *
+     * @input       foldl([1, 2, 3, 4, 5])
+     * @expected    120
+     */    
+    test("| Product", function() {
+        eval(fileLoader.getContent());
+        var input = [1, 2, 3, 4, 5];
+        var output = foldl(input, multiply);
+        var expected = 120;
+        assert.equal(output, expected);
+    });
 
-        test("foldl(array, function): multiply", function() {
-            eval(fileLoader.getContent());
-            var input = [1, 2, 3, 4, 5];
-            var output = foldl(input, multiply);
-            var expected = 120;
-            assert.equal(output, expected);
-        });
+    /**
+     * Product nested.
+     *
+     * @input       foldl([1, 1], [2, 2], [3, 3], [4, 4], [5, 5])
+     * @expected    [120, 120]
+     */
+    test("| Product nested", function() {
+        eval(fileLoader.getContent());
+        var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
+        var output = foldl(input, multiply);
+        var expected = [120, 120];
+        assert.deepEqual(output, expected);
+    });
 
-        test("foldl(array, function): multiply nested", function() {
-            eval(fileLoader.getContent());
-            var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
-            var output = foldl(input, multiply);
-            var expected = [120, 120];
-            assert.deepEqual(output, expected);
-        });
+    /**
+     * And folding.
+     *
+     * @input       foldl([true, false, true, false, true])
+     * @expected    false
+     */
+    test("| And", function() {
+        eval(fileLoader.getContent());
+        var input = [true, false, true, false, true];
+        var output = foldl(input, and);
+        var expected = false;
+        assert.equal(output, expected);
+    });
 
-        test("foldl(array, function): and", function() {
-            eval(fileLoader.getContent());
-            var input = [true, false, true, false, true];
-            var output = foldl(input, and);
-            var expected = false;
-            assert.equal(output, expected);
-        });
+    /**
+     * And nested folding.
+     *
+     * @input       foldl([[true, false], [false, true], [true, false], [false, true], [true, false]])
+     * @expected    [false, false]
+     */
+    test("| And nested", function() {
+        eval(fileLoader.getContent());
+        var input = [[true, false], [false, true], [true, false], [false, true], [true, false]];
+        var output = foldl(input, and);
+        var expected = [false, false];
+        assert.deepEqual(output, expected);
+    });
 
-        test("foldl(array, function): and nested", function() {
-            eval(fileLoader.getContent());
-            var input = [[true, false], [false, true], [true, false], [false, true], [true, false]];
-            var output = foldl(input, and);
-            var expected = [false, false];
-            assert.deepEqual(output, expected);
-        });
+    /**
+     * Or folding.
+     *
+     * @input       foldl([true, false, true, false, true])
+     * @expected    true
+     */
+    test("| Or", function() {
+        eval(fileLoader.getContent());
+        var input = [true, false, true, false, true];
+        var output = foldl(input, or);
+        var expected = true;
+        assert.equal(output, expected);
+    });
 
-        test("foldl(array, function): or", function() {
-            eval(fileLoader.getContent());
-            var input = [true, false, true, false, true];
-            var output = foldl(input, or);
-            var expected = true;
-            assert.equal(output, expected);
-        });
+    /**
+     * And nested folding.
+     *
+     * @input       foldl([[true, false], [false, true], [true, false], [false, true], [true, false]])
+     * @expected    [true, true]
+     */
+    test("| Or nested", function() {
+        eval(fileLoader.getContent());
+        var input = [[true, false], [false, true], [true, false], [false, true], [true, false]];
+        var output = foldl(input, or);
+        var expected = [true, true];
+        assert.deepEqual(output, expected);
+    });
 
-        test("foldl(array, function): or nested", function() {
-            eval(fileLoader.getContent());
-            var input = [[true, false], [false, true], [true, false], [false, true], [true, false]];
-            var output = foldl(input, or);
-            var expected = [true, true];
-            assert.deepEqual(output, expected);
-        });
+    /**
+     * Find the maximum value of an array.
+     *
+     * @input       foldl([1, 2, 3, 4, 5])
+     * @expected    5
+     */
+    test("| Max", function() {
+        eval(fileLoader.getContent());
+        var input = [1, 2, 3, 4, 5];
+        var output = foldl(input, max);
+        var expected = 5;
+        assert.equal(output, expected);
+    });
 
-        test("foldl(array, function): max", function() {
-            eval(fileLoader.getContent());
-            var input = [1, 2, 3, 4, 5];
-            var output = foldl(input, max);
-            var expected = 5;
-            assert.equal(output, expected);
-        });
+    /**
+     * Find the maximum values of nested arrays.
+     *
+     * @input       foldl([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])
+     * @expected    [5, 5]
+     */
+    test("| Max nested", function() {
+        eval(fileLoader.getContent());
+        var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
+        var output = foldl(input, max);
+        var expected = [5, 5];
+        assert.deepEqual(output, expected);
+    });
 
-        test("foldl(array, function): max nested", function() {
-            eval(fileLoader.getContent());
-            var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
-            var output = foldl(input, max);
-            var expected = [5, 5];
-            assert.deepEqual(output, expected);
-        });
+    /**
+     * Find the minimum value of an array.
+     *
+     * @input       foldl([1, 2, 3, 4, 5])
+     * @expected    1
+     */
+    test("| Min", function() {
+        eval(fileLoader.getContent());
+        var input = [1, 2, 3, 4, 5];
+        var output = foldl(input, min);
+        var expected = 1;
+        assert.equal(output, expected);
+    });
 
-        test("foldl(array, function): min", function() {
-            eval(fileLoader.getContent());
-            var input = [1, 2, 3, 4, 5];
-            var output = foldl(input, min);
-            var expected = 1;
-            assert.equal(output, expected);
-        });
-
-        test("foldl(array, function): min nested", function() {
-            eval(fileLoader.getContent());
-            var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
-            var output = foldl(input, min);
-            var expected = [1, 1];
-            assert.deepEqual(output, expected);
-        });
+    /**
+     * Find the minimum values of nested arrays.
+     *
+     * @input       foldl([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])
+     * @expected    [1, 1]
+     */
+    test("| Min nested", function() {
+        eval(fileLoader.getContent());
+        var input = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]];
+        var output = foldl(input, min);
+        var expected = [1, 1];
+        assert.deepEqual(output, expected);
     });
 });

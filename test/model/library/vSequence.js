@@ -8,7 +8,6 @@ suite("vSequence Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(assertModule, module, FileLoader, scriptModule) {
-            console.log("Loaded 'vSequence' module.");
             assert = assertModule;
             compiler = new module();
             fileLoader = new FileLoader();
@@ -22,6 +21,12 @@ suite("vSequence Library", function() {
 
     suite("vSequence", function() {
 
+        /**
+         * Test case for vSequence.
+         *
+         * @input vSequence(2, 5)
+         * @expected [2,3,4]
+         */
         test("create a sequence from 2 through 5", function() {
             eval(fileLoader.getContent());
             x = 2;
@@ -31,6 +36,12 @@ suite("vSequence Library", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for vSequence.
+         *
+         * @input vSequence(5, 2)
+         * @expected []
+         */
         test("create an empty sequence from 5 through 2", function() {
             eval(fileLoader.getContent());
             x = 5;
@@ -43,11 +54,17 @@ suite("vSequence Library", function() {
 
     suite("expansion", function() {
 
+        /**
+         * Test case for expansion of vSequence.
+         *
+         * @input x = vSequence(3, 7)
+         * @expected  x = [3,4,5,6]
+         */
         test("should expand for 'x = vSequence(3, 7)'", function() {
             var input = "x = vSequence(3, 7)";
             expected = [3, 4, 5, 6];
             var output = compiler.compile(new Script(input));
-            assert.deepEqual(output.exe.__x__(), expected);
+            assert.deepEqual(output.__x__(), expected);
         });
     });
 });

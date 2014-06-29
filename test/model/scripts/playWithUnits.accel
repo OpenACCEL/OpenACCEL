@@ -1,0 +1,6 @@
+s=slider(0,0,1)
+// this allows you to pick the first or the second row in mat 
+p=mat[s]; curiousWhatThisUnitWillBe
+// pick one row from matrix m
+mat=[['x':2,'y':1],['x':1,'y':2]]; [[x:1,y:1],[x:kg,y:liter]]
+// various elements in m have various units

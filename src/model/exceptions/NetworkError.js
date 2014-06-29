@@ -16,9 +16,9 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model*/ function() {
+define([], /**@lends Model.Error*/ function() {
     /**
-     * @class Error
+     * @class
      * @classdesc An error that occured while performing a network request
      */
 

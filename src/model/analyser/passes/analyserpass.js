@@ -17,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['model/analyser/passes/pass'], /**@lends Model.Passes.Analyser*/ function(Pass) {
+define(['model/analyser/passes/pass'], /**@lends Model.Analyser.Passes*/ function(Pass) {
     /**
      * @class
      * @classdesc Analyses a single line of code and updates the quantities in the script.
@@ -77,7 +77,7 @@ define(['model/analyser/passes/pass'], /**@lends Model.Passes.Analyser*/ functio
         var match;
         var output = [];
         while (match = regexvar.exec(s)) {
-            if (dummies.indexOf(match[1]) == -1) {
+            if (dummies.indexOf(match[1]) == -1 && isNaN(match[1])) {
                 output.push(match[1]);
             }
         }

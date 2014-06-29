@@ -1,0 +1,46 @@
+ 
+s0=slider(1.0,0,100) 
+s1=slider(1.0,0,100) 
+s2=slider(1.0,0,100) 
+s3=slider(1.0,0,100) 
+s4=slider(1.0,0,100) 
+s5=slider(1.0,0,100) 
+s6=slider(1.0,0,100) 
+s7=slider(1.0,0,100) 
+s8=slider(1.0,0,100) 
+s9=slider(1.0,0,100)
+    //  ten floating point sliders 
+result=plot([graph1,graph2])
+    //  the plot function 
+plotString1=[plotType:'line',x:[mode:'intp'],y:[mode:'data',ref:1],width:10,col_r:0,col_g:255] 
+plotString2=[plotType:'line',x:[mode:'intp'],y:[mode:'data',ref:1],width:10,col_g:0,col_b:255]
+    //  draw a curve 
+script='var v=_arr;ready=false;while(!ready){ready=true;for(var i=1;i<v.length;i++){if(v[i]<v[i-1]){var sw=v[i];v[i]=v[i-1];v[i-1]=sw;ready=false;};};};return v'
+    //  a quicker version to achieve the same is by using the built-in Javascript function array.sort() 
+    // for sorting arrays. The disadvantage there, however, is that by default it sorts
+    // lexicographically - and that is not what we want.
+args=['arr':s]
+    //  this serves to get the array to be sorted into the script 
+graph1=[plotString1,values1] 
+graph2=[plotString2,values2+3]
+    //  set up the arguments for the plot function.
+    //  Make sure that the graphs are at slightly different heights 
+merge(a,b)=debug("merge",['return':cond(vLen(a)==0,b,cond(vLen(b)==0,a,cond(a[0]<b[0],vConcat([a[0]],merge(vSegment(a,1,vLen(a)),b)),vConcat([b[0]],merge(a,vSegment(b,1,vLen(b))))))),'a':a,'b':b])
+    //  merging means: depending on the smaller of the two starting elements, a[0] or b[0],
+    //  return first a[0] or b[0] respectively, concatenated to the merger of the remainder
+    //  of a or b, respectively, merged with b or a, respectively. 
+mergeSort(a)=debug("merge sort",['return':cond(vLen(a)==1,a,merge(mergeSort(vSegment(a,0,round(vLen(a)/2))),mergeSort(vSegment(a,round(vLen(a)/2),vLen(a))))),'a':a])
+    //  this is the recursive sort function: splitting the array to be sorted roughly into two halves, sort
+    //  both halves and merge the sorted halves 
+p1=mergeSort(s)
+    //  calling the recursive merge sort function 
+p2=debug("script sort",['return':do(script,args)])
+    //  this produces the sorted array in an alternative, Javascript-based way. 
+ramp1(t)=vVecRamp(10*vSeq(0,10),p1,t) 
+ramp2(t)=vVecRamp(10*vSeq(0,10),p2,t)
+    //  these user defined functions produce a piecewise linear interpolation between the values of p1 and p2 respectively 
+s=[s0,s1,s2,s3,s4,s5,s6,s7,s8,s9]
+    //  unite the 10 interactive values into an array 
+values1=#(i,vSequence(0,100),ramp1(i),vAppend) 
+values2=#(i,vSequence(0,100),ramp2(i),vAppend)
+    //  collect 100 values of the vector ramp

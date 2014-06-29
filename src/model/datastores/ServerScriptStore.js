@@ -18,7 +18,7 @@ if (inNode) {
 
 define(["model/datastores/AbstractScriptStore", 
         "jquery",
-        "model/exceptions/NetworkError"], /**@lends Model*/ 
+        "model/exceptions/NetworkError"], /**@lends Model.Datastores*/ 
         function(AbstractScriptStore, $, NetworkError) {
     /**
      * @class
@@ -126,7 +126,6 @@ define(["model/datastores/AbstractScriptStore",
                 });
             }
         };
-    }
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return ServerScriptStore;

@@ -1,0 +1,24 @@
+s0=slider(0,0,9) 
+s1=slider(1,0,9) 
+s2=slider(2,0,9) 
+s3=slider(3,0,9) 
+s4=slider(4,0,9) 
+s5=slider(5,0,9) 
+s6=slider(6,0,9) 
+s7=slider(7,0,9) 
+s8=slider(8,0,9) 
+s9=slider(9,0,9) 
+// the above sliders allow to select each of the 10 cities as city nr. N in the sequence
+diffs=paretoHor(paretoMin(#(i,vSequence(1,10),abs(s[i]-s[i-1]),add))) 
+// a very naive geomtry: all cities are arranged on a straight line, 
+// city 0 on 0 km, city 1 on 1 km, city 2 on 2 km etc. 
+// So the shortest route has length 9 km.
+// The length of the route has to be minimized
+occs=paretoVer(paretoMax(#(i,vSequence(0,10),if(occ(i),1,0),add))) 
+// This counts the number of occurring cities. Ideally, all 10 cities are visited.
+// Therefore, the quantity occs needs to be maximized
+occ(i)=#(j,vSequence(0,10),if(s[j]==i,true,false),or)
+// this function returns true if city nr. i is visited, that is:
+// if at least one of the sliders has been set to value i 
+s=[s0,s1,s2,s3,s4,s5,s6,s7,s8,s9]
+// This groups all cities into one array so that quantified expressions can access them

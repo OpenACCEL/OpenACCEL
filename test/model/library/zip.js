@@ -7,7 +7,6 @@ suite("Zip", function() {
 
     setup(function(done) {
         requirejs(["assert", "benchmark", "model/macroexpander", "model/fileloader"], function(Assert, Benchmark, MacroExpander, FileLoader) {
-            console.log("Loaded 'Zip' module.");
             assert = Assert;
             benchmark = Benchmark;
             macroExpander = new MacroExpander();
@@ -23,6 +22,12 @@ suite("Zip", function() {
 
     suite("zip and nzip", function() {
 
+        /**
+         * Test case for binary zip, add two vectors.
+         *
+         * @input binaryZip([1,2,3], [4,5,6], add)
+         * @expected [5,7,9]
+         */
         test("binaryZip(): add two vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
@@ -30,6 +35,12 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for multiary zip, add two vectors.
+         *
+         * @input multiaryZip([[1,2,3], [4,5,6]], add)
+         * @expected [5,7,9]
+         */
         test("multiaryZip(): add two vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
@@ -37,6 +48,12 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for zip, add two vectors.
+         *
+         * @input zip([[1,2,3], [4,5,6]], add)
+         * @expected [5,7,9]
+         */
         test("zip(): add two vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
@@ -46,6 +63,12 @@ suite("Zip", function() {
 
         //----------------------------------------------------------------------
 
+        /**
+         * Test case for binary zip, add scalar to vector.
+         *
+         * @input binaryZip([1, 1, [1, 1, [1, 1]]], 1, add)
+         * @expected [2, 2, [2, 2, [2, 2]]]
+         */
         test("binaryZip(): add scalar to vector", function() {
             eval(fileLoader.getContent());
             setUpAddScalarToVector();
@@ -53,6 +76,12 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for multiary zip, add scalar to vector.
+         *
+         * @input multiaryZip([[1, 1, [1, 1, [1, 1]]], 1], add)
+         * @expected [2, 2, [2, 2, [2, 2]]]
+         */
         test("multiaryZip(): add scalar to vector", function() {
             eval(fileLoader.getContent());
             setUpAddScalarToVector();
@@ -60,6 +89,12 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for zip, add scalar to vector.
+         *
+         * @input zip([[1, 1, [1, 1, [1, 1]]], 1], add)
+         * @expected [2, 2, [2, 2, [2, 2]]]
+         */
         test("zip(): add scalar to vector", function() {
             eval(fileLoader.getContent());
             setUpAddScalarToVector();
@@ -69,6 +104,12 @@ suite("Zip", function() {
 
         //----------------------------------------------------------------------
 
+        /**
+         * Test case for binaryZip, add vector to nested vector.
+         *
+         * @input binaryzip([1, 1, [1, 1, [1, 1, 1]]], [1, 1, 1, 1], add)
+         * @expected [2, 2, [2, 2, [2, 2, 2]]]
+         */
         test("binaryZip(): add vector to nested vector", function() {
             eval(fileLoader.getContent());
             setUpAddVectorToNestedVector();
@@ -76,6 +117,12 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for multiaryZip, add vector to nested vector.
+         *
+         * @input multiaryzip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, 1, 1]], add)
+         * @expected [2, 2, [2, 2, [2, 2, 2]]]
+         */
         test("multiaryZip(): add vector to nested vector", function() {
             eval(fileLoader.getContent());
             setUpAddVectorToNestedVector();
@@ -83,6 +130,12 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for zip, add vector to nested vector.
+         *
+         * @input zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, 1, 1]], add)
+         * @expected [2, 2, [2, 2, [2, 2, 2]]]
+         */
         test("zip(): add vector to nested vector", function() {
             eval(fileLoader.getContent());
             setUpAddVectorToNestedVector();
@@ -91,7 +144,12 @@ suite("Zip", function() {
         });
 
         //----------------------------------------------------------------------
-
+        /**
+         * Test case for binary zip, add nested vector to nested vector.
+         *
+         * @input zip([1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1] , add)
+         * @expected [2, 2, [2, 2, [2, 2]]]
+         */
         test("binaryZip(): add two nested vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoNestedVectors();
@@ -99,6 +157,12 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for multiary zip, add nested vector to nested vector.
+         *
+         * @input multiaryZip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1]] , add)
+         * @expected [2, 2, [2, 2, [2, 2]]]
+         */
         test("multiaryZip(): add two nested vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoNestedVectors();
@@ -106,6 +170,12 @@ suite("Zip", function() {
             assert.deepEqual(output, expected);
         });
 
+        /**
+         * Test case for zip, add nested vector to nested vector.
+         *
+         * @input Zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1]] , add)
+         * @expected [2, 2, [2, 2, [2, 2]]]
+         */
         test("zip(): add two nested vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoNestedVectors();
@@ -115,6 +185,12 @@ suite("Zip", function() {
 
         //----------------------------------------------------------------------
 
+        /**
+         * Test case for zip().
+         *
+         * @input zip([[1,2,3],[4,5,6],[7,8,9]], sum)
+         * @expected [12,15,18]
+         */
         test("zip(): sum three vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 2, 3];
@@ -127,6 +203,12 @@ suite("Zip", function() {
 
         //----------------------------------------------------------------------
 
+        /**
+         * Test case for zip().
+         *
+         * @input zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1], 2], sum)
+         * @expected [4, 4, [4, 4, [4, 4]]]
+         */
         test("zip(): sum scalar to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];
@@ -139,6 +221,12 @@ suite("Zip", function() {
 
         //----------------------------------------------------------------------
 
+        /**
+         * Test case for zip().
+         *
+         * @input zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1], [2, 2, 2, 2]], sum)
+         * @expected [4, 4, [4, 4, [4, 4]]]
+         */
         test("zip(): sum vector to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];
@@ -151,6 +239,12 @@ suite("Zip", function() {
 
         //----------------------------------------------------------------------
 
+        /**
+         * Test case for zip().
+         *
+         * @input zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1], [2, 2, [2, 2]]], sum)
+         * @expected [4, 4, [4, 4]]
+         */
         test("zip(): sum vector to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];

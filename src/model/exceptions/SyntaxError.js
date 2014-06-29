@@ -18,9 +18,9 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model*/ function() {
+define([], /**@lends Model.Error*/ function() {
     /**
-     * @class SyntaxError
+     * @class
      * @classdesc An error that occured while parsing ACCEL script.
      */
 

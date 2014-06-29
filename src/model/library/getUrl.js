@@ -1,4 +1,8 @@
 function getUrl(url) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     if ((typeof url) == 'string') {
         var comps = url.split('?');
         // comps[0] is the part of the URL. Check if this occurs in the array 
@@ -19,7 +23,7 @@ function getUrl(url) {
                     $.ajax({
                         url: cmpUrl,
                         success: function(data, status) {
-                            urlTimers[i].returnValue = JSON.parse(data);
+                            urlTimers[i].returnValue = objectToArray(JSON.parse(data));
                         },
                         error: function(status) {
                             alert('ajax reports a problem retrieving data from server; status=' + status.response);
@@ -46,7 +50,7 @@ function getUrl(url) {
             $.ajax({
                 url: cmpUrl,
                 success: function(data, status) {
-                    urlTimers[i].returnValue = JSON.parse(data);
+                    urlTimers[i].returnValue = objectToArray(JSON.parse(data));
                 },
                 error: function(status) {
                     alert('ajax reports a problem retrieving data from server; status=' + status.response);

@@ -27,10 +27,10 @@ define(["model/analyser/passes/quantitypass",
         "model/quantity",
         'underscore'
     ],
-    /**@lends Analyser*/
+    /**@lends Model.Analyser*/
     function(QuantityPass, DependencyPass, Quantity, _) {
         /**
-         * @class Analyser
+         * @class
          * @classdesc The analyser analyses a line of script and updates the quantities of the script accordingly.
          */
         function Analyser() {
@@ -55,9 +55,14 @@ define(["model/analyser/passes/quantitypass",
              * Object containing a partitioning of all quantities into the
              * different categories.
              *
-             * @type {map<[1-4], map<String, Quantity>>}
+             * @type {Object.<Number, Object.<String, Quantity>>}
              */
-            this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
+            this.categories = {
+                1: {},
+                2: {},
+                3: {},
+                4: {}
+            };
         }
 
         /**
@@ -74,7 +79,7 @@ define(["model/analyser/passes/quantitypass",
          * category
          *
          * @param {Integer} cat The category of which to return all quantities
-         * @return {map<String, Quantity>} Object containing all quantities in
+         * @return {Object.<String, Quantity>} Object containing all quantities in
          * category cat.
          */
         Analyser.prototype.getQuantitiesByCategory = function(cat) {
@@ -85,7 +90,12 @@ define(["model/analyser/passes/quantitypass",
          * Resets this.categories to initial empty value.
          */
         Analyser.prototype.resetCategoryStores = function() {
-            this.categories = {1: {}, 2: {}, 3: {}, 4: {}};
+            this.categories = {
+                1: {},
+                2: {},
+                3: {},
+                4: {}
+            };
         };
 
         /**
@@ -114,7 +124,7 @@ define(["model/analyser/passes/quantitypass",
             }
 
             // Quantity most recently processed and added. Any comments that follow
-            // are assigned to this quantity 
+            // are assigned to this quantity
             var prevQuantity = null;
 
             // List of all quantities parsed from the given source
@@ -139,7 +149,7 @@ define(["model/analyser/passes/quantitypass",
                         for (var i = 0; i < this.passes.length; i++) {
                             prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
                         }
-
+                        this.findPareto(prevQuantity);
                         added.push(prevQuantity);
                     }
                 }
@@ -178,7 +188,7 @@ define(["model/analyser/passes/quantitypass",
                     // The quantity has an input element, so it is category 1
                     category = 1;
                     qty.input.parameters = this.findInputParameters(qty.definition, qty.input.type);
-                } else if (qty.reverseDeps.length === 0) {
+                } else if (qty.reverseDeps.length === 0 && qty.parameters.length === 0) {
                     // If there are no quantities that depend on this quantity, it is category
                     // 2 (output)
                     category = 2;
@@ -239,17 +249,34 @@ define(["model/analyser/passes/quantitypass",
         Analyser.prototype.findInputParameters = function(definition, type) {
             if (!definition) {
                 throw new Error('Analyser.findInputParameters.pre violated:' +
-                    'definition is null or undefined')
+                    'definition is null or undefined');
             }
             var parameters = [];
-            if (type === 'slider') {
-                parameters = definition.match(/slider\((\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*,(\s*-*\s*\d+[.\d]*)\s*\)/);
-            } else if (type === 'check') {
-                parameters = definition.match(/check\(\s*(true|false)\s*\)/);
-            } else if (type === 'text') {
-                parameters = definition.match(/input\(\s*(?:\'|\")(\w+)(?:\'|\")\s*\)/);
+            if (type) {
+                parameters = (new Function('return ' + definition))();
             }
-            return parameters.slice(1);
+            return parameters;
+        };
+
+        Analyser.prototype.findPareto = function(quantity) {
+            if (!quantity) {
+                throw new Error('Analyser.findPareto.pre violated: ' +
+                    'quantity is null or undefined');
+            }
+            var definition = quantity.definition;
+            if (definition.match(/pareto/) !== null) {
+                quantity.pareto.isPareto = true;
+                if (definition.match(/paretoMin\(/) !== null) {
+                    quantity.pareto.isMaximize = false;
+                } else if (definition.match(/paretoMax\(/) !== null) {
+                    quantity.pareto.isMaximize = true;
+                }
+                if (definition.match(/paretoHor\(/) !== null) {
+                    quantity.pareto.isHorizontal = true;
+                } else if (definition.match(/paretoVer\(/) !== null) {
+                    quantity.pareto.isVertical = true;
+                }
+            }
         };
 
         // Exports all macros.

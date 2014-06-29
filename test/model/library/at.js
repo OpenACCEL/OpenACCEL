@@ -7,7 +7,6 @@ suite("@ Library", function() {
 
     setup(function(done) {
         requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
-            console.log("Loaded 'At' module.");
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -18,8 +17,14 @@ suite("@ Library", function() {
     });
 
     suite("@", function() {
-
-        test("at function with scalar to index", function() {
+        /**
+         * Getting the index of a scalar should just return the scalar.
+         *
+         * @input       x = 3
+         *              at(x, 1)
+         * @expected    3
+         */
+        test("| At function with scalar to index", function() {
             eval(fileLoader.getContent());
             x = 3;
             y = 1;
@@ -27,7 +32,14 @@ suite("@ Library", function() {
             assert.deepEqual(output, 3);
         });
 
-        test("at function with simple vector to index", function() {
+        /**
+         * General index fetching, as you'd expect.
+         *
+         * @input       x = [1, 2, 3]
+         *              at(x, 1)
+         * @expected    2
+         */
+        test("| At function with simple vector to index", function() {
             eval(fileLoader.getContent());
             x = [1, 2, 3];
             y = 1;
@@ -35,7 +47,14 @@ suite("@ Library", function() {
             assert.deepEqual(output, 2);
         });
 
-        test("at function with nested vector to index", function() {
+        /**
+         * Should work for nested vectors.
+         *
+         * @input       x = [[1, 2], [2, 3], 3]
+         *              at(x, 0)
+         * @expected    [1, 2]
+         */
+        test("| At function with nested vector to index", function() {
             eval(fileLoader.getContent());
             x = [
                 [1, 2],
@@ -47,7 +66,15 @@ suite("@ Library", function() {
             assert.deepEqual(output, expected);
         });
 
-        test("at function with simple vector to index by vector index", function() {
+        /**
+         * You should be able to get multiple indices at once.
+         *
+         * @input       x = [1, 2, 3]
+         *              y = [0, 2]
+         *              at(x, y)
+         * @expected    [1, 3]
+         */
+        test("| At function with simple vector to index by vector index", function() {
             eval(fileLoader.getContent());
             x = [1, 2, 3];
             y = [0, 2];
@@ -56,7 +83,15 @@ suite("@ Library", function() {
             assert.deepEqual(output, expected);
         });
 
-        test("at function with nested vector to index by vector index", function() {
+        /**
+         * Get multiple indices with nested vectors.
+         *
+         * @input       x = [[1, 2], [2, 3], 3]
+         *              y = [0, 2]
+         *              at(x, y)
+         * @expected    [[1, 2], 3]
+         */
+        test("| At function with nested vector to index by vector index", function() {
             eval(fileLoader.getContent());
             x = [
                 [1, 2],
@@ -70,7 +105,15 @@ suite("@ Library", function() {
             assert.deepEqual(output, expected);
         });
 
-        test("at function with nested vector to index by nested vector index", function() {
+        /**
+         * More nested vectors.
+         *
+         * @input       x = [[1, 2], [2, 3], 3]
+         *              y = [0, [2, 1]]
+         *              at(x, y)
+         * @expected    [[1, 2], [3, [2, 3]]]
+         */
+        test("| At function with nested vector to index by nested vector index", function() {
             eval(fileLoader.getContent());
             x = [
                 [1, 2],
@@ -85,7 +128,14 @@ suite("@ Library", function() {
             assert.deepEqual(output, expected);
         });
 
-        test("at function with vector to index and out of bound index", function() {
+        /**
+         * An out of bound index should return an empty object.
+         *
+         * @input       x = [3]
+         *              at(x, 1)
+         * @expected    {}
+         */
+        test("| At function with vector to index and out of bound index", function() {
             eval(fileLoader.getContent());
             x = [3];
             y = 1;
@@ -94,18 +144,31 @@ suite("@ Library", function() {
         });
     });
 
-    suite("expansion", function() {
-
-        test("should expand for 'x = @([10,30], 0)'", function() {
+    suite("| Compiled", function() {
+        /**
+         * At function should work from the executable.
+         *
+         * @input       x = @([10, 30], 0)
+         * @expected    x = 10
+         */
+        test("| Should expand for 'x = @([10,30], 0)'", function() {
             var input = "x = @([10,30], 0)";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__x__(), 10);
+            assert.equal(output.__x__(), 10);
         });
 
-        test("should expand for 'x = [5,4,2], y = [@(x,1), 2, 3], z = @(y,@(x,2))'", function() {
+        /**
+         * At function should work from the executable.
+         *
+         * @input       x = [5, 4, 2]
+         *              y = [@(x, 1), 2, 3]
+         *              z = @(y, @(x, 2))
+         * @expected    z = 3
+         */
+        test("| Should expand for 'x = [5,4,2], y = [@(x,1), 2, 3], z = @(y,@(x,2))'", function() {
             var input = "x = [5,4,2]\ny = [@(x,1), 2, 3]\nz = @(y,@(x,2))";
             var output = compiler.compile(new script(input));
-            assert.equal(output.exe.__z__(), 3);
+            assert.equal(output.__z__(), 3);
         });
     });
 });

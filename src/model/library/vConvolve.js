@@ -1,7 +1,9 @@
  //This function was taken from keesvanoverveld.com
 function vConvolve(x, y, n, m) {
-    x = objectToArray(x);
-    y = objectToArray(y);
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
     if (x instanceof Array) {
         var r = x.length;
         if (y instanceof Array) {

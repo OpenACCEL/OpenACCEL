@@ -1,0 +1,31 @@
+ 
+nrPTriA=nrPTrpP*nrPiA
+    //  nr piano tuners in Amsterdam:
+    //  proportional to the number of piano's in Amsterdam and to the
+    //  number of tuners needed fo a single piano: [PT/A] = [PT/P] * [P/A] 
+nrPTrpP=nrPTrpPTg*nrPTgpP
+    //  nr piano tuners per piano relates to the number 
+    //  of piano tunings (that is, the number of times per time interval
+    //  that on average a piano needs to be tuned) per piano; [PT/P] = [PT/T] * [T/P] 
+nrPTrpPTg=tf1T/CPT
+    //  nr piano tuners per piano tuning, that is: how many piano tuners
+    // would be fully occupied with tuning just a single piano; [PT/T] = [time/T] / [time/PT] 
+tf1T=slider(2,0,3)
+    //  time for tuning one piano in hours 
+CPT=slider(1300,1200,1800)
+    //  capacity: nr working hours per piano tuner per year [ time in hours] 
+nrPTgpP=1/tbT 
+    //  number of tunings needed fo a single piano per time interval
+tbT=slider(0.5,0.1,2)
+    //  time between two subsequent tunings per piano in years [time in years] 
+nrPiA=nrPpFam*nrFamiA
+    //  nr piano's in Amsterdam relates to the number of families in Amsterdam
+    //  and the fraction of families that owns a piano: [P/A] = [P/F] * [F/A] 
+nrPpFam=slider(0.20,0,1)
+    //  nr piano's per family (dimension [P/F]) 
+nrFamiA=nrPliA/nrPlpFam
+    //  nr families in Amsterdam [F/A] = [Pl/A] / [Pl/F] 
+nrPliA=slider(800000,700000,1200000)
+    //  nr people in Amsterdam 
+nrPlpFam=slider(2.5,1,10)
+    //  nr people per family
