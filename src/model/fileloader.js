@@ -55,6 +55,10 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 location = "library";
                 extension = ".js";
                 break;
+            case "unitlibrary":
+                location = "library/units";
+                extension = ".js";
+                break;
             case "macros":
                 location = "macros";
                 extension = ".sjs";
@@ -123,6 +127,17 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
             return true;
         } else {
             return false;
+        }
+    };
+
+    /**
+     * Unloads the library file with the given name, if it is
+     * currently in memory.
+     * @param  {name} name The name of the library file to remove from memory
+     */
+    FileLoader.prototype.unload = function(name) {
+        if (name in this.library) {
+            delete this.library[name];
         }
     };
 

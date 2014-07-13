@@ -10,7 +10,9 @@ inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
+    globalScope = process;
 } else {
+    globalScope = window;
     require.config({
         shim: {
             'underscore': {
@@ -29,11 +31,13 @@ define(["model/script",
         "model/exceptions/SyntaxError",
         "model/exceptions/RuntimeError",
         "model/emo/geneticoptimisation",
+        "model/fileloader",
         "controller/AbstractView",
         "underscore"
     ],
     /**@lends Controller*/
-    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, _) {
+    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation,
+            FileLoader, AbstractView, _) {
         /**
          * @class
          * @classdesc The Controller is the intermediar between the Model and the View.
@@ -79,6 +83,13 @@ define(["model/script",
              * @type {GeneticOptimisation}
              */
             this.geneticOptimisation = new GeneticOptimisation();
+
+            /**
+             * The file loader used to load libaries.
+             *
+             * @type {FileLoader}
+             */
+            this.fileLoader = new FileLoader();
 
             /**
              * The number of iterations that the script should perform.
@@ -176,27 +187,47 @@ define(["model/script",
             this.status = "";
 
             /**
-             * Array containing measured iteration times of runtime execution.
-             *
-             * @type {Array}
+             * For performance profiling
              */
-            this.curMeasurement = 0;
-            this.numMeasurements = 1000;
-            this.measurements = new Array(this.numMeasurements);
+            if (inBrowser) {
+                this.curMeasurement = 0;
+                this.numMeasurements = 1000;
+                this.measurements = new Array(this.numMeasurements);
 
-            // Determine which profiling function to use
-            window.performance = window.performance || {};
-            performance.now = (function() {
-                return performance.now    ||
-                    performance.mozNow    ||
-                    performance.msNow     ||
-                    performance.oNow      ||
-                    performance.webkitNow ||
-                    function() {
-                        return new Date().getTime();
-                    };
-            })();
+                // Determine which profiling function to use
+                window.performance = window.performance || {};
+                performance.now = (function() {
+                    return performance.now    ||
+                        performance.mozNow    ||
+                        performance.msNow     ||
+                        performance.oNow      ||
+                        performance.webkitNow ||
+                        function() {
+                            return new Date().getTime();
+                        };
+                })();
+            }
         }
+
+        /**
+         * Loads the standard ACCEL functions library into memory, overwriting any
+         * unit libary functions that may be in memory.
+         */
+        Controller.prototype.loadStandardLibrary = function() {
+            this.fileLoader.unload("units");
+            this.fileLoader.load("functions", "library");
+            eval.call(globalScope, this.fileLoader.getLibrary());
+        };
+
+        /**
+         * Loads the units library into memory, overwriting any
+         * standard ACCEL libary functions that may be in memory.
+         */
+        Controller.prototype.loadUnitsLibrary = function() {
+            this.fileLoader.unload("functions");
+            this.fileLoader.load("units", "unitlibrary");
+            eval.call(globalScope, this.fileLoader.getLibrary());
+        };
 
         /**
          * Sets whether the controller should automatically execute the script
@@ -366,7 +397,10 @@ define(["model/script",
          * @post The view has received the current values of all output quantities.
          */
         Controller.prototype.execute = function() {
-            var pretime = performance.now();
+            var pretime, posttime;
+            if (inBrowser) {
+                pretime = performance.now();
+            }
 
             // Extra check to make sure that the model is complete and we are
             // really (still) executing
@@ -405,7 +439,7 @@ define(["model/script",
                 this.stop();
             }
 
-            if (this.curMeasurement < this.numMeasurements) {
+            if (inBrowser && this.curMeasurement < this.numMeasurements) {
                 var posttime = performance.now();
                 this.measurements[this.curMeasurement] = posttime-pretime;
                 this.curMeasurement++;
@@ -439,14 +473,16 @@ define(["model/script",
             }
 
             // Performance measurements
-            var total = this.measurements.slice(0, this.curMeasurement).reduce(function(a, b) {
-                return a + b;
-            });
-            var avg = total/this.curMeasurement;
-            var fps = 100/avg;
+            if (inBrowser) {
+                var total = this.measurements.slice(0, this.curMeasurement).reduce(function(a, b) {
+                    return a + b;
+                });
+                var avg = total/this.curMeasurement;
+                var fps = 100/avg;
 
-            console.log("Average iteration time: " + avg);
-            console.log("#Measurements: " + this.curMeasurement);
+                console.log("Average iteration time: " + avg);
+                console.log("#Measurements: " + this.curMeasurement);
+            }
         };
 
         /**
