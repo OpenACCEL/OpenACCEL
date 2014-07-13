@@ -7,11 +7,16 @@
  */
 
 macro func {
-    // Normal variable definitions.
+    /**
+     * Normal quantity definitions.
+     */
     rule {
         ($x = $expr:expr)
     } => {
-        // Add method to Executable (this) object that returns the value for this quantity
+        /**
+         * Code to expand the matched expression into. This code adds a method to the Executable (=this) object that returns
+         * the current value for the quantity being defined in the matched expression.
+         */
         this.$x = function() {
             // If a quantity is time dependant and is not an input quantity, check if it already has been evaluated and if yes
             // return the evaluated value. Else evaluate it now. This is a form of memoization/caching.
@@ -22,8 +27,8 @@ macro func {
 
             if (this.report && this.report.$x.isTimeDependent) {
                 var report = this.report.$x;
-                
-                // If the current time-step value has not been evaluated yet, do it now
+
+                // If the current time-step value has not been evaluated yet, do it now.
                 if (history[0] === undefined) {
                     // For non-input quantities, evaluate the expression of this quantity and store it
                     // in the history datastructure
@@ -47,19 +52,32 @@ macro func {
             return history[0];
         };
 
-        // Function that evaluates the given expression in the context of 'this'
+        /**
+         * Function that evaluates the matched expression in the context of 'this'
+         */
         this.$x.expr = (function() { return $expr; }).bind(this);
 
-        // Initialise history array
+        /**
+         * The array of historic values of this quantity. The first element always
+         * contains the current (most recent) value of this quantity.
+         *
+         * Other indices will exist only when historic values of the quantity are used within the script.
+         * The array will be just long enough to store the earliest value used in the script.
+         *
+         * @type {Array}
+         */
         this.$x.hist = [];
 
         /**
          * The maximum size of the history array for this quantity.
+         *
          * @type {Number}
          */
         this.$x.timespan = 0;
 
-        // Initialize the values for user input
+        /**
+         * Initialize the value in case it's a user input quantity
+         */
         if (this.report && this.report.$x.category === 1) {
             // Initialise initial values of user input quantities
             if (this.report.$x.input.type == 'button') {
@@ -70,7 +88,10 @@ macro func {
         }
     }
 
-    // Quantity definitions including units
+
+    /**
+     * Quantity definitions including units
+     */
     rule {
         ($x = $expr:expr ; $dim)
     } => {
@@ -78,7 +99,9 @@ macro func {
         this.$x.dim = $dim;
     }
 
-    // Function declarations.
+    /**
+     * Function declarations
+     */
     rule {
         ($x($xs (,) ...) = $expr:expr)
     } => {
@@ -109,7 +132,9 @@ macro func {
         this.$x.cache = {};
     }
 
-    // Function declarations including units
+    /**
+     * Function declarations including units
+     */
     rule {
         ($x($xs (,) ...) = $expr:expr ; $dim)
     } => {

@@ -1,10 +1,8 @@
 /*
- * A quantity (or symbol, or variable) is represented by one or more letters on the left
- * hand side of a line in an ACCEL script. The right hand side of that line contains the
- * definition of the quantity and optionally the units. We treat a quantity as a function
- * with no parameters, so this class is also used for functions.
+ * A unit of a Quantity, consisting of a numerator and optionally a denominator.
+ * Both numerator and denominator can consist of zero or more terms
  *
- * @author Jacco Snoeren
+ * @author Edward Brinkmann
  */
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
@@ -19,7 +17,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model.Script */ function() {
+define([], /**@lends Model.Quantity */ function() {
     /**
      * @class
      * @classdesc Represents a single quantity of the Script.

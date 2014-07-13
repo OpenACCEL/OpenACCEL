@@ -174,6 +174,28 @@ define(["model/script",
              * @type {String}
              */
             this.status = "";
+
+            /**
+             * Array containing measured iteration times of runtime execution.
+             *
+             * @type {Array}
+             */
+            this.curMeasurement = 0;
+            this.numMeasurements = 1000;
+            this.measurements = new Array(this.numMeasurements);
+
+            // Determine which profiling function to use
+            window.performance = window.performance || {};
+            performance.now = (function() {
+                return performance.now    ||
+                    performance.mozNow    ||
+                    performance.msNow     ||
+                    performance.oNow      ||
+                    performance.webkitNow ||
+                    function() {
+                        return new Date().getTime();
+                    };
+            })();
         }
 
         /**
@@ -344,6 +366,8 @@ define(["model/script",
          * @post The view has received the current values of all output quantities.
          */
         Controller.prototype.execute = function() {
+            var pretime = performance.now();
+
             // Extra check to make sure that the model is complete and we are
             // really (still) executing
             if (!this.script.isCompiled()) {
@@ -380,6 +404,12 @@ define(["model/script",
             if (this.numIterations > 0 && this.currentIteration > this.numIterations) {
                 this.stop();
             }
+
+            if (this.curMeasurement < this.numMeasurements) {
+                var posttime = performance.now();
+                this.measurements[this.curMeasurement] = posttime-pretime;
+                this.curMeasurement++;
+            }
         };
 
         /**
@@ -407,6 +437,16 @@ define(["model/script",
                 this.status = "Paused";
                 this.view.setStatus(this.status);
             }
+
+            // Performance measurements
+            var total = this.measurements.slice(0, this.curMeasurement).reduce(function(a, b) {
+                return a + b;
+            });
+            var avg = total/this.curMeasurement;
+            var fps = 100/avg;
+
+            console.log("Average iteration time: " + avg);
+            console.log("#Measurements: " + this.curMeasurement);
         };
 
         /**

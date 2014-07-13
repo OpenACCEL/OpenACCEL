@@ -31,6 +31,8 @@ define([], /**@lends Model*/ function() {
      * @param {Object} report Set of Quantity objects containing all quantities in the script
      */
     function Executable(code, report) {
+        // Evaluate the given code. This adds all methods for evaluating all quantities in the
+        // script to the Executable object.
         eval(code);
 
         /**
@@ -113,7 +115,7 @@ define([], /**@lends Model*/ function() {
     Executable.prototype.step = function() {
         if (this.report) {
             for (var qty in this.report) {
-                // Evaluate all quantities that are time dependent
+                // Evaluate all quantities that are time dependent and that aren't functions
                 if (this.report[qty].isTimeDependent && this.report[qty].parameters.length === 0) {
                     this[qty]();
                 }
@@ -123,9 +125,9 @@ define([], /**@lends Model*/ function() {
                     this.historyStep(qty);
                 } else { // No history means we're dealing with a user-defined function with cache
                     // Clear memoization cache of user functions
-                    for (var c in this[qty].cache) {
+                    /*for (var c in this[qty].cache) {
                         delete this[qty].cache[c];
-                    }
+                    }*/
 
                     this[qty].cache = {};
                 }
