@@ -86,9 +86,13 @@ deploy() {
     # Generating monofunc library functions.
     node ./utils/monofuncgenerator.js ./src/model/library
 
-    # Generate single file containing all functions.
+    # Generate single file containing all standard library functions.
     rm -f src/model/library/functions.js
-    cat src/model/library/* > src/model/library/functions.js
+    cat src/model/library/*.js > src/model/library/functions.js
+
+    # Generate single file containing all unit library functions.
+    rm -f src/model/library/units/functions.js
+    cat src/model/library/units/* > src/model/library/units/functions.js
 
     # Generate single file containing all macros.
     rm -f src/model/macros/macros.sjs

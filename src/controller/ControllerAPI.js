@@ -10,9 +10,7 @@ inNode = !inBrowser;
 
 if (inNode) {
     require = require('requirejs');
-    globalScope = process;
 } else {
-    globalScope = window;
     require.config({
         shim: {
             'underscore': {
@@ -31,13 +29,11 @@ define(["model/script",
         "model/exceptions/SyntaxError",
         "model/exceptions/RuntimeError",
         "model/emo/geneticoptimisation",
-        "model/fileloader",
         "controller/AbstractView",
         "underscore"
     ],
     /**@lends Controller*/
-    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation,
-            FileLoader, AbstractView, _) {
+    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, _) {
         /**
          * @class
          * @classdesc The Controller is the intermediar between the Model and the View.
@@ -83,13 +79,6 @@ define(["model/script",
              * @type {GeneticOptimisation}
              */
             this.geneticOptimisation = new GeneticOptimisation();
-
-            /**
-             * The file loader used to load libaries.
-             *
-             * @type {FileLoader}
-             */
-            this.fileLoader = new FileLoader();
 
             /**
              * The number of iterations that the script should perform.
@@ -213,20 +202,20 @@ define(["model/script",
          * Loads the standard ACCEL functions library into memory, overwriting any
          * unit libary functions that may be in memory.
          */
-        Controller.prototype.loadStandardLibrary = function() {
-            this.fileLoader.unload("units");
-            this.fileLoader.load("functions", "library");
-            eval.call(globalScope, this.fileLoader.getLibrary());
+        Controller.prototype.loadStandardLib = function() {
+            if (this.compiler.unitsLibLoaded()) {
+                this.compiler.loadStandardLib();
+            }
         };
 
         /**
          * Loads the units library into memory, overwriting any
          * standard ACCEL libary functions that may be in memory.
          */
-        Controller.prototype.loadUnitsLibrary = function() {
-            this.fileLoader.unload("functions");
-            this.fileLoader.load("units", "unitlibrary");
-            eval.call(globalScope, this.fileLoader.getLibrary());
+        Controller.prototype.loadUnitsLib = function() {
+            if (!this.compiler.unitsLibLoaded()) {
+                this.compiler.loadUnitsLib();
+            }
         };
 
         /**

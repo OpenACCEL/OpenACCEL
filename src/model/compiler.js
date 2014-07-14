@@ -76,12 +76,19 @@ define(["model/fileloader",
             this.totalNumQuantities = 0;
 
             /**
+             * Whether the standard libary is currently loaded.
+             * 
+             * @type {Boolean}
+             */
+            this.isStandardLibLoaded = true;
+
+            /**
              * The file loader is reponsible for loading all files, like macros and library functions.
              */
             this.fileLoader = new FileLoader();
-
             this.fileLoader.load("macros", "macros");
             this.fileLoader.load("functions", "library");
+
             eval.call(globalScope, this.fileLoader.getLibrary());
         }
 
@@ -145,7 +152,38 @@ define(["model/fileloader",
             return code;
         };
 
-        
+        /**
+         * Loads the unit library into memory, overwriting the standard
+         * library
+         * 
+         * @post The unit library has been loaded into memory
+         */
+        Compiler.prototype.loadUnitsLib = function() {
+            this.fileLoader.load("functions", "unitlibrary");
+            eval.call(globalScope, this.fileLoader.getLibrary());
+            this.isStandardLibLoaded = false;
+        };
+
+        /**
+         * Loads the standard library into memory, overwriting the unit
+         * library
+         * 
+         * @post The standard library has been loaded into memory
+         */
+        Compiler.prototype.loadStandardLib = function() {
+            this.fileLoader.load("functions", "library");
+            eval.call(globalScope, this.fileLoader.getLibrary());
+            this.isStandardLibLoaded = true;
+        };
+
+        /**
+         * Returns whether the unit library is currently in memory
+         * 
+         * @return {Boolean} Whether the unit library is loaded in memory
+         */
+        Compiler.prototype.unitsLibLoaded = function() {
+            return !this.isStandardLibLoaded;
+        };
 
         /**
          * Flags all time-dependent quantities in this.quantities as such

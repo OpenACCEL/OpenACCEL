@@ -59,9 +59,10 @@ macro func {
         this.$x.stdexpr = (function() { return $expr; }).bind(this);
 
         /**
-         * Function that evaluates the matched expression in the context of 'this'.
+         * Function that evaluates the matched expression in the context of 'this',
+         * and returns both the resulting value and corresponding unit.
          * This takes into account that all quantities should return objects, and all
-         * library function also return objects.
+         * library functions also return objects.
          */
         this.$x.unitexpr = (function() {
             /**

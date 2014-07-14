@@ -87,6 +87,15 @@ define([], /**@lends Model*/ function() {
          * @type {Array}
          */
         this.plotStatus = '';
+
+        /**
+         * Dictionary of libraries containing functions that must be accessible
+         * to the code inside quantity expressions. Multiple libraries can be loaded,
+         * each accessible by their own key.
+         * 
+         * @type {Object}
+         */
+        this.libraries = {};
     }
 
 
