@@ -53,9 +53,58 @@ macro func {
         };
 
         /**
-         * Function that evaluates the matched expression in the context of 'this'
+         * Function that evaluates the matched expression in the context of 'this'.
+         * This is without unit checking or other extensions. This is pure code.
          */
-        this.$x.expr = (function() { return $expr; }).bind(this);
+        this.$x.stdexpr = (function() { return $expr; }).bind(this);
+
+        /**
+         * Function that evaluates the matched expression in the context of 'this'.
+         * This takes into account that all quantities should return objects, and all
+         * library function also return objects.
+         */
+        this.$x.unitexpr = (function() {
+            /**
+             * If the quantity has category 1 or 3, and a unit, this unit should be the unit
+             * of the final expression answer. Otherwise, the unit of the final expressions should
+             * 'overwrite' the unit of the quantity.
+             */
+            var ans = $expr;
+
+            if (this.report) {
+                var category = this.report.$x.category;
+                var quantity = this.$x;
+
+                if (quantity.unit && (category === 1 || category === 3)) {
+                    /**
+                     * If the expression is a scalar, we put it in a unit object and give it the
+                     * unit of the quantity. Else, we will overwrite the unit of the returned unit object.
+                     */
+                    if (ans instanceof UnitObject) {
+                        ans.unit = quantity.unit;
+                    } else {
+                        ans = new UnitObject(ans, quantity.unit);
+                    }
+                } else {
+                    // This value is guaranteed to have some unit. The quantity will take this unit.
+                    // (It is an intermediate or output quantity, category 2 or 4).
+                    quantity.unit = ans.unit;
+                }
+
+                return ans;
+            }
+
+            return ans;
+        }).bind(this);
+
+        /**
+         * Function that evaluates the matched expression in the context of 'this'.
+         * This expression should be a reference to the expressions that you want to use for the run-time.
+         *
+         * For example, if you want units, you should refer this to the 'unitexpr', and if you just want
+         * to calculate normal expressions without extension, you'd let it refer to 'stdexpr'.
+         */
+        this.$x.expr = this.$x.stdexpr;
 
         /**
          * The array of historic values of this quantity. The first element always
@@ -93,10 +142,10 @@ macro func {
      * Quantity definitions including units
      */
     rule {
-        ($x = $expr:expr ; $dim)
+        ($x = $expr:expr ; $unit)
     } => {
         func($x = $expr)
-        this.$x.dim = $dim;
+        this.$x.unit = $unit;
     }
 
     /**
@@ -139,6 +188,5 @@ macro func {
         ($x($xs (,) ...) = $expr:expr ; $dim)
     } => {
         func($x($xs (,) ...) = $expr)
-        this.$x.dim = $dim;
     }
 }
