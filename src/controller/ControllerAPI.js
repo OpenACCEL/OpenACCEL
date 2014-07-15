@@ -726,6 +726,12 @@ define(["model/script",
          * @return Whether the script has been compiled
          */
         Controller.prototype.compileScript = function(script) {
+            // Reset measurements
+            if (inBrowser) {
+                this.curMeasurement = 0;
+                this.measurements = new Array(this.numMeasurements);
+            }
+
             if (script.isComplete()) {
                 // Clear old results when recompiling
                 this.view.presentResults({});
