@@ -70,6 +70,7 @@ define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
             qty.source = line;
             qty.definition = rhs;
             qty.todo = false;
+            qty.unit = this.getUnits(line);
 
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
@@ -105,6 +106,7 @@ define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
             qty.LHS = lhs;
             qty.source = line;
             qty.definition = rhs;
+            qty.unit = this.getUnits(line);
 
             // Straightforward check for empty definitions of quantities. Further
             // checking of todo-items is done in the dependency pass.

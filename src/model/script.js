@@ -17,12 +17,12 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["model/analyser/analyser", 
-        "model/quantity", 
-        "underscore", 
+define(["model/analyser/analyser",
+        "model/quantity",
+        "underscore",
         "model/parser",
         "model/exceptions/SyntaxError",
-        "model/exceptions/RuntimeError"], 
+        "model/exceptions/RuntimeError"],
         /** @lends Model.Script */
         function(Analyser, Quantity, _, parser, SyntaxError, RuntimeError) {
     /**
@@ -84,8 +84,8 @@ define(["model/analyser/analyser",
         this.quantities = {};
 
         /**
-         * Array containing the names of all the quantities that have 
-         * been flagged as changed in the executable. Used for memoization 
+         * Array containing the names of all the quantities that have
+         * been flagged as changed in the executable. Used for memoization
          * purposes when setting user input quantity values (setUserInputQuantity()).
          */
         this.flaggedAsChanged = [];
@@ -259,7 +259,7 @@ define(["model/analyser/analyser",
                 this.parser.parse(source);
             } catch (e) {
                 var err = new SyntaxError();
-                
+
                 err.found = e.hash.text;
                 err.expected = e.hash.expected;
                 err.firstLine = e.hash.loc.first_line;
@@ -280,7 +280,7 @@ define(["model/analyser/analyser",
          *
          * @param qtyName The name of the quantity to delete
          * @pre this.hasQuantity(qtyName) && !this.quantities[qtyname].todo
-         * @post The quantity named qtyName has been deleted from the script or set as todo, 
+         * @post The quantity named qtyName has been deleted from the script or set as todo,
          * the category of all quantities has been re-evaluated and the script has
          * been recompiled if complete.
          * @modifies quantities
@@ -404,7 +404,7 @@ define(["model/analyser/analyser",
         },
 
         /**
-         * Recursively sets whether the given quantity and all of it's reverse 
+         * Recursively sets whether the given quantity and all of it's reverse
          * dependencies have been modified.
          *
          * @pre this.isCompiled() == true
@@ -443,7 +443,7 @@ define(["model/analyser/analyser",
             this.scriptModified = true;
             this.compiled = false;
             this.exe = null;
-            
+
             // Determine categories of all quantities
             this.analyser.determineCategories(this.quantities);
         },
@@ -451,7 +451,7 @@ define(["model/analyser/analyser",
         /**
          * Returns the plot array from the executable.
          * Returns the empty array if the executable is null
-         * 
+         *
          * @return {Array} plot array
          */
         getPlot: function() {
@@ -470,9 +470,9 @@ define(["model/analyser/analyser",
          */
         getSource: function() {
             // Use cached value if script has not been modified since last call to this function
-            if (!this.scriptModified) {
-                return this.source;
-            }
+            // if (!this.scriptModified) {
+            //     return this.source;
+            // }
 
             // Iterate through all quantities and append their definition to the source code
             var lines = [];
@@ -487,7 +487,7 @@ define(["model/analyser/analyser",
 
             this.source = lines.join("\n");
             this.scriptModified = false;
-            
+
             return this.source;
         },
 
@@ -532,7 +532,7 @@ define(["model/analyser/analyser",
 
             this.source = lines.join("\n");
             this.scriptModified = false;
-            
+
             return this.source;
         }
     };

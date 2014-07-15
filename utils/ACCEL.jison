@@ -11,8 +11,8 @@
  */
 
 
-%lex 
-/** --------- Lexer macros and initialization section --------- */   
+%lex
+/** --------- Lexer macros and initialization section --------- */
 
 /** Macros used in the lexer */
 digit       [0-9]
@@ -129,7 +129,7 @@ frac        (?:\.[0-9]+)
         'vVecRamp'
     ];
 
-    yy.reservedwords = 
+    yy.reservedwords =
     [
         'true',
         'false',
@@ -289,7 +289,7 @@ frac        (?:\.[0-9]+)
     }
 
     yy.unitTranslator = unitTranslator;
-%}               
+%}
 
 
 
@@ -311,12 +311,12 @@ frac        (?:\.[0-9]+)
 \bfalse\b                                                   { return 'FALSE';       }
 \b\w*[a-zA-Z_]\w*\b                                         %{
                                                                 if (yy.stdfunctions.indexOf(yytext) > -1) {
-                                                                    return 'STDFUNCTION'; 
+                                                                    return 'STDFUNCTION';
                                                                 } else if (yy.inputfunctions.indexOf(yytext) > -1) {
                                                                     return 'INPUTFUNCTION';
-                                                                } else { 
-                                                                    return 'IDENTIFIER'; 
-                                                                } 
+                                                                } else {
+                                                                    return 'IDENTIFIER';
+                                                                }
                                                             %}
 "("                                                         { return '(';       }
 ")"                                                         { return ')';       }
@@ -373,7 +373,7 @@ frac        (?:\.[0-9]+)
 
 
 
-%% 
+%%
 /** --------- Language grammar section --------- */
 
 /** Structure of ACCEL script */
@@ -398,8 +398,8 @@ script                  : (scriptLine)* (scriptFinalLine)?
                         }}
                         ;
 scriptLine              :   LINEBREAK
-                            { $$ = null } 
-                        |   quantity LINEBREAK 
+                            { $$ = null }
+                        |   quantity LINEBREAK
                         |   comment LINEBREAK
                             { $$ = null }
                         ;
@@ -421,13 +421,13 @@ quantityFuncDef         :   funcDef '=' expr
                         }}
                         ;
 quantityName            :   IDENTIFIER
-                            { $$ = '__' + $1 + '__'; } 
-                        ;                    
+                            { $$ = '__' + $1 + '__'; }
+                        ;
 dummy                   : (STDFUNCTION | INPUTFUNCTION | quantityName)
                         {{
                             // intiialize dummies array
                             if (!yy.dummies) {
-                                yy.dummies = [];   
+                                yy.dummies = [];
                             }
                             if (yy.dummies.indexOf($1) > -1) {
                                 // already defined, which is not allowed
@@ -454,20 +454,26 @@ funcDefAdditionalArg    :   ',' dummy
                             { $$ = $2 }
                         ;
 quantityDef             :   quantityName '=' expr (UNIT)?
-                        {{ 
+                        {{
                             var defStr = $1 + $2 + $3;
-                            
+
                             // Translate units to objects if present.
                             if ($4 && $4.length > 0) {
-                                defStr += ";" + yy.unitTranslator.translateUnits($4);
+                                defStr += " ; " + yy.unitTranslator.translateUnits($4);
                             }
 
                             $$ = defStr;
                         }}
                         ;
 inputQuantityDef        :   quantityName '=' inputCall (UNIT)?
-                        {{ 
+                        {{
                             var defStr = $1 + $2 + $3;
+
+                            // Translate units to objects if present.
+                            if ($4 && $4.length > 0) {
+                                defStr += " ; " + yy.unitTranslator.translateUnits($4);
+                            }
+
                             $$ = defStr;
                         }}
                         ;
@@ -533,7 +539,7 @@ scalarVar               :   quantityName
                             //$$ = '((typeof ' + $1 + ' !== \'undefined\') ? ' + $1 + ' : this.' + $1 + '())';
                         }}
                         |   (STDFUNCTION | INPUTFUNCTION)
-                        {{ 
+                        {{
                             // check if this function name is used as a parameter or dummy
                             // which is allowed. But using a function name as quantity
                             // is not.
@@ -548,14 +554,14 @@ scalarVar               :   quantityName
                         }}
                         ;
 historyVar              :   scalarVar '{' expr '}'
-                        {{  
+                        {{
                             if (yy.dummies && yy.dummies.indexOf($1) > -1) {
                                 // Cannot ask for the history of a parameter
                                 yy.parseError('Dummy variables cannot have history', {
                                     text: 'history of ' + $1,
                                     loc: this._$
                                 });
-                            } 
+                            }
                             $$ = "history(" + $1 + "," + $3 + ")";
                         }}
                         ;
@@ -594,7 +600,7 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                             } else {
                                 $$ = funcCall + $5;
                             }
-                       }}   
+                       }}
                         ;
 inputCall               :   INPUTFUNCTION '(' (scalarConst | (('+'|'-') NUMBER))? (inputCallArgList)* ')'
                         {{
@@ -628,7 +634,7 @@ brackets                :   '(' expr ')'
 vectorExpr              :   '[' (vectorArgList)? ']'
                             { $$ = 'objectToArray({' + ($2 || '') + '})'; };
 vectorArgList           :   vectorElem (vectorAdditionalArg)*
-                        {{ 
+                        {{
                             var counter = 0;
 
                             function createElement(elemObj) {
@@ -646,7 +652,7 @@ vectorArgList           :   vectorElem (vectorAdditionalArg)*
 vectorAdditionalArg     :   ',' vectorElem
                             { $$ = $2 }
                         ;
-vectorElem              :   STRING ':' expr 
+vectorElem              :   STRING ':' expr
                             { $$ = { index:$1, value:$3}; }
                         |   IDENTIFIER ':' expr
                             { $$ = { index:'\'' + $1 + '\'', value:$3}; }
@@ -667,9 +673,9 @@ vectorCall              :   scalarTerm '[' expr ']'
                         |   scalarTerm '.' STDFUNCTION
                             { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; }
                         |   scalarTerm '.' INPUTFUNCTION
-                            { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; } 
+                            { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; }
                         |   scalarTerm '.' NUMBER
-                            { $$ = 'at(' + $1 + ', ' + $3 + ')'; } 
+                            { $$ = 'at(' + $1 + ', ' + $3 + ')'; }
                         ;
 
 %%

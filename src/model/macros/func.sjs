@@ -8,6 +8,16 @@
 
 macro func {
     /**
+     * Quantity definitions including units
+     */
+    rule {
+        ($x = $expr:expr ; $unit)
+    } => {
+        func($x = $expr)
+        this.$x.unit = $unit;
+    }
+
+    /**
      * Normal quantity definitions.
      */
     rule {
@@ -119,6 +129,14 @@ macro func {
         this.$x.hist = [];
 
         /**
+         * The unit of this quantity. No unit is given, so assign
+         * unit identity to this quantity.
+         *
+         * @type {Object}
+         */
+        this.$x.unit = {};
+
+        /**
          * The maximum size of the history array for this quantity.
          *
          * @type {Number}
@@ -136,17 +154,6 @@ macro func {
                 this.$x.hist[0] = this.report.$x.input.parameters[0];
             }
         }
-    }
-
-
-    /**
-     * Quantity definitions including units
-     */
-    rule {
-        ($x = $expr:expr ; $unit)
-    } => {
-        func($x = $expr)
-        this.$x.unit = $unit;
     }
 
     /**
