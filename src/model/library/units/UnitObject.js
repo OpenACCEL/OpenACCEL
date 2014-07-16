@@ -296,8 +296,11 @@ UnitObject.prototype.power = function(exponent) {
     var ans = this.clone();
     ans.value = Math.pow(ans.value, exponent);
 
-    for (var key in ans.unit) {
-        ans.unit[key] += exponent;
+    // Only modify the units if there's no error.
+    if (!this.error) {
+        for (var key in ans.unit) {
+            ans.unit[key] += exponent;
+        }
     }
 
     ans.clean();
