@@ -285,12 +285,12 @@ UnitObject.prototype.multiply = function(other) {
 UnitObject.prototype.power = function(exponent) {
     // The exponent must be unitless.
     if (exponent instanceof UnitObject) {
-        return new UnitObject(Math.pow(this.value), exponent.value, { }, "Exponent is not unitless.")
+        return new UnitObject(Math.pow(this.value, exponent.value), { }, "Exponent is not unitless.")
     }
 
     // Throw an error if the exponent is not an integer.
     if (exponent % 1 !== 0) {
-        return new UnitObject(Math.pow(this.value), exponent, { }, "Non integer exponent.");
+        return new UnitObject(Math.pow(this.value, exponent), { }, "Non integer exponent.");
     }
 
     var ans = this.clone();
