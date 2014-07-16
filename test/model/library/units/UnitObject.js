@@ -87,7 +87,7 @@ suite("Unit Object", function() {
             eval(fileLoader.getContent());
             var a = new UnitObject(5, {'kg': 1});
             var b = new UnitObject(10, {'kg': 1});
-            var c = new UnitObject(5, {'kg': 2});
+            var c = new UnitObject(6, {'kg': 2});
 
             var d = a.add(b);
             assert.equal(d.equals(a), true);
@@ -96,7 +96,7 @@ suite("Unit Object", function() {
 
             var e = a.add(c);
             assert.equal(e.equals(a), false);
-            assert.equal(e.value, 10);
+            assert.equal(e.value, 11);
             assert.equal(e.error, "Addition unit mismatch.")
 
             // Commutativity.
@@ -107,7 +107,7 @@ suite("Unit Object", function() {
 
             var g = c.add(a);
             assert.equal(g.equals(a), false);
-            assert.equal(g.value, 10);
+            assert.equal(g.value, 11);
             assert.equal(g.error, "Addition unit mismatch.");
         });
 
@@ -121,8 +121,8 @@ suite("Unit Object", function() {
         test("| Multiplication", function() {
             eval(fileLoader.getContent());
             var a = new UnitObject(5, {'kg': 1, 'm': 0, 'lum': 0});
-            var b = new UnitObject(5, {'m': 1, 's': -2});
-            var ans = new UnitObject(25, {'kg': 1, 'm': 1, 's': -2});
+            var b = new UnitObject(6, {'m': 1, 's': -2});
+            var ans = new UnitObject(30, {'kg': 1, 'm': 1, 's': -2});
 
             var c = a.multiply(b);
             assert.equal(c.equals(ans), true);
@@ -194,8 +194,8 @@ suite("Unit Object", function() {
         test("| Nominator", function() {
             eval(fileLoader.getContent());
             var a = new UnitObject(5, {'kg': 1, 'm': 1, 's': -2});
-            var b = new UnitObject(5, a.getNominator());
-            var expected = new UnitObject(5, {'kg': 1, 'm': 1});
+            var b = new UnitObject(6, a.getNominator());
+            var expected = new UnitObject(11, {'kg': 1, 'm': 1});
             assert.equal(b.equals(expected), true);
         });
 

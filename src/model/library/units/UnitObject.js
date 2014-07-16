@@ -261,7 +261,7 @@ UnitObject.prototype.multiply = function(other) {
 
     // Copy over the units of the left hand side and multiply the values.
     var ans = this.clone();
-    ans.value *= this.value;
+    ans.value *= other.value;
 
     // Unit * Identity = Unit.
     if (other.isNormal()) {
