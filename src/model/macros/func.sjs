@@ -92,14 +92,17 @@ macro func {
                      * unit of the quantity. Else, we will overwrite the unit of the returned unit object.
                      */
                     if (ans instanceof UnitObject) {
-                        ans.unit = quantity.unit;
+                        ans.setUnit(quantity.unit);
                     } else {
-                        ans = new UnitObject(ans, quantity.unit);
+                        // We're dealing with arrays or scalar values, thus we need to zip (auto-map).
+                        ans = UnitObject.prototype.zip(ans, quantity.unit);
                     }
                 } else {
                     // This value is guaranteed to have some unit. The quantity will take this unit.
                     // (It is an intermediate or output quantity, category 2 or 4).
-                    quantity.unit = ans.unit;
+                    quantity.unit = zip([ans.unit], function(x) {
+                        return x.unit;
+                    });
                 }
 
                 return ans;
