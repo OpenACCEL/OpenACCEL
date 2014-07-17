@@ -79,9 +79,8 @@ suite("Unit Object", function() {
          * The addition of two UnitObjects.
          *
          * @input:      a = new UnitObject(5, {'kg': 1})
-         *              b = new UnitObject(5, {'kg': 2})
-         * @expected:   a.add(a) == new UnitObject(10, {'kg': 1})
-         *              a.add(b).error
+         *              b = new UnitObject(10, {'kg': 1})
+         *              c = new UnitObject(6, {'kg': 2})
          */
         test("| Addition", function() {
             eval(fileLoader.getContent());
@@ -109,6 +108,37 @@ suite("Unit Object", function() {
             assert.equal(g.equals(a), false);
             assert.equal(g.value, 11);
             assert.equal(g.error, "Addition unit mismatch.");
+        });
+
+        /**
+         * The subtraction of two UnitObjects.
+         */
+        test("| Subtraction", function() {
+            eval(fileLoader.getContent());
+            var a = new UnitObject(5, {'kg': 1});
+            var b = new UnitObject(10, {'kg': 1});
+            var c = new UnitObject(6, {'kg': 2});
+
+            var d = a.subtract(b);
+            assert.equal(d.equals(a), true);
+            assert.equal(d.value, -5);
+            assert.equal(d.error, null);
+
+            var e = a.subtract(c);
+            assert.equal(e.equals(a), false);
+            assert.equal(e.value, -1);
+            assert.equal(e.error, "Subtraction unit mismatch.")
+
+            // Non-Commutativity.
+            var f = b.subtract(a);
+            assert.equal(f.equals(a), true);
+            assert.equal(f.value, 5);
+            assert.equal(f.error, null);
+
+            var g = c.subtract(a);
+            assert.equal(g.equals(a), false);
+            assert.equal(g.value, 1);
+            assert.equal(g.error, "Subtraction unit mismatch.");
         });
 
         /**

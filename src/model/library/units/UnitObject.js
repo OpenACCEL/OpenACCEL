@@ -234,6 +234,37 @@ UnitObject.prototype.add = function(other) {
 }
 
 /**
+ * Subtracts one UnitObject from the other.
+ * The subtraction of a unit with another unit with an error results in an empty unit with error.
+ * The subtraction of two UnitObjects that do not have the exact same unit, will result
+ * in a UnitObject with no error and empty unit.
+ *
+ * @param  {UnitObject} other The other UnitObject that should be subtracted.
+ * @return {UnitObject}       A new UnitObject that is the result of the subtraction.
+ */
+UnitObject.prototype.subtract = function(other) {
+    // Check for errors on the left hand side.
+    if (this.unit.error) {
+        return new UnitObject(this.value - other.value, {}, this.unit.error);
+    }
+
+    // Check for errors on the right hand side.
+    if (other.unit.error) {
+        return new UnitObject(this.value - other.value, {}, other.unit.error);
+    }
+
+    // Check whether the dimensions of the two objects are equal.
+    // Otherwise, return a UnitObject with error and no unit.
+    if(!this.equals(other)) {
+        return new UnitObject(this.value - other.value, {}, "Subtraction unit mismatch.");
+    } else {
+        var ans = this.clone();
+        ans.value -= other.value;
+        return ans;
+    }
+}
+
+/**
  * Calculates the product of two UnitObjects.
  * The multiplication of a unit with unit with error results in an empty unit with error.
  * The multiplication of a unit with the normal unit results in itself.
