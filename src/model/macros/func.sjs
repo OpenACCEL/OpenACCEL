@@ -85,7 +85,7 @@ macro func {
                         ans.setUnit(quantity.unit);
                     } else {
                         // We're dealing with arrays or scalar values, thus we need to zip (auto-map).
-                        ans = UnitObject.prototype.zip(ans, quantity.unit);
+                        ans = UnitObject.prototype.create(ans, quantity.unit);
                     }
                 } else {
                     // This value is guaranteed to have some unit. The quantity will take this unit.

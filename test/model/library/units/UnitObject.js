@@ -178,7 +178,7 @@ suite("Unit Object", function() {
         });
 
         /**
-         * The zipping of UnitObjects.
+         * The creation (zipping) of UnitObjects.
          *
          * @input:      values = [10, [20, 30], UnitObject(4, {'s': 2})]
          *              units = [{'kg': 1}, [{}, {'m': -2}]]
@@ -187,11 +187,11 @@ suite("Unit Object", function() {
          * 				[new UnitObject(20, {}),
          * 				 new UnitObject(30, {'m': -2})]]
          */
-        test("| Zipping", function() {
+        test("| Creation", function() {
             eval(fileLoader.getContent());
             var values = [10, [20, 30], new UnitObject(4, {'s': 2})];
             var units = [{'kg': 1}, [{}, {'m': -2}], {'lum': 1}];
-            var ans = UnitObject.prototype.zip(values, units);
+            var ans = UnitObject.prototype.create(values, units);
 
             var first = new UnitObject(10, {'kg': 1});
             var second = new UnitObject(20, {});

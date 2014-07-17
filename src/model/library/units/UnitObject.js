@@ -150,7 +150,7 @@ UnitObject.prototype.toString = function() {
  * @param  {Object} units  The units.
  * @return {UnitObject}    The resulting zipped UnitObjects.
  */
-UnitObject.prototype.zip = function(values, units) {
+UnitObject.prototype.create = function(values, units) {
     return zip([values, units], function(value, unit) {
         if (value instanceof UnitObject) {
             var ans = value.clone();
@@ -187,6 +187,29 @@ UnitObject.prototype.equals = function(other) {
 }
 
 /**
+ * Given two UnitObjects, if one of the objects contains an error, the value gets updated,
+ * but the unit stays empty and the error stays the same. If none of the two objects contain
+ * an error, the function will return false.
+ * 
+ * @param  {Function} f The function that zips the values of the two objects together when there is an error.
+ * @param  {UnitObject} other
+ * @return A UnitObject with error and updated value if x or y contains an error. False otherwise.
+ */
+UnitObject.prototype.propagateError = function(f, other) {
+    // Check for errors on the left hand side.
+    if (this.unit.error) {
+        return new UnitObject(f(this.value, other.value), {}, this.unit.error);
+    }
+
+    // Check for errors on the right hand side.
+    if (other.unit.error) {
+        return new UnitObject(f(this.value, other.value), {}, other.unit.error);
+    }
+
+    return false;
+}
+
+/**
  * @return {Boolean} Whether the UnitObject has any unit at all, and is not the
  * identity unit (for multiplication).
  */
@@ -212,14 +235,9 @@ UnitObject.prototype.isNormal = function() {
  * @return {UnitObject}       A new UnitObject that is the result of the addition.
  */
 UnitObject.prototype.add = function(other) {
-    // Check for errors on the left hand side.
-    if (this.unit.error) {
-        return new UnitObject(this.value + other.value, {}, this.unit.error);
-    }
-
-    // Check for errors on the right hand side.
-    if (other.unit.error) {
-        return new UnitObject(this.value + other.value, {}, other.unit.error);
+    var error = this.propagateError(function(x, y) { return x + y; }, other);
+    if (error) {
+        return error;
     }
 
     // Check whether the dimensions of the two objects are equal.
@@ -243,14 +261,9 @@ UnitObject.prototype.add = function(other) {
  * @return {UnitObject}       A new UnitObject that is the result of the subtraction.
  */
 UnitObject.prototype.subtract = function(other) {
-    // Check for errors on the left hand side.
-    if (this.unit.error) {
-        return new UnitObject(this.value - other.value, {}, this.unit.error);
-    }
-
-    // Check for errors on the right hand side.
-    if (other.unit.error) {
-        return new UnitObject(this.value - other.value, {}, other.unit.error);
+    var error = this.propagateError(function(x, y) { return x - y; }, other);
+    if (error) {
+        return error;
     }
 
     // Check whether the dimensions of the two objects are equal.
@@ -273,14 +286,9 @@ UnitObject.prototype.subtract = function(other) {
  * @return {UnitObject}       A new UnitObject that is the result of the multiplication.
  */
 UnitObject.prototype.multiply = function(other) {
-    // Check for errors on the left hand side.
-    if (this.unit.error) {
-        return new UnitObject(this.value * other.value, {}, this.unit.error);
-    }
-
-    // Check for errors on the right hand side.
-    if (other.unit.error) {
-        return new UnitObject(this.value * other.value, {}, other.unit.error);
+    var error = this.propagateError(function(x, y) { return x * y; }, other);
+    if (error) {
+        return error;
     }
 
     // Identity * Unit = Unit.
