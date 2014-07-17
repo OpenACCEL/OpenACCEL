@@ -8,16 +8,6 @@
 
 macro func {
     /**
-     * Quantity definitions including units
-     */
-    rule {
-        ($x = $expr:expr ; $unit)
-    } => {
-        func($x = $expr)
-        this.$x.unit = $unit;
-    }
-
-    /**
      * Normal quantity definitions.
      */
     rule {

@@ -28,6 +28,7 @@ define(["model/fileloader",
         "model/macroexpander",
         "underscore",
         "model/parser",
+        "model/unitparser",
         "model/exceptions/SyntaxError",
         "model/executable"
     ], /**@lends Model.Compiler */
@@ -35,6 +36,7 @@ define(["model/fileloader",
         MacroExpander,
         _,
         parser,
+        unitParser,
         SyntaxError,
         Executable) {
 
@@ -54,9 +56,18 @@ define(["model/fileloader",
 
             /**
              * The parser that will be used to parse inputted ACCEL code
-             * and construct the executable from it.
+             * and construct the executable from it. This does not translate units.
              */
             this.parser = parser;
+
+            /**
+             * The parser that will be used to translate ACCEL units into
+             * workable objects. This is a separate parser, as the language with units
+             * is not a context-free language. By separating the units part from the
+             * actual language part, the entire ACCEL language can be considered
+             * as two context-free languages.
+             */
+            this.unitParser = unitParser;
 
             /**
              * All the quantities in the script to be compiled.
@@ -117,6 +128,10 @@ define(["model/fileloader",
             // Expand the macros in the parser-outputted code
             code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
+            // Now that the quantities are parsed and expanded, we may extend the quantities
+            // with their unit, if they have any.
+            code += this.parseUnits(script);
+
             // Create Executable with the parsed code 
             exe = new Executable(code, script.getQuantities());
 
@@ -136,6 +151,10 @@ define(["model/fileloader",
             try {
                 code = this.parser.parse(code);
             } catch (e) {
+                if (!e.hash) {
+                    throw e;
+                }
+
                 var err = new SyntaxError();
 
                 err.found = e.hash.text;
@@ -151,6 +170,52 @@ define(["model/fileloader",
 
             return code;
         };
+
+        /**
+         * Parse the units for each quantity separately from the source code, and add the parsed
+         * information to the quantities in the executable.
+         * 
+         * @param  {Script} script The entire script, including source and units.
+         * @return {String}        String of executable javascript code that adds units to quanities.
+         * @throws {SyntaxError}   If parsing fails
+         */
+        Compiler.prototype.parseUnits = function(script) {
+            // Parse the units and handle any syntax errors
+            var unitCode = "";
+
+            try {
+                // For each quantity, get the unit, parse it and add to the quantity in the executable.
+                var quantities = script.getQuantities();
+
+                for (var qtyName in quantities) {
+                    var qty = quantities[qtyName];
+
+                    if (!qty.unit || qty.unit === '') {
+                        continue;
+                    }
+
+                    unitCode += "this.__" + qtyName + "__.unit=" + this.unitParser.parse(qty.unit) + ";";
+                }
+
+                return unitCode;
+            } catch (e) {
+                if (!e.hash) {
+                    throw e;
+                }
+
+                var err = new SyntaxError();
+
+                err.found = e.hash.text;
+                err.expected = e.hash.expected;
+                err.firstLine = e.hash.loc.first_line;
+                err.lastLine = e.hash.loc.last_line;
+                err.startPos = e.hash.loc.first_column;
+                err.endPos = e.hash.loc.last_column;
+                err.message = e.message;
+
+                throw err;
+            }
+        }
 
         /**
          * Loads the unit library into memory, overwriting the standard
