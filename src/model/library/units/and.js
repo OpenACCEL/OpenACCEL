@@ -4,16 +4,17 @@ function and(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     return zip([x, y], function(a, b) {
-            var error = this.propagateError(exe.lib["std"].and, other);
+            var std_and = exe.lib.std.and;
+            var error = a.propagateError(std_and, b);
             if (error) {
                 return error;
             }
     
             if (!a.equals(b)) {
-                return new UnitObject(exe.lib["std"].and(a.value, b.value), {}, "Units should be equal.");
+                return new UnitObject(std_and(a.value, b.value), {}, "Units should be equal.");
             } else {
                 var ans = a.clone()
-                ans.value = exe.lib["std"].and(a.value, b.value);
+                ans.value = std_and(a.value, b.value);
                 return ans;
             }
     });
