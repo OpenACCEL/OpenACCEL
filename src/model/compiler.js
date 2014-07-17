@@ -26,6 +26,7 @@ if (inNode) {
 
 define(["model/fileloader",
         "model/macroexpander",
+        "model/library",
         "underscore",
         "model/parser",
         "model/unitparser",
@@ -34,6 +35,7 @@ define(["model/fileloader",
     ], /**@lends Model.Compiler */
     function(FileLoader,
         MacroExpander,
+        Library,
         _,
         parser,
         unitParser,
@@ -87,6 +89,12 @@ define(["model/fileloader",
             this.totalNumQuantities = 0;
 
             /**
+             * List of all library functions (executable!) supported by OpenACCEL.
+             */
+            this.libraries = {};
+            this.libraries.std = [];
+
+            /**
              * Whether the standard libary is currently loaded.
              * 
              * @type {Boolean}
@@ -101,6 +109,13 @@ define(["model/fileloader",
             this.fileLoader.load("functions", "library");
 
             eval.call(globalScope, this.fileLoader.getLibrary());
+
+            // Now that the std library has been loaded, we can store the function references in memory.
+            var library = new Library();
+            for (var i = 0; i < library.std.length; ++i) {
+                var func = library.std[i];
+                this.libraries.std[func] = eval(func);
+            }
         }
 
         /**
@@ -134,6 +149,9 @@ define(["model/fileloader",
 
             // Create Executable with the parsed code 
             exe = new Executable(code, script.getQuantities());
+
+            // Store library references in the executable.
+            exe.lib = this.libraries;
 
             return exe;
         };
