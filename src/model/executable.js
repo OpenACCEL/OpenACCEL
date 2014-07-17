@@ -217,6 +217,22 @@ define([], /**@lends Model*/ function() {
         }
     };
 
+    /**
+     * Gets the unit of the given quantity.
+     * 
+     * @param  {String} quantity name of the quantity
+     * @pre             quantity exists in the current executable
+     * @return          Unit of the quantity
+     */
+    Executable.prototype.getUnit = function(quantity) {
+        var localQty = '__' + quantity + '__';
+        if (this[localQty]) {
+            return this[localQty]().unitToString();
+        } else {
+            throw new Error('Executable.prototype.getUnit.pre violated :' +
+                'no Quantity named ' + quantity);
+        }
+    };
 
     /**
      * Sets the current execution-time value of the given quantity.

@@ -211,13 +211,17 @@ define([], /**@lends Model.Quantity */ function() {
      *
      * @param {Boolean} includeUnits Whether to include the unit in the string representation
      * @param {Boolean} includeComments Whether to include the comment in the string representation
+     * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only 
+     * those provided by the user.
      * @return {String} The script line corresponding to this quantity, optionally with
      * unit and comment
      */
-    Quantity.prototype.toString = function(includeUnits, includeComments) {
+    Quantity.prototype.toString = function(includeUnits, includeComments, includeCheckedUnits) {
         var def = this.LHS + '=' + this.definition;
 
-        if (includeUnits && this.unit != '') {
+        // Only include the unit of this quantity (if it has one) if it's a category 1 or 3 quantity
+        // or when told to include checked units as well
+        if (includeUnits && this.unit != '' && (includeCheckedUnits || (this.category == 1 || this.category == 3))) {
             def += ' ; ' + this.unit;
         }
         if (includeComments && this.comment.length > 0) {

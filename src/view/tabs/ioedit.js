@@ -15,7 +15,6 @@ function editScript(script) {
 }
 
 var showValues = false;
-var checkUnits = false;
 
 function toggleValues() {
 	showValues = !showValues;
@@ -26,18 +25,32 @@ function toggleValues() {
 	}
 }
 
-function toggleUnitChecking() {
-	checkUnits = !checkUnits;
-	if (checkUnits) {
-		$('#checkunits').val('Do not check units');
-	} else {
-		$('#checkunits').val('Check units');
+/**
+ * Performs a one-time check of the units of the quantities in the script
+ * and displays them after the quantities
+ */
+function checkUnits() {
+	try {
+		var source = $('#scriptarea').val();
+		controller.checkUnits(source);
+		synchronizeScriptArea(true);
+	} catch (e) {
+		alert(e.message);
 	}
 }
 
 //------------------------------------------------------------------------------
 
-function synchronizeScriptArea() {
-	var script = controller.scriptToString(true, true);
+/**
+ * Retrieves the current script source from the controller and displays it in the edit area
+ * @param  {Boolean} includeUnits Whether to also display checked units
+ */
+function synchronizeScriptArea(includeCheckedUnits) {
+	// Make parameter optional
+	if (typeof includeCheckedUnits === 'undefined') {
+		includeCheckedUnits = false;
+	}
+
+	var script = controller.scriptToString(true, true, includeCheckedUnits);
 	$('#scriptarea').val(script);
 }

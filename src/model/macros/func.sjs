@@ -90,7 +90,7 @@ macro func {
                 } else {
                     // This value is guaranteed to have some unit. The quantity will take this unit.
                     // (It is an intermediate or output quantity, category 2 or 4).
-                    quantity.unit = zip([ans.unit], function(x) {
+                    quantity.unit = zip([ans], function(x) {
                         return x.unit;
                     });
                 }

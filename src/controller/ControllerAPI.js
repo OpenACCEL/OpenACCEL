@@ -203,9 +203,7 @@ define(["model/script",
          * unit libary functions that may be in memory.
          */
         Controller.prototype.loadStandardLib = function() {
-            if (this.compiler.unitsLibLoaded()) {
-                this.compiler.loadStandardLib();
-            }
+            this.compiler.loadStandardLib();
         };
 
         /**
@@ -213,8 +211,46 @@ define(["model/script",
          * standard ACCEL libary functions that may be in memory.
          */
         Controller.prototype.loadUnitsLib = function() {
-            if (!this.compiler.unitsLibLoaded()) {
-                this.compiler.loadUnitsLib();
+            this.compiler.loadUnitsLib();
+        };
+
+        /**
+         * Checks and computes the unit of every quantity in the given script source
+         *
+         * @param {String} source The source of the script of which to check the quantities
+         */
+        Controller.prototype.checkUnits = function(source) {
+            // Check syntax and build the script from the given source
+            this.setScriptFromSource(source);
+
+            // Check whether the script is complete and compiled. If not, try to compile it
+            if (!this.script.isCompiled() ) {
+                // If the script is complete compile it and proceed with checking units
+                if (this.compileScript(this.script) ) {
+                    // Load the units
+                    this.loadUnitsLib();
+
+                    // Change the evaluation function of the executable to be the function
+                    // that evaluates only the values without the units
+                    this.script.exe.expr = this.script.exe.unitexpr;
+
+                    // Let the script check units
+                    try {
+                        this.script.checkUnits();
+                    } catch(e) {
+                        // Make sure to change the function pointer back and load the standard
+                        // library again!
+                        this.script.exe.expr = this.script.exe.stdexpr;
+                        this.loadStandardLib();
+
+                        throw e;
+                    }
+                    
+                    // Change the function pointer back and load the standard
+                    // library again
+                    this.script.exe.expr = this.script.exe.stdexpr;
+                    this.loadStandardLib();
+                }
             }
         };
 
@@ -722,10 +758,16 @@ define(["model/script",
         /**
          * Compiles the given script if the todo-list is empty.
          *
+         * @pre    script != null && script != 
          * @param  script {Script} The script to compile
          * @return Whether the script has been compiled
          */
         Controller.prototype.compileScript = function(script) {
+            if (!script) {
+                throw new Error('Controller.prototype.compileScript.pre :' +
+                    'script is null or undefined')
+            }
+
             // Reset measurements
             if (inBrowser) {
                 this.curMeasurement = 0;
@@ -911,11 +953,18 @@ define(["model/script",
          * in the output.
          * @param {Boolean} includeComments (optional) Whether to include the
          * comments belonging to the quantities in the output
+         * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only 
+         * those provided by the user.
          * @return {String} The source code of the current script, with or without
          * units and comments as specified.
          */
-        Controller.prototype.scriptToString = function(includeUnits, includeComments) {
-            return this.script.toString(includeUnits, includeComments);
+        Controller.prototype.scriptToString = function(includeUnits, includeComments, includeCheckedUnits) {
+            // Make last parameter optional
+            if (typeof includeCheckedUnits === 'undefined') {
+                includeCheckedUnits = false;
+            }
+            
+            return this.script.toString(includeUnits, includeComments, includeCheckedUnits);
         };
 
         /**

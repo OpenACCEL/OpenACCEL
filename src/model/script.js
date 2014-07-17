@@ -203,6 +203,37 @@ define(["model/analyser/analyser",
         },
 
         /**
+         * Returns the unit of the quantity with the given name, if the model
+         * is compiled and the quantity exists
+         *
+         * @param {String} qtyName The name of the quantity of which to return the unit
+         * @pre this.hasQuantity(qtyName)
+         * @pre this.isCompiled()
+         * @throws {RuntimeError} If an error occured while evaluating the quantity unit
+         * @return this.exe.getUnit(qtyName)
+         */
+        getQuantityUnit: function(qtyName) {
+            if (!this.hasQuantity(qtyName)) {
+                throw new Error('Script.prototype.getQuantityValue.pre :' +
+                'no Quantity named qtyName')
+            }
+            if (!this.isCompiled()) {
+                throw new Error('Script.prototype.getQuantityUnit.pre :' +
+                'script not compiled')
+            }
+
+            // Try evaluating the value. Throw RuntimeError if an error is thrown
+            var unit;
+            try {
+                unit = this.exe.getUnit(qtyName);
+            } catch(e) {
+                throw new RuntimeError(e.message);
+            }
+
+            return unit;
+        },
+
+        /**
          * Adds the quantity defined in source to the script. If the quantity already exists,
          * it's definition is updated. Cannot include comments.
          *
@@ -351,6 +382,26 @@ define(["model/analyser/analyser",
             }
 
             return cat2quantities;
+        },
+
+        /**
+         * Checks the unit of all quantities in the script and stores the results in the Quantity objects
+         *
+         * @pre this.isCompiled()
+         */
+        checkUnits: function() {
+            if (this.isCompiled()) {
+                for (var qtyName in this.quantities) {
+                    try {
+                        this.quantities[qtyName].unit = this.getQuantityUnit(qtyName);
+                    } catch (e) {
+                        var message = "Error evaluating unit of " + qtyName + ": ";
+                        e.message = message + e.message;
+                        
+                        throw e;
+                    }
+                }
+            }
         },
 
         /**
@@ -508,15 +559,20 @@ define(["model/analyser/analyser",
          * @modifies this.source
          * @param {Boolean} includeComments (optional) Whether to include the comments belonging to the quantities
          * in the source
+         * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only 
+         * those provided by the user.
          * @return {String} A single line containing all quantity definitions in the script.
          */
-        toString: function(includeUnits, includeComments) {
+        toString: function(includeUnits, includeComments, includeCheckedUnits) {
             // Make parameter optional by setting value if undefined
             if (typeof includeUnits === 'undefined') {
                 includeUnits = false;
             }
             if (typeof includeComments === 'undefined') {
                 includeComments = false;
+            }
+            if (typeof includeCheckedUnits === 'undefined') {
+                includeCheckedUnits = false;
             }
 
             // Iterate through all quantities and append their string representation to the source code
@@ -526,7 +582,7 @@ define(["model/analyser/analyser",
 
                 // Do not include quantities in the script string that are undefined!
                 if (!qty.todo) {
-                    lines.push(qty.toString(includeUnits, includeComments));
+                    lines.push(qty.toString(includeUnits, includeComments, includeCheckedUnits));
                 }
             }
 

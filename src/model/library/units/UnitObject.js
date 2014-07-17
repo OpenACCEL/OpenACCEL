@@ -32,7 +32,7 @@ function UnitObject(value, unit, error) {
      *
      * @type {Object}
      */
-    this.unit = (typeof unit !== "undefined") ? unit : {};
+    this.unit = (typeof unit !== "undefined" || unit === '') ? unit : {};
 
     /**
      * A possible error that could be the result of an invalid
@@ -345,3 +345,12 @@ UnitObject.prototype.power = function(exponent) {
     ans.clean();
     return ans;
 }
+
+/**
+ * Serialises the unit to string representation for display in e.g. the UI
+ * 
+ * @return {String} The string representation of the unit of this UnitObject
+ */
+UnitObject.prototype.unitToString = function() {
+    return this.unit;
+};
