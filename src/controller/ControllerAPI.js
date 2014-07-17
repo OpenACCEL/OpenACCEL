@@ -223,34 +223,21 @@ define(["model/script",
             // Check syntax and build the script from the given source
             this.setScriptFromSource(source);
 
-            // Check whether the script is complete and compiled. If not, try to compile it
-            if (!this.script.isCompiled() ) {
-                // If the script is complete compile it and proceed with checking units
-                if (this.compileScript(this.script) ) {
-                    // Load the units
-                    this.loadUnitsLib();
+            // Load the units
+            this.loadUnitsLib();
 
-                    // Change the evaluation function of the executable to be the function
-                    // that evaluates only the values without the units
-                    this.script.exe.expr = this.script.exe.unitexpr;
+            // Change the evaluation function of the executable to be the function
+            // that evaluates only the values without the units
+            this.script.exe.setUnits(true);
 
-                    // Let the script check units
-                    try {
-                        this.script.checkUnits();
-                    } catch(e) {
-                        // Make sure to change the function pointer back and load the standard
-                        // library again!
-                        this.script.exe.expr = this.script.exe.stdexpr;
-                        this.loadStandardLib();
-
-                        throw e;
-                    }
-                    
-                    // Change the function pointer back and load the standard
-                    // library again
-                    this.script.exe.expr = this.script.exe.stdexpr;
-                    this.loadStandardLib();
-                }
+            // Let the script check units
+            try {
+                this.script.checkUnits();
+            } catch(e) {
+                throw e;
+            } finally {
+                this.script.exe.setUnits(false);
+                this.loadStandardLib();
             }
         };
 

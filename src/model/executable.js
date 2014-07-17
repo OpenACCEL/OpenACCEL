@@ -218,6 +218,20 @@ define([], /**@lends Model*/ function() {
     };
 
     /**
+     * Sets whether the executable should execute the standard or unit expresison for all quantities.
+     * @param {Boolean} bUnits Whether the unit expression should be evaluated for all quantities.
+     */
+    Executable.prototype.setUnits = function(bUnits) {
+        for (var qty in this.report) {
+            if (bUnits) {
+                this[qty].expr = this[qty].unitexpr;
+            } else {
+                this[qty].expr = this[qty].stdexpr;
+            }
+        }
+    }
+
+    /**
      * Gets the unit of the given quantity.
      * 
      * @param  {String} quantity name of the quantity
