@@ -78,15 +78,11 @@ macro func {
 
                 if (quantity.unit && (category === 1 || category === 3)) {
                     /**
-                     * If the expression is a scalar, we put it in a unit object and give it the
-                     * unit of the quantity. Else, we will overwrite the unit of the returned unit object.
+                     * Perform an automapping over the answer.
+                     * This will turn each scalar element into a UnitObject with the unit
+                     * as determined by the user.
                      */
-                    if (ans instanceof UnitObject) {
-                        ans.setUnit(quantity.unit);
-                    } else {
-                        // We're dealing with arrays or scalar values, thus we need to zip (auto-map).
-                        ans = UnitObject.prototype.create(ans, quantity.unit);
-                    }
+                    ans = UnitObject.prototype.create(ans, quantity.unit);
                 } else {
                     // This value is guaranteed to have some unit. The quantity will take this unit.
                     // (It is an intermediate or output quantity, category 2 or 4).

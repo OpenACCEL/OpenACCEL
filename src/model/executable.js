@@ -92,7 +92,7 @@ define([], /**@lends Model*/ function() {
          * Dictionary of libraries containing functions that must be accessible
          * to the code inside quantity expressions. Multiple libraries can be loaded,
          * each accessible by their own key.
-         * 
+         *
          * @type {Object}
          */
         this.libraries = {};
@@ -233,7 +233,7 @@ define([], /**@lends Model*/ function() {
 
     /**
      * Gets the unit of the given quantity.
-     * 
+     *
      * @param  {String} quantity name of the quantity
      * @pre             quantity exists in the current executable
      * @return          Unit of the quantity
@@ -241,7 +241,9 @@ define([], /**@lends Model*/ function() {
     Executable.prototype.getUnit = function(quantity) {
         var localQty = '__' + quantity + '__';
         if (this[localQty]) {
-            return this[localQty]().unitToString();
+            return JSON.stringify(zip([this[localQty]()], function(unit) {
+                return unit.unitToString();
+            }));
         } else {
             throw new Error('Executable.prototype.getUnit.pre violated :' +
                 'no Quantity named ' + quantity);

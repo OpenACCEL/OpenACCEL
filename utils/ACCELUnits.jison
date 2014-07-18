@@ -205,7 +205,7 @@ unit                    :   UNIT
                         }}
                         |   '[' vectorArgList ']'
                         {{
-                            $$ = 'objectToArray({' + $2 + '})';
+                            $$ = 'objectToArray({' + $2 + '}, true)';
                         }}
                         ;
 
