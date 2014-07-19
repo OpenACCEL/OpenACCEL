@@ -36,11 +36,19 @@ function UnitObject(value, unit, error) {
 
     /**
      * A possible error that could be the result of an invalid
-     * unit operation.
+     * unit operation. This will replace this.unit in the string
+     * representation of this unit if it's not the empty string.
      *
      * @type {String}
      */
     this.error = (typeof error !== "undefined") ? error : null;
+
+    /**
+     * A description of the unit error that occured.
+     *
+     * @type {String}
+     */
+    this.errorString = '';
 }
 
 /**
@@ -53,6 +61,7 @@ UnitObject.prototype.clone = function() {
     var ans = new UnitObject(this.value);
     ans.setUnit(this.unit);
     ans.error = this.error;
+    ans.errorString = this.errorString;
 
     return ans;
 }
@@ -130,16 +139,51 @@ UnitObject.prototype.getDenominator = function() {
  *
  * @return {String} The unit in OpenACCEL string format.
  */
-UnitObject.prototype.toString = function() {
-    if (this.isNormal()) {
-        return "1";
+UnitObject.prototype.unitToString = function() {
+    var ans = "";
+
+    if (this.error != null && this.error != '') {
+        ans = this.error;
+    } else if (this.isNormal()) {
+        ans = "1";
     } else {
-        var ans = "";
         var nominator = this.getNominator();
         var denominator = this.getDenominator();
+        var lnom = nominator.length;
+        var ldenom = denominator.length;
+
+        // Construct terms in nominator
+        if (lnom === 0) {
+            ans += "1";
+        } else {
+            for (var pos in nominator) {
+                ans += pos;
+                if (nominator[pos] > 1) {
+                    ans += nominator[pos];
+                }
+                ans += ".";
+            }
+
+            // Remove last dot from nonimator and add slash if denominator
+            ans = ans.substring(0, ans.length-1);
+        }
+
+        if (ldenom > 0) {
+            ans += "/";
+            for (var neg in denominator) {
+                ans += neg;
+                if (denominator[neg] < -1) {
+                    ans += denominator[neg];
+                }
+                ans += ".";
+            }
+
+            // Remove last dot from denominator
+            ans = ans.substring(0, ans.length-1);
+        }
     }
 
-    // TODO: Finish up.
+    return ans;
 }
 
 /**
@@ -161,6 +205,73 @@ UnitObject.prototype.create = function(values, units) {
         }
     });
 }
+
+/**
+ * Checks whether the signature of the given (array of) UnitObject(s)
+ * matches the signature of it's/their value(s)
+ *
+ * @return {Boolean} Whether the signature of value matches the signature
+ * of unit
+ */
+UnitObject.prototype.verifySignature = function(units) {
+    var val, unit;
+    if (units instanceOf Array) {
+        val = units[0].value;
+        unit = units;
+    } else {
+        val = units.value;
+        unit = units.unit;
+    }
+
+    console.log("Val: " + val);
+    console.log("Unit: " + JSON.stringify(unit));
+
+    var match = true;
+
+    // If both value and unit are scalars, they match and we are done
+    if (!(val instanceof Array) && !(unit instanceof Array)) {
+        match = true;
+    } else if ((val instanceof Array && !(unit instanceof Array)) ||
+        (unit instanceof Array && !(val instanceof Array))) {
+        // If one is an array but the other is not, we have a mismatch
+        match = false;
+    } else {
+        // Both are arrays. First check whether they have the same length
+        if (Object.keys(unit).length !== val.length) {
+            return false;
+        }
+
+        /**
+         * Check whether both unit and value have the same keys. Recursively!
+         * Start by collecting all keys from both arrays. These keys can be both numerical
+         * indices and strings.
+         */
+        var keys = [];
+        for (var key in val) { keys.push(key); }
+        for (var key in unit) { keys.push(key); }
+
+        for (var key in keys) {
+            // Check whether this key appears in both the value and unit
+            if (!val[key] || !unit[key]) {
+                match = false;
+                break;
+            } else {
+                // Both have this key. Make sure the signature of both elements is the same as well
+                match = this.verifySignature(unit[key]);
+                if (!match) {
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!match) {
+        this.error = 'unitError';
+        this.errorString = "Signature of value <" + val + "> does not match the signature of unit <" + unit + ">.";
+    }
+
+    return match;
+};
 
 /**
  * Determines whether two UnitObjects have the exact same unit.
@@ -187,23 +298,21 @@ UnitObject.prototype.equals = function(other) {
 }
 
 /**
- * Given two UnitObjects, if one of the objects contains an error, the value gets updated,
- * but the unit stays empty and the error stays the same. If none of the two objects contain
+ * Given two UnitObjects; if one of the objects contains an error, the value gets updated,
+ * the error becomes 'uncheckUnit' and the unit stays empty. If none of the two objects contain
  * an error, the function will return false.
- * 
+ *
+ * Error _strings_ are not propagated to prevent error messages from stacking up and
+ * appearing multiple times.
+ *
  * @param  {Function} f The function that zips the values of the two objects together when there is an error.
  * @param  {UnitObject} other
  * @return A UnitObject with error and updated value if x or y contains an error. False otherwise.
  */
 UnitObject.prototype.propagateError = function(f, other) {
     // Check for errors on the left hand side.
-    if (this.unit.error) {
-        return new UnitObject(f(this.value, other.value), {}, this.unit.error);
-    }
-
-    // Check for errors on the right hand side.
-    if (other.unit.error) {
-        return new UnitObject(f(this.value, other.value), {}, other.unit.error);
+    if ((this.error != null && this.error != '') || (other.error != null && other.error != '')) {
+        return new UnitObject(f(this.value, other.value), {}, 'uncheckedUnit');
     }
 
     return false;
@@ -242,10 +351,13 @@ UnitObject.prototype.add = function(other) {
 
     // Check whether the dimensions of the two objects are equal.
     // Otherwise, return a UnitObject with error and no unit.
+    var ans;
     if(!this.equals(other)) {
-        return new UnitObject(this.value + other.value, {}, "Addition unit mismatch.");
+        ans = new UnitObject(this.value + other.value, {}, "unitError");
+        ans.errorString = "Addition mismatch";
+        return ans;
     } else {
-        var ans = this.clone();
+        ans = this.clone();
         ans.value += other.value;
         return ans;
     }
@@ -268,10 +380,13 @@ UnitObject.prototype.subtract = function(other) {
 
     // Check whether the dimensions of the two objects are equal.
     // Otherwise, return a UnitObject with error and no unit.
+    var ans;
     if(!this.equals(other)) {
-        return new UnitObject(this.value - other.value, {}, "Subtraction unit mismatch.");
+        ans = new UnitObject(this.value - other.value, {}, "unitError");
+        ans.errorString = "Subtract mismatch";
+        return ans;
     } else {
-        var ans = this.clone();
+        ans = this.clone();
         ans.value -= other.value;
         return ans;
     }
@@ -292,14 +407,15 @@ UnitObject.prototype.multiply = function(other) {
     }
 
     // Identity * Unit = Unit.
+    var ans;
     if (this.isNormal()) {
-        var ans = other.clone();
+        ans = other.clone();
         ans.value *= this.value;
         return ans;
     }
 
     // Copy over the units of the left hand side and multiply the values.
-    var ans = this.clone();
+    ans = this.clone();
     ans.value *= other.value;
 
     // Unit * Identity = Unit.
@@ -322,18 +438,24 @@ UnitObject.prototype.multiply = function(other) {
 }
 
 UnitObject.prototype.power = function(exponent) {
+    var ans;
+
     // The exponent must be unitless.
     // Take note however, that the exponent will also always be a UnitObject.
     if (exponent.hasUnit()) {
-        return new UnitObject(Math.pow(this.value, exponent.value), { }, "Exponent is not unitless.")
+        ans = new UnitObject(Math.pow(this.value, exponent.value), { }, "unitError");
+        ans.errorString = "Exponent is not unitless";
+        return ans;
     }
 
     // Throw an error if the exponent is not an integer.
-    if (exponent.value % 1 !== 0) {
-        return new UnitObject(Math.pow(this.value, exponent), { }, "Non integer exponent.");
+    if (exponent % 1 !== 0) {
+        ans = new UnitObject(Math.pow(this.value, exponent), { }, "unitError");
+        ans.errorString = "Non integer exponent";
+        return ans;
     }
 
-    var ans = this.clone();
+    ans = this.clone();
     ans.value = Math.pow(ans.value, exponent);
 
     // Only modify the units if there's no error.
@@ -346,12 +468,3 @@ UnitObject.prototype.power = function(exponent) {
     ans.clean();
     return ans;
 }
-
-/**
- * Serialises the unit to string representation for display in e.g. the UI
- * 
- * @return {String} The string representation of the unit of this UnitObject
- */
-UnitObject.prototype.unitToString = function() {
-    return this.unit;
-};

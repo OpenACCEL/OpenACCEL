@@ -76,13 +76,17 @@ macro func {
                 var category = this.report.$x.category;
                 var quantity = this.$x;
 
-                if (quantity.unit && (category === 1 || category === 3)) {
+                if (quantity.unit && (category === 1 || category === 3 ||
+                    (this.report.$x.dependencies.length == 0 && this.report.$x.reverseDeps.length == 0))) {
                     /**
                      * Perform an automapping over the answer.
                      * This will turn each scalar element into a UnitObject with the unit
                      * as determined by the user.
                      */
                     ans = UnitObject.prototype.create(ans, quantity.unit);
+
+                    // Check whether the signature of the unit matches that of it's value.
+                    UnitObject.prototype.verifySignature(ans);
                 } else {
                     // This value is guaranteed to have some unit. The quantity will take this unit.
                     // (It is an intermediate or output quantity, category 2 or 4).
@@ -90,8 +94,12 @@ macro func {
                         return x.unit;
                     });
                 }
+            }
 
-                return ans;
+            // Store any textual description of errors that might have occured during the checking of
+            // this unit in the Executable so they can be retrieved later (after all units have been checked).
+            if (ans.error != null && ans.errorString != '') {
+                this.unitErrors.push(ans.errorString);
             }
 
             return ans;

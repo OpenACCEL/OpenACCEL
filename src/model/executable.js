@@ -14,7 +14,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /**@lends Model*/ function() {
+define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeError) {
 
     /**
      * @class
@@ -96,6 +96,15 @@ define([], /**@lends Model*/ function() {
          * @type {Object}
          */
         this.libraries = {};
+
+        /**
+         * An array of descriptions of errors that occured during unit checking.
+         * Errors that occur during checking are stored in this array but the checking
+         * will continue instead of aborting.
+         *
+         * @type {Array}
+         */
+        this.unitErrors = [];
     }
 
 
@@ -229,6 +238,11 @@ define([], /**@lends Model*/ function() {
                 this[qty].expr = this[qty].stdexpr;
             }
         }
+
+        // Clear unit errors that may have been left over from previous checks
+        if (bUnits) {
+            this.unitErrors = [];
+        }
     }
 
     /**
@@ -241,12 +255,67 @@ define([], /**@lends Model*/ function() {
     Executable.prototype.getUnit = function(quantity) {
         var localQty = '__' + quantity + '__';
         if (this[localQty]) {
-            return JSON.stringify(zip([this[localQty]()], function(unit) {
-                return unit.unitToString();
-            }));
+            var unit;
+            try {
+                unit = this[localQty]();
+            } catch (e) {
+                throw new RuntimeError("Error evaluating unit of quantity " + quantity + ": " + e.message);
+            }
+
+            return this.serialiseUnit(unit);
         } else {
             throw new Error('Executable.prototype.getUnit.pre violated :' +
                 'no Quantity named ' + quantity);
+        }
+    };
+
+    /**
+     * Returns all errors that occured during unit checking as a single string.
+     * @return {String} A string containing all errors that occured during unit checking, or false
+     * when no errors occured.
+     */
+    Executable.prototype.getUnitErrors = function() {
+        if (this.unitErrors.length === 0) {
+            return false;
+        }
+
+        var ans = 'The following errors occured during unit checking: \n\n';
+
+        for (var err in this.unitErrors) {
+            ans += this.unitErrors[err] + "\n"
+        }
+
+        return ans;
+    };
+
+    /**
+     * Serialises the given unit, or array of units, to string format.
+     *
+     * @param  {UnitObject} unit (Array of) UnitObject(s) to serialise
+     * @return {String} The string representation of the given units.
+     */
+    Executable.prototype.serialiseUnit = function(unit) {
+        // Handle both arrays of units and single UnitObjects
+        if (unit instanceof Array) {
+            var ans = '[';
+            for (var elem in unit) {
+                // Key can be either a named key or integer
+                if (parseInt(elem) == elem) {
+                    // Unnamed element
+                    ans += this.serialiseUnit(unit[elem]);
+                } else {
+                    ans += elem.toString() + ": " + this.serialiseUnit(unit[elem]);
+                }
+                ans += ", ";
+            }
+
+            // Remove last comma from array contents
+            ans = ans.substring(0, ans.length-2);
+            ans += "]";
+
+            return ans;
+        } else {
+            return unit.unitToString();
         }
     };
 

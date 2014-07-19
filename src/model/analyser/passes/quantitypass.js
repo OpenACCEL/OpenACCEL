@@ -137,7 +137,7 @@ define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
 
         // check whether qty.definition contains a time dependent function
         // Do NOT edit the line below. Placeholder will be automatically replaced at build time.
-        var timeDependencies = ["--TIME-DEPENDENCY-PLACEHOLDER--"];
+        var timeDependencies = ["slider", "check", "button", "input", "getTime", "random", "cursorX", "cursorY", "cursorB"];
         for (var i = timeDependencies.length - 1; i >= 0; i--) {
             if (qty.definition.indexOf(timeDependencies[i]) >= 0) {
                 return true;

@@ -70,12 +70,25 @@ define([], /**@lends Model.Quantity */ function() {
         this.category = null;
 
         /**
-         * The unit of this quantity in a String format. If no unit is defined, the unit is
-         * the empty string ''. Example: If the script contains a line 'a = 4 ; kg.m/s2'
-         * then the unit of quantity a is 'kg.m/s2'.
+         * The _provided_ unit of this quantity in a String format. If no unit is defined by
+         * the user, the unit is the empty string ''. Example: If the script contains a line
+         * 'a = 4 ; kg.m/s2' then the unit of quantity a is 'kg.m/s2'. This value might be different
+         * from the checkedUnit attribute, as the given unit may contain errors or may be overwritten
+         * by computed units during checking.
+         *
          * @type {String}
          */
         this.unit = '';
+
+        /**
+         * The actual, 'correct' unit value of this quantity, as computed by the system when unit
+         * checking is being performed. This can be the same as the provided unit if the provided unit
+         * was correct and has not been overwritten, or can have the value 'unitError' if the given unit
+         * was incorrect.
+         *
+         * @type {String}
+         */
+        this.checkedUnit = '';
 
         /**
          * The parameters of this quantity. If the quantity is not a function, this will be
@@ -211,8 +224,8 @@ define([], /**@lends Model.Quantity */ function() {
      *
      * @param {Boolean} includeUnits Whether to include the unit in the string representation
      * @param {Boolean} includeComments Whether to include the comment in the string representation
-     * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only 
-     * those provided by the user.
+     * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only
+     * those provided by the user. Only regarded when includeUnits is true.
      * @return {String} The script line corresponding to this quantity, optionally with
      * unit and comment
      */
@@ -221,9 +234,16 @@ define([], /**@lends Model.Quantity */ function() {
 
         // Only include the unit of this quantity (if it has one) if it's a category 1 or 3 quantity
         // or when told to include checked units as well
-        if (includeUnits && this.unit != '' && (includeCheckedUnits || (this.category == 1 || this.category == 3))) {
-            def += ' ; ' + this.unit;
+        if (includeUnits) {
+            if (includeCheckedUnits && this.checkedUnit != '') {
+                // Include the checked unit
+                def += ' ; ' + this.checkedUnit;
+            } else if (this.unit != '') {
+                // Include the provided unit if one was provided
+                def += ' ; ' + this.unit;
+            }
         }
+
         if (includeComments && this.comment.length > 0) {
             var comment = '';
 

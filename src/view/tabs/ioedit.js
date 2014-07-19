@@ -33,9 +33,10 @@ function checkUnits() {
 	try {
 		var source = $('#scriptarea').val();
 		controller.checkUnits(source);
-		synchronizeScriptArea(true);
 	} catch (e) {
 		alert(e.message);
+	} finally {
+		synchronizeScriptArea(true);
 	}
 }
 

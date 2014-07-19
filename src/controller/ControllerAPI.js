@@ -221,13 +221,14 @@ define(["model/script",
          */
         Controller.prototype.checkUnits = function(source) {
             // Check syntax and build the script from the given source
-            this.setScriptFromSource(source);
+            this.setScriptFromSource(source, true);
+            this.compileScript(this.script);
 
             // Load the units
             this.loadUnitsLib();
 
             // Change the evaluation function of the executable to be the function
-            // that evaluates only the values without the units
+            // that evaluates the quantity units together with their values
             this.script.exe.setUnits(true);
 
             // Let the script check units
@@ -745,7 +746,7 @@ define(["model/script",
         /**
          * Compiles the given script if the todo-list is empty.
          *
-         * @pre    script != null && script != 
+         * @pre    script != null && script !=
          * @param  script {Script} The script to compile
          * @return Whether the script has been compiled
          */
@@ -940,7 +941,7 @@ define(["model/script",
          * in the output.
          * @param {Boolean} includeComments (optional) Whether to include the
          * comments belonging to the quantities in the output
-         * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only 
+         * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only
          * those provided by the user.
          * @return {String} The source code of the current script, with or without
          * units and comments as specified.
@@ -950,7 +951,7 @@ define(["model/script",
             if (typeof includeCheckedUnits === 'undefined') {
                 includeCheckedUnits = false;
             }
-            
+
             return this.script.toString(includeUnits, includeComments, includeCheckedUnits);
         };
 
@@ -979,7 +980,7 @@ define(["model/script",
             // Stop the current model and create a new script with the
             // given source
             this.newScript(!restoring);
-            var added = this.script.addSource(source, restoring);
+            var added = this.script.addSource(source);
             this.view.setQuantities(this.script.getQuantities());
 
             // Test whether we're in the process of restoring a script from the backup

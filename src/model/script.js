@@ -222,15 +222,7 @@ define(["model/analyser/analyser",
                 'script not compiled')
             }
 
-            // Try evaluating the value. Throw RuntimeError if an error is thrown
-            var unit;
-            try {
-                unit = this.exe.getUnit(qtyName);
-            } catch(e) {
-                throw new RuntimeError(e.message);
-            }
-
-            return unit;
+            return this.exe.getUnit(qtyName);
         },
 
         /**
@@ -391,15 +383,16 @@ define(["model/analyser/analyser",
          */
         checkUnits: function() {
             if (this.isCompiled()) {
+                // First just check all units, skipping over errors
                 for (var qtyName in this.quantities) {
-                    try {
-                        this.quantities[qtyName].unit = this.getQuantityUnit(qtyName);
-                    } catch (e) {
-                        var message = "Error evaluating unit of " + qtyName + ": ";
-                        e.message = message + e.message;
-                        
-                        throw e;
-                    }
+                    this.quantities[qtyName].checkedUnit = this.getQuantityUnit(qtyName);
+                }
+
+                // Now that we checked all units, check whether any errors occured and if so
+                // throw them
+                var errors = this.exe.getUnitErrors();
+                if (errors !== false) {
+                    throw new RuntimeError(errors);
                 }
             }
         },
@@ -559,7 +552,7 @@ define(["model/analyser/analyser",
          * @modifies this.source
          * @param {Boolean} includeComments (optional) Whether to include the comments belonging to the quantities
          * in the source
-         * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only 
+         * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only
          * those provided by the user.
          * @return {String} A single line containing all quantity definitions in the script.
          */
