@@ -1,0 +1,23 @@
+function tan(x) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + arguments.callee.name +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
+
+    return unaryZip(x, function(a) {
+        if (!(a instanceof UnitObject)) {
+            return new UnitObject(a);
+        }
+        
+        var std_tan = exe.lib.std.tan;
+
+        if (a.hasUnit()) {
+            return new UnitObject(std_tan(a.value), {}, "Tan should be unitless.");
+        } else {
+            var ans = a.clone()
+            ans.value = std_tan(a.value);
+            return ans;
+        }
+    });
+}
+

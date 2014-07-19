@@ -4,7 +4,15 @@ function multiply(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     return zip([x, y], function(a, b) {
-        return a * b;
+        if (!(a instanceof UnitObject)) {
+            a = new UnitObject(a);
+        }
+
+        if (!(b instanceof UnitObject)) {
+            b = new UnitObject(b);
+        }
+
+        return a.multiply(b);
     });
 }
 

@@ -5,7 +5,15 @@ function add(x, y) {
     }
 
     return zip([x, y], function(a, b) {
-        return UnitObject.prototype.add(a, b);
+        if (!(a instanceof UnitObject)) {
+            a = new UnitObject(a);
+        }
+
+        if (!(b instanceof UnitObject)) {
+            b = new UnitObject(b);
+        }
+
+        return a.add(b);
     });
 }
 
