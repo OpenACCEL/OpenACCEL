@@ -208,38 +208,29 @@ UnitObject.prototype.create = function(values, units) {
 
 /**
  * Checks whether the signature of the given (array of) UnitObject(s)
- * matches the signature of it's/their value(s)
+ * matches the signature of it's/their value(s).
  *
- * @return {Boolean} Whether the signature of value matches the signature
- * of unit
+ * @param {Object} val The value to match against unit
+ * @return {UnitObject} The given (array of) UnitObject(s) if the signature is correct,
+ * or a new UnitObject with an error if not.
  */
-UnitObject.prototype.verifySignature = function(units) {
-    var val, unit;
-    if (units instanceof Array) {
-        val = units[0].value;
-        unit = units;
-    } else {
-        val = units.value;
-        unit = units.unit;
-    }
-
-    console.log("Val: " + val);
-    console.log("Unit: " + JSON.stringify(unit));
-
+UnitObject.prototype.verifySignature = function(val, unit) {
     var match = true;
 
     // If both value and unit are scalars, they match and we are done
     if (!(val instanceof Array) && !(unit instanceof Array)) {
         match = true;
-    } else if ((val instanceof Array && !(unit instanceof Array)) ||
-        (unit instanceof Array && !(val instanceof Array))) {
+    } else if (((val instanceof Array) && !(unit instanceof Array)) ||
+        (!(val instanceof Array) && (unit instanceof Array))) {
         // If one is an array but the other is not, we have a mismatch
         match = false;
     } else {
         // Both are arrays. First check whether they have the same length
-        if (Object.keys(unit).length !== val.length) {
+        // NOTE: check disabled because keys.length returns incorrect number
+        // with named vectors
+        /*if (Object.keys(unit).length !== val.length) {
             return false;
-        }
+        }*/
 
         /**
          * Check whether both unit and value have the same keys. Recursively!
@@ -252,22 +243,17 @@ UnitObject.prototype.verifySignature = function(units) {
 
         for (var key in keys) {
             // Check whether this key appears in both the value and unit
-            if (!val[key] || !unit[key]) {
+            if (!val[keys[key]] || !unit[keys[key]]) {
                 match = false;
                 break;
             } else {
                 // Both have this key. Make sure the signature of both elements is the same as well
-                match = this.verifySignature(unit[key]);
+                match = this.verifySignature(val[keys[key]], unit[keys[key]]);
                 if (!match) {
                     break;
                 }
             }
         }
-    }
-
-    if (!match) {
-        this.error = 'unitError';
-        this.errorString = "Signature of value <" + val + "> does not match the signature of unit <" + unit + ">.";
     }
 
     return match;

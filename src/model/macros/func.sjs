@@ -78,15 +78,18 @@ macro func {
 
                 if (quantity.unit && (category === 1 || category === 3 ||
                     (this.report.$x.dependencies.length == 0 && this.report.$x.reverseDeps.length == 0))) {
-                    /**
-                     * Perform an automapping over the answer.
-                     * This will turn each scalar element into a UnitObject with the unit
-                     * as determined by the user.
-                     */
-                    ans = UnitObject.prototype.create(ans, quantity.unit);
-
                     // Check whether the signature of the unit matches that of it's value.
-                    UnitObject.prototype.verifySignature(ans);
+                    if (Object.keys(quantity.unit).length === 0 || UnitObject.prototype.verifySignature(ans, quantity.unit)) {
+                        /**
+                         * Perform an automapping over the answer.
+                         * This will turn each scalar element into a UnitObject with the unit
+                         * as determined by the user.
+                         */
+                        ans = UnitObject.prototype.create(ans, quantity.unit);
+                    } else {
+                        ans = new UnitObject(ans, quantity.unit, 'unitError');
+                        ans.errorString = "Signature of quantity " + this.report.$x.name + " is incorrect";
+                    }
                 } else {
                     // This value is guaranteed to have some unit. The quantity will take this unit.
                     // (It is an intermediate or output quantity, category 2 or 4).

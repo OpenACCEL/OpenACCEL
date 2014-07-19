@@ -304,7 +304,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
                     // Unnamed element
                     ans += this.serialiseUnit(unit[elem]);
                 } else {
-                    ans += elem.toString() + ": " + this.serialiseUnit(unit[elem]);
+                    ans += elem.toString() + ":" + this.serialiseUnit(unit[elem]);
                 }
                 ans += ", ";
             }

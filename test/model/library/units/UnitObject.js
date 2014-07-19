@@ -96,7 +96,7 @@ suite("Unit Object", function() {
             var e = a.add(c);
             assert.equal(e.equals(a), false);
             assert.equal(e.value, 11);
-            assert.equal(e.error, "Addition unit mismatch.")
+            assert.equal(e.errorString, "Addition mismatch")
 
             // Commutativity.
             var f = b.add(a);
@@ -107,7 +107,7 @@ suite("Unit Object", function() {
             var g = c.add(a);
             assert.equal(g.equals(a), false);
             assert.equal(g.value, 11);
-            assert.equal(g.error, "Addition unit mismatch.");
+            assert.equal(g.errorString, "Addition mismatch");
         });
 
         /**
@@ -127,7 +127,7 @@ suite("Unit Object", function() {
             var e = a.subtract(c);
             assert.equal(e.equals(a), false);
             assert.equal(e.value, -1);
-            assert.equal(e.error, "Subtraction unit mismatch.")
+            assert.equal(e.errorString, "Subtract mismatch")
 
             // Non-Commutativity.
             var f = b.subtract(a);
@@ -138,7 +138,7 @@ suite("Unit Object", function() {
             var g = c.subtract(a);
             assert.equal(g.equals(a), false);
             assert.equal(g.value, 1);
-            assert.equal(g.error, "Subtraction unit mismatch.");
+            assert.equal(g.errorString, "Subtract mismatch");
         });
 
         /**
