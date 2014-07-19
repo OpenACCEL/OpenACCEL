@@ -95,7 +95,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
          *
          * @type {Object}
          */
-        this.libraries = {};
+        this.lib = {};
 
         /**
          * An array of descriptions of errors that occured during unit checking.
