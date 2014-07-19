@@ -215,7 +215,7 @@ UnitObject.prototype.create = function(values, units) {
  */
 UnitObject.prototype.verifySignature = function(units) {
     var val, unit;
-    if (units instanceOf Array) {
+    if (units instanceof Array) {
         val = units[0].value;
         unit = units;
     } else {
@@ -271,7 +271,7 @@ UnitObject.prototype.verifySignature = function(units) {
     }
 
     return match;
-};
+}
 
 /**
  * Determines whether two UnitObjects have the exact same unit.
