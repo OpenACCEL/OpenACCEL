@@ -323,12 +323,13 @@ UnitObject.prototype.multiply = function(other) {
 
 UnitObject.prototype.power = function(exponent) {
     // The exponent must be unitless.
-    if (exponent instanceof UnitObject) {
+    // Take note however, that the exponent will also always be a UnitObject.
+    if (exponent.hasUnit()) {
         return new UnitObject(Math.pow(this.value, exponent.value), { }, "Exponent is not unitless.")
     }
 
     // Throw an error if the exponent is not an integer.
-    if (exponent % 1 !== 0) {
+    if (exponent.value % 1 !== 0) {
         return new UnitObject(Math.pow(this.value, exponent), { }, "Non integer exponent.");
     }
 
