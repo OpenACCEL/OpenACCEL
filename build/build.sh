@@ -101,8 +101,8 @@ deploy() {
 
     # Copy scripts.
     cp -r src/* bin/scripts
-    #find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
-    #find bin/scripts/model/library -type f -not -name "functions.js" -exec rm {} \;
+    find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
+    find bin/scripts/model/library -type f -not -name "functions.js" -exec rm {} \;
 
     # Copy images.
     cp -r src/view/img bin/img/
