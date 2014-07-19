@@ -4,24 +4,43 @@ function pow(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     return zip([x, y], function(a, b) {
-        if (a >= 0) {
-            return Math.pow(a, b);
-        } else {
-            // a<0
-            if (b > 0) {
-                return Math.pow(Math.abs(a), b);
-            } else {
-                if (b == parseInt(b)) {
-                    if ((b % 2) === 0) {
-                        return 1.0 / Math.pow(Math.abs(a), Math.abs(b));
-                    } else {
-                        return -1.0 / Math.pow(Math.abs(a), Math.abs(b));
-                    }
-                } else {
-                    throw new Error("\npower of negative number to a non-integer exponent is not defined in the real numbers (would be a complex number)");
-                }
+        if (!(a instanceof UnitObject)) {
+            return new UnitObject(a);
+        }
+
+        if (!(b instanceof UnitObject)) {
+            return new UnitObject(b);
+        }
+
+        var std_pow = exe.lib.std.pow;
+
+        // The exponent must be unitless.
+        // Take note however, that the exponent will also always be a UnitObject.
+        if (b.hasUnit()) {
+            ans = new UnitObject(std_pow(a.value, b.value), { }, "unitError");
+            ans.errorString = "Exponent is not unitless";
+            return ans;
+        }
+
+        // Throw an error if the exponent is not an integer.
+        if (b.value % 1 !== 0) {
+            ans = new UnitObject(std_pow(a.value, b.value), { }, "unitError");
+            ans.errorString = "Non integer exponent";
+            return ans;
+        }
+
+        ans = a.clone();
+        ans.value = std_pow(ans.value, b.value);
+
+        // Only modify the units if there's no error.
+        if (!ans.error) {
+            for (var key in ans.unit) {
+                ans.unit[key] *= b.value;
             }
         }
+
+        ans.clean();
+        return ans;
     });
 
 }
