@@ -11,6 +11,11 @@ function asin(x) {
 
         var std_asin = exe.lib.std.asin;
 
+        var error = a.propagateError(std_asin);
+        if (error) {
+            return error;
+        }
+
         if (a.hasUnit()) {
             return new UnitObject(std_asin(a.value), {}, "Asin should be unitless.");
         } else {

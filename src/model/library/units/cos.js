@@ -10,6 +10,10 @@ function cos(x) {
         }
 
         var std_cos = exe.lib.std.cos;
+        var error = a.propagateError(std_cos);
+        if (error) {
+            return error;
+        }
 
         if (a.hasUnit()) {
             return new UnitObject(std_cos(a.value), {}, "Cos should be unitless.");

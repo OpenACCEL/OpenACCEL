@@ -10,6 +10,10 @@ function tan(x) {
         }
         
         var std_tan = exe.lib.std.tan;
+        var error = a.propagateError(std_tan);
+        if (error) {
+            return error;
+        }
 
         if (a.hasUnit()) {
             return new UnitObject(std_tan(a.value), {}, "Tan should be unitless.");

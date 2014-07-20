@@ -10,6 +10,10 @@ function sin(x) {
         }
 
         var std_sin = exe.lib.std.sin;
+        var error = a.propagateError(std_sin);
+        if (error) {
+            return error;
+        }
 
         if (a.hasUnit()) {
             return new UnitObject(std_sin(a.value), {}, "Sin should be unitless.");

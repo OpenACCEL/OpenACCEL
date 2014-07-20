@@ -10,6 +10,10 @@ function ln(x) {
         }
 
         var std_ln = exe.lib.std.ln;
+        var error = a.propagateError(std_ln);
+        if (error) {
+            return error;
+        }
 
         if (a.hasUnit()) {
             return new UnitObject(std_ln(a.value), {}, "Ln should be unitless.");

@@ -10,6 +10,10 @@ function log(x) {
         }
 
         var std_log = exe.lib.std.log;
+        var error = a.propagateError(std_log);
+        if (error) {
+            return error;
+        }
 
         if (a.hasUnit()) {
             return new UnitObject(std_log(a.value), {}, "Log should be unitless.");

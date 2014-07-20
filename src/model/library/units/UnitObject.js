@@ -296,9 +296,15 @@ UnitObject.prototype.equals = function(other) {
  * @return A UnitObject with error and updated value if x or y contains an error. False otherwise.
  */
 UnitObject.prototype.propagateError = function(f, other) {
-    // Check for errors on the left hand side.
-    if ((this.error != null && this.error != '') || (other.error != null && other.error != '')) {
-        return new UnitObject(f(this.value, other.value), {}, 'uncheckedUnit');
+    // Check for errors on the left hand side, if present.
+    if (other) {
+        if ((this.error != null && this.error != '') || (other.error != null && other.error != '')) {
+            return new UnitObject(f(this.value, other.value), {}, 'uncheckedUnit');
+        }
+    } else {
+        if (this.error != null && this.error != '') {
+            return new UnitObject(f(this.value), {}, 'uncheckedUnit');
+        }
     }
 
     return false;

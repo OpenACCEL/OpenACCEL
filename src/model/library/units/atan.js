@@ -11,6 +11,11 @@ function atan(x) {
 
         var std_atan = exe.lib.std.atan;
 
+        var error = a.propagateError(std_atan);
+        if (error) {
+            return error;
+        }
+
         if (a.hasUnit()) {
             return new UnitObject(std_atan(a.value), {}, "Atan should be unitless.");
         } else {

@@ -11,6 +11,11 @@ function exp(x) {
 
         var std_exp = exe.lib.std.exp;
 
+        var error = a.propagateError(std_exp);
+        if (error) {
+            return error;
+        }
+
         if (a.hasUnit()) {
             return new UnitObject(std_exp(a.value), {}, "Exp should be unitless.");
         } else {

@@ -10,6 +10,10 @@ function acos(x) {
         }
 
         var std_acos = exe.lib.std.acos;
+        var error = a.propagateError(std_acos);
+        if (error) {
+            return error;
+        }
 
         if (a.hasUnit()) {
             return new UnitObject(std_acos(a.value), {}, "Acos should be unitless.");
