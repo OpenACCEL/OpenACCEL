@@ -37,7 +37,7 @@ define([], /**@lends Model.Analyser.Passes*/ function() {
 
         /**
          * Regex to get all quantity identifiers that are NOT functions
-         * 
+         *
          * Warning!
          * This regex has one capturing group
          * so to get the actual variable name, look at this subgroup,
@@ -48,7 +48,7 @@ define([], /**@lends Model.Analyser.Passes*/ function() {
 
         /**
          * Regex to get all quantity identifiers, BOTH functions and others
-         * 
+         *
          * Warning!
          * This regex has one capturing group
          * so to get the actual variable name, look at this subgroup,
@@ -59,7 +59,7 @@ define([], /**@lends Model.Analyser.Passes*/ function() {
 
         /**
          * Regex to get all quantity identifiers, BOTH functions and others
-         * 
+         *
          * Warning!
          * This regex has one capturing group
          * so to get the actual variable name, look at this subgroup,
@@ -113,7 +113,7 @@ define([], /**@lends Model.Analyser.Passes*/ function() {
         }
 
         var equalsIndex = line.indexOf('=');
-        
+
         // Is a unit defined?
         if (this.getUnits(line) === '') {
             return line.substring(equalsIndex + 1).trim();
@@ -138,16 +138,33 @@ define([], /**@lends Model.Analyser.Passes*/ function() {
                 'line is null or undefined');
         }
 
-        // ignore strings
-        var noStrings = line.replace(this.stringregex, '');
-
-        var unitStart = noStrings.lastIndexOf(';');
+        var unitStart = line.lastIndexOf(';');
+        var beforeUnit = line.substring(0, unitStart);
 
         // Is a unit defined?
         if (unitStart == -1) {
             return '';
         } else {
-            return noStrings.substring(unitStart + 1).trim();
+            // Check whether this ; occured inside a string. If so, there
+            // is not unit
+            var countSingle = 0, countDouble = 0;
+            posSingle = beforeUnit.indexOf("'");
+            posDouble = beforeUnit.indexOf('"');
+
+            while (posSingle != -1) {
+               countSingle++;
+               posSingle = beforeUnit.indexOf("'", posSingle+1);
+            }
+            while (posDouble != -1) {
+               countDouble++;
+               posDouble = beforeUnit.indexOf('"', posDouble+1);
+            }
+
+            if (countSingle % 2 !== 0 || countDouble % 2 !== 0) {
+                return '';
+            } else {
+                return line.substring(unitStart + 1).trim();
+            }
         }
     };
 

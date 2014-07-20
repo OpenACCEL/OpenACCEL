@@ -48,7 +48,7 @@ define(["model/fileloader",
          * executable Javascript code.
          *
          * Compilation is done by first parsing the source code using a lexical scanner and parser
-         * and subsequently expanding the macro's that the parser put in. 
+         * and subsequently expanding the macro's that the parser put in.
          */
         function Compiler() {
             /**
@@ -96,7 +96,7 @@ define(["model/fileloader",
 
             /**
              * Whether the standard libary is currently loaded.
-             * 
+             *
              * @type {Boolean}
              */
             this.isStandardLibLoaded = true;
@@ -147,7 +147,7 @@ define(["model/fileloader",
             // with their unit, if they have any.
             code += this.parseUnits(script);
 
-            // Create Executable with the parsed code 
+            // Create Executable with the parsed code
             exe = new Executable(code, script.getQuantities());
 
             // Store library references in the executable.
@@ -192,7 +192,7 @@ define(["model/fileloader",
         /**
          * Parse the units for each quantity separately from the source code, and add the parsed
          * information to the quantities in the executable.
-         * 
+         *
          * @param  {Script} script The entire script, including source and units.
          * @return {String}        String of executable javascript code that adds units to quanities.
          * @throws {SyntaxError}   If parsing fails
@@ -217,6 +217,7 @@ define(["model/fileloader",
 
                 return unitCode;
             } catch (e) {
+                console.log(e.message);
                 if (!e.hash) {
                     throw e;
                 }
@@ -238,7 +239,7 @@ define(["model/fileloader",
         /**
          * Loads the unit library into memory, overwriting the standard
          * library
-         * 
+         *
          * @post The unit library has been loaded into memory
          */
         Compiler.prototype.loadUnitsLib = function() {
@@ -250,7 +251,7 @@ define(["model/fileloader",
         /**
          * Loads the standard library into memory, overwriting the unit
          * library
-         * 
+         *
          * @post The standard library has been loaded into memory
          */
         Compiler.prototype.loadStandardLib = function() {
@@ -261,7 +262,7 @@ define(["model/fileloader",
 
         /**
          * Returns whether the unit library is currently in memory
-         * 
+         *
          * @return {Boolean} Whether the unit library is loaded in memory
          */
         Compiler.prototype.unitsLibLoaded = function() {
@@ -291,7 +292,7 @@ define(["model/fileloader",
          * @param {Boolean} timeDependent Whether to mark quantity and it's reverse dependencies as time dependent or not.
          */
         Compiler.prototype.setTimeDependent = function(quantity, timeDependent) {
-            // Base case: this quantity and all of it's reverse dependencies 
+            // Base case: this quantity and all of it's reverse dependencies
             // have already been marked as time-dependent
             if (this.historyChecked.indexOf(quantity.name) >= 0) {
                 return;

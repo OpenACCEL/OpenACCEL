@@ -177,6 +177,7 @@
 /* --------- Lexer definitions section --------- */
 [^\S\n]+                                                    { /* Ignore all whitespace characters except newlines */ }
 \b[a-zA-Z0-9\.\/]+\b                                        { return 'UNIT';        }
+(["][^\"]*["])|(['][^\']*['])                               { return 'STRING';      }
 "["                                                         { return '[';           }
 "]"                                                         { return ']';           }
 ":"                                                         { return ':';           }
@@ -234,6 +235,10 @@ vectorAdditionalArg     :   ',' vectorElem
                         ;
 
 vectorElem              :   UNIT ':' unit
+                            {{
+                                $$ = { index: $1, value: $3};
+                            }}
+                        |   STRING ':' unit
                             {{
                                 $$ = { index: $1, value: $3};
                             }}
