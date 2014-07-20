@@ -15,6 +15,7 @@ function editScript(script) {
 }
 
 var showValues = false;
+//var shouldCheckUnits = false;
 
 function toggleValues() {
 	showValues = !showValues;
@@ -30,14 +31,21 @@ function toggleValues() {
  * and displays them after the quantities
  */
 function checkUnits() {
-	try {
-		var source = $('#scriptarea').val();
-		controller.checkUnits(source);
-	} catch (e) {
-		alert(e.message);
-	} finally {
-		synchronizeScriptArea(true);
-	}
+	//shouldCheckUnits = !shouldCheckUnits;
+	//if (shouldCheckUnits) {
+		try {
+			var source = $('#scriptarea').val();
+			controller.checkUnits(source);
+		} catch (e) {
+			alert(e.message);
+		} finally {
+			synchronizeScriptArea(true);
+			//$('#checkunits').val('Hide units');
+		}
+	/*} else {
+		synchronizeScriptArea(false);
+		$('#checkunits').val('Check units');
+	}*/
 }
 
 //------------------------------------------------------------------------------

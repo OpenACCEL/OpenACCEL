@@ -149,8 +149,8 @@ UnitObject.prototype.unitToString = function() {
     } else {
         var nominator = this.getNominator();
         var denominator = this.getDenominator();
-        var lnom = nominator.length;
-        var ldenom = denominator.length;
+        var lnom = Object.keys(nominator).length;
+        var ldenom = Object.keys(denominator).length;
 
         // Construct terms in nominator
         if (lnom === 0) {
@@ -173,7 +173,7 @@ UnitObject.prototype.unitToString = function() {
             for (var neg in denominator) {
                 ans += neg;
                 if (denominator[neg] < -1) {
-                    ans += denominator[neg];
+                    ans += denominator[neg]*-1;
                 }
                 ans += ".";
             }
