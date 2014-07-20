@@ -327,88 +327,24 @@ UnitObject.prototype.isNormal = function() {
 }
 
 /**
- * Calculates the sum of two UnitObjects.
- * The addition of a unit with another unit with an error results in an empty unit with error.
- * The addition of two UnitObjects that do not have the exact same unit, will result
- * in a UnitObject with no error and empty unit.
- *
- * @param  {UnitObject} other The other UnitObject that should be summed with.
- * @return {UnitObject}       A new UnitObject that is the result of the addition.
- */
-UnitObject.prototype.add = function(other) {
-    var error = this.propagateError(function(x, y) { return x + y; }, other);
-    if (error) {
-        return error;
-    }
-
-    // Check whether the dimensions of the two objects are equal.
-    // Otherwise, return a UnitObject with error and no unit.
-    var ans;
-    if(!this.equals(other)) {
-        ans = new UnitObject(this.value + other.value, {}, "unitError");
-        ans.errorString = "Addition mismatch";
-        return ans;
-    } else {
-        ans = this.clone();
-        ans.value += other.value;
-        return ans;
-    }
-}
-
-/**
- * Subtracts one UnitObject from the other.
- * The subtraction of a unit with another unit with an error results in an empty unit with error.
- * The subtraction of two UnitObjects that do not have the exact same unit, will result
- * in a UnitObject with no error and empty unit.
- *
- * @param  {UnitObject} other The other UnitObject that should be subtracted.
- * @return {UnitObject}       A new UnitObject that is the result of the subtraction.
- */
-UnitObject.prototype.subtract = function(other) {
-    var error = this.propagateError(function(x, y) { return x - y; }, other);
-    if (error) {
-        return error;
-    }
-
-    // Check whether the dimensions of the two objects are equal.
-    // Otherwise, return a UnitObject with error and no unit.
-    var ans;
-    if(!this.equals(other)) {
-        ans = new UnitObject(this.value - other.value, {}, "unitError");
-        ans.errorString = "Subtract mismatch";
-        return ans;
-    } else {
-        ans = this.clone();
-        ans.value -= other.value;
-        return ans;
-    }
-}
-
-/**
- * Calculates the product of two UnitObjects.
+ * Calculates the units of the product of two UnitObjects.
  * The multiplication of a unit with unit with error results in an empty unit with error.
  * The multiplication of a unit with the normal unit results in itself.
+ *
+ * This renders the value property USELESS!
  *
  * @param  {UnitObject} other The other UnitObject that should be multiplied with.
  * @return {UnitObject}       A new UnitObject that is the result of the multiplication.
  */
 UnitObject.prototype.multiply = function(other) {
-    var error = this.propagateError(function(x, y) { return x * y; }, other);
-    if (error) {
-        return error;
-    }
-
     // Identity * Unit = Unit.
     var ans;
     if (this.isNormal()) {
-        ans = other.clone();
-        ans.value *= this.value;
-        return ans;
+        return other.clone();
     }
 
     // Copy over the units of the left hand side and multiply the values.
     ans = this.clone();
-    ans.value *= other.value;
 
     // Unit * Identity = Unit.
     if (other.isNormal()) {
@@ -429,34 +365,85 @@ UnitObject.prototype.multiply = function(other) {
     return ans;
 }
 
-UnitObject.prototype.power = function(exponent) {
+/**
+ * Calculates the units of the division of two UnitObjects.
+ * The multiplication of a unit with unit with error results in an empty unit with error.
+ * The multiplication of a unit with the normal unit results in itself.
+ *
+ * This renders the value property USELESS!
+ *
+ * @param  {UnitObject} other The other UnitObject that should be divided with.
+ * @return {UnitObject}       A new UnitObject that is the result of the division.
+ */
+UnitObject.prototype.divide = function(other) {
+    // Identity / Unit = Unit.
     var ans;
-
-    // The exponent must be unitless.
-    // Take note however, that the exponent will also always be a UnitObject.
-    if (exponent.hasUnit()) {
-        ans = new UnitObject(Math.pow(this.value, exponent.value), { }, "unitError");
-        ans.errorString = "Exponent is not unitless";
-        return ans;
+    if (this.isNormal()) {
+        return other.clone();
     }
 
-    // Throw an error if the exponent is not an integer.
-    if (exponent % 1 !== 0) {
-        ans = new UnitObject(Math.pow(this.value, exponent), { }, "unitError");
-        ans.errorString = "Non integer exponent";
-        return ans;
-    }
-
+    // Copy over the units of the left hand side and divide the values.
     ans = this.clone();
-    ans.value = Math.pow(ans.value, exponent);
 
-    // Only modify the units if there's no error.
-    if (!this.error) {
-        for (var key in ans.unit) {
-            ans.unit[key] += exponent;
+    // Unit / Identity = Unit.
+    if (other.isNormal()) {
+        return ans;
+    }
+
+    // Copy over the units of the right hand side. If the key is already present,
+    // we simply subtract the two values of that key.
+    for (var key in other.unit) {
+        if (key in ans.unit) {
+            ans.unit[key] -= other.unit[key];
+        } else {
+            ans.unit[key] = 0 - other.unit[key];
         }
     }
 
     ans.clean();
     return ans;
 }
+
+UnitObject.prototype.power = function(exponent) {
+    var ans;
+
+    // The exponent must be unitless.
+    // Take note however, that the exponent will also always be a UnitObject.
+    if (exponent.hasUnit()) {
+        ans = new UnitObject(this.value, { }, "unitError");
+        ans.errorString = "Exponent is not unitless";
+        return ans;
+    }
+
+    // Determine whether this is an inverse exponent or not.
+    var bInverse = exponent.value < 1 && exponent.value > -1;
+
+    // Throw an error if the exponent is not an integer.
+    if (!bInverse && exponent.value % 1 !== 0) {
+        ans = new UnitObject(this.value, { }, "unitError");
+        ans.errorString = "Non integer exponent";
+        return ans;
+    }
+
+    ans = this.clone();
+
+    // Only modify the units if there's no error.
+    if (!this.error) {
+        for (var key in ans.unit) {
+            ans.unit[key] *= exponent.value;
+        }
+    }
+
+    // Check if the resulting unit is still an integer when having an invert exponent.
+    if (bInverse) {
+        if (ans.unit[key] % 1 !== 0) {
+            ans.unit = {};
+            ans.error = "unitError";
+            ans.errorString = "Not all units are integers (inverse exponent)";
+        }
+    }
+
+    ans.clean();
+    return ans;
+}
+

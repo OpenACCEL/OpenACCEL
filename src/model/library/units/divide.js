@@ -4,6 +4,22 @@ function divide(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     return zip([x, y], function(a, b) {
-        return a / b;
+        if (!(a instanceof UnitObject)) {
+            a = new UnitObject(a);
+        }
+
+        if (!(b instanceof UnitObject)) {
+            b = new UnitObject(b);
+        }
+
+        var std_divide = exe.lib.std.divide;
+        var error = a.propagateError(std_divide, b);
+        if (error) {
+            return error;
+        }
+
+        var ans = a.divide(b);
+        ans.value = std_divide(a.value, b.value);
+        return ans;
     });
 }

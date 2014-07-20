@@ -12,7 +12,15 @@ function multiply(x, y) {
             b = new UnitObject(b);
         }
 
-        return a.multiply(b);
+        var std_multiply = exe.lib.std.multiply;
+        var error = a.propagateError(std_multiply, b);
+        if (error) {
+            return error;
+        }
+
+        var ans = a.multiply(b);
+        ans.value = std_multiply(a.value, b.value);
+        return ans;
     });
 }
 

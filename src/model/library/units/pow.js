@@ -13,33 +13,13 @@ function pow(x, y) {
         }
 
         var std_pow = exe.lib.std.pow;
-
-        // The exponent must be unitless.
-        // Take note however, that the exponent will also always be a UnitObject.
-        if (b.hasUnit()) {
-            ans = new UnitObject(std_pow(a.value, b.value), { }, "unitError");
-            ans.errorString = "Exponent is not unitless";
-            return ans;
+        var error = a.propagateError(std_pow, b);
+        if (error) {
+            return error;
         }
 
-        // Throw an error if the exponent is not an integer.
-        if (b.value % 1 !== 0) {
-            ans = new UnitObject(std_pow(a.value, b.value), { }, "unitError");
-            ans.errorString = "Non integer exponent";
-            return ans;
-        }
-
-        ans = a.clone();
-        ans.value = std_pow(ans.value, b.value);
-
-        // Only modify the units if there's no error.
-        if (!ans.error) {
-            for (var key in ans.unit) {
-                ans.unit[key] *= b.value;
-            }
-        }
-
-        ans.clean();
+        var ans = a.power(b);
+        ans.value = std_pow(a.value, b.value);
         return ans;
     });
 

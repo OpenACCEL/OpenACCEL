@@ -13,7 +13,22 @@ function add(x, y) {
             b = new UnitObject(b);
         }
 
-        return a.add(b);
+        var std_add = exe.lib.std.add;
+        var error = a.propagateError(std_add, b);
+        if (error) {
+            return error;
+        }
+
+        var ans;
+        if(!a.equals(b)) {
+            ans = new UnitObject(a.value + b.value, {}, "unitError");
+            ans.errorString = "Addition mismatch";
+            return ans;
+        } else {
+            ans = a.clone();
+            ans.value = std_add(a.value, b.value);
+            return ans;
+        }
     });
 }
 
