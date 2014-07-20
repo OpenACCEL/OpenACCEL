@@ -1,22 +1,22 @@
-
-
-//------------------------------------------------------------------------------
-
-function editScript(script) {
-	try {
-		controller.setScriptFromSource(script);
-	} catch (e) {
-		if (typeof(e) === 'SyntaxError') {
-			console.log(e.message);
-		} else {
-			console.log(e);
-		}
-	}
-}
-
+/**
+ * Whether to show the values of quantities inside the editor.
+ *
+ * @type {Boolean}
+ */
 var showValues = false;
+
+/**
+ * An instance of the advanced (CodeMirror) editor currently being used, if any.
+ *
+ * @type {CodeMirror}
+ */
 var editor = null;
 
+
+/**
+ * Toggles between showing and not showing the values of quantities inside
+ * the editor.
+ */
 function toggleValues() {
 	showValues = !showValues;
 	if (showValues) {
@@ -26,29 +26,75 @@ function toggleValues() {
 	}
 }
 
+/**
+ * Constructs an advanced (CodeMirror) editor and replaces the standard textarea with it.
+ */
+function constructAdvancedEditor() {
+	return cm.fromTextArea(document.getElementById('scriptarea'), {
+		lineNumbers: true,
+		mode: 'javascript',
+		theme: 'default',
+		lineWrapping: false,
+		undoDepth: 100
+		//gutters: []
+	});
+}
+
+/**
+ * Toggles between the advanced and basic editor, based on the
+ * value of the corresponding checkbox in the UI.
+ */
 function toggleCM() {
-	var useCM = $('#useCM').is(':checked');
-	if (useCM) {
+	if (usingAdvancedEditor()) {
 		// Construct CodeMirror editor from textarea
-		editor = cm.fromTextArea(document.getElementById('scriptarea'), {
-    		lineNumbers: true,
-  		});
+		editor = constructAdvancedEditor();
 	} else {
 		// Revert back to standard textarea
 		if (editor) {
 			editor.save();
 			editor.toTextArea();
+			editor = null;
 		}
 	}
 }
 
 /**
+ * Returns whether the advanced editor is currently being used
+ *
+ * @return {Boolean} Whether the advanced editor is currently being used
+ */
+function usingAdvancedEditor() {
+	return $('#useCM').is(':checked');
+}
+
+/**
+ * Causes the advanced editor, when in use, to update it's contents
+ * based on the contents of the underlying textarea.
+ */
+function updateAdvancedEditor() {
+	if (usingAdvancedEditor()) {
+		editor.setValue($('#scriptarea').val());
+		editor.refresh();
+	}
+}
+
+/**
+ * Gives focus to the advanced editor when in use, causing it to redraw.
+ */
+function focusAdvancedEditor() {
+	if (usingAdvancedEditor()) {
+		editor.focus();
+	}
+}
+
+/**
  * Performs a one-time check of the units of the quantities in the script
- * and displays them after the quantities
+ * and displays them after the quantities inside the editor
  */
 function checkUnits() {
 	$('#checkUnitsMsg').css({'color':'white', 'visibility':'visible', 'display':'block'});
 	$('#checkUnitsMsg').text('Checking units...');
+
 	setTimeout(function() {
 	try {
 		var source = $('#scriptarea').val();
@@ -65,8 +111,6 @@ function checkUnits() {
 	}}, 100);
 }
 
-//------------------------------------------------------------------------------
-
 /**
  * Retrieves the current script source from the controller and displays it in the edit area
  * @param  {Boolean} includeUnits Whether to also display checked units
@@ -77,6 +121,10 @@ function synchronizeScriptArea(includeCheckedUnits) {
 		includeCheckedUnits = false;
 	}
 
+	// Retrieve current contents of the script and update the textarea
 	var script = controller.scriptToString(true, true, includeCheckedUnits);
 	$('#scriptarea').val(script);
+
+	// Let the advanced editor update itself too, if in use
+	updateAdvancedEditor();
 }
