@@ -102,7 +102,7 @@ body div {
 	color: #ffffff;
 	font-size: 40px;
 /*	font-style: italic;*/
-	text-shadow: 2px 2px 2px #000000; 
+	text-shadow: 2px 2px 2px #000000;
 }
 #main p {
 	color: #FFFFFF;
@@ -140,7 +140,7 @@ body div {
 }
 
 .verticalmenu > a {
-	display: block;	
+	display: block;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
@@ -178,6 +178,13 @@ body div {
 	border-top: 1px #331144 solid;
 	background: #FFFFFF;
 	color: black;
+}
+
+span#checkUnitsMsg {
+	color: white;
+	font-size: 13px;
+	visibility: hidden;
+	margin-left: 14px;
 }
 
 .buttonin {
@@ -270,7 +277,7 @@ body div {
 	display: block;
 	width: 0px;
 }
-.tooltip:before { /* Tooltip border */ 
+.tooltip:before { /* Tooltip border */
 	content: '';
 	position: absolute;
 	top: -12px;
@@ -347,9 +354,9 @@ body div {
 }
 
 /**
- * 
- * EDIT / RUN 
- * 
+ *
+ * EDIT / RUN
+ *
  */
 
 #editrun {
@@ -394,13 +401,13 @@ body div {
 
 #scriptlistcontainer {
 	height: 400px;
-	overflow-x: hidden; 
-	overflow-y: auto; 
+	overflow-x: hidden;
+	overflow-y: auto;
 	padding-left: 0px;
 	padding-right: 0px;
 }
 
-#scriptlist { 
+#scriptlist {
 	display: table;
 	padding-left: 0px;
 	padding-right: 0px;
@@ -449,7 +456,7 @@ body div {
 	width: 20px;
 	height: 20px;
 	float: right;
-	background-image: url('../img/loadDot.gif'); 
+	background-image: url('../img/loadDot.gif');
 	background-size: 100%;
 	background-repeat: no-repeat;
 }
@@ -545,7 +552,7 @@ body div {
 }
 
 .checkboxin {
-	width: 20px;	
+	width: 20px;
 	position: relative;
 }
 
@@ -604,9 +611,9 @@ body div {
 }
 
 /**
- * 
+ *
  * Help / Demo
- * 
+ *
  */
 
 #helptext {
@@ -618,9 +625,9 @@ body div {
 }
 
 /**
- * 
+ *
  * IO / Edit
- * 
+ *
  */
 
 #scriptlineinfo > div > div {
@@ -639,9 +646,9 @@ body div {
 }
 
 /**
- * 
+ *
  * Genetic Optimisation
- * 
+ *
  */
 
 #GOsidebar .group {
