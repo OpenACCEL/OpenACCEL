@@ -37,7 +37,7 @@ function syntaxErrorMessage(id, error, selector) {
     var errorEnd = errorLines[error.lastLine - 1];
 
     errorLines[error.firstLine - 1] = errorEnd.substr(0, error.endPos) + '<span id = "errorlocation' + this.id + '"></span>' + errorEnd.substr(error.endPos);
-    
+
     var newsource = errorLines.join('\n');
     errorContainer.html(newsource);
 
@@ -86,7 +86,7 @@ function handleError(error) {
             errormsg = new syntaxErrorMessage(errorCount, error, '#scriptline');
             break;
         case 'TypeError':
-            //previously thrown when excessive whitespace was input 
+            //previously thrown when excessive whitespace was input
             break;
         case 'RuntimeError':
             errormsg = new runtimeErrorMessage(errorCount, error, '#scriptoptions');
@@ -129,6 +129,9 @@ $(document).ready(
                     case 'ioedit':
                         // Build script from inputted source when leaving IO/edit
                         try {
+                            if (editor) {
+                                editor.save();
+                            }
                             controller.setScriptFromSource($('#scriptarea').val());
                         } catch (e) {
 
@@ -162,7 +165,7 @@ $(document).ready(
                             } else {
                                 controller.run();
                             }
-                            
+
                         }
                         break;
                     default:
@@ -441,7 +444,7 @@ function SelectionList(selector, callback) {
         this.buffer.append(this.getItemHTML(i, item));
     };
 
-    
+
     this.initializeItem = function(i) {
         var itemselector = this.selector + 'Item' + i;
 
@@ -494,7 +497,7 @@ function encodeHTML(string) {
     return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function getPrecision(number) {        
+function getPrecision(number) {
     //To compensate for javascript's floating point errors we use a correction variable which will temporarily convert floats to ints
     var correction = 100000;
     var numberdecimals = (number * correction - Math.floor(number) * correction) / correction;

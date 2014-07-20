@@ -64,7 +64,7 @@ define(["model/fileloader",
 
             /**
              * The parser that will be used to translate ACCEL units into
-             * workable objects. This is a separate parser, as the language with units
+             * workable objects. This is a separate parser, as the language including units
              * is not a context-free language. By separating the units part from the
              * actual language part, the entire ACCEL language can be considered
              * as two context-free languages.
@@ -105,12 +105,15 @@ define(["model/fileloader",
              * The file loader is reponsible for loading all files, like macros and library functions.
              */
             this.fileLoader = new FileLoader();
+
+            // Load the macros and standard library into memory, and evaluate the library
             this.fileLoader.load("macros", "macros");
             this.fileLoader.load("functions", "library");
 
             eval.call(globalScope, this.fileLoader.getLibrary());
 
-            // Now that the std library has been loaded, we can store the function references in memory.
+            // Store a copy of the standard library in memory so it can be referenced from any other
+            // library (at the moment: the unit library)
             var library = new Library();
             for (var i = 0; i < library.std.length; ++i) {
                 var func = library.std[i];

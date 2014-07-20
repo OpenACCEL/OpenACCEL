@@ -15,6 +15,7 @@ function editScript(script) {
 }
 
 var showValues = false;
+var editor = null;
 
 function toggleValues() {
 	showValues = !showValues;
@@ -22,6 +23,22 @@ function toggleValues() {
 		$('#showvalues').val('Hide values');
 	} else {
 		$('#showvalues').val('Show values');
+	}
+}
+
+function toggleCM() {
+	var useCM = $('#useCM').is(':checked');
+	if (useCM) {
+		// Construct CodeMirror editor from textarea
+		editor = cm.fromTextArea(document.getElementById('scriptarea'), {
+    		lineNumbers: true,
+  		});
+	} else {
+		// Revert back to standard textarea
+		if (editor) {
+			editor.save();
+			editor.toTextArea();
+		}
 	}
 }
 

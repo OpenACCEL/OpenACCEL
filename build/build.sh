@@ -6,7 +6,7 @@ build() {
     jade
     documentation
     deploy
-    #post_deploy
+    post_deploy
 }
 
 # Quickbuild
@@ -14,7 +14,7 @@ quickbuild() {
     clean
     jade
     deploy
-    #post_deploy
+    post_deploy
 }
 
 # Testing.
@@ -22,7 +22,7 @@ test() {
     clean
     jade
     deploy
-    #post_deploy
+    post_deploy
     echo "Testing..."
     case "$1" in
         "") node_modules/.bin/mocha test/ -R list -u tdd --recursive --grep @benchmark --invert ;;
@@ -71,7 +71,7 @@ deploy() {
     node_modules/.bin/jison utils/ACCELUnits.jison -o src/model/unitparser.js -m amd -p lalr
 
     echo "Deploying..."
-    mkdir -p                                                                             bin/scripts
+    mkdir -p                                                                             bin/scripts/cm
 
     # Copy library files.
     cp lib/*                                                                             bin/scripts/
@@ -83,6 +83,7 @@ deploy() {
     cp node_modules/sweet.js/node_modules/escodegen/escodegen.browser.min.js             bin/scripts/escodegen.js
     cp node_modules/sweet.js/node_modules/escope/escope.js                               bin/scripts/escope.js
     cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
+    cp -r node_modules/codemirror/*                                                      bin/scripts/cm
 
     # Generating monofunc library functions.
     node ./utils/monofuncgenerator.js ./src/model/library
@@ -114,17 +115,17 @@ deploy() {
 }
 
 # Post Deployment
-# post_deploy() {
-#     # Set time depency functions in quantitypass.js
-#     path_functions="src/model/library/functions.js"
-#     path_quantitypass="bin/scripts/model/analyser/passes/quantitypass.js"
-#     regex=".isTimeDependent = true;"
-#     match=$(grep "$regex" "$path_functions")
-#     funcs=$(echo $match | sed "s@$regex@@g") # remove all occurences of regex from match
-#     funcs=$(echo $funcs | sed "s/ /\", \"/g") # replace all spaces with ", "
-#     placeholder="--TIME-DEPENDENCY-PLACEHOLDER--"
-#     sed -i "s/${placeholder}/${funcs}/g" $path_quantitypass
-# }
+post_deploy() {
+    # Set time depency functions in quantitypass.js
+    path_functions="src/model/library/functions.js"
+    path_quantitypass="bin/scripts/model/analyser/passes/quantitypass.js"
+    regex=".isTimeDependent = true;"
+    match=$(grep "$regex" "$path_functions")
+    funcs=$(echo $match | sed "s@$regex@@g") # remove all occurences of regex from match
+    funcs=$(echo $funcs | sed "s/ /\", \"/g") # replace all spaces with ", "
+    placeholder="--TIME-DEPENDENCY-PLACEHOLDER--"
+    sed -i "s/${placeholder}/${funcs}/g" $path_quantitypass
+}
 
 # Ensure each file in 'folders' with a .js extension has a new line at EOF.
 # function fixnleof() {

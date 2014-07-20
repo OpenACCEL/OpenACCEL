@@ -1,8 +1,11 @@
 var view = null;
 var controller = null;
 var canvasCreator = null;
+var cm = null;
 
-require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator"], /**@lends View*/ function(Controller, AbstractView, CanvasCreator) {
+require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator", "../cm/lib/codemirror",
+    "../cm/mode/javascript/javascript"],
+    /**@lends View*/ function(Controller, AbstractView, CanvasCreator, CodeMirror) {
     /**
      * @class
      * @classdesc Interface declaring the methods that the view with which the Controller will
@@ -120,6 +123,10 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
         handleError(error);
     };
 
+    /**
+     * Instantiate all global variables declared at the top of this file, using the
+     * loaded modules.
+     */
     canvasCreator = new CanvasCreator();
 
     view = new View(canvasCreator);
@@ -129,4 +136,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     controller.setAutoExecute(true);
     controller.autoSave = true;
     controller.restoreSavedScript();
+
+    // Setup CodeMirror instance
+    cm = CodeMirror;
 });
