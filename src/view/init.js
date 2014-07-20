@@ -168,6 +168,9 @@ $(document).ready(
 
                         }
                         break;
+                    case 'ioedit':
+                        setTimeout(function() {updateAdvancedEditor(); focusAdvancedEditor(); }, 100);
+                        break;
                     default:
                         break;
                 }

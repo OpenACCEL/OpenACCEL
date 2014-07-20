@@ -1,7 +1,33 @@
+/**
+ * The instance of the AbstractView that will communicate with the controller. Defined below.
+ *
+ * @type {AbstractView}
+ */
 var view = null;
+
+/**
+ * The controller that manages the application state. Created by the view when the view is
+ * instantiated.
+ *
+ * @type {Controller}
+ */
 var controller = null;
+
+/**
+ * The CanvasCreator is responsible for creating drawable canvases for e.g. the Network tab and
+ * script visualisations.
+ *
+ * @type {CanvasCreator}
+ */
 var canvasCreator = null;
+
+/**
+ * The CodeMirror instance used to create an advanced editor in the IO/edit tab.
+ *
+ * @type {CodeMirror}
+ */
 var cm = null;
+
 
 require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator", "../cm/lib/codemirror",
     "../cm/mode/javascript/javascript"],
@@ -20,14 +46,17 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     View.prototype = new AbstractView();
 
     /**
-     * Uses the given map of quantities to update the UI lists.
+     * Uses the given map of quantities to update the UI.
      *
      * @param quantities {map<String, Quantity>} All the quantities
      * currently in the model, including todo quantities with empty
      * definitions.
      */
     View.prototype.setQuantities = function(quantities) {
+        // Update quantity list in edit/run tab
         synchronizeScriptList(quantities);
+
+        // Update textarea/advanced editor in IO/edit
         synchronizeScriptArea();
     };
 
@@ -50,7 +79,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     };
 
     /**
-     * Show the plot canvas or hide it depending on the value of the passed parameter.
+     * Shows/hides the plot canvas.
      *
      * @param {Boolean} show Whether to show the plot.
      */
@@ -107,10 +136,11 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     };
 
     /**
-     * Resets the view to accomodate the new loaded script.
+     * Resets the view to accomodate the newly loaded script.
      */
     View.prototype.loadedNewScript = function() {
         resetEditRun();
+        synchronizeScriptArea();
     };
 
     /**

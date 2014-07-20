@@ -483,10 +483,9 @@ define(["model/script",
                 this.view.setExecuting(this.executing);
                 this.status = "Paused";
                 this.view.setStatus(this.status);
-            }
 
-            // Performance measurements
-            if (inBrowser) {
+                // Performance measurements
+            if (inBrowser && this.curMeasurement > 0) {
                 var total = this.measurements.slice(0, this.curMeasurement).reduce(function(a, b) {
                     return a + b;
                 });
@@ -495,6 +494,7 @@ define(["model/script",
 
                 console.log("Average iteration time: " + avg);
                 console.log("#Measurements: " + this.curMeasurement);
+            }
             }
         };
 
