@@ -48,6 +48,8 @@ function toggleCM() {
 	if (usingAdvancedEditor()) {
 		// Construct CodeMirror editor from textarea
 		editor = constructAdvancedEditor();
+		editor.setSize(645, 400);
+		editor.refresh();
 	} else {
 		// Revert back to standard textarea
 		if (editor) {
@@ -74,6 +76,7 @@ function usingAdvancedEditor() {
 function updateAdvancedEditor() {
 	if (usingAdvancedEditor()) {
 		editor.setValue($('#scriptarea').val());
+		editor.setSize(645, 400);
 		editor.refresh();
 	}
 }
