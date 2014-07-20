@@ -6,7 +6,7 @@ function asin(x) {
 
     return unaryZip(x, function(a) {
         if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
+            a = new UnitObject(a);
         }
 
         var std_asin = exe.lib.std.asin;

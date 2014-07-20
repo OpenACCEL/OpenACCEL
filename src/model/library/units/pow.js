@@ -5,11 +5,11 @@ function pow(x, y) {
     }
     return zip([x, y], function(a, b) {
         if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
+            a = new UnitObject(a);
         }
 
         if (!(b instanceof UnitObject)) {
-            return new UnitObject(b);
+            b = new UnitObject(b);
         }
 
         var std_pow = exe.lib.std.pow;
