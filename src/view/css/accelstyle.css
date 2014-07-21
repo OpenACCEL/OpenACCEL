@@ -26,6 +26,11 @@ body div {
 	margin: 0px;
 }
 
+.cm-red {
+	color: red;
+	font-weight: bold;
+}
+
 #container {
 	position: relative;
 }

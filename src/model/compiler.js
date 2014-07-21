@@ -151,7 +151,7 @@ define(["model/fileloader",
             code += this.parseUnits(script);
 
             // Create Executable with the parsed code
-            exe = new Executable(code, script.getQuantities());
+            exe = new Executable(code, this.quantities);
 
             // Store library references in the executable.
             exe.lib = this.libraries;
@@ -220,11 +220,14 @@ define(["model/fileloader",
 
                 return unitCode;
             } catch (e) {
-                console.log(e.message);
                 if (!e.hash) {
                     throw e;
                 }
 
+                // Syntaxerror occured if it has a 'hash' property.
+                // Add the error location to the length of the quantity definition to
+                // get the correct position!
+                console.log(e.hash);
                 var err = new SyntaxError();
 
                 err.found = e.hash.text;

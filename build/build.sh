@@ -85,6 +85,10 @@ deploy() {
     cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
     cp -r node_modules/codemirror/*                                                      bin/scripts/cm
 
+    # Copy CodeMirror ACCEL mode file
+    mkdir -p bin/scripts/cm/mode/ACCEL
+    cp utils/CodeMirror_ACCEL.js   bin/scripts/cm/mode/ACCEL/ACCEL.js
+
     # Generating monofunc library functions.
     node ./utils/monofuncgenerator.js ./src/model/library
 

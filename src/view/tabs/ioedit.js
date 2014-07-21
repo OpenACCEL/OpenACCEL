@@ -32,7 +32,7 @@ function toggleValues() {
 function constructAdvancedEditor() {
 	return cm.fromTextArea(document.getElementById('scriptarea'), {
 		lineNumbers: true,
-		mode: 'javascript',
+		mode: 'ACCEL',
 		theme: 'default',
 		lineWrapping: false,
 		undoDepth: 100
@@ -97,6 +97,9 @@ function focusAdvancedEditor() {
 function checkUnits() {
 	$('#checkUnitsMsg').css({'color':'white', 'visibility':'visible', 'display':'block'});
 	$('#checkUnitsMsg').text('Checking units...');
+	if (usingAdvancedEditor()) {
+		editor.save();
+	}
 
 	setTimeout(function() {
 	try {

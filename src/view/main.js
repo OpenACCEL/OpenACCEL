@@ -30,7 +30,7 @@ var cm = null;
 
 
 require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/graphics/canvascreator", "../cm/lib/codemirror",
-    "../cm/mode/javascript/javascript"],
+    "../cm/mode/ACCEL/ACCEL"],
     /**@lends View*/ function(Controller, AbstractView, CanvasCreator, CodeMirror) {
     /**
      * @class
