@@ -4,9 +4,10 @@
         .inline
             .label Options
             input(type = 'button', value = 'Show values' onclick = 'toggleValues()')#showvalues.buttonin.disabled
-        .inline
-            .label &nbsp;
+        .inline(style='vertical-align: bottom;')
             input(type = 'button', value = 'Check units' onclick = 'checkUnits()')#checkunits.buttonin
+        .inline(style='vertical-align: bottom;')
+            input(type = 'button', value = 'Clear unit errors' onclick = 'clearUnitErrors()')#clearerrors.buttonin
         .inline(style='vertical-align: bottom; margin-bottom: 5px;')
             span#checkUnitsMsg Checking units...
         .inline(style='float:right; margin-top: 25px; margin-right: 10px;')

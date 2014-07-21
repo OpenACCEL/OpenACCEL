@@ -192,6 +192,10 @@ span#checkUnitsMsg {
 	margin-left: 14px;
 }
 
+#clearerrors {
+	visibility: hidden;
+}
+
 .buttonin {
 	position: relative;
 	z-index: 1;

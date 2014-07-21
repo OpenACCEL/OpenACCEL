@@ -97,6 +97,7 @@ function focusAdvancedEditor() {
 function checkUnits() {
 	$('#checkUnitsMsg').css({'color':'white', 'visibility':'visible', 'display':'block'});
 	$('#checkUnitsMsg').text('Checking units...');
+	$('#clearerrors').css({'visibility':'hidden'});
 	if (usingAdvancedEditor()) {
 		editor.save();
 	}
@@ -110,11 +111,20 @@ function checkUnits() {
 	} catch (e) {
 		$('#checkUnitsMsg').css({'color':'red'});
 		$('#checkUnitsMsg').text('Unit error(s)!');
+		$('#clearerrors').css({'visibility':'visible'});
 		alert(e.message);
 	} finally {
 		synchronizeScriptArea(true);
 		setTimeout(function() {$('#checkUnitsMsg').fadeOut(400)}, 2500);
 	}}, 100);
+}
+
+/**
+ * Hides all unit errors in the script, if any.
+ */
+function clearUnitErrors() {
+	synchronizeScriptArea(false);
+	$('#clearerrors').css({'visibility':'hidden'});
 }
 
 /**

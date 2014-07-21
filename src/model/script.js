@@ -385,7 +385,13 @@ define(["model/analyser/analyser",
             if (this.isCompiled()) {
                 // First just check all units, skipping over errors
                 for (var qtyName in this.quantities) {
-                    this.quantities[qtyName].checkedUnit = this.getQuantityUnit(qtyName);
+                    var unit = this.getQuantityUnit(qtyName);
+                    this.quantities[qtyName].checkedUnit = unit;
+
+                    // Also overwrite given quantity if the quantity is correct
+                    if (unit != 'unitError' && unit != 'uncheckedUnit') {
+                        this.quantities[qtyName].unit = unit;
+                    }
                 }
 
                 // Now that we checked all units, check whether any errors occured and if so
