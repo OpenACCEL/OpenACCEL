@@ -226,7 +226,7 @@ frac        (?:\.[0-9]+)
 /** --------- Language grammar section --------- */
 
 /** Structure of ACCEL script */
-script                  : (scriptLine)* (scriptFinalLine)?
+script                  :   (scriptLine)* (scriptFinalLine)?
                         {{
                             var output = "";
 
@@ -272,7 +272,7 @@ quantityFuncDef         :   funcDef '=' expr
 quantityName            :   IDENTIFIER
                             { $$ = '__' + $1 + '__'; }
                         ;
-dummy                   : (STDFUNCTION | INPUTFUNCTION | quantityName)
+dummy                   :   (STDFUNCTION | INPUTFUNCTION | quantityName)
                         {{
                             // intiialize dummies array
                             if (!yy.dummies) {
@@ -289,7 +289,7 @@ dummy                   : (STDFUNCTION | INPUTFUNCTION | quantityName)
                             $$ = $1;
 
                         }};
-funcDef                 :  quantityName '(' dummy (funcDefAdditionalArg)* ')'
+funcDef                 :   quantityName '(' dummy (funcDefAdditionalArg)* ')'
                         {{
                             var funcName = $1 + $2 + $3;
                             if ($4 && $4.length > 0) {
@@ -333,7 +333,7 @@ uniArith                :   '-' expr %prec '!'
                         |  '!' expr
                             { $$ = 'not(' + $2 + ')'; }
                         ;
-binArith                :  /* Operator precedence defined above */
+binArith                :   /* Operator precedence defined above */
                             expr '+' expr
                             { $$ = 'add(' + $1 + ',' + $3 + ')'; }
                         |   expr '-' expr
