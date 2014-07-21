@@ -107,6 +107,93 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         this.unitErrors = [];
     }
 
+    /**
+     * Function that gets called when invoking exe.__qty__(), where qty is the quantity whose value you want.
+     * 
+     * @param {Object} The quantity in the executable whose expression you want to evaluate. Usually, this is 'this.qty'.
+     * @param {Report} The report concerning the given quantity. This will usually be 'this.report.qty'.
+     */
+    Executable.prototype.expr = function(quantity, report) {
+        /**
+         * If a quantity is time dependant and is not an input quantity, check if it already has been evaluated and if yes
+         * return the evaluated value. Else evaluate it now. This is a form of memoization/caching.
+         * Input quantities are time dependent but do not have an executable library function: their
+         * value is set by the controller when the corresponding input element is changed by the user in the UI.
+         */
+        var history = quantity.hist;
+
+        if (report.isTimeDependent) {
+            // If the current time-step value has not been evaluated yet, do it now.
+            if (history[0] === undefined) {
+                // For non-input quantities, evaluate the expression of this quantity and store it
+                // in the history datastructure
+                if (report.category !== 1) {
+                    history[0] = quantity.expr();
+                } else {
+                    // For input quantities, which do not have executable library functions,
+                    // retrieve the current value from the report and store it in the history
+                    history[0] = report.value;
+                }
+            }
+        } else {
+            // Quantity value does not change with time: check if it has been evaluated already
+            // and hasn't changed (applicable to user input). Else evaluate it now and store result
+            if (history[0] === undefined || quantity.hasChanged) {
+                history[0] = quantity.expr();
+                quantity.hasChanged = false;
+            }
+        }
+
+        return history[0];
+    };
+
+    /**
+     * When dealing with units, this function will give a given *scalar* answer the unit of the quantity
+     * for which it belongs, if that quantity is of category 1 or 3. Otherwise, the quantity's unit has just
+     * been calculated and resides in the answer. The quantity will then take over that quantity.
+     *
+     * @param {Object} The quantity in the executable whose expression you want to evaluate. Usually, this is 'this.qty'.
+     * @param {Report} The report concerning the given quantity. This will usually be 'this.report.qty'.
+     * @param The answer, or value of the quantity as been calculated by its expression.
+     */
+    Executable.prototype.unitexpr = function(quantity, report, ans) {
+        var category = report.category;
+
+        /**
+         * If the quantity has category 1 or 3, and a unit, this unit should be the unit
+         * of the final expression answer. Otherwise, the unit of the final expressions should
+         * 'overwrite' the unit of the quantity.
+         */
+        if (quantity.unit && (category === 1 || category === 3 ||
+            (report.dependencies.length == 0 && report.reverseDeps.length == 0))) {
+            // Check whether the signature of the unit matches that of it's value.
+            if (Object.keys(quantity.unit).length === 0 || UnitObject.prototype.verifySignature(ans, quantity.unit)) {
+                /**
+                 * Perform an automapping over the answer.
+                 * This will turn each scalar element into a UnitObject with the unit
+                 * as determined by the user.
+                 */
+                ans = UnitObject.prototype.create(ans, quantity.unit);
+            } else {
+                ans = new UnitObject(ans, quantity.unit, 'unitError');
+                ans.errorString = "Signature of quantity " + this.report.$x.name + " is incorrect";
+            }
+        } else {
+            // This value is guaranteed to have some unit. The quantity will take this unit.
+            // (It is an intermediate or output quantity, category 2 or 4).
+            quantity.unit = unaryZip(ans, function(x) {
+                return x.unit;
+            });
+        }
+
+        // Store any textual description of errors that might have occured during the checking of
+        // this unit in the Executable so they can be retrieved later (after all units have been checked).
+        if (ans.error != null && ans.errorString != '') {
+            this.unitErrors.push(ans.errorString);
+        }
+
+        return ans;
+    }
 
     /**
      * Puts two underscores before and after each key of the given object.

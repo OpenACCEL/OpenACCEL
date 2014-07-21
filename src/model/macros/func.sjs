@@ -17,40 +17,7 @@ macro func {
          * Code to expand the matched expression into. This code adds a method to the Executable (=this) object that returns
          * the current value for the quantity being defined in the matched expression.
          */
-        this.$x = function() {
-            // If a quantity is time dependant and is not an input quantity, check if it already has been evaluated and if yes
-            // return the evaluated value. Else evaluate it now. This is a form of memoization/caching.
-            // Input quantities are time dependent but do not have an executable library function: their
-            // value is set by the controller when the corresponding input element is changed by the user in the UI.
-            var quantity = this.$x;
-            var history = quantity.hist;
-
-            if (this.report && this.report.$x.isTimeDependent) {
-                var report = this.report.$x;
-
-                // If the current time-step value has not been evaluated yet, do it now.
-                if (history[0] === undefined) {
-                    // For non-input quantities, evaluate the expression of this quantity and store it
-                    // in the history datastructure
-                    if (report.category !== 1) {
-                        history[0] = quantity.expr();
-                    } else {
-                        // For input quantities, which do not have executable library functions,
-                        // retrieve the current value from the report and store it in the history
-                        history[0] = report.value;
-                    }
-                }
-            } else {
-                // Quantity value does not change with time: check if it has been evaluated already
-                // and hasn't changed (applicable to user input). Else evaluate it now and store result
-                if (history[0] === undefined || quantity.hasChanged) {
-                    history[0] = quantity.expr();
-                    quantity.hasChanged = false;
-                }
-            }
-
-            return history[0];
-        };
+        this.$x = function() { return this.expr(this.$x, this.report.$x); }
 
         /**
          * Function that evaluates the matched expression in the context of 'this'.
@@ -64,49 +31,7 @@ macro func {
          * This takes into account that all quantities should return objects, and all
          * library functions also return objects.
          */
-        this.$x.unitexpr = (function() {
-            /**
-             * If the quantity has category 1 or 3, and a unit, this unit should be the unit
-             * of the final expression answer. Otherwise, the unit of the final expressions should
-             * 'overwrite' the unit of the quantity.
-             */
-            var ans = $expr;
-
-            if (this.report) {
-                var category = this.report.$x.category;
-                var quantity = this.$x;
-
-                if (quantity.unit && (category === 1 || category === 3 ||
-                    (this.report.$x.dependencies.length == 0 && this.report.$x.reverseDeps.length == 0))) {
-                    // Check whether the signature of the unit matches that of it's value.
-                    if (Object.keys(quantity.unit).length === 0 || UnitObject.prototype.verifySignature(ans, quantity.unit)) {
-                        /**
-                         * Perform an automapping over the answer.
-                         * This will turn each scalar element into a UnitObject with the unit
-                         * as determined by the user.
-                         */
-                        ans = UnitObject.prototype.create(ans, quantity.unit);
-                    } else {
-                        ans = new UnitObject(ans, quantity.unit, 'unitError');
-                        ans.errorString = "Signature of quantity " + this.report.$x.name + " is incorrect";
-                    }
-                } else {
-                    // This value is guaranteed to have some unit. The quantity will take this unit.
-                    // (It is an intermediate or output quantity, category 2 or 4).
-                    quantity.unit = zip([ans], function(x) {
-                        return x.unit;
-                    });
-                }
-            }
-
-            // Store any textual description of errors that might have occured during the checking of
-            // this unit in the Executable so they can be retrieved later (after all units have been checked).
-            if (ans.error != null && ans.errorString != '') {
-                this.unitErrors.push(ans.errorString);
-            }
-
-            return ans;
-        }).bind(this);
+        this.$x.unitexpr = (function() { return this.unitexpr(this.$x, this.report.$x, $expr); }).bind(this);
 
         /**
          * Function that evaluates the matched expression in the context of 'this'.
@@ -187,14 +112,5 @@ macro func {
 
         // Memoization datastructure
         this.$x.cache = {};
-    }
-
-    /**
-     * Function declarations including units
-     */
-    rule {
-        ($x($xs (,) ...) = $expr:expr ; $dim)
-    } => {
-        func($x($xs (,) ...) = $expr)
     }
 }
