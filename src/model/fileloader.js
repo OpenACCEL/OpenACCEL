@@ -35,6 +35,8 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
          * List of loaded utility functions. At the moment of writing, this could for exmaple contain the binaryZip function.
          */
         this.library = {};
+        this.library.std = {};
+        this.library.unit = {};
     }
 
     /**
@@ -122,22 +124,15 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
             if (type == "macros" || type == "testmacros") {
                 this.macros[file] = content.toString();
             } else {
-                this.library[file] = content.toString();
+                if (type == "library") {
+                    this.library.std[file] = content.toString();
+                } else if (type == "unitlibrary") {
+                    this.library.unit[file] = content.toString();
+                }
             }
             return true;
         } else {
             return false;
-        }
-    };
-
-    /**
-     * Unloads the library file with the given name, if it is
-     * currently in memory.
-     * @param  {name} name The name of the library file to remove from memory
-     */
-    FileLoader.prototype.unload = function(name) {
-        if (name in this.library) {
-            delete this.library[name];
         }
     };
 
@@ -157,15 +152,35 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
     };
 
     /**
-     * Concatenates all loaded macros into a single string for Sweet.
-     *
+     * Concatenates all loaded macros into a single string.
+     * When the lib parameter has not been given, the function will default to the standard library.
+     * 
+     * @param {String} lib The library to return.
      * @returns {String} A string of all loaded macros.
      */
-    FileLoader.prototype.getLibrary = function() {
+    FileLoader.prototype.getLibrary = function(lib) {
         var output = "";
 
-        for (var key in this.library) {
-            output += this.library[key];
+        if (lib) {
+            switch (lib) {
+                case "library":
+                    lib = "std";
+                    break;
+                case "unitlibrary":
+                    lib = "unit";
+                    break;
+                default:
+                    lib = "std";
+                    break;
+            }
+
+            for (var key in this.library[lib]) {
+                output += this.library[lib][key];
+            }
+        } else {
+            for (var key in this.library.std) {
+                output += this.library.std[key];
+            }
         }
 
         return output;

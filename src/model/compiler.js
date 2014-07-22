@@ -109,6 +109,7 @@ define(["model/fileloader",
             // Load the macros and standard library into memory, and evaluate the library
             this.fileLoader.load("macros", "macros");
             this.fileLoader.load("functions", "library");
+            this.fileLoader.load("functions", "unitlibrary");
 
             eval.call(globalScope, this.fileLoader.getLibrary());
 
@@ -249,8 +250,7 @@ define(["model/fileloader",
          * @post The unit library has been loaded into memory
          */
         Compiler.prototype.loadUnitsLib = function() {
-            this.fileLoader.load("functions", "unitlibrary");
-            eval.call(globalScope, this.fileLoader.getLibrary());
+            eval.call(globalScope, this.fileLoader.getLibrary("unitlibrary"));
             this.isStandardLibLoaded = false;
         };
 
@@ -261,7 +261,6 @@ define(["model/fileloader",
          * @post The standard library has been loaded into memory
          */
         Compiler.prototype.loadStandardLib = function() {
-            this.fileLoader.load("functions", "library");
             eval.call(globalScope, this.fileLoader.getLibrary());
             this.isStandardLibLoaded = true;
         };
