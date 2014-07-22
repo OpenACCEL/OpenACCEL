@@ -14,7 +14,7 @@ suite("Min Library", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for min.
@@ -39,6 +39,32 @@ suite("Min Library", function() {
             var input = "x = min([1,2], [3,4])";
             var output = compiler.compile(new script(input));
             assert.deepEqual([Math.min(1, 3), Math.min(2, 4)], output.__x__());
+        });
+    });
+
+    suite("| Units", function() {
+        test("| Non-equal units", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "x = 5; kg\n" +
+            "y = 6; s\n" +
+            "z = atan2(x, y)";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+            assert.throws(output.__z__());
+        });
+
+        test("| Equal units", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "x = 5; kg\n" +
+            "y = 6; kg\n" +
+            "z = atan2(x, y)";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+            var z = output.__z__();
+            assert.equal(z.value, Math.atan2(5, 6));
+            assert.equal(true, z.equals(new UnitObject(0, {'kg': 1})));
         });
     });
 });
