@@ -86,7 +86,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 url: "scripts/model/" + location + "/" + file + extension,
                 success: function(result) {
                     if (!result) {
-                        console.log("Macro " + file + " was not ok? Help!?");
+                        console.log("File " + file + " was not ok? Help!?");
                         console.log(file + ": " + result);
                         return false;
                     }
