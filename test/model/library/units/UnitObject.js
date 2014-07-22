@@ -76,41 +76,6 @@ suite("Unit Object", function() {
         });
 
         /**
-         * The addition of two UnitObjects.
-         *
-         * @input:      a = new UnitObject(5, {'kg': 1})
-         *              b = new UnitObject(10, {'kg': 1})
-         *              c = new UnitObject(6, {'kg': 2})
-         */
-        test("| Addition", function() {
-            eval(fileLoader.getContent());
-            var a = new UnitObject(5, {'kg': 1});
-            var b = new UnitObject(10, {'kg': 1});
-            var c = new UnitObject(6, {'kg': 2});
-
-            var d = a.add(b);
-            assert.equal(d.equals(a), true);
-            assert.equal(d.value, 15);
-            assert.equal(d.error, null);
-
-            var e = a.add(c);
-            assert.equal(e.equals(a), false);
-            assert.equal(e.value, 11);
-            assert.equal(e.errorString, "Addition mismatch")
-
-            // Commutativity.
-            var f = b.add(a);
-            assert.equal(f.equals(a), true);
-            assert.equal(f.value, 15);
-            assert.equal(f.error, null);
-
-            var g = c.add(a);
-            assert.equal(g.equals(a), false);
-            assert.equal(g.value, 11);
-            assert.equal(g.errorString, "Addition mismatch");
-        });
-
-        /**
          * The subtraction of two UnitObjects.
          */
         test("| Subtraction", function() {
