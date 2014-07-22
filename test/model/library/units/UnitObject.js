@@ -79,8 +79,8 @@ suite("Unit Object", function() {
          * The multiplication of two UnitObjects.
          *
          * @input:      a = new UnitObject(5, {'kg': 1, 'm': 0, 'lum': 0})
-         *              b = new UnitObject(5, {'s': -2})
-         * @expected:   a.multiply(b) == new UnitObject(25, {'kg': 1, 'm': 1, 's': -2})
+         *              b = new UnitObject(6, {'s': -2})
+         * @expected:   a.multiply(b) == new UnitObject(30, {'kg': 1, 'm': 1, 's': -2})
          */
         test("| Multiplication", function() {
             eval(fileLoader.getContent());
@@ -90,13 +90,34 @@ suite("Unit Object", function() {
 
             var c = a.multiply(b);
             assert.equal(c.equals(ans), true);
-            assert.equal(c.value, ans.value);
             assert.equal(c.error, ans.error);
 
             // Commutativity.
             var d = b.multiply(a);
             assert.equal(d.equals(ans), true);
-            assert.equal(d.value, ans.value);
+            assert.equal(d.error, ans.error);
+        });
+
+        /**
+         * The division of two UnitObjects.
+         *
+         * @input:      a = new UnitObject(5, {'kg': 1, 'm': 3, 'lum': 0})
+         *              b = new UnitObject(6, {'s': -2, 'm': 4})
+         * @expected:   a.divide(b) == new UnitObject(1, {'kg': 1, 'm': -1, 's': 2})
+         */
+        test("| Division", function() {
+            eval(fileLoader.getContent());
+            var a = new UnitObject(5, {'kg': 1, 'm': 3, 'lum': 0});
+            var b = new UnitObject(6, {'s': -2, 'm': 4});
+            var ans = new UnitObject(30, {'kg': 1, 'm': -1, 's': 2});
+
+            var c = a.divide(b);
+            assert.equal(c.equals(ans), true);
+            assert.equal(c.error, ans.error);
+
+            // Non-Commutativity.
+            var d = b.multiply(a);
+            assert.equal(d.equals(ans), false);
             assert.equal(d.error, ans.error);
         });
 
