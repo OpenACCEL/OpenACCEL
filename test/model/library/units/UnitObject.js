@@ -208,35 +208,4 @@ suite("Unit Object", function() {
             assert.equal(b.equals(expected), true);
         });
     });
-
-    // suite("| Compiled", function() {
-    //     /**
-    //      * And function should work from the executable.
-    //      *
-    //      * @input:      x = 5
-    //      *              y = and(x, true)
-    //      * @expected:   y = true
-    //      */
-    //     test("| Should expand for 'x = 5, y = and(x, true)'", function() {
-    //         var input = "x = 5\ny = and(x, true)";
-    //         var output = compiler.compile(new script(input));
-    //         assert.equal(output.__y__(), true);
-    //     });
-    //
-    //     /**
-    //      * And function should work from the executable.
-    //      *
-    //      * @input:      x = 5
-    //      *              y = and(x, true)
-    //      *              z = and(y, and(x, false))
-    //      * @expected:   y = true
-    //      *              z = false
-    //      */
-    //     test("| Should expand for 'x = 5, y = and(x, true), z = and(y, and(x, false))'", function() {
-    //         var input = "x = 5\ny = and(x, true) \nz = and(y, and(x, false))";
-    //         var output = compiler.compile(new script(input));
-    //         assert.equal(output.__y__(), true);
-    //         assert.equal(output.__z__(), false);
-    //     });
-    // });
 });
