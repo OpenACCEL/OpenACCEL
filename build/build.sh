@@ -71,7 +71,10 @@ deploy() {
     node_modules/.bin/jison utils/ACCELUnits.jison -o src/model/unitparser.js -m amd -p lalr
 
     echo "Deploying..."
-    mkdir -p                                                                             bin/scripts/cm
+    # Create required directories and all subdirectories that do not yet exist
+    mkdir -p                                                                             bin/scripts/cm/lib
+    mkdir -p                                                                             bin/scripts/cm/mode/ACCEL
+    mkdir -p                                                                             bin/scripts/cm/theme/
 
     # Copy library files.
     cp lib/*                                                                             bin/scripts/
@@ -83,11 +86,10 @@ deploy() {
     cp node_modules/sweet.js/node_modules/escodegen/escodegen.browser.min.js             bin/scripts/escodegen.js
     cp node_modules/sweet.js/node_modules/escope/escope.js                               bin/scripts/escope.js
     cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
-    cp -r node_modules/codemirror/*                                                      bin/scripts/cm
 
-    # Copy CodeMirror ACCEL mode file
-    mkdir -p bin/scripts/cm/mode/ACCEL
-    cp utils/CodeMirror_ACCEL.js   bin/scripts/cm/mode/ACCEL/ACCEL.js
+    # Copy CodeMirror files
+    cp node_modules/codemirror/lib/codemirror.js                                         bin/scripts/cm/lib/codemirror.js
+    cp utils/CodeMirror_ACCEL.js                                                         bin/scripts/cm/mode/ACCEL/ACCEL.js
 
     # Generating monofunc library functions.
     node ./utils/monofuncgenerator.js ./src/model/library

@@ -30,7 +30,8 @@ function toggleValues() {
  * Constructs an advanced (CodeMirror) editor and replaces the standard textarea with it.
  */
 function constructAdvancedEditor() {
-	return cm.fromTextArea(document.getElementById('scriptarea'), {
+	// Construct editor
+	var advEditor = cm.fromTextArea(document.getElementById('scriptarea'), {
 		lineNumbers: true,
 		mode: 'ACCEL',
 		theme: 'default',
@@ -38,6 +39,15 @@ function constructAdvancedEditor() {
 		undoDepth: 100
 		//gutters: []
 	});
+
+	// Register events
+	advEditor.on("changes", function(instance, changes) {
+		$(".cm-builtin","div.CodeMirror").on("click", function(e) {
+			alert(e.target.innerHTML);
+		});
+	});
+
+	return advEditor;
 }
 
 /**
