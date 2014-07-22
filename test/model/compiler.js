@@ -318,7 +318,7 @@ suite("Compiler", function() {
             assert.equal(output.__t__(), expected);
         });
 
-        suite("| Analysis", function() {
+    suite("| Analysis", function() {
             /**
              * Flagging time-dependent quantities in analyser, and retrieving them.
              *
