@@ -38,7 +38,7 @@ suite("Add Unit Library", function() {
         assert.equal(true, z.equals(new UnitObject(0, {'kg': 1})));
     });
 
-    test("Commutativity", function() {
+    test("| Commutativity", function() {
         compiler.loadUnitsLib();
         var input = 
         "x = 5; kg\n" +
