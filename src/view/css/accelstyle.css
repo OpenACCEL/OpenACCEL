@@ -33,6 +33,7 @@ body div {
 
 .cm-builtin {
 	cursor: pointer;
+	text-decoration: underline;
 }
 
 #container {
