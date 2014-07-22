@@ -40,7 +40,17 @@ function constructAdvancedEditor() {
 		//gutters: []
 	});
 
-	// Register events
+	/**--- Register events ---*/
+	// When a piece of text is 'dropped' into the editor, clear the current contents
+	// first
+	advEditor.on("drop", function(instance, e) {
+		// Do not prevent the default and just clear the contents of the editor.
+		// Let the event propagate further and let CodeMirror handle the rest
+		editor.setValue('');
+	});
+
+
+	// Add event handlers to all built-in functions for showing help
 	advEditor.on("changes", function(instance, changes) {
 		$(".cm-builtin","div.CodeMirror").on("click", function(e) {
 			alert(e.target.innerHTML);
@@ -98,6 +108,19 @@ function focusAdvancedEditor() {
 	if (usingAdvancedEditor()) {
 		editor.focus();
 	}
+}
+
+/**
+ * Shows autocomplete suggestions inside the given editor instance
+ *
+ * @param {CodeMirror} editor The CodeMirror editor instance for which to return suggestions
+ * @return {[type]}         [description]
+ */
+function autoComplete(editor, options) {
+	// Return:
+	// list: array of strings or objects containing the suggestions
+	// from: {line, ch} object that denotes the start of the token being autocompleted
+	// to: {line, ch} object that denotes the end of the token being autocompleted
 }
 
 /**
