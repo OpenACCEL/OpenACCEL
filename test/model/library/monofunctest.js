@@ -104,15 +104,15 @@ suite("Monofunc", function() {
             var output = compiler.compile(new script(input));
             output.setUnits(true);
 
-            assert.throws(output.__a__());
-            assert.throws(output.__b__());
-            assert.throws(output.__c__());
-            assert.throws(output.__d__());
-            assert.throws(output.__e__());
-            assert.throws(output.__f__());
-            assert.throws(output.__g__());
-            assert.throws(output.__h__());
-            assert.throws(output.__i__());
+            assert.ok(output.__a__().error);
+            assert.ok(output.__b__().error);
+            assert.ok(output.__c__().error);
+            assert.ok(output.__d__().error);
+            assert.ok(output.__e__().error);
+            assert.ok(output.__f__().error);
+            assert.ok(output.__g__().error);
+            assert.ok(output.__h__().error);
+            assert.ok(output.__i__().error);
 
             assert.equal(true, output.__j__().equals(new UnitObject(0, {'kg': 1})));
             assert.equal(true, output.__k__().equals(new UnitObject(0, {'kg': 1})));

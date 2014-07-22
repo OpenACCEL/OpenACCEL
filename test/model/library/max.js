@@ -40,7 +40,7 @@ suite("Max Library", function() {
             "z = min(x, y)";
             var output = compiler.compile(new script(input));
             output.setUnits(true);
-            assert.throws(output.__z__());
+            assert.ok(output.__z__().error);
         });
 
         test("| Equal units", function() {
