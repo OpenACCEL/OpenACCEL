@@ -36,7 +36,8 @@ function constructAdvancedEditor() {
 		theme: 'default',
 		lineNumbers: true,
 		lineWrapping: false,
-		undoDepth: 100
+		undoDepth: 100,				// Try to save some memory
+		viewportMargin: Infinity	// Always render entire document, so that text search and e.g. added event handlers work correctly
 		//gutters: []
 	});
 
