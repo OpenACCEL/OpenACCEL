@@ -80,11 +80,14 @@ function setupFunctionClickEvents(instance, changes) {
  * value of the corresponding checkbox in the UI.
  */
 function toggleCM() {
+	console.log("toggle fired");
+	var use = undefined;
 	if (usingAdvancedEditor()) {
 		// Construct CodeMirror editor from textarea
 		editor = constructAdvancedEditor();
 		editor.setSize(645, 400);
 		editor.refresh();
+		use = true;
 	} else {
 		// Revert back to standard textarea
 		if (editor) {
@@ -92,7 +95,11 @@ function toggleCM() {
 			editor.toTextArea();
 			editor = null;
 		}
+		use = false;
 	}
+
+	// Save preference to localStorage
+	localStorage['useAdvancedEditor'] = use;
 }
 
 /**

@@ -167,6 +167,11 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     controller.autoSave = true;
     controller.restoreSavedScript();
 
-    // Setup CodeMirror instance
+    // Setup CodeMirror instance and also setup advanced editor in IO/edit tab
+    // when preference in localStorage is set as such
     cm = CodeMirror;
+    if (localStorage['useAdvancedEditor'] === 'true') {
+        $('#useCM').prop("checked", true);
+        toggleCM();
+    }
 });
