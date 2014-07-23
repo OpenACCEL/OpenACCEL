@@ -32,9 +32,9 @@ function toggleValues() {
 function constructAdvancedEditor() {
 	// Construct editor
 	var advEditor = cm.fromTextArea(document.getElementById('scriptarea'), {
-		lineNumbers: true,
 		mode: 'ACCEL',
 		theme: 'default',
+		lineNumbers: true,
 		lineWrapping: false,
 		undoDepth: 100
 		//gutters: []
@@ -49,15 +49,29 @@ function constructAdvancedEditor() {
 		editor.setValue('');
 	});
 
-
 	// Add event handlers to all built-in functions for showing help
-	advEditor.on("changes", function(instance, changes) {
-		$(".cm-builtin","div.CodeMirror").on("click", function(e) {
-			alert(e.target.innerHTML);
-		});
-	});
+	advEditor.on("changes", setupFunctionClickEvents);
+
+	setTimeout(function() { cm.signal(advEditor, "changes"); }, 100);
 
 	return advEditor;
+}
+
+/**
+ * Registers event handlers for all built-in function names
+ * currently present in the contents of the editor.
+ */
+function setupFunctionClickEvents(instance, changes) {
+	console.log("Changes fired!");
+
+	// Start looking in the dom tree only from the CodeMirror div down
+	$(".cm-builtin","div.CodeMirror").on("click", function(e) {
+		e.preventDefault();
+
+		alert(e.target.innerHTML);
+		e.stopPropagation();
+		e.cancelBubble = true;
+	});
 }
 
 /**
@@ -98,6 +112,7 @@ function updateAdvancedEditor() {
 		editor.setValue($('#scriptarea').val());
 		editor.setSize(645, 400);
 		editor.refresh();
+		cm.signal(editor, "changes");
 	}
 }
 
