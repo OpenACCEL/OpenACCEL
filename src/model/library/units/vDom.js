@@ -3,19 +3,20 @@ function vDom(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (x instanceof Array) {
-        var p = [];
-        var key = 0;
-        for (i = 0; i < x.length; i++) {
-            p.push(i);
+
+    // Just get the values, not the units.
+    x = unaryZip(x, function(a) {
+        if (a instanceof UnitObject) {
+            return a.value;
+        } else {
+            return a;
         }
-        for (key in x) {
-            if (isNaN(key)) {
-                p.push(key);
-            }
-        }
-        return p;
-    } else {
-        return [];
-    }
+    });
+
+    var domain = exe.lib.std.vDom(x);
+
+    // Transform the result back into UnitObjects with no unit.
+    return unaryZip(domain, function(a) {
+        return new UnitObject(a);
+    });
 }

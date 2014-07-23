@@ -3,9 +3,19 @@ function vMake(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    result = [];
-    for (var i = 0; i < y; i++) {
-        result[i] = x;
+
+    x = unaryZip(x, function(a) {
+        if (!(a instanceof UnitObject)) {
+            return new UnitObject(a);
+        } else {
+            return a;
+        }
+    });
+
+    if (!(y instanceof UnitObject)) {
+        y = new UnitObject(y);
     }
-    return result;
+
+    var std_vMake = exe.lib.std.vMake;
+    return std_vMake(x, y.value);
 }

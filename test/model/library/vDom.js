@@ -17,7 +17,7 @@ suite("vDom Library", function() {
         });
     });
 
-    suite("vDom", function() {
+    suite("| vDom", function() {
 
         /**
          * Test case for vDom, numerical indices.
@@ -25,7 +25,7 @@ suite("vDom Library", function() {
          * @input vDom([1,2,3])
          * @expected [0,1,2]
          */
-        test("get the domain of an array with only numeric indices", function() {
+        test("| Get the domain of an array with only numeric indices", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -42,7 +42,7 @@ suite("vDom Library", function() {
          * @input vDom([1,2,a:3])
          * @expected [0,1,"a"]
          */
-        test("get the domain of an array with mixed indices", function() {
+        test("| Get the domain of an array with mixed indices", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -59,7 +59,7 @@ suite("vDom Library", function() {
          * @input vDom([a:1,b:2,c:3])
          * @expected ["a","b","c"]
          */
-        test("get the domain of an array with only non-numeric indices", function() {
+        test("| Get the domain of an array with only non-numeric indices", function() {
             eval(fileLoader.getContent());
             x = [];
             x["a"] = 1;
@@ -76,7 +76,7 @@ suite("vDom Library", function() {
          * @input vDom({'5' : 1})
          * @expected [0, 1, 2, 3, 4, 5]
          */
-        test("get the domain of an array with a high number index", function() {
+        test("| Get the domain of an array with a high number index", function() {
             eval(fileLoader.getContent());
             x = [];
             x[5] = 1;
@@ -91,7 +91,7 @@ suite("vDom Library", function() {
          * @input vDom({'5' : 1, 'a': 1, 'b': 2})
          * @expected [0, 1, 2, 3, 4, 5, "a", "b"];
          */
-        test("get the domain of an array with a high number index and named indices", function() {
+        test("| Get the domain of an array with a high number index and named indices", function() {
             eval(fileLoader.getContent());
             x = [];
             x[5] = 1;
@@ -103,7 +103,7 @@ suite("vDom Library", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion for vDom.
@@ -112,11 +112,34 @@ suite("vDom Library", function() {
          *        y = [1,0,0]
          * @expected x = [0,1,2]
          */
-        test("should expand for 'x = vDom(y), y = [1,0,0]'", function() {
+        test("| Should expand for 'x = vDom(y), y = [1,0,0]'", function() {
             var input = "x = vDom(y)\ny = [1,0,0]";
             expected = [0, 1, 2];
             var output = compiler.compile(new Script(input));
             assert.deepEqual(output.__x__(), expected);
+        });
+    });
+
+    suite("| Units", function() {
+        test("| All returned values should be normal", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "x = [5, ['x': 6], 7, y: 10] ; [kg, [x: s], m, y: lum]\n" +
+            "y = vDom(x)";
+            var output = compiler.compile(new Script(input));
+            output.setUnits(true);
+
+            var y = output.__y__();
+            assert.ifError(y.error);
+            assert.equal(true, y[0].isNormal());
+            assert.equal(true, y[1].isNormal());
+            assert.equal(true, y[2].isNormal());
+            assert.equal(true, y[3].isNormal());
+
+            assert.equal(0, y[0].value);
+            assert.equal(1, y[1].value);
+            assert.equal(2, y[2].value);
+            assert.equal('y', y[3].value);
         });
     });
 });
