@@ -3,9 +3,10 @@ suite("Poisson Library", function() {
     var assert;
     var compiler;
     var macros;
+    var script;
 
     setup(function(done) {
-        requirejs(["assert", "model/compiler", "model/fileloader"], function(Assert, Compiler, FileLoader) {
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -15,11 +16,12 @@ suite("Poisson Library", function() {
             fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
             fileLoader.load("factorial", "library");
+            script = Script;
             done();
         });
     });
 
-    suite("poisson", function() {
+    suite("| Poisson", function() {
 
         /**
          * Test case for poisson.
@@ -27,7 +29,7 @@ suite("Poisson Library", function() {
          * @input poisson(3,4, false)
          * @expected 64 * Math.exp(-4) / 6
          */
-        test("poisson function calculating the density.", function() {
+        test("| Poisson function calculating the density.", function() {
             eval(fileLoader.getContent());
             var x = 3;
             var y = 4;
@@ -43,7 +45,7 @@ suite("Poisson Library", function() {
          * @input poisson(3,4, true)
          * @expected 64 * Math.exp(-4) / 6 + 16 * Math.exp(-4) / 2 + 4 * Math.exp(-4) / 1 + 1 * Math.exp(-4) / 1
          */
-        test("poisson function calculating the density.", function() {
+        test("| Poisson function calculating the density.", function() {
             eval(fileLoader.getContent());
             var x = 3;
             var y = 4;
@@ -59,7 +61,7 @@ suite("Poisson Library", function() {
          * @input poisson(-1,1, true)
          * @expected /The poisson of numbers less than 0 are not supported./
          */
-        test("poisson function with variables less than 0", function() {
+        test("| Poisson function with variables less than 0", function() {
             eval(fileLoader.getContent());
             var x = -1;
             var y = 1;
@@ -76,7 +78,7 @@ suite("Poisson Library", function() {
          * @input poisson(1,-1, false)
          * @expected /The poisson of numbers less than 0 are not supported./
          */
-        test("poisson function with variables less than 0", function() {
+        test("| Poisson function with variables less than 0", function() {
             eval(fileLoader.getContent());
             var x = 1;
             var y = -1;
@@ -85,6 +87,48 @@ suite("Poisson Library", function() {
             assert.throws(function() {
                 poisson(x, y, z);
             }, expected);
+        });
+    });
+
+    suite("| Units", function() {
+        test("| Dimension", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "a = 3; kg\n" +
+            "b = 3\n" +
+            "c = 4\n" +
+            "d = 4; kg\n" +
+            "e = true\n" +
+            "f = true; kg\n" +
+            "x = poisson(a, c, e)\n" +
+            "y = poisson(b, d, e)\n" +
+            "z = poisson(b, c, f)\n";
+            var output = compiler.compile(new script(input));
+            var expected = 64 * Math.exp(-4) / 6 + 16 * Math.exp(-4) / 2 + 4 * Math.exp(-4) / 1 + 1 * Math.exp(-4) / 1;
+            output.setUnits(true);
+
+            assert.ok(output.__x__().error);
+            assert.ok(output.__y__().error);
+            assert.ok(output.__z__().error);
+            assert.equal(expected, output.__x__().value);
+            assert.equal(expected, output.__y__().value);
+            assert.equal(expected, output.__z__().value);
+        });
+
+        test("| Dimensionless", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "a = 3\n" +
+            "b = 4\n" +
+            "c = true\n" +
+            "x = poisson(a, b, c)\n";
+            var output = compiler.compile(new script(input));
+            var expected = 64 * Math.exp(-4) / 6 + 16 * Math.exp(-4) / 2 + 4 * Math.exp(-4) / 1 + 1 * Math.exp(-4) / 1;
+            output.setUnits(true);
+
+            assert.equal(expected, output.__x__().value);
+            assert.equal(true, output.__x__().isNormal());
+            assert.ifError(output.__x__().error);
         });
     });
 });

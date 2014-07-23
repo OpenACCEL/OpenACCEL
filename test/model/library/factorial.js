@@ -3,9 +3,10 @@ suite("Factorial Library", function() {
     var assert;
     var compiler;
     var macros;
+    var script;
 
     setup(function(done) {
-        requirejs(["assert", "model/compiler", "model/fileloader"], function(Assert, Compiler, FileLoader) {
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -14,6 +15,7 @@ suite("Factorial Library", function() {
             fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
+            script = Script;
             done();
         });
     });
@@ -91,5 +93,32 @@ suite("Factorial Library", function() {
         assert.throws(function() {
             factorial(x);
         }, expected);
+    });
+
+    suite("| Units", function() {
+        test("| Dimension", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "x = 0.5; kg\n" +
+            "y = factorial(x)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.ok(output.__y__().error);
+            assert.equal(1, output.__y__().value);
+        });
+
+        test("| Dimensionless", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "x = 0.5\n" +
+            "y = factorial(x)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__y__().isNormal());
+            assert.equal(1, output.__y__().value);
+            assert.ifError(output.__y__().error);
+        });
     });
 });

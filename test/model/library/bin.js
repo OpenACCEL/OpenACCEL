@@ -3,9 +3,10 @@ suite("Bin Library", function() {
     var assert;
     var compiler;
     var macros;
+    var script;
 
     setup(function(done) {
-        requirejs(["assert", "model/compiler", "model/fileloader"], function(Assert, Compiler, FileLoader) {
+        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
@@ -15,6 +16,7 @@ suite("Bin Library", function() {
             fileLoader.load("binaryZip", "library");
             fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
+            script = Script;
             done();
         });
     });
@@ -128,5 +130,41 @@ suite("Bin Library", function() {
         assert.throws(function() {
             bin(x, y);
         }, expected);
+    });
+
+    suite("| Units", function() {
+        test("| Dimension", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "a = 25; kg\n" +
+            "b = 24\n" +
+            "c = 24; kg\n" +
+            "x = bin(a, c)\n" +
+            "y = bin(a, b)\n" +
+            "z = bin(b + 1, c)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.ok(output.__x__().error);
+            assert.ok(output.__y__().error);
+            assert.ok(output.__z__().error);
+            assert.equal(25, output.__x__().value);
+            assert.equal(25, output.__y__().value);
+            assert.equal(25, output.__z__().value);
+        });
+
+        test("| Dimensionless", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "x = 25\n" +
+            "y = 24\n" +
+            "z = bin(x, y)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__z__().isNormal());
+            assert.equal(25, output.__z__().value);
+            assert.ifError(output.__z__().error);
+        });
     });
 });

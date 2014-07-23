@@ -3,7 +3,7 @@ function random() {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-	return Math.random();
+	return new UnitObject(Math.random());
 }
 
 random.isTimeDependent = true;
