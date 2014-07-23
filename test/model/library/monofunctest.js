@@ -173,6 +173,20 @@ suite("Monofunc", function() {
             assert.equal(1, output.__k__().value);
             assert.equal(0, output.__l__().value);
             assert.equal(1, output.__m__().value);
+
+            assert.ifError(output.__a__().error);
+            assert.ifError(output.__b__().error);
+            assert.ifError(output.__c__().error);
+            assert.ifError(output.__d__().error);
+            assert.ifError(output.__e__().error);
+            assert.ifError(output.__f__().error);
+            assert.ifError(output.__g__().error);
+            assert.ifError(output.__h__().error);
+            assert.ifError(output.__i__().error);
+            assert.ifError(output.__j__().error);
+            assert.ifError(output.__k__().error);
+            assert.ifError(output.__l__().error);
+            assert.ifError(output.__m__().error);
         });
     });
 });

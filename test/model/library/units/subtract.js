@@ -36,6 +36,7 @@ suite("Subtract Unit Library", function() {
         var z = output.__z__();
         assert.equal(z.value, -1);
         assert.equal(true, z.equals(new UnitObject(0, {'kg': 1})));
+        assert.ifError(z.error);
     });
 
     test("| Non-Commutativity", function() {

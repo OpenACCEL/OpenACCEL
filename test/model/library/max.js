@@ -54,6 +54,7 @@ suite("Max Library", function() {
             var z = output.__z__();
             assert.equal(z.value, Math.min(5, 6));
             assert.equal(true, z.equals(new UnitObject(0, {'kg': 1})));
+            assert.ifError(z.error);
         });
     });
 });
