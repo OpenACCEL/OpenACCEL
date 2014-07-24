@@ -64,7 +64,7 @@ UnitObject.prototype.clone = function() {
     ans.errorString = this.errorString;
 
     return ans;
-}
+};
 
 /**
  * Sets the unit of a UnitObject, but by creating a copy instead.
@@ -79,7 +79,7 @@ UnitObject.prototype.setUnit = function(unit) {
     for (var key in unit) {
         this.unit[key] = unit[key];
     }
-}
+};
 
 /**
  * Removes all elements of a unit whose value is zero.
@@ -91,7 +91,7 @@ UnitObject.prototype.clean = function() {
             delete this.unit[key];
         }
     }
-}
+};
 
 /**
  * Filters out all positive powers in the unit, effectively returning the nominator.
@@ -110,8 +110,8 @@ UnitObject.prototype.getNominator = function() {
         }
     }
 
-    return nominator
-}
+    return nominator;
+};
 
 /**
  * Filters out all negative powers in the unit, effectively returning the denominator.
@@ -130,8 +130,8 @@ UnitObject.prototype.getDenominator = function() {
         }
     }
 
-    return denominator
-}
+    return denominator;
+};
 
 /**
  * Returns the unit of the UnitObject as an OpenACCEL unit string.
@@ -142,7 +142,7 @@ UnitObject.prototype.getDenominator = function() {
 UnitObject.prototype.unitToString = function() {
     var ans = "";
 
-    if (this.error != null && this.error != '') {
+    if (this.error !== null && this.error !== '') {
         ans = this.error;
     } else if (this.isNormal()) {
         ans = "1";
@@ -184,7 +184,7 @@ UnitObject.prototype.unitToString = function() {
     }
 
     return ans;
-}
+};
 
 /**
  * Given an array of values and units, zip them together to create an array of UnitObjects.
@@ -204,7 +204,7 @@ UnitObject.prototype.create = function(values, units) {
             return new UnitObject(value, unit);
         }
     });
-}
+};
 
 /**
  * Checks whether the signature of the given (array of) UnitObject(s)
@@ -238,10 +238,11 @@ UnitObject.prototype.verifySignature = function(val, unit) {
          * indices and strings.
          */
         var keys = [];
-        for (var key in val) { keys.push(key); }
-        for (var key in unit) { keys.push(key); }
+        var key;
+        for (key in val) { keys.push(key); }
+        for (key in unit) { keys.push(key); }
 
-        for (var key in keys) {
+        for (key in keys) {
             // Check whether this key appears in both the value and unit
             if (!val[keys[key]] || !unit[keys[key]]) {
                 match = false;
@@ -257,7 +258,7 @@ UnitObject.prototype.verifySignature = function(val, unit) {
     }
 
     return match;
-}
+};
 
 /**
  * Determines whether two UnitObjects have the exact same unit.
@@ -281,7 +282,7 @@ UnitObject.prototype.equals = function(other) {
     }
 
     return true;
-}
+};
 
 /**
  * Given two UnitObjects; if one of the objects contains an error, the value gets updated,
@@ -298,17 +299,17 @@ UnitObject.prototype.equals = function(other) {
 UnitObject.prototype.propagateError = function(f, other) {
     // Check for errors on the left hand side, if present.
     if (other) {
-        if ((this.error != null && this.error != '') || (other.error != null && other.error != '')) {
+        if ((this.error !== null && this.error !== '') || (other.error !== null && other.error !== '')) {
             return new UnitObject(f(this.value, other.value), {}, 'uncheckedUnit');
         }
     } else {
-        if (this.error != null && this.error != '') {
+        if (this.error !== null && this.error !== '') {
             return new UnitObject(f(this.value), {}, 'uncheckedUnit');
         }
     }
 
     return false;
-}
+};
 
 /**
  * @return {Boolean} Whether the UnitObject has any unit at all, and is not the
@@ -316,7 +317,7 @@ UnitObject.prototype.propagateError = function(f, other) {
  */
 UnitObject.prototype.hasUnit = function() {
     return Object.keys(this.unit).length > 0;
-}
+};
 
 /**
  * @return {Boolean} Whether the UnitObject has no unit, and thus is the
@@ -324,7 +325,7 @@ UnitObject.prototype.hasUnit = function() {
  */
 UnitObject.prototype.isNormal = function() {
     return Object.keys(this.unit).length === 0;
-}
+};
 
 /**
  * Calculates the units of the product of two UnitObjects.
@@ -363,7 +364,7 @@ UnitObject.prototype.multiply = function(other) {
 
     ans.clean();
     return ans;
-}
+};
 
 /**
  * Calculates the units of the division of two UnitObjects.
@@ -402,7 +403,7 @@ UnitObject.prototype.divide = function(other) {
 
     ans.clean();
     return ans;
-}
+};
 
 UnitObject.prototype.power = function(exponent) {
     var ans;
@@ -431,20 +432,18 @@ UnitObject.prototype.power = function(exponent) {
     if (!this.error) {
         for (var key in ans.unit) {
             ans.unit[key] *= exponent.value;
-        }
-    }
 
-    // Check if the resulting unit is still an integer when having an invert exponent.
-    if (bInverse) {
-        if (ans.unit[key] % 1 !== 0) {
-            ans.unit = {};
-            ans.error = "unitError";
-            ans.errorString = "Not all units are integers (inverse exponent)";
+            // Check if the resulting unit is still an integer when having an invert exponent.
+            if (bInverse && ans.unit[key] % 1 !== 0) {
+                ans.unit = {};
+                ans.error = "unitError";
+                ans.errorString = "Not all units are integers (inverse exponent)";
+            }
         }
     }
 
     ans.clean();
     return ans;
-}
+};
 
 UnitObject.prototype.toString = UnitObject.prototype.unitToString;
