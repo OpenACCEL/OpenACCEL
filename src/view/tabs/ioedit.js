@@ -78,7 +78,7 @@ function setupFunctionClickEvents(instance, changes) {
  * value of the corresponding checkbox in the UI.
  */
 function toggleCM() {
-	var use = undefined;
+	var use;
 	if (usingAdvancedEditor()) {
 		// Construct CodeMirror editor from textarea
 		editor = constructAdvancedEditor();
@@ -96,7 +96,7 @@ function toggleCM() {
 	}
 
 	// Save preference to localStorage
-	localStorage['useAdvancedEditor'] = use;
+	localStorage.useAdvancedEditor = use;
 }
 
 /**
@@ -168,7 +168,7 @@ function checkUnits() {
 		alert(e.message);
 	} finally {
 		synchronizeScriptArea(true);
-		setTimeout(function() {$('#checkUnitsMsg').fadeOut(400)}, 2500);
+		setTimeout(function() {$('#checkUnitsMsg').fadeOut(400);}, 2500);
 	}}, 100);
 }
 

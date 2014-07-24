@@ -17,7 +17,6 @@ CanvasTextFunctions.letters = {
     ')': { width: 14, points: [[3,25],[5,23],[7,20],[9,16],[10,11],[10,7],[9,2],[7,-2],[5,-5],[3,-7]] },
     '*': { width: 16, points: [[8,21],[8,9],[-1,-1],[3,18],[13,12],[-1,-1],[13,18],[3,12]] },
     '+': { width: 26, points: [[13,18],[13,0],[-1,-1],[4,9],[22,9]] },
-    ',': { width: 10, points: [[6,1],[5,0],[4,1],[5,2],[6,1],[6,-1],[5,-3],[4,-4]] },
     '-': { width: 26, points: [[4,9],[22,9]] },
     '.': { width: 10, points: [[5,2],[4,1],[5,0],[6,1],[5,2]] },
     '/': { width: 22, points: [[20,25],[2,-7]] },
@@ -105,17 +104,17 @@ CanvasTextFunctions.letters = {
 CanvasTextFunctions.letter = function (ch)
 {
     return CanvasTextFunctions.letters[ch];
-}
+};
 
 CanvasTextFunctions.ascent = function( font, size)
 {
     return size;
-}
+};
 
 CanvasTextFunctions.descent = function( font, size)
 {
     return 7.0*size/25.0;
-}
+};
 
 CanvasTextFunctions.measure = function( font, size, str)
 {
@@ -127,7 +126,7 @@ CanvasTextFunctions.measure = function( font, size, str)
 	if ( c) total += c.width * size / 25.0;
     }
     return total;
-}
+};
 
 CanvasTextFunctions.draw = function(ctx,font,size,x,y,str)
 {
@@ -165,14 +164,14 @@ CanvasTextFunctions.draw = function(ctx,font,size,x,y,str)
     }
     ctx.restore();
     return total;
-}
+};
 
 CanvasTextFunctions.enable = function( ctx)
 {
     ctx.drawText = function(font,size,x,y,text) { return CanvasTextFunctions.draw( ctx, font,size,x,y,text); };
     ctx.measureText = function(font,size,text) { return CanvasTextFunctions.measure( font,size,text); };
-    ctx.fontAscent = function(font,size) { return CanvasTextFunctions.ascent(font,size); }
-    ctx.fontDescent = function(font,size) { return CanvasTextFunctions.descent(font,size); }
+    ctx.fontAscent = function(font,size) { return CanvasTextFunctions.ascent(font,size); };
+    ctx.fontDescent = function(font,size) { return CanvasTextFunctions.descent(font,size); };
 
     ctx.drawTextRight = function(font,size,x,y,text) { 
 	var w = CanvasTextFunctions.measure(font,size,text);
@@ -182,4 +181,4 @@ CanvasTextFunctions.enable = function( ctx)
 	var w = CanvasTextFunctions.measure(font,size,text);
 	return CanvasTextFunctions.draw( ctx, font,size,x-w/2,y,text); 
     };
-}
+};

@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -44,7 +43,7 @@ define(["view/graphics/abstractdescarteshandler"], /** @lends View.Graphics */ f
          * @pre Exists_i[ i in this.handlers : handlers[i].canHandle(modelElement)]
          */
         getHandler: function(modelElement) {
-            for (i in this.handlers) {
+            for (var i in this.handlers) {
                 if (this.handlers[i].canHandle(modelElement)) {
                     return this.handlers[i].getInstance(modelElement);
                 }

@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -121,7 +120,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * @post !Exists_i[ i in descartesInstances : descartesInstances[i].divName == div]
      */
     AbstractDescartesHandler.prototype.removeDescartes = function(div) {
-        for (i in this.descartesInstances) {
+        for (var i in this.descartesInstances) {
             if (this.descartesInstances[i].divName == this.div) {
                 this.descartesInstances[i].eraseGraph();
                 this.descartesInstances.splice(i, 1);
@@ -155,7 +154,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      */
     AbstractDescartesHandler.prototype.draw = function() {
         var drawing = this.getDecoratedDrawing();
-        for (i in this.descartesInstances) {
+        for (var i in this.descartesInstances) {
             this.descartesInstances[i].draw(drawing);
         }
     };
@@ -186,7 +185,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * @modifies ForAll_i[descartesInstances[i]] {descartes} The descartes objects of which the buffers are emptied.
      */
     AbstractDescartesHandler.prototype.clearBuffers = function() {
-        for (i in this.descartesInstances) {
+        for (var i in this.descartesInstances) {
             this.descartesInstances[i].enforceRedraw();
         }
     };
@@ -196,7 +195,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * @modifies ForAll_i[descartesInstances[i]] {descartes} The descartes objects of which the canvas is cleared.
      */
     AbstractDescartesHandler.prototype.clearCanvas = function(divName) {
-        for (i in this.descartesInstances) {
+        for (var i in this.descartesInstances) {
             this.descartesInstances[i].whipeGraph(divName);
         }
     };

@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -90,7 +89,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
              * @type {Individual}
              */
             this.clickedIndividual = null;
-        };
+        }
 
 
         GeneticOptimisationDescartesHandler.prototype = new AbstractDescartesHandler();
@@ -165,8 +164,8 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
             for (var i = population.length - 1; i >= 0; i--) {
                 currentIndividual = population[i];
 
-                var currentHorDistance = currentIndividual.outputvector[horKey].value - point.x;
-                var currentVerDistance = currentIndividual.outputvector[verKey].value - point.y;
+                currentHorDistance = currentIndividual.outputvector[horKey].value - point.x;
+                currentVerDistance = currentIndividual.outputvector[verKey].value - point.y;
                 currentSquareDistance = currentHorDistance * currentHorDistance + currentVerDistance * currentVerDistance;
 
                 if (closestDistance > currentSquareDistance) {
@@ -236,10 +235,10 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
             if (population.length > 0) {
                 for (var j = population[0].outputvector.length - 1; j >= 0; j--) {
                     currentName = population[0].outputvector[j].name;
-                    if (currentName == horName) {
+                    if (currentName === horName) {
                         horKey = j;
                     }
-                    if (currentName == verName) {
+                    if (currentName === verName) {
                         verKey = j;
                     }
                 }
@@ -276,7 +275,7 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
             var diameters = [];
 
             var xValue;
-            var yValue
+            var yValue;
 
             for (var i = population.length - 1; i >= 0; i--) {
                 currentIndividual = population[i];
@@ -348,8 +347,8 @@ define(["view/graphics/abstractdescarteshandler", "view/graphics/quarterfitdesca
                 this.clickedIndividual = null;
             }
 
-            if (population.length > 0 && xCoords.length == 0) {
-                throw new Error("Could not draw genetic optimisation population, a pareto variable is non-numeric.")
+            if (population.length > 0 && xCoords.length === 0) {
+                throw new Error("Could not draw genetic optimisation population, a pareto variable is non-numeric.");
             }
 
             return [

@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -38,7 +37,7 @@ define(["view/graphics/abstractfunctionpropagator"], /** @lends View.Graphics */
          * @type {float}
          */
         this.coordinateScale = 100;
-    };
+    }
 
 
     AbstractDescartesDecorator.prototype = new AbstractFunctionPropagator();
@@ -50,7 +49,7 @@ define(["view/graphics/abstractfunctionpropagator"], /** @lends View.Graphics */
      * @return plot {Object[]} The adjusted drawing
      */
     AbstractDescartesDecorator.prototype.decorate = function(plot) {
-        if (this.decorator != null) {
+        if (this.decorator !== null) {
             plot = this.decorator.decorate(plot);
         }
         return plot;
@@ -66,7 +65,7 @@ define(["view/graphics/abstractfunctionpropagator"], /** @lends View.Graphics */
      * @return point {Object} The inversely adjusted point.
      */
     AbstractDescartesDecorator.prototype.mapPoint = function(point) {
-        if (this.decorator != null) {
+        if (this.decorator !== null) {
             point = this.decorator.mapPoint(point);
         }
         return point;
@@ -80,7 +79,7 @@ define(["view/graphics/abstractfunctionpropagator"], /** @lends View.Graphics */
      * @post decorator can be called called recursively by decorate(), mapPoint() and addDecorator()
      */
     AbstractDescartesDecorator.prototype.addDecorator = function(decorator) {
-        if (this.decorator == null) {
+        if (this.decorator === null) {
             this.decorator = decorator;
         } else {
             this.decorator.addDecorator(decorator);

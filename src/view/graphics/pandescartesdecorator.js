@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -54,7 +53,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * and y co-ordinates adjusted by -verOffset.
      */
     PanDescartesDecorator.prototype.decorate = function(plot) {
-        for (i in plot) {
+        for (var i in plot) {
             if (plot[i][0].x instanceof Object) {
                 for (j in plot[i][plot[i][0].x.ref]) {
                     plot[i][plot[i][0].x.ref][j] -= this.horOffset;
@@ -63,14 +62,14 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
                 plot[i][0].x -= this.horOffset;
             }
             if (plot[i][0].y instanceof Object) {
-                for (j in plot[i][plot[i][0].y.ref]) {
+                for (var j in plot[i][plot[i][0].y.ref]) {
                     plot[i][plot[i][0].y.ref][j] -= this.verOffset;
                 }
             } else {
                 plot[i][0].y -= this.verOffset;
             }
         }
-        if (this.decorator != null) {
+        if (this.decorator !== null) {
             plot = this.decorator.decorate(plot);
         }
         return plot;
@@ -86,7 +85,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * @return point {Object} The point adjusted by +horOffset on the x co-ordinates and +verOffset on the y co-ordinates.
      */
     PanDescartesDecorator.prototype.mapPoint = function(point) {
-        if (this.decorator != null) {
+        if (this.decorator !== null) {
             point = this.decorator.mapPoint(point);
         }
         point.x += this.horOffset;

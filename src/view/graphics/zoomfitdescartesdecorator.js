@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -126,6 +125,7 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
          * nor fitOnce are true.
          */
         ZoomFitDescartesDecorator.prototype.decorate = function(plot) {
+            var i, j;
             if (this.alwaysFit || this.fitOnce) {
                 var horMax = -Infinity;
                 var horMin = Infinity;
@@ -159,11 +159,11 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
                     this.marginZoomAdjust * this.coordinateScale / (verMax - verMin));
                 this.decoratorComponents[2].pan(true, -this.margin, -this.margin);
             }
-            for (var j = 0; j < this.decoratorComponents.length; j++) {
+            for (j = 0; j < this.decoratorComponents.length; j++) {
                 plot = this.decoratorComponents[j].decorate(plot);
             }
             this.fitOnce = false;
-            if (this.decorator != null) {
+            if (this.decorator !== null) {
                 plot = this.decorator.decorate(plot);
             }
             return plot;
@@ -180,7 +180,7 @@ define(["view/graphics/abstractdescartesdecorator", "view/graphics/zoomdescartes
          * mapPoint functions in reverse order.
          */
         ZoomFitDescartesDecorator.prototype.mapPoint = function(point) {
-            if (this.decorator != null) {
+            if (this.decorator !== null) {
                 point = this.decorator.mapPoint(point);
             }
             for (var j = this.decoratorComponents.length - 1; j >= 0; j--) {

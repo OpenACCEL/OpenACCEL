@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -141,7 +140,7 @@ define(["view/graphics/zoomfitdescartesdecorator", "view/graphics/pandescartesde
                 plot = this.decoratorComponents[j].decorate(plot);
             }
             this.fitOnce = false;
-            if (this.decorator != null) {
+            if (this.decorator !== null) {
                 plot = this.decorator.decorate(plot);
             }
             return plot;

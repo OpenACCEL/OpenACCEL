@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -43,7 +42,7 @@ define([], /** @lends View.Graphics */ function() {
          */
         getSubfunctions: function() {
             var allFuncs = [];
-            for (key in this) {
+            for (var key in this) {
                 if (this[key] instanceof AbstractFunctionPropagator) {
                     allFuncs = allFuncs.concat(this[key].getFunctions());
                 }
@@ -74,7 +73,7 @@ define([], /** @lends View.Graphics */ function() {
             var allFuncs = this.getSubfunctions();
             var name;
             var func;
-            for (key in allFuncs) {
+            for (var key in allFuncs) {
                 name = allFuncs[key].name;
                 func = allFuncs[key].func;
                 eval("this." + name + " = func");

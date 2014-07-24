@@ -1,5 +1,3 @@
-
-
 var tooltips = {};
 
 function resizeContainer() {
@@ -49,7 +47,7 @@ function syntaxErrorMessage(id, error, selector) {
     this.x = pos.left;
     this.y = 16 + pos.top;
     this.text = '';
-    if (error.found == '') {
+    if (error.found === '') {
         this.text = '<span style = "color: #FF1144;">Syntax Error</span> Expected expression or operator at position ' + error.endPos + '.';
     } else {
         this.text = '<span style = "color: #FF1144;">Syntax Error</span> Unexpected \"' + error.found + '\" at position ' + error.startPos + ' to ' + error.endPos + '.'; /*' in line ' + error.firstLine;*/
@@ -92,7 +90,7 @@ function handleError(error) {
             errormsg = new runtimeErrorMessage(errorCount, error, '#scriptoptions');
             break;
         case 'Error':
-            errormsg = new runtimeErrorMessage(errorCount, error, '#scriptoptions')
+            errormsg = new runtimeErrorMessage(errorCount, error, '#scriptoptions');
             break;
         default:
             errormsg = {
@@ -207,7 +205,7 @@ $(document).ready(
 //------------------------------------------------------------------------------
 
 /**
- * Constructs a buffer object to contain updated content of a div and update the div when desired
+ * Constructs a buffer object to contain updated content of a div and update the div when desired.
  *
  * @memberof View
  * @param {String} div Id of the div who's content is to be buffered
@@ -223,7 +221,7 @@ function HTMLbuffer(div) {
      */
     this.empty = function() {
         this.html = '';
-    }
+    };
 
     /**
      * Checks whether the buffer is empty
@@ -231,8 +229,8 @@ function HTMLbuffer(div) {
      * @return {Boolean} True if and only if buffer is empty
      */
     this.isEmpty = function() {
-        return (this.html == '');
-    }
+        return (this.html === '');
+    };
 
     /**
      * Hides the target html element if the buffer is empty, show otherwise
@@ -241,7 +239,7 @@ function HTMLbuffer(div) {
      */
     this.hideIfEmpty = function(target) {
         $(target).toggle(!this.isEmpty());
-    }
+    };
 
     /**
      * Appends html to the buffer
@@ -250,7 +248,7 @@ function HTMLbuffer(div) {
      */
     this.append = function(html) {
         this.html = this.html + html;
-    }
+    };
 
     /**
      * Replaces the content in the div with the content in the buffer
@@ -260,7 +258,7 @@ function HTMLbuffer(div) {
         if (target.html() !== this.html) {
             target.html(this.html);
         }
-    }
+    };
 }
 
 //------------------------------------------------------------------------------
@@ -283,14 +281,13 @@ function Tooltip(id, classes, x, y) {
     this.y = y;
 
     this.getHTML = function(message) {
-        return '\
-            <div class = "tooltipcontainer">\
-                <div id = "tooltip' + this.id + '" class = "tooltip ' + this.classes + '">\
-                    ' + message + '\
-                </div>\
-            </div>\
-        ';
-    }
+        return '' +
+            '<div class = "tooltipcontainer">' +
+                '<div id = "tooltip' + this.id + '" class = "tooltip ' + this.classes + '">' +
+                    ' + message + ' +
+                '</div>' +
+            '</div>';
+    };
 
     this.initialize = function() {
         $(document.body).append(this.getHTML(''));
@@ -314,9 +311,9 @@ function Tooltip(id, classes, x, y) {
                                 //$(this).toggle(false);
                                 $(this).parent().remove();
                             }
-                        )
+                        );
                     }
-                )
+                );
             }
         );
         tooltip.on('mouseenter',
@@ -329,14 +326,14 @@ function Tooltip(id, classes, x, y) {
                 $(this).animate({opacity: 1}, 100);
             }
         );
-    }
+    };
 
     this.initialize();
 
     this.set = function(message) {
         $('#tooltip' + this.id).html(message);
         $('#tooltip' + this.id).toggle(true);
-    }
+    };
 }
 
 //------------------------------------------------------------------------------
@@ -356,26 +353,26 @@ function ValueList(selector) {
     this.buffer = new HTMLbuffer(selector);
 
     this.getEntryHTML = function(i, left, right) {
-        return '\
-            <div id = "' + this.selector.substring(1) + 'Entry' + i + '">\
-                <div class = "ellipsis max128w">' + left + '</div>\
-                <div class = "operator"> = </div>\
-                <div class = "ellipsis max128w resultvalue">' + right + '</div>\
-            </div>\
-        ';
+        return '' +
+            '<div id = "' + this.selector.substring(1) + 'Entry' + i + '">' +
+                '<div class = "ellipsis max128w">' + left + '</div>' +
+                '<div class = "operator"> = </div>' +
+                '<div class = "ellipsis max128w resultvalue">' + right + '</div>' +
+            '</div>';
     };
 
     this.initialize = function(size) {
         this.buffer.empty();
+        var i;
 
-        for (var i = 0; i < size; i++) {
+        for (i = 0; i < size; i++) {
             this.buffer.append(this.getEntryHTML(i, '', ''));
         }
 
         this.buffer.flip();
 
         var entries = $(this.selector + ' > div');
-        var i = 0;
+        i = 0;
         entries.children(':last-child').on('click', {id: i++},
             function(e) {
                 $('.datamessage').parent().remove();
@@ -433,9 +430,8 @@ function SelectionList(selector, callback) {
      * @return {String}      HTML for an item in the required list of selectable links
      */
     this.getItemHTML = function(i, item) {//onclick = "' + this.callbackname + '(\'' + item + '\')"
-        return '\
-            <a id = "' + this.selector.substring(1) + 'Item' + i + '" value = "' + item + '">' + item + '</a>\
-        ';
+        return '' +
+            '<a id = "' + this.selector.substring(1) + 'Item' + i + '" value = "' + item + '">' + item + '</a>';
     };
 
     /**
@@ -465,16 +461,16 @@ function SelectionList(selector, callback) {
      */
     this.set = function(items) {
         this.items = items;
-
         this.buffer.empty();
+        var i;
 
-        for (var i in items) {
+        for (i in items) {
             this.addItem(i, items[i]);
         }
 
         this.buffer.flip();
 
-        for (var i in items) {
+        for (i in items) {
             this.initializeItem(i);
         }
     };
@@ -506,7 +502,7 @@ function getPrecision(number) {
     var numberdecimals = (number * correction - Math.floor(number) * correction) / correction;
     var precision = 0;
 
-    while (numberdecimals % 1 != 0) {
+    while (numberdecimals % 1 !== 0) {
         numberdecimals *= 10;
         precision++;
     }

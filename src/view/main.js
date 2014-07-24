@@ -170,7 +170,7 @@ require(["../controller/ControllerAPI", "../controller/AbstractView", "../view/g
     // Setup CodeMirror instance and also setup advanced editor in IO/edit tab
     // when preference in localStorage is set as such
     cm = CodeMirror;
-    if (localStorage['useAdvancedEditor'] === 'true') {
+    if (localStorage.useAdvancedEditor === 'true') {
         $('#useCM').prop("checked", true);
         toggleCM();
     }

@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -51,7 +50,7 @@ define(["view/graphics/abstractdescarteshandler", "model/script"], /** @lends Vi
             name: "clearBuffers",
             func: this.clearBuffers.bind(this)
         });
-    };
+    }
 
 
     ScriptDescartesHandler.prototype = new AbstractDescartesHandler();

@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -76,7 +75,7 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunction
      * @return {boolean} this.handler != null
      */
     Canvas.prototype.canDraw = function() {
-        return this.handler != null;
+        return this.handler !== null;
     };
 
     /**
@@ -89,7 +88,7 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/abstractfunction
      * (see FunctionPropagator).
      */
     Canvas.prototype.setModel = function(modelElement) {
-        if (this.handler == null) {
+        if (this.handler === null) {
             this.handler = this.factory.getHandler(modelElement);
             this.handler.addDescartes(this.div, this.width, this.height);
         } else {

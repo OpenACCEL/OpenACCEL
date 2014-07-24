@@ -2,7 +2,7 @@ $(document).ready(
     function() {
         $('#scriptline').keypress(
             function(e) {
-                if (e.which == 13) {
+                if (e.which === 13) {
                     $('#enterline').click();
                 }
             }
@@ -55,7 +55,7 @@ function addQuantity(string) {
 }
 
 function toggleExecution(action) {
-    if (action == 'Run') {
+    if (action === 'Run') {
         controller.run();
     } else {
         controller.pause();
@@ -343,16 +343,15 @@ var scriptlistBuffer = new HTMLbuffer('#scriptlist');
  * @param {Number} category Category to which the left-hand side belongs
  */
 function getScriptlistLineHTML(linenr, quantity, left, right, category) {
-    return '\
-        <input type="radio" name="script" id="line' + linenr + '" value="' + left + ' = ' + right + '">\
-        <label for="line' + linenr + '" onclick = "selectScriptline(' + linenr + ', \'' + quantity + '\');">\
-            <div class="inline ellipsis max128w">' + left + '</div>\
-            <div class="inline operator">=</div>\
-            <div class="inline ellipsis max128w">' + right + '</div>\
-            <div class="inline comment">(cat.=' + category + ')</div>\
-            <a onclick="deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>\
-        </label>\
-    ';
+    return '' +
+        '<input type="radio" name="script" id="line' + linenr + '" value="' + left + ' = ' + right + '">' +
+        '<label for="line' + linenr + '" onclick = "selectScriptline(' + linenr + ', \'' + quantity + '\');">' +
+            '<div class="inline ellipsis max128w">' + left + '</div>' +
+            '<div class="inline operator">=</div>' +
+            '<div class="inline ellipsis max128w">' + right + '</div>' +
+            '<div class="inline comment">(cat.=' + category + ')</div>' +
+            '<a onclick="deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>' +
+        '</label>';
 }
 
 /**
@@ -375,7 +374,7 @@ function addScriptlistLine(linenr, quantity, left, right, category) {
 function setPendingScriptLine(line) {
     var pendingline = $('#pendingscriptline');
 
-    if (line == null) {
+    if (line === null) {
         pendingline.animate({height: 0, opacity: 0}, 400,
             function() {
                 pendingline.toggle(false);
@@ -407,7 +406,7 @@ var userinputBuffer = new HTMLbuffer('#userinput');
 function Input() {
     this.bufferInput = function() {
         userinputBuffer.append(this.getHTML());
-    }
+    };
 }
 Input.prototype.getHTML = function() {};
 Input.prototype.initialize = function() {};
@@ -460,13 +459,12 @@ function SliderInput(identifier, quantity, label, val, min, max) {
 }
 SliderInput.prototype = new Input();
 SliderInput.prototype.getHTML = function() {
-    return '\
-        <div id = "userinput' + this.identifier + '">\
-            <div class = "inline">' + this.label + '</div>\
-            <div id = "userslider' + this.identifier + 'value" class = "inline">(' + this.val + ')</div>\
-            <div id = "userslider' + this.identifier + '"></div>\
-        </div>\
-    ';
+    return '' +
+        '<div id = "userinput' + this.identifier + '">' +
+            '<div class = "inline">' + this.label + '</div>' +
+            '<div id = "userslider' + this.identifier + 'value" class = "inline">(' + this.val + ')</div>' +
+            '<div id = "userslider' + this.identifier + '"></div>' +
+        '</div>';
 };
 SliderInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, this.val);
@@ -492,18 +490,17 @@ function CheckboxInput(identifier, quantity, label, val) {
     this.label = label;
 
     this.val = val;
-};
+}
 CheckboxInput.prototype = new Input();
 CheckboxInput.prototype.getHTML = function() {
-    return '\
-        <div id = "userinput' + this.identifier + '">\
-            <label for = "usercheck' + this.identifier + '">' + this.label + '</label>\
-            <div class = "inline checkboxin">\
-                <input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val == true ? 'checked' : '') + '>\
-                <label for = "usercheck' + this.identifier + '"></label>\
-            </div>\
-        </div>\
-    ';
+    return '' +
+        '<div id = "userinput' + this.identifier + '">' +
+            '<label for = "usercheck' + this.identifier + '">' + this.label + '</label>' +
+            '<div class = "inline checkboxin">' +
+                '<input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val === true ? 'checked' : '') + '>' +
+                '<label for = "usercheck' + this.identifier + '"></label>' +
+            '</div>' +
+        '</div>';
 };
 CheckboxInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, this.val);
@@ -534,15 +531,14 @@ function TextInput(identifier, quantity, label, val) {
     this.label = label;
 
     this.val = val;
-};
+}
 TextInput.prototype = new Input();
 TextInput.prototype.getHTML = function() {
-    return '\
-        <div id = "userinput' + this.identifier + '">\
-            <label for = "usertext' + this.identifier + '">' + this.label + '</label>\
-            <input type = "text" id = "usertext' + this.identifier + '" class = "textin" value = "' + this.val + '">\
-        </div>\
-    ';
+    return '' +
+        '<div id = "userinput' + this.identifier + '">' +
+            '<label for = "usertext' + this.identifier + '">' + this.label + '</label>' +
+            '<input type = "text" id = "usertext' + this.identifier + '" class = "textin" value = "' + this.val + '">' +
+        '</div>';
 };
 TextInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, this.val);
@@ -550,7 +546,7 @@ TextInput.prototype.initialize = function() {
     var textinput = this;
     $('#usertext' + textinput.identifier).on('input',
         function() {
-            var val = this.value
+            var val = this.value;
             if ($.isNumeric(val) && !(/[a-zA-Z]/.test(val))) {
                 val = parseFloat(val);
             }
@@ -574,15 +570,14 @@ function ButtonInput(identifier, quantity, label) {
     this.identifier = identifier;
     this.quantity = quantity;
     this.label = label;
-};
+}
 ButtonInput.prototype = new Input();
 ButtonInput.prototype.getHTML = function() {
-    return '\
-        <div id = "userinput' + this.identifier + '">\
-            <label for = "userbutton' + this.identifier + '">' + this.quantity + '</label>\
-            <input type = "button" id = "userbutton' + this.identifier + '" class = "buttonin" value = "' + this.label + '">\
-        </div>\
-    ';
+    return '' +
+        '<div id = "userinput' + this.identifier + '">' +
+            '<label for = "userbutton' + this.identifier + '">' + this.quantity + '</label>' +
+            '<input type = "button" id = "userbutton' + this.identifier + '" class = "buttonin" value = "' + this.label + '">' +
+        '</div>';
 };
 ButtonInput.prototype.initialize = function() {
     controller.setUserInputQuantity(this.quantity, false);
@@ -648,11 +643,10 @@ var Report = {
      * @param {String} quantity Quantity which is to be implemented
      */
     getTodoListHTML: function(quantity) {
-        return '\
-            <div onclick = "Report.onclickTodo(\'' + quantity + '\')" class = "hoverbold">\
-                <div class="ellipsis max128w">' + quantity + '</div>\
-            </div>\
-        ';
+        return '' +
+            '<div onclick = "Report.onclickTodo(\'' + quantity + '\')" class = "hoverbold">' +
+                '<div class="ellipsis max128w">' + quantity + '</div>' +
+            '</div>';
     },
     onclickTodo: function(quantity) {
         $('#scriptline').html(quantity + ' =&nbsp;');
@@ -680,12 +674,11 @@ var Report = {
      * @param  {String} property Property of the associated quantity
      */
     getPropertyListHTML: function(quantity, property) {
-        return '\
-            <div onclick = "Report.onclickProperty(\'' + quantity + '\')" class = "hoverbold">\
-                <div class="ellipsis max128w">' + quantity + '</div>\
-                <div class="property">' + property + '</div>\
-            </div>\
-        ';
+        return '' +
+            '<div onclick = "Report.onclickProperty(\'' + quantity + '\')" class = "hoverbold">' +
+                '<div class="ellipsis max128w">' + quantity + '</div>' +
+                '<div class="property">' + property + '</div>' +
+            '</div>';
     },
     onclickProperty: function(quantity) {
         var i = lineNumber[quantity];

@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -61,7 +60,8 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * and all y co-ordinates multiplied by verZoom.
      */
     ZoomDescartesDecorator.prototype.decorate = function(plot) {
-        for (i in plot) {
+        var j;
+        for (var i in plot) {
             if (plot[i][0].x instanceof Object) {
                 for (j in plot[i][plot[i][0].x.ref]) {
                     plot[i][plot[i][0].x.ref][j] *= this.horZoom;
@@ -77,7 +77,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
                 plot[i][0].y *= this.verZoom;
             }
         }
-        if (this.decorator != null) {
+        if (this.decorator !== null) {
             plot = this.decorator.decorate(plot);
         }
         return plot;
@@ -94,7 +94,7 @@ define(["view/graphics/abstractdescartesdecorator"], /** @lends View.Graphics */
      * divided by verZoom.
      */
     ZoomDescartesDecorator.prototype.mapPoint = function(point) {
-        if (this.decorator != null) {
+        if (this.decorator !== null) {
             point = this.decorator.mapPoint(point);
         }
         point.x /= this.horZoom;

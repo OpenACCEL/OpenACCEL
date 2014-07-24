@@ -1,6 +1,5 @@
 /*
  *
- * @author Leo van Gansewinkel
  */
 
 /* Browser vs. Node ***********************************************/
@@ -44,7 +43,7 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/canvas", "view/g
              * Add GeneticOptimisationDescartesHandler to the factory, to support drawing the GeneticOptimisation class.
              */
             this.factory.addHandler(new GeneticOptimisationDescartesHandler());
-        }
+        };
 
         CanvasCreator.prototype = {
 
@@ -59,7 +58,7 @@ define(["view/graphics/descarteshandlerfactory", "view/graphics/canvas", "view/g
                 canvas.facadify();
                 return canvas;
             }
-        }
+        };
 
         // Exports are needed, such that other modules may invoke methods from this module file.
         return CanvasCreator;
