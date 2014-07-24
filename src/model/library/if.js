@@ -12,7 +12,7 @@ function __if__(condition, ifTrue, ifFalse) {
         }
     }
 
-    if (condition instanceof Object) {
+    if (condition instanceof Array) {
         return zip([condition, ifTrue, ifFalse], doIf);
     } else {
         return doIf(condition, ifTrue, ifFalse);

@@ -447,3 +447,4 @@ UnitObject.prototype.power = function(exponent) {
     return ans;
 }
 
+UnitObject.prototype.toString = UnitObject.prototype.unitToString;

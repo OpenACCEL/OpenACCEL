@@ -45,7 +45,6 @@ function addQuantity(string) {
                     handleError(error);
                 }
 
-                console.log('compiled');
                 setPendingScriptLine(null);
 
                 selectContent('#scriptline');
@@ -227,7 +226,7 @@ function objectToString(obj) {
 
                     result += ',';
                 }
-                // replace the last 
+                // replace the last
                 if (result.charAt(result.length - 1) === ',') {
                     result = result.slice(0, -1);
                 }
@@ -286,7 +285,7 @@ function selectScriptline(linenr, quantityname) {
         for (var r in quantity.reverseDeps) {
             Report.addArgto(quantity.reverseDeps[r], 'regular');
         }
-    }        
+    }
 
     Report.arglistBuffer.flip();
     Report.argtolistBuffer.flip();
@@ -377,7 +376,7 @@ function setPendingScriptLine(line) {
     var pendingline = $('#pendingscriptline');
 
     if (line == null) {
-        pendingline.animate({height: 0, opacity: 0}, 400, 
+        pendingline.animate({height: 0, opacity: 0}, 400,
             function() {
                 pendingline.toggle(false);
                 $('#pendingloader').toggle(false);
@@ -436,7 +435,7 @@ function SliderInput(identifier, quantity, label, val, min, max) {
     this.min = min;
     this.max = max;
 
-    this.getStepSize = function(val, min, max) {      
+    this.getStepSize = function(val, min, max) {
         var stepsizes = [Math.pow(10, -getPrecision(val)),
                          Math.pow(10, -getPrecision(min)),
                          Math.pow(10, -getPrecision(max))];
@@ -493,7 +492,6 @@ function CheckboxInput(identifier, quantity, label, val) {
     this.label = label;
 
     this.val = val;
-    console.log(val);
 };
 CheckboxInput.prototype = new Input();
 CheckboxInput.prototype.getHTML = function() {
@@ -513,7 +511,6 @@ CheckboxInput.prototype.initialize = function() {
     var checkboxinput = this;
     $('#usercheck' + checkboxinput.identifier).on('change',
         function() {
-            console.log(this.checked);
             controller.setUserInputQuantity(checkboxinput.quantity, this.checked);
         }
     );
@@ -647,7 +644,7 @@ function initInputs() {
 var Report = {
     /**
      * Generates HTML for an item in the list of todos
-     * 
+     *
      * @param {String} quantity Quantity which is to be implemented
      */
     getTodoListHTML: function(quantity) {
@@ -678,7 +675,7 @@ var Report = {
 
     /**
      * Generates HTML for an item in a list of quantities with a certain property
-     * 
+     *
      * @param  {String} quantity Quantity of which a property is being displayed
      * @param  {String} property Property of the associated quantity
      */
@@ -691,7 +688,6 @@ var Report = {
         ';
     },
     onclickProperty: function(quantity) {
-        console.log(quantity);
         var i = lineNumber[quantity];
         selectScriptline(i, quantity);
         $('#line' + i).trigger('click');
@@ -731,7 +727,7 @@ var Report = {
 
     /**
      * List to allow for value updates without reconstruction of the HTML
-     * 
+     *
      * @type ValueList
      */
     resultList: new ValueList('#result')

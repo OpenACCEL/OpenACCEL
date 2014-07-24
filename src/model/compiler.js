@@ -226,7 +226,6 @@ define(["model/fileloader",
                 // Syntaxerror occured if it has a 'hash' property.
                 // Add the error location to the length of the quantity definition to
                 // get the correct position!
-                console.log(e.hash);
                 var err = new SyntaxError();
 
                 err.found = e.hash.text;

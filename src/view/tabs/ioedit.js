@@ -63,8 +63,6 @@ function constructAdvancedEditor() {
  * currently present in the contents of the editor.
  */
 function setupFunctionClickEvents(instance, changes) {
-	console.log("Changes fired!");
-
 	// Start looking in the dom tree only from the CodeMirror div down
 	$(".cm-builtin","div.CodeMirror").on("click", function(e) {
 		e.preventDefault();
@@ -80,7 +78,6 @@ function setupFunctionClickEvents(instance, changes) {
  * value of the corresponding checkbox in the UI.
  */
 function toggleCM() {
-	console.log("toggle fired");
 	var use = undefined;
 	if (usingAdvancedEditor()) {
 		// Construct CodeMirror editor from textarea
