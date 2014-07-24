@@ -675,7 +675,7 @@ define(["model/script",
          * definition of the quantity to be added
          * @pre definition != null
          * @pre definition != undefined
-         * @post
+         * @post Quantity has now been added to the model.
          * @modifies this.script.quantities
          */
         Controller.prototype.addQuantity = function(definition, autoSave) {

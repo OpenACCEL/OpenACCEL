@@ -134,7 +134,7 @@ function focusAdvancedEditor() {
  * Shows autocomplete suggestions inside the given editor instance
  *
  * @param {CodeMirror} editor The CodeMirror editor instance for which to return suggestions
- * @return {[type]}         [description]
+ * @return {Object} (???)
  */
 function autoComplete(editor, options) {
 	// Return:
