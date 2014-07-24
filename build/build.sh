@@ -16,7 +16,6 @@ quickbuild() {
     jade
     deploy
     post_deploy
-    compress
 }
 
 # Testing.
