@@ -1,7 +1,5 @@
 /*
- * File containing the Controller Class
- *
- * @author Loct
+ * File containing the Controller Class.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -51,7 +49,7 @@ define(["model/script",
              *
              * @type {AbstractView}
              */
-            this.view;
+            this.view = null;
             if (typeof view !== 'undefined') {
                 this.view = view;
             } else {
@@ -357,7 +355,7 @@ define(["model/script",
 
             // If script isn't compiled yet compile it now
             if (!this.script.isCompiled()) {
-                this.compileScript(this.script)
+                this.compileScript(this.script);
             }
 
             // If the execution has reached the last iteration and has stopped there,
@@ -423,7 +421,7 @@ define(["model/script",
             }
 
             // Check whether another iteration should be made
-            if (this.numIterations == 0 || this.currentIteration <= this.numIterations) {
+            if (this.numIterations === 0 || this.currentIteration <= this.numIterations) {
                 // Evaluate the expressions (definitions) of all output quantities
                 this.script.step();
                 var results = this.script.getOutputQuantities();
@@ -434,7 +432,7 @@ define(["model/script",
 
                 // If this is the first iteration of the script, show the plot if
                 // nessecary
-                if (this.currentIteration == 1) {
+                if (this.currentIteration === 1) {
                     // Check if there is a plot and show it if there is
                     if (this.script.exe.hasPlot) {
                         this.view.showPlot(true);
@@ -453,7 +451,7 @@ define(["model/script",
             }
 
             if (inBrowser && this.curMeasurement < this.numMeasurements) {
-                var posttime = performance.now();
+                posttime = performance.now();
                 this.measurements[this.curMeasurement] = posttime-pretime;
                 this.curMeasurement++;
             }
@@ -485,16 +483,16 @@ define(["model/script",
                 this.view.setStatus(this.status);
 
                 // Performance measurements
-            if (inBrowser && this.curMeasurement > 0) {
-                var total = this.measurements.slice(0, this.curMeasurement).reduce(function(a, b) {
-                    return a + b;
-                });
-                var avg = total/this.curMeasurement;
-                var fps = 100/avg;
+                if (inBrowser && this.curMeasurement > 0) {
+                    var total = this.measurements.slice(0, this.curMeasurement).reduce(function(a, b) {
+                        return a + b;
+                    });
+                    var avg = total/this.curMeasurement;
+                    var fps = 100/avg;
 
-                console.log("Average iteration time: " + avg);
-                console.log("#Measurements: " + this.curMeasurement);
-            }
+                    console.log("Average iteration time: " + avg);
+                    console.log("#Measurements: " + this.curMeasurement);
+                }
             }
         };
 
@@ -622,11 +620,11 @@ define(["model/script",
         Controller.prototype.setIterations = function(iterations) {
             if (!iterations) {
                 throw new Error('Controller.prototype.setIteration.pre :' +
-                    'iterations is null or undefined')
+                    'iterations is null or undefined');
             }
-            if (!(iterations >= 0)) {
+            if (iterations < 0) {
                 throw new Error('Controller.prototype.setIteration.pre :' +
-                    'iterations is not greater than or equal to 0')
+                    'iterations is not greater than or equal to 0');
             }
 
             this.stop();
@@ -659,11 +657,11 @@ define(["model/script",
         Controller.prototype.getQuantity = function(qtyName) {
             if (!qtyName) {
                 throw new Error('Controller.prototype.getQuantity.pre :' +
-                    'quantity is null or undefined')
+                    'quantity is null or undefined');
             }
             if (!this.script.hasQuantity(qtyName)) {
                 throw new Error('Controller.prototype.getQuantity.pre :' +
-                    'quantity does not exist')
+                    'quantity does not exist');
             }
 
             //TODO Precondition quantity \in Script
@@ -683,7 +681,7 @@ define(["model/script",
         Controller.prototype.addQuantity = function(definition, autoSave) {
             if (!definition) {
                 throw new Error('Controller.prototype.addQuantity.pre violated :' +
-                    'definition is null or undefined')
+                    'definition is null or undefined');
             }
 
             if (typeof(autoSave) === 'undefined') {
@@ -719,11 +717,11 @@ define(["model/script",
         Controller.prototype.deleteQuantity = function(qtyName) {
             if (!qtyName) {
                 throw new Error('Controller.prototype.addQuantityuantity.pre violated :' +
-                    'qtyName is null or undefined')
+                    'qtyName is null or undefined');
             }
             if (!this.script.hasQuantity(qtyName)) {
                 throw new Error('Controller.prototype.getQuantity.pre :' +
-                    'quantity does not exist')
+                    'quantity does not exist');
             }
 
             // Stop script, delete quantity from script and update quantities in view
@@ -753,7 +751,7 @@ define(["model/script",
         Controller.prototype.compileScript = function(script) {
             if (!script) {
                 throw new Error('Controller.prototype.compileScript.pre :' +
-                    'script is null or undefined')
+                    'script is null or undefined');
             }
 
             // Reset measurements
@@ -777,7 +775,7 @@ define(["model/script",
                 }
 
                 // Hide any shown plot if there is no plot in the new executable anymore
-                if (script.exe.plot.length == 0) {
+                if (script.exe.plot.length === 0) {
                     this.view.showPlot(false);
                 }
 
@@ -799,11 +797,11 @@ define(["model/script",
         Controller.prototype.getQuantityValue = function(qtyName) {
             if (!qtyName) {
                 throw new Error('Controller.prototype.getQuantity.pre :' +
-                    'quantity is null or undefined')
+                    'quantity is null or undefined');
             }
             if (!this.script.hasQuantity(qtyName)) {
                 throw new Error('Controller.prototype.getQuantity.pre :' +
-                    'quantity does not exist')
+                    'quantity does not exist');
             }
 
             return this.script.getQuantityValue(qtyName);
@@ -822,17 +820,17 @@ define(["model/script",
          * @post this.script.quantities[qtyname].value = value
          */
         Controller.prototype.setUserInputQuantity = function(qtyName, value) {
-            if (value == null || value == undefined) {
+            if (value === null || value === undefined) {
                 throw new Error('Controller.prototype.setValue.pre :' +
-                    'value is null or undefined')
+                    'value is null or undefined');
             }
             if (!qtyName) {
                 throw new Error('Controller.prototype.setValue.pre :' +
-                    'quantity is null or undefined')
+                    'quantity is null or undefined');
             }
             if (this.script.getQuantity(qtyName).category != 1) {
                 throw new Error('Controller.prototype.getQuantity.pre :' +
-                    'not a category 1 (user-input) quantity')
+                    'not a category 1 (user-input) quantity');
             }
 
             // Update value in exe
@@ -888,7 +886,7 @@ define(["model/script",
         Controller.prototype.loadDemoScript = function(name) {
             if (!name) {
                 throw new Error('Controller.prototype.loadDemoScript.pre :' +
-                    'name is null or undefined')
+                    'name is null or undefined');
             }
             //TODO Precondition name \in model.DemoScripts
             //TODO Implementation
@@ -907,7 +905,7 @@ define(["model/script",
         Controller.prototype.saveScript = function(name) {
             if (!name) {
                 throw new Error('Controller.prototype.saveScript.pre :' +
-                    'name is null or undefined')
+                    'name is null or undefined');
             }
             //TODO Precondition name \in model.DemoScripts
             //TODO Implementation
@@ -1035,11 +1033,11 @@ define(["model/script",
         Controller.prototype.plot = function(quantity1, quantity2) {
             if (!quantity1) {
                 throw new Error('Controller.prototype.plot.pre :' +
-                    'quantity1 is null or undefined')
+                    'quantity1 is null or undefined');
             }
             if (!quantity2) {
                 throw new Error('Controller.prototype.plot.pre :' +
-                    'quantity2 is null or undefined')
+                    'quantity2 is null or undefined');
             }
             //TODO
             //TODO Implementation
@@ -1180,15 +1178,15 @@ define(["model/script",
         Controller.prototype.setPosition = function(quantity, x, y) {
             if (!quantity) {
                 throw new Error('Controller.prototype.generate.pre :' +
-                    'quantity is null or undefined')
+                    'quantity is null or undefined');
             }
             if (!x) {
                 throw new Error('Controller.prototype.generate.pre :' +
-                    'x is null or undefined')
+                    'x is null or undefined');
             }
             if (!y) {
                 throw new Error('Controller.prototype.generate.pre :' +
-                    'y is null or undefined')
+                    'y is null or undefined');
             }
             //TODO Implementation
             //TODO Tests

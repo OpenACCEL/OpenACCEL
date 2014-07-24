@@ -1,6 +1,5 @@
 /**
- *
- * @author Edward Brinkmann
+ * 
  */
 
 /** Browser vs. Node ***********************************************/
