@@ -4,12 +4,14 @@ function vSegment(x, y, z) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     if (x instanceof Array) {
         if (!(y instanceof Array)) {
             if (!(z instanceof Array)) {
                 var iLow = Math.max(0, y);
                 var iHi = Math.min(x.length, z);
                 var r = [];
+                var i;
                 for (i = iLow; i < iHi; i++) {
                     r[i - iLow] = x[i];
                 }

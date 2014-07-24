@@ -73,7 +73,7 @@ macro func {
          */
         if (this.report && this.report.$x.category === 1) {
             // Initialise initial values of user input quantities
-            if (this.report.$x.input.type == 'button') {
+            if (this.report.$x.input.type === 'button') {
                 this.$x.hist[0] = false;
             } else {
                 this.$x.hist[0] = this.report.$x.input.parameters[0];

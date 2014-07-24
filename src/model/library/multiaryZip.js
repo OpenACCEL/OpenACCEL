@@ -27,7 +27,8 @@ function multiaryZip(x, func) {
         var referenceKeys;
         // Number of keys in the set of referenceKeys.
         var numKeys;
-        for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
+        var inkey;
+        for (inKey = numArgs - 1; inKey >= 0; inKey--) {
             if (x[inKey] instanceof Array) {
                 // Keys of contender for input of reference found.
                 referenceKeys = Object.keys(x[inKey]);
@@ -46,7 +47,7 @@ function multiaryZip(x, func) {
             // Key occurs in every input until proven otherwise.
             isCommonKey = true;
             // Loop over all inputs in x.
-            for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
+            for (inKey = numArgs - 1; inKey >= 0; inKey--) {
                 if (x[inKey] instanceof Array) {
                     // Check if keys contained in all objects
                     if (x[inKey][referenceKeys[resultKey]] !== undefined) {

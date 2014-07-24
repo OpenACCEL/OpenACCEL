@@ -2,8 +2,6 @@
  * The arbitrary mutation takes as input one individual.
  * It mutates one arbitrary category I quantity and gives it
  * a random value in the domain of that category.
- *
- * @author Jacco Snoeren
  */
 
 /* Browser vs. Node ***********************************************/

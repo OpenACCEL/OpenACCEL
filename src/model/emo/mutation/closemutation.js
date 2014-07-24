@@ -2,8 +2,6 @@
  * The close mutation takes as input one individual.
  * It mutates one arbitrary category I quantity and gives it
  * a value close to the original value in the domain of that category.
- *
- * @author Jacco Snoeren
  */
 
 /* Browser vs. Node ***********************************************/
@@ -60,19 +58,19 @@ define(["model/emo/mutation/mutation", "model/emo/random"], /**@lends Model.EMO.
         // determine max value that is still in range for the new quantity
         var maxValue = Math.min(quantity.value + PERCENTAGE * range, maxRange);
         // if max value lies on the border, shift the min value
-        if (maxValue == maxRange) {
+        if (maxValue === maxRange) {
             minValue = maxValue - PERCENTAGE * 2 * range;
         }
         // if min value lies on the border, shift the max value
-        if (minValue == minRange) {
+        if (minValue === minRange) {
             maxValue = minValue + PERCENTAGE * 2 * range;
         }
         var oldValue = quantity.value;
         var newValue = Random.prototype.getRandomDouble(minValue, maxValue, quantity.precision);
         // if new value equals old value, check if, when 1 is added to it,
         // new value still lies within the range.
-        if (newValue == oldValue) {
-            if (newValue == maxRange) {
+        if (newValue === oldValue) {
+            if (newValue === maxRange) {
                 newValue--;
             } else {
                 newValue++;

@@ -1,8 +1,7 @@
 /*
- * An error that occured while performing a network request
- *
- * @author Edward Brinkmann
+ * An error that occured while performing a network request.
  */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
@@ -21,9 +20,7 @@ define([], /**@lends Model.Error*/ function() {
      * @class
      * @classdesc An error that occured while performing a network request
      */
-
     function NetworkError(msg) {
-
         /**
          * A description of the error that occured.
          *

@@ -1,7 +1,5 @@
 /*
- * File containing the AnalyserPass class
- *
- * @author Jacco Snoeren
+ * File containing the AnalyserPass class.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -76,6 +74,7 @@ define(['model/analyser/passes/pass'], /**@lends Model.Analyser.Passes*/ functio
         var dummies = this.getDummies(s); // determine dummies
         var match;
         var output = [];
+        
         while (match = regexvar.exec(s)) {
             if (dummies.indexOf(match[1]) == -1 && isNaN(match[1])) {
                 output.push(match[1]);

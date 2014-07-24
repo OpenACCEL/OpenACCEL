@@ -1,7 +1,5 @@
 /*
- * File containing the QuantityPass class
- *
- * @author Roel Jacobs
+ * File containing the QuantityPass class.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -23,9 +21,9 @@ define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
     /**
      * @class
      * @classdesc This pass is part of the Analyser and extracts:
-     * 	-Quantity names
-     *	-Parameters of user-defined functions
-     *	-Whether quantities have a definition or not
+     *  -Quantity names
+     *  -Parameters of user-defined functions
+     *  -Whether quantities have a definition or not
      */
     function QuantityPass() {
 
@@ -110,7 +108,7 @@ define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
 
             // Straightforward check for empty definitions of quantities. Further
             // checking of todo-items is done in the dependency pass.
-            if (rhs == '') {
+            if (rhs === '') {
                 qty.todo = true;
             } else {
                 qty.todo = false;

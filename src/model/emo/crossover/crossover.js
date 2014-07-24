@@ -1,7 +1,5 @@
 /*
  * Abstract class that represents a cross-over in a Genetic Optimization algorithm.
- *
- * @author Jacco Snoeren
  */
 
 /* Browser vs. Node ***********************************************/

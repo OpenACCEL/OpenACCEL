@@ -15,6 +15,7 @@ function check(def) {
         throw new Error('Wrong number of arguments for ' + 'check' +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     if (typeof def === 'boolean') {
         return [def];
     } else {

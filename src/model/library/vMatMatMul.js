@@ -4,6 +4,8 @@ function vMatMatMul(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
+    var trueMatrix1, i, j, k, a, m, r;
     if (x instanceof Array) {
         var trueMatrix0 = false;
         for (i in x) {
@@ -13,20 +15,20 @@ function vMatMatMul(x, y) {
         }
         if (trueMatrix0) {
             if (y instanceof Array) {
-                var trueMatrix1 = false;
+                trueMatrix1 = false;
                 for (j in y) {
                     if (y[j] instanceof Array)
                         trueMatrix1 = true;
                 }
                 if (trueMatrix1) {
-                    var m = [];
+                    m = [];
                     for (i in x) {
-                        var r = [];
+                        r = [];
                         for (j in y) {
                             if (y[j] instanceof Array) {
                                 for (k in y[j]) {
-                                    if (x[i][j] != undefined) {
-                                        if (y[j][k] != undefined) {
+                                    if (x[i][j] !== undefined) {
+                                        if (y[j][k] !== undefined) {
                                             if (!(x[i][j] instanceof Array) && !(y[j][k] instanceof Array)) {
                                                 var t = x[i][j] * y[j][k];
                                                 if (r[k]) {
@@ -45,12 +47,12 @@ function vMatMatMul(x, y) {
                     return m;
                 } else {
                     // y is not a matrix but a vector; x is a true matrix. So this is a matrix-vector product or a matrix-scalar product.
-                    var r = [];
+                    r = [];
                     for (i in x) {
-                        var a = 0;
+                        a = 0;
                         if (x[i] instanceof Array) {
                             for (j in x[i]) {
-                                if (y[j] != undefined) {
+                                if (y[j] !== undefined) {
                                     if (!(x[i][j] instanceof Array) && !(y[j] instanceof Array)) {
                                         a += x[i][j] * y[j];
                                     }
@@ -64,9 +66,9 @@ function vMatMatMul(x, y) {
             } else {
                 // x is a matrix and y is a scalar. Return the matrix, multiplied by the scalar (this would
                 // also be achieved by auto mapping the multiplication)
-                var m = [];
-                for (var i in x) {
-                    var r = [];
+                m = [];
+                for (i in x) {
+                    r = [];
                     if (x[i] instanceof Array) {
                         for (j in x[i]) {
                             if (!(x[i][j] instanceof Array)) {
@@ -81,20 +83,20 @@ function vMatMatMul(x, y) {
         } else {
             // the argument x is a vector of scalars, not a true matrix. Perhaps y is a matrix.
             if (y instanceof Array) {
-                var trueMatrix1 = false;
+                trueMatrix1 = false;
                 for (j in y) {
                     if (y[j] instanceof Array)
                         trueMatrix1 = true;
                 }
                 if (trueMatrix1) {
                     // yes, so we do a matrix-vector product
-                    var r = [];
+                    r = [];
                     for (i in x) {
-                        if (y[i] != undefined) {
+                        if (y[i] !== undefined) {
                             if (y[i] instanceof Array) {
                                 for (j in y[i]) {
                                     if (!(y[i][j] instanceof Array)) {
-                                        if (r[j] != undefined) {
+                                        if (r[j] !== undefined) {
                                             r[j] += x[i] * y[i][j];
                                         } else {
                                             r[j] = x[i] * y[i][j];
@@ -108,9 +110,9 @@ function vMatMatMul(x, y) {
                 } else {
                     // y is not a matrix but a vector; x is also a vector. So we calculate the dot product -
                     // treating the vector y as a column rather than as the row that it actually is..
-                    var a = 0;
+                    a = 0;
                     for (i in x) {
-                        if (y[i] != undefined) {
+                        if (y[i] !== undefined) {
                             if (!(y[i] instanceof Array)) {
                                 a += x[i] * y[i];
                             }
@@ -121,7 +123,7 @@ function vMatMatMul(x, y) {
                 }
             } else {
                 // so x is a vector and y is a scalar.
-                var r = [];
+                r = [];
                 for (i in x) {
                     if (!(x[i] instanceof Array)) {
                         r[i] = x[i] * y;
@@ -133,16 +135,16 @@ function vMatMatMul(x, y) {
     } else {
         // x is a scalar. Perhaps y is a matrix.
         if (y instanceof Array) {
-            var trueMatrix1 = false;
+            trueMatrix1 = false;
             for (i in y) {
                 if (y[i] instanceof Array)
                     trueMatrix1 = true;
             }
             if (trueMatrix1) {
                 // so x is a scalar and y is a matrix.
-                var m = [];
+                m = [];
                 for (i in y) {
-                    var r = [];
+                    r = [];
                     if (y[i] instanceof Array) {
                         for (j in y[i]) {
                             if (!(y[i][j] instanceof Array)) {
@@ -155,7 +157,7 @@ function vMatMatMul(x, y) {
                 return m;
             } else {
                 // x is a scalar and y is a vector.
-                var r = [];
+                r = [];
                 for (i in y) {
                     if (!(y[i] instanceof Array)) {
                         r[i] = y[i] * x;

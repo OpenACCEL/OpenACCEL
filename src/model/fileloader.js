@@ -1,7 +1,5 @@
 /*
  * Central point where we load all of our macros and library functions, and possibly more!
- *
- * @author Roy Stoof
  */
 
 /* Browser vs. Node ***********************************************/
@@ -121,12 +119,12 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
 
         // If the contents have been read, we can store them and return true, else we failed and return false.
         if (content) {
-            if (type == "macros" || type == "testmacros") {
+            if (type === "macros" || type === "testmacros") {
                 this.macros[file] = content.toString();
             } else {
-                if (type == "library") {
+                if (type === "library") {
                     this.library.std[file] = content.toString();
-                } else if (type == "unitlibrary") {
+                } else if (type === "unitlibrary") {
                     this.library.unit[file] = content.toString();
                 }
             }
@@ -160,6 +158,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
      */
     FileLoader.prototype.getLibrary = function(lib) {
         var output = "";
+        var key;
 
         if (lib) {
             switch (lib) {
@@ -174,11 +173,11 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                     break;
             }
 
-            for (var key in this.library[lib]) {
+            for (key in this.library[lib]) {
                 output += this.library[lib][key];
             }
         } else {
-            for (var key in this.library.std) {
+            for (key in this.library.std) {
                 output += this.library.std[key];
             }
         }

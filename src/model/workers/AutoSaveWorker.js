@@ -1,7 +1,5 @@
 /*
  * Web Worker used to save the script to the autoSaveStore.
- *
- * @author Edward Brinkmann
  */
 
 /* Browser vs. Node ***********************************************/

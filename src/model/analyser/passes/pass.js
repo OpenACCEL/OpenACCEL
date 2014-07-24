@@ -1,7 +1,6 @@
 /*
- * File containing the Pass class
- *
- * @author Roel Jacobs
+ * File containing the Pass class. A single pass is a method applying a transformation or analysis
+ * of the script from top to bottom.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -142,7 +141,7 @@ define([], /**@lends Model.Analyser.Passes*/ function() {
         var beforeUnit = line.substring(0, unitStart);
 
         // Is a unit defined?
-        if (unitStart == -1) {
+        if (unitStart === -1) {
             return '';
         } else {
             // Check whether this ; occured inside a string. If so, there

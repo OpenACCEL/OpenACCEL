@@ -1,10 +1,9 @@
 /*
  * An error that occured while parsing ACCEL script.
  * Indicates that the script was not valid ACCEL script.
- * (or that the parser is broken ;))
- *
- * @author Edward Brinkmann
+ * (or that the parser is broken ;)).
  */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
@@ -23,7 +22,6 @@ define([], /**@lends Model.Error*/ function() {
      * @class
      * @classdesc An error that occured while parsing ACCEL script.
      */
-
     function SyntaxError() {
         this.firstLine = 0;
         this.lastLine = 0;

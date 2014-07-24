@@ -3,10 +3,12 @@ function vMatSolve(mm, v) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+    
     var isOK = true;
+    var t = [];
+    var u = [];
+
     if (mm instanceof Array) {
-        var t = [];
-        var u = [];
         // n is number of rows; m is number of columns of the matrix (=mm)
         var n = mm.length;
         if (mm[0] instanceof Array) {
@@ -60,6 +62,6 @@ function vMatSolve(mm, v) {
         for (i = 0; i < aSol.mat.length; i++) {
             tt[i] = aSol.mat[i][0];
         }
-        return tt
+        return tt;
     }
 }

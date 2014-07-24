@@ -1,6 +1,5 @@
 /*
- * File containing the GeneticOptimisation class
- *
+ * File containing the GeneticOptimisation class.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -150,11 +149,13 @@ define(["model/emo/crossover/crossover",
         var outputquantity;
         var inputvector = [];
         var outputvector = [];
+
         // loop over all the quantities
         for (var i in quantities) {
             quantity = quantities[i];
+
             // check if the quantity is a slider (cat 1)
-            if (quantity.category == 1 && quantity.input.type == "slider") {
+            if (quantity.category === 1 && quantity.input.type === "slider") {
                 // initialise the inputquantity
                 inputquantity = {};
                 inputquantity.name = quantity.name;
@@ -175,10 +176,12 @@ define(["model/emo/crossover/crossover",
                 outputvector.push(outputquantity);
             }
         }
+
         // create the initial population
         this.executable = script.exe;
         this.populationSize = populationSize;
         this.createPopulation(inputvector, outputvector, this.populationSize);
+
         // initialise variables
         this.mutations = [];
         this.mutations.push(new CloseMutation());
@@ -198,30 +201,37 @@ define(["model/emo/crossover/crossover",
     GeneticOptimisation.prototype.createPopulation = function(inputvector, outputvector, size) {
         // initialise population
         this.population = [];
+
         // generate as many individuals as needed
         for (var i = size - 1; i >= 0; i--) {
             // loop over the inputvector
             var _inputvector = [];
-            for (var j = inputvector.length - 1; j >= 0; j--) {
+            var j;
+            var key;
+
+            for (j = inputvector.length - 1; j >= 0; j--) {
                 var inputquantity = {};
                 // copy inputvector
-                for (var key in inputvector[j]) {
+                for (key in inputvector[j]) {
                     inputquantity[key] = inputvector[j][key];
                 }
                 // generate random input value
                 inputquantity.value = Random.prototype.getRandomDouble(inputquantity.minimum, inputquantity.maximum);
                 _inputvector.push(inputquantity);
             }
+
             // loop over the outputvector
             var _outputvector = [];
-            for (var j = outputvector.length - 1; j >= 0; j--) {
+
+            for (j = outputvector.length - 1; j >= 0; j--) {
                 var outputquantity = {};
                 // copy outputvector
-                for (var key in outputvector[j]) {
+                for (key in outputvector[j]) {
                     outputquantity[key] = outputvector[j][key];
                 }
                 _outputvector.push(outputquantity);
             }
+
             // add the newly created individual to the population
             this.population.push(new Individual(_inputvector, _outputvector));
         }
@@ -251,15 +261,19 @@ define(["model/emo/crossover/crossover",
         // calculate current and desired amount of individuals on the pareto front
         var currentParetoFrontSize = this.nondominated.length;
         var desiredParetoFrontSize = parseFloat((this.desiredParetoFrontRatio * this.population.length).toFixed(0));
+
         // initialise variables
         var individual;
         var quantity;
+
         // to avoid an infinite loop give up after this many iterations
         var maxIterations = this.population.length;
         var iterations = 0;
+
         // check if we have too many individuals on the pareto front
         while (currentParetoFrontSize > desiredParetoFrontSize && iterations < maxIterations) {
             individual = Random.prototype.getRandomElement(this.nondominated);
+
             // if needed, throw away a random individual on the pareto front
             if (individual.inParetoFront) {
                 for (var i = individual.inputvector.length - 1; i >= 0; i--) {
@@ -271,6 +285,7 @@ define(["model/emo/crossover/crossover",
                 this.calculateParetoFront();
                 currentParetoFrontSize = this.nondominated.length;
             }
+
             iterations++;
         }
     };
@@ -285,10 +300,12 @@ define(["model/emo/crossover/crossover",
         this.matingpool = [];
         var individual1;
         var individual2;
+
         // fill the mating pool
         while (this.matingpool.length < this.population.length - this.nondominated.length) {
             individual1 = Random.prototype.getRandomElement(this.population);
             individual2 = Random.prototype.getRandomElement(this.population);
+
             // run a tournament to determine the winner and add a clone
             // (instead of a reference) to the mating pool
             this.matingpool.push(CloneObject(this.tournament.select(individual1, individual2)));
@@ -306,6 +323,7 @@ define(["model/emo/crossover/crossover",
         var offspring = [];
         var parent1;
         var parent2;
+
         // loop over pairs of individuals in the mating pool
         for (var i = this.matingpool.length - 1; i >= 0; i -= 2) {
             // apply cross-over probability
@@ -317,14 +335,17 @@ define(["model/emo/crossover/crossover",
                 // continue with the next pair in the mating pool
                 continue;
             }
+
             parent1 = this.matingpool[i];
             parent2 = this.matingpool[i - 1];
+
             // no second parent available anymore, mating pool has odd length
             // parent1 will be chosen as 'offspring'
             if (!parent2) {
                 this.population[i] = this.matingpool[i];
                 break;
             }
+
             // do a cross-over to produce two children
             offspring = this.crossover.produce(parent1, parent2);
             this.population[i] = offspring[0];
@@ -341,10 +362,12 @@ define(["model/emo/crossover/crossover",
     GeneticOptimisation.prototype.mutateOffspring = function() {
         // initialise variable
         var mutation;
+
         // loop over all dominated individuals
         for (var i = this.dominated.length - 1; i >= 0; i--) {
             // decide which mutation to use
             mutation = Math.random();
+
             if (mutation <= this.closeMutationProbability) {
                 mutation = new CloseMutation();
             } else if (mutation <= this.arbitraryMutationProbability) {
@@ -352,6 +375,7 @@ define(["model/emo/crossover/crossover",
             } else {
                 mutation = new RandomMutation();
             }
+
             // apply the mutation
             mutation.mutate(this.dominated[i]);
         }
@@ -368,11 +392,14 @@ define(["model/emo/crossover/crossover",
         // calculate output values
         this.calculateOutputValues();
         // mark all individuals as nondominated
-        for (var i = size - 1; i >= 0; i--) {
+        var i;
+
+        for (i = size - 1; i >= 0; i--) {
             this.population[i].inParetoFront = true;
         }
+
         // compare all individuals with each other
-        for (var i = size - 1; i >= 0; i--) {
+        for (i = size - 1; i >= 0; i--) {
             for (var j = size - 1; j >= 0; j--) {
                 individual = this.population[j];
                 // if they are dominated mark them as such
@@ -381,11 +408,13 @@ define(["model/emo/crossover/crossover",
                 }
             }
         }
+
         // initialise the dominated and nondominated set
         this.dominated = [];
         this.nondominated = [];
+
         // update the dominated and nondominated set
-        for (var i = size - 1; i >= 0; i--) {
+        for (i = size - 1; i >= 0; i--) {
             individual = this.population[i];
             if (individual.inParetoFront) {
                 this.nondominated.push(individual);
@@ -401,6 +430,7 @@ define(["model/emo/crossover/crossover",
     GeneticOptimisation.prototype.calculateOutputValues = function() {
         // initialise variable
         var individual;
+
         // loop over the population
         for (var i = this.population.length - 1; i >= 0; i--) {
             individual = this.population[i];
@@ -417,15 +447,19 @@ define(["model/emo/crossover/crossover",
     GeneticOptimisation.prototype.calculateFitness = function() {
         // calculate the strength values of the population
         this.calculateStrength();
+
         // save the size of the population
         var size = this.population.length;
+
         // initialise variables
         var sum;
         var individual;
+
         // compare all individuals with each other
         for (var i = size - 1; i >= 0; i--) {
             sum = 0;
             individual = this.population[i];
+
             for (var j = size - 1; j >= 0; j--) {
                 var anotherIndividual = this.population[j];
                 // update fitness if individual is dominated by another
@@ -433,6 +467,7 @@ define(["model/emo/crossover/crossover",
                     sum += anotherIndividual.strength;
                 }
             }
+
             individual.fitness = sum;
         }
     };
@@ -446,12 +481,15 @@ define(["model/emo/crossover/crossover",
     GeneticOptimisation.prototype.calculateStrength = function() {
         // save the size of the population
         var size = this.population.length;
+
         // initialise variable
         var individual;
+
         // compare all individuals with each other
         for (var i = size - 1; i >= 0; i--) {
             individual = this.population[i];
             individual.strength = 0;
+            
             for (var j = size - 1; j >= 0; j--) {
                 // update strength if individual dominates another
                 if (individual.dominates(this.population[j])) {

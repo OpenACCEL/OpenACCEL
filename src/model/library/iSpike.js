@@ -4,6 +4,7 @@ function iSpike(x1,x2,y1,y2) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     var r1 = Math.round(y1);
     var r2 = Math.round(y2);
     var p1 = Math.round(x1);

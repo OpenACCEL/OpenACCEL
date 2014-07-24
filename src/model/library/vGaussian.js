@@ -4,13 +4,14 @@ function vGaussian(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     if (!(x instanceof Array) && !(y instanceof Array)) {
         var n = Math.round(x);
         var s = y;
         if (n >= 0) {
             var t = [];
             var sum = 0;
-            var x = -(n - 1) / 2;
+            x = -(n - 1) / 2;
             var denom = 2 * s * s;
             for (i = 0; i < n; i++) {
                 t[i] = Math.exp(-x * x / denom);

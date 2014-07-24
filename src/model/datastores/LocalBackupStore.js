@@ -1,8 +1,7 @@
 /*
  * An AbstractScriptStore implementati that stores quantities in localStorage.
- *
- * @author Edward Brinkmann
- *
+ */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
@@ -30,7 +29,7 @@ define(["underscore"], /**@lends Model.Datastores*/ function(_) {
     function LocalBackupStore() {
         // Create empty index if there is no index already!
         if (inBrowser && window.localStorage) {
-            if (localStorage.getItem('quantities') == null) {
+            if (localStorage.getItem('quantities') === null) {
                 localStorage.setItem('quantities', '[]');
             } else {
                 // Validate index of quantities stored in the localStorage
@@ -47,7 +46,7 @@ define(["underscore"], /**@lends Model.Datastores*/ function(_) {
      * @return {String[]} An array containing all the quantity names in the store.
      */
     LocalBackupStore.prototype.getQuantities = function(validate) {
-        if (typeof(validate) === 'undefined') {
+        if (typeof validate === 'undefined') {
             validate = true;
         }
 
@@ -156,7 +155,7 @@ define(["underscore"], /**@lends Model.Datastores*/ function(_) {
      * @return Whether there is a quantity named qtyName present in the store.
      */
     LocalBackupStore.prototype.hasQuantity = function(qtyName) {
-        if (localStorage.getItem(qtyName) == null) {
+        if (localStorage.getItem(qtyName) === null) {
             return false;
         } else {
             return true;
@@ -165,10 +164,10 @@ define(["underscore"], /**@lends Model.Datastores*/ function(_) {
 
     LocalBackupStore.prototype.hasScript = function() {
         var source = localStorage.getItem('scriptSource');
-        if (source == null) {
+        if (source === null) {
             return false;
         } else {
-            if (source.trim() == '') {
+            if (source.trim() === '') {
                 return false;
             } else {
                 return true;
@@ -184,7 +183,7 @@ define(["underscore"], /**@lends Model.Datastores*/ function(_) {
     LocalBackupStore.prototype.numQuantities = function() {
         this.validateIndex();
 
-        return JSON.parse(localStorage['quantities']).length;
+        return JSON.parse(localStorage.quantities).length;
     };
 
     /**
@@ -199,14 +198,14 @@ define(["underscore"], /**@lends Model.Datastores*/ function(_) {
     LocalBackupStore.prototype.validateIndex = function() {
         // Get current index and make sure it exists
         var index = localStorage.getItem('quantities');
-        if (index != null) {
+        if (index !== null) {
             var quantities = JSON.parse(index);
 
             // Identify all items that are missing in the store
             var deleted = [];
             for (var i = 0; i < quantities.length; i++) {
                 var qtyName = quantities[i];
-                if (localStorage.getItem(qtyName) == null) {
+                if (localStorage.getItem(qtyName) === null) {
                     // Add to quantities array to be deleted
                     deleted.push(qtyName);
                 }

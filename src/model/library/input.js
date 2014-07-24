@@ -17,7 +17,6 @@ function input(def) {
     }
 
     return [def];
-
 }
 
 input.isTimeDependent = true;

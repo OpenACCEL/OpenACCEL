@@ -1,6 +1,5 @@
 /*
- * File containing the Random class
- *
+ * File containing the Random class.
  */
 
 /* Browser vs. Node ***********************************************/

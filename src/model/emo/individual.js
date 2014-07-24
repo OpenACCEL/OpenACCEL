@@ -1,6 +1,5 @@
 /*
- * File containing the Individual class
- *
+ * File containing the Individual class.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -87,6 +86,7 @@ define([], /**@lends Model.EMO*/ function() {
 
         var worse = false;
         var equal = true;
+
         // loop over all dimensions of the output vector
         // unless individual is already worse than the other
         for (var i = outputvector1.length - 1; i >= 0 && !worse; i--) {
@@ -100,6 +100,7 @@ define([], /**@lends Model.EMO*/ function() {
             else {
                 worse = outputvector1[i].value > outputvector2[i].value;
             }
+            
             // update equal if both values are equal and ensure previous dimensions
             // are taken into consideration
             equal = (outputvector1[i].value === outputvector2[i].value) && equal;

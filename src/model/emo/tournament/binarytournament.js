@@ -1,8 +1,6 @@
 /*
  * The BinaryTournament takes as input two individuals.
  * It compares the two individuals and returns the strongest one.
- *
- * @author Jacco Snoeren
  */
 
 /* Browser vs. Node ***********************************************/

@@ -1,5 +1,5 @@
 /*
- * File containing the help documentation database class
+ * File containing the help documentation database class.
  */
 
 /* Browser vs. Node ***********************************************/

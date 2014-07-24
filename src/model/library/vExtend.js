@@ -3,9 +3,11 @@ function vExtend(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
+    var k;
+    var p = [];
     if (!(x instanceof Array)) {
         if (y instanceof Array) {
-            var p = [];
             p.push(x);
             for (k in y) {
                 if (!isNaN(k)) {
@@ -19,7 +21,6 @@ function vExtend(x, y) {
             return [x, y];
         }
     } else {
-        var p = [];
         for (k in x) {
             p[k] = x[k];
         }
@@ -38,4 +39,4 @@ function vExtend(x, y) {
     }
 }
 
-vExtend.base = []
+vExtend.base = [];

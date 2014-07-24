@@ -4,6 +4,7 @@ function iGaussian(n1,n2,s1,s2) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     n1 = Math.round(n1);
     n2 = Math.round(n2);
     if (n1 >= 0 && n2 >= 0) {

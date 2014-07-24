@@ -1,7 +1,5 @@
 /*
  * Abstract class that represents a cross-over in a Genetic Optimization algorithm.
- *
- * @author Jacco Snoeren
  */
 
 /* Browser vs. Node ***********************************************/
@@ -51,6 +49,7 @@ define(["model/emo/crossover/crossover", "model/emo/random", "model/emo/cloneobj
         var offspring2 = CloneObject(parent2);
         var parent;
         var dimension = parent1.inputvector.length;
+        
         // loop over all dimensions of the input vector
         for (var i = dimension - 1; i >= 0; i--) {
             // select a random parent

@@ -1,8 +1,7 @@
 /*
  * A Script Store that saves scripts to and loads scripts from a server.
- *
- * @author Edward Brinkmann
- *
+ */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
@@ -58,7 +57,7 @@ define(["model/datastores/AbstractScriptStore",
                             if (result) {
                                 // Iterate through all returned scriptnames and add them to our array
                                 for (var i = 0; i < result.length; i++) {
-                                    this.scriptList.push(result[i]["name"]);
+                                    this.scriptList.push(result[i].name);
                                 }
 
                                 // Call provided completion handler

@@ -1,6 +1,7 @@
 /*
  * A complete list of library functions.
  */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;

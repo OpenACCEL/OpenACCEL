@@ -4,9 +4,8 @@
  * A Script Store is an object that can store and retrieve scripts
  * from some arbitrary kind of storage, whether it be local, on a server or
  * on some external storage.
- *
- * @author Edward Brinkmann
- *
+ */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
@@ -57,7 +56,7 @@ define([], /**@lends Model.Datastores*/ function() {
          * @abstract
          */
         loadScript: function(name) {}  
-    }
+    };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return AbstractScriptStore;

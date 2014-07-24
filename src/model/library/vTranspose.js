@@ -4,24 +4,28 @@ function vTranspose(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     if (x instanceof Array) {
         var trueMatrix = false;
+        var i;
+
         for (i in x) {
             if (x[i] instanceof Array)
                 trueMatrix = true;
         }
         if (trueMatrix) {
             var r = [];
+            var j;
             for (i in x) {
                 if (x[i] instanceof Array) {
                     for (j in x[i]) {
-                        if (r[j] == undefined) {
+                        if (r[j] === undefined) {
                             r[j] = [];
                         }
                         r[j][i] = x[i][j];
                     }
                 } else {
-                    if (r[j] == undefined) {
+                    if (r[j] === undefined) {
                         r[j] = [];
                     }
                     r[j][0] = x[i];

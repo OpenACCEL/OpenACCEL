@@ -4,11 +4,12 @@ function vSpike(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     var r = Math.round(y);
     var p = Math.round(x);
     var rr = [];
-    for (i = 0; i < r; i++) {
-        if (i == p) {
+    for (var i = 0; i < r; i++) {
+        if (i === p) {
             rr[i] = 1;
         } else {
             rr[i] = 0;

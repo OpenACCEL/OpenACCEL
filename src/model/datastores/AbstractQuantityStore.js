@@ -4,9 +4,8 @@
  * A Quantity Store is an object that can store and retrieve quantities
  * from some arbitrary kind of storage, whether it be local, on a server or
  * on some external storage.
- *
- * @author Edward Brinkmann
- *
+ */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;

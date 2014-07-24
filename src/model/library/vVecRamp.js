@@ -18,7 +18,7 @@ function vVecRamp(x, y, z) {
                 var scalarOK = true;
                 while (!sorted && scalarOK) {
                     sorted = true;
-                    for (i = 0; i < len - 1; i++) {
+                    for (var i = 0; i < len - 1; i++) {
                         if (!(x[i] instanceof Array)) {
                             if (!(x[i + 1] instanceof Array)) {
                                 if (x[i] > x[i + 1]) {
@@ -51,7 +51,7 @@ function vVecRamp(x, y, z) {
                     }
                     var nrtrials = 0;
                     while (hi > lo + 1 && nrtrials < 20) {
-                        mi = Math.round((hi + lo) / 2)
+                        mi = Math.round((hi + lo) / 2);
                         if (z >= x[mi])
                             lo = mi;
                         if (z <= x[mi])

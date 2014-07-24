@@ -16,7 +16,6 @@ function button() {
     }
 
     return [];
-
 }
 
 button.isTimeDependent = true;

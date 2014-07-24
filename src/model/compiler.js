@@ -1,7 +1,5 @@
 /*
  * Central compiling point. Code goes in, executable goes out.
- *
- * @author Roy Stoof
  */
 
 /* Browser vs. Node ***********************************************/
@@ -241,7 +239,7 @@ define(["model/fileloader",
 
                 throw err;
             }
-        }
+        };
 
         /**
          * Loads the unit library into memory, overwriting the standard

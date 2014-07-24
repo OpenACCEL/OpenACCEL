@@ -12,15 +12,11 @@ function zip(x, func) {
     switch (numArgs) {
         case 0:
             throw new error("Cannot zip with zero arguments, attempted by: " + arguments.callee.caller.name);
-            break;
         case 1:
             return unaryZip(x[0], func);
-            break;
         case 2:
             return binaryZip(x[0], x[1], func);
-            break;
         default:
             return multiaryZip(x, func);
-            break;
     }
 }

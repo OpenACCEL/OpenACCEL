@@ -3,6 +3,7 @@ function pow(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     return binaryZip(x, y, function(a, b) {
         if (a >= 0) {
             return Math.pow(a, b);
@@ -23,5 +24,4 @@ function pow(x, y) {
             }
         }
     });
-
 }

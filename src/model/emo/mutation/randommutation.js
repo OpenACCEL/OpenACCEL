@@ -2,8 +2,6 @@
  * The random mutation takes as input one individual.
  * It mutates all category I quantities and gives them
  * a random value in the domain of their category.
- *
- * @author Jacco Snoeren
  */
 
 /* Browser vs. Node ***********************************************/

@@ -4,11 +4,14 @@ function vDot(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
+    var a = 0;
+    var i;
+
     if (x instanceof Array) {
         if (y instanceof Array) {
-            var a = 0;
             for (i in x) {
-                if (y[i] != undefined) {
+                if (y[i] !== undefined) {
                     if (!(x[i] instanceof Array) && !(y[i] instanceof Array)) {
                         a += (x[i] * y[i]);
                     }
@@ -16,7 +19,6 @@ function vDot(x, y) {
             }
             return a;
         } else {
-            var a = 0;
             for (i in x) {
                 if (!(x[i] instanceof Array)) {
                     a += y * x[i];
@@ -28,7 +30,6 @@ function vDot(x, y) {
         if (!(y instanceof Array)) {
             return x * y;
         } else {
-            var a = 0;
             for (i in y) {
                 if (!(y[i] instanceof Array)) {
                     a += x * y[i];

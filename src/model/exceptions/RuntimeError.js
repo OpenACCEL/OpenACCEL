@@ -1,8 +1,7 @@
 /*
- * An error that occured while executing the model
- *
- * @author Edward Brinkmann
+ * An error that occured while executing the model.
  */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
@@ -21,9 +20,7 @@ define([], /**@lends Model.Error*/ function() {
      * @class
      * @classdesc An error that occured during model execution
      */
-
     function RuntimeError(msg) {
-
         /**
          * A description of the error that occured.
          *

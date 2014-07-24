@@ -1,8 +1,6 @@
 /*
  * The macro expander takes as input a bunch of defined macros, runs them through the Sweet compiler and returns 
  * a piece of executable javascript code. That is, this is the code that should be eval()'d and return an executable.
- *
- * @author Roy Stoof
  */
 
 /* Browser vs. Node ***********************************************/

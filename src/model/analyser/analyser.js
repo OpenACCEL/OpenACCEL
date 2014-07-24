@@ -1,7 +1,5 @@
 /*
- * The analyser extracts information of the script.
- *
- * @author Roy Stoof
+ * The analyser extracts information from the script.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -135,12 +133,12 @@ define(["model/analyser/passes/quantitypass",
                 line = line.trim();
 
                 // Only process non-blank lines
-                if (line.replace(/ +?/g, '') != '') {
+                if (line.replace(/ +?/g, '') !== '') {
                     // Handle comments
-                    if (line.substring(0, 2) == '//') {
+                    if (line.substring(0, 2) === '//') {
                         // Ignore comments on first line of script, only handle
                         // those appearing _after_ a quantity definition
-                        if (prevQuantity != null) {
+                        if (prevQuantity !== null) {
                             // Comments can span multiple lines!
                             prevQuantity.comment.push(line.substring(2, line.length));
                         }

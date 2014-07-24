@@ -4,6 +4,7 @@ function iMake(x,nrRows,nrCols) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     var r1 = Math.round(nrRows);
     var r2 = Math.round(nrCols);
     if (r1 >= 0 && r2 >= 0) {

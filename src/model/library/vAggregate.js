@@ -4,11 +4,13 @@ function vAggregate(x, y, z) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     if (x instanceof Array) {
+        var iLow, r;
         if (y instanceof Array) {
             if (!(z instanceof Array)) {
-                var iLow = Math.min(x.length, Math.max(0, z));
-                var r = [];
+                iLow = Math.min(x.length, Math.max(0, z));
+                r = [];
                 for (i = 0; i < iLow; i++) {
                     r[i] = x[i];
                 }
@@ -25,8 +27,8 @@ function vAggregate(x, y, z) {
         } else {
             // we interpret the scala element to be inserted as if it is a vector with length 1
             if (!(z instanceof Array)) {
-                var iLow = Math.min(x.length, Math.max(0, z));
-                var r = [];
+                iLow = Math.min(x.length, Math.max(0, z));
+                r = [];
                 for (i = 0; i < iLow; i++) {
                     r[i] = x[i];
                 }

@@ -4,7 +4,10 @@ function vNormalize(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     var a = 0;
+    var i;
+
     if (x instanceof Array) {
         for (i in x) {
             if (!(x[i] instanceof Array)) {

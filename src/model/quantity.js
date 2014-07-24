@@ -1,9 +1,8 @@
 /*
  * A unit of a Quantity, consisting of a numerator and optionally a denominator.
- * Both numerator and denominator can consist of zero or more terms
- *
- * @author Edward Brinkmann
+ * Both numerator and denominator can consist of zero or more terms.
  */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
@@ -193,7 +192,7 @@ define([], /**@lends Model.Quantity */ function() {
             type: null,
             parameters: []
         };
-    }
+    };
 
     /**
      * Returns the original definition code of this quantity, as it was entered by the user
@@ -235,10 +234,10 @@ define([], /**@lends Model.Quantity */ function() {
         // Only include the unit of this quantity (if it has one) if it's a category 1 or 3 quantity
         // or when told to include checked units as well
         if (includeUnits) {
-            if (includeCheckedUnits && this.checkedUnit != '') {
+            if (includeCheckedUnits && this.checkedUnit !== '') {
                 // Include the checked unit
                 def += ' ; ' + this.checkedUnit;
-            } else if (this.unit != '') {
+            } else if (this.unit !== '') {
                 // Include the provided unit if one was provided
                 def += ' ; ' + this.unit;
             }

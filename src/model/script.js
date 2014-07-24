@@ -1,6 +1,7 @@
 /*
- *
- * @author Jacco Snoeren
+ * The script class is a container class that contains both information about the script itself,
+ * together with a report and a compiler to create the executable. This class is really a facade class
+ * that links everything together concerning OpenACCEL scripts.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -165,7 +166,7 @@ define(["model/analyser/analyser",
         getQuantity: function(qtyName) {
             if (!this.hasQuantity(qtyName)) {
                 throw new Error('Script.prototype.getQuantity.pre :' +
-                'no Quantity named qtyName')
+                'no Quantity named qtyName');
             }
 
             return this.quantities[qtyName];
@@ -184,11 +185,11 @@ define(["model/analyser/analyser",
         getQuantityValue: function(qtyName) {
             if (!this.hasQuantity(qtyName)) {
                 throw new Error('Script.prototype.getQuantityValue.pre :' +
-                'no Quantity named qtyName')
+                'no Quantity named qtyName');
             }
             if (!this.isComplete()) {
                 throw new Error('Script.prototype.getQuantityValue.pre :' +
-                'script not compiled because incomplete')
+                'script not compiled because incomplete');
             }
 
             // Try evaluating the value. Throw RuntimeError if an error is thrown
@@ -215,11 +216,11 @@ define(["model/analyser/analyser",
         getQuantityUnit: function(qtyName) {
             if (!this.hasQuantity(qtyName)) {
                 throw new Error('Script.prototype.getQuantityValue.pre :' +
-                'no Quantity named qtyName')
+                'no Quantity named qtyName');
             }
             if (!this.isCompiled()) {
                 throw new Error('Script.prototype.getQuantityUnit.pre :' +
-                'script not compiled')
+                'script not compiled');
             }
 
             return this.exe.getUnit(qtyName);
@@ -311,11 +312,11 @@ define(["model/analyser/analyser",
         deleteQuantity: function(qtyName) {
             if (!this.hasQuantity(qtyName)) {
                 throw new Error('Script.prototype.deleteQuantity.pre :' +
-                'quantity does not exist')
+                'quantity does not exist');
             }
             if (this.quantities[qtyName].todo) {
                 throw new Error('Script.prototype.deleteQuantity.pre :' +
-                'quantity cannot be deleted: is a todo item')
+                'quantity cannot be deleted: is a todo item');
             }
 
             var delqty = this.quantities[qtyName];
@@ -360,6 +361,7 @@ define(["model/analyser/analyser",
          */
         getOutputQuantities: function() {
             var cat2quantities = this.analyser.getQuantitiesByCategory(2);
+            var q;
 
             // Populate object with quantity values if script has been compiled
             if (this.isCompiled()) {
@@ -389,7 +391,7 @@ define(["model/analyser/analyser",
                     this.quantities[qtyName].checkedUnit = unit;
 
                     // Also overwrite given quantity if the quantity is correct
-                    if (unit != 'unitError' && unit != 'uncheckedUnit') {
+                    if (unit !== 'unitError' && unit !== 'uncheckedUnit') {
                         this.quantities[qtyName].unit = unit;
                     }
                 }
@@ -413,7 +415,7 @@ define(["model/analyser/analyser",
          * category cat.
          */
         getQuantitiesByCategory: function(cat) {
-            if (cat == 2) {
+            if (cat === 2) {
                 return this.getOutputQuantities();
             } else {
                 return this.analyser.getQuantitiesByCategory(cat);
@@ -431,7 +433,7 @@ define(["model/analyser/analyser",
         setConstant: function(qtyName, value) {
             if(this.getQuantity(qtyName).category != 1) {
                 throw new Error('Script.prototype.setConstant.pre :' +
-                'not a category 1 (user-input) quantity')
+                'not a category 1 (user-input) quantity');
             }
 
             // Update value in quantities array
@@ -545,8 +547,8 @@ define(["model/analyser/analyser",
          * Replaced with getSource()!
          */
         toSource: function() {
-            console.log("Warning: using old function Script.toSource(), \
-                use Script.getSource() or Script.toString() instead!");
+            console.log("Warning: using old function Script.toSource(), " +
+                "use Script.getSource() or Script.toString() instead!");
 
             return this.getSource();
         },

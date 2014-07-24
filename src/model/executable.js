@@ -1,6 +1,7 @@
 /*
- * @author Roel Jacobs
+ * The executable class will contain all functions neccessary in order to execute a compiled script.
  */
+
 /* Browser vs. Node ***********************************************/
 inBrowser = typeof window !== 'undefined';
 inNode = !inBrowser;
@@ -165,7 +166,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
          * 'overwrite' the unit of the quantity.
          */
         if (quantity.unit && (category === 1 || category === 3 ||
-            (report.dependencies.length == 0 && report.reverseDeps.length == 0))) {
+            (report.dependencies.length === 0 && report.reverseDeps.length === 0))) {
             // Check whether the signature of the unit matches that of it's value.
             if (Object.keys(quantity.unit).length === 0 || UnitObject.prototype.verifySignature(ans, quantity.unit)) {
                 /**
@@ -188,12 +189,12 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
 
         // Store any textual description of errors that might have occured during the checking of
         // this unit in the Executable so they can be retrieved later (after all units have been checked).
-        if (ans.error != null && ans.errorString != '') {
+        if (ans.error !== null && ans.errorString !== '') {
             this.unitErrors.push(ans.errorString);
         }
 
         return ans;
-    }
+    };
 
     /**
      * Puts two underscores before and after each key of the given object.
@@ -248,7 +249,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
      */
     Executable.prototype.historyStep = function(qty) {
         // All history values have been set, and we need to shift the histories.
-        this[qty].hist.unshift(undefined)
+        this[qty].hist.unshift(undefined);
 
         // + 1, because the hist array also contains the present value (t{0}),
         // and therefore the array has one element more than the timespan number gives.
@@ -262,7 +263,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             this.report[qty].value = false;
             this[qty].hist[0] = false;
         }
-    }
+    };
 
     /**
      * Resets the executable.
@@ -330,7 +331,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         if (bUnits) {
             this.unitErrors = [];
         }
-    }
+    };
 
     /**
      * Gets the unit of the given quantity.
@@ -369,7 +370,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         var ans = 'The following errors occured during unit checking: \n\n';
 
         for (var err in this.unitErrors) {
-            ans += this.unitErrors[err] + "\n"
+            ans += this.unitErrors[err] + "\n";
         }
 
         return ans;
@@ -446,7 +447,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
                 'no Quantity named ' + quantity);
         }
 
-        return this[localQty].hasChanged = hasChanged;
+        this[localQty].hasChanged = hasChanged;
     };
 
     /**
@@ -493,10 +494,12 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
      */
     Executable.prototype.executeQuantities = function(inputs, outputs, steps) {
         this.reset();
+        var key;
+        var elem;
 
         // set the values to the ones given in input
-        for (var key in inputs) {
-            var elem = inputs[key];
+        for (key in inputs) {
+            elem = inputs[key];
             this.setValue(elem.name, elem.value);
         }
 
@@ -506,8 +509,8 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         }
 
         // update the values in the output-objects
-        for (var key in outputs) {
-            var elem = outputs[key];
+        for (key in outputs) {
+            elem = outputs[key];
             this.setHasChanged(elem.name, true);
             elem.value = this.getValue(elem.name);
         }

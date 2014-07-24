@@ -1,6 +1,5 @@
 /*
- * File containing the Individual class
- *
+ * File containing the Individual class.
  */
 
 /* Browser vs. Node ***********************************************/
@@ -37,7 +36,7 @@ define([], /**@lends Model.EMO*/ function() {
             }
         }
         return newObj;
-    };
+    }
 
     return CloneObject;
 });

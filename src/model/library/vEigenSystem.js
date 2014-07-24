@@ -3,6 +3,7 @@ function vEigenSystem(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     if (x instanceof Array) {
         var t = [];
         var n = x.length;
@@ -10,7 +11,7 @@ function vEigenSystem(x) {
         for (i = 0; i < n; i++) {
             t[i] = [];
             if (x[i] instanceof Array) {
-                if (x[i].length == n) {
+                if (x[i].length === n) {
                     for (j = 0; j < n; j++) {
                         if (!(x[i][j] instanceof Array)) {
                             t[i][j] = x[i][j];
@@ -57,9 +58,9 @@ function vEigenSystem(x) {
             throw new Error("\nvEigenSystem: cannot calculate eigensystem for non-square matrix");
         }
     } else {
-        return
+        return;
         // if x is a scalar, the real part of the eigenvalue is equal to that scalar;
         // the iumaginary part is 0, and the eigenvector is the vector [1]
-        [x, 0, [1]];
+        // [x, 0, [1]];
     }
 }

@@ -16,22 +16,24 @@ function binaryZip(a, b, func) {
     if (!isScalarA || !isScalarB) {
         // Recursive step, a or b is an array
         var result = [];
+        var key;
+
         if (isScalarA) {
             // Case, a is a scalar, b is an array
-            for (var key in b) {
+            for (key in b) {
                 result[key] = binaryZip(a, b[key], func);
             }
             return result;
         }
         if (isScalarB) {
             // Case, b is a scalar, a is an array
-            for (var key in a) {
+            for (key in a) {
                 result[key] = binaryZip(a[key], b, func);
             }
             return result;
         }
         // Case, a and b are both arrays
-        for (var key in a) {
+        for (key in a) {
             if (b[key] !== undefined) {
                 result[key] = binaryZip(a[key], b[key], func);
             }

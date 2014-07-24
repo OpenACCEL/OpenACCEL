@@ -3,6 +3,7 @@ function at(x, y) {
         throw new Error('Wrong number of arguments for ' + '@' +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     if (y instanceof Array) {
         // Recursive step, y is an array
         var result = [];

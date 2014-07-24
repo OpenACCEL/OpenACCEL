@@ -16,5 +16,4 @@ function plot(x) {
             "to parameters, and the 'data'-elements are vectors of scalar data each.";
         throw new Error(plotTypeError);
     }
-
 }
