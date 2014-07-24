@@ -7,6 +7,7 @@ build() {
     documentation
     deploy
     post_deploy
+    compress
 }
 
 # Quickbuild
@@ -15,14 +16,11 @@ quickbuild() {
     jade
     deploy
     post_deploy
+    compress
 }
 
 # Testing.
 test() {
-    clean
-    jade
-    deploy
-    post_deploy
     echo "Testing..."
     case "$1" in
         "") node_modules/.bin/mocha test/ -R list -u tdd --recursive --grep @benchmark --invert ;;
@@ -41,7 +39,6 @@ benchmark() {
         *)  file=$(find test/ -name "$1".js)
             node_modules/.bin/mocha $file -u tdd -r test/require.js --grep @benchmark ;;
     esac
-
 }
 
 # Cleaning.
@@ -65,13 +62,13 @@ documentation() {
 
 # Deployment.
 deploy() {
-    # Generate ACCEL compiler using Jison
+    # Generate ACCEL compiler using Jison.
     echo "Generating ACCEL compiler..."
     node_modules/.bin/jison utils/ACCEL.jison      -o src/model/parser.js     -m amd -p lalr
     node_modules/.bin/jison utils/ACCELUnits.jison -o src/model/unitparser.js -m amd -p lalr
 
     echo "Deploying..."
-    # Create required directories and all subdirectories that do not yet exist
+    # Create required directories and all subdirectories that do not yet exist.
     mkdir -p                                                                             bin/scripts/cm/lib
     mkdir -p                                                                             bin/scripts/cm/mode/ACCEL
     mkdir -p                                                                             bin/scripts/cm/theme/
@@ -87,7 +84,7 @@ deploy() {
     cp node_modules/sweet.js/node_modules/escope/escope.js                               bin/scripts/escope.js
     cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
 
-    # Copy CodeMirror files
+    # Copy CodeMirror files.
     cp node_modules/codemirror/lib/codemirror.js                                         bin/scripts/cm/lib/codemirror.js
     cp utils/CodeMirror_ACCEL.js                                                         bin/scripts/cm/mode/ACCEL/ACCEL.js
 
@@ -116,8 +113,6 @@ deploy() {
 
     # Copy style sheets.
     cp -r src/view/css bin/css/
-
-
 }
 
 # Post Deployment
@@ -131,6 +126,14 @@ post_deploy() {
     funcs=$(echo $funcs | sed "s/ /\", \"/g") # replace all spaces with ", "
     placeholder="--TIME-DEPENDENCY-PLACEHOLDER--"
     sed -i "s/${placeholder}/${funcs}/g" $path_quantitypass
+}
+
+# Uglify and compress all binary output files.
+compress() {
+    echo "Uglifying / Compressing..."
+
+    # Uglify all javascript.
+    find bin/scripts -type f -regex ".*\.js" -exec node_modules/.bin/uglifyjs --screw-ie8 -c -m -o {} {} \;
 }
 
 # Ensure each file in 'folders' with a .js extension has a new line at EOF.

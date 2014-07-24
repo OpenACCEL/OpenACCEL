@@ -72,6 +72,7 @@
         "mocha": "1.20.x",
         "requirejs": "2.1.x",
         "sweet.js": "0.6.x",
-        "underscore": "1.6.x"
+        "underscore": "1.6.x",
+        "uglify-js": "2.4.x"
     }
 }
