@@ -1,9 +1,6 @@
 /**
- * Whether to show the values of quantities inside the editor.
- *
- * @type {Boolean}
+ * File containing the user interface code for the IO/edit tab
  */
-var showValues = false;
 
 /**
  * An instance of the advanced (CodeMirror) editor currently being used, if any.
@@ -12,6 +9,13 @@ var showValues = false;
  */
 var editor = null;
 
+/**
+ * Whether to show the values of the quantities inside the editor.
+ *
+ * @type {Boolean}
+ */
+var showValues = false;
+
 
 /**
  * Toggles between showing and not showing the values of quantities inside
@@ -19,9 +23,25 @@ var editor = null;
  */
 function toggleValues() {
 	showValues = !showValues;
+	if (usingAdvancedEditor()) {
+		editor.save();
+	}
+	var source = $('#scriptarea').val();
+
 	if (showValues) {
-		$('#showvalues').val('Hide values');
+		try {
+			// First 'save' the current contents of the textarea to the script,
+			// so that any changes that might have been made won't be lost
+			controller.setScriptFromSource(source);
+			synchronizeScriptArea({'includeValues': true});
+			$('#showvalues').val('Hide values');
+		} catch (e) {
+			// Catch any syntax error messages, or messages thrown when the script
+			// cannot be compiled because it's not complete yet
+			alert(e.message);
+		}
 	} else {
+		synchronizeScriptArea({'includeValues': false});
 		$('#showvalues').val('Show values');
 	}
 }
@@ -150,6 +170,8 @@ function autoComplete(editor, options) {
 function checkUnits() {
 	$('#checkUnitsMsg').css({'color':'white', 'visibility':'visible', 'display':'block'});
 	$('#checkUnitsMsg').text('Checking units...');
+	$('#showvalues').val('Show values');
+	showValues = false;
 	$('#clearerrors').css({'visibility':'hidden'});
 	if (usingAdvancedEditor()) {
 		editor.save();
@@ -162,12 +184,18 @@ function checkUnits() {
 		$('#checkUnitsMsg').css({'color':'rgb(31,212,60)'});
 		$('#checkUnitsMsg').text('Units OK');
 	} catch (e) {
-		$('#checkUnitsMsg').css({'color':'red'});
-		$('#checkUnitsMsg').text('Unit error(s)!');
-		$('#clearerrors').css({'visibility':'visible'});
+		// If the script wasn't simply incomplete but actual unit errors occured...
+		if (!e.incomplete) {
+			$('#checkUnitsMsg').css({'color':'red'});
+			$('#checkUnitsMsg').text('Unit error(s)!');
+			$('#clearerrors').css({'visibility':'visible'});
+		} else {
+			// Script incomplete, hide progress message but don't indicate unit errors
+			$('#checkUnitsMsg').hide();
+		}
 		alert(e.message);
 	} finally {
-		synchronizeScriptArea(true);
+		synchronizeScriptArea({'includeCheckedUnits':true});
 		setTimeout(function() {$('#checkUnitsMsg').fadeOut(400);}, 2500);
 	}}, 100);
 }
@@ -176,7 +204,7 @@ function checkUnits() {
  * Hides all unit errors in the script, if any.
  */
 function clearUnitErrors() {
-	synchronizeScriptArea(false);
+	synchronizeScriptArea({'includeCheckedUnits':false});
 	$('#clearerrors').css({'visibility':'hidden'});
 }
 
@@ -184,14 +212,17 @@ function clearUnitErrors() {
  * Retrieves the current script source from the controller and displays it in the edit area
  * @param  {Boolean} includeUnits Whether to also display checked units
  */
-function synchronizeScriptArea(includeCheckedUnits) {
-	// Make parameter optional
-	if (typeof includeCheckedUnits === 'undefined') {
-		includeCheckedUnits = false;
+function synchronizeScriptArea(options) {
+	if (typeof options === 'undefined') {
+		options = {};
 	}
 
+	// Set options
+	options.includeComments = true;
+	options.includeUnits = true;
+
 	// Retrieve current contents of the script and update the textarea
-	var script = controller.scriptToString(true, true, includeCheckedUnits);
+	var script = controller.scriptToString(options);
 	$('#scriptarea').val(script);
 
 	// Let the advanced editor update itself too, if in use

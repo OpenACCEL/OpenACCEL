@@ -221,20 +221,21 @@ define([], /**@lends Model.Quantity */ function() {
      * Returns a String representation of the line corresponding to this quantity
      * as provided by the user in the ACCEL script.
      *
-     * @param {Boolean} includeUnits Whether to include the unit in the string representation
-     * @param {Boolean} includeComments Whether to include the comment in the string representation
-     * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only
-     * those provided by the user. Only regarded when includeUnits is true.
+     * @param {Object} options An object containing zero or more of the following attributes:
+     * -(Boolean) includeUnits Whether to include the unit of this quantity in the output.
+     * -(Boolean) includeComments Whether to include any comments belonging to this quantity in the output
+     * -(Boolean) includeCheckedUnits Whether to include the unit that may have been checked, or only
+     *            the one provided by the user (if any).
      * @return {String} The script line corresponding to this quantity, optionally with
      * unit and comment
      */
-    Quantity.prototype.toString = function(includeUnits, includeComments, includeCheckedUnits) {
+    Quantity.prototype.toString = function(options) {
         var def = this.LHS + '=' + this.definition;
 
         // Only include the unit of this quantity (if it has one) if it's a category 1 or 3 quantity
         // or when told to include checked units as well
-        if (includeUnits) {
-            if (includeCheckedUnits && this.checkedUnit !== '') {
+        if (options.includeUnits) {
+            if (options.includeCheckedUnits && this.checkedUnit !== '') {
                 // Include the checked unit
                 def += ' ; ' + this.checkedUnit;
             } else if (this.unit !== '') {
@@ -243,7 +244,7 @@ define([], /**@lends Model.Quantity */ function() {
             }
         }
 
-        if (includeComments && this.comment.length > 0) {
+        if (options.includeComments && this.comment.length > 0) {
             var comment = '';
 
             for (var i = 0; i < this.comment.length; i++) {

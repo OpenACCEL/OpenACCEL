@@ -138,7 +138,8 @@ define(["model/analyser/passes/quantitypass",
                     if (line.substring(0, 2) === '//') {
                         // Ignore comments on first line of script, only handle
                         // those appearing _after_ a quantity definition
-                        if (prevQuantity !== null) {
+                        // Also ignore any displayed values in script (prefixed with '////')
+                        if (prevQuantity !== null && line.substring(0, 4) !== '////') {
                             // Comments can span multiple lines!
                             prevQuantity.comment.push(line.substring(2, line.length));
                         }

@@ -220,7 +220,12 @@ define(["model/script",
         Controller.prototype.checkUnits = function(source) {
             // Check syntax and build the script from the given source
             this.setScriptFromSource(source, true);
-            this.compileScript(this.script);
+
+            if (!this.script.isCompiled()) {
+                if (!this.compileScript(this.script)) {
+                    throw {"message":"Unable to check units: script is not complete.", "incomplete":true};
+                }
+            }
 
             // Load the units
             this.loadUnitsLib();
@@ -235,8 +240,8 @@ define(["model/script",
             } catch(e) {
                 throw e;
             } finally {
-                this.script.exe.setUnits(false);
-                this.loadStandardLib();
+                //this.script.exe.setUnits(false);
+                //this.loadStandardLib();
             }
         };
 
@@ -935,22 +940,44 @@ define(["model/script",
          * Returns the source code of the current script, optionally including
          * quantity units and comments.
          *
-         * @param {Boolean} includeUnits Whether to include the quantity units
-         * in the output.
-         * @param {Boolean} includeComments (optional) Whether to include the
-         * comments belonging to the quantities in the output
-         * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only
-         * those provided by the user.
-         * @return {String} The source code of the current script, with or without
-         * units and comments as specified.
+         * @param {Object} options An object containing zero or more of the following attributes:
+         * -(Boolean) includeUnits Whether to include the quantity units in the output.
+         * -(Boolean) includeComments Whether to include the comments belonging to the quantities in the output
+         * -(Boolean) includeCheckedUnits Whether to include the units that may have been checked, or only
+         *            those provided by the user.
+         * -(Boolean) includeValues Whether to include the current values of the quantities in the output
+         *
+         * @return {String} The source code of the current script, with or without (checked) units,
+         * comments and values as specified.
          */
-        Controller.prototype.scriptToString = function(includeUnits, includeComments, includeCheckedUnits) {
-            // Make last parameter optional
-            if (typeof includeCheckedUnits === 'undefined') {
-                includeCheckedUnits = false;
+        Controller.prototype.scriptToString = function(options) {
+            // Assume default value of includeValues option because we need to deal with it here
+            // Leave the rest for Script.toString() to handle
+            if (typeof options.includeValues === 'undefined') {
+                options.includeValues = false;
             }
 
-            return this.script.toString(includeUnits, includeComments, includeCheckedUnits);
+            // Check whether the script is complete and compile it if the values
+            // have to be included
+            if (options.includeValues) {
+                if (!this.script.isCompiled()) {
+                    if (!this.compileScript(this.script)) {
+                        throw new Error("Unable to show values: script not complete.");
+                    }
+                } else {
+                    // Reset to the first iteration, in order to get a single value?
+                    //this.reset();
+                }
+            }
+
+            // TODO remove temporary hack for showing UnitObject values in script
+            var ans = this.script.toString(options);
+            if (this.script.isCompiled()) {
+                this.script.exe.setUnits(false);
+                this.loadStandardLib();
+            }
+
+            return ans;
         };
 
         /**

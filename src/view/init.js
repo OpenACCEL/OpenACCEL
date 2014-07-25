@@ -131,6 +131,8 @@ $(document).ready(
                                 editor.save();
                             }
                             controller.setScriptFromSource($('#scriptarea').val());
+                            showValues = false;
+                            $('#showvalues').val('Show values');
                         } catch (e) {
 
                             if (typeof(e) === 'SyntaxError') {

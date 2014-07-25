@@ -556,24 +556,19 @@ define(["model/analyser/analyser",
         /**
          * Returns the code of the script as a single string.
          *
-         * @param {Boolean} includeUnits (optional) Whether to include the units in the string representation
-         * @modifies this.source
-         * @param {Boolean} includeComments (optional) Whether to include the comments belonging to the quantities
-         * in the source
-         * @param {Boolean} includeCheckedUnits Whether to include the units that may have been checked, or only
-         * those provided by the user.
+         * @pre this.isCompiled() || !(options.includeValues)
+         * @param {Object} options An object containing zero or more of the following attributes:
+         * -(Boolean) includeUnits Whether to include the quantity units in the output.
+         * -(Boolean) includeComments Whether to include the comments belonging to the quantities in the output
+         * -(Boolean) includeCheckedUnits Whether to include the units that may have been checked, or only
+         *            those provided by the user.
+         * -(Boolean) includeValues Whether to include the current values of the quantities in the output
+         *
          * @return {String} A single line containing all quantity definitions in the script.
          */
-        toString: function(includeUnits, includeComments, includeCheckedUnits) {
-            // Make parameter optional by setting value if undefined
-            if (typeof includeUnits === 'undefined') {
-                includeUnits = false;
-            }
-            if (typeof includeComments === 'undefined') {
-                includeComments = false;
-            }
-            if (typeof includeCheckedUnits === 'undefined') {
-                includeCheckedUnits = false;
+        toString: function(options) {
+            if (options.includeValues && !this.isCompiled()) {
+                throw new Error("Script.toString.pre violated: trying to include values in source while script is not compiled.");
             }
 
             // Iterate through all quantities and append their string representation to the source code
@@ -583,7 +578,13 @@ define(["model/analyser/analyser",
 
                 // Do not include quantities in the script string that are undefined!
                 if (!qty.todo) {
-                    lines.push(qty.toString(includeUnits, includeComments, includeCheckedUnits));
+                    lines.push(qty.toString(options));
+
+                    // Compute and include the values in the output if specified
+                    if (options.includeValues || options.includeCheckedUnits) {
+                        var value = JSON.stringify(this.getQuantityValue(qtyName));
+                        lines.push(" //// " + value);
+                    }
                 }
             }
 
