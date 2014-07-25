@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function iMake(x,nrRows,nrCols) {
+this.std.iMake = function(x,nrRows,nrCols) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -19,4 +19,4 @@ function iMake(x,nrRows,nrCols) {
     } else {
         return [];
     }
-}
+};

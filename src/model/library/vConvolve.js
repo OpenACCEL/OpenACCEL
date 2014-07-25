@@ -1,5 +1,5 @@
  //This function was taken from keesvanoverveld.com
-function vConvolve(x, y, n, m) {
+this.std.vConvolve = function(x, y, n, m) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -65,4 +65,4 @@ function vConvolve(x, y, n, m) {
     } else {
         return [];
     }
-}
+};

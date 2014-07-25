@@ -1,4 +1,4 @@
-function vExtend(x, y) {
+this.std.vExtend = function(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -37,6 +37,6 @@ function vExtend(x, y) {
         }
         return p;
     }
-}
+};
 
-vExtend.base = [];
+this.std.vExtend.base = [];

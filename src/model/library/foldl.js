@@ -1,4 +1,4 @@
-function foldl(a, func) {
+this.std.foldl = function(a, func) {
     var result = func.base;
     if (a instanceof Array) {
         var length = a.length;
@@ -9,4 +9,4 @@ function foldl(a, func) {
         result = func(result, a);
     }
     return result;
-}
+};

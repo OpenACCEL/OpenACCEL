@@ -1,12 +1,12 @@
-function plot(x) {
-    exe.hasPlot = true;
+this.std.plot = function(x) {
+    this.hasPlot = true;
 
     if (x instanceof Array) {
-        exe.plot = x;
-        if (exe.plotStatus === '') {
+        this.plot = x;
+        if (this.plotStatus === '') {
             return 'plot OK';
         } else {
-            throw new Error(exe.plotStatus);
+            throw new Error(this.plotStatus);
         }
     } else {
         var plotTypeError =
@@ -16,4 +16,4 @@ function plot(x) {
             "to parameters, and the 'data'-elements are vectors of scalar data each.";
         throw new Error(plotTypeError);
     }
-}
+};

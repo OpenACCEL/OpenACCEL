@@ -1,4 +1,4 @@
-function vDom(x) {
+this.std.vDom = function(x) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -19,4 +19,4 @@ function vDom(x) {
     } else {
         return [];
     }
-}
+};

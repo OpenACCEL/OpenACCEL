@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function vSeq(x, y) {
+this.std.vSeq = function(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -14,4 +14,4 @@ function vSeq(x, y) {
     } else {
         return [];
     }
-}
+};

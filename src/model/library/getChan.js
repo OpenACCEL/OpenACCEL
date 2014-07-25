@@ -1,4 +1,4 @@
-function getChan(x) {
+this.std.getChan = function(x) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -62,4 +62,4 @@ function getChan(x) {
         throw new Error("\nargument of getChan() must be a string");
     }
 
-}
+};

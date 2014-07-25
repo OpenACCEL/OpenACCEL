@@ -1,4 +1,4 @@
-function getUrl(url) {
+this.std.getUrl = function(url) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -64,4 +64,4 @@ function getUrl(url) {
         throw new Error("\nargument of getURL() must be a string");
     }
 
-}
+};

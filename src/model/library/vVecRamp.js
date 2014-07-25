@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function vVecRamp(x, y, z) {
+this.std.vVecRamp = function(x, y, z) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -79,4 +79,4 @@ function vVecRamp(x, y, z) {
     } else {
         throw new Error("vVecRamp: first argument of vVecRamp must be vector (of abcissae).");
     }
-}
+};

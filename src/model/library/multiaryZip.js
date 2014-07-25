@@ -6,7 +6,7 @@
  * @return {Array}              resulting array
  * @memberof Model.Library
  */
-function multiaryZip(x, func) {
+this.std.multiaryZip = function(x, func) {
     var numArgs = x.length;
     var allScalar = true;
     for (var inKey = numArgs - 1; inKey >= 0; inKey--) {
@@ -66,9 +66,9 @@ function multiaryZip(x, func) {
             // Key occurs in all non-scalar inputs.
             if (isCommonKey) {
                 // Put the recursive result in the representative key.
-                result[referenceKeys[resultKey]] = multiaryZip(recursiveInput, func);
+                result[referenceKeys[resultKey]] = this.libraries.std.multiaryZip(recursiveInput, func);
             }
         }
         return result;
     }
-}
+};

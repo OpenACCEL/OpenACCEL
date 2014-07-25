@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function vMatMatMul(x, y) {
+this.std.vMatMatMul = function(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -170,4 +170,4 @@ function vMatMatMul(x, y) {
             return x * y;
         }
     }
-}
+};

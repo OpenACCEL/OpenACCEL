@@ -1,4 +1,4 @@
-function vMake(x, y) {
+this.std.vMake = function(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -10,4 +10,4 @@ function vMake(x, y) {
     }
 
     return result;
-}
+};

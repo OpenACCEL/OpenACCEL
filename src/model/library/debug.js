@@ -1,4 +1,4 @@
-function debug(c, v) {
+this.std.debug = function(c, v) {
     if (typeof c === "string") {
         if (v instanceof Array) {
             var val = '';
@@ -18,4 +18,4 @@ function debug(c, v) {
     } else {
         throw new Error("\nFor function debug(), the first argument must be a string (= text to help identify the debug output)");
     }
-}
+};

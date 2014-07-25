@@ -1,10 +1,10 @@
-function random() {
+this.std.random = function() {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
 	return Math.random();
-}
+};
 
-random.isTimeDependent = true;
+this.std.random.isTimeDependent = true;

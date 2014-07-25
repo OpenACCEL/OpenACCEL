@@ -7,7 +7,7 @@
  * @param  {Array} arr  array to convert
  * @return {Object}      converted object
  */
-function arrayToObject(arr) {
+this.std.arrayToObject = function(arr) {
     if (arr instanceof Array) {
         var obj = {}; // Initialize the object
         for (var key in arr) {
@@ -15,7 +15,7 @@ function arrayToObject(arr) {
             // and add them to the array at the same key
 
             if (arr instanceof Array) {
-                obj[key] = arrayToObject(arr[key]);
+                obj[key] = this.libraries.std.arrayToObject(arr[key]);
             } else {
                 obj[key] = arr[key];
             }
@@ -24,4 +24,4 @@ function arrayToObject(arr) {
     } else {
         return arr;
     }
-}
+};

@@ -1,4 +1,4 @@
-function vEigenSystem(x) {
+this.std.vEigenSystem = function(x) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -63,4 +63,4 @@ function vEigenSystem(x) {
         // the iumaginary part is 0, and the eigenvector is the vector [1]
         // [x, 0, [1]];
     }
-}
+};

@@ -1,4 +1,4 @@
-function at(x, y) {
+this.std.at = function(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + '@' +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -8,7 +8,7 @@ function at(x, y) {
         // Recursive step, y is an array
         var result = [];
         for (var key in y) {
-            result[key] = at(x, y[key]);
+            result[key] = this.libraries.std.at(x, y[key]);
         }
         return result;
     } else {
@@ -27,4 +27,4 @@ function at(x, y) {
             return x;
         }
     }
-}
+};

@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function vAggregate(x, y, z) {
+this.std.vAggregate = function(x, y, z) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -44,4 +44,4 @@ function vAggregate(x, y, z) {
     } else {
         throw new Error("vAggregate: first argument must be a vector");
     }
-}
+};

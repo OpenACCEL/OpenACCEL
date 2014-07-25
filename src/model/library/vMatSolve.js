@@ -1,4 +1,4 @@
-function vMatSolve(mm, v) {
+this.std.vMatSolve = function(mm, v) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -64,4 +64,4 @@ function vMatSolve(mm, v) {
         }
         return tt;
     }
-}
+};

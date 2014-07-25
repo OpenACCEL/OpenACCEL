@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function iGaussian(n1,n2,s1,s2) {
+this.std.iGaussian = function(n1,n2,s1,s2) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -33,4 +33,4 @@ function iGaussian(n1,n2,s1,s2) {
     } else {
         throw new Error("\niGaussian: cannot make an array with <0 elements");
     }
-}
+};

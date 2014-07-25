@@ -1,4 +1,4 @@
-function __do__(code, args) {
+this.std.__do__ = function(code, args) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -24,4 +24,4 @@ function __do__(code, args) {
     } else {
         throw new Error("\nFor function do(), first argument must be a string (= a code fragment)");
     }
-}
+};

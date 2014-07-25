@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function vSegment(x, y, z) {
+this.std.vSegment = function(x, y, z) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -30,4 +30,4 @@ function vSegment(x, y, z) {
     } else {
         throw new Error("vSegment: first argument must be a vector.");
     }
-}
+};

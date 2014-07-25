@@ -1,4 +1,4 @@
-function ramp(x, x1, y1, x2, y2) {
+this.std.ramp = function(x, x1, y1, x2, y2) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -19,4 +19,4 @@ function ramp(x, x1, y1, x2, y2) {
         rmp = ((x2 + y2)) / 2.0;
     }
     return rmp;
-}
+};

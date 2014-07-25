@@ -1,10 +1,10 @@
-function modulo(x, y) {
+this.std.modulo = function(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    return binaryZip(x, y, function(a, b) {
+    return this.libraries.std.binaryZip(x, y, function(a, b) {
         if (b !== 0.0) {
             var mm = a % b;
             if (mm >= 0) {
@@ -16,4 +16,4 @@ function modulo(x, y) {
             throw new Error("\ndivision by zero in modulo");
         }
     });
-}
+};

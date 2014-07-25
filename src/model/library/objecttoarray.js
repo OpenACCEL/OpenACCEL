@@ -8,7 +8,7 @@
  * @param  {Boolean} Whether the function should be applied recursively.
  * @return {Array}      converted array
  */
-function objectToArray(obj, nonRecursive) {
+this.std.objectToArray = function(obj, nonRecursive) {
     if (!(obj instanceof Array) && obj instanceof Object) {
         var array = []; // Initialize the array
         for (var key in obj) {
@@ -16,7 +16,7 @@ function objectToArray(obj, nonRecursive) {
             // and add them to the array at the same key
 
             if (!nonRecursive && !(obj[key] instanceof Array) && obj[key] instanceof Object) {
-                array[key] = objectToArray(obj[key]);
+                array[key] = this.libraries.std.objectToArray(obj[key]);
             } else {
                 array[key] = obj[key];
             }
@@ -25,4 +25,4 @@ function objectToArray(obj, nonRecursive) {
     } else {
         return obj;
     }
-}
+};

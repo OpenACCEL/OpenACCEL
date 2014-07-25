@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function iSpike(x1,x2,y1,y2) {
+this.std.iSpike = function(x1,x2,y1,y2) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -21,4 +21,4 @@ function iSpike(x1,x2,y1,y2) {
         }
     }
     return rr;
-}
+};

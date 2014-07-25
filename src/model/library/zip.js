@@ -7,16 +7,16 @@
  * @return {Array}              resulting array
  * @memberof Model.Library
  */
-function zip(x, func) {
+this.std.zip = function(x, func) {
     var numArgs = x.length;
     switch (numArgs) {
         case 0:
             throw new error("Cannot zip with zero arguments, attempted by: " + arguments.callee.caller.name);
         case 1:
-            return unaryZip(x[0], func);
+            return this.libraries.std.unaryZip(x[0], func);
         case 2:
-            return binaryZip(x[0], x[1], func);
+            return this.libraries.binaryZip(x[0], x[1], func);
         default:
-            return multiaryZip(x, func);
+            return this.libraries.multiaryZip(x, func);
     }
-}
+};

@@ -1,4 +1,4 @@
-function putChan(myChannelName,myValue) {
+this.std.putChan = function(myChannelName,myValue) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -46,4 +46,4 @@ function putChan(myChannelName,myValue) {
     } else {
         throw new Error("\nfirst argument of putChan() must be a string");
     }
-}
+};

@@ -7,16 +7,16 @@
  *
  * @memberof Model.Library
  */
-function unaryZip(a, func) {
+this.std.unaryZip = function(a, func) {
     if (a instanceof Array) {
         // Recursive step, a is an array
         var result = [];
         for (var key in a) {
-            result[key] = unaryZip(a[key], func);
+            result[key] = this.libraries.std.unaryZip(a[key], func);
         }
         return result;
     } else {
         // Base: a is a scalar
         return func(a);
     }
-}
+};

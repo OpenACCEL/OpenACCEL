@@ -9,7 +9,7 @@
  *
  * @memberof Model.Library
  */
-function binaryZip(a, b, func) {
+this.std.binaryZip = function(a, b, func) {
     var isScalarA = !(a instanceof Array);
     var isScalarB = !(b instanceof Array);
 
@@ -21,21 +21,21 @@ function binaryZip(a, b, func) {
         if (isScalarA) {
             // Case, a is a scalar, b is an array
             for (key in b) {
-                result[key] = binaryZip(a, b[key], func);
+                result[key] = this.libraries.std.binaryZip(a, b[key], func);
             }
             return result;
         }
         if (isScalarB) {
             // Case, b is a scalar, a is an array
             for (key in a) {
-                result[key] = binaryZip(a[key], b, func);
+                result[key] = this.libraries.std.binaryZip(a[key], b, func);
             }
             return result;
         }
         // Case, a and b are both arrays
         for (key in a) {
             if (b[key] !== undefined) {
-                result[key] = binaryZip(a[key], b[key], func);
+                result[key] = this.libraries.std.binaryZip(a[key], b[key], func);
             }
         }
         return result;
@@ -43,4 +43,4 @@ function binaryZip(a, b, func) {
         // Base: a and b are both scalar
         return func(a, b);
     }
-}
+};

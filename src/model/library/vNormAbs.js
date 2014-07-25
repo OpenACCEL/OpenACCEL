@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function vNormAbs(x) {
+this.std.vNormAbs = function(x) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -16,4 +16,4 @@ function vNormAbs(x) {
     } else {
         return Math.abs(x);
     }
-}
+};

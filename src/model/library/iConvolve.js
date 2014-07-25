@@ -1,5 +1,5 @@
 //This function was taken from keesvanoverveld.com
-function iConvolve(x,y,n1,n2,m) {
+this.std.iConvolve = function(x,y,n1,n2,m) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
@@ -96,4 +96,4 @@ function iConvolve(x,y,n1,n2,m) {
     } else {
         return [];
     }
-}
+};

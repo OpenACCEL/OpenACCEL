@@ -1,12 +1,12 @@
-function or(x, y) {
+this.std.or = function(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    return binaryZip(x, y, function(a, b) {
+    return this.libraries.std.binaryZip(x, y, function(a, b) {
         return a || b;
     });
-}
+};
 
-or.base = false;
+this.std.or.base = false;

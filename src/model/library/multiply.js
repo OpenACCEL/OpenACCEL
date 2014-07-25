@@ -1,12 +1,12 @@
-function multiply(x, y) {
+this.std.multiply = function(x, y) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    return binaryZip(x, y, function(a, b) {
+    return this.libraries.std.binaryZip(x, y, function(a, b) {
         return a * b;
     });
-}
+};
 
-multiply.base = 1;
+this.std.multiply.base = 1;
