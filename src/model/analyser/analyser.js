@@ -20,6 +20,97 @@ if (inNode) {
 }
 /*******************************************************************/
 
+/**
+ * Performs checks on the arguments and returns the
+ * arguments in an array.
+ * In this way, the Analyser can easily extract the arguments
+ * and check the arguments for errors
+ *
+ * @memberof Model.Library
+ * @pre min <= def <= max
+ * @param  {Number} def Deafault value of the slider
+ * @param  {Number} min Lower bound
+ * @param  {Number} max Upper Bound
+ * @return {Array}     Array with def,min,max
+ */
+function slider(def, min, max) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + 'Slider' +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
+    if (isNaN(parseFloat(def)) || isNaN(parseFloat(min)) || isNaN(parseFloat(max))) {
+        throw new Error('Arguments of slider must be numeric constants.');
+    }
+
+    if (min <= def && def <= max) {
+        return [def, min, max];
+    } else {
+        throw new Error('For the slider, the default value must be between the lower and upper bound.' +
+            ' Also the upper bound must be greater than the lower bound' +
+            ' (Default = ' + def + ', lower = ' + min + ', upper = ' + max + ')');
+    }
+}
+
+/**
+ * Performs checks on the arguments and returns the
+ * arguments in an array.
+ * In this way, the Analyser can easily extract the arguments
+ * and check the arguments for errors
+ *
+ * @memberof Model.Library
+ * @param  {Boolean} def default value of the checkbox
+ * @return {Array}     Singleton array with def
+ */
+function check(def) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + 'check' +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
+
+    if (typeof def === 'boolean') {
+        return [def];
+    } else {
+        throw new Error('Argument of check must be true or false');
+    }
+}
+
+/**
+ * Performs checks on the arguments and returns the
+ * arguments in an array.
+ * In this way, the Analyser can easily extract the arguments
+ * and check the arguments for errors
+ *
+ * @param  {Number|String|Boolean} def Default value of input field
+ * @return {Array}     Singleton array with def
+ * @memberof Model.Library
+ */
+function input(def) {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + 'input' +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
+
+    return [def];
+}
+
+/**
+ * Performs checks on the arguments and returns the
+ * arguments in an array.
+ * In this way, the Analyser can easily extract the arguments
+ * and check the arguments for errors
+ *
+ * @memberof Model.Library
+ * @return {Array}     Empty array
+ */
+function button() {
+    if (arguments.length != arguments.callee.length) {
+        throw new Error('Wrong number of arguments for ' + 'button' +
+            '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
+    }
+
+    return [];
+}
+
 define(["model/analyser/passes/quantitypass",
         "model/analyser/passes/dependencypass",
         "model/quantity",

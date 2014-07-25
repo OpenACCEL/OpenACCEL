@@ -206,7 +206,7 @@ unit                    :   UNIT
                         }}
                         |   '[' vectorArgList ']'
                         {{
-                            $$ = 'objectToArray({' + $2 + '}, true)';
+                            $$ = 'this.lib.objectToArray({' + $2 + '}, true)';
                         }}
                         ;
 

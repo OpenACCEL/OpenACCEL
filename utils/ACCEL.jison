@@ -327,39 +327,39 @@ term                    :   scalarTerm | vectorExpr | scalarConst;
 /* Arithmetic */
 arith                   :   uniArith | binArith;
 uniArith                :   '-' expr %prec '!'
-                            { $$ = 'uniminus(' + $2 + ')'; }
+                            { $$ = 'this.lib.uniminus(' + $2 + ')'; }
                         |  '+' expr %prec '!'
                             { $$ = $2; }
                         |  '!' expr
-                            { $$ = 'not(' + $2 + ')'; }
+                            { $$ = 'this.lib.not(' + $2 + ')'; }
                         ;
 binArith                :   /* Operator precedence defined above */
                             expr '+' expr
-                            { $$ = 'add(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.add(' + $1 + ',' + $3 + ')'; }
                         |   expr '-' expr
-                            { $$ = 'subtract(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.subtract(' + $1 + ',' + $3 + ')'; }
                         |   expr '*' expr
-                            { $$ = 'multiply(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.multiply(' + $1 + ',' + $3 + ')'; }
                         |   expr '/' expr
-                            { $$ = 'divide(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.divide(' + $1 + ',' + $3 + ')'; }
                         |   expr '%' expr
-                            { $$ = 'modulo(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.modulo(' + $1 + ',' + $3 + ')'; }
                         |   expr '<=' expr
-                            { $$ = 'lessThanEqual(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.lessThanEqual(' + $1 + ',' + $3 + ')'; }
                         |   expr '<' expr
-                            { $$ = 'lessThan(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.lessThan(' + $1 + ',' + $3 + ')'; }
                         |   expr '>=' expr
-                            { $$ = 'greaterThanEqual(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.greaterThanEqual(' + $1 + ',' + $3 + ')'; }
                         |   expr '>' expr
-                            { $$ = 'greaterThan(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.greaterThan(' + $1 + ',' + $3 + ')'; }
                         |   expr '==' expr
-                            { $$ = 'equal(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.equal(' + $1 + ',' + $3 + ')'; }
                         |   expr '!=' expr
-                            { $$ = 'notEqual(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.notEqual(' + $1 + ',' + $3 + ')'; }
                         |   expr '&&' expr
-                            { $$ = 'and(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.and(' + $1 + ',' + $3 + ')'; }
                         |   expr '||' expr
-                            { $$ = 'or(' + $1 + ',' + $3 + ')'; }
+                            { $$ = 'this.lib.or(' + $1 + ',' + $3 + ')'; }
                         ;
 
 
@@ -418,9 +418,13 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                             var funcname;
                             if($1 === 'if' || $1 === 'do') {
                                 //needs underscores as it is a javascript keyword
-                                funcname = '__' + $1 + '__';
-                            } else {
+                                funcname = 'this.lib.__' + $1 + '__';
+                            } else if ($1 === 'history' || $1 === 'cond' || $1 === 'quantifier') {
+                                // Leave function calls intact if they're actually macros.
                                 funcname = $1;
+                            } else {
+                                // Function calls are in the executable's library: 'this.lib'.
+                                funcname = "this.lib." + $1;
                             }
                             var funcCall = funcname + $2 + ($3 || '');
                             if ($4 && $4.length > 0) {
@@ -456,11 +460,11 @@ quantifier              :  '#(' dummy ',' expr ',' expr ',' STDFUNCTION ')'
                                 // Remove the dummy variable from the list of
                                 var idx = yy.dummies.indexOf($2);
                                 yy.dummies.splice(idx,1);
-                                $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9;
+                                $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + 'this.lib.' + $8 + $9;
                             }}
                         ;
 at                      :   '@(' expr  ','  expr  ')'
-                            { $$ = 'at(' + $2 + $3 + $4 +  $5; }
+                            { $$ = 'this.lib.at(' + $2 + $3 + $4 +  $5; }
                         ;
 brackets                :   '(' expr ')'
                             { $$ = $1 + $2 + $3; }
@@ -469,7 +473,7 @@ brackets                :   '(' expr ')'
 
 /** Vectors */
 vectorExpr              :   '[' (vectorArgList)? ']'
-                            { $$ = 'objectToArray({' + ($2 || '') + '})'; };
+                            { $$ = 'this.lib.objectToArray({' + ($2 || '') + '})'; };
 vectorArgList           :   vectorElem (vectorAdditionalArg)*
                         {{
                             var counter = 0;
@@ -504,15 +508,15 @@ vectorElem              :   STRING ':' expr
                         ;
 
 vectorCall              :   scalarTerm '[' expr ']'
-                            { $$ = 'at(' + $1 + ', ' + $3 + ')'; }
+                            { $$ = 'this.lib.at(' + $1 + ', ' + $3 + ')'; }
                         |   scalarTerm '.' IDENTIFIER
-                            { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; }
+                            { $$ = 'this.lib.at(' + $1 + ', \'' + $3 + '\')'; }
                         |   scalarTerm '.' STDFUNCTION
-                            { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; }
+                            { $$ = 'this.lib.at(' + $1 + ', \'' + $3 + '\')'; }
                         |   scalarTerm '.' INPUTFUNCTION
-                            { $$ = 'at(' + $1 + ', \'' + $3 + '\')'; }
+                            { $$ = 'this.lib.at(' + $1 + ', \'' + $3 + '\')'; }
                         |   scalarTerm '.' NUMBER
-                            { $$ = 'at(' + $1 + ', ' + $3 + ')'; }
+                            { $$ = 'this.lib.at(' + $1 + ', ' + $3 + ')'; }
                         ;
 
 %%

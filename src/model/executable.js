@@ -94,9 +94,18 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
          * to the code inside quantity expressions. Multiple libraries can be loaded,
          * each accessible by their own key.
          *
-         * @type {Object}
+         * @type {Library}
          */
-        this.lib = {};
+        this.libraries = {};
+        this.libraries.std = {};
+        this.libraries.unit = {};
+
+        /**
+         * The currently loaded main library.
+         * 
+         * @type {Library}
+         */
+        this.lib = this.libraries.std;
 
         /**
          * An array of descriptions of errors that occured during unit checking.
@@ -182,7 +191,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         } else {
             // This value is guaranteed to have some unit. The quantity will take this unit.
             // (It is an intermediate or output quantity, category 2 or 4).
-            quantity.unit = unaryZip(ans, function(x) {
+            quantity.unit = this.libraries.std.unaryZip(ans, function(x) {
                 return x.unit;
             });
         }
@@ -322,8 +331,10 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         for (var qty in this.report) {
             if (bUnits) {
                 this[qty].expr = this[qty].unitexpr;
+                this.lib       = this.libraries.unit;
             } else {
                 this[qty].expr = this[qty].stdexpr;
+                this.lib       = this.libraries.std;
             }
         }
 

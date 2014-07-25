@@ -83,6 +83,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
             // Try to read the file synchronously using jQuery's Ajax API.
             fs.ajax({
                 type: "GET",
+                dataType: "text",
                 url: "scripts/model/" + location + "/" + file + extension,
                 success: function(result) {
                     if (!result) {
@@ -93,11 +94,11 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
 
                     content = result;
                 },
-                error: function(err) {
+                error: function(jqXHR, err) {
                     console.log(err);
                     return false;
                 },
-                fail: function(err) {
+                fail: function( jqXHR, err) {
                     console.log(err);
                     return false;
                 },

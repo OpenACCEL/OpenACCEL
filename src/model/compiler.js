@@ -87,37 +87,16 @@ define(["model/fileloader",
             this.totalNumQuantities = 0;
 
             /**
-             * List of all library functions (executable!) supported by OpenACCEL.
+             * The library that will be exported to all executables.
+             * @type {Library}
              */
-            this.libraries = {};
-            this.libraries.std = [];
-
-            /**
-             * Whether the standard libary is currently loaded.
-             *
-             * @type {Boolean}
-             */
-            this.isStandardLibLoaded = true;
+            this.library = new Library();
 
             /**
              * The file loader is reponsible for loading all files, like macros and library functions.
              */
             this.fileLoader = new FileLoader();
-
-            // Load the macros and standard library into memory, and evaluate the library
             this.fileLoader.load("macros", "macros");
-            this.fileLoader.load("functions", "library");
-            this.fileLoader.load("functions", "unitlibrary");
-
-            eval.call(globalScope, this.fileLoader.getLibrary());
-
-            // Store a copy of the standard library in memory so it can be referenced from any other
-            // library (at the moment: the unit library)
-            var library = new Library();
-            for (var i = 0; i < library.std.length; ++i) {
-                var func = library.std[i];
-                this.libraries.std[func] = eval(func);
-            }
         }
 
         /**
@@ -151,9 +130,7 @@ define(["model/fileloader",
 
             // Create Executable with the parsed code
             exe = new Executable(code, this.quantities);
-
-            // Store library references in the executable.
-            exe.lib = this.libraries;
+            this.library.export(exe);
 
             return exe;
         };
@@ -238,37 +215,6 @@ define(["model/fileloader",
 
                 throw err;
             }
-        };
-
-        /**
-         * Loads the unit library into memory, overwriting the standard
-         * library
-         *
-         * @post The unit library has been loaded into memory
-         */
-        Compiler.prototype.loadUnitsLib = function() {
-            eval.call(globalScope, this.fileLoader.getLibrary("unitlibrary"));
-            this.isStandardLibLoaded = false;
-        };
-
-        /**
-         * Loads the standard library into memory, overwriting the unit
-         * library
-         *
-         * @post The standard library has been loaded into memory
-         */
-        Compiler.prototype.loadStandardLib = function() {
-            eval.call(globalScope, this.fileLoader.getLibrary());
-            this.isStandardLibLoaded = true;
-        };
-
-        /**
-         * Returns whether the unit library is currently in memory
-         *
-         * @return {Boolean} Whether the unit library is loaded in memory
-         */
-        Compiler.prototype.unitsLibLoaded = function() {
-            return !this.isStandardLibLoaded;
         };
 
         /**
