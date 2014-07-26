@@ -182,6 +182,17 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         } else {
             // This value is guaranteed to have some unit. The quantity will take this unit.
             // (It is an intermediate or output quantity, category 2 or 4).
+            ans = unaryZip(ans, function(x) {
+                // Well, the guarantee is actually only for scalar values, in case of a vector like
+                // [0, 5, a], there can still be values in there that are not UnitObjects.
+                // But don't worry, if something is not a UnitObject, the unit is simply empty.
+                if (!(x instanceof UnitObject)) {
+                    return new UnitObject(x);
+                } else {
+                    return x;
+                }
+            });
+
             quantity.unit = unaryZip(ans, function(x) {
                 return x.unit;
             });
