@@ -200,11 +200,32 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
 
         // Store any textual description of errors that might have occured during the checking of
         // this unit in the Executable so they can be retrieved later (after all units have been checked).
-        if (ans.error !== null && ans.errorString !== '') {
-            this.unitErrors.push(ans.errorString);
+        var err = this.findFirstError(ans);
+        if (err !== '') {
+            this.unitErrors.push(err);
         }
 
         return ans;
+    };
+
+    /**
+     * Recursively traverses the (array of array of ...) UnitObject(s) and
+     * returns the first error it finds.
+     * 
+     * @param  {UnitObject} obj (array of array of ...) UnitObject(s)
+     * @return {String} The first error found
+     */
+    Executable.prototype.findFirstError = function(obj) {
+        if (obj instanceof Array) {
+            for (obj2 in obj) {
+                var err = this.findFirstError(obj[obj2]);
+                if (err !== '') {
+                    return err;
+                }
+            }
+        } else {
+            return obj.errorString;
+        }
     };
 
     /**
