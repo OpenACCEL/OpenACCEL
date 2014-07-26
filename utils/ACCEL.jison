@@ -399,7 +399,11 @@ historyVar              :   scalarVar '{' expr '}'
                                     loc: this._$
                                 });
                             }
-                            $$ = "history(" + $1 + "," + $3 + ")";
+
+                            // If the quantity is not a dummy variable, we are guaranteed it is in the format
+                            // 'this.__$1__()'. We can use this information to pass the quantity string to the library function.
+                            var qty = $1.split("__")[1];
+                            $$ = "history('__" + qty + "__'," + $3 + ")";
                         }}
                         ;
 scalarConst             :   NUMBER | STRING | predefinedConstant;
