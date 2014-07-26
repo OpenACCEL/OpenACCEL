@@ -52,6 +52,9 @@ define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
         var lhs = this.getLHS(line);
         var rhs = this.getRHS(line);
 
+        // Unit of quantity
+        var unit = this.getUnits(line);
+
         // get all variable names from the left hand side
         var vars = this.getVariables(lhs);
 
@@ -68,7 +71,7 @@ define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
             qty.source = line;
             qty.definition = rhs;
             qty.todo = false;
-            qty.unit = this.getUnits(line);
+            qty.unit = (unit !== 'unitError' && unit !== 'uncheckedUnit') ? unit : '';
 
             // If there are other items left in vars, then this are the parameters.
             qty.parameters = vars.slice(1);
@@ -104,7 +107,7 @@ define(['underscore', 'model/analyser/passes/analyserpass', 'model/quantity'],
             qty.LHS = lhs;
             qty.source = line;
             qty.definition = rhs;
-            qty.unit = this.getUnits(line);
+            qty.unit = (unit !== 'unitError' && unit !== 'uncheckedUnit') ? unit : '';
 
             // Straightforward check for empty definitions of quantities. Further
             // checking of todo-items is done in the dependency pass.
