@@ -285,30 +285,52 @@ UnitObject.prototype.equals = function(other) {
 };
 
 /**
- * Given two UnitObjects; if one of the objects contains an error, the value gets updated,
- * the error becomes 'uncheckUnit' and the unit stays empty. If none of the two objects contain
- * an error, the function will return false.
+ * Given one or more UnitObjects, returns a new UnitObject with the value computed by the given
+ * function applied to the given arguments, and an 'uncheckedUnit' error
  *
  * Error _strings_ are not propagated to prevent error messages from stacking up and
  * appearing multiple times.
  *
  * @param  {Function} f The function that zips the values of the two objects together when there is an error.
- * @param  {UnitObject} other
+ * @param  {UnitObject} args An
  * @return A UnitObject with error and updated value if x or y contains an error. False otherwise.
  */
-UnitObject.prototype.propagateError = function(f, other) {
-    // Check for errors on the left hand side, if present.
-    if (other) {
-        if ((this.error !== null && this.error !== '') || (other.error !== null && other.error !== '')) {
-            return new UnitObject(f(this.value, other.value), {}, 'uncheckedUnit');
-        }
-    } else {
-        if (this.error !== null && this.error !== '') {
-            return new UnitObject(f(this.value), {}, 'uncheckedUnit');
-        }
-    }
+UnitObject.prototype.propagateError = function(f) {
+    // Convert arguments list to array
+    var args = Array.prototype.slice.call(arguments, 1);
 
-    return false;
+    // Find the first error in the given arguments array. If there is one,
+    // call the given function with the given arguments and return an
+    // 'uncheckedUnit' error.
+    var err = this.findFirstError(args);
+    if (err !== '') {
+        return new UnitObject(f.apply(null, args), {}, 'uncheckedUnit');
+    } else {
+        return false;
+    }
+};
+
+/**
+ * Recursively traverses the (array of array of ...) UnitObject(s) and
+ * returns the first error it finds.
+ *
+ * @param  {UnitObject} obj (array of array of ...) UnitObject(s)
+ * @return {String} The first error found
+ */
+UnitObject.prototype.findFirstError = function(obj) {
+    if (obj instanceof Array) {
+        for (obj2 in obj) {
+            var err = this.findFirstError(obj[obj2]);
+            if (err !== '') {
+                return err;
+            }
+        }
+
+        // If no errors were found, return ''
+        return '';
+    } else {
+        return obj.errorString;
+    }
 };
 
 /**

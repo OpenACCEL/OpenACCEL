@@ -110,7 +110,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
 
     /**
      * Function that gets called when invoking exe.__qty__(), where qty is the quantity whose value you want.
-     * 
+     *
      * @param {Object} The quantity in the executable whose expression you want to evaluate. Usually, this is 'this.qty'.
      * @param {Report} The report concerning the given quantity. This will usually be 'this.report.qty'.
      */
@@ -211,7 +211,7 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
     /**
      * Recursively traverses the (array of array of ...) UnitObject(s) and
      * returns the first error it finds.
-     * 
+     *
      * @param  {UnitObject} obj (array of array of ...) UnitObject(s)
      * @return {String} The first error found
      */
@@ -223,6 +223,9 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
                     return err;
                 }
             }
+
+            // If no errors were found, return ''
+            return '';
         } else {
             return obj.errorString;
         }
