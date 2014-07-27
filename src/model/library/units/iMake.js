@@ -20,7 +20,10 @@ function iMake(x,nrRows,nrCols) {
     }
 
     var std_iMake = exe.lib.std.iMake;
-    // TODO error propagation
+    var error = UnitObject.prototype.propagateError(std_iMake, x, nrRows, nrCols);
+    if (error) {
+        return error;
+    }
 
     var ans;
     if(!nrRows.isNormal() || !nrCols.isNormal()) {
