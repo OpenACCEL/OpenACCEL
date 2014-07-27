@@ -230,6 +230,19 @@ define([], /**@lends Model.Quantity */ function() {
      * unit and comment
      */
     Quantity.prototype.toString = function(options) {
+        // Set default values of missing options
+        if (typeof options === 'undefined') {
+            options = {'includeUnits': true, 'includeComments': true, 'includeCheckedUnits': false};
+        } else {
+            if (typeof options.includeUnits === 'undefined') {
+                options.includeUnits = true;
+            } else if (typeof options.includeComments === 'undefined') {
+                options.includeComments = true;
+            } else if (typeof options.includeCheckedUnits === 'undefined') {
+                options.includeCheckedUnits = false;
+            }
+        }
+
         var def = this.LHS + '=' + this.definition;
 
         // Only include the unit of this quantity (if it has one) if it's a category 1 or 3 quantity
