@@ -318,6 +318,46 @@ suite("Compiler", function() {
             assert.equal(output.__t__(), expected);
         });
 
+        /**
+         * A simple test to see if the base case works.
+         *
+         * @input:      t = t{1 | b + 1000 - 500} + 1
+         *              b = 5*1000
+         * @expected:   t = 5501, 5502, .... , 6000.
+         */
+        test('| Optional base case', function() {
+            var code = 't = t{1 | b + 1000 - 500} + 1 \n b = 5*1000';
+            var output = compiler.compile(new Script(code));
+
+            var expected = 5501;
+            for (var i = 0; i < 1000; i++) {
+                assert.equal(output.__t__(), expected);
+                output.step();
+                expected++;
+            };
+        });
+
+        /**
+         * A simple test to see if the base case works.
+         *
+         * @input:      t = t{2 | b + 1000 - 500} + 1
+         *              b = 5*1000
+         * @expected:   t = 5501, 5501, 5502, 5502, .... , 6000.
+         */
+        test('| Delayed base case', function() {
+            var code = 't = t{2 | b + 1000 - 500} + 1 \n b = 5*1000';
+            var output = compiler.compile(new Script(code));
+
+            var expected = 5501;
+            for (var i = 1; i < 2000; i++) {
+                assert.equal(output.__t__(), expected);
+                output.step();
+                if (i % 2 == 0) {
+                    expected++;
+                }
+            };
+        });
+
     suite("| Analysis", function() {
             /**
              * Flagging time-dependent quantities in analyser, and retrieving them.
