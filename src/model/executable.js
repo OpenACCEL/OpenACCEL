@@ -133,7 +133,14 @@ define(["model/exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
                 } else {
                     // For input quantities, which do not have executable library functions,
                     // retrieve the current value from the report and store it in the history
-                    history[0] = report.value;
+                    
+                    // Don't forget to check for units. If we're evaluating units, we must cast the
+                    // answer as a UnitObject.
+                    if (quantity.expr === quantity.unitexpr) {
+                        history[0] = new UnitObject(report.value, quantity.unit);
+                    } else {
+                        history[0] = report.value;
+                    }
                 }
             }
         } else {
