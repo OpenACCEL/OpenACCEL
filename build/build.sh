@@ -63,8 +63,8 @@ documentation() {
 deploy() {
     # Generate ACCEL compiler using Jison.
     echo "Generating ACCEL compiler..."
-    node_modules/.bin/jison lang/ACCEL.jison      -o src/model/parser.js     -m amd -p lalr
-    node_modules/.bin/jison lang/ACCELUnits.jison -o src/model/unitparser.js -m amd -p lalr
+    node_modules/.bin/jison lang/ACCEL.jison      -o src/Model/Parser.js     -m amd -p lalr
+    node_modules/.bin/jison lang/ACCELUnits.jison -o src/Model/UnitParser.js -m amd -p lalr
 
     echo "Deploying..."
     # Create required directories and all subdirectories that do not yet exist.
@@ -88,37 +88,37 @@ deploy() {
     cp lang/CodeMirror_ACCEL.js                                                          bin/scripts/cm/mode/ACCEL/ACCEL.js
 
     # Generating monofunc library functions.
-    node ./build/monofuncgenerator.js ./src/model/library
+    node ./build/monofuncgenerator.js ./src/Model/Library
 
     # Generate single file containing all standard library functions.
-    rm -f src/model/library/functions.js
-    cat src/model/library/*.js > src/model/library/functions.js
+    rm -f src/Model/Library/Functions.js
+    cat src/Model/Library/*.js > src/Model/Library/Functions.js
 
     # Generate single file containing all unit library functions.
-    rm -f src/model/library/units/functions.js
-    cat src/model/library/units/* > src/model/library/units/functions.js
+    rm -f src/Model/Library/Units/Functions.js
+    cat src/Model/Library/Units/* > src/Model/Library/Units/Functions.js
 
     # Generate single file containing all macros.
-    rm -f src/model/macros/macros.sjs
-    cat src/model/macros/* > src/model/macros/macros.sjs
+    rm -f src/Model/Macros/macros.sjs
+    cat src/Model/Macros/* > src/Model/Macros/macros.sjs
 
     # Copy scripts.
     cp -r src/* bin/scripts
     find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
-    find bin/scripts/model/library -type f -not -name "functions.js" -exec rm {} \;
+    find bin/scripts/Model/Library -type f -not -name "Functions.js" -exec rm {} \;
 
     # Copy images.
-    cp -r src/view/img bin/img/
+    cp -r src/View/img bin/img/
 
     # Copy style sheets.
-    cp -r src/view/css bin/css/
+    cp -r src/View/css bin/css/
 }
 
 # Post Deployment
 post_deploy() {
     # Set time depency functions in quantitypass.js
-    path_functions="src/model/library/functions.js"
-    path_quantitypass="bin/scripts/model/analyser/passes/quantitypass.js"
+    path_functions="src/Model/Library/Functions.js"
+    path_quantitypass="bin/scripts/Model/Analyser/Passes/QuantityPass.js"
     regex=".isTimeDependent = true;"
     match=$(grep "$regex" "$path_functions")
     funcs=$(echo $match | sed "s@$regex@@g") # remove all occurences of regex from match

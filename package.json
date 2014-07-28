@@ -50,7 +50,7 @@
         "node": ">=0.10.25"
     },
     "scripts": {
-        "jade": "jade -o bin/ src/view/index.jade",
+        "jade": "jade -o bin/ src/View/index.jade",
         "doc": "jsdoc -c prepost/conf.json -d doc/ src/ -r",
         "doc-latex": "jsdoc -c JSDoc2Latex/conf.json -d doc-latex/ src/ -r",
         "build": "sh build/build.sh --build",

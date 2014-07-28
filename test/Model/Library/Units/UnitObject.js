@@ -6,7 +6,7 @@ suite("Unit Object", function() {
     var script;
 
     setup(function(done) {
-        requirejs(["assert", "model/compiler", "model/fileloader", "model/script"], function(Assert, Compiler, FileLoader, Script) {
+        requirejs(["assert", "Model/Compiler", "Model/FileLoader", "Model/Script"], function(Assert, Compiler, FileLoader, Script) {
             assert = Assert;
             compiler = new Compiler();
             fileLoader = new FileLoader();
