@@ -56,7 +56,7 @@ var functionsDiff = [{
  * Template, read from librarytemplate.txt
  * @type {String}
  */
-var template = fs.readFileSync('./utils/librarytemplate.txt', 'utf8');
+var template = fs.readFileSync('./build/librarytemplate.txt', 'utf8');
 
 /**
  * Extension for library files

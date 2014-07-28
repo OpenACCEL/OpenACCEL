@@ -63,8 +63,8 @@ documentation() {
 deploy() {
     # Generate ACCEL compiler using Jison.
     echo "Generating ACCEL compiler..."
-    node_modules/.bin/jison utils/ACCEL.jison      -o src/model/parser.js     -m amd -p lalr
-    node_modules/.bin/jison utils/ACCELUnits.jison -o src/model/unitparser.js -m amd -p lalr
+    node_modules/.bin/jison lang/ACCEL.jison      -o src/model/parser.js     -m amd -p lalr
+    node_modules/.bin/jison lang/ACCELUnits.jison -o src/model/unitparser.js -m amd -p lalr
 
     echo "Deploying..."
     # Create required directories and all subdirectories that do not yet exist.
@@ -85,10 +85,10 @@ deploy() {
 
     # Copy CodeMirror files.
     cp node_modules/codemirror/lib/codemirror.js                                         bin/scripts/cm/lib/codemirror.js
-    cp utils/CodeMirror_ACCEL.js                                                         bin/scripts/cm/mode/ACCEL/ACCEL.js
+    cp lang/CodeMirror_ACCEL.js                                                          bin/scripts/cm/mode/ACCEL/ACCEL.js
 
     # Generating monofunc library functions.
-    node ./utils/monofuncgenerator.js ./src/model/library
+    node ./build/monofuncgenerator.js ./src/model/library
 
     # Generate single file containing all standard library functions.
     rm -f src/model/library/functions.js
