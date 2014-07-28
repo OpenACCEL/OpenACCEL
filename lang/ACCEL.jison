@@ -193,6 +193,7 @@ frac        (?:\.[0-9]+)
 "=="                                                        { return '==';      }
 "&&"                                                        { return '&&';      }
 "||"                                                        { return '||';      }
+"|"                                                         { return '|';       }
 "="                                                         { return '=';       }
 
 /lex
@@ -559,10 +560,14 @@ scalarVar               :   quantityName
 /**
  * The history 'operator'. Given a quantity q, one can retrieve a past value 'a' steps ago
  * with the format 'q{a}'. 'a' Can be any expression.
+ *
+ * Optionally, a user can add a base case 'b' in the form of q{a|b}.
+ * This base case will be the default value in case there is no history value 'a' steps back.
+ * When this base case is not given, the default value of zero will be returned.
  * 
  * A scalarVar however can also be a dummy variable, which is not supported by the history operator.
  */
-history                 :   scalarVar '{' expr '}'
+history                 :   scalarVar '{' expr (historyBase)?'}'
                         {{
                             if (yy.dummies && yy.dummies.indexOf($1) > -1) {
                                 // Cannot ask for the history of a parameter.
@@ -575,7 +580,26 @@ history                 :   scalarVar '{' expr '}'
                             // If the quantity is not a dummy variable, we are guaranteed it is in the format
                             // 'this.__$1__()'. We can use this information to pass the quantity string to the library function.
                             var qty = $1.split("__")[1];
-                            $$ = "history('__" + qty + "__'," + $3 + ")";
+
+                            // Check for a base case 'b'. We wrap this base case 'b' in function instead of directly
+                            // executing it, as a means of optimization. This way the value of 'b' will not always be
+                            // unnecessaryily calculated. We expect that the base case will not be called often anyway.
+                            if ($4 && $4.length > 0) {
+                                $$ = "history('__" + qty + "__'," + $3 + ",(function(){return " + $4 + ";}).bind(this))";
+                            } else {
+                                $$ = "history('__" + qty + "__'," + $3 + ")";
+                            }
+                        }}
+                        ;
+
+/**
+ * The optional base case for the hisotry operator.
+ * When this base case is not given, the history operator will return zero instead,
+ * when there exists no history value that 'a' steps ago.
+ */
+historyBase             :   '|' expr
+                        {{
+                            $$ = $2;
                         }}
                         ;
 
