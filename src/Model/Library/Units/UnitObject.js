@@ -313,7 +313,7 @@ UnitObject.prototype.propagateError = function(f) {
 
 /**
  * Converts the given array of UnitObjects to an array containing
- * only their values.
+ * only their values, recursively.
  * @param  {Array} arr The array of UnitObjects to convert.
  * @return {Array} An array containing the values of all UnitObjects
  * in arr in their original order.
@@ -322,7 +322,12 @@ UnitObject.prototype.toArray = function(arr) {
     var l = arr.length;
     var newArr = new Array(l);
     for (var i = l-1; i >= 0; i--) {
-        newArr[i] = arr[i].value;
+        var elem = arr[i];
+        if (elem instanceof Array) {
+            newArr[i] = UnitObject.prototype.toArray(elem);
+        } else {
+            newArr[i] = elem.value;
+        }
     }
 
     return newArr;
@@ -360,11 +365,29 @@ UnitObject.prototype.hasUnit = function() {
 };
 
 /**
+ * Returns whether the applicable (array of) UnitObject(s) has (have) no unit(s).
+ *
+ * @param {UnitObject} obj When given, this (array of) UnitObject(s) is checked.
+ * If not given, the *this* object is used.
  * @return {Boolean} Whether the UnitObject has no unit, and thus is the
  * identity unit (for multiplication).
  */
-UnitObject.prototype.isNormal = function() {
-    return Object.keys(this.unit).length === 0;
+UnitObject.prototype.isNormal = function(obj) {
+    if (typeof obj === 'undefined') {
+        return Object.keys(this.unit).length === 0;
+    } else {
+        if (obj instanceof Array) {
+            for (var elem in obj) {
+                if (!UnitObject.prototype.isNormal(obj[elem])) {
+                    return false;
+                }
+            }
+        } else {
+            return Object.keys(obj.unit).length === 0;
+        }
+    }
+
+    return true;
 };
 
 /**
