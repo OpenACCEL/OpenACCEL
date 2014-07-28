@@ -18,5 +18,5 @@ npm-debug.log
 *.DS_Store
 
 # Generated parser should be re-generated every time and shouldn't be included in the repo
-src/model/parser.js
-src/model/unitparser.js
+src/Model/Parser.js
+src/Model/UnitParser.js

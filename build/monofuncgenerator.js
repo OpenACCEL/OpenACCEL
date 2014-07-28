@@ -105,7 +105,7 @@ var gitignore = fs.openSync(path.join(outputdir, ".gitignore"), 'w');
 fs.appendFile(path.join(outputdir, ".gitignore"), ".gitignore\n", function (err) { });
 
 // Ignore generated functions.js file
-fs.appendFile(path.join(outputdir, ".gitignore"), "functions.js\n", function (err) { });
+fs.appendFile(path.join(outputdir, ".gitignore"), "Functions.js\n", function (err) { });
 
 // Handle all functions that need no translation
 functions1to1.forEach(function(func) {
