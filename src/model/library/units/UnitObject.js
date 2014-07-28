@@ -304,10 +304,28 @@ UnitObject.prototype.propagateError = function(f) {
     // 'uncheckedUnit' error.
     var err = this.findFirstError(args);
     if (err !== '') {
+        args = UnitObject.prototype.toArray(args);
         return new UnitObject(f.apply(null, args), {}, 'uncheckedUnit');
     } else {
         return false;
     }
+};
+
+/**
+ * Converts the given array of UnitObjects to an array containing
+ * only their values.
+ * @param  {Array} arr The array of UnitObjects to convert.
+ * @return {Array} An array containing the values of all UnitObjects
+ * in arr in their original order.
+ */
+UnitObject.prototype.toArray = function(arr) {
+    var l = arr.length;
+    var newArr = new Array(l);
+    for (var i = l-1; i >= 0; i--) {
+        newArr[i] = arr[i].value;
+    }
+
+    return newArr;
 };
 
 /**

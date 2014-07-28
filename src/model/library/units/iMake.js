@@ -27,10 +27,11 @@ function iMake(x,nrRows,nrCols) {
 
     var ans;
     if(!nrRows.isNormal() || !nrCols.isNormal()) {
-        ans = new UnitObject(std_iMake(x,nrRows,nrCols), {}, "unitError");
+        ans = new UnitObject(std_iMake(x, nrRows.value, nrCols.value), {}, "unitError");
         ans.errorString = "Arguments 2 and 3 (=dimensions) of iMake must be unitless; current units are: <"+ nrRows.toString() +">  and <"+ nrCols.toString() +">, respectively";
     } else {
         ans = std_iMake(x, nrRows.value, nrCols.value);
     }
-    return ans
+
+    return ans;
 }

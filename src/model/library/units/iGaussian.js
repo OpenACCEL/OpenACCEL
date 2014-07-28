@@ -1,35 +1,35 @@
-//This function was taken from keesvanoverveld.com
 function iGaussian(n1,n2,s1,s2) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    n1 = Math.round(n1);
-    n2 = Math.round(n2);
-    if (n1 >= 0 && n2 >= 0) {
-        var t = [];
-        var sum = 0;
-        var x1 = -(n1 - 1) / 2;
-        var x2 = -(n2 - 1) / 2;
-        var denom1 = 2 * s1 * s1;
-        var denom2 = 2 * s2 * s2;
-        for (i = 0; i < n1; i++) {
-            t[i] = [];
-            x2 = -(n2 - 1) / 2;
-            for (j = 0; j < n2; j++) {
-                t[i][j] = Math.exp(-x1 * x1 / denom1 - x2 * x2 / denom2);
-                sum += t[i][j];
-                x2 += 1;
-            }
-            x1 += 1;
-        }
-        for (i = 0; i < n1; i++) {
-            for (j = 0; j < n2; j++)
-                t[i][j] /= sum;
 
-        }
-        return t;
-    } else {
-        throw new Error("\niGaussian: cannot make an array with <0 elements");
+    if (!(n1 instanceof UnitObject)) {
+        n1 = new UnitObject(n1);
     }
+    if (!(n2 instanceof UnitObject)) {
+        n2 = new UnitObject(n2);
+    }
+    if (!(s1 instanceof UnitObject)) {
+        s1 = new UnitObject(s1);
+    }
+    if (!(s2 instanceof UnitObject)) {
+        s2 = new UnitObject(s2);
+    }
+
+    var std_iGaussian = exe.lib.std.iGaussian;
+    var error = UnitObject.prototype.propagateError(std_iGaussian, n1, n2, s1, s2);
+    if (error) {
+        return error;
+    }
+
+    var ans;
+    if(!n1.isNormal() || !n2.isNormal() || !s1.isNormal() || !s2.isNormal()) {
+        ans = new UnitObject(std_iGaussian(n1.value, n2.value, s1.value, s2.value), {}, "unitError");
+        ans.errorString = "All arguments of iGaussian must be unitless; current units are: <"+ n1.toString() +">, <"+ n2.toString() +">, <" + s1.toString() + "> and <" + s2.toString() + "> respectively";
+    } else {
+        ans = new UnitObject(std_iGaussian(n1.value, n2.value, s1.value, s2.value), {}, null);
+    }
+
+    return ans;
 }

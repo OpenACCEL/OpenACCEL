@@ -1,23 +1,35 @@
-//This function was taken from keesvanoverveld.com
 function iSpike(x1,x2,y1,y2) {
     if (arguments.length != arguments.callee.length) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    var r1 = Math.round(y1);
-    var r2 = Math.round(y2);
-    var p1 = Math.round(x1);
-    var p2 = Math.round(x2);
-    var rr = [];
-    for (i = 0; i < r1; i++) {
-        rr[i] = [];
-        for (j = 0; j < r2; j++) {
-            if (i == p1 && j == p2) {
-                rr[i][j] = 1;
-            } else {
-                rr[i][j] = 0;
-            }
-        }
+
+    if (!(x1 instanceof UnitObject)) {
+        x1 = new UnitObject(x1);
     }
-    return rr;
+    if (!(x2 instanceof UnitObject)) {
+        x2 = new UnitObject(x2);
+    }
+    if (!(y1 instanceof UnitObject)) {
+        y1 = new UnitObject(y1);
+    }
+    if (!(y2 instanceof UnitObject)) {
+        y2 = new UnitObject(y2);
+    }
+
+    var std_iSpike = exe.lib.std.iSpike;
+    var error = UnitObject.prototype.propagateError(std_iSpike, x1, x2, y1, y2);
+    if (error) {
+        return error;
+    }
+
+    var ans;
+    if(!x1.isNormal() || !x2.isNormal() || !y1.isNormal() || !y2.isNormal()) {
+        ans = new UnitObject(std_iSpike(x1.value, x2.value, y1.value, y2.value), {}, "unitError");
+        ans.errorString = "All arguments of iSpike must be unitless; current units are: <"+ x1.toString() +">, <"+ x2.toString() +">, <" + y1.toString() + "> and <" + y2.toString() + "> respectively";
+    } else {
+        ans = new UnitObject(std_iSpike(x1.value, x2.value, y1.value, y2.value), {}, null);
+    }
+
+    return ans;
 }
