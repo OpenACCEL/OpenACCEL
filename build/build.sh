@@ -22,9 +22,9 @@ quickbuild() {
 test() {
     echo "Testing..."
     case "$1" in
-        "") node_modules/.bin/mocha test/ -R list -u tdd --recursive --grep @benchmark --invert ;;
+        "") node_modules/.bin/mocha test/ -R list -u tdd --no-timeouts --recursive --grep @benchmark --invert ;;
         *)  file=$(find test/ -name "$1".js)
-            node_modules/.bin/mocha $file -R list -u tdd -r test/require.js --grep @benchmark --invert ;;
+            node_modules/.bin/mocha $file -R list -u tdd --no-timeouts -r test/require.js --grep @benchmark --invert ;;
     esac
 }
 
