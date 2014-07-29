@@ -10,7 +10,7 @@ suite("vMatSolve Library", function() {
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
-            fileLoader.load("functions", "library");
+            fileLoader.load("Functions", "library");
             done();
         });
     });
