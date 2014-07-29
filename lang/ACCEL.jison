@@ -169,7 +169,7 @@ frac        (?:\.[0-9]+)
          * library functions also return objects.
          */
         output += "this." + name + ".unitexpr = (function() { " + 
-            "return this.unitexpr(this." + name + ", this.report." + name +", " + expr + "); " +
+            "return this.unitexpr(this." + name + ", this.report." + name +", this." + name + ".stdexpr()); " +
         "}).bind(this);";
 
         /**
