@@ -453,7 +453,7 @@ quantityName            :   IDENTIFIER
  * A quantity function is just like a normal quantitify definition as well, except for a quantity name,
  * it takes parenthesis and additional arguments as well.
  */
-quantityFuncDef         :   quantityFuncName '=' expr
+quantityFuncDef         :   quantityFuncName '=' expr (UNIT)?
                         {{
                             $$ = "func(" + $1 + $2 + $3 + ")";
                         }}

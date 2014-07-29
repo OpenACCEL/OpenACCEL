@@ -34,7 +34,9 @@ macro func {
             }
         };
 
-        this.$x.expr = (function($xs (,) ...) { return $expr; }).bind(this);
+        this.$x.stdexpr = (function($xs (,) ...) { return $expr; }).bind(this);
+        this.$x.unitexpr = (function($xs (,) ...) { return this.unitexpr(this.$x, this.report.$x, this.$x.stdexpr($xs (,) ...)); } ).bind(this);
+        this.$x.expr = this.$x.stdexpr;
 
         // Memoization datastructure
         this.$x.cache = {};
