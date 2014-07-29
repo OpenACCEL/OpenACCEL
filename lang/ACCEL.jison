@@ -138,7 +138,97 @@ frac        (?:\.[0-9]+)
     ];
     yy.reservedwords.push.apply(yy.reservedwords, yy.inputfunctions);
     yy.reservedwords.push.apply(yy.reservedwords, yy.stdfunctions);
+
+    yy.createQuantity = function(name, expr) {
+        var output = "";
+
+        /**
+         * Code to expand the matched expression into. This code adds a method to the Executable (=this) object that returns
+         * the current value for the quantity being defined in the matched expression.
+         *
+         * If your quantity is 'q', then this creates a function __q__() to fetch its value.
+         */
+        output += "this." + name + " = function() { " +
+            "return this.expr(this." + name + ", this.report." + name + "); " +
+        "};";
+
+        /**
+         * Function that evaluates the matched expression in the context of 'this'.
+         * This is without unit checking or other extensions. This is pure code.
+         *
+         * This is where the actual computation of the quantity takes place.
+         */
+        output += "this." + name + ".stdexpr = (function() " + 
+            "{ return " + expr + "; " + 
+        "}).bind(this);";
+
+        /**
+         * Function that evaluates the matched expression in the context of 'this',
+         * and returns both the resulting value and corresponding unit.
+         * This takes into account that all quantities should return objects, and all
+         * library functions also return objects.
+         */
+        output += "this." + name + ".unitexpr = (function() { " + 
+            "return this.unitexpr(this." + name + ", this.report." + name +", " + expr + "); " +
+        "}).bind(this);";
+
+        /**
+         * Function that evaluates the matched expression in the context of 'this'.
+         * This expression should be a reference to the expressions that you want to use for the run-time.
+         *
+         * For example, if you want units, you should refer this to the 'unitexpr', and if you just want
+         * to calculate normal expressions without extension, you'd let it refer to 'stdexpr'.
+         */
+        output += "this." + name + ".expr = this." + name + ".stdexpr;";
+
+        /**
+         * The array of historic values of this quantity. The first element always
+         * contains the current (most recent) value of this quantity.
+         *
+         * Other indices will exist only when historic values of the quantity are used within the script.
+         * The array will be just long enough to store the earliest value used in the script.
+         *
+         * @type {Array}
+         */
+        output += "this." + name + ".hist = [];";
+
+        /**
+         * The unit of this quantity. No unit is given, so assign
+         * unit identity to this quantity.
+         *
+         * @type {Object}
+         */
+        output += "this." + name + ".unit = {};";
+
+        /**
+         * The maximum size of the history array for this quantity.
+         *
+         * @type {Number}
+         */
+        output += "this." + name + ".timespan = 0;";
+
+        /**
+         * Initialize the value in case it's a user input quantity
+         */
+        output += "if (this.report && this.report." + name + ".category === 1) {" +
+            // Initialise initial values of user input quantities
+            "if (this.report." + name + ".input.type === 'button') {" +
+                "this." + name + ".hist[0] = false;" +
+            "} else {" +
+                "this." + name + ".hist[0] = this.report." + name + ".input.parameters[0];" +
+            "}" +
+        "}";
+
+        return output;
+    }
 %}
+
+
+
+
+
+
+
 
 
 
@@ -254,13 +344,13 @@ script                  :   (scriptLine)* (scriptFinalLine)?
                                 var length = $1.length;
                                 for (var i = 0; i < length; i++) {
                                     if($1[i]) {
-                                        output += "func(" + $1[i] + ")\n";
+                                        output += $1[i] + "\n";
                                     }
                                 }
                             }
 
                             if ($2) {
-                                output += "func(" + $2 + ")\n";
+                                output += $2 + "\n";
                             }
 
                             return output;
@@ -333,7 +423,7 @@ quantity                :   (quantityDef | quantityInput | quantityFuncDef)
 quantityDef             :   quantityName '=' expr (UNIT)?
                         {{
                             // Ignore units, there is a seperate parser for those.
-                            $$ = $1 + $2 + $3;
+                            $$ = yy.createQuantity($1, $3);
                         }}
                         ;
 
@@ -344,7 +434,7 @@ quantityDef             :   quantityName '=' expr (UNIT)?
 quantityInput           :   quantityName '=' inputCall (UNIT)?
                         {{
                             // Ignore units, there is a seperate parser for those.
-                            $$ = $1 + $2 + $3;
+                            $$ = yy.createQuantity($1, $3);
                         }}
                         ;
 
@@ -365,7 +455,7 @@ quantityName            :   IDENTIFIER
  */
 quantityFuncDef         :   quantityFuncName '=' expr
                         {{
-                            $$ = $1 + $2 + $3;
+                            $$ = "func(" + $1 + $2 + $3 + ")";
                         }}
                         ;
 
