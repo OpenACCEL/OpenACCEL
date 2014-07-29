@@ -613,7 +613,7 @@ quantifier              :  '#(' dummy ',' expr ',' expr ',' STDFUNCTION ')'
                                 // Remove the dummy variable from the list.
                                 var idx = yy.dummies.indexOf($2);
                                 yy.dummies.splice(idx,1);
-                                $$ = "quantifier(" + $2 + $3 + $4 + $5 + $6 + $7 + $8 + $9;
+                                $$ = "quantifier(" + $4 + ",(function(" + $2 + "){return " + $6 + ";}).bind(this)," + $8 + ")" ;
                             }}
                         ;
 
