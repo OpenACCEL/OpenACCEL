@@ -7,7 +7,6 @@ suite("paretoHor Library", function() {
         // This saves the module for use in tests. You have to use
         // the done callback because this is asynchronous.
         requirejs(["assert", "Model/Compiler", "Model/FileLoader", "Model/Script"], function(Assert, module, FileLoader) {
-            console.log("Loaded 'paretoHor' module.");
             assert = Assert;
             compiler = new module();
             fileLoader = new FileLoader();
