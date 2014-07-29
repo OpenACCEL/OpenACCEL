@@ -14,7 +14,7 @@ function and(x, y) {
         }
 
         var std_and = exe.lib.std.and;
-        var error = a.propagateError(std_and, b);
+        var error = UnitObject.prototype.propagateError(std_and, a, b);
         if (error) {
             return error;
         }
@@ -25,10 +25,10 @@ function and(x, y) {
             ans.errorString = "Both arguments to the \"and\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.";
             return ans;
         } else {
-            var ans = a.clone()
-            ans.value = std_and(a.value, b.value);
-            return ans;
+            ans = new UnitObject(std_and(a.value, b.value), {}, null);
         }
+
+        return ans;
     });
 }
 

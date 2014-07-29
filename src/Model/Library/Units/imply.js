@@ -14,7 +14,7 @@ function imply(x, y) {
         }
 
         var std_imply = exe.lib.std.imply;
-        var error = a.propagateError(std_imply, b);
+        var error = UnitObject.prototype.propagateError(std_imply, a, b);
         if (error) {
             return error;
         }
@@ -23,11 +23,11 @@ function imply(x, y) {
         if (!a.isNormal() || !b.isNormal()) {
             ans = new UnitObject(std_imply(a.value, b.value), {}, "unitError");
             ans.errorString = "Both arguments to the \"imply\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.";
-            return ans;
         } else {
             var ans = a.clone()
             ans.value = std_imply(a.value, b.value);
-            return ans;
         }
+
+        return ans;
     });
 }

@@ -143,4 +143,46 @@ suite("LessThanEqual Library", function() {
         });
 
     });
+
+    suite("| Units", function() {
+        test("| Normal operation", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = 40 ; kg\n" +
+            "b = 25 ; kg\n" +
+            "c = lessThanEqual(a,b)\n" +
+            "x = 36\n" +
+            "y = 36\n" +
+            "z = lessThanEqual(x, y)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__c__().equals(new UnitObject(false, {'kg': 1})));
+            assert.equal(false, output.__c__().value);
+            assert.ifError(output.__c__().error);
+
+            assert.equal(true, output.__z__().isNormal());
+            assert.equal(true, output.__z__().value);
+            assert.ifError(output.__z__().error);
+        });
+
+        test("| Error handling", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = 40 ; kg\n" +
+            "b = 25 ; m2/p\n" +
+            "c = lessThanEqual(a,b)\n" +
+            "x = 36\n" +
+            "z = lessThanEqual(c, x)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(false, output.__c__().value);
+            assert.equal(output.__c__().error, "unitError");
+
+            assert.equal(true, output.__z__().value);
+            assert.equal(output.__z__().error, "uncheckedUnit");
+            assert.ok(output.__z__().isNormal());
+        });
+    });
 });

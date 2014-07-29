@@ -13,7 +13,7 @@ function greaterThan(x, y) {
         }
 
         var std_gt = exe.lib.std.greaterThan;
-        var error = a.propagateError(std_gt, b);
+        var error = UnitObject.prototype.propagateError(std_gt, a, b);
         if (error) {
             return error;
         }
@@ -22,11 +22,11 @@ function greaterThan(x, y) {
         if(!a.equals(b)) {
             ans = new UnitObject(std_gt(a.value, b.value), {}, "unitError");
             ans.errorString = "Arguments to > must have same units. Trying to compare units <" + a.toString() + "> and <" + b.toString() + ">.";
-            return ans;
         } else {
             var ans = a.clone()
             ans.value = std_gt(a.value, b.value);
-            return ans;
         }
+
+        return ans;
     });
 }

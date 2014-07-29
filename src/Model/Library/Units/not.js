@@ -10,7 +10,7 @@ function not(x) {
         }
 
         var std_not = exe.lib.std.not;
-        var error = a.propagateError(std_not);
+        var error = UnitObject.prototype.propagateError(std_not, x);
         if (error) {
             return error;
         }
@@ -19,11 +19,11 @@ function not(x) {
         if(!a.isNormal()) {
             ans = new UnitObject(std_not(a.value), {}, "unitError");
             ans.errorString = "The argument to the \"not\" function must be unit-less. Current unit is: <" + a.toString() + ">.";
-            return ans;
         } else {
             var ans = a.clone()
             ans.value = std_not(a.value);
-            return ans;
         }
+
+        return ans;
     });
 }

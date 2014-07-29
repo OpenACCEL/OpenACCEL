@@ -13,7 +13,7 @@ function notEqual(x, y) {
         }
 
         var std_neq = exe.lib.std.notEqual;
-        var error = a.propagateError(std_neq, b);
+        var error = UnitObject.prototype.propagateError(std_neq, a, b);
         if (error) {
             return error;
         }
@@ -22,11 +22,11 @@ function notEqual(x, y) {
         if(!a.equals(b)) {
             ans = new UnitObject(std_neq(a.value, b.value), {}, "unitError");
             ans.errorString = "Arguments to != must have same units. Trying to compare units <" + a.toString() + "> and <" + b.toString() + ">.";
-            return ans;
         } else {
             var ans = a.clone()
             ans.value = std_neq(a.value, b.value);
-            return ans;
         }
+
+        return ans;
     });
 }

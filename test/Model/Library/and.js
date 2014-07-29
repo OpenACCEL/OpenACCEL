@@ -147,4 +147,38 @@ suite("And Library", function() {
             assert.equal(output.__z__(), false);
         });
     });
+
+    suite("| Units", function() {
+        test("| Normal operation", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "x = true\n" +
+            "y = false\n" +
+            "z = and(x, y)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__z__().isNormal());
+            assert.equal(false, output.__z__().value);
+            assert.ifError(output.__z__().error);
+        });
+
+        test("| Error handling", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = 25; kg\n" +
+            "b = 24\n" +
+            "z = and(a,b)\n" +
+            "y = and(z,b)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(24, output.__z__().value);
+            assert.equal(output.__z__().error, "unitError");
+
+            assert.equal(24, output.__y__().value);
+            assert.equal(output.__y__().error, "uncheckedUnit");
+            assert.ok(output.__y__().isNormal());
+        });
+    });
 });

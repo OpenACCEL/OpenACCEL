@@ -18,7 +18,7 @@ function __if__(condition, ifTrue, ifFalse) {
 
     // Check for errors first
     var std_if = exe.lib.std.__if__;
-    var error = ifTrue.propagateError(std_if, ifFalse);
+    var error = UnitObject.prototype.propagateError(std_if, ifTrue, ifFalse);
     if (error) {
         return error;
     }
@@ -28,7 +28,6 @@ function __if__(condition, ifTrue, ifFalse) {
     if(!condition.isNormal()) {
         ans = new UnitObject(std_if(condition.value, ifTrue.value, ifFalse.value), {}, "unitError");
         ans.errorString = "First argument to \"if\" function must be unit-less. Current unit is: <" + condition.toString() + ">.";
-        return ans;
     } else if ((ifResult = std_if(condition.value, ifTrue.value, ifFalse.value)) === ifTrue.value) {
         // Clone and return the right UnitObject, depending on the return value of the standard library __if__ function
         ans = ifTrue.clone();

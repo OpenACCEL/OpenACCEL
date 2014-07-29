@@ -11,22 +11,24 @@ function lessThanEqual(x, y) {
         if (!(b instanceof UnitObject)) {
             b = new UnitObject(b);
         }
-
+        console.log(JSON.stringify(a));
         var std_lte = exe.lib.std.lessThanEqual;
-        var error = a.propagateError(std_lte, b);
+        var error = UnitObject.prototype.propagateError(std_lte, a, b);
         if (error) {
             return error;
         }
 
         var ans;
         if(!a.equals(b)) {
+
             ans = new UnitObject(std_lte(a.value, b.value), {}, "unitError");
             ans.errorString = "Arguments to <= must have same units. Trying to compare units <" + a.toString() + "> and <" + b.toString() + ">.";
-            return ans;
         } else {
-            var ans = a.clone()
+            console.log(JSON.stringify(a));
+            ans = a.clone();
             ans.value = std_lte(a.value, b.value);
-            return ans;
         }
+
+        return ans;
     });
 }

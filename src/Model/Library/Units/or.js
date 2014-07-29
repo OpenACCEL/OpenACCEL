@@ -14,7 +14,7 @@ function or(x, y) {
         }
 
         var std_or = exe.lib.std.or;
-        var error = a.propagateError(std_or, b);
+        var error = UnitObject.prototype.propagateError(std_or, a, b);
         if (error) {
             return error;
         }
@@ -23,12 +23,12 @@ function or(x, y) {
         if (!a.isNormal() || !b.isNormal()) {
             ans = new UnitObject(std_or(a.value, b.value), {}, "unitError");
             ans.errorString = "Both arguments to the \"or\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.";
-            return ans;
         } else {
             var ans = a.clone()
             ans.value = std_or(a.value, b.value);
-            return ans;
         }
+
+        return ans;
     });
 }
 
