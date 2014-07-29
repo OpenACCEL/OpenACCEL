@@ -13,26 +13,7 @@ macro func {
     rule {
         ($x($xs (,) ...) = $expr:expr)
     } => {
-        this.$x = function($xs (,) ...) {
-            var quantity = this.$x;
-
-            // Support memoization only for 'primitive types', not objects
-            var args = Array.prototype.slice.call(arguments);
-            var obj = false;
-            for (var i=args.length; i>=0; i--) {
-                if (args[i] instanceof Object) {
-                    obj = true;
-                    break;
-                }
-            }
-
-            if (!obj) {
-                hash = JSON.stringify(args);
-                return (hash in quantity.cache) ? quantity.cache[hash] : quantity.cache[hash] = quantity.expr($xs (,) ...);
-            } else {
-                return quantity.expr($xs (,) ...);
-            }
-        };
+        this.$x = function($xs (,) ...) { return this.memoization(this.$x, [$xs (,) ...]); };
 
         this.$x.stdexpr = (function($xs (,) ...) { return $expr; }).bind(this);
         this.$x.unitexpr = (function($xs (,) ...) { return this.unitexpr(this.$x, this.report.$x, this.$x.stdexpr($xs (,) ...)); } ).bind(this);

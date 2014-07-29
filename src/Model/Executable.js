@@ -216,6 +216,31 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
     };
 
     /**
+     * Tries to execute a quantity with memoization.
+     * 
+     * @param  {Quantity} quantity The quantity to execute.
+     * @param  {Object} args      The arguments of the quantity, in case it is a function call.
+     */
+    Executable.prototype.memoization = function(quantity, args) {
+        // Support memoization only for 'primitive types', not objects
+        var slicedArgs = Array.prototype.slice.call(args);
+        var obj = false;
+        for (var i=slicedArgs.length; i>=0; i--) {
+            if (slicedArgs[i] instanceof Object) {
+                obj = true;
+                break;
+            }
+        }
+
+        if (!obj) {
+            hash = JSON.stringify(slicedArgs);
+            return (hash in quantity.cache) ? quantity.cache[hash] : quantity.cache[hash] = quantity.expr.apply(this, args);
+        } else {
+            return quantity.expr.apply(this, args);
+        }
+    };
+
+    /**
      * Recursively traverses the (array of array of ...) UnitObject(s) and
      * returns the first error it finds.
      *
