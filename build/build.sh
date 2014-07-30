@@ -20,6 +20,7 @@ quickbuild() {
 
 # Testing.
 test() {
+    quickbuild
     echo "Testing..."
     case "$1" in
         "") node_modules/.bin/mocha test/ -R list -u tdd --no-timeouts --recursive --grep @benchmark --invert ;;
