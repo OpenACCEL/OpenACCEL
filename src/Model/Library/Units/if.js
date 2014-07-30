@@ -18,7 +18,7 @@ function __if__(condition, ifTrue, ifFalse) {
 
     // Check for errors first
     var std_if = exe.lib.std.__if__;
-    var error = UnitObject.prototype.propagateError(std_if, ifTrue, ifFalse);
+    var error = UnitObject.prototype.propagateError(std_if, condition, ifTrue, ifFalse);
     if (error) {
         return error;
     }
@@ -31,10 +31,11 @@ function __if__(condition, ifTrue, ifFalse) {
     } else if ((ifResult = std_if(condition.value, ifTrue.value, ifFalse.value)) === ifTrue.value) {
         // Clone and return the right UnitObject, depending on the return value of the standard library __if__ function
         ans = ifTrue.clone();
+        ans.value = ifResult;
     } else {
         ans = ifFalse.clone();
+        ans.value = ifResult;
     }
 
-    ans.value = ifResult;
     return ans;
 }

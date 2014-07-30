@@ -145,4 +145,38 @@ suite("Imply Library", function() {
         });
 
     });
+
+    suite("| Units", function() {
+        test("| Normal operation", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = true\n" +
+            "b = 25\n" +
+            "c = imply(a,b)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__c__().isNormal());
+            assert.equal(25, output.__c__().value);
+            assert.ifError(output.__c__().error);
+        });
+
+        test("| Error handling", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = true ; d\n" +
+            "b = false ; kg\n" +
+            "c = imply(a,b)\n" +
+            "z = imply(c, false)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(false, output.__c__().value);
+            assert.equal(output.__c__().error, "unitError");
+
+            assert.equal(true, output.__z__().value);
+            assert.equal(output.__z__().error, "uncheckedUnit");
+            assert.ok(output.__z__().isNormal());
+        });
+    });
 });

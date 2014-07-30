@@ -134,4 +134,36 @@ suite("Not Library", function() {
         });
 
     });
+
+    suite("| Units", function() {
+        test("| Normal operation", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = 25\n" +
+            "c = not(a)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__c__().isNormal());
+            assert.equal(false, output.__c__().value);
+            assert.ifError(output.__c__().error);
+        });
+
+        test("| Error handling", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = false ; d\n" +
+            "c = not(a)\n" +
+            "z = not(c)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__c__().value);
+            assert.equal(output.__c__().error, "unitError");
+
+            assert.equal(false, output.__z__().value);
+            assert.equal(output.__z__().error, "uncheckedUnit");
+            assert.ok(output.__z__().isNormal());
+        });
+    });
 });

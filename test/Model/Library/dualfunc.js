@@ -10,7 +10,6 @@ suite("Dualfunc", function() {
             assert = Assert;
             compiler = new Compiler();
             var fileLoader = new FileLoader();
-            fileLoader.load("func", "macros");
             fileLoader.load("sin", "library");
             script = Script;
             macros = fileLoader.getContent();

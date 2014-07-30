@@ -142,4 +142,38 @@ suite("Or Library", function() {
         });
 
     });
+
+    suite("| Units", function() {
+        test("| Normal operation", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = true\n" +
+            "b = 25\n" +
+            "c = or(a,b)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__c__().isNormal());
+            assert.equal(true, output.__c__().value);
+            assert.ifError(output.__c__().error);
+        });
+
+        test("| Error handling", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = false ; d\n" +
+            "b = 40 ; kg\n" +
+            "c = or(a,b)\n" +
+            "z = or(c, true)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(40, output.__c__().value);
+            assert.equal(output.__c__().error, "unitError");
+
+            assert.equal(40, output.__z__().value);
+            assert.equal(output.__z__().error, "uncheckedUnit");
+            assert.ok(output.__z__().isNormal());
+        });
+    });
 });

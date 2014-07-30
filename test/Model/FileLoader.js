@@ -15,16 +15,6 @@ suite("File Loader", function() {
 
     suite("| Macros", function() {
         /**
-         * Loading of existing macro files should return true.
-         *
-         * @input: Load func macro.
-         * @expected: true.
-         */
-        test("| Load single 'func' macro", function() {
-            assert.equal(true, fileLoader.load("func", "macros"));
-        });
-
-        /**
          * The contents of the loaded macro should match.
          */
         test("| Macro content matching", function() {

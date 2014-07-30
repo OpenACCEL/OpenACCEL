@@ -152,33 +152,33 @@ suite("And Library", function() {
         test("| Normal operation", function() {
             compiler.loadUnitsLib();
             var input =
-            "x = true\n" +
-            "y = false\n" +
-            "z = and(x, y)\n";
+            "a = true\n" +
+            "b = 25\n" +
+            "c = and(a,b)\n";
             var output = compiler.compile(new script(input));
             output.setUnits(true);
 
-            assert.equal(true, output.__z__().isNormal());
-            assert.equal(false, output.__z__().value);
-            assert.ifError(output.__z__().error);
+            assert.equal(true, output.__c__().isNormal());
+            assert.equal(25, output.__c__().value);
+            assert.ifError(output.__c__().error);
         });
 
         test("| Error handling", function() {
             compiler.loadUnitsLib();
             var input =
-            "a = 25; kg\n" +
-            "b = 24\n" +
-            "z = and(a,b)\n" +
-            "y = and(z,b)\n";
+            "a = false ; d\n" +
+            "b = 40 ; kg\n" +
+            "c = and(a,b)\n" +
+            "z = and(c, true)\n";
             var output = compiler.compile(new script(input));
             output.setUnits(true);
 
-            assert.equal(24, output.__z__().value);
-            assert.equal(output.__z__().error, "unitError");
+            assert.equal(false, output.__c__().value);
+            assert.equal(output.__c__().error, "unitError");
 
-            assert.equal(24, output.__y__().value);
-            assert.equal(output.__y__().error, "uncheckedUnit");
-            assert.ok(output.__y__().isNormal());
+            assert.equal(false, output.__z__().value);
+            assert.equal(output.__z__().error, "uncheckedUnit");
+            assert.ok(output.__z__().isNormal());
         });
     });
 });

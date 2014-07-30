@@ -155,4 +155,49 @@ suite("If Library", function() {
             assert.deepEqual(output.__x__(), [1, 4]);
         });
     });
+
+    suite("| Units", function() {
+        test("| Normal operation", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = true\n" +
+            "b = 25 ; kg\n" +
+            "c = 30 ; m2\n" +
+            "d = if(a,b,c)\n" +
+            "w = false\n" +
+            "x = 36 ; 1/p\n" +
+            "y = 43\n" +
+            "z = if(w,x,y)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(true, output.__d__().equals(new UnitObject(25, {'kg': 1})));
+            assert.equal(25, output.__d__().value);
+            assert.ifError(output.__d__().error);
+
+            assert.equal(true, output.__z__().isNormal());
+            assert.equal(43, output.__z__().value);
+            assert.ifError(output.__z__().error);
+        });
+
+        test("| Error handling", function() {
+            compiler.loadUnitsLib();
+            var input =
+            "a = true ; d\n" +
+            "b = 40 ; kg\n" +
+            "c = 25 ; m2.i\n" +
+            "d = if(a,b,c)\n" +
+            "x = false ; m\n" +
+            "z = if(d, 34, x)\n";
+            var output = compiler.compile(new script(input));
+            output.setUnits(true);
+
+            assert.equal(40, output.__d__().value);
+            assert.equal(output.__d__().error, "unitError");
+
+            assert.equal(34, output.__z__().value);
+            assert.equal(output.__z__().error, "uncheckedUnit");
+            assert.ok(output.__z__().isNormal());
+        });
+    });
 });
