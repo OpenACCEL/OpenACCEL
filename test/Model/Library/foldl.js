@@ -1,13 +1,11 @@
 suite("Foldl", function() {
 
     var assert;
-    var macroExpander;
     var fileLoader;
 
     setup(function(done) {
-        requirejs(["assert", "Model/MacroExpander", "Model/FileLoader"], function(Assert, MacroExpander, FileLoader) {
+        requirejs(["assert", "Model/FileLoader"], function(Assert, FileLoader) {
             assert = Assert;
-            macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
             fileLoader.load("foldl","library");
             fileLoader.load("unaryZip", "library");

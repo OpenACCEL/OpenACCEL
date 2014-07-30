@@ -71,7 +71,6 @@
         "jsdoc": "3.3.x",
         "mocha": "1.21.x",
         "requirejs": "2.1.x",
-        "sweet.js": "0.7.x",
         "underscore": "1.6.x",
         "uglify-js": "2.4.x"
     }

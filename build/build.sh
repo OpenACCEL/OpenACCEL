@@ -78,11 +78,6 @@ deploy() {
     cp node_modules/underscore/underscore-min.js                                         bin/scripts/underscore.js
     cp node_modules/jquery/dist/jquery.min.js                                            bin/scripts/jquery.js
     cp node_modules/requirejs/require.js                                                 bin/scripts/require.js
-    cp node_modules/sweet.js/lib/*.js                                                    bin/scripts
-    cp node_modules/sweet.js/macros/stxcase.js                                           bin/scripts/stxcase.js
-    cp node_modules/sweet.js/node_modules/escodegen/escodegen.browser.min.js             bin/scripts/escodegen.js
-    cp node_modules/sweet.js/node_modules/escope/escope.js                               bin/scripts/escope.js
-    cp node_modules/sweet.js/node_modules/escope/node_modules/estraverse/estraverse.js   bin/scripts/estraverse.js
 
     # Copy CodeMirror files.
     cp node_modules/codemirror/lib/codemirror.js                                         bin/scripts/cm/lib/codemirror.js
@@ -98,10 +93,6 @@ deploy() {
     # Generate single file containing all unit library functions.
     rm -f src/Model/Library/Units/Functions.js
     cat src/Model/Library/Units/* > src/Model/Library/Units/Functions.js
-
-    # Generate single file containing all macros.
-    rm -f src/Model/Macros/macros.sjs
-    cat src/Model/Macros/* > src/Model/Macros/macros.sjs
 
     # Copy scripts.
     cp -r src/* bin/scripts

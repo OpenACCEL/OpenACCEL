@@ -2,14 +2,12 @@ suite("Zip", function() {
 
     var assert;
     var benchmark;
-    var macroExpander;
     var fileLoader;
 
     setup(function(done) {
-        requirejs(["assert", "benchmark", "Model/MacroExpander", "Model/FileLoader"], function(Assert, Benchmark, MacroExpander, FileLoader) {
+        requirejs(["assert", "benchmark", "Model/FileLoader"], function(Assert, Benchmark, FileLoader) {
             assert = Assert;
             benchmark = Benchmark;
-            macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
             fileLoader.load("unaryZip", "library");
             fileLoader.load("binaryZip", "library");

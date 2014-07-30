@@ -23,7 +23,6 @@ if (inNode) {
 /*******************************************************************/
 
 define(["Model/FileLoader",
-        "Model/MacroExpander",
         "Model/Library",
         "underscore",
         "Model/Parser",
@@ -32,7 +31,6 @@ define(["Model/FileLoader",
         "Model/Executable"
     ], /**@lends Model.Compiler */
     function(FileLoader,
-        MacroExpander,
         Library,
         _,
         parser,
@@ -49,11 +47,6 @@ define(["Model/FileLoader",
          * and subsequently expanding the macro's that the parser put in.
          */
         function Compiler() {
-            /**
-             * The macro expander will expand all macros, such that the code can be eval()'d.
-             */
-            this.macroExpander = new MacroExpander();
-
             /**
              * The parser that will be used to parse inputted ACCEL code
              * and construct the executable from it. This does not translate units.
@@ -104,8 +97,7 @@ define(["Model/FileLoader",
              */
             this.fileLoader = new FileLoader();
 
-            // Load the macros and standard library into memory, and evaluate the library
-            this.fileLoader.load("macros", "macros");
+            // Load the standard library into memory, and evaluate them
             this.fileLoader.load("Functions", "library");
             this.fileLoader.load("Functions", "unitlibrary");
 
@@ -131,6 +123,9 @@ define(["Model/FileLoader",
             // the recursive compiler methods further down
             this.quantities = script.getQuantities();
 
+            // Determine all time-dependent quantities
+            this.determineTimeDependencies();
+
             // The code will be incrementally "build"/generated and each intermediate result will be stored
             // in this variable
             var code;
@@ -138,12 +133,6 @@ define(["Model/FileLoader",
             // Parse the script with the lexical scanner + parser. Do this before checking e.g. the time dependencies
             // and setting user input values to make sure the script is valid first
             code = this.parse(script.getSource());
-
-            // Determine all time-dependent quantities
-            this.determineTimeDependencies();
-
-            // Expand the macros in the parser-outputted code
-            code = this.macroExpander.expand(code, this.fileLoader.getMacros());
 
             // Now that the quantities are parsed and expanded, we may extend the quantities
             // with their unit, if they have any.

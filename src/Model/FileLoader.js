@@ -25,11 +25,6 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
      */
     function FileLoader() {
         /**
-         * List of loaded and available macros.
-         */
-        this.macros = {};
-
-        /**
          * List of loaded utility functions. At the moment of writing, this could for exmaple contain the binaryZip function.
          */
         this.library = {};
@@ -59,17 +54,9 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 location = "Library/Units";
                 extension = ".js";
                 break;
-            case "macros":
-                location = "Macros";
-                extension = ".sjs";
-                break;
             case "test":
                 location = "../../test/Model/Util";
                 extension = ".js";
-                break;
-            case "testmacros":
-                location = "../../test/Model/Macros";
-                extension = ".sjs";
                 break;
             default:
                 type = "library";
@@ -119,34 +106,15 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
 
         // If the contents have been read, we can store them and return true, else we failed and return false.
         if (content) {
-            if (type === "macros" || type === "testmacros") {
-                this.macros[file] = content.toString();
-            } else {
-                if (type === "library") {
-                    this.library.std[file] = content.toString();
-                } else if (type === "unitlibrary") {
-                    this.library.unit[file] = content.toString();
-                }
+            if (type === "library") {
+                this.library.std[file] = content.toString();
+            } else if (type === "unitlibrary") {
+                this.library.unit[file] = content.toString();
             }
             return true;
         } else {
             return false;
         }
-    };
-
-    /**
-     * Concatenates all loaded macros into a single string for Sweet.
-     *
-     * @returns {String} A string of all loaded macros.
-     */
-    FileLoader.prototype.getMacros = function() {
-        var output = "";
-
-        for (var key in this.macros) {
-            output += this.macros[key];
-        }
-
-        return output;
     };
 
     /**
@@ -186,17 +154,18 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
     };
 
     /**
-     * @returns {String} A string containing both the library functions and macros.
+     * @returns {String} A string the default library functions.
+     *
+     * This is here for historic purposes only. This used to also contain the macros, which are now gone.
      */
     FileLoader.prototype.getContent = function() {
-        return this.getLibrary() + this.getMacros();
+        return this.getLibrary();
     };
 
     /**
      * Clears, and thus unloads all macros currently loaded.
      */
     FileLoader.prototype.clear = function() {
-        this.macros = {};
         this.library = {};
     };
 

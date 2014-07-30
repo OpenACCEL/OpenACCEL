@@ -2,13 +2,11 @@ suite("UnaryZip", function() {
 
     var assert;
     var fileLoader;
-    var macroExpander;
     var macros;
 
     setup(function(done) {
-        requirejs(["assert", "Model/MacroExpander", "Model/FileLoader"], function(Assert, MacroExpander, FileLoader) {
+        requirejs(["assert", "Model/FileLoader"], function(Assert, FileLoader) {
             assert = Assert;
-            macroExpander = new MacroExpander();
             fileLoader = new FileLoader();
             fileLoader.load("unaryZip", "library");
             done();
