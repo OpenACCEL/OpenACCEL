@@ -3,16 +3,15 @@ function vAppend(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (x instanceof Array) {
-        var result = new Array(x.length);
-        for (var key in x) {
-            result[key] = x[key];
+    
+    // We just invoke the normal library function and make sure all elements are UnitObjects.
+    return unaryZip(exe.lib.std.vAppend(x, y), function(elem) {
+        if (elem instanceof UnitObject) {
+            return elem;
+        } else {
+            return new UnitObject(elem);
         }
-        result[x.length] = y;
-        return result;
-    } else {
-        return [x, y];
-    }
+    });
 }
 
 vAppend.base = [];

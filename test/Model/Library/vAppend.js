@@ -18,7 +18,7 @@ suite("vAppend Library", function() {
         });
     });
 
-    suite("vAppend", function() {
+    suite("| vAppend", function() {
 
         /**
          * Test case for vAppend, scalar.
@@ -26,7 +26,7 @@ suite("vAppend Library", function() {
          * @input vAppend(1, 2)
          * @expected [1, 2]
          */
-        test("append a scalar to a scalar", function() {
+        test("| Append a scalar to a scalar", function() {
             eval(fileLoader.getContent());
             x = 1;
             y = 2;
@@ -40,7 +40,7 @@ suite("vAppend Library", function() {
          * @input vAppend([1, 2], 4)
          * @expected [1,2,4]
          */
-        test("append a scalar to a vector", function() {
+        test("| Append a scalar to a vector", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -60,7 +60,7 @@ suite("vAppend Library", function() {
          * @input vAppend([1, 2], [4,5])
          * @expected [1,2, [4,5]]
          */
-        test("append a vector to a vector", function() {
+        test("| Append a vector to a vector", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -75,7 +75,7 @@ suite("vAppend Library", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of vAppend.
@@ -85,7 +85,7 @@ suite("vAppend Library", function() {
          *        z = 3
          * @expected x = [1,0,3]
          */
-        test("should expand for 'x = vAppend(y, z), y = [1,0], z = 3'", function() {
+        test("| Should expand for 'x = vAppend(y, z), y = [1,0], z = 3'", function() {
             var input = "x = vAppend(y, z)\ny = [1,0]\nz = 3";
             var output = compiler.compile(new Script(input));
             expected = [];
@@ -93,6 +93,33 @@ suite("vAppend Library", function() {
             expected[1] = 0;
             expected[2] = 3;
             assert.deepEqual(output.__x__(), expected);
+        });
+    });
+
+    suite("| Units", function() {
+        test("| Concatenation of units", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "a=[1,2,3,x:4]; [1,kg,1,x:s]\n" +
+            "b=[[5,6]]; [[lum,1]]\n" +
+            "c=vAppend(a,b)";
+            var output = compiler.compile(new Script(input));
+            output.setUnits(true);
+
+            var c = output.__c__();
+            assert.equal(true, c[0].isNormal());
+            assert.equal(true, c[1].equals(new UnitObject(0, { 'kg': 1})));
+            assert.equal(true, c[2].isNormal());
+            assert.equal(true, c.x.equals(new UnitObject(0, { 's': 1})));
+            assert.equal(true, c[3][0][0].equals(new UnitObject(0, { 'lum': 1})));
+            assert.equal(true, c[3][0][1].isNormal());
+
+            assert.equal(1, c[0].value);
+            assert.equal(2, c[1].value);
+            assert.equal(3, c[2].value);
+            assert.equal(4, c.x.value);
+            assert.equal(5, c[3][0][0].value);
+            assert.equal(6, c[3][0][1].value);
         });
     });
 });
