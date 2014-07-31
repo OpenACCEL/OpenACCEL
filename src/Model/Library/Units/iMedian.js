@@ -31,7 +31,7 @@ function iMedian(x,n,m) {
         ans = new UnitObject(std_iMedian(xValues, n.value, m.value), {}, "unitError");
         ans.errorString = "All arguments of iMedian must be unitless; current units are: <"+ x.toString() +">, <"+ n.toString() +"> and <" + m.toString() + "> respectively";
     } else {
-        ans = UnitObject.prototype.create(std_iMedian(xValues, n.value, m.value), {});
+        ans = new UnitObject(std_iMedian(xValues, n.value, m.value), {}, null);
     }
 
     return ans;
