@@ -4,7 +4,7 @@ function vAppend(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     if (x instanceof Array) {
-        var result = [];
+        var result = new Array(x.length);
         for (var key in x) {
             result[key] = x[key];
         }
