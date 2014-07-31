@@ -3,22 +3,15 @@ function vConcat(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    var p = [];
-    if (!(x instanceof Array)) {
-        p.push(x);
-    } else {
-        for (k in x) {
-            p.push(x[k]);
+    
+    // We just invoke the normal library function and make sure all elements are UnitObjects.
+    return unaryZip(exe.lib.std.vConcat(x, y), function(elem) {
+        if (elem instanceof UnitObject) {
+            return elem;
+        } else {
+            return new UnitObject(elem);
         }
-    }
-    if (!(y instanceof Array)) {
-        p.push(y);
-    } else {
-        for (k in y) {
-            p.push(y[k]);
-        }
-    }
-    return p;
+    });
 }
 
 vConcat.base = [];

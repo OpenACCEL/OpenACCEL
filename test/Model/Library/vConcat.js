@@ -18,7 +18,7 @@ suite("vConcat Library", function() {
         });
     });
 
-    suite("vConcat", function() {
+    suite("| vConcat", function() {
 
         /**
          * Test case for vConcat, scalar to scalar.
@@ -26,7 +26,7 @@ suite("vConcat Library", function() {
          * @input vConcat(1, 2)
          * @expected [1,2]
          */
-        test("concatinate a scalar to a scalar", function() {
+        test("| Concatinate a scalar to a scalar", function() {
             eval(fileLoader.getContent());
             x = 1;
             y = 2;
@@ -40,7 +40,7 @@ suite("vConcat Library", function() {
          * @input vConcat([1,2], 4)
          * @expected [1,2,4]
          */
-        test("concatinate a scalar to a vector", function() {
+        test("| Concatinate a scalar to a vector", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -60,7 +60,7 @@ suite("vConcat Library", function() {
          * @input vConcat(4, [1,2])
          * @expected [4,1,2]
          */
-        test("concatinate a vector to a scalar", function() {
+        test("| Concatinate a vector to a scalar", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -80,7 +80,7 @@ suite("vConcat Library", function() {
          * @input vConcat([1,2], [4,5])
          * @expected [1,2,4,5]
          */
-        test("concatinate a vector to a vector", function() {
+        test("| Concatinate a vector to a vector", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -100,7 +100,7 @@ suite("vConcat Library", function() {
          * @input vConcat([1,a:2], [4,b:5])
          * @expected [1,2,4,5]
          */
-        test("concatinate a named vector to a named vector", function() {
+        test("| Concatinate a named vector to a named vector", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -118,7 +118,7 @@ suite("vConcat Library", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of vConcat.
@@ -128,7 +128,7 @@ suite("vConcat Library", function() {
          *        z = [3,4]
          * @expected x [1,0,3,4]
          */
-        test("should expand for 'x = vConcat(y, z), y = [1,0], z = [3,4]'", function() {
+        test("| Should expand for 'x = vConcat(y, z), y = [1,0], z = [3,4]'", function() {
             var input = "x = vConcat(y, z)\ny = [1,0]\nz = [3,4]";
             var output = compiler.compile(new Script(input));
             expected = [];
@@ -137,6 +137,33 @@ suite("vConcat Library", function() {
             expected[2] = 3;
             expected[3] = 4;
             assert.deepEqual(output.__x__(), expected);
+        });
+    });
+
+    suite("| Units", function() {
+        test("| Concatenation of units", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "a=[1,2,3,x:4]; [1,kg,1,x:s]\n" +
+            "b=[[5,6]]; [[lum,1]]\n" +
+            "c=vConcat(a,b); [1,kg,1,s,[lum,1]]";
+            var output = compiler.compile(new Script(input));
+            output.setUnits(true);
+
+            var c = output.__c__();
+            assert.equal(true, c[0].isNormal());
+            assert.equal(true, c[1].equals(new UnitObject(0, { 'kg': 1})));
+            assert.equal(true, c[2].isNormal());
+            assert.equal(true, c[3].equals(new UnitObject(0, { 's': 1})));
+            assert.equal(true, c[4][0].equals(new UnitObject(0, { 'lum': 1})));
+            assert.equal(true, c[4][1].isNormal());
+
+            assert.equal(1, c[0].value);
+            assert.equal(2, c[1].value);
+            assert.equal(3, c[2].value);
+            assert.equal(4, c[3].value);
+            assert.equal(5, c[4][0].value);
+            assert.equal(6, c[4][1].value);
         });
     });
 });
