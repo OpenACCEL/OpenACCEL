@@ -69,7 +69,7 @@ suite("vSequence Library", function() {
     });
 
     suite("| Units", function() {
-        test("| Argument should be unitless.", function() {
+        test("| Argument should be unitless", function() {
             compiler.loadUnitsLib();
             var input = 
             "a = 1\n" +
