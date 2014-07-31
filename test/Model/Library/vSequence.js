@@ -19,7 +19,7 @@ suite("vSequence Library", function() {
         });
     });
 
-    suite("vSequence", function() {
+    suite("| vSequence", function() {
 
         /**
          * Test case for vSequence.
@@ -27,7 +27,7 @@ suite("vSequence Library", function() {
          * @input vSequence(2, 5)
          * @expected [2,3,4]
          */
-        test("create a sequence from 2 through 5", function() {
+        test("| Create a sequence from 2 through 5", function() {
             eval(fileLoader.getContent());
             x = 2;
             y = 5;
@@ -42,7 +42,7 @@ suite("vSequence Library", function() {
          * @input vSequence(5, 2)
          * @expected []
          */
-        test("create an empty sequence from 5 through 2", function() {
+        test("| Create an empty sequence from 5 through 2", function() {
             eval(fileLoader.getContent());
             x = 5;
             y = 2;
@@ -52,7 +52,7 @@ suite("vSequence Library", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of vSequence.
@@ -60,11 +60,44 @@ suite("vSequence Library", function() {
          * @input x = vSequence(3, 7)
          * @expected  x = [3,4,5,6]
          */
-        test("should expand for 'x = vSequence(3, 7)'", function() {
+        test("| Should expand for 'x = vSequence(3, 7)'", function() {
             var input = "x = vSequence(3, 7)";
             expected = [3, 4, 5, 6];
             var output = compiler.compile(new Script(input));
             assert.deepEqual(output.__x__(), expected);
+        });
+    });
+
+    suite("| Units", function() {
+        test("| Argument should be unitless.", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "a = 1\n" +
+            "b = 5\n" +
+            "c = 1; kg\n" +
+            "d = 5; kg\n" +
+            "w = vSeq(a, b)\n" +
+            "x = vSeq(a, d)\n" +
+            "y = vSeq(c, b)\n" +
+            "z = vSeq(c, d)\n";
+            var output = compiler.compile(new Script(input));
+            output.setUnits(true);
+
+            for (var i = 0; i < 4; i++) {
+                assert.ifError(output.__w__()[i].error);
+                assert.ok(output.__x__()[i].error);
+                assert.ok(output.__y__()[i].error);
+                assert.ok(output.__z__()[i].error);
+
+                assert.equal(true, output.__w__()[i].isNormal());
+                assert.equal(true, output.__x__()[i].isNormal());
+                assert.equal(true, output.__y__()[i].isNormal());
+                assert.equal(true, output.__z__()[i].isNormal());
+                assert.equal(i + 1, output.__w__()[i].value);
+                assert.equal(i + 1, output.__x__()[i].value);
+                assert.equal(i + 1, output.__y__()[i].value);
+                assert.equal(i + 1, output.__z__()[i].value);
+            }
         });
     });
 });
