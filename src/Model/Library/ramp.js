@@ -3,7 +3,6 @@ function ramp(x, x1, y1, x2, y2) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-
     var rmp = 0;
     if (x1 != x2) {
         if (x < x1) {
@@ -19,4 +18,5 @@ function ramp(x, x1, y1, x2, y2) {
         rmp = ((x2 + y2)) / 2.0;
     }
     return rmp;
+
 }
