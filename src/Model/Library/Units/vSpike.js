@@ -4,15 +4,29 @@ function vSpike(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    var r = Math.round(y);
-    var p = Math.round(x);
-    var rr = [];
-    for (i = 0; i < r; i++) {
-        if (i == p) {
-            rr[i] = 1;
-        } else {
-            rr[i] = 0;
-        }
+
+    if (!(x instanceof UnitObject)) {
+        x = new UnitObject(x);
     }
-    return rr;
+
+    if (!(y instanceof UnitObject)) {
+        y = new UnitObject(y);
+    }
+
+    var std_vSpike = exe.lib.std.vSpike;
+    var error = UnitObject.prototype.propagateError(std_vSpike, x, y);
+    if (error) {
+        return error;
+    }
+
+    var ans = std_vSpike(x.value, y.value);
+    if (x.hasUnit() || y.hasUnit()) {
+        return unaryZip(ans, function(a) {
+            return new UnitObject(a, {}, "vSpike arguments must be unitless.");
+        });
+    }
+
+    return unaryZip(ans, function(a) {
+        return new UnitObject(a);
+    });
 }
