@@ -8,6 +8,7 @@ function poisson(x, y, z) {
         if (a < 0 || b < 0) {
             throw new Error("The poisson of numbers less than 0 are not supported.");
         } else {
+            var factorial = exe.lib.std.factorial;
             if (!c) {
                 return ((Math.pow(b, a) * Math.exp(-b)) / factorial(a));
             } else {

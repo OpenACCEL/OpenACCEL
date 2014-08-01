@@ -8,6 +8,7 @@ function bin(x, y) {
         if (b > a) {
             return 0;
         } else {
+            var factorial = exe.lib.std.factorial;
             return factorial(a) / (factorial(b) * factorial(a - b));
         }
     });
