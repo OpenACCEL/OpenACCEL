@@ -14,7 +14,7 @@ function max(x, y) {
         }
 
         var std_max = exe.lib.std.max;
-        var error = a.propagateError(std_max, b);
+        var error = UnitObject.prototype.propagateError(std_max, a, b);
         if (error) {
             return error;
         }

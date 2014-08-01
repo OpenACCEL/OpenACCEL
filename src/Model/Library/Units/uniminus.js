@@ -10,7 +10,7 @@ function uniminus(x) {
         }
 
         var std_uniminus = exe.lib.std.uniminus;
-        var error = a.propagateError(std_uniminus);
+        var error = UnitObject.prototype.propagateError(std_uniminus, a);
         if (error) {
             return error;
         }

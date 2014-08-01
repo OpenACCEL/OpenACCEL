@@ -13,7 +13,7 @@ function divide(x, y) {
         }
 
         var std_divide = exe.lib.std.divide;
-        var error = a.propagateError(std_divide, b);
+        var error = UnitObject.prototype.propagateError(std_divide, a, b);
         if (error) {
             return error;
         }

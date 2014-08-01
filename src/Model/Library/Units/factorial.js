@@ -10,7 +10,7 @@ function factorial(x) {
         }
 
         var std_factorial = exe.lib.std.factorial;
-        var error = a.propagateError(std_factorial);
+        var error = UnitObject.prototype.propagateError(std_factorial, a);
         if (error) {
             return error;
         }

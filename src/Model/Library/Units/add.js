@@ -14,7 +14,7 @@ function add(x, y) {
         }
 
         var std_add = exe.lib.std.add;
-        var error = a.propagateError(std_add, b);
+        var error = UnitObject.prototype.propagateError(std_add, a, b);
         if (error) {
             return error;
         }

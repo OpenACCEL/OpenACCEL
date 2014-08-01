@@ -14,7 +14,7 @@ function min(x, y) {
         }
 
         var std_min = exe.lib.std.min;
-        var error = a.propagateError(std_min, b);
+        var error = UnitObject.prototype.propagateError(std_min, a, b);
         if (error) {
             return error;
         }

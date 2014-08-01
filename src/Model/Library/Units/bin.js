@@ -14,7 +14,7 @@ function bin(x, y) {
         }
 
         var std_bin = exe.lib.std.bin;
-        var error = a.propagateError(std_bin, b);
+        var error = UnitObject.prototype.propagateError(std_bin, a, b);
         if (error) {
             return error;
         }

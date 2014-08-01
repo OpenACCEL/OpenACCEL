@@ -13,7 +13,7 @@ function pow(x, y) {
         }
 
         var std_pow = exe.lib.std.pow;
-        var error = a.propagateError(std_pow, b);
+        var error = UnitObject.prototype.propagateError(std_pow, a, b);
         if (error) {
             return error;
         }

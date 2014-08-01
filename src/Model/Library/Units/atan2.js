@@ -14,7 +14,7 @@ function atan2(x, y) {
         }
 
         var std_atan2 = exe.lib.std.atan2;
-        var error = a.propagateError(std_atan2, b);
+        var error = UnitObject.prototype.propagateError(std_atan2, a, b);
         if (error) {
             return error;
         }

@@ -13,7 +13,7 @@ function multiply(x, y) {
         }
 
         var std_multiply = exe.lib.std.multiply;
-        var error = a.propagateError(std_multiply, b);
+        var error = UnitObject.prototype.propagateError(std_multiply, a, b);
         if (error) {
             return error;
         }

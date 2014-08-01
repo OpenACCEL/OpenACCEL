@@ -13,7 +13,7 @@ function subtract(x, y) {
         }
 
         var std_subtract = exe.lib.std.subtract;
-        var error = a.propagateError(std_subtract, b);
+        var error = UnitObject.prototype.propagateError(std_subtract, a, b);
         if (error) {
             return error;
         }

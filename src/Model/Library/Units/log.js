@@ -10,7 +10,7 @@ function log(x) {
         }
 
         var std_log = exe.lib.std.log;
-        var error = a.propagateError(std_log);
+        var error = UnitObject.prototype.propagateError(std_log, a);
         if (error) {
             return error;
         }

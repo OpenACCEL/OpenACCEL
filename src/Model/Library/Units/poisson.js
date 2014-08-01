@@ -18,7 +18,7 @@ function poisson(x, y, z) {
         }
 
         var std_poisson = exe.lib.std.poisson;
-        var error = a.propagateError(std_poisson, [b, c]);
+        var error = UnitObject.prototype.propagateError(std_poisson, a, b, c);
         if (error) {
             return error;
         }

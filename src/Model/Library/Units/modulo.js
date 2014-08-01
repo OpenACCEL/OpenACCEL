@@ -14,7 +14,7 @@ function modulo(x, y) {
         }
 
         var std_modulo = exe.lib.std.modulo;
-        var error = a.propagateError(std_modulo, b);
+        var error = UnitObject.prototype.propagateError(std_modulo, a, b);
         if (error) {
             return error;
         }
