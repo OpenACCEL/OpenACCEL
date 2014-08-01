@@ -17,6 +17,7 @@ suite("Poisson Library", function() {
             fileLoader.load("zip", "library");
             fileLoader.load("factorial", "library");
             script = Script;
+            exe = { lib: { std: { factorial: factorial }}};
             done();
         });
     });

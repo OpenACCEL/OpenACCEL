@@ -17,6 +17,7 @@ suite("Bin Library", function() {
             fileLoader.load("multiaryZip", "library");
             fileLoader.load("zip", "library");
             script = Script;
+            exe = { lib: { std: { factorial: factorial }}};
             done();
         });
     });
