@@ -171,6 +171,73 @@ suite("Unit Object", function() {
         });
 
         /**
+         * The cloning of UnitObjects
+         * @return {[type]} [description]
+         */
+        test("| Cloning", function() {
+            eval(fileLoader.getLibrary("unitlibrary"));
+            var values = [10, [20, 30], new UnitObject(4, {'s': 2})];
+            var units = [{'kg': 1}, [{}, {'m': -2}], {'lum': 1}];
+            var ans = UnitObject.prototype.create(values, units);
+
+            var first = new UnitObject(10, {'kg': 1}, "unitError");
+            first.errorString = "Testing cloning for UnitObjects";
+            var second = new UnitObject(20, {}, "uncheckedUnit");
+            var third = new UnitObject(30, {'m': -2}, null);
+            var fourth = new UnitObject(4, {'lum': 1});
+
+            var firstc = first.clone();
+            var secondc = second.clone();
+            var thirdc = third.clone();
+            var fourthc = fourth.clone();
+
+            assert.equal(ans[0].equals(firstc), true);
+            assert.equal(ans[0].value, firstc.value);
+            assert.equal("unitError", firstc.error);
+
+            assert.equal(ans[1][0].equals(secondc), true);
+            assert.equal(ans[1][0].value, secondc.value);
+            assert.equal("uncheckedUnit", secondc.error);
+
+            assert.equal(ans[1][1].equals(thirdc), true);
+            assert.equal(ans[1][1].value, thirdc.value);
+            assert.equal(null, thirdc.error);
+
+            assert.equal(ans[2].equals(fourthc), true);
+            assert.equal(ans[2].value, fourthc.value);
+            assert.equal(null, fourthc.error);
+        });
+
+        /**
+         * Getting the nominator of a unit.
+         *
+         * @input:      a = new UnitObject(5, {'kg': 1, 'm': 1, 's': -2})
+         * @expected:   a.getNominator == {'kg': 1, 'm': 1};
+         */
+        test("| Setting unit", function() {
+            eval(fileLoader.getLibrary("unitlibrary"));
+            var a = new UnitObject(5);
+            a.setUnit({'kg': 1, 'm': 1, 's': -2});
+            var expected = new UnitObject(5, {'kg': 1, 'm': 1, 's': -2});
+            assert.equal(a.equals(expected), true);
+        });
+
+        /**
+         * Getting the nominator of a unit.
+         *
+         * @input:      a = new UnitObject(5, {'kg': 1, 'm': 1, 's': -2})
+         * @expected:   a.getNominator == {'kg': 1, 'm': 1};
+         */
+        test("| Cleaning", function() {
+            eval(fileLoader.getLibrary("unitlibrary"));
+            var a = new UnitObject(5, {'kg': 0, 'm': 0, 's': -2});
+            a.clean();
+            var expected = new UnitObject(5, {'s': -2});
+            assert.equal(a.equals(expected), true);
+            assert.equal(a.value, 5);
+        });
+
+        /**
          * Getting the nominator of a unit.
          *
          * @input:      a = new UnitObject(5, {'kg': 1, 'm': 1, 's': -2})
