@@ -84,7 +84,7 @@ deploy() {
     cp lang/CodeMirror_ACCEL.js                                                          bin/scripts/cm/mode/ACCEL/ACCEL.js
 
     # Generating monofunc library functions.
-    node ./build/monofuncgenerator.js ./src/Model/Library
+    # node ./build/monofuncgenerator.js ./src/Model/Library
 
     # Generate single file containing all standard library functions.
     rm -f src/Model/Library/Functions.js
