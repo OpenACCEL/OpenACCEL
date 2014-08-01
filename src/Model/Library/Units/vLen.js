@@ -3,8 +3,14 @@ function vLen(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (!(x instanceof Array)) {
-        return 0;
+
+    var std_vLen = exe.lib.std.vLen;
+    var error = UnitObject.prototype.propagateError(std_vLen, x);
+    if (error) {
+        return error;
     }
-    return x.length;
+
+    // This works for arrays of UnitObjects as well.
+    var ans = std_vLen(x);
+    return new UnitObject(ans);
 }

@@ -17,7 +17,7 @@ suite("vLen Library", function() {
         });
     });
 
-    suite("vLen", function() {
+    suite("| vLen", function() {
 
         /**
          * Test case for vLen, numeric indices.
@@ -25,7 +25,7 @@ suite("vLen Library", function() {
          * @input vLen([1,2,3])
          * @expected 3
          */
-        test("get the domain of an array with only numeric indices", function() {
+        test("| Get the domain of an array with only numeric indices", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -41,7 +41,7 @@ suite("vLen Library", function() {
          * @input vLen([1,2,a:3])
          * @expected 2
          */
-        test("get the domain of an array with mixed indices", function() {
+        test("| Get the domain of an array with mixed indices", function() {
             eval(fileLoader.getContent());
             x = [];
             x[0] = 1;
@@ -57,7 +57,7 @@ suite("vLen Library", function() {
          * @input vLen([a:1, b:2, c:3])
          * @expected 0
          */
-        test("get the domain of an array with only non-numeric indices", function() {
+        test("| Get the domain of an array with only non-numeric indices", function() {
             eval(fileLoader.getContent());
             x = [];
             x["a"] = 1;
@@ -73,7 +73,7 @@ suite("vLen Library", function() {
          * @input vLen({'5': 1})
          * @expected 6
          */
-        test("get the domain of an array with a high number index", function() {
+        test("| Get the domain of an array with a high number index", function() {
             eval(fileLoader.getContent());
             x = [];
             x[5] = 1;
@@ -87,7 +87,7 @@ suite("vLen Library", function() {
          * @input vLen(2)
          * @expected 0
          */
-        test("get the domain of an array with a high number index and named indices", function() {
+        test("| Get the domain of an array with a high number index and named indices", function() {
             eval(fileLoader.getContent());
             x = 2;
             output = vLen(x);
@@ -95,7 +95,7 @@ suite("vLen Library", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of vLen.
@@ -104,10 +104,25 @@ suite("vLen Library", function() {
          *        y = [1,0,0]
          * @expected x = 3
          */
-        test("should expand for 'x = vLen(y), y = [1,0,0]'", function() {
+        test("| Should expand for 'x = vLen(y), y = [1,0,0]'", function() {
             var input = "x = vLen(y)\ny = [1,0,0]";
             var output = compiler.compile(new Script(input));
             assert.deepEqual(output.__x__(), 3);
+        });
+    });
+
+    suite("| Units", function() {
+        test("| Answer should always be unitless", function() {
+            compiler.loadUnitsLib();
+            var input = 
+            "x = [1, 2, [3, 4]] ; [kg, s, [1, m]]\n" +
+            "y = vLen(x)";
+            var output = compiler.compile(new Script(input));
+            output.setUnits(true);
+
+            assert.ifError(output.__y__().error);
+            assert.equal(true, output.__y__().isNormal());
+            assert.equal(3, output.__y__().value);
         });
     });
 });
