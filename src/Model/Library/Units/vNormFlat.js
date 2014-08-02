@@ -4,22 +4,29 @@ function vNormFlat(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (x instanceof Array) {
-        // we support also strings that are to be concatenated.
-        // Hence the initialisation cannot simply be var a=0; we must leave the type of a open until after
-        // the first assignment;
-        var a;
-        for (i in x) {
-            if (!(x[i] instanceof Array)) {
-                if (a != undefined) {
-                    a += x[i];
-                } else {
-                    a = x[i];
-                }
-            }
+
+    // vNormFlat works on vectors with just values, thus we remove any UnitObjects in the argument.
+    a = unaryZip(x, function(a) {
+        if (a instanceof UnitObject) {
+            return a.value;
+        } else {
+            return a;
         }
-        return a;
+    });
+
+    // Propagate any error.
+    var std_vNormFlat = exe.lib.std.vNormFlat;
+    var error = UnitObject.prototype.propagateError(std_vNormFlat, x);
+    if (error) {
+        return error;
+    }
+
+    // Because we're summing, all units need to be of the same type.
+    var ans = std_vNormFlat(a);
+    var homUnit = UnitObject.prototype.isHomogeneous(x);
+    if (!homUnit) {
+        return new UnitObject(ans, {}, "vNormFlat argument's units should be homogeneous.");
     } else {
-        return x;
+        return new UnitObject(ans, homUnit);
     }
 }
