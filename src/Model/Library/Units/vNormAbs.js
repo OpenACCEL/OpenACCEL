@@ -6,7 +6,7 @@ function vNormAbs(x) {
     }
 
     // vNormAbs works on vectors with just values, thus we remove any UnitObjects in the argument.
-    x = unaryZip(x, function(a) {
+    a = unaryZip(x, function(a) {
         if (a instanceof UnitObject) {
             return a.value;
         } else {
@@ -22,11 +22,11 @@ function vNormAbs(x) {
     }
 
     // Because we're summing, all units need to be of the same type.
-    if (!a.equals(b)) {
-        return new UnitObject(std_vNormAbs(x.value), {}, "Atan2 units should be equal.");
+    var ans = std_vNormAbs(a);
+    var homUnit = UnitObject.prototype.isHomogeneous(x);
+    if (!homUnit) {
+        return new UnitObject(ans, {}, "vNormAbs argument's units should be homogeneous.");
     } else {
-        var ans = a.clone()
-        ans.value = std_atan2(a.value, b.value);
-        return ans;
+        return new UnitObject(ans, homUnit);
     }
 }
