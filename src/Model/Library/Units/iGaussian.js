@@ -23,13 +23,10 @@ function iGaussian(n1,n2,s1,s2) {
         return error;
     }
 
-    var ans;
     if(!n1.isNormal() || !n2.isNormal() || !s1.isNormal() || !s2.isNormal()) {
-        ans = new UnitObject(std_iGaussian(n1.value, n2.value, s1.value, s2.value), {}, "unitError");
-        ans.errorString = "All arguments of iGaussian must be unitless; current units are: <"+ n1.toString() +">, <"+ n2.toString() +">, <" + s1.toString() + "> and <" + s2.toString() + "> respectively";
+        return new UnitObject(std_iGaussian(n1.value, n2.value, s1.value, s2.value), {}, "unitError",
+            "All arguments of iGaussian must be unitless; current units are: <"+ n1.toString() +">, <"+ n2.toString() +">, <" + s1.toString() + "> and <" + s2.toString() + "> respectively");
     } else {
-        ans = new UnitObject(std_iGaussian(n1.value, n2.value, s1.value, s2.value), {}, null);
+        return new UnitObject(std_iGaussian(n1.value, n2.value, s1.value, s2.value), {}, null);
     }
-
-    return ans;
 }

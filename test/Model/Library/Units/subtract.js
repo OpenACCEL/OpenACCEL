@@ -63,7 +63,6 @@ suite("Subtract Unit Library", function() {
 
         assert.equal(b.isNormal(), true);
         assert.equal(b.value, -1);
-        assert.equal(b.errorString, "Subtract mismatch")
 
         assert.equal(c.equals(new UnitObject(0, {'kg': 1})), true);
         assert.equal(c.value, 5);
@@ -71,6 +70,5 @@ suite("Subtract Unit Library", function() {
 
         assert.equal(d.isNormal(), true);
         assert.equal(d.value, 1);
-        assert.equal(d.errorString, "Subtract mismatch");
     });
 });

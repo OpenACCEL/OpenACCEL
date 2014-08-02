@@ -24,7 +24,8 @@ function poisson(x, y, z) {
         }
 
         if (a.hasUnit() || b.hasUnit() || c.hasUnit()) {
-            return new UnitObject(std_poisson(a.value, b.value, c.value), {}, "Poisson arguments should be dimensionless.");
+            return new UnitObject(std_poisson(a.value, b.value, c.value), {}, "unitError",
+                "All arguments of the \"poisson\" function must be unit-less. Current units are <" + a.toString() + ">, <" + b.toString() + "> and <" + c.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_poisson(a.value, b.value, c.value);

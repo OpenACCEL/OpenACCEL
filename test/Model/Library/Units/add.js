@@ -63,7 +63,6 @@ suite("Add Unit Library", function() {
 
         assert.equal(b.isNormal(), true);
         assert.equal(b.value, 11);
-        assert.equal(b.errorString, "Addition mismatch")
 
         assert.equal(c.equals(new UnitObject(0, {'kg': 1})), true);
         assert.equal(c.value, 15);
@@ -71,6 +70,5 @@ suite("Add Unit Library", function() {
 
         assert.equal(d.isNormal(), true);
         assert.equal(d.value, 11);
-        assert.equal(d.errorString, "Addition mismatch");
     });
 });

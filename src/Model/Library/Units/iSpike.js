@@ -23,13 +23,10 @@ function iSpike(x1,x2,y1,y2) {
         return error;
     }
 
-    var ans;
     if(!x1.isNormal() || !x2.isNormal() || !y1.isNormal() || !y2.isNormal()) {
-        ans = new UnitObject(std_iSpike(x1.value, x2.value, y1.value, y2.value), {}, "unitError");
-        ans.errorString = "All arguments of iSpike must be unitless; current units are: <"+ x1.toString() +">, <"+ x2.toString() +">, <" + y1.toString() + "> and <" + y2.toString() + "> respectively";
+        return new UnitObject(std_iSpike(x1.value, x2.value, y1.value, y2.value), {}, "unitError",
+            "All arguments of iSpike must be unitless; current units are: <"+ x1.toString() +">, <"+ x2.toString() +">, <" + y1.toString() + "> and <" + y2.toString() + "> respectively");
     } else {
-        ans = new UnitObject(std_iSpike(x1.value, x2.value, y1.value, y2.value), {}, null);
+        return new UnitObject(std_iSpike(x1.value, x2.value, y1.value, y2.value), {}, null);
     }
-
-    return ans;
 }

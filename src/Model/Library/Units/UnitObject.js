@@ -14,7 +14,7 @@
  *
  * The 'normal form' of a UnitObject is just having the 'unit' == {}.
  */
-function UnitObject(value, unit, error) {
+function UnitObject(value, unit, error, errorString) {
     /**
      * The actual calculated value.
      */
@@ -48,7 +48,7 @@ function UnitObject(value, unit, error) {
      *
      * @type {String}
      */
-    this.errorString = '';
+    this.errorString = (typeof errorString !== "undefined") ? errorString : "";
 }
 
 /**

@@ -26,13 +26,10 @@ function iMedian(x,n,m) {
     }
 
     var xValues = UnitObject.prototype.toArray(x);
-    var ans;
     if(!UnitObject.prototype.isNormal(x) || !n.isNormal() || !m.isNormal()) {
-        ans = new UnitObject(std_iMedian(xValues, n.value, m.value), {}, "unitError");
-        ans.errorString = "All arguments of iMedian must be unitless; current units are: <"+ x.toString() +">, <"+ n.toString() +"> and <" + m.toString() + "> respectively";
+        return new UnitObject(std_iMedian(xValues, n.value, m.value), {}, "unitError",
+            "All arguments of iMedian must be unitless; current units are: <"+ x.toString() +">, <"+ n.toString() +"> and <" + m.toString() + "> respectively");
     } else {
-        ans = new UnitObject(std_iMedian(xValues, n.value, m.value), {}, null);
+        return new UnitObject(std_iMedian(xValues, n.value, m.value), {}, null);
     }
-
-    return ans;
 }

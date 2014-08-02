@@ -19,16 +19,12 @@ function and(x, y) {
             return error;
         }
 
-        var ans;
         if (!a.isNormal() || !b.isNormal()) {
-            ans = new UnitObject(std_and(a.value, b.value), {}, "unitError");
-            ans.errorString = "Both arguments to the \"and\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.";
-            return ans;
+            return new UnitObject(std_and(a.value, b.value), {}, "unitError",
+                "Both arguments of the \"and\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            ans = new UnitObject(std_and(a.value, b.value), {}, null);
+            return new UnitObject(std_and(a.value, b.value), {}, null);
         }
-
-        return ans;
     });
 }
 

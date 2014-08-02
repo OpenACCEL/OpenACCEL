@@ -22,7 +22,8 @@ function vSpike(x, y) {
     var ans = std_vSpike(x.value, y.value);
     if (x.hasUnit() || y.hasUnit()) {
         return unaryZip(ans, function(a) {
-            return new UnitObject(a, {}, "vSpike arguments must be unitless.");
+            return new UnitObject(a, {}, "unitError",
+                "Both arguments of the \"vSpike\" function must be unit-less. Current units are <" + x.toString() + "> and <" + y.toString() + ">.");
         });
     }
 

@@ -19,7 +19,8 @@ function vSeq(x, y) {
     // Don't forget to transform all the answers to UnitObjects.
     if (x.hasUnit() || y.hasUnit()) {
         return unaryZip(ans, function(a) {
-            return new UnitObject(a, {}, "vSeq arguments must be unitless.");
+            return new UnitObject(a, {}, "unitError",
+                "Both arguments of the \"vSeq\" function must be unit-less. Current units are <" + x.toString() + "> and <" + y.toString() + ">.");
         });
     }
 

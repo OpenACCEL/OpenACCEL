@@ -20,7 +20,8 @@ function atan2(x, y) {
         }
 
         if (!a.equals(b)) {
-            return new UnitObject(std_atan2(a.value, b.value), {}, "Atan2 units should be equal.");
+            return new UnitObject(std_atan2(a.value, b.value), {}, "unitError",
+                "Both arguments of the \"atan2\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_atan2(a.value, b.value);

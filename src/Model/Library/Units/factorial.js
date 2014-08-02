@@ -16,7 +16,8 @@ function factorial(x) {
         }
 
         if (a.hasUnit()) {
-            return new UnitObject(std_factorial(a.value), {}, "Factorial should be unitless.");
+            return new UnitObject(std_factorial(a.value), {}, "unitError",
+                "Argument of the \"factorial\" function must be unit-less. Current unit is <" + a.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_factorial(a.value);

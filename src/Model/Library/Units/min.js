@@ -20,7 +20,8 @@ function min(x, y) {
         }
 
         if (!a.equals(b)) {
-            return new UnitObject(std_min(a.value, b.value), {}, "Min units should be equal.");
+            return new UnitObject(std_min(a.value, b.value), {}, "unitError",
+                "Both arguments of the \"min\" function must be the same. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_min(a.value, b.value);

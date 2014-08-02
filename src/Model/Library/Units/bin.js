@@ -20,7 +20,8 @@ function bin(x, y) {
         }
 
         if (a.hasUnit() || b.hasUnit()) {
-            return new UnitObject(std_bin(a.value, b.value), {}, "Bin argument should be dimensionless.");
+            return new UnitObject(std_bin(a.value, b.value), {}, "unitError",
+                "Both arguments of the \"bin\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_bin(a.value, b.value);

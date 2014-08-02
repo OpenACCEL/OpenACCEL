@@ -16,7 +16,8 @@ function atan(x) {
         }
 
         if (a.hasUnit()) {
-            return new UnitObject(std_atan(a.value), {}, "Atan should be unitless.");
+            return new UnitObject(std_atan(a.value), {}, "unitError",
+                "Argument of the \"atan\" function must be unit-less. Current unit is <" + a.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_atan(a.value);

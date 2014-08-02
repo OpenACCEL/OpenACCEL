@@ -16,7 +16,8 @@ function tan(x) {
         }
 
         if (a.hasUnit()) {
-            return new UnitObject(std_tan(a.value), {}, "Tan should be unitless.");
+            return new UnitObject(std_tan(a.value), {}, "unitError",
+                "The argument of the \"tan\" function must be unit-less. Current unit is: <" + a.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_tan(a.value);

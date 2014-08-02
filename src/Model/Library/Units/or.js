@@ -21,14 +21,13 @@ function or(x, y) {
 
         var ans;
         if (!a.isNormal() || !b.isNormal()) {
-            ans = new UnitObject(std_or(a.value, b.value), {}, "unitError");
-            ans.errorString = "Both arguments to the \"or\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.";
+            return new UnitObject(std_or(a.value, b.value), {}, "unitError",
+                "Both arguments of the \"or\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_or(a.value, b.value);
+            return ans;
         }
-
-        return ans;
     });
 }
 

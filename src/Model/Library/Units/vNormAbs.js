@@ -25,7 +25,8 @@ function vNormAbs(x) {
     var ans = std_vNormAbs(a);
     var homUnit = UnitObject.prototype.isHomogeneous(x);
     if (!homUnit) {
-        return new UnitObject(ans, {}, "vNormAbs argument's units should be homogeneous.");
+        return new UnitObject(ans, {}, "unitError",
+            "vNormAbs argument's units should be homogeneous.");
     } else {
         return new UnitObject(ans, homUnit);
     }

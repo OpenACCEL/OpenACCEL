@@ -22,7 +22,8 @@ function vGaussian(x, y) {
     var ans = std_vGaussian(x.value, y.value);
     if (x.hasUnit() || y.hasUnit()) {
         return unaryZip(ans, function(a) {
-            return new UnitObject(a, {}, "vGaussian arguments must be unitless.");
+            return new UnitObject(a, {}, "unitError",
+                "Both arguments of the \"vGaussian\" function must be unit-less. Current units are <" + x.toString() + "> and <" + y.toString() + ">.");
         });
     }
 

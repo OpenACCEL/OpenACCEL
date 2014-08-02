@@ -15,15 +15,13 @@ function not(x) {
             return error;
         }
 
-        var ans;
         if(!a.isNormal()) {
-            ans = new UnitObject(std_not(a.value), {}, "unitError");
-            ans.errorString = "The argument to the \"not\" function must be unit-less. Current unit is: <" + a.toString() + ">.";
+            return new UnitObject(std_not(a.value), {}, "unitError",
+                "The argument of the \"not\" function must be unit-less. Current unit is: <" + a.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_not(a.value);
+            return ans;
         }
-
-        return ans;
     });
 }

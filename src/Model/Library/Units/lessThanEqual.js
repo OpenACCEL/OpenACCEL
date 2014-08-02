@@ -18,16 +18,13 @@ function lessThanEqual(x, y) {
             return error;
         }
 
-        var ans;
         if(!a.equals(b)) {
-            ans = new UnitObject(std_lte(a.value, b.value), {}, "unitError");
-            ans.errorString = "Arguments to <= must have same units. Trying to compare units <" + a.toString() + "> and <" + b.toString() + ">.";
+            return new UnitObject(std_lte(a.value, b.value), {}, "unitError",
+                "Arguments of <= must have same units. Trying to compare units <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            console.log(JSON.stringify(a));
-            ans = a.clone();
+            var ans = a.clone();
             ans.value = std_lte(a.value, b.value);
+            return ans;
         }
-
-        return ans;
     });
 }

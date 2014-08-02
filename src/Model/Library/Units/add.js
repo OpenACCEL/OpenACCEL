@@ -19,13 +19,11 @@ function add(x, y) {
             return error;
         }
 
-        var ans;
         if(!a.equals(b)) {
-            ans = new UnitObject(a.value + b.value, {}, "unitError");
-            ans.errorString = "Addition mismatch";
-            return ans;
+            return new UnitObject(a.value + b.value, {}, "unitError",
+                "Both arguments of the \"add\" function must be the same. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            ans = a.clone();
+            var ans = a.clone();
             ans.value = std_add(a.value, b.value);
             return ans;
         }

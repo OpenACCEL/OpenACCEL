@@ -16,7 +16,8 @@ function log(x) {
         }
 
         if (a.hasUnit()) {
-            return new UnitObject(std_log(a.value), {}, "Log should be unitless.");
+            return new UnitObject(std_log(a.value), {}, "unitError",
+                "Argument of the \"log\" function must be unit-less. Current unit is <" + a.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_log(a.value);

@@ -20,7 +20,8 @@ function max(x, y) {
         }
 
         if (!a.equals(b)) {
-            return new UnitObject(std_max(a.value, b.value), {}, "Max units should be equal.");
+            return new UnitObject(std_max(a.value, b.value), {}, "unitError",
+                "Both arguments of the \"max\" function must be the same. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_max(a.value, b.value);

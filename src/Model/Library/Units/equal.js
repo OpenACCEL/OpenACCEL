@@ -18,15 +18,13 @@ function equal(x, y) {
             return error;
         }
 
-        var ans;
         if(!a.equals(b)) {
-            ans = new UnitObject(std_eq(a.value, b.value), {}, "unitError");
-            ans.errorString = "Arguments to == must have same units. Trying to compare units <" + a.toString() + "> and <" + b.toString() + ">.";
+            return new UnitObject(std_eq(a.value, b.value), {}, "unitError",
+                "Arguments of == must have same units. Trying to compare units <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
             var ans = a.clone()
             ans.value = std_eq(a.value, b.value);
+            return ans;
         }
-
-        return ans;
     });
 }
