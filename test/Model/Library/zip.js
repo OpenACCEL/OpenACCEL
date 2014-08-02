@@ -9,10 +9,7 @@ suite("Zip", function() {
             assert = Assert;
             benchmark = Benchmark;
             fileLoader = new FileLoader();
-            fileLoader.load("unaryZip", "library");
-            fileLoader.load("binaryZip", "library");
-            fileLoader.load("multiaryZip", "library");
-            fileLoader.load("zip", "library");
+            fileLoader.load("Functions", "library");
             fileLoader.load("nzipcees", "test");
             done();
         });
