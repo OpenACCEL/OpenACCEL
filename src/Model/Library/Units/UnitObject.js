@@ -207,6 +207,50 @@ UnitObject.prototype.create = function(values, units) {
 };
 
 /**
+ * Returns whether the given array of UnitObjects is homogeneous with respect
+ * to units. That is, whether all elements have the same unit. If this
+ * is the case it returns the unit of the array, else it returns false.
+ *
+ * @param {arr} arr The array to check for homogeneity
+ * @return {Boolean} The unit of the elements in the array if the array is
+ * homogeneous. Else, false.
+ */
+UnitObject.prototype.isHomogeneous = function(arr) {
+    var unit = '';
+
+    // If it's not even an array, just return the unit
+    if (!(arr instanceof Array)) {
+        return arr.unit;
+    }
+
+    // Check whether all elements of the array have the same unit
+    for (var i = arr.length - 1; i >= 0; i--) {
+        // Get unit of current element, whether it's an array or UnitObject
+        var curUnit;
+        if (arr[i] instanceof Array) {
+            curUnit = UnitObject.prototype.isHomogeneous(arr[i]);
+            if (curUnit === false) {
+                return false;
+            }
+        } else {
+            curUnit = arr[i];
+        }
+        if (!(curUnit instanceof UnitObject)) {
+            curUnit = new UnitObject(0).setUnit(curUnit);
+        }
+
+        // Save current unit if it's the first one found
+        if (i === arr.length-1) {
+            unit = curUnit.clone();
+        } else if (!unit.equals(curUnit)) {
+            return false;
+        }
+    };
+
+    return unit.unit;
+};
+
+/**
  * Checks whether the signature of the given (array of) UnitObject(s)
  * matches the signature of it's/their value(s).
  *
@@ -244,7 +288,7 @@ UnitObject.prototype.verifySignature = function(val, unit) {
 
         for (key in keys) {
             // Check whether this key appears in both the value and unit
-            if (!val[keys[key]] || !unit[keys[key]]) {
+            if (val[keys[key]] === 'undefined' || unit[keys[key]] === 'undefined') {
                 match = false;
                 break;
             } else {

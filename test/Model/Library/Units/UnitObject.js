@@ -228,6 +228,33 @@ suite("Unit Object", function() {
          * @input:      a = new UnitObject(5, {'kg': 1, 'm': 1, 's': -2})
          * @expected:   a.getNominator == {'kg': 1, 'm': 1};
          */
+        test("| Checking homogeneity", function() {
+            eval(fileLoader.getLibrary("unitlibrary"));
+            var x = [
+                new UnitObject(5, {'kg':1, 'p':-1}),
+                new UnitObject(45.7685, {'kg':1, 'p':-1}),
+                new UnitObject(10, {'kg':1, 'p':-1}),
+                new UnitObject(false, {'kg':1, 'p':-1})
+            ]
+            var y = [
+                new UnitObject(5, {'kg':1, 'p':0}),
+                new UnitObject(45.7685, {'kg':1, 'p':-1}),
+                new UnitObject(10, {'kg':2, 'p':-1}),
+                new UnitObject(false, {'kg':1, 'p':-1})
+            ]
+            var z = new UnitObject(45.7685, {});
+
+            assert.deepEqual(UnitObject.prototype.isHomogeneous(x), {'kg':1, 'p':-1});
+            assert.deepEqual(UnitObject.prototype.isHomogeneous(y), false);
+            assert.deepEqual(UnitObject.prototype.isHomogeneous(z), {});
+        });
+
+        /**
+         * Getting the nominator of a unit.
+         *
+         * @input:      a = new UnitObject(5, {'kg': 1, 'm': 1, 's': -2})
+         * @expected:   a.getNominator == {'kg': 1, 'm': 1};
+         */
         test("| Cleaning", function() {
             eval(fileLoader.getLibrary("unitlibrary"));
             var a = new UnitObject(5, {'kg': 0, 'm': 0, 's': -2});
