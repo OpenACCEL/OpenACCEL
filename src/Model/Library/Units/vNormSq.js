@@ -4,15 +4,31 @@ function vNormSq(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (x instanceof Array) {
-        var a = 0;
-        for (i in x) {
-            if (!(x[i] instanceof Array)) {
-                a += x[i] * x[i];
-            }
+
+    // vNormSq works on vectors with just values, thus we remove any UnitObjects in the argument.
+    a = unaryZip(x, function(a) {
+        if (a instanceof UnitObject) {
+            return a.value;
+        } else {
+            return a;
         }
-        return a;
+    });
+
+    // Propagate any error.
+    var std_vNormSq = exe.lib.std.vNormSq;
+    var error = UnitObject.prototype.propagateError(std_vNormSq, x);
+    if (error) {
+        return error;
+    }
+
+    // Because we're summing, all units need to be of the same type.
+    var ans = std_vNormSq(a);
+    var homUnit = UnitObject.prototype.isHomogeneous(x);
+    if (!homUnit) {
+        return new UnitObject(ans, {}, "unitError",
+            "vNormSq argument's units should be homogeneous.");
     } else {
-        return x * x;
+        // Don't forget that all units are squared!
+        return new UnitObject(ans, homUnit).power(2);
     }
 }

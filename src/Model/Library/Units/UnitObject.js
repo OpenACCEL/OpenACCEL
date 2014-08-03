@@ -515,6 +515,10 @@ UnitObject.prototype.divide = function(other) {
 UnitObject.prototype.power = function(exponent) {
     var ans;
 
+    if (!(exponent instanceof UnitObject)) {
+        exponent = new UnitObject(exponent);
+    }
+
     // The exponent must be unitless.
     // Take note however, that the exponent will also always be a UnitObject.
     if (exponent.hasUnit()) {
