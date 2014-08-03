@@ -21,5 +21,3 @@ function vSegment(x, y, z) {
         }
     });
 }
-
-vSegment.base = [];
