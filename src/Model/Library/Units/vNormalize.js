@@ -4,34 +4,36 @@ function vNormalize(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    var a = 0;
-    if (x instanceof Array) {
-        for (i in x) {
-            if (!(x[i] instanceof Array)) {
-                a += x[i] * x[i];
-            }
-        }
-        var nn = Math.sqrt(a);
-        var rr = [];
-        if (nn > 0) {
-            for (i in x) {
-                if (!(x[i] instanceof Array)) {
-                    rr[i] = x[i] / nn;
-                } else {
-                    rr[i] = x[i];
-                }
-            }
+
+    // vNormalize works on vectors with just values, thus we remove any UnitObjects in the argument.
+    a = unaryZip(x, function(a) {
+        if (a instanceof UnitObject) {
+            return a.value;
         } else {
-            for (i in x) {
-                if (!(x[i] instanceof Array)) {
-                    rr[i] = 0;
-                } else {
-                    rr[i] = x[i];
-                }
-            }
+            return a;
         }
-        return rr;
+    });
+
+    // Propagate any error.
+    var std_vNormalize = exe.lib.std.vNormalize;
+    var error = UnitObject.prototype.propagateError(std_vNormalize, x);
+    if (error) {
+        return error;
+    }
+
+    // Because we're summing, all units need to be of the same type.
+    var ans = std_vNormalize(a);
+    var homUnit = UnitObject.prototype.isHomogeneous(x);
+    if (!homUnit) {
+        return unaryZip(ans, function(a) {
+            return new UnitObject(a, {}, "unitError",
+                "vNormalize argument's units should be homogeneous."
+            );
+        });
     } else {
-        return 1;
+        // Normalizing can be seen as dividing by the units, thus all answers are unitless.
+        return unaryZip(ans, function(a) {
+            return new UnitObject(a);
+        });
     }
 }
