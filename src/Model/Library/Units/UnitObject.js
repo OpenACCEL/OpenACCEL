@@ -82,6 +82,22 @@ UnitObject.prototype.setUnit = function(unit) {
 };
 
 /**
+ * Sets the unit of the given (array of) UnitObject(s) recursively.
+ *
+ * @param {Object} obj The (array of) UnitObject(s) to set the unit of.
+ * @param {Object} unit The new unit of the UnitObject.
+ */
+UnitObject.prototype.setUnitsRecursively = function(obj, unit) {
+    if (obj instanceof Array) {
+        for (var i in obj) {
+            UnitObject.prototype.setUnitsRecursively(obj[i], unit);
+        }
+    } else {
+        obj.setUnit(unit);
+    }
+};
+
+/**
  * Removes all elements of a unit whose value is zero.
  * This directly modifies the instance of the UnitObject.
  */
