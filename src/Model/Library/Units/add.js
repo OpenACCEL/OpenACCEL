@@ -13,6 +13,15 @@ function add(x, y) {
             b = new UnitObject(b);
         }
 
+        // Copy over units for the addition base case.
+        if (a.isNormal() && a.value === 0 && !b.isNormal()) {
+            a.setUnit(b.unit);
+        }
+
+        if (b.isNormal() && b.value === 0 && !a.isNormal()) {
+            b.setUnit(a.unit);
+        }
+
         var std_add = exe.lib.std.add;
         var error = UnitObject.prototype.propagateError(std_add, a, b);
         if (error) {
