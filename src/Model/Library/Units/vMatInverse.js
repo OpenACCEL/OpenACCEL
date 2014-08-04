@@ -3,43 +3,34 @@ function vMatInverse(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (x instanceof Array) {
-        var t = [];
-        var n = x.length;
-        var isOK = true;
-        for (i = 0; i < n; i++) {
-            t[i] = [];
-            if (x[i] instanceof Array) {
-                if (x[i].length == n) {
-                    for (j = 0; j < n; j++) {
-                        if (!(x[i][j] instanceof Array)) {
-                            t[i][j] = x[i][j];
-                        } else {
-                            isOK = false;
-                        }
-                    }
-                } else {
-                    isOK = false;
-                }
-            } else {
-                isOK = false;
-            }
-        }
-        if (isOK) {
-            var aA = Matrix.create(t);
-            var aInv = Matrix.inverse(aA);
-            for (i = 0; i < aInv.mat.length; i++) {
-                var tt = [];
-                for (j = 0; j < aInv.mat[i].length; j++) {
-                    tt[j] = aInv.mat[i][j];
-                }
-                t[i] = tt;
-            }
-            return t;
+    
+    // Convert all to UnitObjects
+    x = unaryZip(x, function(a) {
+        if (!(a instanceof UnitObject)) {
+            return new UnitObject(a);
         } else {
-            throw new Error("\nvMatInverse: cannot take inverse of non-square matrix");
+            return a;
         }
-    } else {
-        return 1 / x;
+    });
+
+    std_vmi = exe.lib.std.vMatInverse;
+    var error = UnitObject.prototype.propagateError(std_vmi, x);
+    if (error) {
+        return error;
     }
+
+    var xValues = UnitObject.prototype.toArray(x);
+    var xUnit = x[0][0];
+
+    // First compute the value, then set the units
+    var ansValue = std_vmi(xValues);
+
+    // The new unit is simply the inverse of the current unit
+    var newUnit = xUnit.power(-1);
+
+    // Assume homogenous square matrix. However, we also
+    // support a single scalar value
+    var ans = UnitObject.prototype.create(ansValue, newUnit.unit);
+
+    return ans;
 }
