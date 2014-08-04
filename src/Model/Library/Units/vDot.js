@@ -4,37 +4,40 @@ function vDot(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (x instanceof Array) {
-        if (y instanceof Array) {
-            var a = 0;
-            for (i in x) {
-                if (y[i] != undefined) {
-                    if (!(x[i] instanceof Array) && !(y[i] instanceof Array)) {
-                        a += (x[i] * y[i]);
-                    }
-                }
-            }
-            return a;
+
+    // vDot works on vectors with just values, thus we remove any UnitObjects in the argument.
+    a = unaryZip(x, function(i) {
+        if (i instanceof UnitObject) {
+            return i.value;
         } else {
-            var a = 0;
-            for (i in x) {
-                if (!(x[i] instanceof Array)) {
-                    a += y * x[i];
-                }
-            }
-            return a;
+            return i;
         }
+    });
+
+    b = unaryZip(x, function(j) {
+        if (j instanceof UnitObject) {
+            return j.value;
+        } else {
+            return j;
+        }
+    });
+
+    // Propagate any error.
+    var std_vDot = exe.lib.std.vDot;
+    var error = UnitObject.prototype.propagateError(std_vDot, x, y);
+    if (error) {
+        return error;
+    }
+
+    // Because we're summing, all units need to be of the same type.
+    var ans = std_vDot(a, b);
+    var homUnitX = UnitObject.prototype.isHomogeneous(x);
+    var homUnitY = UnitObject.prototype.isHomogeneous(y);
+    if (!homUnitX || !homUnitY) {
+        return new UnitObject(ans, {}, "unitError",
+            "vDot argument's units should both be homogeneous.");
     } else {
-        if (!(y instanceof Array)) {
-            return x * y;
-        } else {
-            var a = 0;
-            for (i in y) {
-                if (!(y[i] instanceof Array)) {
-                    a += x * y[i];
-                }
-            }
-            return a;
-        }
+    	var unit = new UnitObject(0, homUnitX).multiply(new UnitObject(0, homUnitY));
+        return new UnitObject(ans, unit.unit);
     }
 }
