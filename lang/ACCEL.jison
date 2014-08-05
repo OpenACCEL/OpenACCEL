@@ -152,9 +152,9 @@ frac        (?:\.[0-9]+)
          *
          * If your quantity is 'q', then this creates a function __q__() to fetch its value.
          */
-        output += "this." + name + " = function() { " +
+        output += "\nthis." + name + " = function() { " +
             "return this.expr(this." + name + ", this.report." + name + "); " +
-        "};";
+        "};\n";
 
         /**
          * Function that evaluates the matched expression in the context of 'this'.
@@ -164,7 +164,7 @@ frac        (?:\.[0-9]+)
          */
         output += "this." + name + ".stdexpr = (function() " + 
             "{ return " + expr + "; " + 
-        "}).bind(this);";
+        "}).bind(this);\n";
 
         if (yy.units) {
 
@@ -176,7 +176,7 @@ frac        (?:\.[0-9]+)
              */
             output += "this." + name + ".unitexpr = (function() { " + 
                 "return this.unitexpr(this." + name + ", this.report." + name +", this." + name + ".stdexpr()); " +
-            "}).bind(this);";
+            "}).bind(this);\n";
 
         }
 
@@ -187,7 +187,7 @@ frac        (?:\.[0-9]+)
          * For example, if you want units, you should refer this to the 'unitexpr', and if you just want
          * to calculate normal expressions without extension, you'd let it refer to 'stdexpr'.
          */
-        output += "this." + name + ".expr = this." + name + ((yy.units) ? ".unitexpr" : ".stdexpr") + ";";
+        output += "this." + name + ".expr = this." + name + ((yy.units) ? ".unitexpr" : ".stdexpr") + ";\n";
 
         /**
          * The array of historic values of this quantity. The first element always
@@ -198,7 +198,7 @@ frac        (?:\.[0-9]+)
          *
          * @type {Array}
          */
-        output += "this." + name + ".hist = [];";
+        output += "this." + name + ".hist = [];\n";
 
         /**
          * The unit of this quantity. No unit is given, so assign
@@ -206,14 +206,14 @@ frac        (?:\.[0-9]+)
          *
          * @type {Object}
          */
-        output += "this." + name + ".unit = {};";
+        output += "this." + name + ".unit = {};\n";
 
         /**
          * The maximum size of the history array for this quantity.
          *
          * @type {Number}
          */
-        output += "this." + name + ".timespan = 0;";
+        output += "this." + name + ".timespan = 0;\n";
 
         /**
          * Initialize the value in case it's a user input quantity
@@ -225,7 +225,7 @@ frac        (?:\.[0-9]+)
             "} else {" +
                 "this." + name + ".hist[0] = this.report." + name + ".input.parameters[0];" +
             "}" +
-        "}";
+        "}\n";
 
         return output;
     }
@@ -240,9 +240,9 @@ frac        (?:\.[0-9]+)
          *
          * If your quantity is 'q', then this creates a function __q__() to fetch its value.
          */
-        output += "this." + name + "= function(" + dummies + ") { " +
+        output += "\nthis." + name + "= function(" + dummies + ") { " +
             "return this.memoization(this." + name + ", [" + dummies + "]); " + 
-        "};";
+        "};\n";
 
         /**
          * Function that evaluates the matched expression in the context of 'this'.
@@ -252,7 +252,7 @@ frac        (?:\.[0-9]+)
          */
         output += "this." + name + ".stdexpr = (function(" + dummies + ") { " +
             "return " + expr + "; " + 
-        "}).bind(this);";
+        "}).bind(this);\n";
 
             if (yy.units) {
             /**
@@ -263,10 +263,10 @@ frac        (?:\.[0-9]+)
              */
             output += "this." + name + ".unitexpr = (function(" + dummies + ") { " + 
                 "return this.unitexpr(this." + name + ", this.report." + name + ", this." + name + ".stdexpr(" + dummies + ")); " +
-            "}).bind(this);";
+            "}).bind(this);\n";
             
         }
-        
+
         /**
          * Function that evaluates the matched expression in the context of 'this'.
          * This expression should be a reference to the expressions that you want to use for the run-time.
@@ -274,12 +274,12 @@ frac        (?:\.[0-9]+)
          * For example, if you want units, you should refer this to the 'unitexpr', and if you just want
          * to calculate normal expressions without extension, you'd let it refer to 'stdexpr'.
          */
-        output += "this." + name + ".expr = this." + name + ((yy.units) ? ".unitexpr" : ".stdexpr") + ";";
+        output += "this." + name + ".expr = this." + name + ((yy.units) ? ".unitexpr" : ".stdexpr") + ";\n";
 
         /**
          * Memoization data structure for function calls.
          */
-        output += "this." + name + ".cache = {};";
+        output += "this." + name + ".cache = {};\n";
 
         return output;
     }
