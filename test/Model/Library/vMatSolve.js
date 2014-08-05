@@ -17,7 +17,7 @@ suite("vMatSolve Library", function() {
         });
     });
 
-    suite("vMatSolve", function() {
+    suite("| vMatSolve", function() {
 
         /**
          * Test case for vMatSolve.
@@ -25,7 +25,7 @@ suite("vMatSolve Library", function() {
          * @input:vMatSolve([[1,2],[3,4]],[1,2])
          * @expected: [0,0.50]
          */
-        test("m=vMatSolve([[1,2],[3,4]],[1,2]) = [0,0.50]", function() {
+        test("| m=vMatSolve([[1,2],[3,4]],[1,2]) = [0,0.50]", function() {
             eval(fileLoader.getContent());
 
             var expected = [0, 0.50];
@@ -41,13 +41,13 @@ suite("vMatSolve Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = [[1,2],[3,4]] ; [[kg, kg], [kg, kg]]\n" +
             "b = [1,2] ; [kg2, kg2]\n" +
             "z = vMatSolve(a,b)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
+            
 
             var expected = UnitObject.prototype.create([0, 0.50], {'kg':1});
             assert.deepEqual(output.__z__(), expected);

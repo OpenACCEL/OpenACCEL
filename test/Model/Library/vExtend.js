@@ -15,7 +15,7 @@ suite("vExtend Library", function() {
         });
     });
 
-    suite("vExtend", function() {
+    suite("| vExtend", function() {
 
         /**
          * Test case for vExtend.
@@ -23,7 +23,7 @@ suite("vExtend Library", function() {
          * @input:vExtend([1,2,3,4],[5,6])
          * @expected: [1,2,3,4,5,6]
          */
-        test("vExtend([1,2,3,4],[5,6]) = [1,2,3,4,5,6]", function() {
+        test("| vExtend([1,2,3,4],[5,6]) = [1,2,3,4,5,6]", function() {
             eval(fileLoader.getContent());
 
             var expected = [1, 2, 3, 4, 5, 6];
@@ -38,7 +38,7 @@ suite("vExtend Library", function() {
          * @input:vExtend([x:3,y:5],[t:6])
          * @expected: [x:3,y:5,t:6]
          */
-        test("vExtend([x:3,y:5],[t:6]) = [x:3,y:5,t:6]", function() {
+        test("| vExtend([x:3,y:5],[t:6]) = [x:3,y:5,t:6]", function() {
             eval(fileLoader.getContent());
 
             var expected = objectToArray({

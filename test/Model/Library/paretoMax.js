@@ -15,7 +15,7 @@ suite("paretoMax Library", function() {
         });
     });
 
-    suite("paretoMax", function() {
+    suite("| paretoMax", function() {
 
         /**
          * Test case for paretoMax.
@@ -23,7 +23,7 @@ suite("paretoMax Library", function() {
          * input:paretoMax(42)
          * expected: 42
          */
-        test("paretoMax(42) = 42", function() {
+        test("| paretoMax(42) = 42", function() {
             eval(fileLoader.getContent());
 
             var expected = 42;

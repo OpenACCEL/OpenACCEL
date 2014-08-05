@@ -29,6 +29,10 @@ frac        (?:\.[0-9]+)
         throw {message: message, hash: hash};
     }
 
+    if (typeof yy.units === 'undefined') {
+        yy.units = false;
+    }
+
     /** List of all ACCEL user-input functions */
     yy.inputfunctions = [
         /* Input elements */
@@ -363,6 +367,7 @@ frac        (?:\.[0-9]+)
 /** Parser configuration directives */
 %ebnf               /** Enable extended BNF syntax! */
 %start script       /** The non-terminal to start at */
+%parse-param        params
 
 
 
@@ -636,7 +641,34 @@ term                    :   scalarConst | scalarTerm | vectorExpr;
  * Scalar constants are exactly what they are, constants. They do not need any more computations
  * or modifications. Aside from numbers and strings, there are a few predefined constants in OpenACCEl.
  */
-scalarConst             :   NUMBER | STRING | predefinedConstant;
+scalarConst             :   number | string | predefinedConstant;
+
+/**
+ * When compiling with unit supports, numbers should be converted to UnitObjects.
+ */
+number                  :   NUMBER
+                        {{
+                            if (yy.units) {
+                                $$ = "new UnitObject(" + $1 + ")";
+                            } else {
+                                $$ = $1;
+                            }
+                        }}
+                        ;
+
+/**
+ * When compiling with unit supports, strings should be converted to UnitObjects.
+ */
+string                  :   STRING
+                        {{
+                            if (yy.units) {
+                                $$ = "new UnitObject(" + $1 + ")";
+                            } else {
+                                $$ = $1;
+                            }
+                        }}
+                        ;
+
 predefinedConstant      :   PI
                             {{ $$ = "Math.PI"; }}
                         |   E

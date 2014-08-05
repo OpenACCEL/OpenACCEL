@@ -113,6 +113,7 @@ suite("vDom Library", function() {
          * @expected x = [0,1,2]
          */
         test("| Should expand for 'x = vDom(y), y = [1,0,0]'", function() {
+            compiler.setUnits(false);
             var input = "x = vDom(y)\ny = [1,0,0]";
             expected = [0, 1, 2];
             var output = compiler.compile(new Script(input));
@@ -122,12 +123,11 @@ suite("vDom Library", function() {
 
     suite("| Units", function() {
         test("| All returned values should be normal", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "x = [5, ['x': 6], 7, y: 10] ; [kg, [x: s], m, y: lum]\n" +
             "y = vDom(x)";
             var output = compiler.compile(new Script(input));
-            output.setUnits(true);
 
             var y = output.__y__();
             assert.ifError(y.error);

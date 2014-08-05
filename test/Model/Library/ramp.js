@@ -21,7 +21,7 @@ suite("ramp Library", function() {
         });
     });
 
-    suite("ramp", function() {
+    suite("| Ramp", function() {
 
         /**
          * Test case for ramp.
@@ -30,7 +30,7 @@ suite("ramp Library", function() {
          * @input: ramp(0.5,0,0,1,1)
          * @expected: 0.5
          */
-        test("Example from help ramp(0.5,0,0,1,1)=0.5", function() {
+        test("| Example from help ramp(0.5,0,0,1,1)=0.5", function() {
             eval(fileLoader.getContent());
             assert.deepEqual(ramp(0.5, 0, 0, 1, 1), 0.5);
         });
@@ -39,7 +39,7 @@ suite("ramp Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a=0.5 ; kg\n" +
             "b=0 ; kg\n" +
@@ -48,7 +48,6 @@ suite("ramp Library", function() {
             "e=1 ; m2\n" +
             "z=ramp(a,b,c,d,e)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__z__().equals(new UnitObject(0.5, {'m':2})));
             assert.equal(0.5, output.__z__().value);
@@ -56,7 +55,7 @@ suite("ramp Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a=0.5 ; kg\n" +
             "b=0 ; kg\n" +
@@ -66,7 +65,6 @@ suite("ramp Library", function() {
             "z=ramp(a,b,c,d,e)\n" +
             "x=ramp(z,0,0,1,1)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(0.5, output.__z__().value);
             assert.equal(output.__z__().error, "unitError");

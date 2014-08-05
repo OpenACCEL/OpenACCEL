@@ -97,24 +97,22 @@ suite("Factorial Library", function() {
 
     suite("| Units", function() {
         test("| Dimension", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "x = 0.5; kg\n" +
             "y = factorial(x)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.ok(output.__y__().error);
             assert.equal(1, output.__y__().value);
         });
 
         test("| Dimensionless", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "x = 0.5\n" +
             "y = factorial(x)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__y__().isNormal());
             assert.equal(1, output.__y__().value);

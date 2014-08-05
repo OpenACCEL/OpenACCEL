@@ -35,11 +35,10 @@ suite("iSpike Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = iSpike(0,0,3,3)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, UnitObject.prototype.isNormal(output.__a__()));
             assert.deepEqual([[1,0,0],[0,0,0],[0,0,0]], output.__a__().value);
@@ -47,7 +46,7 @@ suite("iSpike Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 0 ; kg\n" +
             "b = iSpike(a,0,3,3)\n" +
@@ -56,7 +55,6 @@ suite("iSpike Library", function() {
             "y = 3 ; kg\n" +
             "z = and(x,y)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.deepEqual([[1,0,0],[0,0,0],[0,0,0]], output.__b__().value);
             assert.equal(output.__b__().error, "unitError");

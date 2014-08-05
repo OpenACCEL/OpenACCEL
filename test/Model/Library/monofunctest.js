@@ -23,6 +23,7 @@ suite("Monofunc", function() {
          * @expected Math.sin(5)
          */
         test("| Sin | Scalar value", function() {
+            compiler.setUnits(false);
             var input = "y = sin(5)";
             var output = compiler.compile(new script(input)).__y__();
             assert.equal(output, Math.sin(5));
@@ -37,6 +38,7 @@ suite("Monofunc", function() {
          * @expected Math.sin(Math.sin(5 + Math.sin(Math.sin(5) + 2)))
          */
         test("| Sin | Nested function calls", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = sin(x) + 2\nz = sin(sin(x + sin(y)))";
             var output = compiler.compile(new script(input)).__z__();
             assert.equal(output, Math.sin(Math.sin(5 + Math.sin(Math.sin(5) + 2))));
@@ -49,6 +51,7 @@ suite("Monofunc", function() {
          * @expected [Math.sin(1), Math.sin(2), Math.sin(3)]
          */
         test("| Sin | Simple function #1", function() {
+            compiler.setUnits(false);
             var input = "x = sin([1,2,3])";
             var output = compiler.compile(new script(input)).__x__();
             var expected = [Math.sin(1), Math.sin(2), Math.sin(3)];
@@ -62,6 +65,7 @@ suite("Monofunc", function() {
          * @expected [Math.sin(1), [Math.sin(2), [Math.sin(3),Math.sin(4)]], Math.sin(5)]
          */
         test("| Sin | Simple function #2", function() {
+            compiler.setUnits(false);
             var input = "x = sin([1,[2,[3,4]],5])";
             var output = compiler.compile(new script(input)).__x__();
             var expected = [Math.sin(1), [Math.sin(2), [Math.sin(3), Math.sin(4)]], Math.sin(5)];
@@ -75,6 +79,7 @@ suite("Monofunc", function() {
          * @expected [1 + Math.sin(1) * 2, [1 + Math.sin(2) * 2, [1 + Math.sin(3) * 2, 1 + Math.sin(4) * 2]], 1 + Math.sin(5) * 2]
          */
         test("| Sin | Simple function #3", function() {
+            compiler.setUnits(false);
             var input = "x = 1 + sin([1,[2,[3,4]],5]) * 2";
             var output = compiler.compile(new script(input)).__x__();
             var expected = [1 + Math.sin(1) * 2, [1 + Math.sin(2) * 2, [1 + Math.sin(3) * 2, 1 + Math.sin(4) * 2]], 1 + Math.sin(5) * 2];
@@ -84,7 +89,7 @@ suite("Monofunc", function() {
 
     suite("| Units", function() {
         test("| Dimension", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "x = 0.5; kg\n" +
             "a = sin(x)\n" +
@@ -102,7 +107,6 @@ suite("Monofunc", function() {
             "l = floor(x)\n" +
             "m = round(x)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.ok(output.__a__().error);
             assert.ok(output.__b__().error);
@@ -126,7 +130,7 @@ suite("Monofunc", function() {
         });
 
         test("| Dimensionless", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "x = 0.5\n" +
             "a = sin(x)\n" +
@@ -144,7 +148,6 @@ suite("Monofunc", function() {
             "l = floor(x)\n" +
             "m = round(x)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__a__().isNormal());
             assert.equal(true, output.__b__().isNormal());

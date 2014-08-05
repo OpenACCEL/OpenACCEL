@@ -126,6 +126,7 @@ suite("Equal Library", function() {
          * @expected    y = false
          */
         test("| Should expand for 'x = 5, y = equal(x, 4)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = equal(x, 4)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), false);
@@ -141,6 +142,7 @@ suite("Equal Library", function() {
          *              z = false
          */
         test("| Should expand for 'x = 5, y = equal(x, 5), z = equal(x, equal(4, y)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = equal(x, 5) \nz = equal(x, equal(4, y))";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), true);
@@ -150,7 +152,7 @@ suite("Equal Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 40 ; kg\n" +
             "b = 25 ; kg\n" +
@@ -159,7 +161,6 @@ suite("Equal Library", function() {
             "y = 36\n" +
             "z = equal(x, y)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().equals(new UnitObject(false, {'kg': 1})));
             assert.equal(false, output.__c__().value);
@@ -171,7 +172,7 @@ suite("Equal Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 40 ; kg\n" +
             "b = 25 ; m2/p\n" +
@@ -179,7 +180,6 @@ suite("Equal Library", function() {
             "x = false\n" +
             "z = equal(c, x)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(false, output.__c__().value);
             assert.equal(output.__c__().error, "unitError");

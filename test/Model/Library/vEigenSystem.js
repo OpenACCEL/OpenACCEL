@@ -60,12 +60,11 @@ suite("vEigenSystem Library", function() {
      */
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = [[4,4],[2,2]] ; [[kg, kg], [kg, kg]]\n" +
             "z = vEigenSystem(a)\n";
             var output = compiler.compile(new script(input)); 
-            output.setUnits(true);
 
             var result = output.__z__();
             var expected = [

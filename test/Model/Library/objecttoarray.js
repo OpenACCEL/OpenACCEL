@@ -17,7 +17,7 @@ suite("Object to Array function", function() {
         });
     });
 
-    suite("__objectToArray()__", function() {
+    suite("| __objectToArray()__", function() {
 
         /**
          * Test case for ObjectToArray.
@@ -25,7 +25,7 @@ suite("Object to Array function", function() {
          * @input objectToArray({a:1, b:2, c:3})
          * @expected [a:1, b:2, c:3] 
          */
-        test("Object with only named keys", function() {
+        test("| Object with only named keys", function() {
             eval(fileLoader.getContent());
             var input = {a:1, b:2, c:3};
 
@@ -45,7 +45,7 @@ suite("Object to Array function", function() {
          * @input objectToArray({'0':1, '1':2, '2':3})
          * @expected [1,2,3] 
          */
-        test("Object with only numerical keys", function() {
+        test("| Object with only numerical keys", function() {
             eval(fileLoader.getContent());
             var input = {'0':1, '1':2, '2':3};
 
@@ -62,7 +62,7 @@ suite("Object to Array function", function() {
          * @input objectToArray({'0':1, '2':3, '1':2})
          * @expected [1,2,3] 
          */
-        test("Object with only numerical keys shuffled", function() {
+        test("| Object with only numerical keys shuffled", function() {
             eval(fileLoader.getContent());
             var input = {'0':1, '2':3, '1':2};
 
@@ -79,7 +79,7 @@ suite("Object to Array function", function() {
          * @input objectToArray({'0':1, a:3, '1':2})
          * @expected [1, 2, a:3] 
          */
-        test("Object mixed keys", function() {
+        test("| Object mixed keys", function() {
             eval(fileLoader.getContent());
             var input = {'0':1, a:3, '1':2};
 

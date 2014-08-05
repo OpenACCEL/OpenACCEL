@@ -15,7 +15,7 @@ suite("paretoMin Library", function() {
         });
     });
 
-    suite("paretoMin", function() {
+    suite("| paretoMin", function() {
 
         /**
          * Test case for paretoMin.
@@ -23,7 +23,7 @@ suite("paretoMin Library", function() {
          * input:paretoMin(42)
          * expected: 42
          */
-        test("paretoMin(42) = 42", function() {
+        test("| paretoMin(42) = 42", function() {
             eval(fileLoader.getContent());
 
             var expected = 42;

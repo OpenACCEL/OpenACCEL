@@ -8,6 +8,7 @@ suite("Operator Precedence", function() {
         requirejs(["assert", "Model/Compiler", "Model/Script"], function(Assert, Compiler, Script) {
             assert = Assert;
             compiler = new Compiler();
+            compiler.setUnits(false);
             script = Script;
             done();
         });

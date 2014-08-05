@@ -16,7 +16,7 @@ suite("vConvolve Library", function() {
         });
     });
 
-    suite("vConvolve", function() {
+    suite("| vConvolve", function() {
 
         /**
          * Test case for vConvolve.
@@ -24,7 +24,7 @@ suite("vConvolve Library", function() {
          * @input: vConvolve([1, 2, 3, 2, 1], [-1, 0, 1], 3, 0)
          * @expected: [-2, -1, 1, 2, 0]
          */
-        test("vConvolve([1, 2, 3, 2, 1], [-1, 0, 1], 3, 0) = [-2, -1, 1, 2, 0]", function() {
+        test("| vConvolve([1, 2, 3, 2, 1], [-1, 0, 1], 3, 0) = [-2, -1, 1, 2, 0]", function() {
             eval(fileLoader.getContent());
 
             var expected = [-2, -1, 1, 2, 0];
@@ -39,7 +39,7 @@ suite("vConvolve Library", function() {
          * @input: vConvolve([1,2,3,2,1],[-1,0,1],3,1)
          * @expected: [0,1,2,2,0]
          */
-        test("vConvolve([1,2,3,2,1],[-1,0,1],3,1) = [0,1,2,2,0]", function() {
+        test("| vConvolve([1,2,3,2,1],[-1,0,1],3,1) = [0,1,2,2,0]", function() {
             eval(fileLoader.getContent());
 
             var expected = [0, 1, 2, 2, 0];
@@ -54,7 +54,7 @@ suite("vConvolve Library", function() {
          * @input: vConvolve([1,2,3,2,1],[-1,0,1],3,2)
          * @expected: value=[0,0,1,2,0]
          */
-        test("vConvolve([1,2,3,2,1],[-1,0,1],3,2) = value=[0,0,1,2,0]", function() {
+        test("| vConvolve([1,2,3,2,1],[-1,0,1],3,2) = value=[0,0,1,2,0]", function() {
             eval(fileLoader.getContent());
 
             var expected = value = [0, 0, 1, 2, 0];

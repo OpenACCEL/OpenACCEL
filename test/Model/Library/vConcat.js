@@ -129,6 +129,7 @@ suite("vConcat Library", function() {
          * @expected x [1,0,3,4]
          */
         test("| Should expand for 'x = vConcat(y, z), y = [1,0], z = [3,4]'", function() {
+            compiler.setUnits(false);
             var input = "x = vConcat(y, z)\ny = [1,0]\nz = [3,4]";
             var output = compiler.compile(new Script(input));
             expected = [];
@@ -142,13 +143,12 @@ suite("vConcat Library", function() {
 
     suite("| Units", function() {
         test("| Concatenation of units", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a=[1,2,3,x:4]; [1,kg,1,x:s]\n" +
             "b=[[5,6]]; [[lum,1]]\n" +
             "c=vConcat(a,b); [1,kg,1,s,[lum,1]]";
             var output = compiler.compile(new Script(input));
-            output.setUnits(true);
 
             var c = output.__c__();
             assert.equal(true, c[0].isNormal());

@@ -38,7 +38,7 @@ suite("vSpike Library", function() {
 
     suite("| Units", function() {
         test("| Argument should be unitless", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = 0\n" +
             "b = 5\n" +
@@ -50,7 +50,6 @@ suite("vSpike Library", function() {
             "z = vSpike(c, d)\n";
             var expected = [1, 0, 0, 0, 0];
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             for (var i = 0; i < 4; i++) {
                 assert.ifError(output.__w__()[i].error);

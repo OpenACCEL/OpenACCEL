@@ -18,14 +18,14 @@ suite("vVecRamp Library", function() {
         });
     });
 
-    suite("vVecRamp", function() {
+    suite("| vVecRamp", function() {
         /**
          * Test case for vVecRamp.
          *
          * @input: vVecRamp([10,20,30,40],[0,100,150,0],30)
          * @expected: 150
          */
-        test("vVecRamp([10,20,30,40],[0,100,150,0],30) = 150", function() {
+        test("| vVecRamp([10,20,30,40],[0,100,150,0],30) = 150", function() {
             eval(fileLoader.getContent());
 
             var expected = 150;
@@ -40,7 +40,7 @@ suite("vVecRamp Library", function() {
          * @input: vVecRamp([100,80,60,40],[0,5,10,0],90)
          * @expected: 2.5
          */
-        test("vVecRamp([100,80,60,40],[0,5,10,0],90) = 2.5", function() {
+        test("| vVecRamp([100,80,60,40],[0,5,10,0],90) = 2.5", function() {
             eval(fileLoader.getContent());
 
             var expected = 2.5;
@@ -55,7 +55,7 @@ suite("vVecRamp Library", function() {
          * @input: vVecRamp([24,16,28,9,16,36],[14,7,28,4,4,0],30)
          * @expected: 21
          */
-        test("vVecRamp([24,16,28,9,16,36],[14,7,28,4,4,0],30) = 21", function() {
+        test("| vVecRamp([24,16,28,9,16,36],[14,7,28,4,4,0],30) = 21", function() {
             eval(fileLoader.getContent());
 
             var expected = 21;
@@ -67,14 +67,13 @@ suite("vVecRamp Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = [10,20,30,40] ; [kg, kg, kg, kg]\n" +
             "b = [0,100,150,0] ; [m,m,m,m]\n" +
             "c = 30 ; kg\n" +
             "z = vVecRamp(a,b,c)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             var expected = UnitObject.prototype.create(150, {'m':1});
             assert.equal(true, output.__z__().equals(expected));
@@ -83,7 +82,7 @@ suite("vVecRamp Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = [10,20,30,40] ; [kg, p, kg, kg]\n" +
             "b = [0,100,150,0] ; [m,m,m,m]\n" +
@@ -94,7 +93,6 @@ suite("vVecRamp Library", function() {
             "f = 30 ; d\n" +
             "y = vVecRamp(a,b,c)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(150, output.__z__().value);
             assert.equal(output.__z__().error, "unitError");

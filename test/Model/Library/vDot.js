@@ -67,6 +67,7 @@ suite("vDot Library", function() {
          * @expected 6
          */
         test("| Should expand for 'x = vDot(z, y), y = [[1, 1],[0, -1]], z = [[2, 4],[3, 5]]'", function() {
+            compiler.setUnits(false);
             var input = "x = vDot(z, y)\ny = [1, 1]\nz = [2, 4]";
             expected = 6;
             var output = compiler.compile(new Script(input));
@@ -76,7 +77,7 @@ suite("vDot Library", function() {
 
     suite("| Units", function() {
         test("| Homogenous units", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = [-1, 2, 3]; [kg, kg, 1]\n" +
             "b = [-1, 2, 3]; [kg, 1, kg]\n" +
@@ -96,7 +97,6 @@ suite("vDot Library", function() {
             "q = vDot(h, h)\n" + 
             "r = vDot(i, i)\n";
             var output = compiler.compile(new Script(input));
-            output.setUnits(true);
 
             assert.ok(output.__k__().error);
             assert.ok(output.__l__().error);

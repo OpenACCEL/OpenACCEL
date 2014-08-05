@@ -16,7 +16,7 @@ suite("vTranspose Library", function() {
         });
     });
 
-    suite("vTranspose", function() {
+    suite("| vTranspose", function() {
 
         /**
          * Test case for vTranspose.
@@ -26,7 +26,7 @@ suite("vTranspose Library", function() {
          * @input:vTranspose([[1,10,100],[2,20,200],[3,30,300]])
          * @expected: [[1,2,3],[10,20,30],[100,200,300]]
          */
-        test("vTranspose([[1,10,100],[2,20,200],[3,30,300]]) = [[1,2,3],[10,20,30],[100,200,300]]", function() {
+        test("| vTranspose([[1,10,100],[2,20,200],[3,30,300]]) = [[1,2,3],[10,20,30],[100,200,300]]", function() {
             eval(fileLoader.getContent());
 
             var expected = [[1,2,3],[10,20,30],[100,200,300]];
@@ -43,7 +43,7 @@ suite("vTranspose Library", function() {
          * input:vTranspose([[1,10,100],[2,20,200,2000],[3,30,300]])
          * expected: [[1,2,3],[10,20,30],[100,200,300],[2000]]
          */
-        test("vTranspose([[1,10,100],[2,20,200,2000],[3,30,300]]) = [[1,2,3],[10,20,30],[100,200,300],[2000]]", function() {
+        test("| vTranspose([[1,10,100],[2,20,200,2000],[3,30,300]]) = [[1,2,3],[10,20,30],[100,200,300],[2000]]", function() {
             eval(fileLoader.getContent());
 
             // Note, this is really the matrix that should be generated,
@@ -63,7 +63,7 @@ suite("vTranspose Library", function() {
          * input:vTranspose(vTranspose([[1,10,100],[2,20,200,2000],[3,30,300]]))
          * expected: [[1,10,100],[2,20,200,2000],[3,30,300]]
          */
-        test("vTranspose(vTranspose([[1,10,100],[2,20,200,2000],[3,30,300]])) = [[1,10,100],[2,20,200,2000],[3,30,300]]", function() {
+        test("| vTranspose(vTranspose([[1,10,100],[2,20,200,2000],[3,30,300]])) = [[1,10,100],[2,20,200,2000],[3,30,300]]", function() {
             eval(fileLoader.getContent());
 
             var expected = [[1,10,100],[2,20,200,2000],[3,30,300]];
@@ -80,7 +80,7 @@ suite("vTranspose Library", function() {
          * input:vTranspose([['x':1,'y':2],['x':10,'y':20]])
          * expected: ['x':[1,10],'y':[2,20]]
          */
-        test("vTranspose([['x':1,'y':2],['x':10,'y':20]) = ['x':[1,10],'y':[2,20]]", function() {
+        test("| vTranspose([['x':1,'y':2],['x':10,'y':20]) = ['x':[1,10],'y':[2,20]]", function() {
             eval(fileLoader.getContent());
             var e  = [];
             e.x = [1,10];

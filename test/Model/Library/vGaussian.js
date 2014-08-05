@@ -79,7 +79,7 @@ suite("vGaussian Library", function() {
 
     suite("| Units", function() {
         test("| Argument should be unitless", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = 6\n" +
             "b = 3\n" +
@@ -91,7 +91,6 @@ suite("vGaussian Library", function() {
             "z = vGaussian(c, d)\n";
             var expected = [0.14,0.17,0.19,0.19,0.17,0.14];
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             // round all the results to two decimals
 

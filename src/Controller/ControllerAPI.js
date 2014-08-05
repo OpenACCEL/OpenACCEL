@@ -197,22 +197,6 @@ define(["Model/Script",
         }
 
         /**
-         * Loads the standard ACCEL functions library into memory, overwriting any
-         * unit libary functions that may be in memory.
-         */
-        Controller.prototype.loadStandardLib = function() {
-            this.compiler.loadStandardLib();
-        };
-
-        /**
-         * Loads the units library into memory, overwriting any
-         * standard ACCEL libary functions that may be in memory.
-         */
-        Controller.prototype.loadUnitsLib = function() {
-            this.compiler.loadUnitsLib();
-        };
-
-        /**
          * Checks and computes the unit of every quantity in the given script source
          *
          * @param {String} source The source of the script of which to check the quantities
@@ -228,11 +212,7 @@ define(["Model/Script",
             }
 
             // Load the units
-            this.loadUnitsLib();
-
-            // Change the evaluation function of the executable to be the function
-            // that evaluates the quantity units together with their values
-            this.script.exe.setUnits(true);
+            this.setUnits(true);
 
             // Let the script check units
             try {
@@ -973,8 +953,7 @@ define(["Model/Script",
             // TODO remove temporary hack for showing UnitObject values in script
             var ans = this.script.toString(options);
             if (this.script.isCompiled()) {
-                this.script.exe.setUnits(false);
-                this.loadStandardLib();
+                this.setUnits(false);
             }
 
             return ans;

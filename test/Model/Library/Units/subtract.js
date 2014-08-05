@@ -15,24 +15,24 @@ suite("Subtract Unit Library", function() {
     });
 
     test("| Non-equal units", function() {
-        compiler.loadUnitsLib();
+        compiler.setUnits(true);
         var input = 
         "x = 5; kg\n" +
         "y = 6; s\n" +
         "z = x - y";
         var output = compiler.compile(new script(input));
-        output.setUnits(true);
+        
         assert.ok(output.__z__().error);
     });
 
     test("| Equal units", function() {
-        compiler.loadUnitsLib();
+        compiler.setUnits(true);
         var input = 
         "x = 5; kg\n" +
         "y = 6; kg\n" +
         "z = x - y";
         var output = compiler.compile(new script(input));
-        output.setUnits(true);
+        
         var z = output.__z__();
         assert.equal(z.value, -1);
         assert.equal(true, z.equals(new UnitObject(0, {'kg': 1})));
@@ -40,7 +40,7 @@ suite("Subtract Unit Library", function() {
     });
 
     test("| Non-Commutativity", function() {
-        compiler.loadUnitsLib();
+        compiler.setUnits(true);
         var input = 
         "x = 5; kg\n" +
         "y = 10; kg\n" +
@@ -50,7 +50,7 @@ suite("Subtract Unit Library", function() {
         "c = y - x\n" +
         "d = z - x";
         var output = compiler.compile(new script(input));
-        output.setUnits(true);
+        
 
         var a = output.__a__();
         var b = output.__b__();

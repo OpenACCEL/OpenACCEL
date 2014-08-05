@@ -86,6 +86,7 @@ suite("vAppend Library", function() {
          * @expected x = [1,0,3]
          */
         test("| Should expand for 'x = vAppend(y, z), y = [1,0], z = 3'", function() {
+            compiler.setUnits(false);
             var input = "x = vAppend(y, z)\ny = [1,0]\nz = 3";
             var output = compiler.compile(new Script(input));
             expected = [];
@@ -98,13 +99,12 @@ suite("vAppend Library", function() {
 
     suite("| Units", function() {
         test("| Concatenation of units", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a=[1,2,3,x:4]; [1,kg,1,x:s]\n" +
             "b=[[5,6]]; [[lum,1]]\n" +
             "c=vAppend(a,b)";
             var output = compiler.compile(new Script(input));
-            output.setUnits(true);
 
             var c = output.__c__();
             assert.equal(true, c[0].isNormal());

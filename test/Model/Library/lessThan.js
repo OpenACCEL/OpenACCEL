@@ -21,7 +21,7 @@ suite("LessThan Library", function() {
         });
     });
 
-    suite("lessThan", function() {
+    suite("| LessThan", function() {
 
         /**
          * Test case for lessThan.
@@ -29,7 +29,7 @@ suite("LessThan Library", function() {
          * @input lessThan(1,2)
          * @expected true
          */
-        test("lessThan function with 2 variables", function() {
+        test("| LessThan function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = 1;
             var y = 2;
@@ -43,7 +43,7 @@ suite("LessThan Library", function() {
          * @input lessThan(2,1)
          * @expected false
          */
-        test("lessThan function with 2 variables", function() {
+        test("| LessThan function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = 2;
             var y = 1;
@@ -57,7 +57,7 @@ suite("LessThan Library", function() {
          * @input lessThan(3,[2,3,4])
          * @expected [false,false,true]
          */
-        test("lessThan function with a constant and an array", function() {
+        test("| LessThan function with a constant and an array", function() {
             eval(fileLoader.getContent());
             var x = 3
             var y = [2, 3, 4];
@@ -71,7 +71,7 @@ suite("LessThan Library", function() {
          * @input lessThan([1,2,3],[3,2,1])
          * @expected [true,false,false]
          */
-        test("lessThan function with 2 array's", function() {
+        test("| LessThan function with 2 array's", function() {
             eval(fileLoader.getContent());
             var x = [1, 2, 3];
             var y = [3, 2, 1];
@@ -85,7 +85,7 @@ suite("LessThan Library", function() {
          * @input lessThan([1,2,3],[3,2,[1,4]])
          * @expected [true, false, [false, true]]
          */
-        test("lessThan function with an array and a nested array", function() {
+        test("| LessThan function with an array and a nested array", function() {
             eval(fileLoader.getContent());
             var x = [1, 2, 3];
             var y = [3, 2, [1, 4]];
@@ -99,7 +99,7 @@ suite("LessThan Library", function() {
          * @input lessThan([1, [2, 3], 3],[3, 2, [1, 4]])
          * @expected [true, [false, false], [false, true]]
          */
-        test("lessThan function with nested array's", function() {
+        test("| LessThan function with nested array's", function() {
             eval(fileLoader.getContent());
             var x = [1, [2, 3], 3];
             var y = [3, 2, [1, 4]];
@@ -111,7 +111,7 @@ suite("LessThan Library", function() {
 
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of lessThan.
@@ -120,7 +120,8 @@ suite("LessThan Library", function() {
          *        y = lessThan(x,4)
          * @expected y = false
          */
-        test("should expand for 'x = 5, y = lessThan(x, 4)'", function() {
+        test("| Should expand for 'x = 5, y = lessThan(x, 4)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = lessThan(x, 4)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), false);
@@ -135,7 +136,8 @@ suite("LessThan Library", function() {
          * @expected y = false
          *           z = false
          */
-        test("should expand for 'x = 5, y = lessThan(x, 5), z = lessThan(x, lessThan(4, y))'", function() {
+        test("| Should expand for 'x = 5, y = lessThan(x, 5), z = lessThan(x, lessThan(4, y))'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = lessThan(x, 5) \nz = lessThan(x, lessThan(4, y))";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), false);
@@ -146,7 +148,7 @@ suite("LessThan Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 19 ; kg\n" +
             "b = 25 ; kg\n" +
@@ -155,7 +157,6 @@ suite("LessThan Library", function() {
             "y = 36\n" +
             "z = lessThan(x, y)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().equals(new UnitObject(true, {'kg': 1})));
             assert.equal(true, output.__c__().value);
@@ -167,7 +168,7 @@ suite("LessThan Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 40 ; kg\n" +
             "b = 25 ; m2/p\n" +
@@ -175,7 +176,6 @@ suite("LessThan Library", function() {
             "x = 36\n" +
             "z = lessThan(c, x)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(false, output.__c__().value);
             assert.equal(output.__c__().error, "unitError");

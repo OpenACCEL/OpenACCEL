@@ -20,7 +20,7 @@ suite("Not Library", function() {
         });
     });
 
-    suite("not", function() {
+    suite("| Not", function() {
 
         /**
          * Test case for not.
@@ -28,7 +28,7 @@ suite("Not Library", function() {
          * @input not(true)
          * @expected false
          */
-        test("not function with 1 variable", function() {
+        test("| Not function with 1 variable", function() {
             eval(fileLoader.getContent());
             var x = true;
             output = not(x);
@@ -41,7 +41,7 @@ suite("Not Library", function() {
          * @input not(3 == 4)
          * @expected true
          */
-        test("not function with 1 variable", function() {
+        test("| Not function with 1 variable", function() {
             eval(fileLoader.getContent());
             var x = (3 == 4);
             output = not(x);
@@ -54,7 +54,7 @@ suite("Not Library", function() {
          * @input not([true, false])
          * @expected [false, true]
          */
-        test("not function with an array", function() {
+        test("| Not function with an array", function() {
             eval(fileLoader.getContent());
             var x = [true, false];
             output = not(x);
@@ -67,7 +67,7 @@ suite("Not Library", function() {
          * @input not((1 == 2), (3 == 3))
          * @expected [true, false]
          */
-        test("not function with an", function() {
+        test("| Not function with an", function() {
             eval(fileLoader.getContent());
             var x = [(1 == 2), (3 == 3)];
             output = not(x);
@@ -80,7 +80,7 @@ suite("Not Library", function() {
          * @input not([true, [true, false], false])
          * @expected [false, [false, true], true]
          */
-        test("not function with a nested array", function() {
+        test("| Not function with a nested array", function() {
             eval(fileLoader.getContent());
             var x = [true, [true, false], false];
             output = not(x);
@@ -93,7 +93,7 @@ suite("Not Library", function() {
          * @input not((1 == 2), [(2 == 3), (3 == 3)], (4 == 4))
          * @expected [true, [true, false], false]
          */
-        test("not function with a nested array", function() {
+        test("| Not function with a nested array", function() {
             eval(fileLoader.getContent());
             var x = [(1 == 2), [(2 == 3), (3 == 3)], (4 == 4)];
             output = not(x);
@@ -102,7 +102,7 @@ suite("Not Library", function() {
 
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of not.
@@ -111,7 +111,8 @@ suite("Not Library", function() {
          *        y = not(x)
          * @expected y = false
          */
-        test("should expand for 'x = 5, y = not(x)'", function() {
+        test("| Should expand for 'x = 5, y = not(x)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = not(x)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), false);
@@ -126,7 +127,8 @@ suite("Not Library", function() {
          * @expected y = false
          *           z = true
          */
-        test("should expand for 'x = 5, y = not(x), z = not(y)'", function() {
+        test("| Should expand for 'x = 5, y = not(x), z = not(y)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = not(x) \nz = not(y)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), false);
@@ -137,12 +139,11 @@ suite("Not Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 25\n" +
             "c = not(a)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().isNormal());
             assert.equal(false, output.__c__().value);
@@ -150,13 +151,12 @@ suite("Not Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = false ; d\n" +
             "c = not(a)\n" +
             "z = not(c)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().value);
             assert.equal(output.__c__().error, "unitError");

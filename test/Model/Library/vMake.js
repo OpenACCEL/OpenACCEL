@@ -80,6 +80,7 @@ suite("vMake Library", function() {
          * @expected x = ["stuff", "stuff"]
          */
         test("| Should expand for 'x = vMake('stuff', 2)'", function() {
+            compiler.setUnits(false);
             var input = "x = vMake('stuff', 2)";
             expected = [];
             expected[0] = "stuff";
@@ -91,7 +92,7 @@ suite("vMake Library", function() {
 
     suite("| Units", function() {
         test("| Dimensions", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = 5; kg\n" +
             "b = [3,4];[kg,s]\n" +
@@ -99,7 +100,6 @@ suite("vMake Library", function() {
             "y = vMake(a, a)\n" +
             "z = vMake(b, 3)";
             var output = compiler.compile(new Script(input));
-            output.setUnits(true);
 
             //assert.ok(output.__y__().error);
             assert.ifError(output.__x__().error);

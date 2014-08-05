@@ -105,6 +105,7 @@ suite("vLen Library", function() {
          * @expected x = 3
          */
         test("| Should expand for 'x = vLen(y), y = [1,0,0]'", function() {
+            compiler.setUnits(false);
             var input = "x = vLen(y)\ny = [1,0,0]";
             var output = compiler.compile(new Script(input));
             assert.deepEqual(output.__x__(), 3);
@@ -113,12 +114,11 @@ suite("vLen Library", function() {
 
     suite("| Units", function() {
         test("| Answer should always be unitless", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "x = [1, 2, [3, 4]] ; [kg, s, [1, m]]\n" +
             "y = vLen(x)";
             var output = compiler.compile(new Script(input));
-            output.setUnits(true);
 
             assert.ifError(output.__y__().error);
             assert.equal(true, output.__y__().isNormal());

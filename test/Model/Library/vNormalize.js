@@ -79,7 +79,7 @@ suite("vNormalize Library", function() {
 
     suite("| Units", function() {
         test("| Equal dimensions", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = [10, 10, 10]; [kg, kg, 1]\n" +
             "b = [10, 10, 10]; [kg, 1, kg]\n" +
@@ -99,7 +99,6 @@ suite("vNormalize Library", function() {
             "q = vNormalize(h)\n" + 
             "r = vNormalize(i)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             for (var i = 0; i < 3; i++) {
                 assert.ok(output.__k__()[i].error);

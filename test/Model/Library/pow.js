@@ -13,7 +13,7 @@ suite("Pow Library", function() {
             done();
         });
     });
-    suite("pow", function() {
+    suite("| Pow", function() {
 
         /**
          * Test case for pow.
@@ -21,7 +21,8 @@ suite("Pow Library", function() {
          * @input pow(5,2)
          * @expected Math.pow(5, 2)
          */
-        test("x = pow(5, 2)", function() {
+        test("| x = pow(5, 2)", function() {
+            compiler.setUnits(false);
             var input = "x = pow(5, 2)";
             var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, Math.pow(5, 2));
@@ -33,7 +34,8 @@ suite("Pow Library", function() {
          * @input pow(-2, 3)
          * @expected 8
          */
-        test("x = pow(-2, 3)", function() {
+        test("| x = pow(-2, 3)", function() {
+            compiler.setUnits(false);
             var input = "x = pow(-2, 3)";
             var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, 8);
@@ -45,7 +47,8 @@ suite("Pow Library", function() {
          * @input pow(-2, 0.5)
          * @expected Math.pow(2, 0.5)
          */
-        test("x = pow(-2, 0.5)", function() {
+        test("| x = pow(-2, 0.5)", function() {
+            compiler.setUnits(false);
             var input = "x = pow(-2, 0.5)";
             var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, Math.pow(2, 0.5));
@@ -59,7 +62,8 @@ suite("Pow Library", function() {
          *        z = pow(y, pow(x, 2))
          * @expected Math.pow(Math.pow(5, 3), Math.pow(5, 2))
          */
-        test("x = 5; y = y = pow(x, 3);z = z = pow(y, pow(x, 2))", function() {
+        test("| x = 5; y = y = pow(x, 3);z = z = pow(y, pow(x, 2))", function() {
+            compiler.setUnits(false);
             var input =
                 "x = 5\n" +
                 "y = pow(x, 3)\n" +

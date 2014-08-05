@@ -20,7 +20,7 @@ suite("Imply Library", function() {
         });
     });
 
-    suite("imply", function() {
+    suite("| Imply", function() {
 
         /**
          * Test case for imply.
@@ -28,7 +28,7 @@ suite("Imply Library", function() {
          * @input   imply(true, true)
          * @expected true
          */
-        test("imply function with 2 variables", function() {
+        test("| Imply function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = true;
             var y = true;
@@ -42,7 +42,7 @@ suite("Imply Library", function() {
          * @input   imply(true, false)
          * @expected false
          */
-        test("imply function with 2 variables", function() {
+        test("| Imply function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = true;
             var y = false;
@@ -56,7 +56,7 @@ suite("Imply Library", function() {
          * @input   imply([true,false], 1)
          * @expected [1,true]
          */
-        test("imply function with a constant and an array", function() {
+        test("| Imply function with a constant and an array", function() {
             eval(fileLoader.getContent());
             var x = [true, false];
             var y = 1;
@@ -70,7 +70,7 @@ suite("Imply Library", function() {
          * @input   imply([true, true, false, false], [true, false, true, false])
          * @expected [true, false, true, true]
          */
-        test("imply function with array's", function() {
+        test("| Imply function with array's", function() {
             eval(fileLoader.getContent());
             var x = [true, true, false, false];
             var y = [true, false, true, false];
@@ -84,7 +84,7 @@ suite("Imply Library", function() {
          * @input   imply([true, false], [true, [true, false]])
          * @expected [true, [true, true]]
          */
-        test("imply function with an array and a nested array", function() {
+        test("| Imply function with an array and a nested array", function() {
             eval(fileLoader.getContent());
             var x = [true, false];
             var y = [true, [true, false]];
@@ -98,7 +98,7 @@ suite("Imply Library", function() {
          * @input   imply([[true, false], false], [true, [true, false]])
          * @expected [[true,true], [true, true]]
          */
-        test("imply function with nested array's", function() {
+        test("| Imply function with nested array's", function() {
             eval(fileLoader.getContent());
             var x = [
                 [true, false], false
@@ -113,7 +113,7 @@ suite("Imply Library", function() {
 
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of imply.
@@ -122,7 +122,8 @@ suite("Imply Library", function() {
          *          y = imply(x,4)
          * @expected y = 4
          */
-        test("should expand for 'x = 5, y = imply(x, 4)'", function() {
+        test("| Should expand for 'x = 5, y = imply(x, 4)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = imply(x, 4)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), 4);
@@ -137,7 +138,8 @@ suite("Imply Library", function() {
          * @expected y = 5
          *           z = 5
          */
-        test("should expand for 'x = 5, y = imply(x, 5), z = imply(x, imply(4, y))'", function() {
+        test("| Should expand for 'x = 5, y = imply(x, 5), z = imply(x, imply(4, y))'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = imply(x, 5) \nz = imply(x, imply(4, y))";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), 5);
@@ -148,13 +150,12 @@ suite("Imply Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = true\n" +
             "b = 25\n" +
             "c = imply(a,b)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().isNormal());
             assert.equal(25, output.__c__().value);
@@ -162,14 +163,13 @@ suite("Imply Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = true ; d\n" +
             "b = false ; kg\n" +
             "c = imply(a,b)\n" +
             "z = imply(c, false)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(false, output.__c__().value);
             assert.equal(output.__c__().error, "unitError");

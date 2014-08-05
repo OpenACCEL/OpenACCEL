@@ -54,7 +54,7 @@ suite("vNormSq Library", function() {
 
     suite("| Units", function() {
         test("| Equal dimensions", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = [-3, 4, 5]; [kg, kg, 1]\n" +
             "b = [-3, 4, 5]; [kg, 1, kg]\n" +
@@ -74,7 +74,6 @@ suite("vNormSq Library", function() {
             "q = vNormSq(h)\n" + 
             "r = vNormSq(i)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.ok(output.__k__().error);
             assert.ok(output.__l__().error);

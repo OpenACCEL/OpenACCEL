@@ -61,6 +61,7 @@ suite("vSequence Library", function() {
          * @expected  x = [3,4,5,6]
          */
         test("| Should expand for 'x = vSequence(3, 7)'", function() {
+            compiler.setUnits(false);
             var input = "x = vSequence(3, 7)";
             expected = [3, 4, 5, 6];
             var output = compiler.compile(new Script(input));
@@ -70,7 +71,7 @@ suite("vSequence Library", function() {
 
     suite("| Units", function() {
         test("| Argument should be unitless", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = 1\n" +
             "b = 5\n" +
@@ -81,7 +82,6 @@ suite("vSequence Library", function() {
             "y = vSeq(c, b)\n" +
             "z = vSeq(c, d)\n";
             var output = compiler.compile(new Script(input));
-            output.setUnits(true);
 
             for (var i = 0; i < 4; i++) {
                 assert.ifError(output.__w__()[i].error);

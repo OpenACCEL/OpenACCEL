@@ -13,7 +13,7 @@ suite("Log Library", function() {
             done();
         });
     });
-    suite("log", function() {
+    suite("| Log", function() {
 
         /**
          * Test case for log.
@@ -21,7 +21,8 @@ suite("Log Library", function() {
          * @input x = log(5)
          * @expected Math.log(5) / Math.log(10)
          */
-        test("x = log(5)", function() {
+        test("| x = log(5)", function() {
+            compiler.setUnits(false);
             var input = "x = log(5)";
             var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, Math.log(5) / Math.log(10));
@@ -35,7 +36,8 @@ suite("Log Library", function() {
          *        z = log(log(x) + log(y))
          * @expected z = Math.log(Math.log(5) / Math.log(10) + Math.log(Math.log(5) / Math.log(10) + 2) / Math.log(10))
          */
-        test("x = 5, y = log(x) + 2, z = log(log(x) + log(y))", function() {
+        test("| x = 5, y = log(x) + 2, z = log(log(x) + log(y))", function() {
+            compiler.setUnits(false);
             var input =
                 "x = 5\n" +
                 "y = log(x) + 2\n" +

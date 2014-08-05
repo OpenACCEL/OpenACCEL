@@ -13,7 +13,7 @@ suite("UnaryZip", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("| Standard", function() {
 
         // simple test function
         function square(x) {
@@ -26,7 +26,7 @@ suite("UnaryZip", function() {
          * @input unaryZip(5, square)
          * @expected 25
          */
-        test("unaryZip(): scalar", function() {
+        test("| Scalar", function() {
             eval(fileLoader.getContent());
             var input = 5;
             var expected = 25;
@@ -40,7 +40,7 @@ suite("UnaryZip", function() {
          * @input unaryZip([2, 3, 4], square)
          * @expected [4, 9, 16]
          */
-        test("unaryZip(): unnamed vector", function() {
+        test("| Unnamed vector", function() {
             eval(fileLoader.getContent());
             var input = [2, 3, 4];
             var expected = [4, 9, 16];
@@ -54,7 +54,7 @@ suite("UnaryZip", function() {
          * @input unaryZip([x:2, y:3, z:4], square)
          * @expected [x:4, y:9, z:16]
          */
-        test("unaryZip(): named vector", function() {
+        test("| Named vector", function() {
             eval(fileLoader.getContent());
             var input = [];
             input.x = 2;
@@ -74,7 +74,7 @@ suite("UnaryZip", function() {
          * @input unaryZip([2, 3, z:4], square)
          * @expected [4, 9, z:16]
          */
-        test("unaryZip(): named + unnamed vector", function() {
+        test("| Named + unnamed vector", function() {
             eval(fileLoader.getContent());
             var input = [2, 3];
             input.z = 4;
@@ -90,7 +90,7 @@ suite("UnaryZip", function() {
          * @input unaryZip([1, [2, [3, 4], 5], 6, [7, 8]], square)
          * @expected [1, [4, [9, 16], 25], 36, [49, 64]]
          */
-        test("unaryZip(): Nested vector", function() {
+        test("| Nested vector", function() {
             eval(fileLoader.getContent());
             var input = [1, [2, [3, 4], 5], 6, [7, 8]];
             var expected = [1, [4, [9, 16], 25], 36, [49, 64]];
@@ -104,7 +104,7 @@ suite("UnaryZip", function() {
          * @input unaryZip([2,[x:3, y:4], square)
          * @expected [4, [x:9, y: 16]]
          */
-        test("unaryZip(): Nested vector", function() {
+        test("| Nested vector", function() {
             eval(fileLoader.getContent());
             var input = [2];
             input[1] = [];

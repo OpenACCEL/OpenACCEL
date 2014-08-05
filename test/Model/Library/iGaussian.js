@@ -36,11 +36,10 @@ suite("iGaussian Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = iGaussian(2,2,1,4)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, UnitObject.prototype.isNormal(output.__a__()));
             assert.deepEqual([[0.25,0.25],[0.25,0.25]], output.__a__().value);
@@ -48,7 +47,7 @@ suite("iGaussian Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 2 ; kg\n" +
             "b = iGaussian(a,2,1,4)\n" +
@@ -57,7 +56,6 @@ suite("iGaussian Library", function() {
             "y = 2 ; kg\n" +
             "z = and(x,y)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.deepEqual([[0.25,0.25],[0.25,0.25]], output.__b__().value);
             assert.equal(output.__b__().error, "unitError");

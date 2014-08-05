@@ -22,6 +22,7 @@ suite("Boolean Library", function() {
      * @expected    x = 10
      */
     test("| Should expand for 'x = if(true,10,30)'", function() {
+        compiler.setUnits(false);
         var input = "x = if(true,10,30)";
         var output = compiler.compile(new script(input));
         assert.equal(output.__x__(), 10);
@@ -37,6 +38,7 @@ suite("Boolean Library", function() {
      * @expected    z = 2
      */
     test("| Should expand for 'x = 5, y = if(true,x,4) + 2, z = if(false,if(false,x,2),y)'", function() {
+        compiler.setUnits(false);
         var input = "x = 5\ny = if(true,x,4) + 2\nz = if(true,if(false,x,2),y)";
         var output = compiler.compile(new script(input));
         assert.equal(output.__y__(), 7);
@@ -50,6 +52,7 @@ suite("Boolean Library", function() {
      * @expected    x = [1, 4]
      */
     test("| Should expand for 'x = if([true,false], [1,2], [3,4])'", function() {
+        compiler.setUnits(false);
         var input = "x = if([true,false], [1,2], [3,4])";
         var output = compiler.compile(new script(input));
         assert.deepEqual(output.__x__(), [1, 4]);

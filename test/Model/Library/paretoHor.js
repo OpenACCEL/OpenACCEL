@@ -15,7 +15,7 @@ suite("paretoHor Library", function() {
         });
     });
 
-    suite("paretoHor", function() {
+    suite("| paretoHor", function() {
 
         /**
          * Test case for paretoHor.
@@ -23,7 +23,7 @@ suite("paretoHor Library", function() {
          * input:paretoHor(42)
          * expected: 42
          */
-        test("paretoHor(42) = 42", function() {
+        test("| paretoHor(42) = 42", function() {
             eval(fileLoader.getContent());
 
             var expected = 42;

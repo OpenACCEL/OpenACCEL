@@ -13,7 +13,7 @@ suite("Modulo Library", function() {
             done();
         });
     });
-    suite("modulo", function() {
+    suite("| Modulo", function() {
 
         /**
          * Test case for modulo.
@@ -21,7 +21,8 @@ suite("Modulo Library", function() {
          * @input x = modulo(5,4)
          * @expected x = 5 % 4
          */
-        test("x = modulo(5, 4)", function() {
+        test("| x = modulo(5, 4)", function() {
+            compiler.setUnits(false);
             var input = "x = modulo(5, 4)";
             var output = compiler.compile(new script(input)).__x__();
             assert.equal(output, 5 % 4);
@@ -35,7 +36,8 @@ suite("Modulo Library", function() {
          *        z = modulo(modulo(x,2),y)
          * @expected z = (5 % 2) % (5 % 4 + 2)
          */
-        test("x = 5, y = modulo(x,4) + 2, z = modulo(modulo(x,2),y)", function() {
+        test("| x = 5, y = modulo(x,4) + 2, z = modulo(modulo(x,2),y)", function() {
+            compiler.setUnits(false);
             var input = "x = 5\n y = modulo(x,4) + 2\n z = modulo(modulo(x,2),y)";
             var output = compiler.compile(new script(input)).__z__();
             assert.equal(output, (5 % 2) % (5 % 4 + 2));

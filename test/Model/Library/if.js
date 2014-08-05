@@ -20,7 +20,7 @@ suite("If Library", function() {
         });
     });
 
-    suite("__if__", function() {
+    suite("| __if__", function() {
 
         /**
          * Test case for if.
@@ -28,7 +28,7 @@ suite("If Library", function() {
          * @input if(true, 1, 3)
          * @expected 1
          */
-        test("if function with true condition", function() {
+        test("| If function with true condition", function() {
             eval(fileLoader.getContent());
             var condition = true;
             var ifTrue = 1;
@@ -43,7 +43,7 @@ suite("If Library", function() {
          * @input if(false, 1, 3)
          * @expected 3
          */
-        test("if function with false condition", function() {
+        test("| If function with false condition", function() {
             eval(fileLoader.getContent());
             var condition = false;
             var ifTrue = 1;
@@ -58,7 +58,7 @@ suite("If Library", function() {
          * @input if(true, [1,2,3], []])
          * @expected [1,2,3]
          */
-        test("if function with true conditions, and arrays as options", function() {
+        test("| If function with true conditions, and arrays as options", function() {
             eval(fileLoader.getContent());
             var condition = true;
             var ifTrue = [1, 2, 3];
@@ -73,7 +73,7 @@ suite("If Library", function() {
          * @input if([false,true,true], 1, 3)
          * @expected [3,1,1]
          */
-        test("if function with array condition, using multiaryZip", function() {
+        test("| If function with array condition, using multiaryZip", function() {
             eval(fileLoader.getContent());
             var condition = [false, true, true];
             var ifTrue = 1;
@@ -88,7 +88,7 @@ suite("If Library", function() {
          * @input if([true,true,false], 3, [4,5,6])
          * @expected [3,3,6]
          */
-        test("if function with array condition and scalar or array choice, using multiaryZip", function() {
+        test("| If function with array condition and scalar or array choice, using multiaryZip", function() {
             eval(fileLoader.getContent());
             var condition = [true, true, false];
             var ifTrue = 3;
@@ -103,7 +103,7 @@ suite("If Library", function() {
          * @input if([false,true,false], [3, [4,5]], [4,5,6])
          * @expected [4,[4,5]]
          */
-        test("if function with array condition and scalar or array choice, using multiaryZip", function() {
+        test("| If function with array condition and scalar or array choice, using multiaryZip", function() {
             eval(fileLoader.getContent());
             var condition = [false, true, false];
             var ifTrue = [3, [4, 5]];
@@ -113,7 +113,7 @@ suite("If Library", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of if.
@@ -121,7 +121,8 @@ suite("If Library", function() {
          * @input if(1==1, 10, 30)
          * @expected 10
          */
-        test("should expand for 'x = if(1 == 1,10,30)'", function() {
+        test("| Should expand for 'x = if(1 == 1,10,30)'", function() {
+            compiler.setUnits(false);
             var input = "x = if(1 == 1,10,30)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__x__(), 10);
@@ -136,7 +137,8 @@ suite("If Library", function() {
          * @expected y = 7
          *           z = 2
          */
-        test("should expand for 'x = 5, y = if(1 == 1,x,4) + 2, z = if(1 == 0,if(1 == 0,x,2),y)'", function() {
+        test("| Should expand for 'x = 5, y = if(1 == 1,x,4) + 2, z = if(1 == 0,if(1 == 0,x,2),y)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = if(1 == 1,x,4) + 2\nz = if(1 == 1,if(1 == 0,x,2),y)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), 7);
@@ -149,7 +151,8 @@ suite("If Library", function() {
          * @input x = if ([1==1, 1==0], [1,2], [3,4])
          * @expected x = [1,4]
          */
-        test("should expand for 'x = if([1,2], [3,4])'", function() {
+        test("| Should expand for 'x = if([1,2], [3,4])'", function() {
+            compiler.setUnits(false);
             var input = "x = if([1 == 1,1 == 0], [1,2], [3,4])";
             var output = compiler.compile(new script(input));
             assert.deepEqual(output.__x__(), [1, 4]);
@@ -158,7 +161,7 @@ suite("If Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = true\n" +
             "b = 25 ; kg\n" +
@@ -169,7 +172,6 @@ suite("If Library", function() {
             "y = 43\n" +
             "z = if(w,x,y)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__d__().equals(new UnitObject(25, {'kg': 1})));
             assert.equal(25, output.__d__().value);
@@ -181,7 +183,7 @@ suite("If Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = true ; d\n" +
             "b = 40 ; kg\n" +
@@ -190,7 +192,6 @@ suite("If Library", function() {
             "x = false ; m\n" +
             "z = if(d, 34, x)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(40, output.__d__().value);
             assert.equal(output.__d__().error, "unitError");

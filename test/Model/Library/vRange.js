@@ -79,12 +79,11 @@ suite("vRange Library", function() {
 
     suite("| Units", function() {
         test("| All returned values should have units", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "x = [5, ['x': 6], 7, y: 10] ; [kg, [x: s], m, y: lum]\n" +
             "y = vRange(x)";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             var y = output.__y__();
             assert.ifError(y.error);

@@ -35,11 +35,10 @@ suite("iMedian Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = iMedian([[1,2,3,4],[1,2,3,4]],5,0)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, UnitObject.prototype.isNormal(output.__a__()));
             assert.deepEqual([[2,2,3,3],[2,2,3,3]], output.__a__().value);
@@ -47,14 +46,13 @@ suite("iMedian Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 5 ; kg\n" +
             "b = iMedian([[1,2,3,4],[1,2,3,4]],a,0)\n" +
             "c = iMedian([[1,2,3,4],[1,2,3,4]],x,0)\n" +
             "x = 5 ; [d,m2]\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.deepEqual([[2,2,3,3],[2,2,3,3]], output.__b__().value);
             assert.equal(output.__b__().error, "unitError");

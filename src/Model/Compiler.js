@@ -86,11 +86,11 @@ define(["Model/FileLoader",
             this.libraries.std = [];
 
             /**
-             * Whether the standard libary is currently loaded.
+             * Whether the compiler should compile with unit support or not.
              *
              * @type {Boolean}
              */
-            this.isStandardLibLoaded = true;
+            this.units = false;
 
             /**
              * The file loader is reponsible for loading all files, like macros and library functions.
@@ -143,6 +143,7 @@ define(["Model/FileLoader",
 
             // Store library references in the executable.
             exe.lib = this.libraries;
+            exe.setUnits(this.units);
 
             return exe;
         };
@@ -230,34 +231,19 @@ define(["Model/FileLoader",
         };
 
         /**
-         * Loads the unit library into memory, overwriting the standard
-         * library
+         * Sets whether the compielr should compile with units enabled or not.
+         * This translates any number and string into a UnitObject.
          *
-         * @post The unit library has been loaded into memory
+         * @param {Boolean} bUnits Whether numbers and stirngs should be compiled as UnitObjects.
          */
-        Compiler.prototype.loadUnitsLib = function() {
-            eval.call(globalScope, this.fileLoader.getLibrary("unitlibrary"));
-            this.isStandardLibLoaded = false;
-        };
+        Compiler.prototype.setUnits = function(bUnits) {
+            this.parser.yy.units = bUnits;
 
-        /**
-         * Loads the standard library into memory, overwriting the unit
-         * library
-         *
-         * @post The standard library has been loaded into memory
-         */
-        Compiler.prototype.loadStandardLib = function() {
-            eval.call(globalScope, this.fileLoader.getLibrary());
-            this.isStandardLibLoaded = true;
-        };
-
-        /**
-         * Returns whether the unit library is currently in memory
-         *
-         * @return {Boolean} Whether the unit library is loaded in memory
-         */
-        Compiler.prototype.unitsLibLoaded = function() {
-            return !this.isStandardLibLoaded;
+            if (bUnits) {
+                eval.call(globalScope, this.fileLoader.getLibrary("unitlibrary"));
+            } else {
+                eval.call(globalScope, this.fileLoader.getLibrary());
+            }
         };
 
         /**

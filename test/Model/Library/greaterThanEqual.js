@@ -126,6 +126,7 @@ suite("GreaterThanEqual Library", function() {
          * @expected    y = true
          */
         test("| Should expand for 'x = 5, y = greaterThanEqual(x, 4)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = greaterThanEqual(x, 4)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), true);
@@ -141,6 +142,7 @@ suite("GreaterThanEqual Library", function() {
          *              z = true
          */
         test("| Should expand for 'x = 5, y = greaterThanEqual(x, 5), z = greaterThanEqual(x, greaterThanEqual(4, y))'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = greaterThanEqual(x, 5) \nz = greaterThanEqual(x, greaterThanEqual(4, y))";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), true);
@@ -151,7 +153,7 @@ suite("GreaterThanEqual Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 19 ; kg\n" +
             "b = 25 ; kg\n" +
@@ -160,7 +162,6 @@ suite("GreaterThanEqual Library", function() {
             "y = 36\n" +
             "z = greaterThanEqual(x, y)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().equals(new UnitObject(true, {'kg': 1})));
             assert.equal(false, output.__c__().value);
@@ -172,7 +173,7 @@ suite("GreaterThanEqual Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = 40 ; kg\n" +
             "b = 25 ; m2/p\n" +
@@ -180,7 +181,6 @@ suite("GreaterThanEqual Library", function() {
             "x = 36\n" +
             "z = greaterThanEqual(c, x)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().value);
             assert.equal(output.__c__().error, "unitError");

@@ -135,7 +135,7 @@ suite("Bin Library", function() {
 
     suite("| Units", function() {
         test("| Dimension", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = 25; kg\n" +
             "b = 24\n" +
@@ -144,7 +144,6 @@ suite("Bin Library", function() {
             "y = bin(a, b)\n" +
             "z = bin(b + 1, c)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.ok(output.__x__().error);
             assert.ok(output.__y__().error);
@@ -155,13 +154,12 @@ suite("Bin Library", function() {
         });
 
         test("| Dimensionless", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "x = 25\n" +
             "y = 24\n" +
             "z = bin(x, y)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__z__().isNormal());
             assert.equal(25, output.__z__().value);

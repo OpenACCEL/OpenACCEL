@@ -85,14 +85,13 @@ suite("vSegment Library", function() {
 
     suite("| Units", function() {
         test("| Segment dimensions", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = [0, 1, 2, 3, 4]; [kg, s, 1, lum, 1]\n" +
             "x = vSegment(a, 1, 2)\n" + 
             "y = vSegment(a, 0, 5)\n" + 
             "z = vSegment(a, 0, 7)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             // X
             assert.ifError(output.__x__()[0].error);

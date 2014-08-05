@@ -73,7 +73,7 @@ suite("vNormAbs Library", function() {
 
     suite("| Units", function() {
         test("| Equal dimensions", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = [-1, 2, 3]; [kg, kg, 1]\n" +
             "b = [-1, 2, 3]; [kg, 1, kg]\n" +
@@ -93,7 +93,6 @@ suite("vNormAbs Library", function() {
             "q = vNormAbs(h)\n" + 
             "r = vNormAbs(i)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.ok(output.__k__().error);
             assert.ok(output.__l__().error);

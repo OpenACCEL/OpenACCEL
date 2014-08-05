@@ -35,13 +35,12 @@ suite("vAggregate Library", function() {
 
     suite("| Units", function() {
         test("| Aggregation of units", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input = 
             "a = [1,2,3,4]; [1,kg,1,s]\n" +
             "b = [10,[20,21,22]]; [1, [lum, 1, kg]]\n" +
             "c = vAggregate(a, b, 1)";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             var c = output.__c__();
             assert.equal(true, c[0].isNormal());

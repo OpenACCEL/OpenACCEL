@@ -40,13 +40,12 @@ suite("iMake Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = iMake(7,2,3)\n" +
             "b = 25 ; kg\n" +
             "c = iMake(b,2,2)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, UnitObject.prototype.isNormal(output.__a__()));
             assert.deepEqual(UnitObject.prototype.create([[7,7,7],[7,7,7]]), output.__a__());
@@ -57,14 +56,13 @@ suite("iMake Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = false ; d\n" +
             "b = 40 ; kg\n" +
             "c = and(a,b)\n" +
             "z = and(c, true)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(false, output.__c__().value);
             assert.equal(output.__c__().error, "unitError");

@@ -15,7 +15,7 @@ suite("Zip", function() {
         });
     });
 
-    suite("zip and nzip", function() {
+    suite("| Zip and nZip", function() {
 
         /**
          * Test case for binary zip, add two vectors.
@@ -23,7 +23,7 @@ suite("Zip", function() {
          * @input binaryZip([1,2,3], [4,5,6], add)
          * @expected [5,7,9]
          */
-        test("binaryZip(): add two vectors", function() {
+        test("| BinaryZip: add two vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
             output = binaryZip(input1, input2, add);
@@ -36,7 +36,7 @@ suite("Zip", function() {
          * @input multiaryZip([[1,2,3], [4,5,6]], add)
          * @expected [5,7,9]
          */
-        test("multiaryZip(): add two vectors", function() {
+        test("| MultiaryZip: add two vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
             output = multiaryZip([input1, input2], add);
@@ -49,7 +49,7 @@ suite("Zip", function() {
          * @input zip([[1,2,3], [4,5,6]], add)
          * @expected [5,7,9]
          */
-        test("zip(): add two vectors", function() {
+        test("| Zip: add two vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoVectors();
             output = zip([input1, input2], add);
@@ -64,7 +64,7 @@ suite("Zip", function() {
          * @input binaryZip([1, 1, [1, 1, [1, 1]]], 1, add)
          * @expected [2, 2, [2, 2, [2, 2]]]
          */
-        test("binaryZip(): add scalar to vector", function() {
+        test("| BinaryZip: add scalar to vector", function() {
             eval(fileLoader.getContent());
             setUpAddScalarToVector();
             output = binaryZip(input1, input2, add);
@@ -77,7 +77,7 @@ suite("Zip", function() {
          * @input multiaryZip([[1, 1, [1, 1, [1, 1]]], 1], add)
          * @expected [2, 2, [2, 2, [2, 2]]]
          */
-        test("multiaryZip(): add scalar to vector", function() {
+        test("| MultiaryZip: add scalar to vector", function() {
             eval(fileLoader.getContent());
             setUpAddScalarToVector();
             output = multiaryZip([input1, input2], add);
@@ -90,7 +90,7 @@ suite("Zip", function() {
          * @input zip([[1, 1, [1, 1, [1, 1]]], 1], add)
          * @expected [2, 2, [2, 2, [2, 2]]]
          */
-        test("zip(): add scalar to vector", function() {
+        test("| Zip: add scalar to vector", function() {
             eval(fileLoader.getContent());
             setUpAddScalarToVector();
             output = zip([input1, input2], add);
@@ -105,7 +105,7 @@ suite("Zip", function() {
          * @input binaryzip([1, 1, [1, 1, [1, 1, 1]]], [1, 1, 1, 1], add)
          * @expected [2, 2, [2, 2, [2, 2, 2]]]
          */
-        test("binaryZip(): add vector to nested vector", function() {
+        test("| BinaryZip: add vector to nested vector", function() {
             eval(fileLoader.getContent());
             setUpAddVectorToNestedVector();
             output = binaryZip(input1, input2, add);
@@ -118,7 +118,7 @@ suite("Zip", function() {
          * @input multiaryzip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, 1, 1]], add)
          * @expected [2, 2, [2, 2, [2, 2, 2]]]
          */
-        test("multiaryZip(): add vector to nested vector", function() {
+        test("| MultiaryZip: add vector to nested vector", function() {
             eval(fileLoader.getContent());
             setUpAddVectorToNestedVector();
             output = multiaryZip([input1, input2], add);
@@ -131,7 +131,7 @@ suite("Zip", function() {
          * @input zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, 1, 1]], add)
          * @expected [2, 2, [2, 2, [2, 2, 2]]]
          */
-        test("zip(): add vector to nested vector", function() {
+        test("| Zip: add vector to nested vector", function() {
             eval(fileLoader.getContent());
             setUpAddVectorToNestedVector();
             output = zip([input1, input2], add);
@@ -145,7 +145,7 @@ suite("Zip", function() {
          * @input zip([1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1] , add)
          * @expected [2, 2, [2, 2, [2, 2]]]
          */
-        test("binaryZip(): add two nested vectors", function() {
+        test("| BinaryZip: add two nested vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoNestedVectors();
             output = binaryZip(input1, input2, add);
@@ -158,7 +158,7 @@ suite("Zip", function() {
          * @input multiaryZip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1]] , add)
          * @expected [2, 2, [2, 2, [2, 2]]]
          */
-        test("multiaryZip(): add two nested vectors", function() {
+        test("| MultiaryZip: add two nested vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoNestedVectors();
             output = multiaryZip([input1, input2], add);
@@ -171,7 +171,7 @@ suite("Zip", function() {
          * @input Zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1]] , add)
          * @expected [2, 2, [2, 2, [2, 2]]]
          */
-        test("zip(): add two nested vectors", function() {
+        test("| Zip: add two nested vectors", function() {
             eval(fileLoader.getContent());
             setUpAddTwoNestedVectors();
             output = zip([input1, input2], add);
@@ -186,7 +186,7 @@ suite("Zip", function() {
          * @input zip([[1,2,3],[4,5,6],[7,8,9]], sum)
          * @expected [12,15,18]
          */
-        test("zip(): sum three vectors", function() {
+        test("| Zip: sum three vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 2, 3];
             input2 = [4, 5, 6];
@@ -204,7 +204,7 @@ suite("Zip", function() {
          * @input zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1], 2], sum)
          * @expected [4, 4, [4, 4, [4, 4]]]
          */
-        test("zip(): sum scalar to two nested vectors", function() {
+        test("| Zip: sum scalar to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];
             input2 = [1, 1, [1, 1, [1, 1]], 1];
@@ -222,7 +222,7 @@ suite("Zip", function() {
          * @input zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1], [2, 2, 2, 2]], sum)
          * @expected [4, 4, [4, 4, [4, 4]]]
          */
-        test("zip(): sum vector to two nested vectors", function() {
+        test("| Zip: sum vector to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];
             input2 = [1, 1, [1, 1, [1, 1]], 1];
@@ -240,7 +240,7 @@ suite("Zip", function() {
          * @input zip([[1, 1, [1, 1, [1, 1, 1]]], [1, 1, [1, 1, [1, 1]], 1], [2, 2, [2, 2]]], sum)
          * @expected [4, 4, [4, 4]]
          */
-        test("zip(): sum vector to two nested vectors", function() {
+        test("| Zip: sum vector to two nested vectors", function() {
             eval(fileLoader.getContent());
             input1 = [1, 1, [1, 1, [1, 1, 1]]];
             input2 = [1, 1, [1, 1, [1, 1]], 1];

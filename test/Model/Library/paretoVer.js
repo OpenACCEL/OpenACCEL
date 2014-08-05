@@ -15,7 +15,7 @@ suite("paretoVer Library", function() {
         });
     });
 
-    suite("paretoVer", function() {
+    suite("| paretoVer", function() {
 
         /**
          * Test case for paretoVer.
@@ -23,7 +23,7 @@ suite("paretoVer Library", function() {
          * input:paretoVer(42)
          * expected: 42
          */
-        test("paretoVer(42) = 42", function() {
+        test("| paretoVer(42) = 42", function() {
             eval(fileLoader.getContent());
 
             var expected = 42;

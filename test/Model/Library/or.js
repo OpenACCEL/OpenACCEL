@@ -20,7 +20,7 @@ suite("Or Library", function() {
         });
     });
 
-    suite("or", function() {
+    suite("| Or", function() {
 
         /**
          * Test case for or.
@@ -28,7 +28,7 @@ suite("Or Library", function() {
          * @input or(true, false)
          * @expected true
          */
-        test("or function with 2 variables", function() {
+        test("| Or function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = true;
             var y = false;
@@ -42,7 +42,7 @@ suite("Or Library", function() {
          * @input or(false, false)
          * @expected false
          */
-        test("or function with 2 variables", function() {
+        test("| Or function with 2 variables", function() {
             eval(fileLoader.getContent());
             var x = false;
             var y = false;
@@ -56,7 +56,7 @@ suite("Or Library", function() {
          * @input or(true, [true, false])
          * @expected [true, true]
          */
-        test("or function with a constant and an array", function() {
+        test("| Or function with a constant and an array", function() {
             eval(fileLoader.getContent());
             var x = true
             var y = [true, false];
@@ -70,7 +70,7 @@ suite("Or Library", function() {
          * @input or([true, true, false, false], [true, false, true, false])
          * @expected [true, true, true, false]
          */
-        test("or function with 2 array's", function() {
+        test("| Or function with 2 array's", function() {
             eval(fileLoader.getContent());
             var x = [true, true, false, false];
             var y = [true, false, true, false];
@@ -84,7 +84,7 @@ suite("Or Library", function() {
          * @input or([true, false], [true, [true, false]])
          * @expected [true, [true, false]]
          */
-        test("or function with an array and a nested array", function() {
+        test("| Or function with an array and a nested array", function() {
             eval(fileLoader.getContent());
             var x = [true, false];
             var y = [true, [true, false]];
@@ -98,7 +98,7 @@ suite("Or Library", function() {
          * @input or([true, [true, false], false], [true, false, [true, false]])
          * @expected [true, [true, false],[true, false]]
          */
-        test("or function with nested array's", function() {
+        test("| Or function with nested array's", function() {
             eval(fileLoader.getContent());
             var x = [true, [true, false], false];
             var y = [true, false, [true, false]];
@@ -110,7 +110,7 @@ suite("Or Library", function() {
 
     });
 
-    suite("expansion", function() {
+    suite("| Expansion", function() {
 
         /**
          * Test case for expansion of or.
@@ -119,7 +119,8 @@ suite("Or Library", function() {
          *        y = or(x, false)
          * @expected y = true
          */
-        test("should expand for 'x = true, y = or(x, false)'", function() {
+        test("| Should expand for 'x = true, y = or(x, false)'", function() {
+            compiler.setUnits(false);
             var input = "x = true\ny = or(x, false)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), true);
@@ -134,7 +135,8 @@ suite("Or Library", function() {
          * @expected y = false
          *           z = true
          */
-        test("should expand for 'x = false, y = or(x, false), z = or(x, or(true, y))'", function() {
+        test("| Should expand for 'x = false, y = or(x, false), z = or(x, or(true, y))'", function() {
+            compiler.setUnits(false);
             var input = "x = false\ny = or(x, false) \nz = or(x, or(true, y))";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), false);
@@ -145,13 +147,12 @@ suite("Or Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = true\n" +
             "b = 25\n" +
             "c = or(a,b)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().isNormal());
             assert.equal(true, output.__c__().value);
@@ -159,14 +160,13 @@ suite("Or Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = false ; d\n" +
             "b = 40 ; kg\n" +
             "c = or(a,b)\n" +
             "z = or(c, true)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(40, output.__c__().value);
             assert.equal(output.__c__().error, "unitError");

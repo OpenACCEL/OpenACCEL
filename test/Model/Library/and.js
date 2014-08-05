@@ -126,6 +126,7 @@ suite("And Library", function() {
          * @expected:   y = true
          */
         test("| Should expand for 'x = 5, y = and(x, true)'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = and(x, true)";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), true);
@@ -141,6 +142,7 @@ suite("And Library", function() {
          *              z = false
          */
         test("| Should expand for 'x = 5, y = and(x, true), z = and(y, and(x, false))'", function() {
+            compiler.setUnits(false);
             var input = "x = 5\ny = and(x, true) \nz = and(y, and(x, false))";
             var output = compiler.compile(new script(input));
             assert.equal(output.__y__(), true);
@@ -150,13 +152,12 @@ suite("And Library", function() {
 
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = true\n" +
             "b = 25\n" +
             "c = and(a,b)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(true, output.__c__().isNormal());
             assert.equal(25, output.__c__().value);
@@ -164,14 +165,13 @@ suite("And Library", function() {
         });
 
         test("| Error handling", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = false ; d\n" +
             "b = 40 ; kg\n" +
             "c = and(a,b)\n" +
             "z = and(c, true)\n";
             var output = compiler.compile(new script(input));
-            output.setUnits(true);
 
             assert.equal(false, output.__c__().value);
             assert.equal(output.__c__().error, "unitError");

@@ -18,7 +18,7 @@ suite("vMatMatMul Library", function() {
         });
     });
 
-    suite("vMatMatMul", function() {
+    suite("| vMatMatMul", function() {
 
         /**
          * Test case for vMatMatMul.
@@ -26,7 +26,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul(2,3)
          * @expected 6
          */
-        test("multiply two scalars", function() {
+        test("| Multiply two scalars", function() {
             eval(fileLoader.getContent());
             x = 2;
             y = 3;
@@ -41,7 +41,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul(3,[1,2,4])
          * @expected [3, ,6 12]
          */
-        test("multiply a scalar by a vector", function() {
+        test("| Multiply a scalar by a vector", function() {
             eval(fileLoader.getContent());
             x = 3;
             y = [1, 2, 4];
@@ -56,7 +56,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul([1, 2, 4],3)
          * @expected [3, 6, 12]
          */
-        test("multiply a vector by a scalar", function() {
+        test("| Multiply a vector by a scalar", function() {
             eval(fileLoader.getContent());
             x = [1, 2, 4];
             y = 3;
@@ -71,7 +71,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul([3, 4], [1, 2])
          * @expected 11
          */
-        test("multiply two vectors", function() {
+        test("| Multiply two vectors", function() {
             eval(fileLoader.getContent());
             x = [3, 4];
             y = [1, 2];
@@ -86,7 +86,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul(2, [[3,4],[4,5],[9,8]])
          * @expected [[6,8],[8,10],[18,16]]
          */
-        test("multiply a scalar by a matrix", function() {
+        test("| Multiply a scalar by a matrix", function() {
             eval(fileLoader.getContent());
             x = 2;
             y = [
@@ -109,7 +109,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul([[3,4],[4,5],[9,8]], 2)
          * @expected [[6,8],[8,10],[18,16]]
          */
-        test("multiply multiply a matrix by a scalar", function() {
+        test("| Multiply multiply a matrix by a scalar", function() {
             eval(fileLoader.getContent());
             x = [
                 [3, 4],
@@ -132,7 +132,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul([2,3], [[4,4],[3,5]])
          * @expected [17,23]
          */
-        test("multiply a vector by a matrix", function() {
+        test("| Multiply a vector by a matrix", function() {
             eval(fileLoader.getContent());
             x = [2, 3];
             y = [
@@ -150,7 +150,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul([[4,4], [3,5], [2,3])
          * @expected [20,21]
          */
-        test("multiply a matrix by a vector", function() {
+        test("| Multiply a matrix by a vector", function() {
             eval(fileLoader.getContent());
             x = [
                 [4, 4],
@@ -168,7 +168,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul([[2,4],[3,5]], [[1,1],[0,-1]])
          * @expected [[2,-2], [3,-2]]
          */
-        test("multiply two matrices", function() {
+        test("| Multiply two matrices", function() {
             eval(fileLoader.getContent());
             x = [
                 [2, 4],
@@ -192,7 +192,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul([[2,3,4]], [[5],[6],[7]])
          * @expected [56]
          */
-        test("multiply two vectors as matrices, row by column (dot product)", function() {
+        test("| Multiply two vectors as matrices, row by column (dot product)", function() {
             eval(fileLoader.getContent());
             x = [
                 [2, 3, 4]
@@ -215,7 +215,7 @@ suite("vMatMatMul Library", function() {
          * @input vMatMatMul([[5],[6],[7]], [[2,3,4]])
          * @expected [[10,15,20],[12,18,24],[14,21,28]]
          */
-        test("multiply two vectors as matrices, column by row", function() {
+        test("| Multiply two vectors as matrices, column by row", function() {
             eval(fileLoader.getContent());
             x = [
                 [5],
@@ -235,7 +235,7 @@ suite("vMatMatMul Library", function() {
         });
     });
 
-    suite("expansion", function() {
+    suite("Expansion", function() {
 
         /**
          * Test expansion of vMatMatMul.
@@ -245,7 +245,8 @@ suite("vMatMatMul Library", function() {
          *        z = [[2, 4],[3, 5]]
          * @expected x = [[2,-2],[3,-2]]
          */
-        test("should expand for 'x = vMatMatMul(z, y), y = [[1, 1],[0, -1]], z = [[2, 4],[3, 5]]'", function() {
+        test("Should expand for 'x = vMatMatMul(z, y), y = [[1, 1],[0, -1]], z = [[2, 4],[3, 5]]'", function() {
+            compiler.setUnits(false);
             var input = "x = vMatMatMul(z, y)\ny = [[1, 1],[0, -1]]\nz = [[2, 4],[3, 5]]";
             expected = [
                 [2, -2],
