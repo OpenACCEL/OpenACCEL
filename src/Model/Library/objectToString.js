@@ -1,17 +1,14 @@
 /**
- * How many elements to print before cutting it off.
- * 
- * @type {Number}
- */
-maxPrintObjectElements = 500;
-
-/**
  * Create printable version of an object.
  *
  * @param  {Object} obj Object to print
  * @return {String}     Printable string
  */
-function objectToString(obj) {
+function objectToString(obj, maxElements) {
+    if (typeof maxElements === 'undefined') {
+        maxElements = 1000;
+    }
+
     var result = '';
     var count = 0;
 
@@ -19,14 +16,14 @@ function objectToString(obj) {
         /**
          * Recursive function constructing the string representation of the given object.
          */
-        (function(obj) {
+        (function(obj, maxElements) {
             if (obj instanceof Object) {
-                if (count < maxPrintObjectElements) {
+                if (count < maxElements) {
                     result += '[';
                 }
 
                 for (var key in obj) {
-                    if (count >= maxPrintObjectElements) {
+                    if (count >= maxElements) {
                         // We need to terminate the recursion
                         // So we throw the result we have so far
                         // appended with ...
@@ -42,7 +39,7 @@ function objectToString(obj) {
                     if (obj[key] instanceof Object) {
                         // With this condition we avoid a recursive call in case
                         // we reach a base case;
-                        arguments.callee(obj[key]);
+                        arguments.callee(obj[key], maxElements);
                     } else {
                         if (typeof obj[key] === 'string') {
                             result += '\'' + obj[key].toString() + '\'';
@@ -68,7 +65,7 @@ function objectToString(obj) {
                 }
 
             }
-        })(obj);
+        })(obj, maxElements);
     } catch (e) {
         // Result was terminated.
     }
