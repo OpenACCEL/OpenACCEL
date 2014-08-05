@@ -181,17 +181,17 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
          */
         if (quantity.unit && (category === 1 || category === 3 ||
             (report.dependencies.length === 0 && report.reverseDeps.length === 0))) {
-            // Check whether the signature of the unit matches that of it's value.
+             /**
+             * Perform an automapping over the answer.
+             * This will turn each scalar element into a UnitObject with the unit
+             * as determined by the user.
+             * 
+             * Also check whether the signature of the unit matches that of it's value.
+             */
             if (Object.keys(quantity.unit).length === 0 || UnitObject.prototype.verifySignature(ans, quantity.unit)) {
-                /**
-                 * Perform an automapping over the answer.
-                 * This will turn each scalar element into a UnitObject with the unit
-                 * as determined by the user.
-                 */
                 ans = UnitObject.prototype.create(ans, quantity.unit);
             } else {
-                ans = new UnitObject(ans, quantity.unit, 'unitError');
-                ans.errorString = "Signature of quantity " + report.name + " is incorrect";
+                ans = UnitObject.prototype.create(ans, quantity.unit, "unitError", "Signature of quantity " + report.name + " is incorrect");
             }
         } else {
             // This value is guaranteed to have some unit. The quantity will take this unit.
@@ -387,6 +387,11 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
     Executable.prototype.getUnit = function(quantity) {
         var localQty = '__' + quantity + '__';
         if (this[localQty]) {
+            // User defined functions can't have a unit without knowing its arguments.
+            if (this.report[localQty].parameters.length > 0) {
+                return "";
+            }
+
             var unit;
             try {
                 unit = this[localQty]();

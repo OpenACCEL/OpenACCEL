@@ -210,18 +210,35 @@ UnitObject.prototype.unitToString = function() {
  * Given an array of values and units, zip them together to create an array of UnitObjects.
  * If a value is already a UnitObject, it's unit will be overwritten.
  *
- * @param  {Object} values The values.
- * @param  {Object} units  The units.
- * @return {UnitObject}    The resulting zipped UnitObjects.
+ * @param  {Object} values     The values.
+ * @param  {Object} units      The units.
+ * @param  {String} error      Whether the UO has an error (the error type).
+ * @param  {String} errorStr   The error message in case of an error.
+ * @return {UnitObject}        The resulting zipped UnitObjects.
  */
-UnitObject.prototype.create = function(values, units) {
-    return zip([values, units], function(value, unit) {
-        if (value instanceof UnitObject) {
-            return new UnitObject(value.value, unit);
-        } else {
-            return new UnitObject(value, unit);
-        }
-    });
+UnitObject.prototype.create = function(values, units, errors, errorStrings) {
+    // Small optimization between binaryZip and normal zip.
+    if (typeof errors === 'undefined') {
+        return binaryZip(values, units, function(value, unit) {
+            if (value instanceof UnitObject) {
+                return new UnitObject(value.value, unit);
+            } else {
+                return new UnitObject(value, unit);
+            }
+        });
+    } else {
+        return multiaryZip([values, units, errors, errorStrings], function(value, unit, error, errorString) {
+            if (!errorString) {
+                errorString = '';
+            }
+
+            if (value instanceof UnitObject) {
+                return new UnitObject(value.value, unit, error, errorString);
+            } else {
+                return new UnitObject(value, unit, error, errorString);
+            }
+        });
+    }
 };
 
 /**
