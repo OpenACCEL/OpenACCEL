@@ -183,7 +183,6 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             (report.dependencies.length === 0 && report.reverseDeps.length === 0))) {
             // Check whether the signature of the unit matches that of it's value.
             if (Object.keys(quantity.unit).length === 0 || UnitObject.prototype.verifySignature(ans, quantity.unit)) {
-                console.log(quantity.unit);
                 /**
                  * Perform an automapping over the answer.
                  * This will turn each scalar element into a UnitObject with the unit
