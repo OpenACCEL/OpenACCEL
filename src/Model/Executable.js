@@ -99,6 +99,13 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         this.lib = {};
 
         /**
+         * Whether the executable has been compiled with unit support or not.
+         * 
+         * @type {Boolean}
+         */
+        this.units = false;
+
+        /**
          * An array of descriptions of errors that occured during unit checking.
          * Errors that occur during checking are stored in this array but the checking
          * will continue instead of aborting.
@@ -136,7 +143,7 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
                     
                     // Don't forget to check for units. If we're evaluating units, we must cast the
                     // answer as a UnitObject.
-                    if (quantity.expr === quantity.unitexpr) {
+                    if (this.units) {
                         history[0] = new UnitObject(report.value, quantity.unit);
                     } else {
                         history[0] = report.value;
@@ -190,17 +197,6 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         } else {
             // This value is guaranteed to have some unit. The quantity will take this unit.
             // (It is an intermediate or output quantity, category 2 or 4).
-            ans = unaryZip(ans, function(x) {
-                // Well, the guarantee is actually only for scalar values, in case of a vector like
-                // [0, 5, a], there can still be values in there that are not UnitObjects.
-                // But don't worry, if something is not a UnitObject, the unit is simply empty.
-                if (!(x instanceof UnitObject)) {
-                    return new UnitObject(x);
-                } else {
-                    return x;
-                }
-            });
-
             quantity.unit = unaryZip(ans, function(x) {
                 return x.unit;
             });
@@ -379,25 +375,6 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         } else {
             throw new Error('Executable.prototype.getValue.pre violated :' +
                 'no Quantity named ' + quantity);
-        }
-    };
-
-    /**
-     * Sets whether the executable should execute the standard or unit expresison for all quantities.
-     * @param {Boolean} bUnits Whether the unit expression should be evaluated for all quantities.
-     */
-    Executable.prototype.setUnits = function(bUnits) {
-        for (var qty in this.report) {
-            if (bUnits) {
-                this[qty].expr = this[qty].unitexpr;
-            } else {
-                this[qty].expr = this[qty].stdexpr;
-            }
-        }
-
-        // Clear unit errors that may have been left over from previous checks
-        if (bUnits) {
-            this.unitErrors = [];
         }
     };
 

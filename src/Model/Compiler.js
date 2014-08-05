@@ -143,7 +143,7 @@ define(["Model/FileLoader",
 
             // Store library references in the executable.
             exe.lib = this.libraries;
-            exe.setUnits(this.units);
+            exe.units = this.units;
 
             return exe;
         };

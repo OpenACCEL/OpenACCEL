@@ -166,15 +166,19 @@ frac        (?:\.[0-9]+)
             "{ return " + expr + "; " + 
         "}).bind(this);";
 
-        /**
-         * Function that evaluates the matched expression in the context of 'this',
-         * and returns both the resulting value and corresponding unit.
-         * This takes into account that all quantities should return objects, and all
-         * library functions also return objects.
-         */
-        output += "this." + name + ".unitexpr = (function() { " + 
-            "return this.unitexpr(this." + name + ", this.report." + name +", this." + name + ".stdexpr()); " +
-        "}).bind(this);";
+        if (yy.units) {
+
+            /**
+             * Function that evaluates the matched expression in the context of 'this',
+             * and returns both the resulting value and corresponding unit.
+             * This takes into account that all quantities should return objects, and all
+             * library functions also return objects.
+             */
+            output += "this." + name + ".unitexpr = (function() { " + 
+                "return this.unitexpr(this." + name + ", this.report." + name +", this." + name + ".stdexpr()); " +
+            "}).bind(this);";
+
+        }
 
         /**
          * Function that evaluates the matched expression in the context of 'this'.
@@ -183,7 +187,7 @@ frac        (?:\.[0-9]+)
          * For example, if you want units, you should refer this to the 'unitexpr', and if you just want
          * to calculate normal expressions without extension, you'd let it refer to 'stdexpr'.
          */
-        output += "this." + name + ".expr = this." + name + ".stdexpr;";
+        output += "this." + name + ".expr = this." + name + ((yy.units) ? ".unitexpr" : ".stdexpr") + ";";
 
         /**
          * The array of historic values of this quantity. The first element always
@@ -250,15 +254,18 @@ frac        (?:\.[0-9]+)
             "return " + expr + "; " + 
         "}).bind(this);";
 
-        /**
-         * Function that evaluates the matched expression in the context of 'this',
-         * and returns both the resulting value and corresponding unit.
-         * This takes into account that all quantities should return objects, and all
-         * library functions also return objects.
-         */
-        output += "this." + name + ".unitexpr = (function(" + dummies + ") { " + 
-            "return this.unitexpr(this." + name + ", this.report." + name + ", this." + name + ".stdexpr(" + dummies + ")); " +
-        "}).bind(this);";
+            if (yy.units) {
+            /**
+             * Function that evaluates the matched expression in the context of 'this',
+             * and returns both the resulting value and corresponding unit.
+             * This takes into account that all quantities should return objects, and all
+             * library functions also return objects.
+             */
+            output += "this." + name + ".unitexpr = (function(" + dummies + ") { " + 
+                "return this.unitexpr(this." + name + ", this.report." + name + ", this." + name + ".stdexpr(" + dummies + ")); " +
+            "}).bind(this);";
+            
+        }
         
         /**
          * Function that evaluates the matched expression in the context of 'this'.
@@ -267,7 +274,7 @@ frac        (?:\.[0-9]+)
          * For example, if you want units, you should refer this to the 'unitexpr', and if you just want
          * to calculate normal expressions without extension, you'd let it refer to 'stdexpr'.
          */
-        output += "this." + name + ".expr = this." + name + ".stdexpr;";
+        output += "this." + name + ".expr = this." + name + ((yy.units) ? ".unitexpr" : ".stdexpr") + ";";
 
         /**
          * Memoization data structure for function calls.
