@@ -443,7 +443,25 @@ suite("Compiler", function() {
                 
                 try {
                     var script = new Script(code);
-                    var output = compiler.compile(script);
+                    compiler.compile(script);
+                } catch(e) {
+                    console.log(code);
+                    throw(e);
+                }
+            });
+        });
+
+        test("| Original ACCEL script unit checking", function() {
+            var dir = "./test/Model/Scripts";
+
+            fs.readdirSync(dir).forEach(function(file) {
+                var code = fs.readFileSync(dir + "/" + file, "utf8");
+                
+                try {
+                    var script = new Script(code);
+                    compiler.setUnits(true);
+                    script.setExecutable(compiler.compile(script));
+                    script.checkUnits();
                 } catch(e) {
                     console.log(code);
                     throw(e);
@@ -457,6 +475,7 @@ suite("Compiler", function() {
         test('call to plot', function() {
             var code = 'a=plot([1,2,3,4])';
             var script = new Script(code);
+            compiler.setUnits(false);
             var exe = compiler.compile(script);
             script.exe = exe;
             var expected = [1,2,3,4];
