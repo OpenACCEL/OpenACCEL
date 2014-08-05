@@ -286,25 +286,26 @@ UnitObject.prototype.verifySignature = function(val, unit) {
         match = false;
     } else {
         // Both are arrays. First check whether they have the same length
-        // NOTE: check disabled because keys.length returns incorrect number
-        // with named vectors
-        /*if (Object.keys(unit).length !== val.length) {
+        if (Object.keys(unit).length !== Object.keys(val).length) {
             return false;
-        }*/
+        }
 
         /**
          * Check whether both unit and value have the same keys. Recursively!
          * Start by collecting all keys from both arrays. These keys can be both numerical
          * indices and strings.
          */
+        var valKeys = Object.keys(val);
+        var unitKeys = Object.keys(unit);
         var keys = [];
         var key;
-        for (key in val) { keys.push(key); }
-        for (key in unit) { keys.push(key); }
+
+        for (key in valKeys) { keys.push(valKeys[key]); }
+        for (key in unitKeys) { keys.push(unitKeys[key]); }
 
         for (key in keys) {
             // Check whether this key appears in both the value and unit
-            if (val[keys[key]] === 'undefined' || unit[keys[key]] === 'undefined') {
+            if (!val.hasOwnProperty(keys[key]) || !unit.hasOwnProperty(keys[key])) {
                 match = false;
                 break;
             } else {

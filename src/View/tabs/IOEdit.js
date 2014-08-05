@@ -23,16 +23,17 @@ var showValues = false;
  */
 function toggleValues() {
 	showValues = !showValues;
+
+	// First save the current contents of the textarea to the script,
+	// so that any changes that might have been made won't be lost
 	if (usingAdvancedEditor()) {
 		editor.save();
 	}
 	var source = $('#scriptarea').val();
+	controller.setScriptFromSource(source);
 
 	if (showValues) {
 		try {
-			// First 'save' the current contents of the textarea to the script,
-			// so that any changes that might have been made won't be lost
-			controller.setScriptFromSource(source);
 			synchronizeScriptArea({'includeValues': true});
 			$('#showvalues').val('Hide values');
 		} catch (e) {
@@ -204,6 +205,10 @@ function checkUnits() {
  * Hides all unit errors in the script, if any.
  */
 function clearUnitErrors() {
+	// First save the current contents so any changes won't be lost
+	var source = $('#scriptarea').val();
+	controller.setScriptFromSource(source);
+	
 	synchronizeScriptArea({'includeCheckedUnits':false});
 	$('#clearerrors').css({'visibility':'hidden'});
 }

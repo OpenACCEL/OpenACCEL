@@ -250,6 +250,19 @@ suite("Unit Object", function() {
         });
 
         /**
+         * Verifying the given unit of a quantity.
+         */
+        test("| Verifying quantity signature", function() {
+            eval(fileLoader.getLibrary("unitlibrary"));
+
+            assert.equal(UnitObject.prototype.verifySignature(1,        {"kg":1}),                          true);
+            assert.equal(UnitObject.prototype.verifySignature(1,        [{"kg":1}]),                        false);
+            assert.equal(UnitObject.prototype.verifySignature([1, 2],   {"kg":1}),                          false);
+            assert.equal(UnitObject.prototype.verifySignature([1, 2],   [{"kg":1}, {"p":2, "m":-1}]),       true);
+            assert.equal(UnitObject.prototype.verifySignature({a:1, 0:2}, {'a':{"kg":1}, 0:{"p":2, "m":-1}}),true);
+        });
+
+        /**
          * Getting the nominator of a unit.
          *
          * @input:      a = new UnitObject(5, {'kg': 1, 'm': 1, 's': -2})
