@@ -159,7 +159,6 @@ $(document).ready(
                     case 'editrun':
                         // If autoexecute is true, resume script only when it has been paused
                         // by the system, and start executing when it is not paused but compiled
-                        controller.loadStandardLib();
                         if (controller.autoExecute) {
                             if (controller.isPaused()) {
                                 controller.resume(true);

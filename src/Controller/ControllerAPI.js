@@ -211,8 +211,9 @@ define(["Model/Script",
                 }
             }
 
-            // Load the units
-            this.setUnits(true);
+            // Load the units and recompile the script.
+            this.compiler.setUnits(true);
+            this.compileScript(this.script);
 
             // Let the script check units
             try {
@@ -220,8 +221,7 @@ define(["Model/Script",
             } catch(e) {
                 throw e;
             } finally {
-                //this.script.exe.setUnits(false);
-                //this.loadStandardLib();
+                this.compiler.setUnits(true);
             }
         };
 
@@ -953,7 +953,7 @@ define(["Model/Script",
             // TODO remove temporary hack for showing UnitObject values in script
             var ans = this.script.toString(options);
             if (this.script.isCompiled()) {
-                this.setUnits(false);
+                this.compiler.setUnits(false);
             }
 
             return ans;

@@ -237,6 +237,7 @@ define(["Model/FileLoader",
          * @param {Boolean} bUnits Whether numbers and stirngs should be compiled as UnitObjects.
          */
         Compiler.prototype.setUnits = function(bUnits) {
+            this.units = bUnits;
             this.parser.yy.units = bUnits;
 
             if (bUnits) {
