@@ -15,9 +15,7 @@ function bin(x, y) {
             return new UnitObject(std_bin(a.value, b.value), {}, "unitError",
                 "Both arguments of the \"bin\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_bin(a.value, b.value);
-            return ans;
+            return a.clone(std_bin(a.value, b.value));
         }
     });
 }

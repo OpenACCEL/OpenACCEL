@@ -15,9 +15,7 @@ function poisson(x, y, z) {
             return new UnitObject(std_poisson(a.value, b.value, c.value), {}, "unitError",
                 "All arguments of the \"poisson\" function must be unit-less. Current units are <" + a.toString() + ">, <" + b.toString() + "> and <" + c.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_poisson(a.value, b.value, c.value);
-            return ans;
+            return a.clone(std_poisson(a.value, b.value, c.value));
         }
     });
 }

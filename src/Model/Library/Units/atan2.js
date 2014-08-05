@@ -15,9 +15,7 @@ function atan2(x, y) {
             return new UnitObject(std_atan2(a.value, b.value), {}, "unitError",
                 "Both arguments of the \"atan2\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_atan2(a.value, b.value);
-            return ans;
+            return a.clone(std_atan2(a.value, b.value));
         }
     });
 }

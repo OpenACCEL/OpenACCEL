@@ -15,9 +15,7 @@ function min(x, y) {
             return new UnitObject(std_min(a.value, b.value), {}, "unitError",
                 "Both arguments of the \"min\" function must be the same. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_min(a.value, b.value);
-            return ans;
+            return a.clone(std_min(a.value, b.value));
         }
     });
 }

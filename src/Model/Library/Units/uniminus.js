@@ -11,9 +11,7 @@ function uniminus(x) {
             return error;
         }
 
-        var ans = a.clone();
-        ans.value = std_uniminus(a.value);
-        return ans;
+        return a.clone(std_uniminus(a.value));
     });
 }
 

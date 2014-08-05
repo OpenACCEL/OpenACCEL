@@ -15,9 +15,7 @@ function not(x) {
             return new UnitObject(std_not(a.value), {}, "unitError",
                 "The argument of the \"not\" function must be unit-less. Current unit is: <" + a.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_not(a.value);
-            return ans;
+            return a.clone(std_not(a.value));
         }
     });
 }

@@ -15,9 +15,7 @@ function subtract(x, y) {
             return new UnitObject(a.value - b.value, {}, "unitError",
                 "Both arguments of the \"subtract\" function must be the same. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            var ans = a.clone();
-            ans.value = std_subtract(a.value, b.value);
-            return ans;
+            return a.clone(std_subtract(a.value, b.value));
         }
     });
 }

@@ -15,9 +15,7 @@ function imply(x, y) {
             return new UnitObject(std_imply(a.value, b.value), {}, "unitError",
                 "Both arguments of the \"imply\" function must be unit-less. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_imply(a.value, b.value);
-            return ans;
+            return a.clone(std_imply(a.value, b.value));
         }
     });
 }

@@ -54,11 +54,15 @@ function UnitObject(value, unit, error, errorString) {
 /**
  * Creates a shallow clone of the UnitObject, giving a fresh copy that can be
  * modified, without modifying the original object.
+ * 
+ * An additional parameter may be given that will overwrite the value of the UnitObject.
+ * This is because most of the time you only want to clone the unit, and not the value.
  *
+ * @param {Object} A possible value to be overwritten.
  * @return {UnitObject} The shallow copy.
  */
-UnitObject.prototype.clone = function() {
-    var ans = new UnitObject(this.value);
+UnitObject.prototype.clone = function(value) {
+    var ans = new UnitObject(typeof value === 'undefined' ? this.value : value);
     ans.setUnit(this.unit);
     ans.error = this.error;
     ans.errorString = this.errorString;
@@ -213,9 +217,7 @@ UnitObject.prototype.unitToString = function() {
 UnitObject.prototype.create = function(values, units) {
     return zip([values, units], function(value, unit) {
         if (value instanceof UnitObject) {
-            var ans = value.clone();
-            ans.setUnit(unit);
-            return ans;
+            return new UnitObject(value.value, unit);
         } else {
             return new UnitObject(value, unit);
         }

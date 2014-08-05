@@ -15,9 +15,7 @@ function ln(x) {
             return new UnitObject(std_ln(a.value), {}, "unitError",
                 "Argument of the \"ln\" function must be unit-less. Current unit is <" + a.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_ln(a.value);
-            return ans;
+            return a.clone(std_ln(a.value));
         }
     });
 }

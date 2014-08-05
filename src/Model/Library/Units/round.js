@@ -11,8 +11,6 @@ function round(x) {
             return error;
         }
 
-        var ans = a.clone();
-        ans.value = std_round(a.value);
-        return ans;
+        return a.clone(std_round(a.value));
     });
 }

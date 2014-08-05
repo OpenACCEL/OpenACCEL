@@ -10,19 +10,14 @@ function __if__(condition, ifTrue, ifFalse) {
         return error;
     }
 
-    var ans;
     var ifResult;
     if(!condition.isNormal()) {
         return new UnitObject(std_if(condition.value, ifTrue.value, ifFalse.value), {}, "unitError",
             "First argument of \"if\" function must be unit-less. Current unit is: <" + condition.toString() + ">.");
     } else if ((ifResult = std_if(condition.value, ifTrue.value, ifFalse.value)) === ifTrue.value) {
         // Clone and return the right UnitObject, depending on the return value of the standard library __if__ function
-        ans = ifTrue.clone();
-        ans.value = ifResult;
+        return ifTrue.clone(ifResult);
     } else {
-        ans = ifFalse.clone();
-        ans.value = ifResult;
+        return ifFalse.clone(ifResult);
     }
-
-    return ans;
 }

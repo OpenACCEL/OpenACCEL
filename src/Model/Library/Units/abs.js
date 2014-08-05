@@ -11,8 +11,6 @@ function abs(x) {
             return error;
         }
 
-        var ans = a.clone();
-        ans.value = std_abs(a.value);
-        return ans;
+        return a.clone(std_abs(a.value));
     });
 }

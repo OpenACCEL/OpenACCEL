@@ -15,9 +15,7 @@ function sin(x) {
             return new UnitObject(std_sin(a.value), {}, "unitError",
                 "The argument of the \"sin\" function must be unit-less. Current unit is: <" + a.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_sin(a.value);
-            return ans;
+            return a.clone(std_sin(a.value));
         }
     });
 }

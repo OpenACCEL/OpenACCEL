@@ -15,9 +15,7 @@ function max(x, y) {
             return new UnitObject(std_max(a.value, b.value), {}, "unitError",
                 "Both arguments of the \"max\" function must be the same. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_max(a.value, b.value);
-            return ans;
+            return a.clone(std_max(a.value, b.value));
         }
     });
 }

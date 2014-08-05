@@ -11,8 +11,6 @@ function floor(x) {
             return error;
         }
 
-        var ans = a.clone();
-        ans.value = std_floor(a.value);
-        return ans;
+        return a.clone(std_floor(a.value));
     });
 }

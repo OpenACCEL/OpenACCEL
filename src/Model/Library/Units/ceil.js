@@ -11,8 +11,6 @@ function ceil(x) {
             return error;
         }
 
-        var ans = a.clone();
-        ans.value = std_ceil(a.value);
-        return ans;
+        return a.clone(std_ceil(a.value));
     });
 }

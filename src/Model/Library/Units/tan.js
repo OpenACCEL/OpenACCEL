@@ -15,9 +15,7 @@ function tan(x) {
             return new UnitObject(std_tan(a.value), {}, "unitError",
                 "The argument of the \"tan\" function must be unit-less. Current unit is: <" + a.toString() + ">.");
         } else {
-            var ans = a.clone()
-            ans.value = std_tan(a.value);
-            return ans;
+            return a.clone(std_tan(a.value));
         }
     });
 }
