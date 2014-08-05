@@ -5,10 +5,6 @@ function exp(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_exp = exe.lib.std.exp;
         var error = UnitObject.prototype.propagateError(std_exp, a);
         if (error) {

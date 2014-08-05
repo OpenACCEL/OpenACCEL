@@ -5,10 +5,6 @@ function atan(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_atan = exe.lib.std.atan;
         var error = UnitObject.prototype.propagateError(std_atan, a);
         if (error) {

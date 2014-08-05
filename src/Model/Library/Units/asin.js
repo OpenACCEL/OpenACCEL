@@ -5,10 +5,6 @@ function asin(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_asin = exe.lib.std.asin;
         var error = UnitObject.prototype.propagateError(std_asin, a);
         if (error) {

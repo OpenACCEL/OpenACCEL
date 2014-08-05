@@ -4,19 +4,6 @@ function __if__(condition, ifTrue, ifFalse) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    // Convert to UnitObjects
-    if (!(condition instanceof UnitObject)) {
-        condition = new UnitObject(condition);
-    }
-    if (!(ifTrue instanceof UnitObject)) {
-        ifTrue = new UnitObject(ifTrue);
-    }
-
-    if (!(ifFalse instanceof UnitObject)) {
-        ifFalse = new UnitObject(ifFalse);
-    }
-
-    // Check for errors first
     var std_if = exe.lib.std.__if__;
     var error = UnitObject.prototype.propagateError(std_if, condition, ifTrue, ifFalse);
     if (error) {

@@ -5,10 +5,6 @@ function sin(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_sin = exe.lib.std.sin;
         var error = UnitObject.prototype.propagateError(std_sin, a);
         if (error) {

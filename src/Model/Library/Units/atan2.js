@@ -5,14 +5,6 @@ function atan2(x, y) {
     }
     
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         var std_atan2 = exe.lib.std.atan2;
         var error = UnitObject.prototype.propagateError(std_atan2, a, b);
         if (error) {

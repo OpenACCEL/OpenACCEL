@@ -5,10 +5,6 @@ function not(x) {
     }
 
     return zip([x], function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_not = exe.lib.std.not;
         var error = UnitObject.prototype.propagateError(std_not, x);
         if (error) {

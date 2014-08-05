@@ -3,15 +3,6 @@ function vMatInverse(x) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    
-    // Convert all to UnitObjects
-    x = unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
 
     std_vmi = exe.lib.std.vMatInverse;
     var error = UnitObject.prototype.propagateError(std_vmi, x);

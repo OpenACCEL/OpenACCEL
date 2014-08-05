@@ -5,10 +5,6 @@ function factorial(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_factorial = exe.lib.std.factorial;
         var error = UnitObject.prototype.propagateError(std_factorial, a);
         if (error) {

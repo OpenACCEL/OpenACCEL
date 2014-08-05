@@ -4,15 +4,7 @@ function vGaussian(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-
-    if (!(x instanceof UnitObject)) {
-        x = new UnitObject(x);
-    }
-
-    if (!(y instanceof UnitObject)) {
-        y = new UnitObject(y);
-    }
-
+    
     var std_vGaussian = exe.lib.std.vGaussian;
     var error = UnitObject.prototype.propagateError(std_vGaussian, x, y);
     if (error) {

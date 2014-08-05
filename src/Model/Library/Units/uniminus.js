@@ -5,10 +5,6 @@ function uniminus(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_uniminus = exe.lib.std.uniminus;
         var error = UnitObject.prototype.propagateError(std_uniminus, a);
         if (error) {

@@ -5,14 +5,6 @@ function and(x, y) {
     }
 
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         var std_and = exe.lib.std.and;
         var error = UnitObject.prototype.propagateError(std_and, a, b);
         if (error) {

@@ -50,13 +50,12 @@ suite("vMatInverse Library", function() {
      */
     suite("| Units", function() {
         test("| Normal operation", function() {
-            compiler.loadUnitsLib();
+            compiler.setUnits(true);
             var input =
             "a = [[3,4,5],[23,56,67],[1,8,7]] ; [[kg, kg, kg], [kg, kg, kg], [kg, kg, kg]]\n" +
             "z = vMatInverse(a)\n" +
             "y = vMatInverse([[3,4,5],[23,56,67],[1,8,7]])";
             var output = compiler.compile(new script(input)); 
-            output.setUnits(true);
 
             var resultZ = output.__z__();
             var resultY = output.__y__();

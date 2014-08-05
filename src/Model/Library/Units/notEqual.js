@@ -3,15 +3,8 @@ function notEqual(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         var std_neq = exe.lib.std.notEqual;
         var error = UnitObject.prototype.propagateError(std_neq, a, b);
         if (error) {

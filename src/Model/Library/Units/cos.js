@@ -5,10 +5,6 @@ function cos(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_cos = exe.lib.std.cos;
         var error = UnitObject.prototype.propagateError(std_cos, a);
         if (error) {

@@ -5,10 +5,6 @@ function abs(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_abs = exe.lib.std.abs;
         var error = UnitObject.prototype.propagateError(std_abs, a);
         if (error) {

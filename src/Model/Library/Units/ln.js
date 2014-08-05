@@ -5,10 +5,6 @@ function ln(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_ln = exe.lib.std.ln;
         var error = UnitObject.prototype.propagateError(std_ln, a);
         if (error) {

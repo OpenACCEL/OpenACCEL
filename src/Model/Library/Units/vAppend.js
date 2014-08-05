@@ -4,14 +4,8 @@ function vAppend(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
     
-    // We just invoke the normal library function and make sure all elements are UnitObjects.
-    return unaryZip(exe.lib.std.vAppend(x, y), function(elem) {
-        if (elem instanceof UnitObject) {
-            return elem;
-        } else {
-            return new UnitObject(elem);
-        }
-    });
+    // We just invoke the normal library function.
+    return exe.lib.std.vAppend(x, y);
 }
 
 vAppend.base = [];

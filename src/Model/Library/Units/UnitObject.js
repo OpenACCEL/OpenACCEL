@@ -366,6 +366,7 @@ UnitObject.prototype.propagateError = function(f) {
     var err = this.findFirstError(args);
     if (err !== '') {
         args = UnitObject.prototype.toArray(args);
+        var ans = f.apply(null, args);
         return new UnitObject(f.apply(null, args), {}, 'uncheckedUnit');
     } else {
         return false;

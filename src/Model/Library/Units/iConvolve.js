@@ -4,31 +4,6 @@ function iConvolve(x,y,n1,n2,m) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    // Convert all to UnitObjects
-    x = unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
-    y = unaryZip(y, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
-    if (!(n1 instanceof UnitObject)) {
-        n1 = new UnitObject(n1);
-    }
-    if (!(n2 instanceof UnitObject)) {
-        n2 = new UnitObject(n2);
-    }
-    if (!(m instanceof UnitObject)) {
-        m = new UnitObject(m);
-    }
-
     var std_iConvolve = exe.lib.std.iConvolve;
     var error = UnitObject.prototype.propagateError(std_iConvolve, x, y, n1, n2, m);
     if (error) {

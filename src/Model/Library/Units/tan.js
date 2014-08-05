@@ -5,10 +5,6 @@ function tan(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-        
         var std_tan = exe.lib.std.tan;
         var error = UnitObject.prototype.propagateError(std_tan, a);
         if (error) {

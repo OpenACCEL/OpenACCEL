@@ -4,25 +4,6 @@ function vVecRamp(x, y, z) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    // Convert all to UnitObjects
-    x = unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
-    y = unaryZip(y, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
-    if (!(z instanceof UnitObject)) {
-        z = new UnitObject(z);
-    }
-
     var std_vvec = exe.lib.std.vVecRamp;
     var error = UnitObject.prototype.propagateError(std_vvec, x, y, z);
     if (error) {

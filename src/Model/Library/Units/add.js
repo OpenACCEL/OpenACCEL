@@ -5,14 +5,6 @@ function add(x, y) {
     }
 
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         // Copy over units for the addition base case.
         if (a.isNormal() && a.value === 0 && !b.isNormal()) {
             a.setUnit(b.unit);

@@ -5,10 +5,6 @@ function floor(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_floor = exe.lib.std.floor;
         var error = UnitObject.prototype.propagateError(std_floor, a);
         if (error) {

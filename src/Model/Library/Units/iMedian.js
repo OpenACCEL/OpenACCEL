@@ -4,21 +4,6 @@ function iMedian(x,n,m) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    // Convert all to UnitObjects
-    x = unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
-    if (!(n instanceof UnitObject)) {
-        n = new UnitObject(n);
-    }
-    if (!(m instanceof UnitObject)) {
-        m = new UnitObject(m);
-    }
-
     var std_iMedian = exe.lib.std.iMedian;
     var error = UnitObject.prototype.propagateError(std_iMedian, x, n, m);
     if (error) {

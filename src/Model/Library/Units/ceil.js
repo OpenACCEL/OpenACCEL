@@ -5,10 +5,6 @@ function ceil(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_ceil = exe.lib.std.ceil;
         var error = UnitObject.prototype.propagateError(std_ceil, a);
         if (error) {

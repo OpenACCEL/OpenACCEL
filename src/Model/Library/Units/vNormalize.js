@@ -7,11 +7,7 @@ function vNormalize(x) {
 
     // vNormalize works on vectors with just values, thus we remove any UnitObjects in the argument.
     a = unaryZip(x, function(a) {
-        if (a instanceof UnitObject) {
-            return a.value;
-        } else {
-            return a;
-        }
+        return a.value;
     });
 
     // Propagate any error.

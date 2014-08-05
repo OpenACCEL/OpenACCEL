@@ -5,10 +5,6 @@ function round(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_round = exe.lib.std.round;
         var error = UnitObject.prototype.propagateError(std_round, a);
         if (error) {

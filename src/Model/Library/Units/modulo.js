@@ -5,14 +5,6 @@ function modulo(x, y) {
     }
     
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         var std_modulo = exe.lib.std.modulo;
         var error = UnitObject.prototype.propagateError(std_modulo, a, b);
         if (error) {

@@ -5,14 +5,6 @@ function max(x, y) {
     }
     
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         var std_max = exe.lib.std.max;
         var error = UnitObject.prototype.propagateError(std_max, a, b);
         if (error) {

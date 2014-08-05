@@ -4,19 +4,6 @@ function iGaussian(n1,n2,s1,s2) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    if (!(n1 instanceof UnitObject)) {
-        n1 = new UnitObject(n1);
-    }
-    if (!(n2 instanceof UnitObject)) {
-        n2 = new UnitObject(n2);
-    }
-    if (!(s1 instanceof UnitObject)) {
-        s1 = new UnitObject(s1);
-    }
-    if (!(s2 instanceof UnitObject)) {
-        s2 = new UnitObject(s2);
-    }
-
     var std_iGaussian = exe.lib.std.iGaussian;
     var error = UnitObject.prototype.propagateError(std_iGaussian, n1, n2, s1, s2);
     if (error) {

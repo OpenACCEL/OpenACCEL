@@ -4,22 +4,6 @@ function ramp(x, x1, y1, x2, y2) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    if (!(x instanceof UnitObject)) {
-        x = new UnitObject(x);
-    }
-    if (!(x1 instanceof UnitObject)) {
-        x1 = new UnitObject(x1);
-    }
-    if (!(x2 instanceof UnitObject)) {
-        x2 = new UnitObject(x2);
-    }
-    if (!(y1 instanceof UnitObject)) {
-        y1 = new UnitObject(y1);
-    }
-    if (!(y2 instanceof UnitObject)) {
-        y2 = new UnitObject(y2);
-    }
-
     var std_ramp = exe.lib.std.ramp;
     var error = UnitObject.prototype.propagateError(std_ramp, x, x1, y1, x2, y2);
     if (error) {

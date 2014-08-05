@@ -5,10 +5,6 @@ function acos(x) {
     }
 
     return unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
         var std_acos = exe.lib.std.acos;
         var error = UnitObject.prototype.propagateError(std_acos, a);
         if (error) {

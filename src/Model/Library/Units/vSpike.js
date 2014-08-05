@@ -5,14 +5,6 @@ function vSpike(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    if (!(x instanceof UnitObject)) {
-        x = new UnitObject(x);
-    }
-
-    if (!(y instanceof UnitObject)) {
-        y = new UnitObject(y);
-    }
-
     var std_vSpike = exe.lib.std.vSpike;
     var error = UnitObject.prototype.propagateError(std_vSpike, x, y);
     if (error) {

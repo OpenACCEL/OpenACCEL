@@ -4,31 +4,15 @@ function vMatSolve(mm, v) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    // Convert all to UnitObjects
-    m = unaryZip(mm, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
-    v = unaryZip(v, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
-
     var std_vms = exe.lib.std.vMatSolve;
-    var error = UnitObject.prototype.propagateError(std_vms, m, v);
+    var error = UnitObject.prototype.propagateError(std_vms, mm, v);
     if (error) {
         return error;
     }
 
-    var mValues = UnitObject.prototype.toArray(m);
+    var mValues = UnitObject.prototype.toArray(mm);
     var vValues = UnitObject.prototype.toArray(v);
-    var mUnit = m[0][0];
+    var mUnit = mm[0][0];
     var vUnit = v[0];
 
     var ansUnit = vUnit.divide(mUnit).unit;

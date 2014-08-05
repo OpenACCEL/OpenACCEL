@@ -5,18 +5,6 @@ function poisson(x, y, z) {
     }
     
     return zip([x, y, z], function(a, b, c) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
-        if (!(c instanceof UnitObject)) {
-            c = new UnitObject(c);
-        }
-
         var std_poisson = exe.lib.std.poisson;
         var error = UnitObject.prototype.propagateError(std_poisson, a, b, c);
         if (error) {

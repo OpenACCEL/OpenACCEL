@@ -4,21 +4,6 @@ function iMake(x,nrRows,nrCols) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    x = unaryZip(x, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
-
-    if (!(nrRows instanceof UnitObject)) {
-        nrRows = new UnitObject(nrRows);
-    }
-    if (!(nrCols instanceof UnitObject)) {
-        nrCols = new UnitObject(nrCols);
-    }
-
     var std_iMake = exe.lib.std.iMake;
     var error = UnitObject.prototype.propagateError(std_iMake, x, nrRows, nrCols);
     if (error) {

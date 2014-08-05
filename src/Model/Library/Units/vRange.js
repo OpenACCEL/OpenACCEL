@@ -4,14 +4,5 @@ function vRange(x) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    var range = exe.lib.std.vRange(x);
-
-    // Transform any scalar value into a UnitObject.
-    return unaryZip(range, function(a) {
-        if (!(a instanceof UnitObject)) {
-            return new UnitObject(a);
-        } else {
-            return a;
-        }
-    });
+    return exe.lib.std.vRange(x);
 }

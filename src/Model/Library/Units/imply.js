@@ -5,14 +5,6 @@ function imply(x, y) {
     }
 
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         var std_imply = exe.lib.std.imply;
         var error = UnitObject.prototype.propagateError(std_imply, a, b);
         if (error) {

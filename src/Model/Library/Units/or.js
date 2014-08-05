@@ -5,14 +5,6 @@ function or(x, y) {
     }
 
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         var std_or = exe.lib.std.or;
         var error = UnitObject.prototype.propagateError(std_or, a, b);
         if (error) {

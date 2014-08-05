@@ -7,19 +7,11 @@ function vDot(x, y) {
 
     // vDot works on vectors with just values, thus we remove any UnitObjects in the argument.
     a = unaryZip(x, function(i) {
-        if (i instanceof UnitObject) {
-            return i.value;
-        } else {
-            return i;
-        }
+        return i.value;
     });
 
     b = unaryZip(x, function(j) {
-        if (j instanceof UnitObject) {
-            return j.value;
-        } else {
-            return j;
-        }
+        return j.value;
     });
 
     // Propagate any error.

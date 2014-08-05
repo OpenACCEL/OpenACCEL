@@ -4,16 +4,9 @@ function vDom(x) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    // Just get the values, not the units.
-    x = unaryZip(x, function(a) {
-        if (a instanceof UnitObject) {
-            return a.value;
-        } else {
-            return a;
-        }
-    });
-
-    var domain = exe.lib.std.vDom(x);
+    var domain = exe.lib.std.vDom(unaryZip(x, function(a) {
+        return a.value;
+    }));
 
     // Transform the result back into UnitObjects with no unit.
     return unaryZip(domain, function(a) {

@@ -5,14 +5,6 @@ function vSeq(x, y) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    if (!(x instanceof UnitObject)) {
-        x = new UnitObject(x);
-    }
-
-    if (!(y instanceof UnitObject)) {
-        y = new UnitObject(y);
-    }
-
     var std_vSeq = exe.lib.std.vSeq;
     var ans = std_vSeq(x.value, y.value);
 

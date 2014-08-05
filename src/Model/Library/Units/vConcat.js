@@ -5,13 +5,7 @@ function vConcat(x, y) {
     }
     
     // We just invoke the normal library function and make sure all elements are UnitObjects.
-    return unaryZip(exe.lib.std.vConcat(x, y), function(elem) {
-        if (elem instanceof UnitObject) {
-            return elem;
-        } else {
-            return new UnitObject(elem);
-        }
-    });
+    return exe.lib.std.vConcat(x, y);
 }
 
 vConcat.base = [];

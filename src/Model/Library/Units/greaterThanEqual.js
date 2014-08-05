@@ -3,15 +3,8 @@ function greaterThanEqual(x, y) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
+
     return zip([x, y], function(a, b) {
-        if (!(a instanceof UnitObject)) {
-            a = new UnitObject(a);
-        }
-
-        if (!(b instanceof UnitObject)) {
-            b = new UnitObject(b);
-        }
-
         var std_gte = exe.lib.std.greaterThanEqual;
         var error = UnitObject.prototype.propagateError(std_gte, a, b);
         if (error) {
