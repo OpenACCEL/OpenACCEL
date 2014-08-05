@@ -63,10 +63,12 @@ suite("vEigenSystem Library", function() {
             compiler.setUnits(true);
             var input =
             "a = [[4,4],[2,2]] ; [[kg, kg], [kg, kg]]\n" +
-            "z = vEigenSystem(a)\n";
+            "z = vEigenSystem(a)\n" +
+            "y = vEigenSystem([[4,4],[2,2]])";
             var output = compiler.compile(new script(input)); 
 
-            var result = output.__z__();
+            var resultZ = output.__z__();
+            var resultY = output.__y__();
             var expected = [
                 [6, 0],
                 [0, 0],
@@ -88,21 +90,28 @@ suite("vEigenSystem Library", function() {
             }
 
             // Check values
-            checkIt(UnitObject.prototype.toArray(result), expected);
+            checkIt(UnitObject.prototype.toArray(resultY), expected);
+            checkIt(UnitObject.prototype.toArray(resultZ), expected);
 
             // Check units of the three vectors. First 2 vectors should have
             // the same unit as the input matrix, the last vector should be unitless
             for (var i=0; i<=2; i++) {
                 // Must be unitless
                 if (i === 2) {
-                    for (var j=0; j<result[2].length; j++) {
-                        assert.equal(true, UnitObject.prototype.isNormal(result[i][j]));
-                        assert.ifError(result[i][j].error);
+                    for (var j=0; j<resultZ[2].length; j++) {
+                        assert.equal(true, UnitObject.prototype.isNormal(resultZ[i][j]));
+                        assert.ifError(resultZ[i][j].error);
+
+                        assert.equal(true, UnitObject.prototype.isNormal(resultY[i][j]));
+                        assert.ifError(resultZ[i][j].error);
                     }
                 } else {
-                    for (var j=0; j<result[i].length; j++) {
-                        assert.deepEqual(result[i][j].unit, {'kg':1});
-                        assert.ifError(result[i][j].error);
+                    for (var j=0; j<resultZ[i].length; j++) {
+                        assert.deepEqual(resultZ[i][j].unit, {'kg':1});
+                        assert.ifError(resultZ[i][j].error);
+
+                        assert.equal(true, UnitObject.prototype.isNormal(resultY[i][j]));
+                        assert.ifError(resultZ[i][j].error);
                     }
                 }    
             }
