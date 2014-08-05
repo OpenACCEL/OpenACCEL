@@ -578,13 +578,14 @@ define(["Model/Analyser/Analyser",
 
                 // Do not include quantities in the script string that are undefined!
                 if (!qty.todo) {
-                    lines.push(qty.toString(options));
-
                     // Compute and include the values in the output if specified
                     if (options.includeValues || options.includeCheckedUnits) {
-                        var value = JSON.stringify(this.getQuantityValue(qtyName));
-                        lines.push(" //// " + value);
+                        // Compute the value and save it in the quantity. Then call
+                        // toString of the quantity so it can use the computed value.
+                        qty.value = this.getQuantityValue(qtyName);
                     }
+
+                    lines.push(qty.toString(options));
                 }
             }
 
