@@ -226,13 +226,14 @@ define([], /**@lends Model.Quantity */ function() {
      * -(Boolean) includeComments Whether to include any comments belonging to this quantity in the output
      * -(Boolean) includeCheckedUnits Whether to include the unit that may have been checked, or only
      *            the one provided by the user (if any).
+     * -(Boolean) includeValues Whether to include the current value, as saved in this.value, in the output
      * @return {String} The script line corresponding to this quantity, optionally with
      * unit and comment
      */
     Quantity.prototype.toString = function(options) {
         // Set default values of missing options
         if (typeof options === 'undefined') {
-            options = {'includeUnits': true, 'includeComments': true, 'includeCheckedUnits': false};
+            options = {'includeUnits': true, 'includeComments': true, 'includeCheckedUnits': false, 'includeValues': false};
         } else {
             if (typeof options.includeUnits === 'undefined') {
                 options.includeUnits = true;
@@ -240,6 +241,8 @@ define([], /**@lends Model.Quantity */ function() {
                 options.includeComments = true;
             } else if (typeof options.includeCheckedUnits === 'undefined') {
                 options.includeCheckedUnits = false;
+            } else if (typeof options.includeValues === 'undefined') {
+                options.includeValues = false;
             }
         }
 
@@ -257,6 +260,7 @@ define([], /**@lends Model.Quantity */ function() {
             }
         }
 
+        // Include comment(s) when asked
         if (options.includeComments && this.comment.length > 0) {
             var comment = '';
 
@@ -265,6 +269,11 @@ define([], /**@lends Model.Quantity */ function() {
             }
 
             def += comment;
+        }
+
+        // Include value when asked
+        if (options.includeValues) {
+            def += '\n //// Value: ' + objectToString(this.value, 500);
         }
 
         return def;

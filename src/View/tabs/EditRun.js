@@ -18,6 +18,15 @@ $(document).ready(
     }
 );
 
+/**
+ * Number of object-elements the objectToString function
+ * should generate before it is terminated.
+ *
+ * @memberof View
+ * @type {Number}
+ */
+var maxPrintElements = 1000;
+
 //------------------------------------------------------------------------------
 
 function deleteQuantity(quantity) {
@@ -158,94 +167,12 @@ function synchronizeResults(quantities) {
 
     for (var q in quantities) {
         var quantity = quantities[q];
-        resultValues[quantity.name] = objectToString(controller.getQuantityValue(quantity.name));
+        resultValues[quantity.name] = objectToString(controller.getQuantityValue(quantity.name), maxPrintElements);
     }
 
     Report.resultList.set(resultValues);
     Report.resultList.buffer.hideIfEmpty('#resultdiv');
 }
-
-/**
- * Number of object-elements the objectToString function
- * should generate before it is terminated.
- *
- * @memberof View
- * @type {Number}
- */
-var maxPrintElements = 1000;
-
-/**
- * Create printable version of an object.
- *
- * Terminates the string with ...
- * when maxPrintElements elements has been reached.
- *
- * @memberof View
- * @param  {Object} obj Object to print
- * @return {String}     Printable string
- */
-function objectToString(obj) {
-    var result = '';
-    var count = 0;
-
-    try {
-        // Recursive function calculating the
-        (function(obj) {
-            if (obj instanceof Object) {
-                if (count < maxPrintElements) {
-                    result += '[';
-                }
-
-                for (var key in obj) {
-                    if (count >= maxPrintElements) {
-                        // We need to terminate the recursion
-                        // So we throw the result we have so far
-                        // appended with ...
-                        result += '...';
-                        throw {};
-                    }
-
-                    if (isNaN(key)) {
-                        // Key is not a number
-                        result += key + ':';
-                    }
-
-                    if (obj[key] instanceof Object) {
-                        // With this condition we avoid a recursive call in case
-                        // we reach a base case;
-                        arguments.callee(obj[key]);
-                    } else {
-                        if (typeof obj[key] === 'string') {
-                            result += '\'' + obj[key].toString() + '\'';
-                        } else {
-                            result += obj[key].toString();
-                        }
-                    }
-
-                    count++;
-
-                    result += ',';
-                }
-                // replace the last
-                if (result.charAt(result.length - 1) === ',') {
-                    result = result.slice(0, -1);
-                }
-                result += ']';
-            } else {
-                if (typeof obj === 'string') {
-                    result += '\'' + obj.toString() + '\'';
-                } else {
-                    result += obj.toString();
-                }
-
-            }
-        })(obj);
-    } catch (e) {
-        // Result was terminated.
-    }
-    return result;
-}
-
 
 //------------------------------------------------------------------------------
 
