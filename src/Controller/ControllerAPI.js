@@ -531,7 +531,7 @@ define(["Model/Script",
 
             // Give new script object to descartes
             if (inBrowser) {
-                this.view.canvas.setModel(this.script);
+                this.view.canvasses.editRun.setModel(this.script);
             }
 
             if (clearStore && this.autoSave && window.localStorage) {
@@ -751,7 +751,7 @@ define(["Model/Script",
 
                 // Reset descartes canvas
                 if (inBrowser) {
-                    this.view.canvas.clearBuffers();
+                    this.view.canvasses.editRun.clearBuffers();
                     this.view.clearOptimisationPlot();
                 }
 
