@@ -21,4 +21,4 @@ function or(x, y) {
     });
 }
 
-or.base = false;
+or.base = new UnitObject(false);

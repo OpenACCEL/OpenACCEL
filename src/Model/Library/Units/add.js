@@ -29,4 +29,4 @@ function add(x, y) {
     });
 }
 
-add.base = 0;
+add.base = new UnitObject(0);

@@ -20,4 +20,4 @@ function and(x, y) {
     });
 }
 
-and.base = true;
+and.base = new UnitObject(true);

@@ -17,4 +17,4 @@ function multiply(x, y) {
     });
 }
 
-multiply.base = 1;
+multiply.base = new UnitObject(1);
