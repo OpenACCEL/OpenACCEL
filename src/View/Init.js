@@ -153,6 +153,9 @@ $(document).ready(
                             }
                         }
                         break;
+                    case 'simulation':
+                        controller.pause(true);
+                        break;
                     default:
                         break;
                 }
@@ -167,6 +170,7 @@ $(document).ready(
             function(event, ui) {
                 entering = ui.newPanel[0].id;
                 switch (entering) {
+                    case 'simulation':
                     case 'editrun':
                         // If autoexecute is true, resume script only when it has been paused
                         // by the system, and start executing when it is not paused but compiled
