@@ -75,6 +75,7 @@ require(["../Controller/ControllerAPI", "../Controller/AbstractView", "../View/G
      */
     View.prototype.setUpPlot = function() {
         this.canvas = canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
+        this.simulationCanvas = canvasCreator.createCanvas(controller.getScript(), 'plotSimulation', 800, 600);
         this.optimisationCanvas = canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
     };
 
