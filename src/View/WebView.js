@@ -15,8 +15,10 @@ define(["../Controller/AbstractView",
          */
         this.canvasCreator = new CanvasCreator();
 
-        this.canvas = null;
-        this.optimisationCanvas = null;
+        /**
+         * The various canvasses that the view will use to plot and draw.
+         */
+        this.canvasses = {};
     }
 
     WebView.prototype = new AbstractView();
@@ -50,9 +52,20 @@ define(["../Controller/AbstractView",
      * Creates the necessary plot canvases
      */
     WebView.prototype.setUpPlot = function() {
-        this.canvas = this.canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
-        this.simulationCanvas = this.canvasCreator.createCanvas(controller.getScript(), 'plotSimulation', 800, 600);
-        this.optimisationCanvas = this.canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
+        /**
+         * The small plot window that shows up in the Edit/Run tab.
+         */
+        this.canvasses.editRun = this.canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
+
+        /**
+         * This big plot window for the Simulation tab, which shows the same as the plot of Edit/Run.
+         */
+        this.canvasses.simulation = this.canvasCreator.createCanvas(controller.getScript(), 'plotSimulation', 800, 600);
+
+        /**
+         * The canvas that is used to plot individuals of the Genetic Optimization tab.
+         */
+        this.canvasses.go = this.canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
     };
 
     /**
@@ -68,21 +81,21 @@ define(["../Controller/AbstractView",
      * Clears the plot canvas
      */
     WebView.prototype.clearPlot = function() {
-        this.canvas.clearCanvas();
+        this.canvasses.editRun.clearCanvas();
     };
 
     /**
      * Updates the plot canvas
      */
     WebView.prototype.drawPlot = function() {
-        this.canvas.draw();
+        this.canvasses.editRun.draw();
     };
 
     /**
      * Trigger an update of the optimisation plot canvas
      */
     WebView.prototype.drawOptimisationPlot = function() {
-        this.optimisationCanvas.draw();
+        this.canvasses.go.draw();
     };
 
     WebView.prototype.showOptimisationPlot = function(show) {
@@ -90,16 +103,16 @@ define(["../Controller/AbstractView",
     };
 
     WebView.prototype.clearOptimisationPlot = function() {
-        this.optimisationCanvas.clearCanvas();
+        this.canvasses.go.clearCanvas();
     };
 
     WebView.prototype.smartZoomOptimisation = function() {
-        this.optimisationCanvas.smartZoom();
+        this.canvasses.go.smartZoom();
         this.drawOptimisationPlot();
     };
 
     WebView.prototype.zoomToFitOptimisation = function(show) {
-        this.optimisationCanvas.zoomToFit();
+        this.canvasses.go.zoomToFit();
         this.drawOptimisationPlot();
     };
 
