@@ -75,8 +75,7 @@ define([], /** @lends View.Graphics */ function() {
             var func;
             for (var key in allFuncs) {
                 name = allFuncs[key].name;
-                func = allFuncs[key].func;
-                eval("this." + name + " = func");
+                this[name] = allFuncs[key].func;
             }
         }
     };
