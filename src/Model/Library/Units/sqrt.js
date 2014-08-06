@@ -6,4 +6,3 @@ function sqrt(x) {
 
     return pow(x, 0.5);
 }
-

@@ -14,4 +14,3 @@ function uniminus(x) {
         return a.clone(std_uniminus(a.value));
     });
 }
-
