@@ -55,7 +55,6 @@ define(["View/Graphics/DescartesHandlerFactory", "View/Graphics/Canvas", "View/G
              */
             createCanvas: function(modelElement, div, width, height) {
                 canvas = new Canvas(modelElement, div, width, height, this.factory);
-                canvas.facadify();
                 return canvas;
             }
         };
