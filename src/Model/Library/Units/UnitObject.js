@@ -54,7 +54,7 @@ function UnitObject(value, unit, error, errorString) {
 /**
  * Creates a shallow clone of the UnitObject, giving a fresh copy that can be
  * modified, without modifying the original object.
- * 
+ *
  * An additional parameter may be given that will overwrite the value of the UnitObject.
  * This is because most of the time you only want to clone the unit, and not the value.
  *
@@ -400,6 +400,10 @@ UnitObject.prototype.propagateError = function(f) {
  * in arr in their original order.
  */
 UnitObject.prototype.toArray = function(arr) {
+    if (!(arr instanceof Array)) {
+        return arr.value;
+    }
+
     var l = arr.length;
     var newArr = new Array(l);
     for (var i = l-1; i >= 0; i--) {
