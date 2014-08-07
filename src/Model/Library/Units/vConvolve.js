@@ -4,66 +4,26 @@ function vConvolve(x, y, n, m) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    if (x instanceof Array) {
-        var r = x.length;
-        if (y instanceof Array) {
-            var p = y.length;
-            if (!(n instanceof Array)) {
-                var n = Math.round(n);
-                var res = [];
-                switch (m) {
-                    case 0:
-                        for (i = 0; i < r; i++) {
-                            var rr = 0;
-                            for (j = 0; j < p; j++) {
-                                var index = i + j - n;
-                                while (index < 0)
-                                    index += r;
-                                while (index >= r)
-                                    index -= r;
-                                rr += x[index] * y[j];
-                            }
-                            res[i] = rr;
-                        }
-                        return res;
-                        break;
-                    case 1:
-                        for (i = 0; i < r; i++) {
-                            var rr = 0;
-                            for (j = 0; j < p; j++) {
-                                var index = i + j - n;
-                                if (index >= 0 && index < r) {
-                                    rr += x[index] * y[j];
-                                }
-                            }
-                            res[i] = rr;
-                        }
-                        return res;
-                        break;
-                    case 2:
-                        for (i = 0; i < r; i++) {
-                            var rr = 0;
-                            for (j = 0; j < p; j++) {
-                                var index = i + j - n;
-                                index = index < 0 ? 0 : (index >= r ? r - 1 : index);
-                                rr += x[index] * y[j];
 
-                            }
-                            res[i] = rr;
-                        }
-                        return res;
-                        break;
-                    default:
-                        throw new Error("convolution: fourth argument must be 0, 1 or 2.");
-                }
-            } else {
-                throw new Error("convolution: auto-mapping is not supported, third argument must be scalar.");
-
-            }
-        } else {
-            return [];
-        }
-    } else {
-        return [];
+    std_vconv = exe.lib.std.vConvolve;
+    var error = UnitObject.prototype.propagateError(std_vconv, x, y, n, m);
+    if (error) {
+        return error;
     }
+
+    var xValues = UnitObject.prototype.toArray(x);
+    var yValues = UnitObject.prototype.toArray(y);
+    var xUnit = (x instanceof Array) ? x[0] : x;
+    var yUnit = (y instanceof Array) ? y[0] : y;
+
+    var ansValue = std_vconv(xValues, yValues, n.value, m.value);
+    if (!n.isNormal() || !m.isNormal()) {
+        ans = new UnitObject(ansValue, {}, "unitError",
+            "In function vConvolve, third and fourth arguments must be unit-less. Current units are: <" + n.toString() + "> and <" + m.toString() + ">.");
+    } else {
+        var ansUnit = xUnit.multiply(yUnit);
+        ans = UnitObject.prototype.create(ansValue, ansUnit.unit);
+    }
+
+    return ans;
 }
