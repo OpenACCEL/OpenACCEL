@@ -11,10 +11,15 @@ function iMedian(x,n,m) {
     }
 
     var xValues = UnitObject.prototype.toArray(x);
+    var ansValue = std_iMedian(xValues, n.value, m.value);
+    var ans;
+
     if(!UnitObject.prototype.isNormal(x) || !n.isNormal() || !m.isNormal()) {
-        return new UnitObject(std_iMedian(xValues, n.value, m.value), {}, "unitError",
-            "All arguments of iMedian must be unitless; current units are: <"+ x.toString() +">, <"+ n.toString() +"> and <" + m.toString() + "> respectively");
+        ans = new UnitObject(ansValue, {}, "unitError");
+        ans.errorString = "All arguments of iMedian must be unitless; current units are: <"+ x.toString() +">, <"+ n.toString() +"> and <" + m.toString() + "> respectively";
     } else {
-        return new UnitObject(std_iMedian(xValues, n.value, m.value), {}, null);
+        ans = UnitObject.prototype.create(ansValue, {});
     }
+
+    return ans;
 }

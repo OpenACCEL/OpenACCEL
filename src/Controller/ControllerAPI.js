@@ -205,15 +205,11 @@ define(["Model/Script",
             // Check syntax and build the script from the given source
             this.setScriptFromSource(source, true);
 
-            if (!this.script.isCompiled()) {
-                if (!this.compileScript(this.script)) {
-                    throw {"message":"Unable to check units: script is not complete.", "incomplete":true};
-                }
-            }
-
             // Load the units and recompile the script.
             this.compiler.setUnits(true);
-            this.compileScript(this.script);
+            if (!this.compileScript(this.script)) {
+                throw {"message":"Unable to check units: script is not complete.", "incomplete":true};
+            }
 
             // Let the script check units
             try {
@@ -221,7 +217,7 @@ define(["Model/Script",
             } catch(e) {
                 throw e;
             } finally {
-                this.compiler.setUnits(true);
+                //this.compiler.setUnits(false);
             }
         };
 

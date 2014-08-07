@@ -191,7 +191,8 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             if (Object.keys(quantity.unit).length === 0 || UnitObject.prototype.verifySignature(ans, quantity.unit)) {
                 ans = UnitObject.prototype.create(ans, quantity.unit);
             } else {
-                ans = UnitObject.prototype.create(ans, quantity.unit, "unitError", "Signature of quantity " + report.name + " is incorrect");
+                ans.error = "unitError";
+                ans.errorString = "Signature of quantity " + report.name + " is incorrect";
             }
         } else {
             // This value is guaranteed to have some unit. The quantity will take this unit.

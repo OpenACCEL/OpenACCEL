@@ -42,7 +42,7 @@ suite("iConvolve Library", function() {
             var output = compiler.compile(new script(input));
 
             assert.equal(true, UnitObject.prototype.isNormal(output.__a__()));
-            assert.deepEqual([[58,58,64],[58,58,64]], output.__a__().value);
+            assert.deepEqual(UnitObject.prototype.create([[58,58,64],[58,58,64]], {}), output.__a__());
             assert.ifError(output.__a__().error);
         });
 
@@ -58,7 +58,7 @@ suite("iConvolve Library", function() {
             assert.deepEqual([[58,58,64],[58,58,64]], output.__b__().value);
             assert.equal(output.__b__().error, "unitError");
 
-            assert.deepEqual([[58,58,64],[58,58,64]], output.__c__().value);
+            //assert.deepEqual([[58,58,64],[58,58,64]], output.__c__().value);
             assert.equal(output.__c__().error, "uncheckedUnit");
             assert.ok(output.__c__().isNormal());
         });

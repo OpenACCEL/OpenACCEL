@@ -41,7 +41,7 @@ suite("iMedian Library", function() {
             var output = compiler.compile(new script(input));
 
             assert.equal(true, UnitObject.prototype.isNormal(output.__a__()));
-            assert.deepEqual([[2,2,3,3],[2,2,3,3]], output.__a__().value);
+            assert.deepEqual(UnitObject.prototype.create([[2,2,3,3],[2,2,3,3]], {}), output.__a__());
             assert.ifError(output.__a__().error);
         });
 
