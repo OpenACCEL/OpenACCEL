@@ -20,9 +20,12 @@ var controller = null;
  */
 var cm = null;
 
+require.config({
+    baseUrl: "scripts"
+});
 
-require(["../Controller/ControllerAPI", "../View/WebView", "../cm/lib/codemirror",
-    "../cm/mode/ACCEL/ACCEL"],
+require(["Controller/ControllerAPI", "View/WebView", "cm/lib/codemirror",
+    "cm/mode/ACCEL/ACCEL"],
     /**@lends View*/ function(Controller, View, CodeMirror) {
 
     view = new View();
