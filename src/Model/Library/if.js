@@ -4,8 +4,6 @@ function __if__(condition, ifTrue, ifFalse) {
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
 
-    console.log(JSON.stringify(condition) + ", " + JSON.stringify(ifTrue) + ", " + JSON.stringify(ifFalse));
-
     function doIf(cond, tr, fa) {
         if (cond) {
             return tr;
