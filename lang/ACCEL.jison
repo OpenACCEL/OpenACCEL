@@ -677,13 +677,21 @@ string                  :   STRING
                         ;
 
 predefinedConstant      :   PI
-                            {{ $$ = "Math.PI"; }}
+                            {{
+                                if (yy.units) { $$ = "new UnitObject(Math.PI)"; } else { $$ = "Math.PI";  }
+                            }}
                         |   E
-                            {{ $$ = "Math.E"; }}
+                            {{
+                                if (yy.units) { $$ = "new UnitObject(Math.E)"; } else { $$ = "Math.E"; }
+                            }}
                         |   TRUE
-                            {{ $$ = "true"; }}
+                            {{
+                                if (yy.units) { $$ = "new UnitObject(true)"; } else { $$ = "true"; }
+                            }}
                         |   FALSE
-                            {{ $$ = "false"; }}
+                            {{
+                                if (yy.units) { $$ = "new UnitObject(false)"; } else { $$ = "false"; }
+                            }}
                         ;
 
 /**
