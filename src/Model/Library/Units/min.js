@@ -19,3 +19,5 @@ function min(x, y) {
         }
     });
 }
+
+min.base = new UnitObject(Infinity);

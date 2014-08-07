@@ -19,3 +19,5 @@ function max(x, y) {
         }
     });
 }
+
+max.base = new UnitObject(-Infinity);
