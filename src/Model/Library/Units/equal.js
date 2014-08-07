@@ -15,7 +15,7 @@ function equal(x, y) {
             return new UnitObject(std_eq(a.value, b.value), {}, "unitError",
                 "Arguments of == must have same units. Trying to compare units <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            return a.clone(std_eq(a.value, b.value));
+            return new UnitObject(std_eq(a.value, b.value));
         }
     });
 }

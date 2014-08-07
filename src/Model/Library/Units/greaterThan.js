@@ -15,7 +15,7 @@ function greaterThan(x, y) {
             return new UnitObject(std_gt(a.value, b.value), {}, "unitError",
                 "Both arguments of > must be the same. Current units are <" + a.toString() + "> and <" + b.toString() + ">.");
         } else {
-            return a.clone(std_gt(a.value, b.value));
+            return new UnitObject(std_gt(a.value, b.value));
         }
     });
 }
