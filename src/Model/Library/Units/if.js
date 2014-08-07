@@ -3,7 +3,6 @@ function __if__(condition, ifTrue, ifFalse) {
         throw new Error('Wrong number of arguments for ' + arguments.callee.name +
             '. Expected: ' + arguments.callee.length + ', got: ' + arguments.length);
     }
-    console.log(JSON.stringify(condition) + ", " + JSON.stringify(ifTrue) + ", " + JSON.stringify(ifFalse));
 
     // Handle error(s) (propagation)
     var std_if = exe.lib.std.__if__;
