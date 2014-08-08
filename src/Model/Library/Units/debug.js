@@ -1,4 +1,5 @@
 function debug(c, v) {
-    // Not implemented yet.
-    return new UnitObject(0);
+    return new UnitObject(exe.lib.std.debug(c.value, unaryZip(v, function(x) {
+    	return x.value;
+    })));
 }
