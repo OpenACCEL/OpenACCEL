@@ -206,9 +206,12 @@ function checkUnits() {
  */
 function clearUnitErrors() {
 	// First save the current contents so any changes won't be lost
+	if (usingAdvancedEditor()) {
+		editor.save();
+	}
 	var source = $('#scriptarea').val();
 	controller.setScriptFromSource(source);
-	
+
 	synchronizeScriptArea({'includeCheckedUnits':false});
 	$('#clearerrors').css({'visibility':'hidden'});
 }

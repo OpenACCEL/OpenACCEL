@@ -100,7 +100,7 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
 
         /**
          * Whether the executable has been compiled with unit support or not.
-         * 
+         *
          * @type {Boolean}
          */
         this.units = false;
@@ -140,7 +140,7 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
                 } else {
                     // For input quantities, which do not have executable library functions,
                     // retrieve the current value from the report and store it in the history
-                    
+
                     // Don't forget to check for units. If we're evaluating units, we must cast the
                     // answer as a UnitObject.
                     if (this.units) {
@@ -185,14 +185,13 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
              * Perform an automapping over the answer.
              * This will turn each scalar element into a UnitObject with the unit
              * as determined by the user.
-             * 
+             *
              * Also check whether the signature of the unit matches that of it's value.
              */
             if (Object.keys(quantity.unit).length === 0 || UnitObject.prototype.verifySignature(ans, quantity.unit)) {
                 ans = UnitObject.prototype.create(ans, quantity.unit);
             } else {
-                ans.error = "unitError";
-                ans.errorString = "Signature of quantity " + report.name + " is incorrect";
+                ans = UnitObject.prototype.makeError(ans, "unitError", "Signature of quantity " + report.name + " is incorrect");
             }
         } else {
             // This value is guaranteed to have some unit. The quantity will take this unit.
@@ -202,19 +201,12 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             });
         }
 
-        // Store any textual description of errors that might have occured during the checking of
-        // this unit in the Executable so they can be retrieved later (after all units have been checked).
-        var err = this.findFirstError(ans);
-        if (err !== '') {
-            this.unitErrors.push(err);
-        }
-
         return ans;
     };
 
     /**
      * Tries to execute a quantity with memoization.
-     * 
+     *
      * @param  {Quantity} quantity The quantity to execute.
      * @param  {Object} args      The arguments of the quantity, in case it is a function call.
      */
@@ -396,6 +388,13 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             var unit;
             try {
                 unit = this[localQty]();
+
+                // Store any textual description of errors that might have occured during the checking of
+                // this unit in the Executable so they can be retrieved later (after all units have been checked).
+                var err = this.findFirstError(unit);
+                if (err !== '') {
+                    this.unitErrors.push(quantity + ": " + err);
+                }
             } catch (e) {
                 throw new RuntimeError("Error evaluating unit of quantity " + quantity + ": " + e.message);
             }

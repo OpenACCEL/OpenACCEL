@@ -419,6 +419,24 @@ UnitObject.prototype.toArray = function(arr) {
 };
 
 /**
+ * Turns the given (array of) UnitObject(s) into a single UO containing the same value
+ * and the given error and error message. This error will then be propagated correctly
+ * when used in other expressions.
+ *
+ * @param {UnitObject} obj The (array of) UnitObject(s) to turn into an error object.
+ * @param {String} err The error to give to the UO. For example "unitError" or "uncheckedUnit"
+ * @param {String} message The textual description of the error. Displayed to the user in the UI
+ * @return {UnitObject} UO with the value of the given (array of) UO('s), and the given error (message)
+ */
+UnitObject.prototype.makeError = function(obj, err, message) {
+    var val = UnitObject.prototype.toArray(obj);
+    var ans = new UnitObject(val, {}, err);
+    ans.errorString = message;
+
+    return ans;
+};
+
+/**
  * Recursively traverses the (array of array of ...) UnitObject(s) and
  * returns the first error it finds.
  *
