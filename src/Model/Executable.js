@@ -205,7 +205,7 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         // this unit in the Executable so they can be retrieved later (after all units have been checked).
         var err = this.findFirstError(ans);
         if (err !== '') {
-            this.unitErrors.push(report.name + ": " + err);
+            this.unitErrors.push({'quantity': report.name, 'error': err});
         }
 
         return ans;
@@ -425,7 +425,8 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         var ans = 'The following errors occured during unit checking: \n\n';
 
         for (var err in this.unitErrors) {
-            ans += this.unitErrors[err] + "\n";
+            var error = this.unitErrors[err];
+            ans += error.quantity + ": " + error.error + "\n";
         }
 
         return ans;
