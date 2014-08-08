@@ -841,7 +841,12 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                         }}
                         |   COND '(' expr ',' expr ',' expr ')'
                         {{
-                            $$ = "((" + $3 + ")?(" + $5 + "):(" + $7 + "))";
+                            // When the condition is an array, the result will always be false.
+                            if (yy.units) {
+                                $$ = "((!(" + $3 + " instanceof Array) && " + $3 + ".value)?(" + $5 + "):(" + $7 + "))";
+                            } else {
+                                $$ = "((!(" + $3 + " instanceof Array) && " + $3 + ")?(" + $5 + "):(" + $7 + "))";
+                            }
                         }}
                         ;
 
