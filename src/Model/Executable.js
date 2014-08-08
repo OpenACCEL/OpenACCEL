@@ -142,11 +142,13 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
                     // retrieve the current value from the report and store it in the history
 
                     // Don't forget to check for units. If we're evaluating units, we must cast the
-                    // answer as a UnitObject.
+                    // answer as a UnitObject. If the report value is undefined, we just fetch
+                    // it from the default input value.
+                    var value = (report.value) ? report.value : report.input.parameters[0];
                     if (this.units) {
-                        history[0] = new UnitObject(report.value, quantity.unit);
+                        history[0] = new UnitObject(value, quantity.unit);
                     } else {
-                        history[0] = report.value;
+                        history[0] = value;
                     }
                 }
             }
@@ -205,7 +207,7 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         // this unit in the Executable so they can be retrieved later (after all units have been checked).
         var err = this.findFirstError(ans);
         if (err !== '') {
-            this.unitErrors.push({'quantity': report.name, 'error': err});
+            this.unitErrors.push(report.name + ": " + err);
         }
 
         return ans;
@@ -425,8 +427,7 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         var ans = 'The following errors occured during unit checking: \n\n';
 
         for (var err in this.unitErrors) {
-            var error = this.unitErrors[err];
-            ans += error.quantity + ": " + error.error + "\n";
+            ans += this.unitErrors[err] + "\n";
         }
 
         return ans;

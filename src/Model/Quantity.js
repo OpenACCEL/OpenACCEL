@@ -124,11 +124,11 @@ define([], /**@lends Model.Quantity */ function() {
 
         /**
          * The current value of the quantity, as evaluated in the executable.
-         * Default value is zero.
+         * Default value is undefined.
          *
          * @type {Number}
          */
-        this.value = 0;
+        this.value = undefined;
 
 
         /**
