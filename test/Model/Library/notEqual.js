@@ -151,7 +151,7 @@ suite("NotEqual Library", function() {
             "z = notEqual(x, y)\n";
             var output = compiler.compile(new script(input));
 
-            assert.equal(true, output.__c__().equals(new UnitObject(false, {'kg': 1})));
+            assert.equal(true, output.__c__().isNormal());
             assert.equal(true, output.__c__().value);
             assert.ifError(output.__c__().error);
 
