@@ -369,6 +369,12 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
      */
     Executable.prototype.getValue = function(quantity) {
         var localQty = '__' + quantity + '__';
+
+        // User defined functions can't have a unit without knowing its arguments.
+        if (this.report[localQty].parameters.length > 0) {
+            return "";
+        }
+
         if (this[localQty]) {
             return this[localQty]();
         } else {
