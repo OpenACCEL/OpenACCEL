@@ -201,6 +201,13 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             });
         }
 
+        // Store any textual description of errors that might have occured during the checking of
+        // this unit in the Executable so they can be retrieved later (after all units have been checked).
+        var err = this.findFirstError(ans);
+        if (err !== '') {
+            this.unitErrors.push(report.name + ": " + err);
+        }
+
         return ans;
     };
 
@@ -388,13 +395,6 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             var unit;
             try {
                 unit = this[localQty]();
-
-                // Store any textual description of errors that might have occured during the checking of
-                // this unit in the Executable so they can be retrieved later (after all units have been checked).
-                var err = this.findFirstError(unit);
-                if (err !== '') {
-                    this.unitErrors.push(quantity + ": " + err);
-                }
             } catch (e) {
                 throw new RuntimeError("Error evaluating unit of quantity " + quantity + ": " + e.message);
             }
