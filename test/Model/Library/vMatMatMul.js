@@ -256,4 +256,25 @@ suite("vMatMatMul Library", function() {
             assert.deepEqual(output.__x__(), expected);
         });
     });
+
+    suite("| Units", function() {
+        test("| Normal operation", function() {
+            compiler.setUnits(true);
+            var input =
+            "x = vMatMatMul(z, y)\n" +
+            "y = [[1, 1],[0, -1]] ; [[kg,kg],[kg,kg]]\n" +
+            "z = [[2, 4],[3, 5]] ; [[d,d],[d,d]]\n" +
+            "u = vMatMatMul([[4,4], [3,5]], [2,3])\n";
+            var output = compiler.compile(new Script(input));
+
+            var expected1 = UnitObject.prototype.create([[2,-2],[3,-2]], {'kg':1, 'd':1});
+            assert.deepEqual(output.__x__(), expected1);
+            assert.ifError(output.__x__().error);
+
+            var expected2 = UnitObject.prototype.create([20,21], {});
+            assert.deepEqual(output.__u__(), expected2);
+            assert.equal(true, UnitObject.prototype.isNormal(output.__u__()));
+            assert.ifError(output.__u__().error);
+        });
+    });
 });
