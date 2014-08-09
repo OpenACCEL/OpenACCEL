@@ -23,6 +23,7 @@ define([], /**@lends Model.Error*/ function() {
      * @classdesc An error that occured while parsing ACCEL script.
      */
     function SyntaxError() {
+        this.type = "parsing";
         this.firstLine = 0;
         this.lastLine = 0;
         this.startPos = 0;

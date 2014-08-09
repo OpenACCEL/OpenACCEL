@@ -282,15 +282,27 @@ define(["Model/Analyser/Analyser",
             try {
                 this.parser.parse(source);
             } catch (e) {
+                // A syntax error occured in the Jison parser. This could either be a parser or
+                // lexical error. In the latter case, only the properties e.hash.line and
+                // e.message are defined!
                 var err = new SyntaxError();
 
-                err.found = e.hash.text;
-                err.expected = e.hash.expected;
-                err.firstLine = e.hash.loc.first_line;
-                err.lastLine = e.hash.loc.last_line;
-                err.startPos = e.hash.loc.first_column;
-                err.endPos = e.hash.loc.last_column;
-                err.message = e.message;
+                if (e.hash.line !== 'undefined') {
+                    // Lexical error
+                    err.type = "lexical";
+                    err.firstLine = e.hash.line;
+                    err.message = e.message;
+                } else {
+                    // Parsing error
+                    err.type = "parsing";
+                    err.found = e.hash.text;
+                    err.expected = e.hash.expected;
+                    err.firstLine = e.hash.loc.first_line;
+                    err.lastLine = e.hash.loc.last_line;
+                    err.startPos = e.hash.loc.first_column;
+                    err.endPos = e.hash.loc.last_column;
+                    err.message = e.message;
+                }
 
                 throw err;
             }
@@ -390,7 +402,7 @@ define(["Model/Analyser/Analyser",
                     var unit = this.getQuantityUnit(qtyName);
                     this.quantities[qtyName].checkedUnit = unit;
 
-                    // Also overwrite given quantity if the quantity is correct
+                    // Also overwrite given unit if the unit is correct
                     if (unit !== 'unitError' && unit !== 'uncheckedUnit') {
                         this.quantities[qtyName].unit = unit;
                     }
