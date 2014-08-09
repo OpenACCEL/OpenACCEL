@@ -42,7 +42,7 @@ suite("iGaussian Library", function() {
             var output = compiler.compile(new script(input));
 
             assert.equal(true, UnitObject.prototype.isNormal(output.__a__()));
-            assert.deepEqual([[0.25,0.25],[0.25,0.25]], output.__a__().value);
+            assert.deepEqual(UnitObject.prototype.create([[0.25,0.25],[0.25,0.25]], {}), output.__a__());
             assert.ifError(output.__a__().error);
         });
 

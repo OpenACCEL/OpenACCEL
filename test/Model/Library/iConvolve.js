@@ -58,7 +58,7 @@ suite("iConvolve Library", function() {
             assert.deepEqual([[58,58,64],[58,58,64]], output.__b__().value);
             assert.equal(output.__b__().error, "unitError");
 
-            //assert.deepEqual([[58,58,64],[58,58,64]], output.__c__().value);
+            assert.deepEqual([[58,58,64],[58,58,64]], output.__c__().value);
             assert.equal(output.__c__().error, "uncheckedUnit");
             assert.ok(output.__c__().isNormal());
         });

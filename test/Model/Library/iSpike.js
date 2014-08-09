@@ -41,7 +41,7 @@ suite("iSpike Library", function() {
             var output = compiler.compile(new script(input));
 
             assert.equal(true, UnitObject.prototype.isNormal(output.__a__()));
-            assert.deepEqual([[1,0,0],[0,0,0],[0,0,0]], output.__a__().value);
+            assert.deepEqual(UnitObject.prototype.create([[1,0,0],[0,0,0],[0,0,0]], {}), output.__a__());
             assert.ifError(output.__a__().error);
         });
 

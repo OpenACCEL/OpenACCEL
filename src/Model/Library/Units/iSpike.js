@@ -14,6 +14,6 @@ function iSpike(x1,x2,y1,y2) {
         return new UnitObject(std_iSpike(x1.value, x2.value, y1.value, y2.value), {}, "unitError",
             "All arguments of iSpike must be unitless; current units are: <"+ x1.toString() +">, <"+ x2.toString() +">, <" + y1.toString() + "> and <" + y2.toString() + "> respectively");
     } else {
-        return new UnitObject(std_iSpike(x1.value, x2.value, y1.value, y2.value), {}, null);
+        return UnitObject.prototype.create(std_iSpike(x1.value, x2.value, y1.value, y2.value), {});
     }
 }
