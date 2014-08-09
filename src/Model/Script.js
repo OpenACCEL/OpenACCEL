@@ -287,11 +287,24 @@ define(["Model/Analyser/Analyser",
                 // e.message are defined!
                 var err = new SyntaxError();
 
-                if (e.hash.line !== 'undefined') {
+                if (typeof e.hash.loc === 'undefined') {
                     // Lexical error
                     err.type = "lexical";
-                    err.firstLine = e.hash.line;
                     err.message = e.message;
+                    err.firstLine = err.lastLine = e.hash.line+1;
+
+                    // Deduce the position from the amount of '-' characters in the error message
+                    // and the start of the string mentioned in the message..
+                    var textMatch = err.message.split("\n")[1];
+                    var offset = source.indexOf(textMatch);
+
+                    var relativePosRE = /(-)*\^$/;
+                    var position = relativePosRE.exec(err.message)[0].length;
+
+
+                    err.startPos = offset+position-1;
+                    err.endPos = offset+position-1;
+                    err.found = source.substr(err.startPos, 1);
                 } else {
                     // Parsing error
                     err.type = "parsing";

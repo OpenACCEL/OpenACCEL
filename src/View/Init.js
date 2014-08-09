@@ -32,6 +32,7 @@ function syntaxErrorMessage(id, error, selector) {
     var errorContainer = $(selector);
     var source = errorContainer.html();
     var errorLines = source.split('\n');
+
     var errorEnd = errorLines[error.lastLine - 1];
 
     errorLines[error.firstLine - 1] = errorEnd.substr(0, error.endPos) + '<span id = "errorlocation' + this.id + '"></span>' + errorEnd.substr(error.endPos);
@@ -47,7 +48,9 @@ function syntaxErrorMessage(id, error, selector) {
     this.x = pos.left;
     this.y = 16 + pos.top;
     this.text = '';
-    if (error.found === '') {
+    if (error.type === 'lexical') {
+        this.text = '<span style = "color: #FF1144;">Syntax Error</span> Unexpected \"' + error.found + '\" at position ' + error.startPos + '.';
+    } else if (error.found === '') {
         this.text = '<span style = "color: #FF1144;">Syntax Error</span> Expected expression or operator at position ' + error.endPos + '.';
     } else {
         this.text = '<span style = "color: #FF1144;">Syntax Error</span> Unexpected \"' + error.found + '\" at position ' + error.startPos + ' to ' + error.endPos + '.'; /*' in line ' + error.firstLine;*/
@@ -70,7 +73,11 @@ function runtimeErrorMessage(id, error, selector) {
         this.y = 48 + pos.top;
     }
 
-    this.text = '<span style = "color: #FF1144;">Runtime Error</span> ' + error.message;
+    if (error.type === 'lexical') {
+        this.text = '<span style = "color: #FF1144;">Syntax Error</span> ' + error.message;
+    } else {
+        this.text = '<span style = "color: #FF1144;">Runtime Error</span> ' + error.message;
+    }
 }
 
 var errorCount = 0;
@@ -81,6 +88,7 @@ function handleError(error) {
 
     switch(error.constructor.name) {
         case 'SyntaxError':
+            // Can be either a lexical scanner or parsing error. Handle appropriately
             errormsg = new syntaxErrorMessage(errorCount, error, '#scriptline');
             break;
         case 'TypeError':
