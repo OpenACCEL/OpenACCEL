@@ -161,21 +161,11 @@ define(["Model/FileLoader",
             try {
                 code = this.parser.parse(code);
             } catch (e) {
-                if (!e.hash) {
+                if (typeof e.hash === 'undefined') {
                     throw e;
                 }
 
-                var err = new SyntaxError();
-
-                err.found = e.hash.text;
-                err.expected = e.hash.expected;
-                err.firstLine = e.hash.loc.first_line;
-                err.lastLine = e.hash.loc.last_line;
-                err.startPos = e.hash.loc.first_column;
-                err.endPos = e.hash.loc.last_column;
-                err.message = e.message;
-
-                throw err;
+                throw new SyntaxError(e, code);
             }
 
             return code;
@@ -192,6 +182,7 @@ define(["Model/FileLoader",
         Compiler.prototype.parseUnits = function(script) {
             // Parse the units and handle any syntax errors
             var unitCode = "";
+            var currentQuantity = undefined;
 
             try {
                 // For each quantity, get the unit, parse it and add to the quantity in the executable.
@@ -204,29 +195,17 @@ define(["Model/FileLoader",
                         continue;
                     }
 
+                    currentQuantity = qty;
                     unitCode += "this.__" + qtyName + "__.unit=" + this.unitParser.parse(qty.unit) + ";";
                 }
 
                 return unitCode;
             } catch (e) {
-                if (!e.hash) {
+                if (e.hash === 'undefined') {
                     throw e;
                 }
 
-                // Syntaxerror occured if it has a 'hash' property.
-                // Add the error location to the length of the quantity definition to
-                // get the correct position!
-                var err = new SyntaxError();
-
-                err.found = e.hash.text;
-                err.expected = e.hash.expected;
-                err.firstLine = e.hash.loc.first_line;
-                err.lastLine = e.hash.loc.last_line;
-                err.startPos = e.hash.loc.first_column;
-                err.endPos = e.hash.loc.last_column;
-                err.message = e.message;
-
-                throw err;
+                throw new SyntaxError(e, qty.source);
             }
         };
 

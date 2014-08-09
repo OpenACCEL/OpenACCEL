@@ -282,42 +282,7 @@ define(["Model/Analyser/Analyser",
             try {
                 this.parser.parse(source);
             } catch (e) {
-                // A syntax error occured in the Jison parser. This could either be a parser or
-                // lexical error. In the latter case, only the properties e.hash.line and
-                // e.message are defined!
-                var err = new SyntaxError();
-
-                if (typeof e.hash.loc === 'undefined') {
-                    // Lexical error
-                    err.type = "lexical";
-                    err.message = e.message;
-                    err.firstLine = err.lastLine = e.hash.line+1;
-
-                    // Deduce the position from the amount of '-' characters in the error message
-                    // and the start of the string mentioned in the message..
-                    var textMatch = err.message.split("\n")[1];
-                    var offset = source.indexOf(textMatch);
-
-                    var relativePosRE = /(-)*\^$/;
-                    var position = relativePosRE.exec(err.message)[0].length;
-
-
-                    err.startPos = offset+position-1;
-                    err.endPos = offset+position-1;
-                    err.found = source.substr(err.startPos, 1);
-                } else {
-                    // Parsing error
-                    err.type = "parsing";
-                    err.found = e.hash.text;
-                    err.expected = e.hash.expected;
-                    err.firstLine = e.hash.loc.first_line;
-                    err.lastLine = e.hash.loc.last_line;
-                    err.startPos = e.hash.loc.first_column;
-                    err.endPos = e.hash.loc.last_column;
-                    err.message = e.message;
-                }
-
-                throw err;
+                throw new SyntaxError(e, source);
             }
 
             return true;
