@@ -217,7 +217,7 @@ define(["Model/Script",
             } catch(e) {
                 throw e;
             } finally {
-                //this.compiler.setUnits(false);
+                this.compiler.setUnits(false);
             }
         };
 
@@ -946,13 +946,7 @@ define(["Model/Script",
                 }
             }
 
-            // TODO remove temporary hack for showing UnitObject values in script
-            var ans = this.script.toString(options);
-            if (this.script.isCompiled()) {
-                this.compiler.setUnits(false);
-            }
-
-            return ans;
+            return this.script.toString(options);
         };
 
         /**

@@ -272,9 +272,7 @@ define([], /**@lends Model.Quantity */ function() {
         }
 
         // Include value when asked
-        if (options.includeCheckedUnits) {
-            def += '\n //// Value: ' + JSON.stringify(this.value);
-        } else if (options.includeValues) {
+        if (options.includeValues) {
             def += '\n //// Value: ' + objectToString(this.value, 500);
         }
 
