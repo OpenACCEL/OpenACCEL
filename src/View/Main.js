@@ -13,20 +13,12 @@ var view = null;
  */
 var controller = null;
 
-/**
- * The CodeMirror instance used to create an advanced editor in the IO/edit tab.
- *
- * @type {CodeMirror}
- */
-var cm = null;
-
 require.config({
     baseUrl: "scripts"
 });
 
-require(["Controller/ControllerAPI", "View/WebView", "cm/lib/codemirror",
-    "cm/mode/ACCEL/ACCEL"],
-    /**@lends View*/ function(Controller, View, CodeMirror) {
+require(["Controller/ControllerAPI", "View/WebView"],
+    /**@lends View*/ function(Controller, View) {
 
     view = new View();
     controller = new Controller(view);
@@ -35,12 +27,4 @@ require(["Controller/ControllerAPI", "View/WebView", "cm/lib/codemirror",
     controller.setAutoExecute(true);
     controller.autoSave = true;
     controller.restoreSavedScript();
-
-    // Setup CodeMirror instance and also setup advanced editor in IO/edit tab
-    // when preference in localStorage is set as such
-    cm = CodeMirror;
-    if (localStorage.useAdvancedEditor === 'true') {
-        $('#useCM').prop("checked", true);
-        toggleCM();
-    }
 });
