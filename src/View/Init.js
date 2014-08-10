@@ -45,7 +45,10 @@ function syntaxErrorMessage(id, error, selector) {
 
     errorContainer.children().remove();
 
-    this.x = pos.left;
+    // Ensure the popup is never displayed outside of the input field
+    var minX = errorContainer.offset().left;
+    var maxX = errorContainer.offset().left + errorContainer.outerWidth();
+    this.x = (pos.left-3 < minX) ? minX : ((pos.left-3 > maxX) ? maxX : pos.left-3)
     this.y = 16 + pos.top;
     this.text = '';
     if (error.type === 'lexical') {
