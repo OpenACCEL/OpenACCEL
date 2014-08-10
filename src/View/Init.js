@@ -30,7 +30,7 @@ function syntaxErrorMessage(id, error, selector) {
     this.id = id;
 
     var errorContainer = $(selector);
-    var source = errorContainer.html();
+    var source = errorContainer.text();
     var errorLines = source.split('\n');
 
     var errorEnd = errorLines[error.lastLine - 1];
@@ -49,7 +49,7 @@ function syntaxErrorMessage(id, error, selector) {
     this.y = 16 + pos.top;
     this.text = '';
     if (error.type === 'lexical') {
-        this.text = '<span style = "color: #FF1144;">Syntax Error</span> Unexpected \"' + error.found + '\" at position ' + error.startPos + '.';
+        this.text = '<span style = "color: #FF1144;">Syntax Error</span> Unexpected \"' + error.found + '\" at position ' + (error.startPos+1) + '.';
     } else if (error.found === '') {
         this.text = '<span style = "color: #FF1144;">Syntax Error</span> Expected expression or operator at position ' + error.endPos + '.';
     } else {

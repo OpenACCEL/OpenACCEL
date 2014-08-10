@@ -45,7 +45,7 @@ define([], /**@lends Model.Error*/ function() {
                 var relativePosRE = /(-)*\^$/;
                 var position = relativePosRE.exec(this.message)[0].length;
 
-                this.startPos = offset+position-1;
+                this.startPos = offset+position-2;
                 this.endPos = this.startPos+1;
                 this.found = source.substr(this.startPos, 1);
             } else {
