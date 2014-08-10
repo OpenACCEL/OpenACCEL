@@ -3,9 +3,10 @@ require.config({
 });
 
 define(["../Controller/AbstractView",
+        "../View/Tabs/IOEdit",
         "../View/Graphics/CanvasCreator"],
         /**@lends View*/
-        function(AbstractView, CanvasCreator) {
+        function(AbstractView, IOEdit, CanvasCreator) {
     /**
      * @class
      * @classdesc The webview is the view class for webbrowsers.
@@ -23,6 +24,12 @@ define(["../Controller/AbstractView",
          * The various canvasses that the view will use to plot and draw.
          */
         this.canvasses = {};
+
+        /**
+         * The various tab that this view has to offer.
+         */
+        this.tabs = {};
+        this.tabs.ioedit = new IOEdit();
     }
 
     WebView.prototype = new AbstractView();
@@ -39,7 +46,7 @@ define(["../Controller/AbstractView",
         synchronizeScriptList(quantities);
 
         // Update textarea/advanced editor in IO/edit
-        synchronizeScriptArea();
+        this.tabs.ioedit.synchronizeScriptArea();
     };
 
     /**
@@ -134,7 +141,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.loadedNewScript = function() {
         resetEditRun();
-        synchronizeScriptArea();
+        this.tabs.ioedit.synchronizeScriptArea();
     };
 
     /**

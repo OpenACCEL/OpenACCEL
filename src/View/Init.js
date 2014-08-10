@@ -138,8 +138,8 @@ $(document).ready(
                     case 'ioedit':
                         // Build script from inputted source when leaving IO/edit
                         try {
-                            if (editor) {
-                                editor.save();
+                            if (view.tabs.ioedit.editor) {
+                                view.tabs.ioedit.editor.save();
                             }
                             controller.setScriptFromSource($('#scriptarea').val());
                             showValues = false;
@@ -183,7 +183,10 @@ $(document).ready(
                         }
                         break;
                     case 'ioedit':
-                        setTimeout(function() {updateAdvancedEditor(); focusAdvancedEditor(); }, 100);
+                        setTimeout(function() {
+                            view.tabs.ioedit.updateAdvancedEditor();
+                            view.tabs.ioedit.focusAdvancedEditor();
+                        }, 100);
                         break;
                     default:
                         break;
