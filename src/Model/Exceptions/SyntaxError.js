@@ -38,12 +38,22 @@ define([], /**@lends Model.Error*/ function() {
                 this.firstLine = this.lastLine = e.hash.line+1;
 
                 // Deduce the position from the amount of '-' characters in the error message
-                // and the start of the string mentioned in the message..
+                // and from the start of the string mentioned in the message in the parsed source..
                 var textMatch = this.message.split("\n")[1];
+                var start=0;
+                var end=textMatch.length;
+                if (textMatch.substr(0,3) === '...') {
+                    start = 3;
+                }
+                if (textMatch.substr(-3) === '...') {
+                    end -= 3;
+                }
+                textMatch = textMatch.substring(start, end);
+
                 var offset = source.indexOf(textMatch);
 
                 var relativePosRE = /(-)*\^$/;
-                var position = relativePosRE.exec(this.message)[0].length;
+                var position = relativePosRE.exec(this.message)[0].length - (start-1);
 
                 this.startPos = offset+position-2;
                 this.endPos = this.startPos+1;
