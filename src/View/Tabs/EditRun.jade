@@ -1,5 +1,4 @@
 #editrun
-    script(src = 'scripts/View/tabs/EditRun.js')
     div
         .inline
             .label Script line
@@ -7,17 +6,17 @@
             #scriptline.inline.textin(contenteditable)
         .inline
             .label &nbsp;
-            input(type = 'button', value = 'Enter', onclick = 'addQuantity($("#scriptline").text())')#enterline.buttonin
+            input(type = 'button', value = 'Enter', onclick = 'view.tabs.editrun.addQuantity($("#scriptline").text())')#enterline.buttonin
         #scriptoptions
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'New', onclick = 'newScript()')#newscript.buttonin
+                input(type = 'button', value = 'New', onclick = 'view.tabs.editrun.newScript()')#newscript.buttonin
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'Run', onclick = 'toggleExecution(this.value)')#runscript.buttonin
+                input(type = 'button', value = 'Run', onclick = 'view.tabs.editrun.toggleExecution(this.value)')#runscript.buttonin
             .inline
                 .label Iterations
-                input(type = 'number', min = '0', value = '0', onchange = 'setIterations(this.value)')#iterations.textin
+                input(type = 'number', min = '0', value = '0', onchange = 'view.tabs.editrun.setIterations(this.value)')#iterations.textin
 
     .inline
         #scriptlistdiv
