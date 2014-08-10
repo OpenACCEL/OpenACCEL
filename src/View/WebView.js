@@ -3,10 +3,11 @@ require.config({
 });
 
 define(["../Controller/AbstractView",
+        "../View/Tabs/EditRun",
         "../View/Tabs/IOEdit",
         "../View/Graphics/CanvasCreator"],
         /**@lends View*/
-        function(AbstractView, IOEdit, CanvasCreator) {
+        function(AbstractView, EditRun, IOEdit, CanvasCreator) {
     /**
      * @class
      * @classdesc The webview is the view class for webbrowsers.
@@ -30,6 +31,7 @@ define(["../Controller/AbstractView",
          */
         this.tabs = {};
         this.tabs.ioedit = new IOEdit();
+        this.tabs.editrun = new EditRun();
     }
 
     WebView.prototype = new AbstractView();
@@ -43,7 +45,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.setQuantities = function(quantities) {
         // Update quantity list in edit/run tab
-        synchronizeScriptList(quantities);
+        this.tabs.editrun.synchronizeScriptList(quantities);
 
         // Update textarea/advanced editor in IO/edit
         this.tabs.ioedit.synchronizeScriptArea();
@@ -56,7 +58,7 @@ define(["../Controller/AbstractView",
      * quantities in the script.
      */
     WebView.prototype.presentResults = function(cat2quantities) {
-        synchronizeResults(cat2quantities);
+        this.tabs.editrun.synchronizeResults(cat2quantities);
     };
 
     /**
@@ -133,14 +135,14 @@ define(["../Controller/AbstractView",
      * @param executing Boolean indicating whether the OpenACCEL model is being executed.
      */
     WebView.prototype.setExecuting = function(executing) {
-        setExecuting(executing);
+        this.tabs.editrun.setExecuting(executing);
     };
 
     /**
      * Resets the view to accomodate the newly loaded script.
      */
     WebView.prototype.loadedNewScript = function() {
-        resetEditRun();
+        this.tabs.editrun.resetEditRun();
         this.tabs.ioedit.synchronizeScriptArea();
     };
 
