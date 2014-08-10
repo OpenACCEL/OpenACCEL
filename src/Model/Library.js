@@ -120,6 +120,10 @@ define([], /**@lends Model.Library */ function() {
         ];
     }
 
+    Library.prototype.getFunctionNames = function(escaped) {
+        return this.std;
+    };
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Library;
 });
