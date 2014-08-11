@@ -30,6 +30,13 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
         this.library = {};
         this.library.std = {};
         this.library.unit = {};
+
+        /**
+         * The parsed JSON object containing the ACCEL library metadata such as function names, help text etc.
+         * 
+         * @type {Object}
+         */
+        this.libfile = {};
     }
 
     /**
@@ -53,6 +60,10 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
             case "unitlibrary":
                 location = "Library/Units";
                 extension = ".js";
+                break;
+            case "libfile":
+                location = "../../lang";
+                extension = ".json";
                 break;
             case "test":
                 location = "../../test/Model/Util";
@@ -110,6 +121,8 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 this.library.std[file] = content.toString();
             } else if (type === "unitlibrary") {
                 this.library.unit[file] = content.toString();
+            } else if (type === "libfile") {
+                this.libfile = JSON.parse(content);
             }
             return true;
         } else {
@@ -151,6 +164,20 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
         }
 
         return output;
+    };
+
+    /**
+     * Returns the contents of the ACCEL library metadata file as a JSON object.
+     * 
+     * @return {Object} The JSON object containing the ACCEL library metadata
+     */
+    FileLoader.prototype.getLibFile = function() {
+        // Load the file if it has not already been loaded
+        if (this.libfile === {}) {
+            this.load("ACCEL", "libfile");
+        }
+
+        return this.libfile;
     };
 
     /**

@@ -106,6 +106,7 @@ define(["Model/FileLoader",
             // Store a copy of the standard library in memory so it can be referenced from any other
             // library (at the moment: the unit library)
             var library = new Library();
+            library.load();
             var funcs = library.getFunctionNames(true);
             for (var i = 0; i < funcs.length; ++i) {
                 var func = funcs[i];
