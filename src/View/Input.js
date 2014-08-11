@@ -67,9 +67,9 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         this.max = max;
 
         this.getStepSize = function(val, min, max) {
-            var stepsizes = [Math.pow(10, -getPrecision(val)),
-                             Math.pow(10, -getPrecision(min)),
-                             Math.pow(10, -getPrecision(max))];
+            var stepsizes = [Math.pow(10, -view.getPrecision(val)),
+                             Math.pow(10, -view.getPrecision(min)),
+                             Math.pow(10, -view.getPrecision(max))];
 
             return Math.min.apply(Math, stepsizes);
         };

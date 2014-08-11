@@ -187,12 +187,12 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
                         controller.addQuantity(string);
                     } catch (error) {
                         console.log(error);
-                        handleError(error);
+                        view.handleError(error);
                     }
 
                     this.setPendingScriptLine(null);
 
-                    selectContent('#scriptline');
+                    view.selectContent('#scriptline');
                 }).bind(this),
                 10
             );
@@ -428,7 +428,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      */
     EditRun.prototype.addScriptlistLine = function(linenr, quantity, left, right, category) {
         //Secure right hand from input
-        right = encodeHTML(right);
+        right = view.encodeHTML(right);
 
         this.scriptlistBuffer.append(this.getScriptlistLineHTML(linenr, quantity, left, right, category));
     };
