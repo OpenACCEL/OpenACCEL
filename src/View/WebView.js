@@ -4,10 +4,12 @@ require.config({
 
 define(["../Controller/AbstractView",
         "../View/Tabs/EditRun",
+        "../View/Tabs/HelpDemo",
         "../View/Tabs/IOEdit",
+        "../View/Tabs/Optimisation",
         "../View/Graphics/CanvasCreator"],
         /**@lends View*/
-        function(AbstractView, EditRun, IOEdit, CanvasCreator) {
+        function(AbstractView, EditRun, HelpDemo, IOEdit, Optimisation, CanvasCreator) {
     /**
      * @class
      * @classdesc The webview is the view class for webbrowsers.
@@ -30,8 +32,10 @@ define(["../Controller/AbstractView",
          * The various tab that this view has to offer.
          */
         this.tabs = {};
-        this.tabs.ioedit = new IOEdit();
         this.tabs.editrun = new EditRun();
+        this.tabs.helpdemo = new HelpDemo();
+        this.tabs.ioedit = new IOEdit();
+        this.tabs.optimisation = new Optimisation();
     }
 
     WebView.prototype = new AbstractView();
