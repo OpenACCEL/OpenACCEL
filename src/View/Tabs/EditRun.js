@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define([], /**@lends View*/ function() {
+define(["View/Input"], /**@lends View*/ function(Input) {
     /**
      * @class
      * @classdesc The EditRun tab.
@@ -30,6 +30,11 @@ define([], /**@lends View*/ function() {
          * @type {HTMLbuffer}
          */
         this.userinputBuffer = new HTMLbuffer('#userinput');
+
+        /**
+         * Input element creation class.
+         */
+        this.Input = new Input(this.userinputBuffer);
 
         /**
          * Array of input javascript objects
@@ -258,16 +263,16 @@ define([], /**@lends View*/ function() {
             if (quantity.category == 1) {
                 switch (quantity.input.type) {
                     case 'slider':
-                        this.addInput(new SliderInput(i, quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2])));
+                        this.addInput(new this.Input.Slider(i, quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2])));
                         break;
                     case 'check':
-                        this.addInput(new CheckboxInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                        this.addInput(new this.Input.CheckBox(i, quantity.name, quantity.name, quantity.input.parameters[0]));
                         break;
                     case 'button':
-                        this.addInput(new ButtonInput(i, quantity.name, 'Click me', quantity.input.parameters[0]));
+                        this.addInput(new this.Input.Button(i, quantity.name, 'Click me', quantity.input.parameters[0]));
                         break;
                     case 'text':
-                        this.addInput(new TextInput(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                        this.addInput(new this.Input.TextBox(i, quantity.name, quantity.name, quantity.input.parameters[0]));
                         break;
                     default:
                         //Unknown input type
@@ -477,200 +482,6 @@ define([], /**@lends View*/ function() {
         for (var i = 0; i < this.inputs.length; i++) {
             this.inputs[i].initialize();
         }
-    };
-
-    /**
-     * Constructs a base input element
-     *
-     * @memberof View
-     * @class
-     * @classdesc Base input element to be extended
-     */
-    function Input() {
-        this.bufferInput = function() {
-            userinputBuffer.append(this.getHTML());
-        };
-    }
-    Input.prototype.getHTML = function() {};
-    Input.prototype.initialize = function() {};
-
-    /**
-     * Constructs a dynamic slider input object
-     *
-     * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
-     * @param {Object} quantity   Object which the input element affects
-     * @param {String} label      String to be used as a label for the input element in the UI
-     * @param {Number} val        Initial value of the slider
-     * @param {Number} min        Minimal value of the slider
-     * @param {Number} max        Maximal value of the slider
-     *
-     * @memberof View
-     * @class
-     * @classdesc Dynamic slider input class to be generated according to ACCEL script requirements
-     */
-    function SliderInput(identifier, quantity, label, val, min, max) {
-        this.identifier = identifier;
-        this.quantity = quantity;
-        this.label = label;
-
-        this.val = val;
-        this.min = min;
-        this.max = max;
-
-        this.getStepSize = function(val, min, max) {
-            var stepsizes = [Math.pow(10, -getPrecision(val)),
-                             Math.pow(10, -getPrecision(min)),
-                             Math.pow(10, -getPrecision(max))];
-
-            return Math.min.apply(Math, stepsizes);
-        };
-
-        this.properties = {
-            range: "min",
-            value: this.val,
-            min: this.min,
-            max: this.max,
-            step: this.getStepSize(this.val, this.min, this.max),
-
-            quantity: this.quantity, //Non-jquery addition to get the associated quantity within the slide function's scope
-            identifier: this.identifier, //Non-jquery addition to get the associated quantity within the slide function's scope
-            slide: function(event, ui) {
-                controller.setUserInputQuantity(quantity, ui.value);
-                $('#userslider' + identifier + 'value').html('(' + ui.value + ')');
-            }
-        };
-    }
-    SliderInput.prototype = new Input();
-    SliderInput.prototype.getHTML = function() {
-        return '' +
-            '<div id = "userinput' + this.identifier + '">' +
-                '<div class = "inline">' + this.label + '</div>' +
-                '<div id = "userslider' + this.identifier + 'value" class = "inline">(' + this.val + ')</div>' +
-                '<div id = "userslider' + this.identifier + '"></div>' +
-            '</div>';
-    };
-    SliderInput.prototype.initialize = function() {
-        controller.setUserInputQuantity(this.quantity, this.val);
-
-        $('#userslider' + this.identifier).slider(this.properties);
-    };
-
-    /**
-     * Constructs a dynamic checkbox input object
-     *
-     * @param {String}  identifier String to be used as a suffix in the id values of the generated html elements
-     * @param {Object}  quantity   Object which the input element affects
-     * @param {String}  label      String to be used as a label for the input element in the UI
-     * @param {Boolean} val        Initial value of the checkbox
-     *
-     * @memberof View
-     * @class
-     * @classdesc Dynamic checkbox input class to be generated according to ACCEL script requirements
-     */
-    function CheckboxInput(identifier, quantity, label, val) {
-        this.identifier = identifier;
-        this.quantity = quantity;
-        this.label = label;
-
-        this.val = val;
-    }
-    CheckboxInput.prototype = new Input();
-    CheckboxInput.prototype.getHTML = function() {
-        return '' +
-            '<div id = "userinput' + this.identifier + '">' +
-                '<label for = "usercheck' + this.identifier + '">' + this.label + '</label>' +
-                '<div class = "inline checkboxin">' +
-                    '<input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val === true ? 'checked' : '') + '>' +
-                    '<label for = "usercheck' + this.identifier + '"></label>' +
-                '</div>' +
-            '</div>';
-    };
-    CheckboxInput.prototype.initialize = function() {
-        controller.setUserInputQuantity(this.quantity, this.val);
-
-        var checkboxinput = this;
-        $('#usercheck' + checkboxinput.identifier).on('change',
-            function() {
-                controller.setUserInputQuantity(checkboxinput.quantity, this.checked);
-            }
-        );
-    };
-
-    /**
-     * Constructs a dynamic text input object
-     *
-     * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
-     * @param {Object} quantity   Object which the input element affects
-     * @param {String} label      String to be used as a label for the input element in the UI
-     * @param {String} val        Initial value of the text input field
-     *
-     * @memberof View
-     * @class
-     * @classdesc Dynamic text input class to be generated according to ACCEL script requirements
-     */
-    function TextInput(identifier, quantity, label, val) {
-        this.identifier = identifier;
-        this.quantity = quantity;
-        this.label = label;
-
-        this.val = val;
-    }
-    TextInput.prototype = new Input();
-    TextInput.prototype.getHTML = function() {
-        return '' +
-            '<div id = "userinput' + this.identifier + '">' +
-                '<label for = "usertext' + this.identifier + '">' + this.label + '</label>' +
-                '<input type = "text" id = "usertext' + this.identifier + '" class = "textin" value = "' + this.val + '">' +
-            '</div>';
-    };
-    TextInput.prototype.initialize = function() {
-        controller.setUserInputQuantity(this.quantity, this.val);
-
-        var textinput = this;
-        $('#usertext' + textinput.identifier).on('input',
-            function() {
-                var val = this.value;
-                if ($.isNumeric(val) && !(/[a-zA-Z]/.test(val))) {
-                    val = parseFloat(val);
-                }
-                controller.setUserInputQuantity(textinput.quantity, val);
-            }
-        );
-    };
-
-    /**
-     * Constructs a dynamic button input object
-     *
-     * @param {String} identifier String to be used as a suffix in the id values of the generated html elements
-     * @param {Object} quantity   Object which the input element affects
-     * @param {String} label      String to be used as a label for the input element in the UI
-     *
-     * @memberof View
-     * @class
-     * @classdesc Dynamic button input class to be generated according to ACCEL script requirements
-     */
-    function ButtonInput(identifier, quantity, label) {
-        this.identifier = identifier;
-        this.quantity = quantity;
-        this.label = label;
-    }
-    ButtonInput.prototype = new Input();
-    ButtonInput.prototype.getHTML = function() {
-        return '' +
-            '<div id = "userinput' + this.identifier + '">' +
-                '<label for = "userbutton' + this.identifier + '">' + this.quantity + '</label>' +
-                '<input type = "button" id = "userbutton' + this.identifier + '" class = "buttonin" value = "' + this.label + '">' +
-            '</div>';
-    };
-    ButtonInput.prototype.initialize = function() {
-        controller.setUserInputQuantity(this.quantity, false);
-
-        var buttoninput = this;
-        $('#userbutton' + buttoninput.identifier).on('click',
-            function() {
-                controller.setUserInputQuantity(buttoninput.quantity, true);
-            }
-        );
     };
 
     return EditRun;
