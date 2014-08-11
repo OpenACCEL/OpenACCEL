@@ -140,7 +140,7 @@ $(document).ready(
 
         $('#plotGO').on('click',
             function() {
-                var individual = view.optimisationCanvas.getClickedIndividual();
+                var individual = view.canvasses.go.getClickedIndividual();
                 var q;
 
                 individualPropertiesBuffer.empty();
