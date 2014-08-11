@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/Input"], /**@lends View*/ function(Input) {
+define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLBuffer) {
     /**
      * @class
      * @classdesc The EditRun tab.
@@ -20,16 +20,16 @@ define(["View/Input"], /**@lends View*/ function(Input) {
         /**
          * Buffer to contain updated #scriptlist content
          * @memberof View
-         * @type {HTMLbuffer}
+         * @type {HTMLBuffer}
          */
-        this.scriptlistBuffer = new HTMLbuffer('#scriptlist');
+        this.scriptlistBuffer = new HTMLBuffer('#scriptlist');
 
         /**
          * Buffer to contain updated #userinput content
          * @memberof View
-         * @type {HTMLbuffer}
+         * @type {HTMLBuffer}
          */
-        this.userinputBuffer = new HTMLbuffer('#userinput');
+        this.userinputBuffer = new HTMLBuffer('#userinput');
 
         /**
          * Input element creation class.
@@ -66,9 +66,9 @@ define(["View/Input"], /**@lends View*/ function(Input) {
 
             /**
              * Buffer to contain updated #todolist content
-             * @type {HTMLbuffer}
+             * @type {HTMLBuffer}
              */
-            todolistBuffer: new HTMLbuffer('#todolist'),
+            todolistBuffer: new HTMLBuffer('#todolist'),
 
             /**
              * Adds a quantity to be defined to the #todo element
@@ -100,9 +100,9 @@ define(["View/Input"], /**@lends View*/ function(Input) {
 
             /**
              * Buffer to contain updated #arglist content
-             * @type {HTMLbuffer}
+             * @type {HTMLBuffer}
              */
-            arglistBuffer: new HTMLbuffer('#arglist'),
+            arglistBuffer: new HTMLBuffer('#arglist'),
 
             /**
              * Adds a quantity to the list of quantities which are a parameter to the selected quantity
@@ -116,9 +116,9 @@ define(["View/Input"], /**@lends View*/ function(Input) {
 
             /**
              * Buffer to contain updated #argtolist content
-             * @type {HTMLbuffer}
+             * @type {HTMLBuffer}
              */
-            argtolistBuffer: new HTMLbuffer('#argtolist'),
+            argtolistBuffer: new HTMLBuffer('#argtolist'),
 
             /**
              * Adds a quantity to the list of quantities which use the selected quantity as a parameter
@@ -135,7 +135,7 @@ define(["View/Input"], /**@lends View*/ function(Input) {
              *
              * @type ValueList
              */
-            resultList: new ValueList('#result')
+            resultList: new this.Input.ValueList('#result')
         };
 
         $('#scriptline').keypress(

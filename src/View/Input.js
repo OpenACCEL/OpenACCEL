@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define([], /**@lends View*/ function() {
+define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
     /**
      * @class
      * @classdesc Container of various input classes..
@@ -11,9 +11,9 @@ define([], /**@lends View*/ function() {
         /**
          * Buffer to contain updated content
          * @memberof View
-         * @type {HTMLbuffer}
+         * @type {HTMLBuffer}
          */
-        this.buffer = typeof buffer === 'undefined' ? new HTMLbuffer() : buffer;
+        this.buffer = typeof buffer === 'undefined' ? new HTMLBuffer() : buffer;
 
         /**
          * The exported input classes.
@@ -23,6 +23,9 @@ define([], /**@lends View*/ function() {
         this.CheckBox = CheckBox;
         this.TextBox = TextBox;
         this.Button = Button;
+        this.ValueList = ValueList;
+        this.SelectionList = SelectionList;
+        this.Tooltip = Tooltip;
     }
 
     /**
@@ -232,6 +235,218 @@ define([], /**@lends View*/ function() {
             }
         );
     };
+
+    /**
+     * Constructs a new Tooltip object
+     *
+     * @param {String} id      String to be used as a suffix in the id values of the generated html elements
+     * @param {String} div     Selector to indicate which element the Tooltip should be associated with
+     * @param {String} classes Classes to be assigned to the generated tooltip to affect the look and feel
+     *
+     * @memberof View
+     * @class
+     * @classdesc Tooltip object to be able to show the user messages related to a specific UI-element
+     */
+    function Tooltip(id, classes, x, y) {
+        this.id = id;
+        this.classes = classes;
+        this.x = x;
+        this.y = y;
+
+        this.getHTML = function(message) {
+            return '' +
+                '<div class = "tooltipcontainer">' +
+                    '<div id = "tooltip' + this.id + '" class = "tooltip ' + this.classes + '">' +
+                        ' + message + ' +
+                    '</div>' +
+                '</div>';
+        };
+
+        this.initialize = function() {
+            $(document.body).append(this.getHTML(''));
+
+            var tooltip = $('#tooltip' + this.id);
+            tooltip.toggle(false);
+
+            tooltip.parent().css(
+                {
+                    'padding-left': -20 + this.x,
+                    'padding-top': 10 + this.y
+                }
+            );
+
+            tooltip.on('click',
+                function() {
+                    $(this).animate({padding: '+=8'}, 50,
+                        function() {
+                            $(this).animate({opacity: 0, width: 0, height: 0}, 200,
+                                function() {
+                                    //$(this).toggle(false);
+                                    $(this).parent().remove();
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+
+            tooltip.on('mouseenter',
+                function() {
+                    $(this).animate({opacity: 0.8}, 200);
+                }
+            );
+
+            tooltip.on('mouseleave',
+                function() {
+                    $(this).animate({opacity: 1}, 100);
+                }
+            );
+        };
+
+        this.initialize();
+
+        this.set = function(message) {
+            $('#tooltip' + this.id).html(message);
+            $('#tooltip' + this.id).toggle(true);
+        };
+    }
+
+    function ValueList(selector) {
+        this.selector = selector;
+        this.initialized = false;
+        this.size = 0;
+
+        /**
+         * Buffer to contain HTML for the required list
+         *
+         * @memberof View
+         * @type {HTMLBuffer}
+         */
+        this.buffer = new HTMLBuffer(selector);
+
+        this.getEntryHTML = function(i, left, right) {
+            return '' +
+                '<div id = "' + this.selector.substring(1) + 'Entry' + i + '">' +
+                    '<div class = "ellipsis max128w">' + left + '</div>' +
+                    '<div class = "operator"> = </div>' +
+                    '<div class = "ellipsis max128w resultvalue">' + right + '</div>' +
+                '</div>';
+        };
+
+        this.initialize = function(size) {
+            this.buffer.empty();
+            var i;
+
+            for (i = 0; i < size; i++) {
+                this.buffer.append(this.getEntryHTML(i, '', ''));
+            }
+
+            this.buffer.flip();
+
+            var entries = $(this.selector + ' > div');
+            i = 0;
+            entries.children(':last-child').on('click', {id: i++},
+                function(e) {
+                    $('.datamessage').parent().remove();
+
+                    var resultvalue = $(this);
+                    var location = resultvalue.offset();
+                    var fullvalue = new Tooltip(e.data.id, 'datamessage', location.left + 10, location.top + resultvalue.height());
+                    fullvalue.set(resultvalue.html());
+                }
+            );
+
+            this.initialized = true;
+        };
+
+        this.set = function(values) {
+            var newsize = Object.keys(values).length;
+
+            if (!this.initialized || newsize != this.size) {
+                this.size = newsize;
+                this.initialize(this.size);
+            }
+
+            var entries = $(this.selector + ' > div');
+            var i = 0;
+            for (var v in values) {
+                var columns = entries.eq(i++).children();
+                columns.eq(0).text(v);
+                columns.eq(2).html(values[v]);
+            }
+        };
+    }
+
+    /**
+     * Class to generate a list of selectable items
+     *
+     * @memberof View
+     * @param  {String}   selector Element to put the list in
+     * @param  {Function} callback Function to be called when an item is clicked
+     */
+    function SelectionList(selector, callback) {
+        this.selector = selector;
+        this.callback = callback;
+
+        /**
+         * Buffer to contain HTML for the required list
+         *
+         * @type {HTMLBuffer}
+         */
+        this.buffer = new HTMLBuffer(this.selector);
+
+        /**
+         * Generates HTML for an item in the required list of selectable links
+         *
+         * @param  {String} item String to represent an item in the list
+         * @return {String}      HTML for an item in the required list of selectable links
+         */
+        this.getItemHTML = function(i, item) {//onclick = "' + this.callbackname + '(\'' + item + '\')"
+            return '' +
+                '<a id = "' + this.selector.substring(1) + 'Item' + i + '" value = "' + item + '">' + item + '</a>';
+        };
+
+        /**
+         * Adds an item to the list of selectable links
+         *
+         * @param {String} item String to represent an item in the list
+         */
+        this.addItem = function(i, item) {
+            this.buffer.append(this.getItemHTML(i, item));
+        };
+
+
+        this.initializeItem = function(i) {
+            var itemselector = this.selector + 'Item' + i;
+
+            $(itemselector).on('click', {list: this},
+                function(e) {
+                    e.data.list.callback(this);
+                }
+            );
+        };
+
+        /**
+         * Set the items contained in the list
+         *
+         * @param {String[]} items Strings to represent the items in the list
+         */
+        this.set = function(items) {
+            this.items = items;
+            this.buffer.empty();
+            var i;
+
+            for (i in items) {
+                this.addItem(i, items[i]);
+            }
+
+            this.buffer.flip();
+
+            for (i in items) {
+                this.initializeItem(i);
+            }
+        };
+    }
 
     return Input;
 });
