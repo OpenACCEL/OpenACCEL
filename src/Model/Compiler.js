@@ -107,7 +107,7 @@ define(["Model/FileLoader",
             // library (at the moment: the unit library)
             var library = new Library();
             library.load();
-            var funcs = library.getFunctionNames(true);
+            var funcs = library.getFunctions({'escaped':true});
             for (var i = 0; i < funcs.length; ++i) {
                 var func = funcs[i];
                 this.libraries.std[func] = eval(func);

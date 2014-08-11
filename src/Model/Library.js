@@ -66,60 +66,75 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
             this.lib = this.fileLoader.getLibFile(); 
         } catch (e) {
             // Unrecoverable error: the ACCEL library metadata could not be loaded!
-            console.log("Unrecoverable error: the ACCEL library metadata file could not be loaded!");
+            console.log(e.message);
         }
     };
 
     /**
-     * Returns the list of ACCEL function names, escaped where nessecary to avoid name clashes.
+     * Returns the given list of function names, escaped where nessecary to avoid name clashes.
      * Escaping is done according to the rewrite rules as specified in this.replaceNames.
      * 
-     * @return {Array} The names of all supported ACCEL functions, escaped when nessecary.
+     * @return {Array} The functions list, but now with escaped names where nessecary.
      */
-    Library.prototype.escape = function() {
-        if (this.escapedFunctions.length > 0) {
-            return this.escapedFunctions;
-        }
-
-        if (this.lib === {}) {
-            this.load();
+    Library.prototype.escape = function(functions) {
+        if (!functions instanceof Array || functions.length === 0) {
+            throw new Error("Library.prototype.escape.pre violated: non-array or empty array given.");
         }
 
         // Make a (shallow) clone of the original function names array
-        this.escapedFunctions = this.lib.function_names.slice(0);
+        var escapedList = functions.slice(0);
 
         var escape = Object.keys(this.replaceNames);
 
         // For each element in the array, check whether it needs to be escaped and with what
-        for (var elem in this.escapedFunctions) {
-            var funcName = this.escapedFunctions[elem];
+        for (var elem in escapedList) {
+            var funcName = escapedList[elem];
             var escIndex = escape.indexOf(funcName);
             if (escIndex !== -1) {
-                this.escapedFunctions[elem] = this.replaceNames[funcName];
+                escapedList[elem] = this.replaceNames[funcName];
             } 
         }
 
-        return this.escapedFunctions;
+        return escapedList;
     };
 
     /**
-     * Returns a list of all supported ACCEL library functions, optionally escaped.
-     * @param  {Boolean} escaped Whether to escape function names that would otherwise
-     * cause name clashes with existing javascript functions. Functions are escaped according
-     * to the 'rewrite rules' specified in this.replaceNames.
+     * Returns a list of all supported ACCEL library functions, optionally filtered.
      * 
-     * @return {Array} A list of function names, optionally escaped
+     * @param {Object} options An object that can have the following properties: 
+     *  - {Boolean} escaped Whether to escape function names that would otherwise
+     *      cause name clashes with existing javascript functions. Functions are escaped according
+     *      to the 'rewrite rules' specified in this.replaceNames.
+     *  - {Boolean} inputs Whether to include input functions
+     * 
+     * @return {Array} A list of function names, filtered in accordance with the given options object
      */
-    Library.prototype.getFunctionNames = function(escaped) {
-        if (escaped === true) {
-            return this.escape();
-        } else {
-            if (this.lib === {}) {
-                this.load();
-            }
+    Library.prototype.getFunctions = function(options) {
+        var ans = [];
 
-            return this.lib.function_names;
+        // Load library first if not already loaded!
+        if (this.lib === {}) {
+            this.load();
         }
+
+        if (options.escaped) {
+            // Return saved list if we already escaped the functions list before.
+            // Else do it now
+            if (this.escapedFunctions.length > 0) {
+                ans = this.escapedFunctions;
+            } else {
+                ans = this.escapedFunctions = this.escape(this.lib.standard_functions);
+            }
+        } else {
+            ans = this.lib.standard_functions;
+
+            // Append input functions if requested
+            if (options.inputs) {
+                ans = ans.concat(this.lib.input_functions);
+            }
+        }
+
+        return ans;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

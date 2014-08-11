@@ -39,7 +39,10 @@ frac        (?:\.[0-9]+)
         'slider',
         'input',
         'check',
-        'button'
+        'button',
+        'cursorX',
+        'cursorY',
+        'cursorB'
     ];
 
     /** List of all built-in ACCEL functions */
@@ -56,9 +59,6 @@ frac        (?:\.[0-9]+)
         'ceil',
         'cond',
         'cos',
-        'cursorB',
-        'cursorX',
-        'cursorY',
         'debug',
         'divide',
         'do',
@@ -142,6 +142,8 @@ frac        (?:\.[0-9]+)
     ];
     yy.reservedwords.push.apply(yy.reservedwords, yy.inputfunctions);
     yy.reservedwords.push.apply(yy.reservedwords, yy.stdfunctions);
+
+    yy.setBuiltinFunctions = 
 
     yy.createQuantity = function(name, expr) {
         var output = "";
