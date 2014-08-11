@@ -6,7 +6,7 @@ var geneticOptimisationValues = {
     maxfront: 50
 };
 
-var individualPropertiesBuffer = new HTMLbuffer('#propertiesGO');
+var individualPropertiesBuffer = new HTMLBuffer('#propertiesGO');
 
 $(document).ready(
     function() {
