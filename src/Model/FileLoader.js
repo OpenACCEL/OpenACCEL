@@ -33,7 +33,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
 
         /**
          * The parsed JSON object containing the ACCEL library metadata such as function names, help text etc.
-         * 
+         *
          * @type {Object}
          */
         this.libfile = {};
@@ -62,7 +62,11 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 extension = ".js";
                 break;
             case "libfile":
-                location = "../../lang";
+                if (inBrowser) {
+                    location = "../lang";
+                } else {
+                    location = "../../lang";
+                }
                 extension = ".json";
                 break;
             case "test":
@@ -93,10 +97,12 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 },
                 error: function(err) {
                     console.log(err);
+                    throw (err);
                     return false;
                 },
                 fail: function(err) {
                     console.log(err);
+                    throw (err);
                     return false;
                 },
                 async: false
@@ -111,6 +117,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 content = fs.readFileSync(filename);
             } catch (err) {
                 console.log(err);
+                throw (err);
                 return false;
             }
         }
@@ -122,7 +129,11 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
             } else if (type === "unitlibrary") {
                 this.library.unit[file] = content.toString();
             } else if (type === "libfile") {
-                this.libfile = JSON.parse(content);
+                if (inNode) {
+                    content = JSON.parse(content);
+                }
+
+                this.libfile = content;
             }
             return true;
         } else {
@@ -133,7 +144,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
     /**
      * Concatenates all loaded macros into a single string.
      * When the lib parameter has not been given, the function will default to the standard library.
-     * 
+     *
      * @param {String} lib The library to return.
      * @returns {String} A string of all loaded macros.
      */
@@ -168,7 +179,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
 
     /**
      * Returns the contents of the ACCEL library metadata file as a JSON object.
-     * 
+     *
      * @return {Object} The JSON object containing the ACCEL library metadata
      */
     FileLoader.prototype.getLibFile = function() {

@@ -20,27 +20,27 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
     /**
      * @class
      * @classdesc Represents the ACCEL function library including all it's metadata.
-     * 
+     *
      * This is a singleton class: there can be only a single instance of it.
      */
     function Library(source) {
         /**
          * The fileloader used to load the library .json file
-         * 
+         *
          * @type {FileLoader}
          */
         this.fileLoader = new FileLoader();
 
         /**
          * The JSON object containing the ACCEL library metadata.
-         * 
+         *
          * @type {Object}
          */
         this.lib = {};
 
         /**
          * A list of function names, escaped where nessecary.
-         * 
+         *
          * @type {Array}
          */
         this.escapedFunctions = [];
@@ -48,7 +48,7 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         /**
          * The function names to escape, should they be used in the library as names of functions.
          * Each key in the array should be replaced by it's value.
-         * 
+         *
          * @type {Object}
          */
         this.replaceNames = {
@@ -63,7 +63,7 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
     Library.prototype.load = function() {
         try {
             this.fileLoader.load("ACCEL", "libfile");
-            this.lib = this.fileLoader.getLibFile(); 
+            this.lib = this.fileLoader.getLibFile();
         } catch (e) {
             // Unrecoverable error: the ACCEL library metadata could not be loaded!
             console.log(e.message);
@@ -73,11 +73,11 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
     /**
      * Returns the given list of function names, escaped where nessecary to avoid name clashes.
      * Escaping is done according to the rewrite rules as specified in this.replaceNames.
-     * 
+     *
      * @return {Array} The functions list, but now with escaped names where nessecary.
      */
     Library.prototype.escape = function(functions) {
-        if (!functions instanceof Array || functions.length === 0) {
+        if (!(functions instanceof Array) || functions.length === 0) {
             throw new Error("Library.prototype.escape.pre violated: non-array or empty array given.");
         }
 
@@ -92,7 +92,7 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
             var escIndex = escape.indexOf(funcName);
             if (escIndex !== -1) {
                 escapedList[elem] = this.replaceNames[funcName];
-            } 
+            }
         }
 
         return escapedList;
@@ -100,13 +100,13 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
 
     /**
      * Returns a list of all supported ACCEL library functions, optionally filtered.
-     * 
-     * @param {Object} options An object that can have the following properties: 
+     *
+     * @param {Object} options An object that can have the following properties:
      *  - {Boolean} escaped Whether to escape function names that would otherwise
      *      cause name clashes with existing javascript functions. Functions are escaped according
      *      to the 'rewrite rules' specified in this.replaceNames.
      *  - {Boolean} inputs Whether to include input functions
-     * 
+     *
      * @return {Array} A list of function names, filtered in accordance with the given options object
      */
     Library.prototype.getFunctions = function(options) {
