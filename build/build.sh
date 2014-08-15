@@ -107,6 +107,9 @@ deploy() {
 
     # Copy style sheets.
     cp -r src/View/css bin/css/
+
+    # Copy demo scripts.
+    cp -r lang/DemoScripts bin/DemoScripts
 }
 
 # Post Deployment

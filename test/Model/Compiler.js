@@ -436,7 +436,7 @@ suite("Compiler", function() {
          * Try to compile all ACCEL scripts from the original www.keesvanoverveld.com website.
          */
         test("| Original ACCEL script compilation", function() {
-            var dir = "./test/Model/Scripts";
+            var dir = "./lang/DemoScripts";
 
             fs.readdirSync(dir).forEach(function(file) {
                 var code = fs.readFileSync(dir + "/" + file, "utf8");
@@ -452,7 +452,7 @@ suite("Compiler", function() {
         });
 
         test("| Original ACCEL script unit checking", function() {
-            var dir = "./test/Model/Scripts";
+            var dir = "./lang/DemoScripts";
 
             fs.readdirSync(dir).forEach(function(file) {
                 var code = fs.readFileSync(dir + "/" + file, "utf8");
