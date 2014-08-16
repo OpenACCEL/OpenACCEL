@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Parser'], /**@lends Model.Analyser.Passes*/ function(AnalyserPass, Quantity, parser) {
+define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library'], /**@lends Model.Analyser.Passes*/ function(AnalyserPass, Quantity, Library) {
     /**
      * @class
      * @classdesc This pass is part of the Script Analyser and extracts:
@@ -25,7 +25,10 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Parser'],
      *  -Whether a quantity has been given a definition already, or is a 'todo-item'
      */
     function DependencyPass() {
-        //this.reservedwords = parser.yy.stdfunctions;
+        this.lib = new Library();
+        this.lib.load();
+
+        this.reservedwords = this.lib.getFunctions({'all':true, 'escaped':false});
     }
 
     DependencyPass.prototype = new AnalyserPass();
@@ -56,12 +59,12 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Parser'],
             // as well.
             if (quantity.parameters.indexOf(d) === -1 &&
                 quantity.dependencies.indexOf(d) === -1 &&
-                parser.yy.reservedwords.indexOf(d) === -1) {
-                
+                this.reservedwords.indexOf(d) === -1) {
+
                 quantity.dependencies.push(d);
 
                 // It could be that it is used in multiple definitions while being
-                // undefined. Therefore only add it if it's not already there 
+                // undefined. Therefore only add it if it's not already there
                 if (!quantities[d]) {
                     quantities[d] = new Quantity();
                     quantities[d].name = d;

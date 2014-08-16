@@ -4,7 +4,7 @@ suite("Parser", function() {
     var script;
 
     setup(function (done) {
-        requirejs(["assert", "Model/Parser", "Model/Script"], function(Assert, Parser, Script) {
+        requirejs(["assert", "Model/Compilation/Parsers/ACCELScriptParser", "Model/Script"], function(Assert, Parser, Script) {
             assert = Assert;
             parser = Parser;
             script = Script;

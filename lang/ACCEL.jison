@@ -33,118 +33,6 @@ frac        (?:\.[0-9]+)
         yy.units = false;
     }
 
-    /** List of all ACCEL user-input functions */
-    yy.inputfunctions = [
-        /* Input elements */
-        'slider',
-        'input',
-        'check',
-        'button',
-        'cursorX',
-        'cursorY',
-        'cursorB'
-    ];
-
-    /** List of all built-in ACCEL functions */
-    yy.stdfunctions = [
-        /** Functions */
-        'abs',
-        'acos',
-        'add',
-        'and',
-        'asin',
-        'atan',
-        'atan2',
-        'bin',
-        'ceil',
-        'cond',
-        'cos',
-        'debug',
-        'divide',
-        'do',
-        'equal',
-        'exp',
-        'factorial',
-        'floor',
-        'getChan',
-        'getTime',
-        'getUrl',
-        'greaterThan',
-        'greaterThanEqual',
-        'iConvolve',
-        'iGaussian',
-        'iMake',
-        'iMedian',
-        'iSpike',
-        'if',
-        'imply',
-        'lessThan',
-        'lessThanEqual',
-        'ln',
-        'log',
-        'max',
-        'min',
-        'modulo',
-        'multiply',
-        'not',
-        'notEqual',
-        'or',
-        'paretoHor',
-        'paretoMax',
-        'paretoMin',
-        'paretoVer',
-        'plot',
-        'poisson',
-        'pow',
-        'putChan',
-        'ramp',
-        'random',
-        'round',
-        'sin',
-        'sqrt',
-        'subtract',
-        'tan',
-        'uniminus',
-        'vAggregate',
-        'vAppend',
-        'vConcat',
-        'vConvolve',
-        'vDom',
-        'vDot',
-        'vEigenSystem',
-        'vExtend',
-        'vGaussian',
-        'vLen',
-        'vMake',
-        'vMatInverse',
-        'vMatMatMul',
-        'vMatSolve',
-        'vNormAbs',
-        'vNormEuclid',
-        'vNormFlat',
-        'vNormSq',
-        'vNormalize',
-        'vRange',
-        'vSegment',
-        'vSeq',
-        'vSequence',
-        'vSpike',
-        'vTranspose',
-        'vVecRamp'
-    ];
-
-    yy.reservedwords =
-    [
-        'true',
-        'false',
-        'PI',
-        'E'
-    ];
-    yy.reservedwords.push.apply(yy.reservedwords, yy.inputfunctions);
-    yy.reservedwords.push.apply(yy.reservedwords, yy.stdfunctions);
-
-    yy.setBuiltinFunctions = 
-
     yy.createQuantity = function(name, expr) {
         var output = "";
 
@@ -164,8 +52,8 @@ frac        (?:\.[0-9]+)
          *
          * This is where the actual computation of the quantity takes place.
          */
-        output += "this." + name + ".stdexpr = (function() " + 
-            "{ return " + expr + "; " + 
+        output += "this." + name + ".stdexpr = (function() " +
+            "{ return " + expr + "; " +
         "}).bind(this);\n";
 
         if (yy.units) {
@@ -176,7 +64,7 @@ frac        (?:\.[0-9]+)
              * This takes into account that all quantities should return objects, and all
              * library functions also return objects.
              */
-            output += "this." + name + ".unitexpr = (function() { " + 
+            output += "this." + name + ".unitexpr = (function() { " +
                 "return this.unitexpr(this." + name + ", this.report." + name +", this." + name + ".stdexpr()); " +
             "}).bind(this);\n";
 
@@ -243,7 +131,7 @@ frac        (?:\.[0-9]+)
          * If your quantity is 'q', then this creates a function __q__() to fetch its value.
          */
         output += "\nthis." + name + "= function(" + dummies + ") { " +
-            "return this.memoization(this." + name + ", [" + dummies + "]); " + 
+            "return this.memoization(this." + name + ", [" + dummies + "]); " +
         "};\n";
 
         /**
@@ -253,7 +141,7 @@ frac        (?:\.[0-9]+)
          * This is where the actual computation of the quantity takes place.
          */
         output += "this." + name + ".stdexpr = (function(" + dummies + ") { " +
-            "return " + expr + "; " + 
+            "return " + expr + "; " +
         "}).bind(this);\n";
 
             if (yy.units) {
@@ -263,10 +151,10 @@ frac        (?:\.[0-9]+)
              * This takes into account that all quantities should return objects, and all
              * library functions also return objects.
              */
-            output += "this." + name + ".unitexpr = (function(" + dummies + ") { " + 
+            output += "this." + name + ".unitexpr = (function(" + dummies + ") { " +
                 "return this.unitexpr(this." + name + ", this.report." + name + ", this." + name + ".stdexpr(" + dummies + ")); " +
             "}).bind(this);\n";
-            
+
         }
 
         /**
@@ -389,7 +277,7 @@ frac        (?:\.[0-9]+)
  * An OpenACCEL script consists of multiple lines.
  * Each script line gets wrapped inside the 'func' macro, which gets expanded by sweet, but
  * in the future may be delegated to this file instead.
- * 
+ *
  * An example of a script would be:
  * x = 5 <LINEBREAK>
  * // myComment <LINEBREAK>
@@ -397,7 +285,7 @@ frac        (?:\.[0-9]+)
  *
  * The 'func' macro expansion adds for each quantity (scriptline) a few functions that are required
  * to retrieve its value.
- * 
+ *
  * Comments and linebreaks are considered scriptlines, but whatever they could possibly return should
  * not be in the func macro. Hence, when they are deteced they return '$$ = null', such that we can
  * skip the wrapping of the func macro for them.
@@ -426,7 +314,7 @@ script                  :   (scriptLine)* (scriptFinalLine)?
 
 /**
  * A single script line is either a line break by itself, or a either a quantity or comment, followed by a line break.
- * 
+ *
  * Line breaks and comments (with linebreaks) are not needed for the compilation and creation of the executable,
  * hence they get dropped from the output of the parser.
  */
@@ -468,7 +356,7 @@ comment                 :   COMMENT
  * <name> = <expr>
  * <name> = <input function>
  * <function>(<arguments>) = <expr>
- * 
+ *
  * That is, a quantity can be a simple quantity definition, or it can be a function which takes arguments.
  */
 quantity                :   (quantityDef | quantityInput | quantityFuncDef)
@@ -482,7 +370,7 @@ quantity                :   (quantityDef | quantityInput | quantityFuncDef)
 
 /**
  * A quantity definition is just like a mathematical equation.
- * 
+ *
  * On the left hand side there will be the name of the quantity.
  * On the right hand side the expression of that quantity is placed.
  * Additionally, a quantity may have a unit, which gets ignored as these are parsed seperately.
@@ -589,9 +477,9 @@ expr                    :   arith | term;
 
 /**
  * Arithmetics are computed using symbols. OpenACCEL supports mathematical operators that take
- * one argument, the so called unary operators, and mathematical operators that take 
+ * one argument, the so called unary operators, and mathematical operators that take
  * two arguments, the so called binary operators.
- * 
+ *
  * Both unary and binary operators get translated into their corresponding library function names.
  */
 arith                   :   uniArith | binArith;
@@ -707,7 +595,7 @@ scalarTerm              :   brackets | scalarVar | history | quantifier | at | f
  * It is not defined as an expression itself as well because there were previous issues with operator precedence.
  */
 brackets                :   '(' expr ')'
-                        {{ 
+                        {{
                             $$ = $1 + $2 + $3;
                         }}
                         ;
@@ -716,7 +604,7 @@ brackets                :   '(' expr ')'
  * A scalar variable is a variable pointing to the *value* of a single entity, like a quantity.
  * When it's a dummy quantity name, it should refer to a quantity.
  * Quantity values can be computed with 'this.__qtyName__'.
- * 
+ *
  * However, when the quantityName is a dummy variable, it should overshadow the quantity names,
  * and therefore should refer to a local variable. Therefore, it's not a function and not part of 'this'.
  */
@@ -751,7 +639,7 @@ scalarVar               :   quantityName
  * Optionally, a user can add a base case 'b' in the form of q{a|b}.
  * This base case will be the default value in case there is no history value 'a' steps back.
  * When this base case is not given, the default value of zero will be returned.
- * 
+ *
  * A scalarVar however can also be a dummy variable, which is not supported by the history operator.
  */
 history                 :   scalarVar '{' expr (historyBase)?'}'
@@ -792,7 +680,7 @@ historyBase             :   '|' expr
 
 /**
  * Quantifier as defined by the language.
- * 
+ *
  * #(i, [1, 2, 3, 4], i * i, add) = 1 * 1 + 2 * 2 + 3 * 3 + 4 * 4 + 5 * 5.
  */
 quantifier              :  '#(' dummy ',' expr ',' expr ',' STDFUNCTION ')'
@@ -813,7 +701,7 @@ at                      :   '@(' expr  ','  expr  ')'
 
 /**
  * A function call is really what is it, a function call.
- * 
+ *
  * If the function is a standard function, additional pre-processing is needed.
  */
 funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
@@ -883,11 +771,11 @@ inputCallArgList        :   ',' (scalarConst | (('+'|'-') NUMBER))
 /**
  * A vector expression is an expressions that creates a vector.
  * A vector is defined by a number of comma-separated expressions between [] brackets.
- * 
+ *
  * In order to support named vectors, vector actually get created as if they were objects.
  * These objects then get converted into actual javascript arrays. This is because in javascript,
  * arrays do not support named elements.
- * 
+ *
  * An empty array is possible.
  */
 vectorExpr              :   '[' (vectorArgList)? ']'
@@ -903,7 +791,7 @@ vectorExpr              :   '[' (vectorArgList)? ']'
 
 /**
  * A list of vector arguments consists out of one vector element, with possible additional vector elements.
- * 
+ *
  * If a vector element is not named, it needs to have an index. Hence, the counter is there to give
  * all non-named elements an index.
  */
@@ -935,7 +823,7 @@ vectorAdditionalArg     :   ',' vectorElem
 
 /**
  * A vector element can either be just an expression, or be a named object with an expression.
- * 
+ *
  * A vector element returns an object, where the expression gets stored into a 'value' property.
  * If the vector is also named, its name gets put into the 'index' property.
  */

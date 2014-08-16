@@ -25,16 +25,14 @@ if (inNode) {
 define(["Model/FileLoader",
         "Model/Library",
         "underscore",
-        "Model/Parser",
-        "Model/UnitParser",
+        "Model/Compilation/Parsers/ACCELParser",
         "Model/Exceptions/SyntaxError",
         "Model/Executable"
     ], /**@lends Model.Compiler */
     function(FileLoader,
         Library,
         _,
-        parser,
-        unitParser,
+        ACCELParser,
         SyntaxError,
         Executable) {
 
@@ -51,7 +49,7 @@ define(["Model/FileLoader",
              * The parser that will be used to parse inputted ACCEL code
              * and construct the executable from it. This does not translate units.
              */
-            this.parser = parser;
+            this.scriptParser = new ACCELParser("script");
 
             /**
              * The parser that will be used to translate ACCEL units into
@@ -60,7 +58,7 @@ define(["Model/FileLoader",
              * actual language part, the entire ACCEL language can be considered
              * as two context-free languages.
              */
-            this.unitParser = unitParser;
+            this.unitParser = new ACCELParser("unit");
 
             /**
              * All the quantities in the script to be compiled.
@@ -107,10 +105,15 @@ define(["Model/FileLoader",
             // library (at the moment: the unit library)
             var library = new Library();
             library.load();
-            var funcs = library.getFunctions({'escaped':true});
+            var funcs = library.getFunctions({'standard':true, 'escaped':true});
             for (var i = 0; i < funcs.length; ++i) {
                 var func = funcs[i];
-                this.libraries.std[func] = eval(func);
+
+                // Only the cond function does not have a real function object but instead is
+                // implemented as a language construct in the jison parser.
+                if (func !== 'cond') {
+                    this.libraries.std[func] = eval(func);
+                }
             }
         }
 
@@ -161,7 +164,7 @@ define(["Model/FileLoader",
         Compiler.prototype.parse = function(code) {
             // Parse the script and handle any syntax errors
             try {
-                code = this.parser.parse(code);
+                code = this.scriptParser.parse(code);
             } catch (e) {
                 if (typeof e.hash === 'undefined') {
                     throw e;
@@ -219,7 +222,7 @@ define(["Model/FileLoader",
          */
         Compiler.prototype.setUnits = function(bUnits) {
             this.units = bUnits;
-            this.parser.yy.units = bUnits;
+            this.scriptParser.setUnits(bUnits);
 
             if (bUnits) {
                 eval.call(globalScope, this.fileLoader.getLibrary("unitlibrary"));

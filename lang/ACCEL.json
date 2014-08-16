@@ -1,4 +1,11 @@
 {
+	"reserved_words": [
+		"true",
+		"false",
+		"PI",
+		"E"
+	],
+
 	"standard_functions": [
 		"abs",
 		"acos",
@@ -12,6 +19,7 @@
 		"bin",
 		"binaryZip",
 		"ceil",
+		"cond",
 		"cos",
 		"debug",
 		"divide",
@@ -398,7 +406,7 @@
 	    "seeAlso":"run - pauze,edit",
 	    "external":"",
 	    "abbreviation":""
-	  
+
 	},
 	{
 	    "fName":"quantified expression",
@@ -410,7 +418,7 @@
 	    "seeAlso":"auto-mapping,quantor",
 	    "external":"Quantified expressions are best known in predicate calculus: the all- and exist-quantors are examples. In algebra, the summation or repeated product are also examples of quantified expressions. In <a href='http://en.wikipedia.org/wiki/Quantification#Mathematics'>http://en.wikipedia.org/wiki/Quantification#Mathematics</a>, an introduction to quantors is given.",
 	    "abbreviation":"In mathematics, various \"abbreviation\"s are common. For summation and product, for instance, the capital sigma and pi-notations are used, where the domain is often indicated as subscripts."
-	  
+
 	},
 	{
 	    "fName":"tabs",

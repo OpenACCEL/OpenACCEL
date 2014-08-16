@@ -39,13 +39,6 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         this.lib = {};
 
         /**
-         * A list of function names, escaped where nessecary.
-         *
-         * @type {Array}
-         */
-        this.escapedFunctions = [];
-
-        /**
          * The function names to escape, should they be used in the library as names of functions.
          * Each key in the array should be replaced by it's value.
          *
@@ -102,10 +95,15 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
      * Returns a list of all supported ACCEL library functions, optionally filtered.
      *
      * @param {Object} options An object that can have the following properties:
+     *  - {Boolean} standard Whether to include the standard functions, including cond.
      *  - {Boolean} escaped Whether to escape function names that would otherwise
      *      cause name clashes with existing javascript functions. Functions are escaped according
      *      to the 'rewrite rules' specified in this.replaceNames.
      *  - {Boolean} inputs Whether to include input functions
+     *  - {Boolean} reserved Whether to include reserved words in the list.
+     *      These are words like 'true' and 'PI'.
+     *  - {Boolean} all Whether to include all possible functions and reserved words in the list.
+     *      Overwrites all other options except escaped.
      *
      * @return {Array} A list of function names, filtered in accordance with the given options object
      */
@@ -117,21 +115,24 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
             this.load();
         }
 
-        if (options.escaped) {
-            // Return saved list if we already escaped the functions list before.
-            // Else do it now
-            if (this.escapedFunctions.length > 0) {
-                ans = this.escapedFunctions;
-            } else {
-                ans = this.escapedFunctions = this.escape(this.lib.standard_functions);
-            }
-        } else {
-            ans = this.lib.standard_functions;
+        // Start with just the list of standard functions
+        if (options.standard || options.all) {
+            ans = ans.concat(this.lib.standard_functions);
+        }
 
-            // Append input functions if requested
-            if (options.inputs) {
-                ans = ans.concat(this.lib.input_functions);
-            }
+        // Append input functions if requested
+        if (options.inputs || options.all) {
+            ans = ans.concat(this.lib.input_functions);
+        }
+
+        // Append reserved words if requested
+        if (options.reserved || options.all) {
+            ans = ans.concat(this.lib.reserved_words);
+        }
+
+        // Escape if requested
+        if (options.escaped) {
+            ans = this.escape(ans);
         }
 
         return ans;
