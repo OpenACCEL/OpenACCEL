@@ -21,6 +21,9 @@
 		"ceil",
 		"cond",
 		"cos",
+		"cursorX",
+        "cursorY",
+        "cursorB",
 		"debug",
 		"divide",
 		"do",
@@ -105,10 +108,7 @@
 		"slider",
         "input",
         "check",
-        "button",
-        "cursorX",
-        "cursorY",
-        "cursorB"
+        "button"
 	],
 
 	"help_articles": {
