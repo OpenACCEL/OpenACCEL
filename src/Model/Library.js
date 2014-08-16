@@ -39,6 +39,13 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         this.lib = {};
 
         /**
+         * The database of help articles, partitioned into categories.
+         *
+         * @type {Object}
+         */
+        this.help = {};
+
+        /**
          * The function names to escape, should they be used in the library as names of functions.
          * Each key in the array should be replaced by it's value.
          *
@@ -61,6 +68,20 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
             // Unrecoverable error: the ACCEL library metadata could not be loaded!
             console.log(e.message);
         }
+    };
+
+    /**
+     * Returns a map of all available help articles.
+     *
+     * @return {Object} A map of all help articles, indexed first by category
+     * and then by article name. An article is thus accessed by categoryName.articleName.
+     */
+    Library.prototype.getHelpArticles = function() {
+        if (Object.keys(this.lib).length === 0) {
+            this.load();
+        }
+
+        return this.lib.help_articles;
     };
 
     /**
@@ -136,6 +157,15 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         }
 
         return ans;
+    };
+
+    /**
+     * Returns a list of all help categories.
+     *
+     * @return {[type]} [description]
+     */
+    Library.prototype.getCategories = function() {
+        // body...
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

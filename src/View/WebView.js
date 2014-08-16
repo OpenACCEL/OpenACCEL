@@ -109,6 +109,9 @@ define(["../Controller/AbstractView",
                             view.tabs.ioedit.focusAdvancedEditor();
                         }, 100);
                         break;
+                    case 'helpdemo':
+                        view.tabs.helpdemo.setup();
+                        break;
                     default:
                         break;
                 }

@@ -15,44 +15,37 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          */
         this.helpTextBuffer = new HTMLBuffer('#helptext');
 
+        /**
+         * Search input field.
+         *
+         * @type {Input}
+         */
         this.Input = new Input(this.helpTextBuffer);
 
         this.helpCategoryList = new this.Input.SelectionList('#helpcategories', this.selectHelpCategory);
         this.helpArticleList = new this.Input.SelectionList('#helparticles', this.selectHelpArticle);
         this.demoScriptList = new this.Input.SelectionList('#demoscripts', this.loadDemoScript);
 
-        this.synchronizeCategories(['#all functions',
-            'Descartes',
-            'algebra',
-            'general',
-            'image',
-            'logic',
-            'optimisation',
-            'special',
-            'statistics',
-            'transcendental',
-            'vector'
-        ]);
+        /**
+         * The database of help articles, in their categories
+         *
+         * @type {Object}
+         */
+        this.articles = {};
 
-        this.synchronizeArticles(['@',
-            'abs',
-            'acos',
-            'add',
-            'and',
-            'asin'
-        ]);
+        /**
+         * A partitioning of all articles into the different help categories.
+         *
+         * @type {Object}
+         */
+        this.articlesByCategory = {};
 
-        this.article = {
-            help: "iGaussian(n1,n2,s1,s2) creates a vector of n1 vectors each of n2 scalar elements; indices are integers starting with 0. Element [i][j] has value P*exp(-(i-n1/2)*(i-n1/2)/(2*s1*s1)-(j-n2/2)*(j-n2/2)/(2*s2*s2)), where i ranges from 0 to n1-1, j from 0 to n2-1, and where P is such that the sum over all elements is one.",
-            autoMapping: "Does not support auto-mapping.",
-            details: "Notice 1:The third and fourth arguments plays the role of sigma in the standard definition of the Gaussian. These don't have to be integer. The Gaussian has an infinite support; parameters n1 and n2 are necessarily is finite. Therefore, the resulting Gaussian will always be a truncated version, even if the ratio between n and s is very large. The normalisation nevertheless ensures that the (truncated) Gaussian can serve e.g. as a stable low pass filter.<br>Notice 2:For even n, the resulting approximation has no single extreme apex. For odd n, there is a single extreme apex.",
-            seeAlso: "vConvolve,vGaussian,iConvolve",
-            external: "See <a href='http://en.wikipedia.org/wiki/Gaussian_function'>http://en.wikipedia.org/wiki/Gaussian_function</a>",
-            abbreviation: "No abbreviation",
-            example: ""
-        };
-        
-        this.showHelpArticle(this.article);
+        /**
+         * List containing the names of all articles
+         *
+         * @type {Array}
+         */
+        this.articleNames = [];
 
         this.synchronizeDemoScripts(['anEveningInTheBar.txt',
             'ballAndStick.txt',
@@ -65,6 +58,56 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             'clickDemo.txt'
         ]);
     }
+
+    /**
+     * Loads the help articles and demo scripts, if not already done.
+     */
+    HelpDemo.prototype.setup = function() {
+        if (Object.keys(this.articlesByCategory).length !== 0) {
+            return;
+        }
+
+        // Get help articles and partition them into categories
+        this.articles = controller.getHelpDatabase();
+        this.articlesByCategory = this.buildHelpDatabase(this.articles);
+        this.articleNames = Object.keys(this.articles);
+
+        // Construct category and article lists
+        this.synchronizeCategories(Object.keys(this.articlesByCategory));
+        this.synchronizeArticles(this.articleNames);
+
+        // Display first help article
+        var hoi = this.articles[this.articleNames[0]];
+        this.showHelpArticle(this.articles[this.articleNames[0]]);
+    };
+
+    /**
+     * Builds the help database from the given list of articles.
+     * The database partitions articles by category.
+     *
+     * @param  {Object} articles The articles to put into the database
+     * @return {Object} A database containing all given articles, partitioned
+     * in categories.
+     */
+    HelpDemo.prototype.buildHelpDatabase = function(articles) {
+        var db = {};
+
+        for (var elem in articles) {
+            // Get article and category of article
+            var article = articles[elem];
+            var cat = article.cat;
+
+            // Create category object if it does not yet exist
+            if (Object.keys(db).indexOf(cat) === -1) {
+                db[cat] = {};
+            }
+
+            // Add article object to category
+            db[article.cat][article.fName] = article;
+        }
+
+        return db;
+    };
 
     HelpDemo.prototype.searchHelp = function(phrase) {
         console.log('phrase: ' + phrase);
@@ -93,11 +136,15 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
     HelpDemo.prototype.showHelpArticle = function(article) {
         this.helpTextBuffer.empty();
 
-        this.helpTextBuffer.append('<h1>' + article + '</h1>');
+        this.helpTextBuffer.append('<h1>' + article.fName + '</h1>');
 
-        for (var member in article) {
-            this.helpTextBuffer.append('<h3>' + member + '</h3>');
-            this.helpTextBuffer.append('<p>' + this.article[member] + '</p>');
+        var members = Object.keys(article);
+        for (var i in members) {
+            var member = members[i];
+            if (member !== 'fName') {
+                this.helpTextBuffer.append('<h3 class="help_heading">' + member + '</h3>');
+                this.helpTextBuffer.append('<p class="help_text">' + article[member] + '</p>');
+            }
         }
 
         this.helpTextBuffer.flip();

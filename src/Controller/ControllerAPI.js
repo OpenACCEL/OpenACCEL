@@ -28,10 +28,11 @@ define(["Model/Script",
         "Model/Exceptions/RuntimeError",
         "Model/EMO/GeneticOptimisation",
         "Controller/AbstractView",
+        "Model/Library",
         "underscore"
     ],
     /**@lends Controller*/
-    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, _) {
+    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, Library, _) {
         /**
          * @class
          * @classdesc The Controller is the intermediar between the Model and the View.
@@ -70,6 +71,13 @@ define(["Model/Script",
              * @type {Script}
              */
             this.script = new Script();
+
+            /**
+             * The library of metadata and help articles about ACCEL.
+             *
+             * @type {Library}
+             */
+            this.library = new Library();
 
             /**
              * The GeneticOptimisation object used to do Genetic Optimization.
@@ -832,15 +840,12 @@ define(["Model/Script",
         };
 
         /**
-         * Gets help files from the model.
+         * Returns all available help articles.
          *
-         * @pre model.HelpFiles != null
-         * @return {Object} List Help filenames
+         * @return {Object} Map of all help articles, indexed
          */
-        Controller.prototype.getHelpFiles = function() {
-            //TODO Precondition model.HelpFiles != null
-            //TODO Implementation
-            //TODO Tests
+        Controller.prototype.getHelpDatabase = function() {
+            return this.library.getHelpArticles();
         };
 
         /**
