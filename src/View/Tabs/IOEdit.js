@@ -177,7 +177,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
         $('#checkUnitsMsg').css({'color':'white', 'visibility':'visible', 'display':'block'});
         $('#checkUnitsMsg').text('Checking units...');
         $('#showvalues').val('Show values');
-        showValues = false;
+        this.showValues = false;
         $('#clearerrors').css({'visibility':'hidden'});
         if (this.usingAdvancedEditor()) {
             this.editor.save();
