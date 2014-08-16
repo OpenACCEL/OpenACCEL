@@ -22,19 +22,19 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          * @memberof View
          * @type {HTMLBuffer}
          */
-        this.scriptlistBuffer = new HTMLBuffer('#scriptlist');
+        this.scriptListBuffer = new HTMLBuffer();
 
         /**
          * Buffer to contain updated #userinput content
          * @memberof View
          * @type {HTMLBuffer}
          */
-        this.userinputBuffer = new HTMLBuffer('#userinput');
+        this.userInputBuffer = new HTMLBuffer();
 
         /**
          * Input element creation class.
          */
-        this.Input = new Input(this.userinputBuffer);
+        this.Input = new Input();
 
         /**
          * Array of input javascript objects
@@ -68,7 +68,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
              * Buffer to contain updated #todolist content
              * @type {HTMLBuffer}
              */
-            todolistBuffer: new HTMLBuffer('#todolist'),
+            todoListBuffer: new HTMLBuffer(),
 
             /**
              * Adds a quantity to be defined to the #todo element
@@ -76,7 +76,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
              * @param {String} quantity Quantity to be implemented
              */
             addTodo: function(quantity) {
-                view.tabs.editrun.report.todolistBuffer.append(this.getTodoListHTML(quantity));
+                view.tabs.editrun.report.todoListBuffer.append(this.getTodoListHTML(quantity));
             },
 
             /**
@@ -102,7 +102,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
              * Buffer to contain updated #arglist content
              * @type {HTMLBuffer}
              */
-            arglistBuffer: new HTMLBuffer('#arglist'),
+            argListBuffer: new HTMLBuffer(),
 
             /**
              * Adds a quantity to the list of quantities which are a parameter to the selected quantity
@@ -111,14 +111,14 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
              * @param {String} property [description]
              */
             addArg: function(quantity, property) {
-                view.tabs.editrun.report.arglistBuffer.append(this.getPropertyListHTML(quantity, property));
+                view.tabs.editrun.report.argListBuffer.append(this.getPropertyListHTML(quantity, property));
             },
 
             /**
              * Buffer to contain updated #argtolist content
              * @type {HTMLBuffer}
              */
-            argtolistBuffer: new HTMLBuffer('#argtolist'),
+            argToListBuffer: new HTMLBuffer(),
 
             /**
              * Adds a quantity to the list of quantities which use the selected quantity as a parameter
@@ -127,7 +127,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
              * @param {String} property [description]
              */
             addArgto: function(quantity, property) {
-                view.tabs.editrun.report.argtolistBuffer.append(this.getPropertyListHTML(quantity, property));
+                view.tabs.editrun.report.argToListBuffer.append(this.getPropertyListHTML(quantity, property));
             },
 
             /**
@@ -147,10 +147,10 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         );
 
         // Hide what needs hiding.
-        this.report.todolistBuffer.hideIfEmpty('#tododiv');
-        this.report.arglistBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argtolistBuffer.hideIfEmpty('#argtodiv');
-        this.userinputBuffer.hideIfEmpty('#userinputdiv');
+        this.report.todoListBuffer.hideIfEmpty('#tododiv');
+        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
+        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
+        this.userInputBuffer.hideIfEmpty('#userinputdiv');
         this.report.resultList.buffer.hideIfEmpty('#resultdiv');
         $('#plotdiv').toggle(false);
 
@@ -241,9 +241,9 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @param  {Object} quantities All quantities registered in the model
      */
     EditRun.prototype.synchronizeScriptList = function(quantities) {
-        this.scriptlistBuffer.empty();
+        this.scriptListBuffer.empty();
         this.lineNumber = {};
-        this.report.todolistBuffer.empty();
+        this.report.todoListBuffer.empty();
         this.resetInputs();
 
         var i = 0;
@@ -282,15 +282,15 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             }
         }
 
-        this.scriptlistBuffer.flip();
-        this.report.todolistBuffer.flip();
+        this.scriptListBuffer.flip("#scriptlist");
+        this.report.todoListBuffer.flip("#todolist");
         this.initInputs();
 
         //Hide what needs hiding
-        this.report.todolistBuffer.hideIfEmpty('#tododiv');
-        this.report.arglistBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argtolistBuffer.hideIfEmpty('#argtodiv');
-        this.userinputBuffer.hideIfEmpty('#userinputdiv');
+        this.report.todoListBuffer.hideIfEmpty('#tododiv');
+        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
+        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
+        this.userInputBuffer.hideIfEmpty('#userinputdiv');
         this.report.resultList.buffer.hideIfEmpty('#resultdiv');
         $('#plotdiv').toggle(false);
     };
@@ -321,8 +321,8 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @param  {String} value To be put in the #scriptline element
      */
     EditRun.prototype.selectScriptline = function(linenr, quantityname) {
-        this.report.arglistBuffer.empty();
-        this.report.argtolistBuffer.empty();
+        this.report.argListBuffer.empty();
+        this.report.argToListBuffer.empty();
 
         if ($('#line' + linenr).length > 0) {
             var quantity = controller.getQuantity(quantityname);
@@ -351,11 +351,11 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             }
         }
 
-        this.report.arglistBuffer.flip();
-        this.report.argtolistBuffer.flip();
+        this.report.argListBuffer.flip("#arglist");
+        this.report.argToListBuffer.flip("#argtolist");
 
-        this.report.arglistBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argtolistBuffer.hideIfEmpty('#argtodiv');
+        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
+        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
     };
 
     /**
@@ -366,8 +366,8 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.selectScriptline(null, null);
         $('#scriptline').text('');
 
-        this.report.arglistBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argtolistBuffer.hideIfEmpty('#argtodiv');
+        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
+        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
     };
 
     /**
@@ -380,10 +380,10 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.selectScriptline(null, null);
         $('#scriptline').text('');
 
-        this.report.todolistBuffer.hideIfEmpty('#tododiv');
-        this.report.arglistBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argtolistBuffer.hideIfEmpty('#argtodiv');
-        this.userinputBuffer.hideIfEmpty('#userinputdiv');
+        this.report.todoListBuffer.hideIfEmpty('#tododiv');
+        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
+        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
+        this.userInputBuffer.hideIfEmpty('#userinputdiv');
         this.report.resultList.buffer.hideIfEmpty('#resultdiv');
         $('#plotdiv').toggle(false);
     };
@@ -430,7 +430,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         //Secure right hand from input
         right = view.encodeHTML(right);
 
-        this.scriptlistBuffer.append(this.getScriptlistLineHTML(linenr, quantity, left, right, category));
+        this.scriptListBuffer.append(this.getScriptlistLineHTML(linenr, quantity, left, right, category));
     };
 
 
@@ -457,7 +457,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @memberof View
      */
     EditRun.prototype.resetInputs = function() {
-        this.userinputBuffer.empty();
+        this.userInputBuffer.empty();
         this.inputs = [];
     };
 
@@ -468,7 +468,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @param {Object} elements    Object with functions to generate the corresponding HTML to be put in #userinput
      */
     EditRun.prototype.addInput = function(element) {
-        this.userinputBuffer.append(element.getHTML());
+        this.userInputBuffer.append(element.getHTML());
         this.inputs.push(element);
     };
 
@@ -477,7 +477,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @memberof View
      */
     EditRun.prototype.initInputs = function() {
-        this.userinputBuffer.flip();
+        this.userInputBuffer.flip("#userinput");
 
         for (var i = 0; i < this.inputs.length; i++) {
             this.inputs[i].initialize();

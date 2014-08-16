@@ -4,7 +4,7 @@ require.config({
 
 define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
     function Optimization() {
-        this.individualPropertiesBuffer = new HTMLBuffer('#propertiesGO');
+        this.individualPropertiesBuffer = new HTMLBuffer();
 
         this.geneticOptimisationValues = {
             population: 25,
@@ -133,7 +133,7 @@ define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
             (function() {
                 controller.initialiseGeneticOptimisation(this.geneticOptimisationValues.population);
                 this.individualPropertiesBuffer.empty();
-                this.individualPropertiesBuffer.flip();
+                this.individualPropertiesBuffer.flip("#propertiesGO");
             }).bind(this)
         );
 
@@ -152,7 +152,7 @@ define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
                 this.individualPropertiesBuffer.empty();
 
                 if (individual === null) {
-                    this.individualPropertiesBuffer.flip();
+                    this.individualPropertiesBuffer.flip("#propertiesGO");
                     return;
                 }
 
@@ -198,7 +198,7 @@ define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
 
                 this.individualPropertiesBuffer.append('</div>');
 
-                this.individualPropertiesBuffer.flip();
+                this.individualPropertiesBuffer.flip("#propertiesGO");
             }).bind(this)
         );
 

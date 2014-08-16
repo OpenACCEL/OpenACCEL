@@ -11,8 +11,7 @@ define([], /**@lends View*/ function() {
      * @class
      * @classdesc Buffer class to contain updated content of a div and update the div when desired
      */
-    function HTMLBuffer(div) {
-        this.div = div;
+    function HTMLBuffer() {
         this.html = '';
 
         /**
@@ -51,12 +50,12 @@ define([], /**@lends View*/ function() {
 
         /**
          * Replaces the content in the div with the content in the buffer
+         * 
+         * @param {String} The div to place the HTML content in.
          */
-        this.flip = function() {
-            var target = $(this.div);
-            if (target.html() !== this.html) {
-                target.html(this.html);
-            }
+        this.flip = function(div) {
+            var target = $(div);
+            target.html(this.html);
         };
     }
 

@@ -7,18 +7,10 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
      * @class
      * @classdesc Container of various input classes..
      */
-    function Input(buffer) {
-        /**
-         * Buffer to contain updated content
-         * @memberof View
-         * @type {HTMLBuffer}
-         */
-        this.buffer = typeof buffer === 'undefined' ? new HTMLBuffer() : buffer;
-
+    function Input() {
         /**
          * The exported input classes.
          */
-        this.BaseInput = BaseInput;
         this.Slider = Slider;
         this.CheckBox = CheckBox;
         this.TextBox = TextBox;
@@ -26,22 +18,6 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         this.ValueList = ValueList;
         this.SelectionList = SelectionList;
     }
-
-    /**
-     * Constructs a base input element
-     *
-     * @memberof View
-     * @class
-     * @classdesc Base input element to be extended
-     */
-    function BaseInput() {
-        this.bufferInput = function() {
-            this.buffer.append(this.getHTML());
-        };
-    }
-
-    BaseInput.prototype.getHTML = function() {};
-    BaseInput.prototype.initialize = function() {};
 
     /**
      * Constructs a dynamic slider input object
@@ -90,8 +66,6 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         };
     }
 
-    Slider.prototype = new BaseInput();
-
     Slider.prototype.getHTML = function() {
         return '' +
             '<div id = "userinput' + this.identifier + '">' +
@@ -127,8 +101,6 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
 
         this.val = val;
     }
-
-    CheckBox.prototype = new BaseInput();
 
     CheckBox.prototype.getHTML = function() {
         return '' +
@@ -172,8 +144,6 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         this.val = val;
     }
 
-    TextBox.prototype = new BaseInput();
-
     TextBox.prototype.getHTML = function() {
         return '' +
             '<div id = "userinput' + this.identifier + '">' +
@@ -214,8 +184,6 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         this.label = label;
     }
 
-    Button.prototype = new BaseInput();
-
     Button.prototype.getHTML = function() {
         return '' +
             '<div id = "userinput' + this.identifier + '">' +
@@ -246,7 +214,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
          * @memberof View
          * @type {HTMLBuffer}
          */
-        this.buffer = new HTMLBuffer(selector);
+        this.buffer = new HTMLBuffer();
 
         this.getEntryHTML = function(i, left, right) {
             return '' +
@@ -265,7 +233,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
                 this.buffer.append(this.getEntryHTML(i, '', ''));
             }
 
-            this.buffer.flip();
+            this.buffer.flip(this.selector);
 
             var entries = $(this.selector + ' > div');
             i = 0;
@@ -317,7 +285,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
          *
          * @type {HTMLBuffer}
          */
-        this.buffer = new HTMLBuffer(this.selector);
+        this.buffer = new HTMLBuffer();
 
         /**
          * Generates HTML for an item in the required list of selectable links
@@ -364,7 +332,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
                 this.addItem(i, items[i]);
             }
 
-            this.buffer.flip();
+            this.buffer.flip(this.selector);
 
             for (i in items) {
                 this.initializeItem(i);
