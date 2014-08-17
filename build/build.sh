@@ -64,8 +64,8 @@ documentation() {
 deploy() {
     # Generate ACCEL compiler using Jison.
     echo "Generating ACCEL compiler..."
-    node_modules/.bin/jison lang/ACCEL.jison      -o src/Model/Parser.js     -m amd -p lalr
-    node_modules/.bin/jison lang/ACCELUnits.jison -o src/Model/UnitParser.js -m amd -p lalr
+    node_modules/.bin/jison lang/ACCEL.jison      -o src/Model/Compilation/Parsers/ACCELScriptParser.js     -m amd -p lalr
+    node_modules/.bin/jison lang/ACCELUnits.jison -o src/Model/Compilation/Parsers/ACCELUnitParser.js       -m amd -p lalr
 
     echo "Deploying..."
     # Create required directories and all subdirectories that do not yet exist.

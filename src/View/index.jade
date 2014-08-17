@@ -7,6 +7,7 @@ html
         script(data-main ='scripts/View/Main' src = 'scripts/require.js')
         script(src = 'scripts/jquery.js')
         script(src = 'scripts/jquery-ui.js')
+        script(src = 'scripts/jquery-bbq.min.js')
         script(src = 'scripts/View/Graphics/Imports/Clone.js')
         script(src = 'scripts/View/Graphics/Imports/CanvasText.js')
         script(src = 'scripts/View/Graphics/Imports/Descartes.js')
@@ -24,22 +25,22 @@ html
             div
                 #main.inline
                     ul
-                        li
-                            a(href = '#intro') Intro
-                        li
-                            a(href = '#editrun') Edit / Run script
-                        li.disabled
-                            a(href = '#helpdemo') Help / Demo
-                        li
-                            a(href = '#ioedit') IO / Edit
-                        li.disabled
-                            a(href = '#analysis') Analysis
-                        li
-                            a(href = '#optimisation') Genetic Optimisation
-                        li
-                            a(href = '#simulation') Simulation
-                        li.disabled
-                            a(href = '#network') Network
+                        li#intro.navtab
+                            a(href = '#tab=intro') Intro
+                        li#editrun.navtab
+                            a(href = '#tab=editrun') Edit / Run script
+                        li#helpdemo.navtab
+                            a(href = '#tab=helpdemo') Help / Demo
+                        li#ioedit.navtab
+                            a(href = '#tab=ioedit') IO / Edit
+                        li#analysis.disable
+                            a(href = '#tab=analysis') Analysis
+                        li#optimisation.navtab
+                            a(href = '#tab=optimisation') Genetic Optimisation
+                        li#simulation.navtab
+                            a(href = '#tab=simulation') Simulation
+                        li#network.disable
+                            a(href = '#tab=network') Network
 
                     include Tabs/Intro.jade
                     include Tabs/EditRun.jade

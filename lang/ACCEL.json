@@ -1,4 +1,11 @@
 {
+	"reserved_words": [
+		"true",
+		"false",
+		"PI",
+		"E"
+	],
+
 	"standard_functions": [
 		"abs",
 		"acos",
@@ -12,7 +19,11 @@
 		"bin",
 		"binaryZip",
 		"ceil",
+		"cond",
 		"cos",
+		"cursorX",
+        "cursorY",
+        "cursorB",
 		"debug",
 		"divide",
 		"do",
@@ -97,328 +108,354 @@
 		"slider",
         "input",
         "check",
-        "button",
-        "cursorX",
-        "cursorY",
-        "cursorB"
+        "button"
 	],
 
-	"help": [
+	"help_articles": {
+		"user functions":
+		  {
+		    "fName":"user functions",
+		    "cat":"general",
+		    "help":"ACCELTM+ supports user-defined functions, featuring local quantities (a.k.a. formal arguments).",
+		    "autoMapping":"user defined functions are compatible with auto mapping: if the function body uses a function that supports auto-mapping, the auto mapping feature also applies in the user defined function. quantities that are mapped may be both regular ('global') quantities and local quantities.",
+		    "example":"mySum(x,y)=x+y introduces a function called 'mySum' that takes two arguments and returns their sum. It can be called as p=mySum(3,4), but also e.g. as q=mySum(mySum(3,4),5) or q=mySum(3+4,5)",
+		    "details":"In some respects user defined functions behave a bit like quantities - in the sense that they can occur in expressions. For instance myArray(x,y)=['first':x,'second':y] can occur in an expression such as p=@(myArray(3,4),'first'), correctly producing 3. In other respects, they are very different. They do not have a history, so mySum{1} is not defined. In p=mySum(mySum(3,4),5), it is impossible to say what the value of 'mySum' is: is it 7 or 12? For this reason, they don't show up in the listing in the IO / edit tab if the 'show values' option is selected. <br><br>In the same way, local quantities, such as the x and y in the above example, are a bit different from category-I,II,III or IV-quantities. For instance, again mySum(x,y)=x+y, if we have p=mySum(3,4) and q=mySum(5,6) occurring in the same script, we cannot say if x is 3 or 5. So local quantities also don't show up in the IO / edit-version as separately listable quantities.<br><br>In many respects, local quantities resemble dummies in quantified expressions. Naming conventions are to a large extent similar. Names for dummies as well as names for local quantities don't need to be unique (that is, a local quantity name can occur in several user-defined functions and/or as a name of a dummy in several quantified expressions). The following restrictions apply:<ul><li>The name of a dummy or local quantity must not occur as the name of a regular ('global') quantity;</li><li>if a user defined function has multiple local quantities, these must have different names. It is forbidden to have mySillyExample(x,x)=2*x;</li><li>if quantified expressions are nested, dummies must have different names. It is forbidden to have #(i,[1,2,3],#(i,[1,2,3],i*i,add),add).</li></ul><br><br>User defined functions allow recursion. For instance, the following function calculates the factorial: myFac(x)=cond(x<=1,1,myFac(x-1)*x). Notice that here we need the cond() form instead of the if() form: the if()-form causes both alternatives to be calculated always, and the calculation then would never end. Recursion is tricky: the following example works fib(x)=cond(x<=1,1,fib(x-1)+fib(x-2)) to calculate elements from the famous Fibonacci series, but the evaluation of fib(30) takes already more than a second on most machines. Als think about inf(x)=inf(x)+1: this pseudo-recursion is sure not to terminate. With recursion it is very easy to exceed bounds in execution time or memory usage. \"+\"ACCELTM+ uses a number of heuristics to detect and robustly handle such exceptions, but some care should be taken when using recursion.<br><br>Thinking of functions fits very well in the framework of four categories. Indeed, we can write down the appliation of a function, even before we have thought about the body (=the statements that define what the function does). Such as soldVolume=priceElasticity(price,numberPotentialCustomers). The details of priceElasticity(x,y) need not to be known, in that respect it behaves a bit as a category-IV quantity. It will therefore appear in the to-do list as long as the body is not yet given.",
+		    "seeAlso":"quantified expression,recursion,local quantity, formal quantity,dummy,categories",
+		    "external":"There is a vast amount of literature on functions, function application and related topics. A start can be found here: <a href='http://en.wikipedia.org/wiki/Function_(mathematics)'>http://en.wikipedia.org/wiki/Function_(mathematics)"
+		  },
+		"categories":
+		  {
+		    "fName":"categories",
+		    "cat":"general",
+		    "help":"ACCELTM+ is based on the notion that quantities in (quantitative) models can play 4 roles:<ul><li>Category I: choice quantities, corresponding to user interface device (slider, checkbox, button, input-field. The category-I quantities (apart from values obtained by the input()-function, which are kept constant dusring execution of the SPEA algorithm) are used as independent quantities in optimisation: they are varied (using some heuristics) to achieve Pareto-optimal values for category-II quantities.</li><li>Category-II: objective quantities. These are the 'outcomes' of the model calculation. In the case of a design model, they represent the quality (the adequateness, the goodness, the merit, ...) of the design, where a 'design' is a choice for all of the category-I quantities.</li><li>Category-III quantities: these are all constants - that is: independent quantities on which the user (designer) has no influence, but who do have influence on the category-II quantities.</li><li>Category-IV quantities: all quantities that depend on cat.-I, cat.-III or other cat.-IV quantities, and onto which cat.-II and other cat.-IV quantities depend. They are the 'intermediate' quantities that each represent small sub-mechanisms of the entire model.</li></ul>",
+		    "autoMapping":"",
+		    "example":"In the following script:<br>a=slider(10,0,20)<br>b=12<br>c=a+b<br>d=b*2<br><br>a is cat.-I, b is cat.-III, c is cat.-IV, and d=cat.-II.",
+		    "details":"ACCELTM+ figures out to which category quantities belong. In the script listing in the Edit / Run script tab, for every quantity it is indicated to which category it belongs. \"+\"ACCELTM+ will put not-yet defined quantities automatically in a to-do list.<br><br>In the script listing in the Edit / Run script tab, quantities are sorted per category.",
+		    "seeAlso":"to-do list",
+		    "external":""
+		  },
+		"time":
+		  {
+		    "fName":"time",
+		    "cat":"general",
+		    "help":"For every quantity, either scalar or vector, historic values (=values that were computed in earlier evaluations, that is: at earlier timesteps) can be accessed. For a quantity x, x{n} is its value at n time steps ago. ",
+		    "autoMapping":"The operator {n} can only be applied to a quantity, (either scalar of vector), not to expressions. So e.g, (a+b){1} does not make sense. To obtain (a+b){1}, one should set e.g. c=a+b followed by d=c{1}.",
+		    "example":"To have a quantity which represents time, simply write time=time{1}+1. This means: the current value of the quantity time equals the previous value plus one. <br>To approximate the solution of a differential equation of the form df/dt=g, use 1st order Taylor expansion to write g(t)=(f(t+h)-f(t-h))/2h, or f(t+h)=f(t-h)+2hg(t). This can be simplified to f=f{2}+2*g{1} (tacitly taking h==1), or even f=f{1}+g. <br>For second order time dependecy, we get in a similar way f=2*f{1}-f{2}+g{1}",
+		    "details":"Notice 1: The time delay n can be arbitrary - but the result of x{n} for n which is larger than the number of evaluations thusfar is the default value. The default value for numerical quantities is 0, for Booleans it is false and for strings it is the empty string. Also, the default value will always be a scalar. So any quantity for which historic values are to be assessed, starts its lifecycle as a scalar. <br>Starting conditions typically occur in the form of x=if(time>1,functionOfX(x{1}),x0). The function 'functionOfX' may expect its argument to be a vector, and therefore encounters a type-problem for time=1. But at time=1, the expression 'x0' is returned for x. Provided that this expression is a vector, the rest of the calculation will work as expected. <br>Notice 2: functional dependencies shall not be cyclic. That is, constructions as the following are forbidden:<br>a=b+3<br>b=a-5<br>, even if thie would be algebraically feasible (such as a=b+3 followed by b=a-3). For time-delayed assessments of quantities however, this restriction does not apply: it is correct to set <br>a=b+3<br>b=a{1}+5.",
+		    "seeAlso":"iteration,cyclic dependency,user functions",
+		    "external":"ACCEL deals with time by means of recurrence; see <a href='http://en.wikipedia.org/wiki/Recurrence_relation'>http://en.wikipedia.org/wiki/Recurrence_relation</a>. Also, in stead of differential equations, ACCEL's approach to (discrete) time suggests to interpret time evolution as a <span class=\"accelEmph\">difference equation</span> rather than as a <span class=\"accelEmph\">differential equation</span>. See the same reference for an introduction to difference equations.",
+		    "abbreviation":""
+		  },
+		"sensitivity analysis":
+		  {
+		    "fName":"sensitivity analysis",
+		    "cat":"general",
+		    "help":"\"+\"ACCELTM+ models are functional models. Every cat.-II quantity is written as a function of cat.-I and cat.-III quantities. To get an idea of the reliability of a model, it is important to understand the sensititivies of these functional dependencies. Indeed, if a cat.-II quantity turns out to be highly sensitive for small changes in some cat.-I or cat.-III quantity, we should be very careful with drawing conclusions: since any model will contain inaccuracies, the propagation of a small uncertainty in one of the input quantities may render the outcome fully meaningless. Therefore, performing sensitivity analyses should be routine in any modelling project.<br><br>\"+\"ACCELTM+ significantly fascilitates sensitivity analysis with its built-in numerical sensitivity analysis estimation tool. The tool can be found on the tab 'analysis'. The sensitivity analysis is performed by simply clicking the button 'do sensitivity analysis'. It produces a table where the first row gives estimates for the standard deviations of each of the cat-II quantities, either in absolute values or in percentage of their expectation value. For instance, for the functional model y=x;x=10, for a standard deviation of 1 percent in x, the standard deviation in y is also 1 percent. For an absolute deviation of 0.3, the resulting deviation is also 0.3. For a functional model y=x*x; x=10, we get a relative percentage of 2, irrespective of the value of x. Indeed, let y=f(x), then delta y/y = df/dx * (delta x/x) * (x/y); df/dx = 2y, so delta y/y = 2x*x/y * (delta x/x) = 2 * (delta x /x). <br><br> Relative spreadings (either in absolute values or in percentage) in cat.-I or cat.-III quantities can be input by clicking on the current value of each (absolute or percentual) value. These spreadings are used both to estimate the standard deviation and to estimate the propagated uncertainties (see below). Switch between a(bsolute) or p(ercentual) sampling by clicking on the word 'percentual' or 'absolute' in the first row. <br><br>Every subsequent row corresponds to a cat-I or cat-III quantity, and every cat.-II quantity is a column. When both row and column correspond to numbers, the error propagation is given. In case of percentual calculation, this error propagation is given by the so-called condition number. For cat.-II quantity y and cat.-I or -III quantity x, the condition number is defined as abs((dy/dx)/(y/x)), that is: the ratio of relative changes in y and x, dy/y and dx/x. For more sensitive dependencies, the value is larger than 1. Very large values are given in red: these ask for more careful analyses whether the numerical outcomes could be trusted. In case of absolute calculation, the error propagation is given as df/dx * dx, that is: the absolute difference in output given the absolute difference in input. In the example of y=x*x; x=10, the absolute error propagation for an input difference of 1 is approximately (121-100) = 21. The approximation is due to the fact that a numerical estimate to the first derivative, df/dx is used. ",
+		    "autoMapping":"",
+		    "example":"For a model of the form y=(x1*x2*x3...)/(x4*x5*x6...), all condition numbers are 1. For a model of the form y=(x1+x2+x3+...), condition numbers are proportional to the absolute size of the x's, and their sum is 1.",
+		    "details":"The differential quotient dy/dx can only be numerically approximated. To that aim, x is changed a small amount. By default, this is 0.01 of its value. (1 percent). To check if this gives a stable approximation for some quantity x, one can click on the + or - in the row of that x. The percentage (listed in the column labeled %) used to estimate dy/dx is then doubled or halved; for the result to be trustworthy, the calculated condition number should not change much. The approximation used, entails that we take the average of the absolute value of the left derivative and the absolute derivative value of the right derivative. As a consequence, the estimated value of the deriviative that is computed in the apex of a function is not zero - as one might expect: it approaches zero only for dex towards 0. This is done to avoid misleadingly optimistic interpretation of the error propagation in the neighborhood of local extrema. The analytically correct value '0' that would be obtained there is meaningless in most cases.<br><br>The standard deviation dy of a function y=f(x1,x2,...xi) is calculated as the square root of the sum of squares of, for every i, the square of df/dxi * dxi. In this respect we follow <a href = 'http://en.wikipedia.org/wiki/Propagation_of_uncertainty'> http://en.wikipedia.org/wiki/Propagation_of_uncertainty </a>. To get the relative value for the standard deviation, we calculate the square root of the sum of squares of, for every i, the square of df/dxi * (dxi/xi), and divide the final result by y. So the absolute standard deviation of y=f(x1,x2)=x1+x2, for x1=1,x2=1,dx1=dx2=0.1 is 0.14; the relative standard deviation is 0.071 (indeed, setting '0.1' for both spreadings in x1 and x2 is interpreted as '0.1 percent', hence the relative spreading in x1+x2 is sqrt(2) * 0.05 percent = 0.071 percent.<br><br>To get info on the meaning of the quantity, click on the questionmark.<br><br>For cat.-I, III or II quantities that are not scalar numeric, the condition number cannot be defined. In that case, e.g. 'arg:string', or 'result:vector' is set.",
+		    "seeAlso":"categories,plotting dependencies,debugging,plotting dependencies,analysis",
+		    "external":"An introduction to senisitivity analysis is found here: <a href='http://en.wikipedia.org/wiki/Sensitivity_analysis'> http://en.wikipedia.org/wiki/Sensitivity_analysis</a>.",
+		    "abbreviation":""
+		  },
+		"to-do list":
+		  {
+		    "fName":"to-do list",
+		    "cat":"general",
+		    "help":"The to-do list contains the quantities that still need to be defined. As long as the to-do list is not empty, the model can not be compiled and executed.",
+		    "autoMapping":"",
+		    "example":"In an empty script, type a=b+3. The right hand expression contains a quantity b that is not yet defined; this quantity appears in the to-do list.",
+		    "details":"A model can be entered in the form of a complete script in the IO / Edit-tab. Alternatively, a model can be entered line-by-line. If the model is built up line-by-line, a very systematic way is to start with a cat.-II quantity, to define this in terms of cat.-IV quantities, and to subsequentially process all cat.-IV quantities until everyone of them is defined in terms of other cat.-IV quantities or cat.-I/III quantities. At any stage during this process, therefore, there will be 0 or more not-yet defined quantities. To keep track of the work that still is to be done to make the model complete, these not-yet defined quantities are collected in a so-called to-do list. This list is automatically shown as soon as there are any not-yet defined quantities; the list vanishes as soon as it is empty. By clicking on a quantity in the to-do list, this quantity is transported to the script-line input box. ",
+		    "seeAlso":"categories,script,IO / Edit",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"dependencies":
+		  {
+		    "fName":"dependencies",
+		    "cat":"general",
+		    "help":"ACCELTM+ models are functional models. To keep track of the functional dependencies in a model, it is often needed for a given quantity x, to find which quantities x depends on, and which other quantities depend on x. Various provisions in \"+\"ACCELTM+ help to answer these questions.",
+		    "autoMapping":"",
+		    "example":"In the script <br>a=b+c+3<br>b=d+2<br>c=1<br>d=5<br>, a depends on b and c; b depends on d and a is dependent on b; c and d depend on nothing, et cetera.",
+		    "details":"In the script listing in the tab 'Edit / Run script', every line can be clicked. Clicking on any part of a script line moves the script line to the edit text field; it puts all the quantities that depend on the current quantity (say 'x') in the list 'x: arg to ...'; furher, it puts al the quantities occurring in this expression for x in the list 'Arg of x'.<br><br> Elements in the lists 'x: arg to...' and 'Arg of x' can also be clicked. Clicking on one of the quantities in these lists puts the quantity and its defining expression into the edit text field, and updates both lists.<br>If the script is not running (click on pauze to stop a running script), one can alos click on each of the quantities in the 'Results' list: for a clicked quantity in the 'Results', the same procedure appplies.<br><br>The network-tab offers a direct view to the model as a network of dependencies among quantities.",
+		    "seeAlso":"to-do list,cyclic dependency,categories,tabs",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"cyclic dependency":
+		  {
+		    "fName":"cyclic dependency",
+		    "cat":"general",
+		    "help":"ACCELTM+Assumes functional models, that is: values of output quantities depend on input quantities. In that paradigm, it is forbidden to have constructions like <br>a=b+3<br>b=a-2<br> where quantities indirectly depend on themselves. This is called <span class=\"accelEmph\">cyclic dependency</span>. Cyclic dependency is even forbidden in the situation where fixed points (=sets of values that satisfy all definitions) exist, such as <br>a=b+3<br>b=a-3<br>." ,
+		    "autoMapping":"",
+		    "example":"In designing the dimensions of a book, there is a relationship between text length TL, point size PS and number of pages NP of the form NP=C*TL/PS. From algebra it is obvious that also PS=C*TL/NP. However, only one of the two expressions can occur in a functional model of the book. Therefore the model maker should make up het mind: which of the two dependencies, in her view, describes most adequately the causality at hand: is the number of pages the result from choosing the point size (for instance: designing a book for elderly readers, where the points size should be a given value), or does the point size result from choosing the number of pages (for instance: designing a travel guide for backpackers, where the book should be as lightweight as possible, and therefore contain no more than some amount of pages).",
+		    "details":"In most cases, cyclic dependencies occur as a result of the confusion of what depends on what. If, while entering a script, a cyclic dependency happens before the script is completed, \"+\"ACCELTM+ has not yet attempted to compile the script, and cyclic dependency cannot be detected. If no more undefined quantities occur, \"+\"ACCELTM+ compiles the script. Cyclic dependency, however, is no syntax error, and therefore compilation of a script containing cyclic dependencies may succeed. Only during runtime the occurrence of a cyclic dependency can be detected.<br>In some cases, the cause of cyclic dependency relates to the notion of time: one may want to express that x at a later time step equals x at a previous time step plus some increment. This means, however, that there are two quantities: x and x{1}, with an implicit relationship between them - namely, that the value of x will be the value of x{1} at the next time step, and similar for x{n}, n>1. ",
+		    "seeAlso":"time,iteration,dependencies",
+		    "external":"",
+		    "abbreviation":""
+		    },
+		"plotting dependencies":
+		  {
+		    "fName":"plotting dependencies",
+		    "cat":"general",
+		    "help":"In \"+\"ACCELTM+, dependencies between any pair of numerical, scalar quantities can be graphically plotted. This is a useful device for testing the behaviour of a model-under-construction.",
+		    "autoMapping":"",
+		    "example":"Consider a model of a taxi company. One of the cat.-II quantities is the profit (P) in Euro/year; one of the cat.-III quantities is the fuel price (F) in Euro/liter. Any reasonable model should show a decreasing behaviour of P=P(F); on the other hand, F=F(P) is not defined since F does not depend on P.",
+		    "details":"In the tab 'analysis', there are two tables of quantities, one labeled 'Arguments', the other labeled 'Results'. All numerical, scalar quantities in the current model appear in both tables. By clicking a quantity in one of the tables, this quantity is chosen as either argument or result quantity in a graph to be plotted. The ranges of the argument and result quantity can be independently set by filling in numerical values in the 'from' and 'to'-boxes for the argument and result quantities. Values for the result quantity, by default, are scaled such that the graph fits either exactly or approximately in the vertical scale. Exact fitting happens if the checkbox 'auto scale: exact clamping' is selected. Exact scaling is nice to inspect values of minima and maxima, but the numbers are nicer if non-exact clamping is selected. \"+\"ACCELTM+ tries to do a reasonable first guess for the interval of argument-values. In particular, for cat.-I quantities that are sliders, the interval of the slider is taken as interval of argument quantity. Take care when adjusting the from- and to-values of an argument quantity that values may be entered for which the model is not defined. In that case, error message may or may not be produced, depending on the working of the script.<br><br>For argument quantities that correspond to sliders with a nominal domain (in the taxi-\"example\": the car brand),the model doesn't make sense for any other values than the discrete range of integers, obtainable by the slider. In such cases, the plot will consist of discrete dots only.<br><br>The graph is automatically plot again whenever either the argument value, the range value, or any of the from- or to-values is changed.<br><br>An alternative view to dependencies is offered by means of the network tab (see the tabs-documentation). This view depicts the model as a network of dependencies among quantities.",
+		    "seeAlso":"dependencies,cyclic dependency,sensitivity analysis,debugging,analysis,tabs",
+		    "external":"See <a href='http://en.wikipedia.org/wiki/Graph_of_a_function'> http://en.wikipedia.org/wiki/Graph_of_a_function </a> for more background on graphs of functions.",
+		    "abbreviation":""
+		  },
+		"graph plotting":
+		  {
+		    "fName":"graph plotting",
+		    "cat":"general",
+		    "help":"All quantities computed by \"+\"ACCELTM+ can be visually represented by graphs. Grap-plotting is done by the \"+DESCARTESTM+\" subsystem.",
+		    "autoMapping":"",
+		    "example":"plot([graph1,graph2])<br>graph1=[ctrl1,data1,data2]<br>graph2=[ctrl2,data3]<br>ctrl1=[plotType:'line',x:[mode:'intp'],y:[mode:'data',ref:1],width:[mode:'data',ref:2],col_r:[value:200]]<br>ctrl2=[plotType:'radar',phi:[mode:'shift',ref:1]]<br>data1=[..,..,..,..]<br>data2=[..,..,..,..]<br>data3=[..,..,..,..]",
+		    "details":"There is a single function available for all forms of data visualisation: the function plot(). It takes an array where every element is one graph. A graph is an array where the first element is a control vector. Further elements are optional; every further element is an array of scalar numerical data.",
+		    "seeAlso":"descartes,control string,plot format",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"units and unit checking":
+		  {
+		    "fName":"units and unit checking",
+		    "cat":"general",
+		    "help":"Quantities in \"+\"ACCELTM+ can be associated to units. Expressions with units can be checked, and quantities for which no units have been provided will receive units automatically. Unit checking, when enabled, takes place automatically when the script is viewed in the IO/ Edit tab. <br><br>In order to enable unit checking, check the checkbox 'check units' in the tab 'IO /Edit'.",
+		    "autoMapping":"",
+		    "example":"a=3;kg<br>b=5;m<br>c=2;liter<br>x=a*b/c<br><br>produces a numerical outcome of 7.5. The unit of this outcome is calculated as kg.m/liter.",
+		    "details":"A unit is any expression of the form numerator or numerator/denominator, where both numerator and denominator consist of zero or more factors. Factors can be any string consisting of letters only, optionally followed by a positive integer. Factors are separated by points (.). In case of no factors in the numerator, write '1' (one). <br><br>Units of compound quantities are recognised, e.g. a=[p,'x':[q,r]];[kg.m/s2,'x':[liter,liter2]]. Notice that the names used to label properties in a quantity must occur identical in the unit for that quantity; vectors with unnamed elements have a unit that contains the same amount of elements.<br>Unit checking works for binary operations such as + and max: units of quantities must be equal. It also works for operators assuming unit-less arguments such as sin() and or. The approporiate algebra for multiplying and dividing units is applied. Also the sqrt function is handled correctly: if the unit of p is m2.kg2, the unit of sqrt(p) is m.kg.<br><br>Unit checking takes place when the view switches from the Edit / run script-tab to the IO / Edit tab. Some apparent unit-errors relate to problems with initialisation. For instance, checking the unit of a=a{n}+p, where p has a unit, can only take place after at least n iterations; prioir to that time, a will take a default value (0) with undetermined unit.<br><br>Errors against unit checking don't prevent the script from running. Some errors against unit syntax, however, are considered as compile errors; these need to be fixed before the script can run.<br><br>Unit information is propagated from categories I and III to categories IV and II. Units for quantities in categories IV and II are overwritten by deduced units; units for quantities in categories I and III cannot be deduced from units of quantities in categories IV or II.<br><br>Notice that, to get units correct, it may be necessary to introduce value-less quantities (as opposed to dimensionless quantities). Example: the amount of glasses of beer, G, with unit 'glass' to be served to a group of friends is given by the formula R * F where R is the number of rounds (unit: 'round') and F is the number of friends (unit: 'friend'). However, this expression is dimensionally flawed. It needs multiplication with a quantity with unit glass/friend.round and value 1. Indeed, this signifies that in each round, every friend consumes one glass of beer. Similarly, there can be value-less quantities to make correct expressions where where quantities are added or subtracted. An example is the max() function. In order to ensure a quantity q with unit 'u' to be positive, we may write min(0,q). But this only is correct if the value 0 has unit 'u' as well: the 0 is a value-less, but not dimensionless quantity with unit 'u'.",
+		    "external":"",
+		    "seeAlso":"scalar,vector",
+		    "abbreviation":""
+		  },
+		"demo":
+		  {
+		    "fName":"demo",
+		    "cat":"general",
+		    "help":"The best way to get familiar with \"+\"ACCELTM+is by playing with scripts that already work and do something meaningful. A collection of demo scripts can be found in the right most table on the tab Help / Demo; merely selecting a title should load the script and start it. The full script text can be inspected in the IO / Edit screen.<br><br>In case you want your own script to be shared with other users, perhaps to hand it in as homework, you should click the button labeled 'submit'. Then the script is stored in a database, and you receive a unique link (a URL); going to that link in a browser supported by \"+\"ACCELTM+ runs your script. Notice(1): In some cases you might want to type in the link you receive in the address bar of your browser. This is inconvenient for very long URL's; therefore \"+\"ACCELTM+ constructs the unique name on the basis of a string (=a name) you provide. Suppose you want to call your script 'myDemo', then you should type in this name. In case, say, two people before you proposed the same name, the name of your script will be 'myDemo_2', and the link will be something like 'www.keesvanoverveld.com/Accel/accel.htm?link=myDemo_2' - which is not too bad in to type in yourself. Notice(2): scripts are stored only for a limited amount of time on the server (aqbout one week). For preserving scripts permanently, you should not rely on this service, but store scripts as text-files on your local computer.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"",
+		    "seeAlso":"IO / Edit,help system",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"help system":
+		  {
+		    "fName":"help system",
+		    "cat":"general",
+		    "help":"If you are reading this text, it is likely that you have at least some working knowledge of \"+\"ACCELTM+'s help system. For completeness' sake, we explain the full help system here.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"There are four ways to access a help topic.<ul><li>Select a help category from the left most table on the tab Help / Demo. Categories are for instance 'algebra' (explaining the algebraic functions), 'optimisation' (explaining the optimisation methods) et cetera. When a category is clicked, a list of 'Help details' is shown. Clicking on one of the help detail topics shows the actual lemma. Notice that help detail topics in white refer to functions in the \"+\"ACCELTM+ script language; help detail topics in blue are general subjects. </li><li>Typing in a search string in the text input field, upper left, and optionally clicking the 'search' button filters all help detail topics containing the search string - irrespective of the help category. Again selecting a help detail topic presents the actual help text.</li><li>Every help lemma contains a section 'see also'. Terms found there can be clicked; they appear as search strings in the search text input field, and the matching help detail topics are automatically shown.</li><li>If anything else fails, you can click the button 'ask for help via mail': in that case you can compose a help text that can be sent off to the \"+\"ACCELTM+system administrator.</li></ul>Apart from browsing through the help lemma's, an efficient way to become familiar with \"+\"ACCELTM+is to load demo's and to study, play and modify them.",
+		    "seeAlso":"demo's",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"genetics":
+		  {
+		    "fName":"genetics",
+		    "cat":"general",
+		    "help":"A broad class of models has the purpose to optimise something. That means: cat.-I quantities should be given such values that certain cat.-II quantities are optimal (maximal or minimal). Since models can be extremely varied, including non-linear, non-continuous and multiple-objective models, there are very few sufficiently generic optimisation methods. One method that does apply in virtually all circumstances is <span class=\"accelEmph\">genetic</span> or <span class=\"accelEmph\">evolutionary</span> programming. ",
+		    "autoMapping":"",
+		    "example":"The biological variety in living species is believed to have resulted from genetic optimisation according to the principle of survival of the fittest in a heterogenous population. Genotype roughly matches with our notion of cat.-I quantities, phenotype roughty with cat.-II quantities.",
+		    "details":"The essence of genetic optimisation is, that rather than a single solution that should be optimal, we operate on a population of sample solutions that is sufficiently varied. Some individuals in that population will be fitter than others, and the chance for next generation individuals to resemble the fitter ancestors is somewhat larger than for non-fit individuals. The process is initiated by a fully random population, that is: a population where the values for all cat.-I quantities for each individual are randomly chosen. Fitness is determined by means of <span class=\"accelEmph\">domination</span>. <br><br>Domination is the relation between two individuals where values of <span class=\"accelEmph\">all</span> cat.-II quantities of one individual values are better than those of the other. 'Better' here means: larger for a quantity that needs to be maximised, and less for a quantity that needs to be minimised. <br><br>This introduces the notion of <span class=\"accelEmph\">strength</span>. Strength is a measure for the fitness of a quantity. Strength is minus the number of individuals whom an individual is dominated by. Non-dominated individuals have strength=0; all dominated individuals have lower strengths. To construct a next generation's population, all non-dominated individuals are preserved. These are said to form the <span class=\"accelEmph\">Pareto-front</span>. Individuals not on the Pareto-front are replaced by new individuals, where a number of heuristics can be used to form a new individual. After a number of generations, it is assumed that the Pareto front moves in the direction of increasingly stronger (fitter) individuals." ,
+		    "seeAlso":"Pareto,dominance,population,paretoMax,paretoMin,SPEA",
+		    "external":"One of the original papers of Zitzler and Thiele, introducing the Strength Pareto Evolutionary Algorithm is <a href='http://www.tik.ee.ethz.ch/sop/publicationListFiles/zlt2001a.pdf'>http://www.tik.ee.ethz.ch/sop/publicationListFiles/zlt2001a.pdf</a>",
+		    "abbreviation":""
+		  },
+		"Pareto - general":
+		  {
+		    "fName":"Pareto - general",
+		    "cat":"optimisation",
+		    "help":"In a population that is used to optimise certain criteria (expressed as minimum or maximum conditions on cat.-II quantities), the non-dominated individuals need to be preserved whereas dominated indiviuals can be replaced by others. ",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"For replacing individuals, a number of heuristics is implemented in \"+\"ACCELTM+:<ul><li>Random:  all cat.-I quantities receive random values within the ranges of the associated sliders. Boolean values are randomly set to true or false.</li><li>Arb(itrary) mutant: an arbitrary cat.-I quantity takes on a random value.</li><li>Close mutant: an arbitrary cat.-I quantity takes on a value that is close to the current value. 'Close' is taken relative to the range of admitted values for the quantity.</li><li>Cross over: a new individual is constructed by selecting two individuals on the Pareto front, and randomly selecting the values for the cat.-I quantities either from one or from the other 'parent'. This resembles the biological phenomenon of sexual procreation.</li><li>Binary tournament: two random individuals, not on the Pareto front, are selected. For both their strength is calculated (=minus the number of individuals they are dominated by), and the stronger of the two is chosen as a new individual.</li></ul>Each of these five processes has a probability, which can be specified with the five lower most sliders on the Genetic Optimisation tab. A new population is constructed by first selecting all individuals on the Pareto front, and next replacing all other individuals by applying one of the above heuristics, applying relative chances according to the specified settings of the respective sliders.",
+		    "seeAlso":"Pareto,dominance,population,paretoMax,paretoMin,SPEA",
+		    "external":"Evolutionary algorithms in general are widely applied. An overview can be found here: <a href='http://en.wikipedia.org/wiki/Evolutionary_algorithm'>http://en.wikipedia.org/wiki/Evolutionary_algorithm</a>.",
+		    "abbreviation":""
+		  },
+		"SPEA":
+		  {
+		    "fName":"SPEA",
+		    "cat":"optimisation",
+		    "help":"The entire optimisation process consists of a number of steps. These are outlined below.",
+		    "autoMapping":"",
+		    "example":"For a practical application, see the demo file 'taxiCompanyPareto.txt'",
+		    "details":"<ul><li>Make sure there is an executable script containing at least one cat.-II quantity and one cat.-I quantity.</li><li>In the script, determine what should be done to the cat.-II quantities: should they be maximised or minimized? Register quantities for maximisation or minimisation by the functions paretoMax and paretoMin. </li><li>In order to get a visual impression (and the option to interactively interrogate individuals), there should be a graphical Pareto plot. This needs one cat.-II quantity to be plotted horizontally and one to be plotted vertically. The functions paretoHor and paretoVer can be used to specify which quantities should be plotted.</li><li>Specify the size of the population using the top most slider (labeled 'population size') on the Genetic Optimisation tab. The ideal population size is determined by the speed of the computer: the larger the population, the bigger the chance for extreme optima, but the more computational resources are required.</li><li>Nest, specify the number of generations to iterate. Every click on the button 'next generations' does a full series of iterations. This amount is specified by the slider labelled 'nr. new generations'.</li><li>Next click the button 'init SPEA'. This produces a random first generation. Individuals are visualised as little blue dots. Individuals on the Pareto-front are larger red dots.</li><li>Next click the button 'next generations' to have an ordered amount of next generations. Watch the Pareto front moving in the direction of increasingly fitter solutions.</li><li>For better usage of the drawing area of the Pareto plot, buttons 'zoom in' or 'zoom out' may be clicked.</li><li>Once the Pareto front has stabilized, further improvement may be obtained by 'post tuning' (see elsewhere).</li><li>Individual solutions may be interrogated by clicking on a solution (=a blue, or in most case: a red dot); the cat.-I settings of a solution may be moved to the default settings for the relevant cat.-I quantities.</li></ul>",
+		    "seeAlso":"Pareto,dominance,population,paretoMax,paretoMin,paretoHor,paretoVer,SPEA,demo's",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"post tuning":
+		  {
+		    "fName":"post tuning",
+		    "cat":"optimisation",
+		    "help":"After a number of generations, the Pareto front as it is estimated by the SPEA algorithm will typically stabilize: it does not further improve. In such cases, howver, significant progress sometimes can be achieved by switching to another strategy: <span class=\"accelEmph\">post tuning</span>.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"The essence of genetic algorithms, as opposed to standard (local) analytic optimisation methods is, that an entire population is calculated in order to have a larger chance to cover 'niches' in the solution space where local optima might be found. If the evolutionary process does no longer make progress, a local strategy may be advantageous. In a local strategy, every individual solution on the Pareto front is processed. All cat.-I quantities of such a solution are varied, one by one, to see if dominance in the cat.-II quantities can be achieved. That is, if a new solution can be found that dominates the original solution ('domination' meaning, that the new solution is better in all cat.-II quantities than the old one). If such an improvement can be found, attempts are repeated for this solution until no further optimisation are obtained. <br><br>Notice that, by treating solutions on the Pareto front individually, they no longer need to form a Pareto front. Indeed, it is possible that a solution that could make significant improvmenet now dominates on e of the other solutions that were originally on the Pareto front. It is therefore necessary after a round of post-tuning to at least calculate one new generation of the entire population to ensure that the most recent Pareto front is attained.<br><br>Depending on the structure of the solution space, post-tuning can be a length process. It is therefore possible to interrupt post tuning. To this aim, the function of the button 'post tune' changes during the actual tuning process into 'stop tuning'.",
+		    "seeAlso":"Pareto,dominance,population,paretoMax,paretoMin,paretoHor,paretoVer,SPEA,demo's",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"front":
+		  {
+		    "fName":"front",
+		    "cat":"optimisation",
+		    "help":"Ideally, the Pareto front contains a relative small portion of the entire population. First, this enables a large amount of individuals to actively mutate, so that a broad coverage of the entire solution space is achieved; further, multiple closely distributed Pareto-solutions are mainly redundant.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"The chance for an individual to be on the Pareto front increases drastically with the number of cat.-II quantities. Indeed, the more cat.-II quantities, the smaller the chance to be dominated, and therefore the bigger the chance <span class=\"accelEmph\">not</span> to be dominated. If the fraction of individuals being on the Pareto front is too large, the evolutionary process comes to a halt: indeed, since the population size is constant, there will be too few individuals to mutate. In that case it can help to maximize the fraction of individuals on the Pareto front. This means that an individual who is not dominated, and who therefore should be part of the next generation, is deliberatly mutated (and therefore taken out of the next generation). Although this strategy stimulates a large variability, it introduces the risk that the progress of the Pareto front is no longer monotonous: it is possible to 'loose' good solutions. The slider 'max. percentage on front' can be used to set the maximum fraction of individuals that are allowed to be on the Pareto front. With as few as two or three cat.-II quantities, it should not be necessary to use this intervention.",
+		    "seeAlso":"Pareto,dominance,population,SPEA",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"modifying script":
+		  {
+		    "fName":"modifying script",
+		    "cat":"optimisation",
+		    "help":"Once a Pareto run has completed, it can be adviseable to promote one of the Pareto solutions to a default solution, for instance to do a sensitivity analysis in the neighbourhood of this new default.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"Every individual solution in the Pareto image can be clicked. This produces a message with all information for that solution (all values for cat.-I and cat.-II quantities), plus the option to take these cat.-I values as new defaults. If this option is chosen, the script is actually modified. In particular, all slider expression of the form quantity=slider(default,low,high) get as their new value for 'default' the valua as in the selected solution.",
+		    "seeAlso":"Pareto,dominance,population,SPEA",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"iteration over time":
+		  {
+		    "fName":"iteration over time",
+		    "cat":"general",
+		    "help":"ACCELTM+scripts can be used to model processes that take place over time. In particular it is possible to execute a script over a given amount of time steps in stead of only once.",
+		    "autoMapping":"",
+		    "example":"Suppose a model represents a business that is intended to reach a break-even point after some years: after an initial phase of negative profit, profits should become positive once initial investments have been written off. In this case, the script should represent one year, where the assets at the beginning of the year are taken to be the assets at the end of the previous year. Having the model run for, say, 10 successive rounds gives an estimate for the assets after 10 years. By considering only the result after these 10 time iterations, SPEA optimisation can be done where every individual represents a complete business history of 10 years.",
+		    "details":"Normally, one evalutation of an \"+\"ACCELTM+ script starts with setting all quantities to zero, and leaving the hisotric values of all quantities untouched. In this way, a non-time dependent model executes exactly once every round, and in a time dependent model, time keeps running. <br><br>This default behaviour, however, only applies if the iteration counter (= the numerical stepper in the tab Edit / Run script, next to the pauze button), is set to its default value 0.<br><br>If this stepper is set to, say, n, n&gt 0, the quantities are only set to zero, and the history is only erased, once every n iterations; the results are published at the end of these n iterations. <br><br>To see this working, try the following script: <br>b=a<br>a=a{1}+slider(0,1,10)<br>With the stepper set to 0, the result is an ever increasing number; with the stepper set to n, the result is the product of n and the slider value - indeed, we emulate a multiplication as a repeated addition.<br><br>When a script is executed on behalf of the SPEA optimisation, the setting of the iteration counter is taken into account, and every individual solution in the Pareto plot is the result of an iterated calculation. Obviously, for large numbers of iterations, this can signoficantly slow down the performance.",
+		    "seeAlso":"time,SPEA",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"IO / Edit":
+		  {
+		    "fName":"IO / Edit",
+		    "cat":"general",
+		    "help":"A script can be entered in two ways: in the Edit / Run script-tab, script lines are entered one-by-one; after every entered line, \"+\"ACCELTM+ checks if the script represents an executable model (that is: there are no undefined quantities in the to-do list, and the script is free of syntax-errors), and the script starts running. The other possibility is to type a complete script in the text area in the IO / Edit tab (or, equivalently, load a demo script from the right most table on the Help / Demo tab). In the case where a script is typed in on the text area in the IO / Edit tab, checking for completeness and checking for correct syntax only start when the run-button above the text area is clicked. A downloaded demo-script should run automatically when loading is complete."  ,
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"In the IO / Edit tab, the text-area view of the script serves three purposes: <ul><li>For a complete overview, the lines are given at full length, including comment lines (script lines may be truncated in the listing in the Edit / Run script tab; the listing in the Edit / Run script tab shows no comment texts). The full view allows extensive editing without immediate consequence for the running calculation: as soon as anything changes in the text area, the running calculations are put on hold. (This can be seen since the caption of the 'pauze' button changes into 'run').</li><li>The script view in the IO / Edit tab can be used to show instantaneous values of all quantities. Click the button 'Show / hide values to flip between a view with values given and without. Values are given in the same format as comment texts (that is, preceded by two slashes). In this way, values at several instances of the execution can be collected in the same script.</li><li>\"+\"ACCELTM+, as well as any other javascript application, has no possiblities to read or write information to the local computer's file ssystem. It is possible, however, to copy and paste text from text areas. In this way a downloaded or typed-in script can be saved as an ordinary text file on the local computer: merely select all text in the text area and (on Windows machines) press ctrl-C (Mac: apple-C) to copy the current script into the copy-n-paste buffer. Next paste (ctrl-V/apple-V) the text into any text editor and save the contents as a text file. Similarly, a script can be restored: load the script in a text editor, select all text and copy; next select the contents of the text area in the IO / Edit tab and paste: the contents of the text area will be replaced by the new script. </li></ul>",
+		    "seeAlso":"run,pauze,edit,saving,restoring,syntax",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"saving and restoring scripts":
+		  {
+		    "fName":"saving and restoring scripts",
+		    "cat":"general",
+		    "help":"There are no file load or file save options in \"+\"ACCELTM+. Saving and restoring scripts takes place by copying and pasting text to and from the text area view in the IO / Edit tab.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"\"+\"ACCELTM+, as well as any other javascript application, has no possiblities to read or write information to the local computer's file ssystem. It is possible, however, to copy and paste text from text areas. In this way a downloaded or typed-in script can be saved as an ordinary text file on the local computer: merely select all text in the text area and (on Windows machines) press ctrl-C (Mac: apple-C) to copy the current script into the copy-n-paste buffer. Next paste (ctrl-V/apple-V) the text into any text editor and save the contents as a text file. Similarly, a script can be restored: load the script in a text editor, select all text and copy; next select the contents of the text area in the IO / Edit tab and paste: the contents of the text area will be replaced by the new script. ",
+		    "seeAlso":"",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"run - pauze":
+		  {
+		    "fName":"run - pauze",
+		    "cat":"general",
+		    "help":"ACCELTM+ can be in two modes: run and pauze. In run mode, the script is repeatedly executed, giving real-time response to sliders and other input devices, performing a dynamic simulation and/or updating visual output. In pauze mode, the execution is halted. In case debugging was enabled, the debug-output window is minimized to the task bar, but it may be opened for inspection.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"Run mode is only possible with a script that is executable, that is: a script without any undefined quantities (no to-do list) that is syntactically correct. When entering a script line-by-line in the Edit / Run script tab, \"+\"ACCELTM+continuously checks if this is the case; if so, run mode is automatically entered. <br><br>When entering a script via the IO / Edit tab, run mode can be entered by clicking the 'run' button.<br><br>During run mode, the script can be navigated (browsing through the listing on the Edit / Run script tab, scrolling through the script in the IO / Edit view, clicking on quantities in the various arguments lists in the Edit / Run script tab). There is one restriction: the list of results in the Edit / Run script tab, which is dynamically refreshed at every script evaluation, cannot be browsed or clicked when the script is running.<br><br>Pauze mode is entered in one of the following ways:<ul><li>Clicking on the button labeled 'pauze' (this button sits both in the Edit / Run script tab and in the IO / Edit tab; it is physically the same button as the 'run'-button with a changed button caption);</li><li>Modifying the content in the text-screen view of the script in the IO / Edit tab;</li></ul>In most cases, when \"+\"ACCELTM+ is in the pauze-state, it can be made to run again by clicking the run-button. In exceptional cases, the 'pauze'-button does not automatically change into a 'run'-button. This happens for instance if a non-recoverable runtime exception occurs. In that case \"+\"ACCELTM+ assumes that something needs to be adjusted in the script. Merely click on the left hand side of one of the quantities in the script listing in the Edit / Run script tab; this makes the script line appear in the text input box. Press enter (perhaps after having performed some adjustment). If the resulting script is complete and correct, \"+\"ACCELTM+ automatically will enter run-mode again. In case \"+\"ACCELTM+ does not go back to run-mode, recover the script and re-load \"+\"ACCELTM+ as explained in the lemma 'panic'",
+		    "seeAlso":"IO / Edit,runtime exceptions,debug,panic",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"comment":
+		  {
+		    "fName":"comment",
+		    "cat":"general",
+		    "help":"A model is only meaningful if it can be interpreted. The interpretation of a model is human-readible text, explaining the meaning of quantities and relations, and listing important assumptions. This text is called <span class=\"accelEmph\">comment</span>. Comment text is not part of the script, but it is crucial to understand the script.",
+		    "autoMapping":"",
+		    "example":"This is an example of using comment:<br>green=slider(10,0,100)<br>// a is the percentage of products painted green; default is 10.<br><br>",
+		    "details":"Comment text are visible in the IO / Edit tab view of the script. A comment text line starts with two slashes. Comment text lines can only be entered in the IO / Edit view. <br><br>Comment texts are used to annotate quantities in various lists (the argument list and the argument-of list). Furthermore, comments are used to provide tooltips for user interface widgets such as sliders and checkboxes. Also to aid the user of a script therefore, well-chosen comments are crucial.<br><br>A special case of comment text is the instantaneous value of a quantity. These instantaneous values can be added to the comment of a script by clicking the button 'Show/hide values' in the IO / Edit tab. This button works as a toggle: it alternatingly switches the value-view on or off.<br><br>Comment texts - either comment text that where entered by the author, or comment texts showing the instantaeous values of script quantities - form an integral part of the script. They should be saved and restored together with the actual script lines.<br><br>A comment line that takes the form of [['n':'name','x':number,'y':number],[...],...] is interpret as a prescription of the locations of the nodes (quantities) in a model when depicted as a network. Such a comment field is automatically added at the end of the script when a listing is made. Saving and restoring the script including this trailing comment line makes the network appear the same as a previous time, for easier inspection.",
+		    "seeAlso":"IO / Edit,editing,user interaction,tooltips",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"runtime exceptions":
+		  {
+		    "fName":"runtime exceptions",
+		    "cat":"general",
+		    "help":"Not all mathematical calculations can be correctly executed. Division by zero is a notorious example. The event where, at runtime, an impossible mathematical operation occurs is called a <span class=\"accelEmph\">runtime exception</span>.<br>A runtime exception interrupts the running evaluation; in most cases, a message explaining the cause appears, and result quantities show the text 'STACK PROCESSING INTERRUPTED'. The run/pauze mode does not automatically switch back to 'run', since in most cases some intervention is needed in the script to get things 'back on track'. Click on one of the problematic quantities in the result table, and navigate to the problem in the script. Doing so will bring the script line(s) to be edited into the text input field in the Edit / Run script tab. After fixing any issues, type 'enter', and \"+\"ACCELTM+ will atempt to compile the (modified) script. If this succeeds, the mode switches back to 'run' again. <br><br><span class=\"accelEmph\">Notice: after the occurrence of a runtime exception, the state cannot be brought back to 'run' via the IO / Edit tab: interventions need to be done via the Edit / Run script tab</span>.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"",
+		    "seeAlso":"run - pauze,panic",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		 "panic":
+		    {
+		    "fName":"panic",
+		    "cat":"general",
+		    "help":"ACCELTM+ is in one of two states: run or pause. In most circumstances, transition between these two states is fluent: either manually by clicking the run-pauze buttons, by changing something in the IO / Edit tab-view of the script, by entering a script line that makes a script complete, or as a result of dealing with a runtime exception (e.g., divide by zero). There can be rare circumstances, however, when \"+\"ACCELTM+ seems to be unable to enter the run-state. The system seems to be frozen. In such circumstance, it is important not to loose the current script. Follow the procedure below:<ull><li>Switch to the IO / Edit tab.</li><li>Select all text in the text area.</li><li>Press ctrl-C (or on Mac: apple-C).</li><li>Open a text editor.</li><li>Press ctrl-V (or on Mac: apple-V). This pastes the text into the text editor.</li><li>Save your script on the local computer.</li><li>Close the browser tab running \"+\"ACCELTM+.</li><li>Reopen the web page running \"+\"ACCELTM+.</li><li>Select the IO / Edit tab.</li><li>Paste the text (from the preserved script) into the text area.</li><li>Cick the 'run'-button to try to get the script running, or analyse the problems with the script if it refuses to run.</li></ul>",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"",
+		    "seeAlso":"run - pauze,runtime exception",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		 "editing":
+		    {
+		    "fName":"editing",
+		    "cat":"general",
+		    "help":"A script can be edited in one of two ways: a line-by-line approach in the Edit / Run script tab, or a full script approach in the IO / Edit tab.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"The text area in the IO / Edit tab gives a full text view on the script, similar as in simple text editors. The script can be edited as any standard ASCII text; after the script is thought to be complete, click the 'run'-button to get the script checked for completeness, compiled, and - if no problems are detected, run. <br><br>The script in the IO / Edit tab consists both of executable script lines - that is, lines in the form of 'quantity'='expression', where the expression defines the quantity, or comment lines - that is, lines starting with //, containing human readable text to clarify the preceding executable script line. <br><br>In case of detected problems (e.g., undefined quantities or syntac errors), \"+\"ACCELTM+switches to the Edit / Run script tab to help fixing the problem.<br><br>Editing a script in the Edit / Run script tab takes place on line-by-line basis. After typing 'enter' in the input text field on the top of the Edit / Run script tab, the current contents of this text field is considered to be a script line, defining the quantity that occurrs before the '='-sign. If such a quantity was defined before, the new script line overwrites the earlier definition. Next \"+\"ACCELTM+ checks to see if there are any undefined quantities (that is, a to-do list). If not, it checks the syntax of all expressions, and if no errors are found, it switches to the run mode, evaluating the script. Script lines can be removed from the script by clicking on the red 'delete'-text in the script listing in the Edit / Run script tab.",
+		    "seeAlso":"run - pauze,syntax",
+		    "external":"",
+		    "abbreviation":""
+		  },
+		"syntax":
+		  {
+		    "fName":"syntax",
+		    "cat":"general",
+		    "help":"Every expression in a script needs to comply with the syntax of the \"+\"ACCELTM+ script language.",
+		    "autoMapping":"",
+		    "example":"",
+		    "details":"This language is given by the following grammar:<ul><li>expr ::= scalarExpr | vectorExpr</li><li>scalarExpr ::= scalarTerm | scalarArith</li><li>scalarArith ::= scalarBinArith | scalarUniArith</li><li>scalarUniArith ::= '-' expr | '+' expr | '!' expr</li><li>scalarTerm ::= scalarVar | scalarBrackets | scalarFunc | scalarConst | scalarQuant </li><li>scalarFunc ::= functionName '(' commaList ')'</li><li>predefinedConstant ::= PI | E | true | false</li><li>scalarConst ::=number | string | predefinedConstant</li><li>string ::= '\"'char* '\"' | \"'\"char * \"'\"</li><li>scalarVar ::= scalarDelayedVar | scalarAtomicVar</li><li>scalarDelayedVar ::= scalarAtomicVar '{' scalarExpr '}'</li><li>scalarAtomicVar ::= (element of symbol table)</li><li>scalarBrackets ::= '(' expr ')'</li><li>vectorExpr ::= '[' vectorArgList ']'</li><li>scalarBinArith ::= expr | binOp | expr</li><li>binOp ::= '+' | '-' | '/' | '%' | '<=' | '<' | '>=' | '>' | '==' | '!=' | '&&' | '||' </li><li>commaList ::= '' | expr ',' commaList | expr</li><li>vectorArgList ::= '' | vectorElem ',' vectorArgList | vectorElem</li><li>vectorElem ::= \"'\" char* \"'\" ':' expr |  char* ':' expr | expr</li><li>scalarQuant ::= '#(' freshId ',' scalarExpr ',' expr ',' functionName ')'</li></ul>   ",
+		    "seeAlso":"run - pauze,edit",
+		    "external":"",
+		    "abbreviation":""
+
+		},
+		"quantified expression":
 		{
-	    "fName":"user functions",
-	    "cat":"general",
-	    "help":"ACCELTM+ supports user-defined functions, featuring local quantities (a.k.a. formal arguments).",
-	    "autoMapping":"user defined functions are compatible with auto mapping: if the function body uses a function that supports auto-mapping, the auto mapping feature also applies in the user defined function. quantities that are mapped may be both regular ('global') quantities and local quantities.",
-	    "example":"mySum(x,y)=x+y introduces a function called 'mySum' that takes two arguments and returns their sum. It can be called as p=mySum(3,4), but also e.g. as q=mySum(mySum(3,4),5) or q=mySum(3+4,5)",
-	    "details":"In some respects user defined functions behave a bit like quantities - in the sense that they can occur in expressions. For instance myArray(x,y)=['first':x,'second':y] can occur in an expression such as p=@(myArray(3,4),'first'), correctly producing 3. In other respects, they are very different. They do not have a history, so mySum{1} is not defined. In p=mySum(mySum(3,4),5), it is impossible to say what the value of 'mySum' is: is it 7 or 12? For this reason, they don't show up in the listing in the IO / edit tab if the 'show values' option is selected. <br><br>In the same way, local quantities, such as the x and y in the above example, are a bit different from category-I,II,III or IV-quantities. For instance, again mySum(x,y)=x+y, if we have p=mySum(3,4) and q=mySum(5,6) occurring in the same script, we cannot say if x is 3 or 5. So local quantities also don't show up in the IO / edit-version as separately listable quantities.<br><br>In many respects, local quantities resemble dummies in quantified expressions. Naming conventions are to a large extent similar. Names for dummies as well as names for local quantities don't need to be unique (that is, a local quantity name can occur in several user-defined functions and/or as a name of a dummy in several quantified expressions). The following restrictions apply:<ul><li>The name of a dummy or local quantity must not occur as the name of a regular ('global') quantity;</li><li>if a user defined function has multiple local quantities, these must have different names. It is forbidden to have mySillyExample(x,x)=2*x;</li><li>if quantified expressions are nested, dummies must have different names. It is forbidden to have #(i,[1,2,3],#(i,[1,2,3],i*i,add),add).</li></ul><br><br>User defined functions allow recursion. For instance, the following function calculates the factorial: myFac(x)=cond(x<=1,1,myFac(x-1)*x). Notice that here we need the cond() form instead of the if() form: the if()-form causes both alternatives to be calculated always, and the calculation then would never end. Recursion is tricky: the following example works fib(x)=cond(x<=1,1,fib(x-1)+fib(x-2)) to calculate elements from the famous Fibonacci series, but the evaluation of fib(30) takes already more than a second on most machines. Als think about inf(x)=inf(x)+1: this pseudo-recursion is sure not to terminate. With recursion it is very easy to exceed bounds in execution time or memory usage. \"+\"ACCELTM+ uses a number of heuristics to detect and robustly handle such exceptions, but some care should be taken when using recursion.<br><br>Thinking of functions fits very well in the framework of four categories. Indeed, we can write down the appliation of a function, even before we have thought about the body (=the statements that define what the function does). Such as soldVolume=priceElasticity(price,numberPotentialCustomers). The details of priceElasticity(x,y) need not to be known, in that respect it behaves a bit as a category-IV quantity. It will therefore appear in the to-do list as long as the body is not yet given.",
-	    "seeAlso":"quantified expression,recursion,local quantity, formal quantity,dummy,categories",
-	    "external":"There is a vast amount of literature on functions, function application and related topics. A start can be found here: <a href='http://en.wikipedia.org/wiki/Function_(mathematics)'>http://en.wikipedia.org/wiki/Function_(mathematics)"
-	    },
-	    {
-	    "fName":"categories",
-	    "cat":"general",
-	    "help":"ACCELTM+ is based on the notion that quantities in (quantitative) models can play 4 roles:<ul><li>Category I: choice quantities, corresponding to user interface device (slider, checkbox, button, input-field. The category-I quantities (apart from values obtained by the input()-function, which are kept constant dusring execution of the SPEA algorithm) are used as independent quantities in optimisation: they are varied (using some heuristics) to achieve Pareto-optimal values for category-II quantities.</li><li>Category-II: objective quantities. These are the 'outcomes' of the model calculation. In the case of a design model, they represent the quality (the adequateness, the goodness, the merit, ...) of the design, where a 'design' is a choice for all of the category-I quantities.</li><li>Category-III quantities: these are all constants - that is: independent quantities on which the user (designer) has no influence, but who do have influence on the category-II quantities.</li><li>Category-IV quantities: all quantities that depend on cat.-I, cat.-III or other cat.-IV quantities, and onto which cat.-II and other cat.-IV quantities depend. They are the 'intermediate' quantities that each represent small sub-mechanisms of the entire model.</li></ul>",
-	    "autoMapping":"",
-	    "example":"In the following script:<br>a=slider(10,0,20)<br>b=12<br>c=a+b<br>d=b*2<br><br>a is cat.-I, b is cat.-III, c is cat.-IV, and d=cat.-II.",
-	    "details":"ACCELTM+ figures out to which category quantities belong. In the script listing in the Edit / Run script tab, for every quantity it is indicated to which category it belongs. \"+\"ACCELTM+ will put not-yet defined quantities automatically in a to-do list.<br><br>In the script listing in the Edit / Run script tab, quantities are sorted per category.",
-	    "seeAlso":"to-do list",
-	    "external":""
-	  },
-	  {
-	    "fName":"time",
-	    "cat":"general",
-	    "help":"For every quantity, either scalar or vector, historic values (=values that were computed in earlier evaluations, that is: at earlier timesteps) can be accessed. For a quantity x, x{n} is its value at n time steps ago. ",
-	    "autoMapping":"The operator {n} can only be applied to a quantity, (either scalar of vector), not to expressions. So e.g, (a+b){1} does not make sense. To obtain (a+b){1}, one should set e.g. c=a+b followed by d=c{1}.",
-	    "example":"To have a quantity which represents time, simply write time=time{1}+1. This means: the current value of the quantity time equals the previous value plus one. <br>To approximate the solution of a differential equation of the form df/dt=g, use 1st order Taylor expansion to write g(t)=(f(t+h)-f(t-h))/2h, or f(t+h)=f(t-h)+2hg(t). This can be simplified to f=f{2}+2*g{1} (tacitly taking h==1), or even f=f{1}+g. <br>For second order time dependecy, we get in a similar way f=2*f{1}-f{2}+g{1}",
-	    "details":"Notice 1: The time delay n can be arbitrary - but the result of x{n} for n which is larger than the number of evaluations thusfar is the default value. The default value for numerical quantities is 0, for Booleans it is false and for strings it is the empty string. Also, the default value will always be a scalar. So any quantity for which historic values are to be assessed, starts its lifecycle as a scalar. <br>Starting conditions typically occur in the form of x=if(time>1,functionOfX(x{1}),x0). The function 'functionOfX' may expect its argument to be a vector, and therefore encounters a type-problem for time=1. But at time=1, the expression 'x0' is returned for x. Provided that this expression is a vector, the rest of the calculation will work as expected. <br>Notice 2: functional dependencies shall not be cyclic. That is, constructions as the following are forbidden:<br>a=b+3<br>b=a-5<br>, even if thie would be algebraically feasible (such as a=b+3 followed by b=a-3). For time-delayed assessments of quantities however, this restriction does not apply: it is correct to set <br>a=b+3<br>b=a{1}+5.",
-	    "seeAlso":"iteration,cyclic dependency,user functions",
-	    "external":"ACCEL deals with time by means of recurrence; see <a href='http://en.wikipedia.org/wiki/Recurrence_relation'>http://en.wikipedia.org/wiki/Recurrence_relation</a>. Also, in stead of differential equations, ACCEL's approach to (discrete) time suggests to interpret time evolution as a <span class=\"accelEmph\">difference equation</span> rather than as a <span class=\"accelEmph\">differential equation</span>. See the same reference for an introduction to difference equations.",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"sensitivity analysis",
-	    "cat":"general",
-	    "help":"\"+\"ACCELTM+ models are functional models. Every cat.-II quantity is written as a function of cat.-I and cat.-III quantities. To get an idea of the reliability of a model, it is important to understand the sensititivies of these functional dependencies. Indeed, if a cat.-II quantity turns out to be highly sensitive for small changes in some cat.-I or cat.-III quantity, we should be very careful with drawing conclusions: since any model will contain inaccuracies, the propagation of a small uncertainty in one of the input quantities may render the outcome fully meaningless. Therefore, performing sensitivity analyses should be routine in any modelling project.<br><br>\"+\"ACCELTM+ significantly fascilitates sensitivity analysis with its built-in numerical sensitivity analysis estimation tool. The tool can be found on the tab 'analysis'. The sensitivity analysis is performed by simply clicking the button 'do sensitivity analysis'. It produces a table where the first row gives estimates for the standard deviations of each of the cat-II quantities, either in absolute values or in percentage of their expectation value. For instance, for the functional model y=x;x=10, for a standard deviation of 1 percent in x, the standard deviation in y is also 1 percent. For an absolute deviation of 0.3, the resulting deviation is also 0.3. For a functional model y=x*x; x=10, we get a relative percentage of 2, irrespective of the value of x. Indeed, let y=f(x), then delta y/y = df/dx * (delta x/x) * (x/y); df/dx = 2y, so delta y/y = 2x*x/y * (delta x/x) = 2 * (delta x /x). <br><br> Relative spreadings (either in absolute values or in percentage) in cat.-I or cat.-III quantities can be input by clicking on the current value of each (absolute or percentual) value. These spreadings are used both to estimate the standard deviation and to estimate the propagated uncertainties (see below). Switch between a(bsolute) or p(ercentual) sampling by clicking on the word 'percentual' or 'absolute' in the first row. <br><br>Every subsequent row corresponds to a cat-I or cat-III quantity, and every cat.-II quantity is a column. When both row and column correspond to numbers, the error propagation is given. In case of percentual calculation, this error propagation is given by the so-called condition number. For cat.-II quantity y and cat.-I or -III quantity x, the condition number is defined as abs((dy/dx)/(y/x)), that is: the ratio of relative changes in y and x, dy/y and dx/x. For more sensitive dependencies, the value is larger than 1. Very large values are given in red: these ask for more careful analyses whether the numerical outcomes could be trusted. In case of absolute calculation, the error propagation is given as df/dx * dx, that is: the absolute difference in output given the absolute difference in input. In the example of y=x*x; x=10, the absolute error propagation for an input difference of 1 is approximately (121-100) = 21. The approximation is due to the fact that a numerical estimate to the first derivative, df/dx is used. ",
-	    "autoMapping":"",
-	    "example":"For a model of the form y=(x1*x2*x3...)/(x4*x5*x6...), all condition numbers are 1. For a model of the form y=(x1+x2+x3+...), condition numbers are proportional to the absolute size of the x's, and their sum is 1.",
-	    "details":"The differential quotient dy/dx can only be numerically approximated. To that aim, x is changed a small amount. By default, this is 0.01 of its value. (1 percent). To check if this gives a stable approximation for some quantity x, one can click on the + or - in the row of that x. The percentage (listed in the column labeled %) used to estimate dy/dx is then doubled or halved; for the result to be trustworthy, the calculated condition number should not change much. The approximation used, entails that we take the average of the absolute value of the left derivative and the absolute derivative value of the right derivative. As a consequence, the estimated value of the deriviative that is computed in the apex of a function is not zero - as one might expect: it approaches zero only for dex towards 0. This is done to avoid misleadingly optimistic interpretation of the error propagation in the neighborhood of local extrema. The analytically correct value '0' that would be obtained there is meaningless in most cases.<br><br>The standard deviation dy of a function y=f(x1,x2,...xi) is calculated as the square root of the sum of squares of, for every i, the square of df/dxi * dxi. In this respect we follow <a href = 'http://en.wikipedia.org/wiki/Propagation_of_uncertainty'> http://en.wikipedia.org/wiki/Propagation_of_uncertainty </a>. To get the relative value for the standard deviation, we calculate the square root of the sum of squares of, for every i, the square of df/dxi * (dxi/xi), and divide the final result by y. So the absolute standard deviation of y=f(x1,x2)=x1+x2, for x1=1,x2=1,dx1=dx2=0.1 is 0.14; the relative standard deviation is 0.071 (indeed, setting '0.1' for both spreadings in x1 and x2 is interpreted as '0.1 percent', hence the relative spreading in x1+x2 is sqrt(2) * 0.05 percent = 0.071 percent.<br><br>To get info on the meaning of the quantity, click on the questionmark.<br><br>For cat.-I, III or II quantities that are not scalar numeric, the condition number cannot be defined. In that case, e.g. 'arg:string', or 'result:vector' is set.",
-	    "seeAlso":"categories,plotting dependencies,debugging,plotting dependencies,analysis",
-	    "external":"An introduction to senisitivity analysis is found here: <a href='http://en.wikipedia.org/wiki/Sensitivity_analysis'> http://en.wikipedia.org/wiki/Sensitivity_analysis</a>.",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"to-do list",
-	    "cat":"general",
-	    "help":"The to-do list contains the quantities that still need to be defined. As long as the to-do list is not empty, the model can not be compiled and executed.",
-	    "autoMapping":"",
-	    "example":"In an empty script, type a=b+3. The right hand expression contains a quantity b that is not yet defined; this quantity appears in the to-do list.",
-	    "details":"A model can be entered in the form of a complete script in the IO / Edit-tab. Alternatively, a model can be entered line-by-line. If the model is built up line-by-line, a very systematic way is to start with a cat.-II quantity, to define this in terms of cat.-IV quantities, and to subsequentially process all cat.-IV quantities until everyone of them is defined in terms of other cat.-IV quantities or cat.-I/III quantities. At any stage during this process, therefore, there will be 0 or more not-yet defined quantities. To keep track of the work that still is to be done to make the model complete, these not-yet defined quantities are collected in a so-called to-do list. This list is automatically shown as soon as there are any not-yet defined quantities; the list vanishes as soon as it is empty. By clicking on a quantity in the to-do list, this quantity is transported to the script-line input box. ",
-	    "seeAlso":"categories,script,IO / Edit",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"dependencies",
-	    "cat":"general",
-	    "help":"ACCELTM+ models are functional models. To keep track of the functional dependencies in a model, it is often needed for a given quantity x, to find which quantities x depends on, and which other quantities depend on x. Various provisions in \"+\"ACCELTM+ help to answer these questions.",
-	    "autoMapping":"",
-	    "example":"In the script <br>a=b+c+3<br>b=d+2<br>c=1<br>d=5<br>, a depends on b and c; b depends on d and a is dependent on b; c and d depend on nothing, et cetera.",
-	    "details":"In the script listing in the tab 'Edit / Run script', every line can be clicked. Clicking on any part of a script line moves the script line to the edit text field; it puts all the quantities that depend on the current quantity (say 'x') in the list 'x: arg to ...'; furher, it puts al the quantities occurring in this expression for x in the list 'Arg of x'.<br><br> Elements in the lists 'x: arg to...' and 'Arg of x' can also be clicked. Clicking on one of the quantities in these lists puts the quantity and its defining expression into the edit text field, and updates both lists.<br>If the script is not running (click on pauze to stop a running script), one can alos click on each of the quantities in the 'Results' list: for a clicked quantity in the 'Results', the same procedure appplies.<br><br>The network-tab offers a direct view to the model as a network of dependencies among quantities.",
-	    "seeAlso":"to-do list,cyclic dependency,categories,tabs",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"cyclic dependency",
-	    "cat":"general",
-	    "help":"ACCELTM+Assumes functional models, that is: values of output quantities depend on input quantities. In that paradigm, it is forbidden to have constructions like <br>a=b+3<br>b=a-2<br> where quantities indirectly depend on themselves. This is called <span class=\"accelEmph\">cyclic dependency</span>. Cyclic dependency is even forbidden in the situation where fixed points (=sets of values that satisfy all definitions) exist, such as <br>a=b+3<br>b=a-3<br>." ,
-	    "autoMapping":"",
-	    "example":"In designing the dimensions of a book, there is a relationship between text length TL, point size PS and number of pages NP of the form NP=C*TL/PS. From algebra it is obvious that also PS=C*TL/NP. However, only one of the two expressions can occur in a functional model of the book. Therefore the model maker should make up het mind: which of the two dependencies, in her view, describes most adequately the causality at hand: is the number of pages the result from choosing the point size (for instance: designing a book for elderly readers, where the points size should be a given value), or does the point size result from choosing the number of pages (for instance: designing a travel guide for backpackers, where the book should be as lightweight as possible, and therefore contain no more than some amount of pages).",
-	    "details":"In most cases, cyclic dependencies occur as a result of the confusion of what depends on what. If, while entering a script, a cyclic dependency happens before the script is completed, \"+\"ACCELTM+ has not yet attempted to compile the script, and cyclic dependency cannot be detected. If no more undefined quantities occur, \"+\"ACCELTM+ compiles the script. Cyclic dependency, however, is no syntax error, and therefore compilation of a script containing cyclic dependencies may succeed. Only during runtime the occurrence of a cyclic dependency can be detected.<br>In some cases, the cause of cyclic dependency relates to the notion of time: one may want to express that x at a later time step equals x at a previous time step plus some increment. This means, however, that there are two quantities: x and x{1}, with an implicit relationship between them - namely, that the value of x will be the value of x{1} at the next time step, and similar for x{n}, n>1. ",
-	    "seeAlso":"time,iteration,dependencies",
-	    "external":"",
-	    "abbreviation":""
-	    },
-	  {
-	    "fName":"plotting dependencies",
-	    "cat":"general",
-	    "help":"In \"+\"ACCELTM+, dependencies between any pair of numerical, scalar quantities can be graphically plotted. This is a useful device for testing the behaviour of a model-under-construction.",
-	    "autoMapping":"",
-	    "example":"Consider a model of a taxi company. One of the cat.-II quantities is the profit (P) in Euro/year; one of the cat.-III quantities is the fuel price (F) in Euro/liter. Any reasonable model should show a decreasing behaviour of P=P(F); on the other hand, F=F(P) is not defined since F does not depend on P.",
-	    "details":"In the tab 'analysis', there are two tables of quantities, one labeled 'Arguments', the other labeled 'Results'. All numerical, scalar quantities in the current model appear in both tables. By clicking a quantity in one of the tables, this quantity is chosen as either argument or result quantity in a graph to be plotted. The ranges of the argument and result quantity can be independently set by filling in numerical values in the 'from' and 'to'-boxes for the argument and result quantities. Values for the result quantity, by default, are scaled such that the graph fits either exactly or approximately in the vertical scale. Exact fitting happens if the checkbox 'auto scale: exact clamping' is selected. Exact scaling is nice to inspect values of minima and maxima, but the numbers are nicer if non-exact clamping is selected. \"+\"ACCELTM+ tries to do a reasonable first guess for the interval of argument-values. In particular, for cat.-I quantities that are sliders, the interval of the slider is taken as interval of argument quantity. Take care when adjusting the from- and to-values of an argument quantity that values may be entered for which the model is not defined. In that case, error message may or may not be produced, depending on the working of the script.<br><br>For argument quantities that correspond to sliders with a nominal domain (in the taxi-\"example\": the car brand),the model doesn't make sense for any other values than the discrete range of integers, obtainable by the slider. In such cases, the plot will consist of discrete dots only.<br><br>The graph is automatically plot again whenever either the argument value, the range value, or any of the from- or to-values is changed.<br><br>An alternative view to dependencies is offered by means of the network tab (see the tabs-documentation). This view depicts the model as a network of dependencies among quantities.",
-	    "seeAlso":"dependencies,cyclic dependency,sensitivity analysis,debugging,analysis,tabs",
-	    "external":"See <a href='http://en.wikipedia.org/wiki/Graph_of_a_function'> http://en.wikipedia.org/wiki/Graph_of_a_function </a> for more background on graphs of functions.",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"graph plotting",
-	    "cat":"general",
-	    "help":"All quantities computed by \"+\"ACCELTM+ can be visually represented by graphs. Grap-plotting is done by the \"+DESCARTESTM+\" subsystem.",
-	    "autoMapping":"",
-	    "example":"plot([graph1,graph2])<br>graph1=[ctrl1,data1,data2]<br>graph2=[ctrl2,data3]<br>ctrl1=[plotType:'line',x:[mode:'intp'],y:[mode:'data',ref:1],width:[mode:'data',ref:2],col_r:[value:200]]<br>ctrl2=[plotType:'radar',phi:[mode:'shift',ref:1]]<br>data1=[..,..,..,..]<br>data2=[..,..,..,..]<br>data3=[..,..,..,..]",
-	    "details":"There is a single function available for all forms of data visualisation: the function plot(). It takes an array where every element is one graph. A graph is an array where the first element is a control vector. Further elements are optional; every further element is an array of scalar numerical data.",
-	    "seeAlso":"descartes,control string,plot format",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"units and unit checking",
-	    "cat":"general",
-	    "help":"Quantities in \"+\"ACCELTM+ can be associated to units. Expressions with units can be checked, and quantities for which no units have been provided will receive units automatically. Unit checking, when enabled, takes place automatically when the script is viewed in the IO/ Edit tab. <br><br>In order to enable unit checking, check the checkbox 'check units' in the tab 'IO /Edit'.",
-	    "autoMapping":"",
-	    "example":"a=3;kg<br>b=5;m<br>c=2;liter<br>x=a*b/c<br><br>produces a numerical outcome of 7.5. The unit of this outcome is calculated as kg.m/liter.",
-	    "details":"A unit is any expression of the form numerator or numerator/denominator, where both numerator and denominator consist of zero or more factors. Factors can be any string consisting of letters only, optionally followed by a positive integer. Factors are separated by points (.). In case of no factors in the numerator, write '1' (one). <br><br>Units of compound quantities are recognised, e.g. a=[p,'x':[q,r]];[kg.m/s2,'x':[liter,liter2]]. Notice that the names used to label properties in a quantity must occur identical in the unit for that quantity; vectors with unnamed elements have a unit that contains the same amount of elements.<br>Unit checking works for binary operations such as + and max: units of quantities must be equal. It also works for operators assuming unit-less arguments such as sin() and or. The approporiate algebra for multiplying and dividing units is applied. Also the sqrt function is handled correctly: if the unit of p is m2.kg2, the unit of sqrt(p) is m.kg.<br><br>Unit checking takes place when the view switches from the Edit / run script-tab to the IO / Edit tab. Some apparent unit-errors relate to problems with initialisation. For instance, checking the unit of a=a{n}+p, where p has a unit, can only take place after at least n iterations; prioir to that time, a will take a default value (0) with undetermined unit.<br><br>Errors against unit checking don't prevent the script from running. Some errors against unit syntax, however, are considered as compile errors; these need to be fixed before the script can run.<br><br>Unit information is propagated from categories I and III to categories IV and II. Units for quantities in categories IV and II are overwritten by deduced units; units for quantities in categories I and III cannot be deduced from units of quantities in categories IV or II.<br><br>Notice that, to get units correct, it may be necessary to introduce value-less quantities (as opposed to dimensionless quantities). Example: the amount of glasses of beer, G, with unit 'glass' to be served to a group of friends is given by the formula R * F where R is the number of rounds (unit: 'round') and F is the number of friends (unit: 'friend'). However, this expression is dimensionally flawed. It needs multiplication with a quantity with unit glass/friend.round and value 1. Indeed, this signifies that in each round, every friend consumes one glass of beer. Similarly, there can be value-less quantities to make correct expressions where where quantities are added or subtracted. An example is the max() function. In order to ensure a quantity q with unit 'u' to be positive, we may write min(0,q). But this only is correct if the value 0 has unit 'u' as well: the 0 is a value-less, but not dimensionless quantity with unit 'u'.",
-	    "external":"",
-	    "seeAlso":"scalar,vector",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"demo",
-	    "cat":"general",
-	    "help":"The best way to get familiar with \"+\"ACCELTM+is by playing with scripts that already work and do something meaningful. A collection of demo scripts can be found in the right most table on the tab Help / Demo; merely selecting a title should load the script and start it. The full script text can be inspected in the IO / Edit screen.<br><br>In case you want your own script to be shared with other users, perhaps to hand it in as homework, you should click the button labeled 'submit'. Then the script is stored in a database, and you receive a unique link (a URL); going to that link in a browser supported by \"+\"ACCELTM+ runs your script. Notice(1): In some cases you might want to type in the link you receive in the address bar of your browser. This is inconvenient for very long URL's; therefore \"+\"ACCELTM+ constructs the unique name on the basis of a string (=a name) you provide. Suppose you want to call your script 'myDemo', then you should type in this name. In case, say, two people before you proposed the same name, the name of your script will be 'myDemo_2', and the link will be something like 'www.keesvanoverveld.com/Accel/accel.htm?link=myDemo_2' - which is not too bad in to type in yourself. Notice(2): scripts are stored only for a limited amount of time on the server (aqbout one week). For preserving scripts permanently, you should not rely on this service, but store scripts as text-files on your local computer.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"",
-	    "seeAlso":"IO / Edit,help system",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"help system",
-	    "cat":"general",
-	    "help":"If you are reading this text, it is likely that you have at least some working knowledge of \"+\"ACCELTM+'s help system. For completeness' sake, we explain the full help system here.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"There are four ways to access a help topic.<ul><li>Select a help category from the left most table on the tab Help / Demo. Categories are for instance 'algebra' (explaining the algebraic functions), 'optimisation' (explaining the optimisation methods) et cetera. When a category is clicked, a list of 'Help details' is shown. Clicking on one of the help detail topics shows the actual lemma. Notice that help detail topics in white refer to functions in the \"+\"ACCELTM+ script language; help detail topics in blue are general subjects. </li><li>Typing in a search string in the text input field, upper left, and optionally clicking the 'search' button filters all help detail topics containing the search string - irrespective of the help category. Again selecting a help detail topic presents the actual help text.</li><li>Every help lemma contains a section 'see also'. Terms found there can be clicked; they appear as search strings in the search text input field, and the matching help detail topics are automatically shown.</li><li>If anything else fails, you can click the button 'ask for help via mail': in that case you can compose a help text that can be sent off to the \"+\"ACCELTM+system administrator.</li></ul>Apart from browsing through the help lemma's, an efficient way to become familiar with \"+\"ACCELTM+is to load demo's and to study, play and modify them.",
-	    "seeAlso":"demo's",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"genetics",
-	    "cat":"general",
-	    "help":"A broad class of models has the purpose to optimise something. That means: cat.-I quantities should be given such values that certain cat.-II quantities are optimal (maximal or minimal). Since models can be extremely varied, including non-linear, non-continuous and multiple-objective models, there are very few sufficiently generic optimisation methods. One method that does apply in virtually all circumstances is <span class=\"accelEmph\">genetic</span> or <span class=\"accelEmph\">evolutionary</span> programming. ",
-	    "autoMapping":"",
-	    "example":"The biological variety in living species is believed to have resulted from genetic optimisation according to the principle of survival of the fittest in a heterogenous population. Genotype roughly matches with our notion of cat.-I quantities, phenotype roughty with cat.-II quantities.",
-	    "details":"The essence of genetic optimisation is, that rather than a single solution that should be optimal, we operate on a population of sample solutions that is sufficiently varied. Some individuals in that population will be fitter than others, and the chance for next generation individuals to resemble the fitter ancestors is somewhat larger than for non-fit individuals. The process is initiated by a fully random population, that is: a population where the values for all cat.-I quantities for each individual are randomly chosen. Fitness is determined by means of <span class=\"accelEmph\">domination</span>. <br><br>Domination is the relation between two individuals where values of <span class=\"accelEmph\">all</span> cat.-II quantities of one individual values are better than those of the other. 'Better' here means: larger for a quantity that needs to be maximised, and less for a quantity that needs to be minimised. <br><br>This introduces the notion of <span class=\"accelEmph\">strength</span>. Strength is a measure for the fitness of a quantity. Strength is minus the number of individuals whom an individual is dominated by. Non-dominated individuals have strength=0; all dominated individuals have lower strengths. To construct a next generation's population, all non-dominated individuals are preserved. These are said to form the <span class=\"accelEmph\">Pareto-front</span>. Individuals not on the Pareto-front are replaced by new individuals, where a number of heuristics can be used to form a new individual. After a number of generations, it is assumed that the Pareto front moves in the direction of increasingly stronger (fitter) individuals." ,
-	    "seeAlso":"Pareto,dominance,population,paretoMax,paretoMin,SPEA",
-	    "external":"One of the original papers of Zitzler and Thiele, introducing the Strength Pareto Evolutionary Algorithm is <a href='http://www.tik.ee.ethz.ch/sop/publicationListFiles/zlt2001a.pdf'>http://www.tik.ee.ethz.ch/sop/publicationListFiles/zlt2001a.pdf</a>",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"Pareto - general",
-	    "cat":"optimisation",
-	    "help":"In a population that is used to optimise certain criteria (expressed as minimum or maximum conditions on cat.-II quantities), the non-dominated individuals need to be preserved whereas dominated indiviuals can be replaced by others. ",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"For replacing individuals, a number of heuristics is implemented in \"+\"ACCELTM+:<ul><li>Random:  all cat.-I quantities receive random values within the ranges of the associated sliders. Boolean values are randomly set to true or false.</li><li>Arb(itrary) mutant: an arbitrary cat.-I quantity takes on a random value.</li><li>Close mutant: an arbitrary cat.-I quantity takes on a value that is close to the current value. 'Close' is taken relative to the range of admitted values for the quantity.</li><li>Cross over: a new individual is constructed by selecting two individuals on the Pareto front, and randomly selecting the values for the cat.-I quantities either from one or from the other 'parent'. This resembles the biological phenomenon of sexual procreation.</li><li>Binary tournament: two random individuals, not on the Pareto front, are selected. For both their strength is calculated (=minus the number of individuals they are dominated by), and the stronger of the two is chosen as a new individual.</li></ul>Each of these five processes has a probability, which can be specified with the five lower most sliders on the Genetic Optimisation tab. A new population is constructed by first selecting all individuals on the Pareto front, and next replacing all other individuals by applying one of the above heuristics, applying relative chances according to the specified settings of the respective sliders.",
-	    "seeAlso":"Pareto,dominance,population,paretoMax,paretoMin,SPEA",
-	    "external":"Evolutionary algorithms in general are widely applied. An overview can be found here: <a href='http://en.wikipedia.org/wiki/Evolutionary_algorithm'>http://en.wikipedia.org/wiki/Evolutionary_algorithm</a>.",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"SPEA",
-	    "cat":"optimisation",
-	    "help":"The entire optimisation process consists of a number of steps. These are outlined below.",
-	    "autoMapping":"",
-	    "example":"For a practical application, see the demo file 'taxiCompanyPareto.txt'",
-	    "details":"<ul><li>Make sure there is an executable script containing at least one cat.-II quantity and one cat.-I quantity.</li><li>In the script, determine what should be done to the cat.-II quantities: should they be maximised or minimized? Register quantities for maximisation or minimisation by the functions paretoMax and paretoMin. </li><li>In order to get a visual impression (and the option to interactively interrogate individuals), there should be a graphical Pareto plot. This needs one cat.-II quantity to be plotted horizontally and one to be plotted vertically. The functions paretoHor and paretoVer can be used to specify which quantities should be plotted.</li><li>Specify the size of the population using the top most slider (labeled 'population size') on the Genetic Optimisation tab. The ideal population size is determined by the speed of the computer: the larger the population, the bigger the chance for extreme optima, but the more computational resources are required.</li><li>Nest, specify the number of generations to iterate. Every click on the button 'next generations' does a full series of iterations. This amount is specified by the slider labelled 'nr. new generations'.</li><li>Next click the button 'init SPEA'. This produces a random first generation. Individuals are visualised as little blue dots. Individuals on the Pareto-front are larger red dots.</li><li>Next click the button 'next generations' to have an ordered amount of next generations. Watch the Pareto front moving in the direction of increasingly fitter solutions.</li><li>For better usage of the drawing area of the Pareto plot, buttons 'zoom in' or 'zoom out' may be clicked.</li><li>Once the Pareto front has stabilized, further improvement may be obtained by 'post tuning' (see elsewhere).</li><li>Individual solutions may be interrogated by clicking on a solution (=a blue, or in most case: a red dot); the cat.-I settings of a solution may be moved to the default settings for the relevant cat.-I quantities.</li></ul>",
-	    "seeAlso":"Pareto,dominance,population,paretoMax,paretoMin,paretoHor,paretoVer,SPEA,demo's",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"post tuning",
-	    "cat":"optimisation",
-	    "help":"After a number of generations, the Pareto front as it is estimated by the SPEA algorithm will typically stabilize: it does not further improve. In such cases, howver, significant progress sometimes can be achieved by switching to another strategy: <span class=\"accelEmph\">post tuning</span>.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"The essence of genetic algorithms, as opposed to standard (local) analytic optimisation methods is, that an entire population is calculated in order to have a larger chance to cover 'niches' in the solution space where local optima might be found. If the evolutionary process does no longer make progress, a local strategy may be advantageous. In a local strategy, every individual solution on the Pareto front is processed. All cat.-I quantities of such a solution are varied, one by one, to see if dominance in the cat.-II quantities can be achieved. That is, if a new solution can be found that dominates the original solution ('domination' meaning, that the new solution is better in all cat.-II quantities than the old one). If such an improvement can be found, attempts are repeated for this solution until no further optimisation are obtained. <br><br>Notice that, by treating solutions on the Pareto front individually, they no longer need to form a Pareto front. Indeed, it is possible that a solution that could make significant improvmenet now dominates on e of the other solutions that were originally on the Pareto front. It is therefore necessary after a round of post-tuning to at least calculate one new generation of the entire population to ensure that the most recent Pareto front is attained.<br><br>Depending on the structure of the solution space, post-tuning can be a length process. It is therefore possible to interrupt post tuning. To this aim, the function of the button 'post tune' changes during the actual tuning process into 'stop tuning'.",
-	    "seeAlso":"Pareto,dominance,population,paretoMax,paretoMin,paretoHor,paretoVer,SPEA,demo's",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"front",
-	    "cat":"optimisation",
-	    "help":"Ideally, the Pareto front contains a relative small portion of the entire population. First, this enables a large amount of individuals to actively mutate, so that a broad coverage of the entire solution space is achieved; further, multiple closely distributed Pareto-solutions are mainly redundant.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"The chance for an individual to be on the Pareto front increases drastically with the number of cat.-II quantities. Indeed, the more cat.-II quantities, the smaller the chance to be dominated, and therefore the bigger the chance <span class=\"accelEmph\">not</span> to be dominated. If the fraction of individuals being on the Pareto front is too large, the evolutionary process comes to a halt: indeed, since the population size is constant, there will be too few individuals to mutate. In that case it can help to maximize the fraction of individuals on the Pareto front. This means that an individual who is not dominated, and who therefore should be part of the next generation, is deliberatly mutated (and therefore taken out of the next generation). Although this strategy stimulates a large variability, it introduces the risk that the progress of the Pareto front is no longer monotonous: it is possible to 'loose' good solutions. The slider 'max. percentage on front' can be used to set the maximum fraction of individuals that are allowed to be on the Pareto front. With as few as two or three cat.-II quantities, it should not be necessary to use this intervention.",
-	    "seeAlso":"Pareto,dominance,population,SPEA",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"modifying script",
-	    "cat":"optimisation",
-	    "help":"Once a Pareto run has completed, it can be adviseable to promote one of the Pareto solutions to a default solution, for instance to do a sensitivity analysis in the neighbourhood of this new default.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"Every individual solution in the Pareto image can be clicked. This produces a message with all information for that solution (all values for cat.-I and cat.-II quantities), plus the option to take these cat.-I values as new defaults. If this option is chosen, the script is actually modified. In particular, all slider expression of the form quantity=slider(default,low,high) get as their new value for 'default' the valua as in the selected solution.",
-	    "seeAlso":"Pareto,dominance,population,SPEA",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"iteration over time",
-	    "cat":"general",
-	    "help":"ACCELTM+scripts can be used to model processes that take place over time. In particular it is possible to execute a script over a given amount of time steps in stead of only once.",
-	    "autoMapping":"",
-	    "example":"Suppose a model represents a business that is intended to reach a break-even point after some years: after an initial phase of negative profit, profits should become positive once initial investments have been written off. In this case, the script should represent one year, where the assets at the beginning of the year are taken to be the assets at the end of the previous year. Having the model run for, say, 10 successive rounds gives an estimate for the assets after 10 years. By considering only the result after these 10 time iterations, SPEA optimisation can be done where every individual represents a complete business history of 10 years.",
-	    "details":"Normally, one evalutation of an \"+\"ACCELTM+ script starts with setting all quantities to zero, and leaving the hisotric values of all quantities untouched. In this way, a non-time dependent model executes exactly once every round, and in a time dependent model, time keeps running. <br><br>This default behaviour, however, only applies if the iteration counter (= the numerical stepper in the tab Edit / Run script, next to the pauze button), is set to its default value 0.<br><br>If this stepper is set to, say, n, n&gt 0, the quantities are only set to zero, and the history is only erased, once every n iterations; the results are published at the end of these n iterations. <br><br>To see this working, try the following script: <br>b=a<br>a=a{1}+slider(0,1,10)<br>With the stepper set to 0, the result is an ever increasing number; with the stepper set to n, the result is the product of n and the slider value - indeed, we emulate a multiplication as a repeated addition.<br><br>When a script is executed on behalf of the SPEA optimisation, the setting of the iteration counter is taken into account, and every individual solution in the Pareto plot is the result of an iterated calculation. Obviously, for large numbers of iterations, this can signoficantly slow down the performance.",
-	    "seeAlso":"time,SPEA",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"IO / Edit",
-	    "cat":"general",
-	    "help":"A script can be entered in two ways: in the Edit / Run script-tab, script lines are entered one-by-one; after every entered line, \"+\"ACCELTM+ checks if the script represents an executable model (that is: there are no undefined quantities in the to-do list, and the script is free of syntax-errors), and the script starts running. The other possibility is to type a complete script in the text area in the IO / Edit tab (or, equivalently, load a demo script from the right most table on the Help / Demo tab). In the case where a script is typed in on the text area in the IO / Edit tab, checking for completeness and checking for correct syntax only start when the run-button above the text area is clicked. A downloaded demo-script should run automatically when loading is complete."  ,
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"In the IO / Edit tab, the text-area view of the script serves three purposes: <ul><li>For a complete overview, the lines are given at full length, including comment lines (script lines may be truncated in the listing in the Edit / Run script tab; the listing in the Edit / Run script tab shows no comment texts). The full view allows extensive editing without immediate consequence for the running calculation: as soon as anything changes in the text area, the running calculations are put on hold. (This can be seen since the caption of the 'pauze' button changes into 'run').</li><li>The script view in the IO / Edit tab can be used to show instantaneous values of all quantities. Click the button 'Show / hide values to flip between a view with values given and without. Values are given in the same format as comment texts (that is, preceded by two slashes). In this way, values at several instances of the execution can be collected in the same script.</li><li>\"+\"ACCELTM+, as well as any other javascript application, has no possiblities to read or write information to the local computer's file ssystem. It is possible, however, to copy and paste text from text areas. In this way a downloaded or typed-in script can be saved as an ordinary text file on the local computer: merely select all text in the text area and (on Windows machines) press ctrl-C (Mac: apple-C) to copy the current script into the copy-n-paste buffer. Next paste (ctrl-V/apple-V) the text into any text editor and save the contents as a text file. Similarly, a script can be restored: load the script in a text editor, select all text and copy; next select the contents of the text area in the IO / Edit tab and paste: the contents of the text area will be replaced by the new script. </li></ul>",
-	    "seeAlso":"run,pauze,edit,saving,restoring,syntax",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"saving and restoring scripts",
-	    "cat":"general",
-	    "help":"There are no file load or file save options in \"+\"ACCELTM+. Saving and restoring scripts takes place by copying and pasting text to and from the text area view in the IO / Edit tab.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"\"+\"ACCELTM+, as well as any other javascript application, has no possiblities to read or write information to the local computer's file ssystem. It is possible, however, to copy and paste text from text areas. In this way a downloaded or typed-in script can be saved as an ordinary text file on the local computer: merely select all text in the text area and (on Windows machines) press ctrl-C (Mac: apple-C) to copy the current script into the copy-n-paste buffer. Next paste (ctrl-V/apple-V) the text into any text editor and save the contents as a text file. Similarly, a script can be restored: load the script in a text editor, select all text and copy; next select the contents of the text area in the IO / Edit tab and paste: the contents of the text area will be replaced by the new script. ",
-	    "seeAlso":"",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"run - pauze",
-	    "cat":"general",
-	    "help":"ACCELTM+ can be in two modes: run and pauze. In run mode, the script is repeatedly executed, giving real-time response to sliders and other input devices, performing a dynamic simulation and/or updating visual output. In pauze mode, the execution is halted. In case debugging was enabled, the debug-output window is minimized to the task bar, but it may be opened for inspection.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"Run mode is only possible with a script that is executable, that is: a script without any undefined quantities (no to-do list) that is syntactically correct. When entering a script line-by-line in the Edit / Run script tab, \"+\"ACCELTM+continuously checks if this is the case; if so, run mode is automatically entered. <br><br>When entering a script via the IO / Edit tab, run mode can be entered by clicking the 'run' button.<br><br>During run mode, the script can be navigated (browsing through the listing on the Edit / Run script tab, scrolling through the script in the IO / Edit view, clicking on quantities in the various arguments lists in the Edit / Run script tab). There is one restriction: the list of results in the Edit / Run script tab, which is dynamically refreshed at every script evaluation, cannot be browsed or clicked when the script is running.<br><br>Pauze mode is entered in one of the following ways:<ul><li>Clicking on the button labeled 'pauze' (this button sits both in the Edit / Run script tab and in the IO / Edit tab; it is physically the same button as the 'run'-button with a changed button caption);</li><li>Modifying the content in the text-screen view of the script in the IO / Edit tab;</li></ul>In most cases, when \"+\"ACCELTM+ is in the pauze-state, it can be made to run again by clicking the run-button. In exceptional cases, the 'pauze'-button does not automatically change into a 'run'-button. This happens for instance if a non-recoverable runtime exception occurs. In that case \"+\"ACCELTM+ assumes that something needs to be adjusted in the script. Merely click on the left hand side of one of the quantities in the script listing in the Edit / Run script tab; this makes the script line appear in the text input box. Press enter (perhaps after having performed some adjustment). If the resulting script is complete and correct, \"+\"ACCELTM+ automatically will enter run-mode again. In case \"+\"ACCELTM+ does not go back to run-mode, recover the script and re-load \"+\"ACCELTM+ as explained in the lemma 'panic'",
-	    "seeAlso":"IO / Edit,runtime exceptions,debug,panic",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"comment",
-	    "cat":"general",
-	    "help":"A model is only meaningful if it can be interpreted. The interpretation of a model is human-readible text, explaining the meaning of quantities and relations, and listing important assumptions. This text is called <span class=\"accelEmph\">comment</span>. Comment text is not part of the script, but it is crucial to understand the script.",
-	    "autoMapping":"",
-	    "example":"This is an example of using comment:<br>green=slider(10,0,100)<br>// a is the percentage of products painted green; default is 10.<br><br>",
-	    "details":"Comment text are visible in the IO / Edit tab view of the script. A comment text line starts with two slashes. Comment text lines can only be entered in the IO / Edit view. <br><br>Comment texts are used to annotate quantities in various lists (the argument list and the argument-of list). Furthermore, comments are used to provide tooltips for user interface widgets such as sliders and checkboxes. Also to aid the user of a script therefore, well-chosen comments are crucial.<br><br>A special case of comment text is the instantaneous value of a quantity. These instantaneous values can be added to the comment of a script by clicking the button 'Show/hide values' in the IO / Edit tab. This button works as a toggle: it alternatingly switches the value-view on or off.<br><br>Comment texts - either comment text that where entered by the author, or comment texts showing the instantaeous values of script quantities - form an integral part of the script. They should be saved and restored together with the actual script lines.<br><br>A comment line that takes the form of [['n':'name','x':number,'y':number],[...],...] is interpret as a prescription of the locations of the nodes (quantities) in a model when depicted as a network. Such a comment field is automatically added at the end of the script when a listing is made. Saving and restoring the script including this trailing comment line makes the network appear the same as a previous time, for easier inspection.",
-	    "seeAlso":"IO / Edit,editing,user interaction,tooltips",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	  {
-	    "fName":"runtime exceptions",
-	    "cat":"general",
-	    "help":"Not all mathematical calculations can be correctly executed. Division by zero is a notorious example. The event where, at runtime, an impossible mathematical operation occurs is called a <span class=\"accelEmph\">runtime exception</span>.<br>A runtime exception interrupts the running evaluation; in most cases, a message explaining the cause appears, and result quantities show the text 'STACK PROCESSING INTERRUPTED'. The run/pauze mode does not automatically switch back to 'run', since in most cases some intervention is needed in the script to get things 'back on track'. Click on one of the problematic quantities in the result table, and navigate to the problem in the script. Doing so will bring the script line(s) to be edited into the text input field in the Edit / Run script tab. After fixing any issues, type 'enter', and \"+\"ACCELTM+ will atempt to compile the (modified) script. If this succeeds, the mode switches back to 'run' again. <br><br><span class=\"accelEmph\">Notice: after the occurrence of a runtime exception, the state cannot be brought back to 'run' via the IO / Edit tab: interventions need to be done via the Edit / Run script tab</span>.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"",
-	    "seeAlso":"run - pauze,panic",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	    {
-	    "fName":"panic",
-	    "cat":"general",
-	    "help":"ACCELTM+ is in one of two states: run or pause. In most circumstances, transition between these two states is fluent: either manually by clicking the run-pauze buttons, by changing something in the IO / Edit tab-view of the script, by entering a script line that makes a script complete, or as a result of dealing with a runtime exception (e.g., divide by zero). There can be rare circumstances, however, when \"+\"ACCELTM+ seems to be unable to enter the run-state. The system seems to be frozen. In such circumstance, it is important not to loose the current script. Follow the procedure below:<ull><li>Switch to the IO / Edit tab.</li><li>Select all text in the text area.</li><li>Press ctrl-C (or on Mac: apple-C).</li><li>Open a text editor.</li><li>Press ctrl-V (or on Mac: apple-V). This pastes the text into the text editor.</li><li>Save your script on the local computer.</li><li>Close the browser tab running \"+\"ACCELTM+.</li><li>Reopen the web page running \"+\"ACCELTM+.</li><li>Select the IO / Edit tab.</li><li>Paste the text (from the preserved script) into the text area.</li><li>Cick the 'run'-button to try to get the script running, or analyse the problems with the script if it refuses to run.</li></ul>",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"",
-	    "seeAlso":"run - pauze,runtime exception",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	      {
-	    "fName":"editing",
-	    "cat":"general",
-	    "help":"A script can be edited in one of two ways: a line-by-line approach in the Edit / Run script tab, or a full script approach in the IO / Edit tab.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"The text area in the IO / Edit tab gives a full text view on the script, similar as in simple text editors. The script can be edited as any standard ASCII text; after the script is thought to be complete, click the 'run'-button to get the script checked for completeness, compiled, and - if no problems are detected, run. <br><br>The script in the IO / Edit tab consists both of executable script lines - that is, lines in the form of 'quantity'='expression', where the expression defines the quantity, or comment lines - that is, lines starting with //, containing human readable text to clarify the preceding executable script line. <br><br>In case of detected problems (e.g., undefined quantities or syntac errors), \"+\"ACCELTM+switches to the Edit / Run script tab to help fixing the problem.<br><br>Editing a script in the Edit / Run script tab takes place on line-by-line basis. After typing 'enter' in the input text field on the top of the Edit / Run script tab, the current contents of this text field is considered to be a script line, defining the quantity that occurrs before the '='-sign. If such a quantity was defined before, the new script line overwrites the earlier definition. Next \"+\"ACCELTM+ checks to see if there are any undefined quantities (that is, a to-do list). If not, it checks the syntax of all expressions, and if no errors are found, it switches to the run mode, evaluating the script. Script lines can be removed from the script by clicking on the red 'delete'-text in the script listing in the Edit / Run script tab.",
-	    "seeAlso":"run - pauze,syntax",
-	    "external":"",
-	    "abbreviation":""
-	  },
-	        {
-	    "fName":"syntax",
-	    "cat":"general",
-	    "help":"Every expression in a script needs to comply with the syntax of the \"+\"ACCELTM+ script language.",
-	    "autoMapping":"",
-	    "example":"",
-	    "details":"This language is given by the following grammar:<ul><li>expr ::= scalarExpr | vectorExpr</li><li>scalarExpr ::= scalarTerm | scalarArith</li><li>scalarArith ::= scalarBinArith | scalarUniArith</li><li>scalarUniArith ::= '-' expr | '+' expr | '!' expr</li><li>scalarTerm ::= scalarVar | scalarBrackets | scalarFunc | scalarConst | scalarQuant </li><li>scalarFunc ::= functionName '(' commaList ')'</li><li>predefinedConstant ::= PI | E | true | false</li><li>scalarConst ::=number | string | predefinedConstant</li><li>string ::= '\"'char* '\"' | \"'\"char * \"'\"</li><li>scalarVar ::= scalarDelayedVar | scalarAtomicVar</li><li>scalarDelayedVar ::= scalarAtomicVar '{' scalarExpr '}'</li><li>scalarAtomicVar ::= (element of symbol table)</li><li>scalarBrackets ::= '(' expr ')'</li><li>vectorExpr ::= '[' vectorArgList ']'</li><li>scalarBinArith ::= expr | binOp | expr</li><li>binOp ::= '+' | '-' | '/' | '%' | '<=' | '<' | '>=' | '>' | '==' | '!=' | '&&' | '||' </li><li>commaList ::= '' | expr ',' commaList | expr</li><li>vectorArgList ::= '' | vectorElem ',' vectorArgList | vectorElem</li><li>vectorElem ::= \"'\" char* \"'\" ':' expr |  char* ':' expr | expr</li><li>scalarQuant ::= '#(' freshId ',' scalarExpr ',' expr ',' functionName ')'</li></ul>   ",
-	    "seeAlso":"run - pauze,edit",
-	    "external":"",
-	    "abbreviation":""
-	  
-	},
-	{
-	    "fName":"quantified expression",
-	    "cat":"general",
-	    "help":"A quantified expression is an expression with an implied iteration.",
-	    "autoMapping":"",
-	    "example":"a=#(i,[1,2,3,4],i*i,add) is the sum of the squares of the numbers 1 to 4",
-	    "details":"A quantified expression takes the form #(dummy,domain,expression,operator). <ul><li>dummy is the fresh name (=not a name that occurs as a quantity in the script, or a dummy from an encompassing quantified expression) of a quantity, used to iterate over the set 'domain'. The expression 'expression' is evaluated for every value of the dummy, and the resulting values are aggregated using the operator 'operator'.</li><li>domain is a value or a vector of values. If it is a single value, this is the only value taken by 'dummy'. If it is a vector, 'dummy' successively takes each of the values of 'domain'. Notice: it is allowed that values of 'domain' are themselves vectors; in that case, 'dummy' will also be a vector. </li><li>expression is an arbitrary expression returning a value. This expression typically will depend on 'dummy'. It is allowed that 'expression' contains other quantified expressions. </li><li>operator is a 2-argument function for which a so-called bottom value exists. A bottom value is the value that is returned when the function is applied to an empty set. The following functions have bottom values:<ul><li>add:0</li><li>multiply:1</li><li>and:true (corresponds to the ALL-quantor in predicate calculus)</li><li>or:false (corresponds to the EXISTS-quantor in predicate calculus)</li><li>max:- infinity</li><li>min:+ infinity</li><li>vAppend:[]</li></ul></ul>",
-	    "seeAlso":"auto-mapping,quantor",
-	    "external":"Quantified expressions are best known in predicate calculus: the all- and exist-quantors are examples. In algebra, the summation or repeated product are also examples of quantified expressions. In <a href='http://en.wikipedia.org/wiki/Quantification#Mathematics'>http://en.wikipedia.org/wiki/Quantification#Mathematics</a>, an introduction to quantors is given.",
-	    "abbreviation":"In mathematics, various \"abbreviation\"s are common. For summation and product, for instance, the capital sigma and pi-notations are used, where the domain is often indicated as subscripts."
-	  
-	},
-	{
-	    "fName":"tabs",
-	    "cat":"general",
-	    "help":"The various modes for operating of \"+\"ACCELTM+ can be accessed by each of the 8 tabs.",
-	    "autoMapping":"",
-	    "details":"The tabs have the following functions: <ul><li>Intro: this gives a brief introduction to the main features of the \"+\"ACCELTM+system.</li><li>Edit / Run script: this tab allows line-by line entering or editing a script. Scripts can be run, and quantity dependencies can be traced. Graphical output is given on a small plot screen.</li><li>Help / Demo: this gives access to the \"+\"ACCELTM+ help system, including a free text search on help topics and an extensive list of demo-scripts.</li><li>Io / Edit: this tab contains a text-area where script (including comment) can be entered. Copy-n-paste functionality can be used to offload scripts in the form of text files for saving into a file or text processing.</li><li>Analysis: in order to debug and analyse script, various tools are made available such as automatic sensitivity analysis and visual plotting dependencies between quantities.</li><li>Genetic Optimisation: this tab contains the user interface for a generic Pareto-based multi-objective optimisation environment.</li><li>Simulation - no script: this gives the functionality to run an (interactive) script that produces visual output on a larger plot screen. Script editing and quantity tracing facilities are not supported on this tab.</li><li>Network: this gives a graphical impression of the model. Every quantity is a node (dot); dependencies are lines between quantities. Nodes can be clicked to show the quantities that depend on it, and quantities on which this quantity depends. In models without time-delays operators, the convention holds that influence propagates from left to right. On the far left, the cat.-I and cat.-III quantities reside, the cat.-II quantities reside far right. The network allows rearranging the nodes for improved clarity, but these constraints are maintained. In models with time delay-operators, cyclic dependencies may occur: a quantity may depend on earlier versions of itself. Therefore, directions of dependencies that relate to time delays are not constrained. The locations of nodes in the network view are added in the form of a trailing comment line to the script, and therefore can be stored. If the script is read again, the configuration is recovered from the previous configuration.</li></ul>",
-	    "seeAlso":"IO / Edit,run - pauze,sensitivity analysis,genetics,Pareto"
+		    "fName":"quantified expression",
+		    "cat":"general",
+		    "help":"A quantified expression is an expression with an implied iteration.",
+		    "autoMapping":"",
+		    "example":"a=#(i,[1,2,3,4],i*i,add) is the sum of the squares of the numbers 1 to 4",
+		    "details":"A quantified expression takes the form #(dummy,domain,expression,operator). <ul><li>dummy is the fresh name (=not a name that occurs as a quantity in the script, or a dummy from an encompassing quantified expression) of a quantity, used to iterate over the set 'domain'. The expression 'expression' is evaluated for every value of the dummy, and the resulting values are aggregated using the operator 'operator'.</li><li>domain is a value or a vector of values. If it is a single value, this is the only value taken by 'dummy'. If it is a vector, 'dummy' successively takes each of the values of 'domain'. Notice: it is allowed that values of 'domain' are themselves vectors; in that case, 'dummy' will also be a vector. </li><li>expression is an arbitrary expression returning a value. This expression typically will depend on 'dummy'. It is allowed that 'expression' contains other quantified expressions. </li><li>operator is a 2-argument function for which a so-called bottom value exists. A bottom value is the value that is returned when the function is applied to an empty set. The following functions have bottom values:<ul><li>add:0</li><li>multiply:1</li><li>and:true (corresponds to the ALL-quantor in predicate calculus)</li><li>or:false (corresponds to the EXISTS-quantor in predicate calculus)</li><li>max:- infinity</li><li>min:+ infinity</li><li>vAppend:[]</li></ul></ul>",
+		    "seeAlso":"auto-mapping,quantor",
+		    "external":"Quantified expressions are best known in predicate calculus: the all- and exist-quantors are examples. In algebra, the summation or repeated product are also examples of quantified expressions. In <a href='http://en.wikipedia.org/wiki/Quantification#Mathematics'>http://en.wikipedia.org/wiki/Quantification#Mathematics</a>, an introduction to quantors is given.",
+		    "abbreviation":"In mathematics, various \"abbreviation\"s are common. For summation and product, for instance, the capital sigma and pi-notations are used, where the domain is often indicated as subscripts."
+
+		},
+		"tabs":
+		{
+		    "fName":"tabs",
+		    "cat":"general",
+		    "help":"The various modes for operating of \"+\"ACCELTM+ can be accessed by each of the 8 tabs.",
+		    "autoMapping":"",
+		    "details":"The tabs have the following functions: <ul><li>Intro: this gives a brief introduction to the main features of the \"+\"ACCELTM+system.</li><li>Edit / Run script: this tab allows line-by line entering or editing a script. Scripts can be run, and quantity dependencies can be traced. Graphical output is given on a small plot screen.</li><li>Help / Demo: this gives access to the \"+\"ACCELTM+ help system, including a free text search on help topics and an extensive list of demo-scripts.</li><li>Io / Edit: this tab contains a text-area where script (including comment) can be entered. Copy-n-paste functionality can be used to offload scripts in the form of text files for saving into a file or text processing.</li><li>Analysis: in order to debug and analyse script, various tools are made available such as automatic sensitivity analysis and visual plotting dependencies between quantities.</li><li>Genetic Optimisation: this tab contains the user interface for a generic Pareto-based multi-objective optimisation environment.</li><li>Simulation - no script: this gives the functionality to run an (interactive) script that produces visual output on a larger plot screen. Script editing and quantity tracing facilities are not supported on this tab.</li><li>Network: this gives a graphical impression of the model. Every quantity is a node (dot); dependencies are lines between quantities. Nodes can be clicked to show the quantities that depend on it, and quantities on which this quantity depends. In models without time-delays operators, the convention holds that influence propagates from left to right. On the far left, the cat.-I and cat.-III quantities reside, the cat.-II quantities reside far right. The network allows rearranging the nodes for improved clarity, but these constraints are maintained. In models with time delay-operators, cyclic dependencies may occur: a quantity may depend on earlier versions of itself. Therefore, directions of dependencies that relate to time delays are not constrained. The locations of nodes in the network view are added in the form of a trailing comment line to the script, and therefore can be stored. If the script is read again, the configuration is recovered from the previous configuration.</li></ul>",
+		    "seeAlso":"IO / Edit,run - pauze,sensitivity analysis,genetics,Pareto"
+		}
 	}
-	]
 }

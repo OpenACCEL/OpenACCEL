@@ -1,14 +1,14 @@
-#helpdemo
+#helpdemo.tabcontent
     div
         .inline
             .label Help phrase
             input(type = 'text')#helpphrase.textin
         .inline
             .label &nbsp;
-            input(type = 'button', value = 'Search' onclick = 'view.tabs.helpdemo.toggleValues()')#helpsearch.buttonin
+            input(type = 'button', value = 'Search' onclick = 'view.tabs.helpdemo.searchHelp($("#helpphrase").val())')#helpsearch.buttonin
         .inline
             .label &nbsp;
-            input(type = 'button', value = 'Ask for help' onclick = 'view.tabs.helpdemo.toggleValues()')#helpmail.buttonin
+            input(type = 'button', value = 'Ask for help' onclick = 'view.tabs.helpdemo.toggleValues()')#helpmail.buttonin.disabled
     .inline100
         .label Help categories
         #helpcategories.report.verticalmenu

@@ -276,9 +276,10 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
      * @param  {String}   selector Element to put the list in
      * @param  {Function} callback Function to be called when an item is clicked
      */
-    function SelectionList(selector, callback) {
+    function SelectionList(selector, callback, caller) {
         this.selector = selector;
         this.callback = callback;
+        this.caller = caller;
 
         /**
          * Buffer to contain HTML for the required list
@@ -313,7 +314,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
 
             $(itemselector).on('click', {list: this},
                 function(e) {
-                    e.data.list.callback(this);
+                    e.data.list.callback.call(this.caller, $(this).text());
                 }
             );
         };

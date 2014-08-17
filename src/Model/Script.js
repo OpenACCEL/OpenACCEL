@@ -21,11 +21,11 @@ if (inNode) {
 define(["Model/Analyser/Analyser",
         "Model/Quantity",
         "underscore",
-        "Model/Parser",
+        "Model/Compilation/Parsers/ACCELParser",
         "Model/Exceptions/SyntaxError",
         "Model/Exceptions/RuntimeError"],
         /** @lends Model.Script */
-        function(Analyser, Quantity, _, parser, SyntaxError, RuntimeError) {
+        function(Analyser, Quantity, _, ACCELParser, SyntaxError, RuntimeError) {
     /**
      * @class
      * @classdesc The Script class represents an ACCEL script/model, containing the defined quantities,
@@ -45,7 +45,7 @@ define(["Model/Analyser/Analyser",
         /**
          * The parser used to parse the quantity definitions and do syntax checking.
          */
-        this.parser = parser;
+        this.parser = new ACCELParser("script");
 
         /**
          * The source of the ACCEL script, as provided by the user.

@@ -177,6 +177,17 @@ body div {
 	background: #882288;
 }
 
+.help_heading {
+	margin-bottom: 1px;
+	padding-bottom: 0px;
+}
+
+.help_text {
+	margin-top: 0px;
+	padding-top: 0px;
+	margin-bottom: 6px;
+}
+
 .textin {
 	position: relative;
 	z-index: 1;
