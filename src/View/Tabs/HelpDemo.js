@@ -109,22 +109,6 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         return db;
     };
 
-    HelpDemo.prototype.searchHelp = function(phrase) {
-        console.log('phrase: ' + phrase);
-    }
-
-    HelpDemo.prototype.selectHelpCategory = function(category) {
-        console.log('category: ' + category);
-    }
-
-    HelpDemo.prototype.selectHelpArticle = function(article) {
-        console.log('article: ' + article);
-    }
-
-    HelpDemo.prototype.loadDemoScript= function(demoscript) {
-        console.log('demoscript: ' + demoscript);
-    }
-
     HelpDemo.prototype.synchronizeCategories = function(categories) {
         this.helpCategoryList.set(categories);
     }
@@ -148,6 +132,45 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         }
 
         this.helpTextBuffer.flip();
+    }
+
+    /**
+     * Searches the help database contents for the given phrase,
+     * and displays all help topics that return a match in the list.
+     *
+     * @param  {String} phrase The phrase to search for in the help database
+     */
+    HelpDemo.prototype.searchHelp = function(phrase) {
+        var matches = [];
+
+        for (var elem in this.articles) {
+            var article = this.articles[elem];
+            var match = false;
+            for (var i in article) {
+                if (article[i].indexOf(phrase) !== -1) {
+                    match = true;
+                    break;
+                }
+            }
+
+            if (match) {
+                matches.push(article.fName);
+            }
+        }
+
+        this.synchronizeArticles(matches);
+    }
+
+    HelpDemo.prototype.selectHelpCategory = function(category) {
+        view.tabs.helpdemo.synchronizeArticles(Object.keys(view.tabs.helpdemo.articlesByCategory[category]));
+    }
+
+    HelpDemo.prototype.selectHelpArticle = function(article) {
+        view.tabs.helpdemo.showHelpArticle(view.tabs.helpdemo.articles[article]);
+    }
+
+    HelpDemo.prototype.loadDemoScript= function(demoscript) {
+        console.log('demoscript: ' + demoscript);
     }
 
     HelpDemo.prototype.synchronizeDemoScripts = function(demoscripts) {
