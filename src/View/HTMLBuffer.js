@@ -11,7 +11,8 @@ define([], /**@lends View*/ function() {
      * @class
      * @classdesc Buffer class to contain updated content of a div and update the div when desired
      */
-    function HTMLBuffer() {
+    function HTMLBuffer(div) {
+        this.div = typeof div === 'undefined' ? null : div;
         this.html = '';
 
         /**
@@ -54,7 +55,14 @@ define([], /**@lends View*/ function() {
          * @param {String} The div to place the HTML content in.
          */
         this.flip = function(div) {
-            var target = $(div);
+            var target;
+
+            if (typeof div !== 'undefined') {
+                target = $(div);
+            } else {
+                target = $(this.div);
+            }
+
             target.html(this.html);
         };
     }
