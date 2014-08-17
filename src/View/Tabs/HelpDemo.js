@@ -22,9 +22,14 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          */
         this.Input = new Input(this.helpTextBuffer);
 
-        this.helpCategoryList = new this.Input.SelectionList('#helpcategories', this.selectHelpCategory);
-        this.helpArticleList = new this.Input.SelectionList('#helparticles', this.selectHelpArticle);
-        this.demoScriptList = new this.Input.SelectionList('#demoscripts', this.loadDemoScript);
+        this.helpCategoryList = new this.Input.SelectionList('#helpcategories', function(cat) {
+            view.setState({'helpcat': cat});
+        });
+        this.helpArticleList = new this.Input.SelectionList('#helparticles', function(article) {
+            view.setState({'help': article});
+        });
+
+        this.demoScriptList = new this.Input.SelectionList('#demoscripts');
 
         /**
          * The database of help articles, in their categories
@@ -77,8 +82,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.synchronizeArticles(this.articleNames);
 
         // Display first help article
-        var hoi = this.articles[this.articleNames[0]];
-        this.showHelpArticle(this.articles[this.articleNames[0]]);
+        this.showHelpArticle(this.articleNames[0]);
     };
 
     /**
@@ -117,18 +121,66 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.helpArticleList.set(articles);
     }
 
-    HelpDemo.prototype.showHelpArticle = function(article) {
-        this.helpTextBuffer.empty();
+    HelpDemo.prototype.showHelpArticle = function(artName) {
+        var article = view.tabs.helpdemo.articles[artName];
+        var search = view.encodeHTML($('#helpphrase').val().trim());
 
+        // Construct article heading
+        this.helpTextBuffer.empty();
         this.helpTextBuffer.append('<h1>' + article.fName + '</h1>');
 
-        var members = Object.keys(article);
-        for (var i in members) {
-            var member = members[i];
-            if (member !== 'fName') {
-                this.helpTextBuffer.append('<h3 class="help_heading">' + member + '</h3>');
-                this.helpTextBuffer.append('<p class="help_text">' + article[member] + '</p>');
+        // Returns the given text with all matches of the search string highlighted, if any
+        function matchSearch(text) {
+            if (search === '' || search.length <= 2) {
+                return text;
+            } else {
+                return text.replace(new RegExp(search, "gi"), '<span class="help_match">$&</span>');
             }
+        }
+
+        /**----- Add every member of the article object as a separate paragraph with it's heading -----**/
+        // Help
+        if (article.help !== '') {
+            this.helpTextBuffer.append('<h3 class="help_heading">Help</h3>');
+            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.help) + '</div>');
+        }
+
+        // Details
+        if (article.details !== '') {
+            this.helpTextBuffer.append('<h3 class="help_heading">Details</h3>');
+            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.details) + '</div>');
+        }
+
+        // Example
+        if (article.example !== '') {
+            this.helpTextBuffer.append('<h3 class="help_heading">Example</h3>');
+            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.example) + '</div>');
+        }
+
+        // Automapping
+        if (article.autoMapping !== '') {
+            this.helpTextBuffer.append('<h3 class="help_heading">Auto-mapping</h3>');
+            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.autoMapping) + '</div>');
+        }
+
+        // See also
+        var text = '';
+        var links = (article.seeAlso.indexOf(',') > -1) ? article.seeAlso.split(",") : [article.seeAlso];
+        for (var j in links) {
+            var link = links[j].trim();
+            var extraText = (view.tabs.helpdemo.articles[link]) ? ',"helpcat":"' + view.tabs.helpdemo.articles[link].cat + '"' : '';
+
+            text += '<a id="articlelink_' + j + '" class="alink" onclick=\'view.setState({"help":"' + link + '"' + extraText + '});\'>' + link + '</a>, ';
+        }
+        text = text.substring(0, text.length-2);
+
+        this.helpTextBuffer.append('<h3 class="help_heading">See also</h3>');
+        this.helpTextBuffer.append('<div id="seealso" class="help_text">' + text + '</div>');
+
+        // External
+        if (article.external !== '') {
+            this.helpTextBuffer.append('<h3 class="help_heading">External reference</h3>');
+            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.external) + '</div>');
         }
 
         this.helpTextBuffer.flip();
@@ -141,13 +193,32 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @param  {String} phrase The phrase to search for in the help database
      */
     HelpDemo.prototype.searchHelp = function(phrase) {
-        var matches = [];
+        if (phrase.length <= 2) {
+            return;
+        }
 
+        // Encode HTML to avoid matching html inside article text
+        phrase = view.encodeHTML(phrase);
+
+        var matches = [];
+        var re = new RegExp(phrase, "gi");
+
+        // Search in currently displayed article
+        $('div.help_text').not("#seealso").each(function() {
+            var oldText = $(this).html();
+
+            // Remove old matches first!
+            oldText = oldText.replace(/<span class="help_match">([^<]*)<\/span>/gi, '$1');
+            var newText = oldText.replace(re, '<span class="help_match">$&</span>');
+            $(this).html(newText);
+        });
+
+        // Search in all (other) articles
         for (var elem in this.articles) {
             var article = this.articles[elem];
             var match = false;
             for (var i in article) {
-                if (article[i].indexOf(phrase) !== -1) {
+                if (re.test(article[i])) {
                     match = true;
                     break;
                 }

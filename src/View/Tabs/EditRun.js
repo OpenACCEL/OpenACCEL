@@ -159,7 +159,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
     /**
      * Deletes a quantity from the script.
-     * 
+     *
      * @param {String} The quantity to delete.
      */
     EditRun.prototype.deleteQuantity = function(quantity) {
@@ -168,7 +168,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
     /**
      * Adds a quantity to the script.
-     * 
+     *
      * @param {String} The quantity to add.
      */
     EditRun.prototype.addQuantity = function(string) {
@@ -201,7 +201,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
     /**
      * Toggles the execution of the script.
-     * 
+     *
      * @param {String} 'Run' if the script should be ran, otherwise it will be paused.
      */
     EditRun.prototype.toggleExecution = function(action) {
@@ -225,7 +225,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
     /**
      * Sets the amount of iterations the script should be ran.
-     * 
+     *
      * @param {Number} The amount of iterations the script will be ran.
      */
     EditRun.prototype.setIterations = function(iterations) {
@@ -413,7 +413,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
                 '<div class="inline operator">=</div>' +
                 '<div class="inline ellipsis max128w">' + right + '</div>' +
                 '<div class="inline comment">(cat.=' + category + ')</div>' +
-                '<a onclick="deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>' +
+                '<a onclick="view.tabs.editrun.deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>' +
             '</label>';
     };
 

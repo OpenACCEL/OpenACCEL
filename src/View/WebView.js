@@ -36,7 +36,7 @@ define(["../Controller/AbstractView",
          *
          * @type {Object}
          */
-        this.state = $.deparam.querystring(true);
+        this.state = $.deparam(location.hash, true);
 
         /**
          * The various tabs that this view has to offer.
@@ -88,6 +88,16 @@ define(["../Controller/AbstractView",
                 $(".tabcontent").hide();
                 $(window).trigger('entertab', newState.tab);
                 $("#" + newState.tab + ".tabcontent").show();
+            }
+
+            // Update current help category if nessecary
+            if (newState.helpcat && (newState.helpcat !== view.state.helpcat || initial === true)) {
+                view.tabs.helpdemo.selectHelpCategory(newState.helpcat);
+            }
+
+            // Update shown help article if nessecary
+            if (newState.help) {
+                view.tabs.helpdemo.showHelpArticle(newState.help);
             }
 
             // Update state variable
@@ -198,6 +208,20 @@ define(["../Controller/AbstractView",
     }
 
     WebView.prototype = new AbstractView();
+
+    /**
+     * Merges the attributes in the given object into the
+     * current state, overriding any existing attributes with
+     * the same name.
+     *
+     * @param {Object} state The state object with attributes to
+     * merge into the current state.
+     * @post The attributes of the given object are merged into the current
+     * application state
+     */
+    WebView.prototype.setState = function(state) {
+        location.hash = $.param.fragment(location.hash, state);
+    };
 
     /**
      * Uses the given map of quantities to update the UI.

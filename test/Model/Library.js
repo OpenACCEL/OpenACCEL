@@ -16,7 +16,7 @@ suite("Library", function() {
             lib.load();
             assert(lib.lib.standard_functions.length > 0);
             assert(lib.lib.input_functions.length > 0);
-            assert(lib.lib.help_articles.length > 0);
+            assert(Object.keys(lib.lib.help_articles).length > 0);
         });
 
         test("| Escaping functions names", function() {

@@ -31,6 +31,10 @@ body div {
 	font-weight: bold;
 }
 
+.help_match {
+	background-color: red;
+}
+
 .cm-builtin {
 	cursor: pointer;
 	text-decoration: underline;
@@ -162,6 +166,15 @@ body div {
 	border-bottom: 1px #331144 solid;
 	color: #FFFFFF;
 	background: #9933CC;
+}
+
+.alink {
+	cursor: pointer;
+	color: #91E6A5;
+}
+
+.alink:hover {
+	text-decoration: underline;
 }
 
 .report {

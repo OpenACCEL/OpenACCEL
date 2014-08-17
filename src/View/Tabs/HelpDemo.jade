@@ -2,7 +2,7 @@
     div
         .inline
             .label Help phrase
-            input(type = 'text')#helpphrase.textin
+            input(type = 'text', onkeyup = 'view.tabs.helpdemo.searchHelp(this.value.trim())')#helpphrase.textin
         .inline
             .label &nbsp;
             input(type = 'button', value = 'Search' onclick = 'view.tabs.helpdemo.searchHelp($("#helpphrase").val())')#helpsearch.buttonin
@@ -15,7 +15,7 @@
     .inline100
         .label Help articles
         #helparticles.report.verticalmenu.px12
-    .inline
+    #helparticlecontents.inline
         .label Help text
         #helptext.group
     .inline100
