@@ -117,7 +117,7 @@ define(["../Controller/AbstractView",
                             view.tabs.ioedit.editor.save();
                         }
                         controller.setScriptFromSource($('#scriptarea').val());
-                        showValues = false;
+                        view.tabs.ioedit.showValues = false;
                         $('#showvalues').val('Show values');
                     } catch (e) {
                         if (typeof(e) === 'SyntaxError') {
