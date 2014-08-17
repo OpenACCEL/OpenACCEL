@@ -11,7 +11,7 @@ define(["../Controller/AbstractView",
         "../View/Tabs/Simulation",
         "../View/Graphics/CanvasCreator"],
         /**@lends View*/
-        function(AbstractView, Tooltip, EditRun, HelpDemo, IOEdit, Optimisation, Simulation, CanvasCreator) {
+        function(AbstractView, Tooltip, EditRun, HelpDemo, IOEdit, Optimisation, Simulation, CanvasCreator, deparam) {
     /**
      * @class
      * @classdesc The webview is the view class for webbrowsers.
@@ -31,7 +31,15 @@ define(["../Controller/AbstractView",
         this.canvasses = {};
 
         /**
-         * The various tab that this view has to offer.
+         * Object representing the current application state as stored in the hash fragment
+         * of the URL.
+         *
+         * @type {Object}
+         */
+        this.state = $.deparam.querystring(true);
+
+        /**
+         * The various tabs that this view has to offer.
          */
         this.tabs = {};
         this.tabs.editrun = new EditRun();
@@ -43,89 +51,137 @@ define(["../Controller/AbstractView",
         this.tooltips = {};
         this.errorCount = 0;
 
-        $('#main').tabs();
 
-        $('#main').on('tabsbeforeactivate',
-            function(event, ui) {
-                $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
+        /**
+         * Fired when the hash fragment of the URL changes.
+         *
+         * @param  {Event} e The jQuery event object.
+         * @param  {Boolean} initial Whether this event was fired onpageload
+         */
+        $(window).on('hashchange', function(e, initial) {
+            var query = $.deparam.querystring(true);
+            var newState = $.deparam(e.fragment, true);
 
-                leaving = ui.oldPanel[0].id;
-                switch (leaving) {
-                    case 'editrun':
-                        // Pause script when leaving edit/run tab, indicating it has
-                        // been paused automatically by the system and not by the user
-                        controller.pause(true);
-                        break;
-                    case 'ioedit':
-                        // Build script from inputted source when leaving IO/edit
-                        try {
-                            if (view.tabs.ioedit.editor) {
-                                view.tabs.ioedit.editor.save();
-                            }
-                            controller.setScriptFromSource($('#scriptarea').val());
-                            showValues = false;
-                            $('#showvalues').val('Show values');
-                        } catch (e) {
-
-                            if (typeof(e) === 'SyntaxError') {
-                                console.log(e.message);
-                            } else {
-                                console.log(e);
-                            }
-                        }
-                        break;
-                    case 'simulation':
-                        controller.pause(true);
-                        break;
-                    default:
-                        break;
-                }
-
-                //Tooltips stored and hidden
-                view.tooltips[leaving] = $('.tooltipcontainer').filter(":visible");
-                view.tooltips[leaving].toggle(false);
+            // Support old ACCEL query strings
+            if (query.script) {
+                hash.script = query.script;
             }
-        );
-
-        $('#main').on('tabsactivate',
-            function(event, ui) {
-                entering = ui.newPanel[0].id;
-                switch (entering) {
-                    case 'simulation':
-                    case 'editrun':
-                        // If autoexecute is true, resume script only when it has been paused
-                        // by the system, and start executing when it is not paused but compiled
-                        if (controller.autoExecute) {
-                            if (controller.isPaused()) {
-                                controller.resume(true);
-                            } else {
-                                controller.run();
-                            }
-                        }
-                        break;
-                    case 'ioedit':
-                        setTimeout(function() {
-                            view.tabs.ioedit.updateAdvancedEditor();
-                            view.tabs.ioedit.focusAdvancedEditor();
-                        }, 100);
-                        break;
-                    case 'helpdemo':
-                        view.tabs.helpdemo.setup();
-                        break;
-                    default:
-                        break;
-                }
-
-                //Tooltips loaded and shown
-                try {
-                    view.tooltips[entering].toggle(true);
-                } catch(e) {
-
-                }
-
-                view.resizeContainer();
+            if (query.help) {
+                hash.help = query.help;
             }
-        );
+            if (query.link) {
+                hash.link = query.link;
+            }
+
+            // Activate other tab when nessecary
+            if ((newState.tab && (newState.tab !== view.state.tab)) || initial === true) {
+                if (typeof newState.tab === 'undefined') {
+                    newState.tab = "editrun";
+                }
+
+                // Make correct tab active
+                $("li.navtab").removeClass("ui-tabs-active");
+                $("li#" + newState.tab + ".navtab").addClass("ui-tabs-active");
+
+                // Show contents of newly activated tab and trigger events
+                $(window).trigger('leavetab', view.state.tab);
+                $(".tabcontent").hide();
+                $(window).trigger('entertab', newState.tab);
+                $("#" + newState.tab + ".tabcontent").show();
+            }
+
+            // Update state variable
+            view.state = newState;
+        });
+
+
+        /**
+         * Called just before a tab is left and made hidden
+         *
+         * @param  {Event} event The jQuery event that was fired
+         * @param  {string} tab The identifier of the tab that will be hidden
+         */
+        $(window).on('leavetab', function(event, tab) {
+            $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
+
+            switch (tab) {
+                case 'editrun':
+                    // Pause script when leaving edit/run tab, indicating it has
+                    // been paused automatically by the system and not by the user
+                    controller.pause(true);
+                    break;
+                case 'ioedit':
+                    // Build script from inputted source when leaving IO/edit
+                    try {
+                        if (view.tabs.ioedit.editor) {
+                            view.tabs.ioedit.editor.save();
+                        }
+                        controller.setScriptFromSource($('#scriptarea').val());
+                        showValues = false;
+                        $('#showvalues').val('Show values');
+                    } catch (e) {
+                        if (typeof(e) === 'SyntaxError') {
+                            console.log(e.message);
+                        } else {
+                            console.log(e);
+                        }
+                    }
+                    break;
+                case 'simulation':
+                    controller.pause(true);
+                    break;
+                default:
+                    break;
+            }
+
+            //Tooltips stored and hidden
+            view.tooltips[tab] = $('.tooltipcontainer').filter(":visible");
+            view.tooltips[tab].toggle(false);
+        });
+
+
+        /**
+         * Called just before a tab is made active/shown
+         *
+         * @param  {Event} event The jQuery event that was fired
+         * @param  {string} tab The identifier of the tab that will be made current.
+         */
+        $(window).on('entertab', function(event, tab) {
+            switch (tab) {
+                case 'simulation':
+                case 'editrun':
+                    // If autoexecute is true, resume script only when it has been paused
+                    // by the system, and start executing when it is not paused but compiled
+                    if (controller.autoExecute) {
+                        if (controller.isPaused()) {
+                            controller.resume(true);
+                        } else {
+                            controller.run();
+                        }
+                    }
+                    break;
+                case 'ioedit':
+                    setTimeout(function() {
+                        view.tabs.ioedit.updateAdvancedEditor();
+                        view.tabs.ioedit.focusAdvancedEditor();
+                    }, 100);
+                    break;
+                case 'helpdemo':
+                    view.tabs.helpdemo.setup();
+                    break;
+                default:
+                    break;
+            }
+
+            //Tooltips loaded and shown
+            try {
+                view.tooltips[tab].toggle(true);
+            } catch(e) {
+
+            }
+
+            view.resizeContainer();
+        });
 
         // Loading should be done at this point.
         this.resizeContainer();

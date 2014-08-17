@@ -27,4 +27,7 @@ require(["Controller/ControllerAPI", "View/WebView"],
     controller.setAutoExecute(true);
     controller.autoSave = true;
     controller.restoreSavedScript();
+
+    // Trigger hashchange on initial page load
+    $(window).trigger('hashchange', true);
 });
