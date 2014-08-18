@@ -345,15 +345,7 @@ define(["../Controller/AbstractView",
         }
     }
 
-    WebView.prototype.smartZoomOptimisation = function() {
-        this.canvasses.optimisation.smartZoom();
-        this.drawOptimisationPlot();
-    };
 
-    WebView.prototype.zoomToFitOptimisation = function(show) {
-        this.canvasses.optimisation.zoomToFit();
-        this.drawOptimisationPlot();
-    };
 
     /**
      * Changes UI elements depending on whether the OpenACCEL model is being executed.

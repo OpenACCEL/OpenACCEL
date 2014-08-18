@@ -203,17 +203,27 @@ define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
         );
 
         $('#smartzoomGO').on('click',
-            function() {
-                controller.smartZoomGO();
-            }
+            (function() {
+                this.smartZoom();
+            }).bind(this)
         );
 
         $('#zoomtofitGO').on('click',
-            function() {
-                controller.zoomToFitGO();
-            }
+            (function() {
+                this.zoomToFit();
+            }).bind(this)
         );
     }
+
+    Optimization.prototype.smartZoom = function() {
+        view.canvasses.optimisation.smartZoom();
+        view.canvasses.optimisation.draw();
+    };
+
+    Optimization.prototype.zoomToFit = function(show) {
+        view.canvasses.optimisation.zoomToFit();
+        view.canvasses.optimisation.draw();
+    };
 
     return Optimization;
 });

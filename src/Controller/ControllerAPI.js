@@ -1071,8 +1071,7 @@ define(["Model/Script",
             }
             // initialise the genetic optimisation algorithm
             this.geneticOptimisation.initialise(this.getScript(), populationSize);
-            // plot with smart zoom
-            this.smartZoomGO();
+            view.onNewGeneration();
         };
 
         /**
@@ -1131,20 +1130,6 @@ define(["Model/Script",
          */
         Controller.prototype.setMaxfront = function(desiredParetoFrontRatio) {
             this.geneticOptimisation.desiredParetoFrontRatio = desiredParetoFrontRatio / 100;
-        };
-
-        /**
-         * Smart zooms the view's optimisation canvas.
-         */
-        Controller.prototype.smartZoomGO = function() {
-            this.view.smartZoomOptimisation();
-        };
-
-        /**
-         * Zoom fits the view's optimisation canvas.
-         */
-        Controller.prototype.zoomToFitGO = function() {
-            this.view.zoomToFitOptimisation();
         };
 
         /**
