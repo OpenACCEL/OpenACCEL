@@ -62,7 +62,7 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
      */
     Library.prototype.loadFunctions = function() {
         try {
-            this.fileLoader.load("ACCEL_functions", "libfile");
+            //this.fileLoader.load("ACCEL_functions", "libfile");
             this.functions = this.fileLoader.getLibFile("ACCEL_functions");
         } catch (e) {
             // Unrecoverable error: the ACCEL library metadata could not be loaded!
@@ -75,7 +75,7 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
      */
     Library.prototype.loadHelp = function() {
         try {
-            this.fileLoader.load("ACCEL_help", "libfile");
+            //this.fileLoader.load("ACCEL_help", "libfile");
             this.help = this.fileLoader.getLibFile("ACCEL_help").help_articles;
         } catch (e) {
             // Unrecoverable error: the ACCEL library metadata could not be loaded!

@@ -183,6 +183,10 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
      * @return {Object} The JSON object containing the ACCEL library metadata
      */
     FileLoader.prototype.getLibFile = function(name) {
+        if (!this.libfiles[name]) {
+            this.load(name, "libfile");
+        }
+
         return this.libfiles[name];
     };
 
