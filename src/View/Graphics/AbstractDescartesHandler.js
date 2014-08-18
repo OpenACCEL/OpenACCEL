@@ -149,12 +149,24 @@ define(["View/Graphics/AbstractDescartesDecorator"], /** @lends View.Graphics */
     /**
      * Sends getDecoratedDrawing() to all descartes objects in descartesInstances.
      *
+     * @param {String[]} Optional array: Draw only the given divs (and thus canvasses).
      * @modifies ForAll_i[descartesInstances[i]] {descartes} Previous drawing is overwritten by getDecoratedDrawing().
      */
-    AbstractDescartesHandler.prototype.draw = function() {
+    AbstractDescartesHandler.prototype.drawInstances = function(divs) {
         var drawing = this.getDecoratedDrawing();
-        for (var i in this.descartesInstances) {
-            this.descartesInstances[i].draw(drawing);
+
+        // Only draw the given divs.
+        if (divs) {
+            for (var key in divs) {
+                this.descartesInstances[divs[key]].draw(drawing);
+            }
+        }
+
+        // If none given, draw them all.
+        else {
+            for (var i in this.descartesInstances) {
+                this.descartesInstances[i].draw(drawing);
+            }
         }
     };
 
@@ -181,13 +193,25 @@ define(["View/Graphics/AbstractDescartesDecorator"], /** @lends View.Graphics */
      * Forces all descartesInstances to redraw, emptying their buffers. This is needed to
      * not use old input artifacts for drawing.
      *
+     * @param {String[]} Optional array: Clear only the given divs (and thus canvasses).
      * @modifies ForAll_i[descartesInstances[i]] {descartes} The descartes objects of which the buffers are emptied.
      */
-    AbstractDescartesHandler.prototype.clearBuffers = function() {
-        for (var i in this.descartesInstances) {
-            this.descartesInstances[i].enforceRedraw();
+    AbstractDescartesHandler.prototype.clearBuffers = function(divs) {
+        // Only clear the given divs.
+        if (divs) {
+            for (var key in divs) {
+                this.descartesInstances[divs[key]].enforceRedraw();
+            }
+        }
+
+        // If none given, clear them all.
+        else {
+            for (var i in this.descartesInstances) {
+                this.descartesInstances[i].enforceRedraw();
+            }
         }
     };
+
     /**
      * Empties the canvas of any drawings.
      *

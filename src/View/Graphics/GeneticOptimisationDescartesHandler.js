@@ -60,27 +60,11 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
             });
 
             /**
-             * Propagate the draw function to (probably) the Canvas class.
-             */
-            this.propagatables.push({
-                name: "draw",
-                func: this.draw.bind(this)
-            });
-
-            /**
              * Propagate the getClickedIndividual function to (probably) the Canvas class.
              */
             this.propagatables.push({
                 name: "getClickedIndividual",
                 func: this.getClickedIndividual.bind(this)
-            });
-
-            /**
-             * Propagate the clearBuffers function to (probably) the Canvas class.
-             */
-            this.propagatables.push({
-                name: "clearBuffers",
-                func: this.clearBuffers.bind(this)
             });
 
             /**
@@ -177,7 +161,7 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
 
             //Dereference clickedIndividual
             this.clickedIndividual = new CloneObject(this.clickedIndividual);
-            this.draw();
+            this.drawInstances();
         };
 
         /**

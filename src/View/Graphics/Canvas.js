@@ -118,6 +118,18 @@ define(["View/Graphics/DescartesHandlerFactory", "View/Graphics/AbstractFunction
         }
     };
 
+    Canvas.prototype.draw = function() {
+        if (this.canDraw()) {
+            this.handler.drawInstances([this.div]);
+        }
+    }
+
+    Canvas.prototype.clearBuffers = function() {
+        if (this.canDraw()) {
+            this.handler.clearBuffers([this.div]);
+        }
+    }
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Canvas;
 });

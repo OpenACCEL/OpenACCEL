@@ -34,22 +34,6 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Script"], /** @lends Vi
          * @type {Script}
          */
         this.modelElement = modelElement;
-
-        /**
-         * Propagate the draw function to (probably) the Canvas class.
-         */
-        this.propagatables.push({
-            name: "draw",
-            func: this.draw.bind(this)
-        });
-
-        /**
-         * Propagate the clearBuffers function to (probably) the Canvas class.
-         */
-        this.propagatables.push({
-            name: "clearBuffers",
-            func: this.clearBuffers.bind(this)
-        });
     }
 
 
@@ -138,16 +122,30 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Script"], /** @lends Vi
      * Sends getDecoratedDrawing() to all descartes objects in descartesInstances.
      * In addition, the statusreport from descartes is fetched and propagated to be thrown as error if needed.
      *
+     * @param {String[]} Optional array: Draw only the given divs (and thus canvasses).
      * @modifies ForAll_i[descartesInstances[i]] {descartes} Previous drawing is overwritten by getDecoratedDrawing().
      * @modifies this.modelElement {Script} The script gets its plotStatus changed.
      */
-    ScriptDescartesHandler.prototype.draw = function() {
+    ScriptDescartesHandler.prototype.drawInstances = function(divs) {
         var drawing = this.getDecoratedDrawing();
         var status = '';
-        for (var div in this.descartesInstances) {
-            this.descartesInstances[div].draw(drawing);
-            status = this.descartesInstances[div].getStatusReport();
+
+        // Only draw the given divs.
+        if (divs) {
+            for (var key in divs) {
+                this.descartesInstances[divs[key]].draw(drawing);
+                status = this.descartesInstances[divs[key]].getStatusReport();
+            }
         }
+
+        // If none given, draw them all.
+        else {
+            for (var div in this.descartesInstances) {
+                this.descartesInstances[div].draw(drawing);
+                status = this.descartesInstances[div].getStatusReport();
+            }
+        }
+
         this.drawReport = status;
         controller.setPlotStatusInScript(this.drawReport);
     };
