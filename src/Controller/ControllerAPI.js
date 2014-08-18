@@ -1094,7 +1094,7 @@ define(["Model/Script",
                     'number of iterations is less than or equal to zero');
             }
             this.geneticOptimisation.nextGeneration();
-            this.view.drawOptimisationPlot();
+            this.view.onNewGeneration();
             // 'this' is outside the scope of the setTimeout function
             var _this = this;
             // set a timeout of 1ms to allow the plot to update between generations

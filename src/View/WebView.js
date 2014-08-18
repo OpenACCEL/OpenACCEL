@@ -329,6 +329,13 @@ define(["../Controller/AbstractView",
     }
 
     /**
+     * Event that gets called when the genetic algorithm has generated a new generation.
+     */
+    WebView.prototype.onNewGeneration = function() {
+        this.canvasses.optimisation.draw();
+    }
+
+    /**
      * Resets all canvasses and plots, such that they are as good as new!
      */
     WebView.prototype.resetAllPlots = function() {
@@ -337,17 +344,6 @@ define(["../Controller/AbstractView",
             this.canvasses[key].clearBuffers();
         }
     }
-
-    /**
-     * Trigger an update of the optimisation plot canvas
-     */
-    WebView.prototype.drawOptimisationPlot = function() {
-        this.canvasses.optimisation.draw();
-    };
-
-    WebView.prototype.clearOptimisationPlot = function() {
-        this.canvasses.optimisation.clearCanvas();
-    };
 
     WebView.prototype.smartZoomOptimisation = function() {
         this.canvasses.optimisation.smartZoom();
