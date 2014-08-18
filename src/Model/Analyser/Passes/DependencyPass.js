@@ -26,8 +26,6 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library']
      */
     function DependencyPass() {
         this.lib = new Library();
-        this.lib.load();
-
         this.reservedwords = this.lib.getFunctions({'all':true, 'escaped':false});
     }
 

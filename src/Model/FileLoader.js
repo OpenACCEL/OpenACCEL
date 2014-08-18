@@ -36,7 +36,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
          *
          * @type {Object}
          */
-        this.libfile = {};
+        this.libfiles = {};
     }
 
     /**
@@ -133,7 +133,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                     content = JSON.parse(content);
                 }
 
-                this.libfile = content;
+                this.libfiles[file] = content;
             }
             return true;
         } else {
@@ -182,13 +182,8 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
      *
      * @return {Object} The JSON object containing the ACCEL library metadata
      */
-    FileLoader.prototype.getLibFile = function() {
-        // Load the file if it has not already been loaded
-        if (this.libfile === {}) {
-            this.load("ACCEL", "libfile");
-        }
-
-        return this.libfile;
+    FileLoader.prototype.getLibFile = function(name) {
+        return this.libfiles[name];
     };
 
     /**

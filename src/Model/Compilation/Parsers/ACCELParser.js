@@ -51,7 +51,6 @@ define(["Model/Compilation/Parsers/ACCELScriptParser",
              * @type {Library}
              */
             this.lib = new Library();
-            this.lib.load();
 
             // Instantiate correct parser: units or entire script parser
             if (parser === 'unit') {

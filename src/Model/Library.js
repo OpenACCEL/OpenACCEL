@@ -36,7 +36,7 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
          *
          * @type {Object}
          */
-        this.lib = {};
+        this.functions = {};
 
         /**
          * The database of help articles, partitioned into categories.
@@ -60,10 +60,23 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
     /**
      * Loads the ACCEL library metadata into memory and parses it.
      */
-    Library.prototype.load = function() {
+    Library.prototype.loadFunctions = function() {
         try {
-            this.fileLoader.load("ACCEL", "libfile");
-            this.lib = this.fileLoader.getLibFile();
+            this.fileLoader.load("ACCEL_functions", "libfile");
+            this.functions = this.fileLoader.getLibFile("ACCEL_functions");
+        } catch (e) {
+            // Unrecoverable error: the ACCEL library metadata could not be loaded!
+            console.log(e.message);
+        }
+    };
+
+    /**
+     * Loads the ACCEL library metadata into memory and parses it.
+     */
+    Library.prototype.loadHelp = function() {
+        try {
+            this.fileLoader.load("ACCEL_help", "libfile");
+            this.help = this.fileLoader.getLibFile("ACCEL_help").help_articles;
         } catch (e) {
             // Unrecoverable error: the ACCEL library metadata could not be loaded!
             console.log(e.message);
@@ -77,11 +90,11 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
      * and then by article name. An article is thus accessed by categoryName.articleName.
      */
     Library.prototype.getHelpArticles = function() {
-        if (Object.keys(this.lib).length === 0) {
-            this.load();
+        if (Object.keys(this.help).length === 0) {
+            this.loadHelp();
         }
 
-        return this.lib.help_articles;
+        return this.help;
     };
 
     /**
@@ -132,23 +145,23 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         var ans = [];
 
         // Load library first if not already loaded!
-        if (this.lib === {}) {
-            this.load();
+        if (Object.keys(this.functions).length === 0) {
+            this.loadFunctions();
         }
 
         // Start with just the list of standard functions
         if (options.standard || options.all) {
-            ans = ans.concat(this.lib.standard_functions);
+            ans = ans.concat(this.functions.standard_functions);
         }
 
         // Append input functions if requested
         if (options.inputs || options.all) {
-            ans = ans.concat(this.lib.input_functions);
+            ans = ans.concat(this.functions.input_functions);
         }
 
         // Append reserved words if requested
         if (options.reserved || options.all) {
-            ans = ans.concat(this.lib.reserved_words);
+            ans = ans.concat(this.functions.reserved_words);
         }
 
         // Escape if requested
@@ -157,15 +170,6 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         }
 
         return ans;
-    };
-
-    /**
-     * Returns a list of all help categories.
-     *
-     * @return {[type]} [description]
-     */
-    Library.prototype.getCategories = function() {
-        // body...
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.

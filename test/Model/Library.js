@@ -13,15 +13,14 @@ suite("Library", function() {
 
     suite("| Library", function() {
         test("| Loading library", function() {
-            lib.load();
-            assert(lib.lib.standard_functions.length > 0);
-            assert(lib.lib.input_functions.length > 0);
-            assert(Object.keys(lib.lib.help_articles).length > 0);
+            lib.loadFunctions();
+            assert(lib.functions.standard_functions.length > 0);
+            assert(lib.functions.input_functions.length > 0);
         });
 
         test("| Escaping functions names", function() {
-            lib.load();
-            var escaped = lib.escape(lib.lib.standard_functions);
+            lib.loadFunctions();
+            var escaped = lib.escape(lib.functions.standard_functions);
 
 
             for (var elem in escaped) {
@@ -30,7 +29,6 @@ suite("Library", function() {
         });
 
         test("| Loading help articles", function() {
-            lib.load();
             var articles = lib.getHelpArticles();
             // assert(lib.lib.standard_functions.length > 0);
             // assert(lib.lib.input_functions.length > 0);
