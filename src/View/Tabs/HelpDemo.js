@@ -88,16 +88,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.showHelpArticle(this.articleNames[0]);
 
         // Setup demo scripts list
-        this.demoScripts = ['anEveningInTheBar.txt',
-            'ballAndStick.txt',
-            'ballAndStickCtrl.txt',
-            'barChart.txt',
-            'biljart.txt',
-            'canon ball shooting.txt',
-            'chimneySweepers1.txt',
-            'chimneySweepers2.txt',
-            'clickDemo.txt'
-        ];
+        this.demoScripts = controller.getDemoScripts();
         this.synchronizeDemoScripts(this.demoScripts);
     };
 

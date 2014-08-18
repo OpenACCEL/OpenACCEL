@@ -31,6 +31,18 @@ body div {
 	font-weight: bold;
 }
 
+#plot {
+	background-color: #cc9ae5;
+}
+
+#demoscripts, #helparticles, #helpcategories {
+	max-height: 450px;
+	max-width: 145px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+}
+
 .help_match {
 	background-color: red;
 }

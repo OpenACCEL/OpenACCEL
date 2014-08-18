@@ -37,6 +37,115 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
          * @type {Object}
          */
         this.libfiles = {};
+
+        /**
+         * The message to prepend to ajax errors that occur and
+         * are signalled to the Controller.
+         *
+         * @type {String}
+         */
+        this.errorMessage = "";
+
+        /**
+         * List containing the names of all demo scripts.
+         *
+         * @type {Array}
+         */
+        this.demoscriptlist = [
+            'ballAndStick',
+            'ballAndStickCtrl',
+            'barChart',
+            'biljart',
+            'cano shooting.accel',
+            'chimneySweepers1',
+            'chimneySweepers2',
+            'clickDemo',
+            'com_Example_1',
+            'com_Example_2',
+            'com_Example_3A',
+            'com_Example_3B',
+            'contours',
+            'convoluteDemo1',
+            'conway',
+            'coordinatesDemo',
+            'dangle',
+            'doDemo',
+            'eigenSystemDemo',
+            'evacuateMultipleDoors',
+            'evacuateOneDoor',
+            'excitedPendulum',
+            'fullHistory',
+            'gas-n-gravity',
+            'gas',
+            'gaussDemo',
+            'gravity1',
+            'gravity2',
+            'gridDemo',
+            'iMedianDemo',
+            'iSpikeDemo',
+            'iWaveDemo',
+            'iWaveImageDemo',
+            'iWaveSubtleDemo',
+            'imageAndGrid',
+            'intersectTwoCircles',
+            'kiwi',
+            'lanterns',
+            'lanternsSimple',
+            'laundry',
+            'matrixIterationDemo',
+            'noise 2D',
+            'optiMeal',
+            'optiMealPrizes',
+            'optimalManufacturingLine',
+            'optimalManufacturingLine1',
+            'optimalManufacturingLine2',
+            'optimalThermostatSettings',
+            'oscillator',
+            'paretoDemo',
+            'peanutButterProblem',
+            'peterson',
+            'peterson_moving',
+            'pianoForce',
+            'pianoTuners',
+            'pieChart',
+            'playWithUnits',
+            'plotDemo1',
+            'plotDemo2',
+            'plotDemo3',
+            'plotVectorDemo',
+            'polynomial syn.accel',
+            'populationDynamics',
+            'potentialFlow',
+            'problem',
+            'radarPlot',
+            'radarPlot1',
+            'recursion',
+            'recursiveBezier',
+            'recursiveMergeSort',
+            'simpleBusiness',
+            'steepestDescent',
+            'stringArt',
+            'subliminalWaves',
+            'taxiCompanyPareto',
+            'travelingInWinter',
+            'travelingSalesMan_1',
+            'travelingSalesMan_2',
+            'travelingSalesMan_3',
+            'underDevelopment',
+            'vecRampDemo',
+            'vector3D',
+            'warfare',
+            'wave synthesis',
+            'wave1',
+            'wave2'
+        ];
+
+        /**
+         * The source code of the last loaded demo script, if any.
+         *
+         * @type {String}
+         */
+        this.demoscript = "";
     }
 
     /**
@@ -69,6 +178,14 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 }
                 extension = ".json";
                 break;
+            case "demoscript":
+                if (inBrowser) {
+                    location = "../../DemoScripts";
+                } else {
+                    location = "../../../DemoScripts";
+                }
+                extension = ".accel";
+                break;
             case "test":
                 location = "../../test/Model/Util";
                 extension = ".js";
@@ -86,6 +203,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
             fs.ajax({
                 type: "GET",
                 url: "scripts/Model/" + location + "/" + file + extension,
+                context: this,
                 success: function(result) {
                     if (!result) {
                         console.log("File " + file + " was not ok? Help!?");
@@ -97,12 +215,14 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 },
                 error: function(err) {
                     console.log(err);
-                    throw (err);
+                    controller.ajaxError(this.errorMessage + err.responseText);
+                    this.errorMessage = "";
                     return false;
                 },
                 fail: function(err) {
                     console.log(err);
-                    throw (err);
+                    controller.ajaxError(this.errorMessage + err.responseText);
+                    this.errorMessage = "";
                     return false;
                 },
                 async: false
@@ -134,6 +254,8 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 }
 
                 this.libfiles[file] = content;
+            } else if (type === 'demoscript') {
+                this.demoscript = content;
             }
             return true;
         } else {
@@ -188,6 +310,28 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
         }
 
         return this.libfiles[name];
+    };
+
+    /**
+     * Returns a list of all available demo script names
+     *
+     * @return {Array} List containing the names of all demo scripts.
+     */
+    FileLoader.prototype.getDemoScripts = function() {
+        // TODO fetch list from server
+        return this.demoscriptlist;
+    };
+
+    /**
+     * Returns a list of all available demo script names
+     *
+     * @return {Array} List containing the names of all demo scripts.
+     */
+    FileLoader.prototype.getDemoScript = function(script) {
+        this.errorMessage = "Failed to load demo script " + script + ": ";
+        this.load(script, "demoscript");
+
+        return this.demoscript;
     };
 
     /**

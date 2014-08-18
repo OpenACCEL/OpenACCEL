@@ -81,7 +81,9 @@ define(["../Controller/AbstractView",
                     newState.tab = "editrun";
                 }
 
-                if (newState.help) {
+                if (newState.script) {
+                    newState.tab = "editrun";
+                } else if (newState.help) {
                     newState.tab = "helpdemo";
                 }
 
@@ -104,6 +106,11 @@ define(["../Controller/AbstractView",
             // Update shown help article if nessecary
             if (newState.help) {
                 view.tabs.helpdemo.showHelpArticle(newState.help);
+            }
+
+            // Load requested demo script
+            if (newState.script) {
+                controller.loadDemoScript(newState.script);
             }
 
             // Update state variable

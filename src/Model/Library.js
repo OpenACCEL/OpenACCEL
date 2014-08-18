@@ -46,6 +46,13 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         this.help = {};
 
         /**
+         * List of available demoscripts.
+         *
+         * @type {Array}
+         */
+        this.demoscripts = [];
+
+        /**
          * The function names to escape, should they be used in the library as names of functions.
          * Each key in the array should be replaced by it's value.
          *
@@ -84,6 +91,19 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
     };
 
     /**
+     * Loads the list of available demo scripts.
+     */
+    Library.prototype.loadDemos = function() {
+        try {
+            //this.fileLoader.load("ACCEL_help", "libfile");
+            this.demoscripts = this.fileLoader.getDemoScripts();
+        } catch (e) {
+            // Unrecoverable error: the ACCEL library metadata could not be loaded!
+            console.log(e.message);
+        }
+    };
+
+    /**
      * Returns a map of all available help articles.
      *
      * @return {Object} A map of all help articles, indexed first by category
@@ -95,6 +115,29 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         }
 
         return this.help;
+    };
+
+    /**
+     * Returns a list containing the names of all available demo scripts.
+     *
+     * @return {Array} A list with the names of all available demo scripts.
+     */
+    Library.prototype.getDemoScripts = function() {
+        if (Object.keys(this.demoscripts).length === 0) {
+            this.loadDemos();
+        }
+
+        return this.demoscripts;
+    };
+
+    /**
+     * Loads the demo with the given name and returns it's source
+     *
+     * @param  {String} demo The name of the demo to load
+     * @return {String} The source code of the demo with the given name
+     */
+    Library.prototype.getDemoScript = function(demo) {
+        return this.fileLoader.getDemoScript(demo);
     };
 
     /**
