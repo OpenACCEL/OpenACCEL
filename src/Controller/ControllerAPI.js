@@ -423,14 +423,6 @@ define(["Model/Script",
                     this.view.drawPlot();
                 }
 
-                // If this is the first iteration of the script, show the plot if nessecary.
-                if (this.currentIteration === 1) {
-                    // Check if there is a plot and show it if there is
-                    if (this.script.exe.hasPlot && this.view.hasPlot) {
-                        this.view.showPlot(true);
-                    }
-                }
-
                 // Signal the executable that one iteration has been completed,
                 // for quantity history functionality
                 this.script.exe.step();
@@ -762,11 +754,6 @@ define(["Model/Script",
                 // Reset descartes canvas
                 if (inBrowser) {
                     this.view.resetAllPlots();
-                }
-
-                // Hide any shown plot if there is no plot in the new executable anymore
-                if (script.exe.plot.length === 0) {
-                    this.view.showPlot(false);
                 }
 
                 return true;

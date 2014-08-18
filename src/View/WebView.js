@@ -297,15 +297,6 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Shows/hides the plot canvas.
-     *
-     * @param {Boolean} show Whether to show the plot.
-     */
-    WebView.prototype.showPlot = function(show) {
-        $('#plotdiv').toggle(show);
-    };
-
-    /**
      * Clears the plot canvas
      */
     WebView.prototype.clearPlot = function() {
@@ -352,10 +343,6 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.drawOptimisationPlot = function() {
         this.canvasses.optimisation.draw();
-    };
-
-    WebView.prototype.showOptimisationPlot = function(show) {
-        $('#plotGOdiv').toggle(show);
     };
 
     WebView.prototype.clearOptimisationPlot = function() {

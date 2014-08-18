@@ -146,14 +146,6 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             }
         );
 
-        // Hide what needs hiding.
-        this.report.todoListBuffer.hideIfEmpty('#tododiv');
-        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
-        this.userInputBuffer.hideIfEmpty('#userinputdiv');
-        this.report.resultList.buffer.hideIfEmpty('#resultdiv');
-        $('#plotdiv').toggle(false);
-
         this.lineNumber = {};
     }
 
@@ -285,14 +277,6 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.scriptListBuffer.flip();
         this.report.todoListBuffer.flip();
         this.initInputs();
-
-        //Hide what needs hiding
-        this.report.todoListBuffer.hideIfEmpty('#tododiv');
-        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
-        this.userInputBuffer.hideIfEmpty('#userinputdiv');
-        this.report.resultList.buffer.hideIfEmpty('#resultdiv');
-        $('#plotdiv').toggle(false);
     };
 
     /**
@@ -310,7 +294,6 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         }
 
         this.report.resultList.set(resultValues);
-        this.report.resultList.buffer.hideIfEmpty('#resultdiv');
     };
 
     /**
@@ -353,9 +336,6 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
         this.report.argListBuffer.flip();
         this.report.argToListBuffer.flip();
-
-        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
     };
 
     /**
@@ -365,9 +345,6 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
     EditRun.prototype.deselectScriptline = function() {
         this.selectScriptline(null, null);
         $('#scriptline').text('');
-
-        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
     };
 
     /**
@@ -379,13 +356,6 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.synchronizeResults(null);
         this.selectScriptline(null, null);
         $('#scriptline').text('');
-
-        this.report.todoListBuffer.hideIfEmpty('#tododiv');
-        this.report.argListBuffer.hideIfEmpty('#arglistdiv');
-        this.report.argToListBuffer.hideIfEmpty('#argtodiv');
-        this.userInputBuffer.hideIfEmpty('#userinputdiv');
-        this.report.resultList.buffer.hideIfEmpty('#resultdiv');
-        $('#plotdiv').toggle(false);
     };
 
     EditRun.prototype.setExecuting = function(executing) {
