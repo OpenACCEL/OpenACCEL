@@ -31,6 +31,11 @@ define(["../Controller/AbstractView",
         this.canvasses = {};
 
         /**
+         * Whether the current open tab has one or more plot canvasses.
+         */
+        this.hasPlot = false;
+
+        /**
          * Object representing the current application state as stored in the hash fragment
          * of the URL.
          *
@@ -61,6 +66,11 @@ define(["../Controller/AbstractView",
         this.tabs.ioedit = new IOEdit();
         this.tabs.optimisation = new Optimisation();
         this.tabs.simulation = new Simulation();
+
+        /**
+         * The tab that is currently open.
+         */
+        this.currentTab = "";
 
         this.tooltips = {};
         this.errorCount = 0;
@@ -166,6 +176,8 @@ define(["../Controller/AbstractView",
             switch (tab) {
                 case 'simulation':
                 case 'editrun':
+                    view.hasPlot = true;
+
                     // If autoexecute is true, resume script only when it has been paused
                     // by the system, and start executing when it is not paused but compiled
                     if (controller.autoExecute) {
@@ -177,12 +189,14 @@ define(["../Controller/AbstractView",
                     }
                     break;
                 case 'ioedit':
+                    view.hasPlot = false;
                     setTimeout(function() {
                         view.tabs.ioedit.updateAdvancedEditor();
                         view.tabs.ioedit.focusAdvancedEditor();
                     }, 100);
                     break;
                 case 'helpdemo':
+                    view.hasPlot = false;
                     view.tabs.helpdemo.setup();
                     break;
                 default:
@@ -197,6 +211,7 @@ define(["../Controller/AbstractView",
             }
 
             view.resizeContainer();
+            view.currentTab = tab;
         });
 
         // Loading should be done at this point.
@@ -261,7 +276,7 @@ define(["../Controller/AbstractView",
         /**
          * The small plot window that shows up in the Edit/Run tab.
          */
-        this.canvasses.editRun = this.canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
+        this.canvasses.editrun = this.canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
 
         /**
          * This big plot window for the Simulation tab, which shows the same as the plot of Edit/Run.
@@ -271,7 +286,7 @@ define(["../Controller/AbstractView",
         /**
          * The canvas that is used to plot individuals of the Genetic Optimization tab.
          */
-        this.canvasses.go = this.canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
+        this.canvasses.optimisation = this.canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
     };
 
     /**
@@ -287,21 +302,25 @@ define(["../Controller/AbstractView",
      * Clears the plot canvas
      */
     WebView.prototype.clearPlot = function() {
-        this.canvasses.editRun.clearCanvas();
+        if (this.hasPlot) {
+            this.canvasses[this.currentTab].clearCanvas();
+        }
     };
 
     /**
      * Updates the plot canvas
      */
     WebView.prototype.drawPlot = function() {
-        this.canvasses.editRun.draw();
+        if (this.hasPlot) {
+            this.canvasses[this.currentTab].draw();
+        }
     };
 
     /**
      * Trigger an update of the optimisation plot canvas
      */
     WebView.prototype.drawOptimisationPlot = function() {
-        this.canvasses.go.draw();
+        this.canvasses.optimisation.draw();
     };
 
     WebView.prototype.showOptimisationPlot = function(show) {
@@ -309,16 +328,16 @@ define(["../Controller/AbstractView",
     };
 
     WebView.prototype.clearOptimisationPlot = function() {
-        this.canvasses.go.clearCanvas();
+        this.canvasses.optimisation.clearCanvas();
     };
 
     WebView.prototype.smartZoomOptimisation = function() {
-        this.canvasses.go.smartZoom();
+        this.canvasses.optimisation.smartZoom();
         this.drawOptimisationPlot();
     };
 
     WebView.prototype.zoomToFitOptimisation = function(show) {
-        this.canvasses.go.zoomToFit();
+        this.canvasses.optimisation.zoomToFit();
         this.drawOptimisationPlot();
     };
 

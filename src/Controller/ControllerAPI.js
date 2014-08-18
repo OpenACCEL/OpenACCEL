@@ -417,13 +417,16 @@ define(["Model/Script",
 
                 // Push results to view and draw plot if there is any
                 this.presentResults(results);
-                this.view.drawPlot();
 
-                // If this is the first iteration of the script, show the plot if
-                // nessecary
+                // Draw a plot if one is visible on the current view tab.
+                if (this.view.hasPlot) {
+                    this.view.drawPlot();
+                }
+
+                // If this is the first iteration of the script, show the plot if nessecary.
                 if (this.currentIteration === 1) {
                     // Check if there is a plot and show it if there is
-                    if (this.script.exe.hasPlot) {
+                    if (this.script.exe.hasPlot && this.view.hasPlot) {
                         this.view.showPlot(true);
                     }
                 }
@@ -539,7 +542,7 @@ define(["Model/Script",
 
             // Give new script object to descartes
             if (inBrowser) {
-                this.view.canvasses.editRun.setModel(this.script);
+                this.view.canvasses.editrun.setModel(this.script);
             }
 
             if (clearStore && this.autoSave && window.localStorage) {
@@ -759,7 +762,7 @@ define(["Model/Script",
 
                 // Reset descartes canvas
                 if (inBrowser) {
-                    this.view.canvasses.editRun.clearBuffers();
+                    this.view.canvasses.editrun.clearBuffers();
                     this.view.clearOptimisationPlot();
                 }
 
