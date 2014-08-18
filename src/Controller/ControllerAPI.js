@@ -1095,15 +1095,13 @@ define(["Model/Script",
             }
             this.geneticOptimisation.nextGeneration();
             this.view.onNewGeneration();
-            // 'this' is outside the scope of the setTimeout function
-            var _this = this;
             // set a timeout of 1ms to allow the plot to update between generations
-            setTimeout(function() {
+            setTimeout((function() {
                 iterations--;
                 if (iterations > 0) {
-                    _this.nextGeneration(iterations);
+                    this.nextGeneration(iterations);
                 }
-            }, 1);
+            }).bind(this), 1);
 
         };
 
