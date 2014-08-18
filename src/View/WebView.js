@@ -327,6 +327,8 @@ define(["../Controller/AbstractView",
      * Event that gets called when the controller has compiled a new script.
      */
     WebView.prototype.onNewScript = function() {
+        this.resetAllPlots();
+
         this.canvasses.editrun.setModel(controller.getScript());
         this.canvasses.simulation.setModel(controller.getScript());
         this.canvasses.optimisation.setModel(controller.getGeneticOptimisation());
