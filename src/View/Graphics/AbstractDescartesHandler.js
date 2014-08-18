@@ -30,7 +30,7 @@ define(["View/Graphics/AbstractDescartesDecorator"], /** @lends View.Graphics */
          *
          * @type {Descartes[]}
          */
-        this.descartesInstances = [];
+        this.descartesInstances = {};
 
         /**
          * The error report of descartes.draw().
@@ -93,12 +93,13 @@ define(["View/Graphics/AbstractDescartesDecorator"], /** @lends View.Graphics */
      * @modifies descartesInstances The new descartes object gets appended to this.
      */
     AbstractDescartesHandler.prototype.addDescartes = function(div, width, height) {
-        this.descartesInstances.push(new descartes({
+        this.descartesInstances[div] = new descartes({
             dN: div,
             cW: width,
             cH: height
-        }));
-        this.descartesInstances[this.descartesInstances.length - 1].setUpGraph();
+        });
+
+        this.descartesInstances[div].setUpGraph();
     };
 
     /**
@@ -120,11 +121,9 @@ define(["View/Graphics/AbstractDescartesDecorator"], /** @lends View.Graphics */
      * @post !Exists_i[ i in descartesInstances : descartesInstances[i].divName == div]
      */
     AbstractDescartesHandler.prototype.removeDescartes = function(div) {
-        for (var i in this.descartesInstances) {
-            if (this.descartesInstances[i].divName == this.div) {
-                this.descartesInstances[i].eraseGraph();
-                this.descartesInstances.splice(i, 1);
-            }
+        if (this.descartesInstances[div]) {
+            this.descartesInstances[div].eraseGraph();
+            delete this.descartesInstances[div];
         }
     };
 

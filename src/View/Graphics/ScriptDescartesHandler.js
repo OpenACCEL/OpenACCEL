@@ -87,14 +87,15 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Script"], /** @lends Vi
     ScriptDescartesHandler.prototype.addDescartes = function(div, width, height) {
         var click = this.clickCallback.bind(this);
         var move = this.moveCallback.bind(this);
-        this.descartesInstances.push(new descartes({
+        this.descartesInstances[div] = new descartes({
             dN: div,
             cW: width,
             cH: height,
             cB: click,
             cMove: move
-        }));
-        this.descartesInstances[this.descartesInstances.length - 1].setUpGraph();
+        });
+
+        this.descartesInstances[div].setUpGraph();
     };
 
     /**
@@ -143,9 +144,9 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Script"], /** @lends Vi
     ScriptDescartesHandler.prototype.draw = function() {
         var drawing = this.getDecoratedDrawing();
         var status = '';
-        for (var i = this.descartesInstances.length - 1; i >= 0; i--) {
-            this.descartesInstances[i].draw(drawing);
-            status = this.descartesInstances[i].getStatusReport();
+        for (var div in this.descartesInstances) {
+            this.descartesInstances[div].draw(drawing);
+            status = this.descartesInstances[div].getStatusReport();
         }
         this.drawReport = status;
         controller.setPlotStatusInScript(this.drawReport);

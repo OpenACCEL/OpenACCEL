@@ -125,13 +125,14 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
          */
         GeneticOptimisationDescartesHandler.prototype.addDescartes = function(div, width, height) {
             var click = this.clickCallback.bind(this);
-            this.descartesInstances.push(new descartes({
+            this.descartesInstances[div] = new descartes({
                 dN: div,
                 cW: width,
                 cH: height,
                 cB: click
-            }));
-            this.descartesInstances[this.descartesInstances.length - 1].setUpGraph();
+            });
+
+            this.descartesInstances[div].setUpGraph();
         };
 
         /**
