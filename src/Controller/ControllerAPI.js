@@ -858,9 +858,7 @@ define(["Model/Script",
          * @return {Object} List Demo Scriptnames
          */
         Controller.prototype.getDemoScripts = function() {
-            //TODO Precondition model.DemoScripts != null
-            //TODO Implementation
-            //TODO Tests
+            return this.library.getDemoScripts();
         };
 
         /**
@@ -873,13 +871,12 @@ define(["Model/Script",
          * @return {Object} Script
          */
         Controller.prototype.loadDemoScript = function(name) {
-            if (!name) {
-                throw new Error('Controller.prototype.loadDemoScript.pre :' +
-                    'name is null or undefined');
+            var source = this.library.getDemoScript(name);
+            this.setScriptFromSource(source);
+
+            if (this.autoExecute) {
+                this.run();
             }
-            //TODO Precondition name \in model.DemoScripts
-            //TODO Implementation
-            //TODO Tests
         };
 
         /**
@@ -918,6 +915,15 @@ define(["Model/Script",
          */
         Controller.prototype.getScriptSource = function() {
             return this.script.getSource();
+        };
+
+        /**
+         * Handles an ajax request error that occured
+         *
+         * @param {String} err The description of the error that occured
+         */
+        Controller.prototype.ajaxError = function(message) {
+            alert(message);
         };
 
         /**

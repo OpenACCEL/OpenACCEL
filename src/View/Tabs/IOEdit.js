@@ -102,10 +102,10 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
      */
     IOEdit.prototype.setupFunctionClickEvents = function(instance, changes) {
         // Start looking in the dom tree only from the CodeMirror div down
-        $(".cm-builtin","div.CodeMirror").on("click", function(e) {
+        $(".cm-builtin","div.CodeMirror").on("dblclick", function(e) {
             e.preventDefault();
 
-            alert(e.target.innerHTML);
+            view.setState({'help': e.target.innerHTML});
             e.stopPropagation();
             e.cancelBubble = true;
         });
