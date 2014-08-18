@@ -93,7 +93,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
                     '</div>';
             },
             onclickProperty: function(quantity) {
-                var i = lineNumber[quantity];
+                var i = view.tabs.editrun.lineNumber[quantity];
                 view.tabs.editrun.selectScriptline(i, quantity);
                 $('#line' + i).trigger('click');
             },
