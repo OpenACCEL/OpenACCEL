@@ -146,7 +146,7 @@ define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
 
         $('#plotGO').on('click',
             (function() {
-                var individual = view.canvasses.go.getClickedIndividual();
+                var individual = view.canvasses.optimisation.getClickedIndividual();
                 var q;
 
                 this.individualPropertiesBuffer.empty();
