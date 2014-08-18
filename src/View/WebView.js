@@ -330,6 +330,9 @@ define(["../Controller/AbstractView",
         this.canvasses.editrun.setModel(controller.getScript());
         this.canvasses.simulation.setModel(controller.getScript());
         this.canvasses.optimisation.setModel(controller.getGeneticOptimisation());
+
+        this.tabs.editrun.resetEditRun();
+        this.tabs.ioedit.synchronizeScriptArea();
     }
 
     /**
@@ -374,14 +377,6 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.setExecuting = function(executing) {
         this.tabs.editrun.setExecuting(executing);
-    };
-
-    /**
-     * Resets the view to accomodate the newly loaded script.
-     */
-    WebView.prototype.loadedNewScript = function() {
-        this.tabs.editrun.resetEditRun();
-        this.tabs.ioedit.synchronizeScriptArea();
     };
 
     /**
