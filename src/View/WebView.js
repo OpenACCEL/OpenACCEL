@@ -266,7 +266,7 @@ define(["../Controller/AbstractView",
         /**
          * This big plot window for the Simulation tab, which shows the same as the plot of Edit/Run.
          */
-        //this.canvasses.simulation = this.canvasCreator.createCanvas(controller.getScript(), 'plotSimulation', 800, 600);
+        this.canvasses.simulation = this.canvasCreator.createCanvas(controller.getScript(), 'plotSimulation', 800, 600);
 
         /**
          * The canvas that is used to plot individuals of the Genetic Optimization tab.
