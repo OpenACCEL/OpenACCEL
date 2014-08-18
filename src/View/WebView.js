@@ -38,6 +38,20 @@ define(["../Controller/AbstractView",
          */
         this.state = $.deparam(location.hash, true);
 
+        // Support old ACCEL query strings
+        /*var query = $.deparam.querystring(true);
+        if (query.script && !this.state.script) {
+            this.state.script = query.script;
+        }
+        if (query.help && !this.state.help) {
+            this.state.help = query.help;
+        }
+        if (query.link && !this.state.link) {
+            this.state.link = query.link;
+        }
+
+        this.setState(this.state);*/
+
         /**
          * The various tabs that this view has to offer.
          */
@@ -59,24 +73,16 @@ define(["../Controller/AbstractView",
          * @param  {Boolean} initial Whether this event was fired onpageload
          */
         $(window).on('hashchange', function(e, initial) {
-            var query = $.deparam.querystring(true);
             var newState = $.deparam(e.fragment, true);
 
-            // Support old ACCEL query strings
-            if (query.script) {
-                hash.script = query.script;
-            }
-            if (query.help) {
-                hash.help = query.help;
-            }
-            if (query.link) {
-                hash.link = query.link;
-            }
-
             // Activate other tab when nessecary
-            if ((newState.tab && (newState.tab !== view.state.tab)) || initial === true) {
+            if ((newState.tab && (newState.tab !== view.state.tab)) || initial === true || newState.help || newState.script || newState.link) {
                 if (typeof newState.tab === 'undefined') {
                     newState.tab = "editrun";
+                }
+
+                if (newState.help) {
+                    newState.tab = "helpdemo";
                 }
 
                 // Make correct tab active

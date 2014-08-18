@@ -22,14 +22,18 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          */
         this.Input = new Input(this.helpTextBuffer);
 
+        /**
+         * The lists for the help categories, help articles and demo scripts, respectively
+         */
         this.helpCategoryList = new this.Input.SelectionList('#helpcategories', function(cat) {
             view.setState({'helpcat': cat});
         });
         this.helpArticleList = new this.Input.SelectionList('#helparticles', function(article) {
             view.setState({'help': article});
         });
-
-        this.demoScriptList = new this.Input.SelectionList('#demoscripts');
+        this.demoScriptList = new this.Input.SelectionList('#demoscripts', function(script) {
+            view.setState({'script': script});
+        });
 
         /**
          * The database of help articles, in their categories
@@ -52,16 +56,12 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          */
         this.articleNames = [];
 
-        this.synchronizeDemoScripts(['anEveningInTheBar.txt',
-            'ballAndStick.txt',
-            'ballAndStickCtrl.txt',
-            'barChart.txt',
-            'biljart.txt',
-            'canon ball shooting.txt',
-            'chimneySweepers1.txt',
-            'chimneySweepers2.txt',
-            'clickDemo.txt'
-        ]);
+        /**
+         * All available demo scripts that can be loaded into OpenACCEL
+         *
+         * @type {Array}
+         */
+        this.demoScripts = [];
     }
 
     /**
@@ -73,16 +73,32 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         }
 
         // Get help articles and partition them into categories
-        this.articles = controller.getHelpDatabase();
+        this.articles = controller.getHelpArticles();
         this.articlesByCategory = this.buildHelpDatabase(this.articles);
         this.articleNames = Object.keys(this.articles);
 
         // Construct category and article lists
-        this.synchronizeCategories(Object.keys(this.articlesByCategory));
+        var categories = Object.keys(this.articlesByCategory);
+        categories.unshift("All articles");
+
+        this.synchronizeCategories(categories);
         this.synchronizeArticles(this.articleNames);
 
         // Display first help article
         this.showHelpArticle(this.articleNames[0]);
+
+        // Setup demo scripts list
+        this.demoScripts = ['anEveningInTheBar.txt',
+            'ballAndStick.txt',
+            'ballAndStickCtrl.txt',
+            'barChart.txt',
+            'biljart.txt',
+            'canon ball shooting.txt',
+            'chimneySweepers1.txt',
+            'chimneySweepers2.txt',
+            'clickDemo.txt'
+        ];
+        this.synchronizeDemoScripts(this.demoScripts);
     };
 
     /**
@@ -113,21 +129,47 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         return db;
     };
 
+    /**
+     * Displays the given categories in the category list.
+     *
+     * @param {Array} categories List of category names
+     */
     HelpDemo.prototype.synchronizeCategories = function(categories) {
         this.helpCategoryList.set(categories);
     }
 
+    /**
+     * Displays the given articles in the articles list.
+     *
+     * @param {Array} articles List of article names
+     */
     HelpDemo.prototype.synchronizeArticles = function(articles) {
         this.helpArticleList.set(articles);
     }
 
+    /**
+     * Shows the contents of the help article with the given name,
+     * if it exists.
+     * If it does not exist, an error message is displayed instead.
+     *
+     * @param  {String} artName The name of the article to display
+     */
     HelpDemo.prototype.showHelpArticle = function(artName) {
         var article = view.tabs.helpdemo.articles[artName];
-        var search = view.encodeHTML($('#helpphrase').val().trim());
+        this.helpTextBuffer.empty();
+
+        // If article not found, display error message
+        if (!article) {
+            this.helpTextBuffer.append('<h1>Article not found!</h1>');
+            this.helpTextBuffer.append('<div class="help_text">It may have been removed, or the name may be incorrect.</div>');
+            this.helpTextBuffer.flip();
+            return;
+        }
 
         // Construct article heading
-        this.helpTextBuffer.empty();
         this.helpTextBuffer.append('<h1>' + article.fName + '</h1>');
+
+        var search = view.encodeHTML($('#helpphrase').val().trim());
 
         // Returns the given text with all matches of the search string highlighted, if any
         function matchSearch(text) {
@@ -193,22 +235,39 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @param  {String} phrase The phrase to search for in the help database
      */
     HelpDemo.prototype.searchHelp = function(phrase) {
-        if (phrase.length <= 2) {
-            return;
+        /**
+         * Removes any search highlights from the given text
+         *
+         * @param {String} text The text from which to remove search highlights
+         * @return {String} The given text, with search highlights removed
+         */
+        function clearMatches(text) {
+            return text.replace(/<span class="help_match">([^<]*)<\/span>/gi, '$1');
         }
 
         // Encode HTML to avoid matching html inside article text
         phrase = view.encodeHTML(phrase);
 
-        var matches = [];
+        // Do a global, case-insensitive search
         var re = new RegExp(phrase, "gi");
+        var matches = [];
+
+        // If search term not longer than 2 characters, only clear
+        // current search highlights and return
+        if (phrase.length <= 2) {
+            // Clear existing matches
+            $('div.help_text').not("#seealso").each(function() {
+                var newText = clearMatches($(this).html());
+                $(this).html(newText);
+            });
+
+            return;
+        }
 
         // Search in currently displayed article
         $('div.help_text').not("#seealso").each(function() {
-            var oldText = $(this).html();
-
-            // Remove old matches first!
-            oldText = oldText.replace(/<span class="help_match">([^<]*)<\/span>/gi, '$1');
+            // Remove old matches first, then highlight new ones!
+            var oldText = clearMatches($(this).html());
             var newText = oldText.replace(re, '<span class="help_match">$&</span>');
             $(this).html(newText);
         });
@@ -233,7 +292,15 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
     }
 
     HelpDemo.prototype.selectHelpCategory = function(category) {
-        view.tabs.helpdemo.synchronizeArticles(Object.keys(view.tabs.helpdemo.articlesByCategory[category]));
+        var articles;
+
+        if (category === 'All articles') {
+            articles = Object.keys(view.tabs.helpdemo.articles);
+        } else {
+            articles = Object.keys(view.tabs.helpdemo.articlesByCategory[category]);
+        }
+
+        view.tabs.helpdemo.synchronizeArticles(articles);
     }
 
     HelpDemo.prototype.selectHelpArticle = function(article) {

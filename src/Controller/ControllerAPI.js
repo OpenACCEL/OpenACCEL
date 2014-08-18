@@ -844,7 +844,7 @@ define(["Model/Script",
          *
          * @return {Object} Map of all help articles, indexed
          */
-        Controller.prototype.getHelpDatabase = function() {
+        Controller.prototype.getHelpArticles = function() {
             return this.library.getHelpArticles();
         };
 
