@@ -324,6 +324,25 @@ define(["../Controller/AbstractView",
     };
 
     /**
+     * Event that gets called when the controller has compiled a new script.
+     */
+    WebView.prototype.onNewScript = function() {
+        this.canvasses.editrun.setModel(controller.getScript());
+        this.canvasses.simulation.setModel(controller.getScript());
+        this.canvasses.optimisation.setModel(controller.getGeneticOptimisation());
+    }
+
+    /**
+     * Resets all canvasses and plots, such that they are as good as new!
+     */
+    WebView.prototype.resetAllPlots = function() {
+        for (var key in this.canvasses) {
+            this.canvasses[key].clearCanvas();
+            this.canvasses[key].clearBuffers();
+        }
+    }
+
+    /**
      * Trigger an update of the optimisation plot canvas
      */
     WebView.prototype.drawOptimisationPlot = function() {
