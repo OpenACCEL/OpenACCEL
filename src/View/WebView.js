@@ -252,31 +252,6 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Uses the given map of quantities to update the UI.
-     *
-     * @param quantities {map<String, Quantity>} All the quantities
-     * currently in the model, including todo quantities with empty
-     * definitions.
-     */
-    WebView.prototype.setQuantities = function(quantities) {
-        // Update quantity list in edit/run tab
-        this.tabs.editrun.synchronizeScriptList(quantities);
-
-        // Update textarea/advanced editor in IO/edit
-        this.tabs.ioedit.synchronizeScriptArea();
-    };
-
-    /**
-     * Displays the values of the given output quantities in the UI.
-     *
-     * @param cat2quantities {map<String, Quantity>} A map of all output
-     * quantities in the script.
-     */
-    WebView.prototype.presentResults = function(cat2quantities) {
-        this.tabs.editrun.synchronizeResults(cat2quantities);
-    };
-
-    /**
      * Creates the necessary plot canvases
      */
     WebView.prototype.setUpPlot = function() {
@@ -315,16 +290,49 @@ define(["../Controller/AbstractView",
     };
 
     /**
+     * Event that gets called when one of the quantity definitions have been modified.
+     */
+    WebView.prototype.onModifiedQuantity = function() {
+        var script = controller.getScript();
+
+        switch(this.currentTab) {
+            case 'editrun':
+                this.tabs.editrun.synchronizeScriptList(script.getQuantities());
+                break;
+            case 'ioedit':
+                this.tabs.ioedit.synchronizeScriptArea();
+                break;
+        }
+    }
+
+    /**
+     * Event that gets called when the controller has issued a new iteration for the script.
+     */
+    WebView.prototype.onNextStep = function() {
+        var script = controller.getScript();
+
+        switch(this.currentTab) {
+            case 'editrun':
+                this.tabs.editrun.synchronizeResults(script.getOutputQuantities());
+                break;
+        }
+
+        // Draw a plot if one is visible on the current view tab.
+        this.drawPlot();
+    }
+
+    /**
      * Event that gets called when the controller has compiled a new script.
      */
     WebView.prototype.onNewScript = function() {
         this.resetAllPlots();
 
-        this.canvasses.editrun.setModel(controller.getScript());
-        this.canvasses.simulation.setModel(controller.getScript());
+        var script = controller.getScript();
+        this.canvasses.editrun.setModel(script);
+        this.canvasses.simulation.setModel(script);
         this.canvasses.optimisation.setModel(controller.getGeneticOptimisation());
 
-        this.tabs.editrun.resetEditRun();
+        this.tabs.editrun.synchronizeScriptList(script.getQuantities());
         this.tabs.ioedit.synchronizeScriptArea();
     }
 
@@ -344,8 +352,6 @@ define(["../Controller/AbstractView",
             this.canvasses[key].clearBuffers();
         }
     }
-
-
 
     /**
      * Changes UI elements depending on whether the OpenACCEL model is being executed.

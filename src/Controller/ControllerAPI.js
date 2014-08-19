@@ -413,20 +413,13 @@ define(["Model/Script",
             if (this.numIterations === 0 || this.currentIteration <= this.numIterations) {
                 // Evaluate the expressions (definitions) of all output quantities
                 this.script.step();
-                var results = this.script.getOutputQuantities();
-
-                // Push results to view and draw plot if there is any
-                this.presentResults(results);
-
-                // Draw a plot if one is visible on the current view tab.
-                if (this.view.hasPlot) {
-                    this.view.drawPlot();
-                }
 
                 // Signal the executable that one iteration has been completed,
                 // for quantity history functionality
                 this.script.exe.step();
                 this.currentIteration++;
+
+                this.view.onNextStep();
             }
 
             // If specified number of iterations have been reached, stop executing
@@ -512,6 +505,7 @@ define(["Model/Script",
             // If compiled, reset the Executable object
             if (this.script.isCompiled()) {
                 this.script.exe.reset();
+                this.view.onNextStep();
             }
         };
 
@@ -528,13 +522,7 @@ define(["Model/Script",
             // quantities and results lists
             this.stop();
             this.script = new Script();
-            this.view.setQuantities({});
-            this.view.presentResults({});
-
-            // Give new script object to descartes
-            if (inBrowser) {
-                this.view.onNewScript();
-            }
+            this.view.onNewScript();
 
             if (clearStore && this.autoSave && window.localStorage) {
                 this.autoSaveStore.clear();
@@ -576,19 +564,6 @@ define(["Model/Script",
          */
         Controller.prototype.isRunning = function() {
             return this.executing;
-        };
-
-        /**
-         * Presents the results stored in the given output quantities
-         * to the view associated with this controller.
-         *
-         * @param cat2quantities {map<String, Quantity>} Map containing the output
-         * quantities to present to the view, keyed by quantity name.
-         * @post The given quantities and their values have been pushed to the
-         * view.
-         */
-        Controller.prototype.presentResults = function(cat2quantities) {
-            this.view.presentResults(cat2quantities);
         };
 
         /**
@@ -674,7 +649,7 @@ define(["Model/Script",
             // Stop script, add quantity to script and update quantities in view
             this.stop();
             var qty = this.script.addQuantity(definition);
-            this.view.setQuantities(this.script.getQuantities());
+            this.view.onModifiedQuantity();
 
             // Autosave quantity if enabled
             if (autoSave && this.autoSave && window.localStorage) {
@@ -710,7 +685,7 @@ define(["Model/Script",
             // Stop script, delete quantity from script and update quantities in view
             this.stop();
             this.script.deleteQuantity(qtyName);
-            this.view.setQuantities(this.script.getQuantities());
+            this.view.onModifiedQuantity();
 
             // Remove quantity from autosave store
             if (this.autoSave && window.localStorage) {
@@ -744,17 +719,9 @@ define(["Model/Script",
             }
 
             if (script.isComplete()) {
-                // Clear old results when recompiling
-                this.view.presentResults({});
-
-                // Compile script and signal script that it has
-                // been compiled
+                // Compile script and signal script and view that it has been compiled.
                 script.setExecutable(this.compiler.compile(script));
-
-                // Reset descartes canvas
-                if (inBrowser) {
-                    this.view.resetAllPlots();
-                }
+                this.view.onNewScript();
 
                 return true;
             } else {
@@ -974,7 +941,7 @@ define(["Model/Script",
             // given source
             this.newScript(!restoring);
             var added = this.script.addSource(source);
-            this.view.setQuantities(this.script.getQuantities());
+            this.view.onModifiedQuantity();
 
             // Test whether we're in the process of restoring a script from the backup
             // store. If we are, don't save it again and don't compile it.
@@ -985,9 +952,6 @@ define(["Model/Script",
                 }
 
                 this.compileScript(this.script);
-                /*if (this.autoExecute) {
-                    this.run();
-                }*/
             }
 
             return added;
@@ -1071,7 +1035,7 @@ define(["Model/Script",
             }
             // initialise the genetic optimisation algorithm
             this.geneticOptimisation.initialise(this.getScript(), populationSize);
-            view.onNewGeneration();
+            this.view.onNewGeneration();
         };
 
         /**
