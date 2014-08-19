@@ -75,151 +75,13 @@ define(["../Controller/AbstractView",
         this.tooltips = {};
         this.errorCount = 0;
 
-
         /**
          * Fired when the hash fragment of the URL changes.
          *
          * @param  {Event} e The jQuery event object.
          * @param  {Boolean} initial Whether this event was fired onpageload
          */
-        $(window).on('hashchange', function(e, initial) {
-            var newState = $.deparam(e.fragment, true);
-
-            // Activate other tab when nessecary
-            if ((newState.tab && (newState.tab !== view.state.tab)) || initial === true || newState.help || newState.script || newState.link) {
-                if (typeof newState.tab === 'undefined') {
-                    newState.tab = "editrun";
-                }
-
-                if (newState.script) {
-                    newState.tab = "editrun";
-                } else if (newState.help) {
-                    newState.tab = "helpdemo";
-                }
-
-                // Make correct tab active
-                $("li.navtab").removeClass("ui-tabs-active");
-                $("li#" + newState.tab + ".navtab").addClass("ui-tabs-active");
-
-                // Show contents of newly activated tab and trigger events
-                $(window).trigger('leavetab', view.state.tab);
-                $(".tabcontent").hide();
-                $(window).trigger('entertab', newState.tab);
-                $("#" + newState.tab + ".tabcontent").show();
-            }
-
-            // Update current help category if nessecary
-            if (newState.helpcat && (newState.helpcat !== view.state.helpcat || initial === true)) {
-                view.tabs.helpdemo.selectHelpCategory(newState.helpcat);
-            }
-
-            // Update shown help article if nessecary
-            if (newState.help) {
-                view.tabs.helpdemo.showHelpArticle(newState.help);
-            }
-
-            // Load requested demo script
-            if (newState.script) {
-                controller.loadDemoScript(newState.script);
-            }
-
-            // Update state variable
-            view.state = newState;
-        });
-
-
-        /**
-         * Called just before a tab is left and made hidden
-         *
-         * @param  {Event} event The jQuery event that was fired
-         * @param  {string} tab The identifier of the tab that will be hidden
-         */
-        $(window).on('leavetab', function(event, tab) {
-            $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
-
-            switch (tab) {
-                case 'editrun':
-                    // Pause script when leaving edit/run tab, indicating it has
-                    // been paused automatically by the system and not by the user
-                    controller.pause(true);
-                    break;
-                case 'ioedit':
-                    // Build script from inputted source when leaving IO/edit
-                    try {
-                        if (view.tabs.ioedit.editor) {
-                            view.tabs.ioedit.editor.save();
-                        }
-                        controller.setScriptFromSource($('#scriptarea').val());
-                        view.tabs.ioedit.showValues = false;
-                        $('#showvalues').val('Show values');
-                    } catch (e) {
-                        if (typeof(e) === 'SyntaxError') {
-                            console.log(e.message);
-                        } else {
-                            console.log(e);
-                        }
-                    }
-                    break;
-                case 'simulation':
-                    controller.pause(true);
-                    break;
-                default:
-                    break;
-            }
-
-            //Tooltips stored and hidden
-            view.tooltips[tab] = $('.tooltipcontainer').filter(":visible");
-            view.tooltips[tab].toggle(false);
-        });
-
-
-        /**
-         * Called just before a tab is made active/shown
-         *
-         * @param  {Event} event The jQuery event that was fired
-         * @param  {string} tab The identifier of the tab that will be made current.
-         */
-        $(window).on('entertab', function(event, tab) {
-            switch (tab) {
-                case 'simulation':
-                case 'editrun':
-                    view.hasPlot = true;
-
-                    // If autoexecute is true, resume script only when it has been paused
-                    // by the system, and start executing when it is not paused but compiled
-                    if (controller.autoExecute) {
-                        if (controller.isPaused()) {
-                            controller.resume(true);
-                        } else {
-                            controller.run();
-                        }
-                    }
-                    break;
-                case 'ioedit':
-                    view.hasPlot = false;
-                    setTimeout(function() {
-                        view.tabs.ioedit.updateAdvancedEditor();
-                        view.tabs.ioedit.focusAdvancedEditor();
-                    }, 100);
-                    break;
-                case 'helpdemo':
-                    view.hasPlot = false;
-                    view.tabs.helpdemo.setup();
-                    break;
-                default:
-                    break;
-            }
-
-            //Tooltips loaded and shown
-            try {
-                view.tooltips[tab].toggle(true);
-            } catch(e) {
-
-            }
-
-            view.resizeContainer();
-            view.currentTab = tab;
-        });
+        $(window).on('hashchange', this.onHashChange.bind(this));
 
         // Loading should be done at this point.
         this.resizeContainer();
@@ -287,6 +149,149 @@ define(["../Controller/AbstractView",
         if (this.hasPlot) {
             this.canvasses[this.currentTab].draw();
         }
+    };
+
+    /**
+     * Fired when the hash fragment of the URL changes.
+     *
+     * @param  {Event} e The jQuery event object.
+     * @param  {Boolean} initial Whether this event was fired onpageload
+     */
+    WebView.prototype.onHashChange = function(e, initial) {
+        var newState = $.deparam(e.fragment, true);
+
+        // Activate other tab when nessecary
+        if ((newState.tab && (newState.tab !== this.state.tab)) || initial === true || newState.help || newState.script || newState.link) {
+            if (typeof newState.tab === 'undefined') {
+                newState.tab = "editrun";
+            }
+
+            if (newState.script) {
+                newState.tab = "editrun";
+            } else if (newState.help) {
+                newState.tab = "helpdemo";
+            }
+
+            // Make correct tab active
+            $("li.navtab").removeClass("ui-tabs-active");
+            $("li#" + newState.tab + ".navtab").addClass("ui-tabs-active");
+
+            // Show contents of newly activated tab and trigger events
+            this.onLeaveTab(this.state.tab);
+            $(".tabcontent").hide();
+            this.onEnterTab(newState.tab);
+            $("#" + newState.tab + ".tabcontent").show();
+        }
+
+        // Update current help category if nessecary
+        if (newState.helpcat && (newState.helpcat !== this.state.helpcat || initial === true)) {
+            this.tabs.helpdemo.selectHelpCategory(newState.helpcat);
+        }
+
+        // Update shown help article if nessecary
+        if (newState.help) {
+            this.tabs.helpdemo.showHelpArticle(newState.help);
+        }
+
+        // Load requested demo script
+        if (newState.script) {
+            controller.loadDemoScript(newState.script);
+        }
+
+        // Update state variable
+        this.state = newState;
+    };
+
+    /**
+     * Called just before a tab is made active/shown
+     *
+     * @param  {Event} event The jQuery event that was fired
+     * @param  {string} tab The identifier of the tab that will be made current.
+     */
+    WebView.prototype.onEnterTab = function(tab) {
+        switch (tab) {
+            case 'simulation':
+            case 'editrun':
+                this.hasPlot = true;
+
+                // If autoexecute is true, resume script only when it has been paused
+                // by the system, and start executing when it is not paused but compiled
+                if (controller.autoExecute) {
+                    if (controller.isPaused()) {
+                        controller.resume(true);
+                    } else {
+                        controller.run();
+                    }
+                }
+                break;
+            case 'ioedit':
+                this.hasPlot = false;
+                setTimeout((function() {
+                    this.tabs.ioedit.updateAdvancedEditor();
+                    this.tabs.ioedit.focusAdvancedEditor();
+                }).bind(this), 100);
+                break;
+            case 'helpdemo':
+                this.hasPlot = false;
+                this.tabs.helpdemo.setup();
+                break;
+            default:
+                break;
+        }
+
+        //Tooltips loaded and shown
+        try {
+            this.tooltips[tab].toggle(true);
+        } catch(e) {
+
+        }
+
+        this.resizeContainer();
+        this.currentTab = tab;
+    };
+
+    /**
+     * Called just before a tab is left and made hidden
+     *
+     * @param  {Event} event The jQuery event that was fired
+     * @param  {string} tab The identifier of the tab that will be hidden
+     */
+    WebView.prototype.onLeaveTab = function(tab) {
+        $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
+
+        switch (tab) {
+            case 'editrun':
+                // Pause script when leaving edit/run tab, indicating it has
+                // been paused automatically by the system and not by the user
+                controller.pause(true);
+                break;
+            case 'ioedit':
+                // Build script from inputted source when leaving IO/edit
+                try {
+                    if (this.tabs.ioedit.editor) {
+                        this.tabs.ioedit.editor.save();
+                    }
+                    controller.setScriptFromSource($('#scriptarea').val());
+                    this.tabs.ioedit.showValues = false;
+                    $('#showvalues').val('Show values');
+                } catch (e) {
+                    if (typeof(e) === 'SyntaxError') {
+                        console.log(e.message);
+                    } else {
+                        console.log(e);
+                    }
+                }
+                break;
+            case 'simulation':
+                controller.pause(true);
+                break;
+            default:
+                break;
+        }
+
+        //Tooltips stored and hidden
+        this.tooltips[tab] = $('.tooltipcontainer').filter(":visible");
+        this.tooltips[tab].toggle(false);
     };
 
     /**
