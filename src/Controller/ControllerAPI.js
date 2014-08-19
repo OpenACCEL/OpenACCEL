@@ -974,32 +974,6 @@ define(["Model/Script",
         };
 
         /**
-         * Plots the relation between two Quantities.
-         *
-         * @param quantity1 {Object} quantity
-         * @param quantity2 {Object} quantity
-         * @pre quantity1, quantity2 = category 3, category 4 quantity
-         * @pre quantity1 != null
-         * @pre quantity1 != undefined
-         * @pre quantity2 != null
-         * @pre quantity2 != undefined
-         * @return {Object} plot information for descartes
-         */
-        Controller.prototype.plot = function(quantity1, quantity2) {
-            if (!quantity1) {
-                throw new Error('Controller.prototype.plot.pre :' +
-                    'quantity1 is null or undefined');
-            }
-            if (!quantity2) {
-                throw new Error('Controller.prototype.plot.pre :' +
-                    'quantity2 is null or undefined');
-            }
-            //TODO
-            //TODO Implementation
-            //TODO Tests
-        };
-
-        /**
          * Returns the Genetic Optimisation object currently managed by this controller.
          *
          * @return {GeneticOptimisation} this.geneticOptimisation
