@@ -413,10 +413,6 @@ define(["Model/Script",
             if (this.numIterations === 0 || this.currentIteration <= this.numIterations) {
                 // Evaluate the expressions (definitions) of all output quantities
                 this.script.step();
-
-                // Signal the executable that one iteration has been completed,
-                // for quantity history functionality
-                this.script.exe.step();
                 this.currentIteration++;
 
                 this.view.onNextStep();
