@@ -106,32 +106,6 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Uses the given map of quantities to update the UI.
-     *
-     * @param quantities {map<String, Quantity>} All the quantities
-     * currently in the model, including todo quantities with empty
-     * definitions.
-     */
-    WebView.prototype.setQuantities = function(quantities) {
-        // Update quantity list in edit/run tab
-        this.tabs.editrun.synchronizeScriptList(quantities);
-
-        // Update textarea/advanced editor in IO/edit
-        this.tabs.ioedit.synchronizeScriptArea();
-
-        // Check whether to disable the genetic optimisation tab
-        if (!controller.hasOptimisation()) {
-            if (!$('#optimisation').hasClass('disabled')) {
-                $('#optimisation').addClass('disabled').children("a").removeAttr('href');
-            }
-        } else {
-            if ($('#optimisation').hasClass('disabled')) {
-                $('#optimisation').removeClass('disabled').children("a").attr('href', '#tab=optimisation');
-            }
-        }
-    };
-
-    /**
      * Displays the values of the given output quantities in the UI.
      *
      * @param cat2quantities {map<String, Quantity>} A map of all output
@@ -328,6 +302,17 @@ define(["../Controller/AbstractView",
     WebView.prototype.onModifiedQuantity = function() {
         var script = controller.getScript();
 
+        // Check whether to disable the genetic optimisation tab
+        if (!controller.hasOptimisation()) {
+            if (!$('#optimisation').hasClass('disabled')) {
+                $('#optimisation').addClass('disabled').children("a").removeAttr('href');
+            }
+        } else {
+            if ($('#optimisation').hasClass('disabled')) {
+                $('#optimisation').removeClass('disabled').children("a").attr('href', '#tab=optimisation');
+            }
+        }
+
         switch(this.currentTab) {
             case 'editrun':
                 this.tabs.editrun.synchronizeScriptList(script.getQuantities());
@@ -367,6 +352,12 @@ define(["../Controller/AbstractView",
 
         this.tabs.editrun.synchronizeScriptList(script.getQuantities());
         this.tabs.ioedit.synchronizeScriptArea();
+
+        if (!controller.hasOptimisation) {
+            if (!$('#optimisation').hasClass('disabled')) {
+                $('#optimisation').addClass('disabled').children("a").removeAttr('href');
+            }
+        }
     }
 
     /**

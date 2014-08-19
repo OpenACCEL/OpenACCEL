@@ -142,7 +142,7 @@ define(["Model/Analyser/Analyser",
          * @return {Boolean} Whether the script contains pareto quantities
          */
         hasOptimisation: function() {
-            return this.analyser.optimisation && Object.keys(this.quantities).length > 0;
+            return this.analyser.optimisation === true && Object.keys(this.quantities).length > 0;
         },
 
         /**

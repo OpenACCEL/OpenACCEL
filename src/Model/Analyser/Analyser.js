@@ -176,6 +176,7 @@ define(["Model/Analyser/Passes/QuantityPass",
         Analyser.prototype.determineCategories = function(quantities) {
             this.resetCategoryStores();
             this.scriptComplete = true;
+            this.optimisation = false;
 
             // Loop through all quantities
             for (var qtyName in quantities) {
