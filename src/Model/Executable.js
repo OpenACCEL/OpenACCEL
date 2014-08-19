@@ -484,6 +484,11 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
                 quantity + ' is a user-defined function');
         }
 
+        // Convert the value to a UnitObject if the executable has been compiled with unit support.
+        if (this.units && !(value instanceof UnitObject)) {
+            value = new UnitObject(value);
+        }
+
         this[localQty].hist[0] = value;
         this.report[localQty].value = value;
     };
