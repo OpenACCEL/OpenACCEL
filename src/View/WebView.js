@@ -53,11 +53,6 @@ define(["../Controller/AbstractView",
         this.tabs.optimisation = new Optimisation();
         this.tabs.simulation = new Simulation();
 
-        /**
-         * The tab that is currently open.
-         */
-        this.currentTab = "";
-
         this.tooltips = {};
         this.errorCount = 0;
 
@@ -140,7 +135,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.clearPlot = function() {
         if (this.hasPlot) {
-            this.canvasses[this.currentTab].clearCanvas();
+            this.canvasses[this.state.tab].clearCanvas();
         }
     };
 
@@ -149,7 +144,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.drawPlot = function() {
         if (this.hasPlot) {
-            this.canvasses[this.currentTab].draw();
+            this.canvasses[this.state.tab].draw();
         }
     };
 
@@ -249,7 +244,6 @@ define(["../Controller/AbstractView",
         }
 
         this.resizeContainer();
-        this.currentTab = tab;
     };
 
     /**
@@ -313,7 +307,7 @@ define(["../Controller/AbstractView",
             }
         }
 
-        switch(this.currentTab) {
+        switch(this.state.tab) {
             case 'editrun':
                 this.tabs.editrun.synchronizeScriptList(script.getQuantities());
                 break;
@@ -329,7 +323,7 @@ define(["../Controller/AbstractView",
     WebView.prototype.onNextStep = function() {
         var script = controller.getScript();
 
-        switch(this.currentTab) {
+        switch(this.state.tab) {
             case 'editrun':
                 this.tabs.editrun.synchronizeResults(script.getOutputQuantities());
                 break;
