@@ -363,14 +363,14 @@ define(["Model/Script",
             // Start runloop
             var controller = this;
             this.runloop = setInterval(
-                function() {
+                (function() {
                     try {
-                        controller.execute();
+                        this.execute();
                     } catch (e) {
-                        controller.view.runtimeError(e);
-                        controller.stop();
+                        this.view.runtimeError(e);
+                        this.stop();
                     }
-                }, 16
+                }).bind(this), 16
             );
         };
 
