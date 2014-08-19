@@ -219,12 +219,16 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @param {String} 'Run' if the script should be ran, otherwise it will be paused.
      */
     EditRun.prototype.toggleExecution = function(action) {
-        if (action === 'Run') {
-            controller.run();
-            $('#runscript').val('Pause');
+        if ($('#runscript').hasClass('disabled')) {
+            alert("The script is not complete yet. Please define all quantities in the to-do list.");
         } else {
-            controller.pause();
-            $('#runscript').val('Run');
+            if (action === 'Run') {
+                controller.run();
+                $('#runscript').val('Pause');
+            } else {
+                controller.pause();
+                $('#runscript').val('Run');
+            }
         }
     };
 
@@ -255,6 +259,8 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @param  {Object} quantities All quantities registered in the model
      */
     EditRun.prototype.synchronizeScriptList = function(quantities) {
+        var enableRun = true;
+
         this.scriptListBuffer.empty();
         this.lineNumber = {};
         this.report.todoListBuffer.empty();
@@ -267,6 +273,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             //TODOs
             if (quantity.todo) {
                 this.report.addTodo(quantity.name);
+                enableRun = false;
             } else {
                 i++;
                 this.lineNumber[quantity.name] = i;
@@ -299,6 +306,17 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.scriptListBuffer.flip();
         this.report.todoListBuffer.flip();
         this.initInputs();
+
+        // Disable run button when script is incomplete, else enable (again)
+        if (enableRun === false || quantities === null) {
+            if (!$('#runscript').hasClass('disabled')) {
+                $('#runscript').addClass('disabled');
+            }
+        } else {
+            if ($('#runscript').hasClass('disabled')) {
+                $('#runscript').removeClass('disabled');
+            }
+        }
     };
 
     /**
