@@ -176,7 +176,7 @@
 %%
 /* --------- Lexer definitions section --------- */
 [^\S\n]+                                                    { /* Ignore all whitespace characters except newlines */ }
-\b[a-zA-Z0-9\.\/]+\b                                        { return 'UNIT';        }
+\b[a-zA-Z0-9\.\/_]+\b                                       { return 'UNIT';        }
 (["][^\"]*["])|(['][^\']*['])                               { return 'STRING';      }
 "["                                                         { return '[';           }
 "]"                                                         { return ']';           }
