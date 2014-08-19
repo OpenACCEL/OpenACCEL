@@ -75,9 +75,9 @@ define(["../Controller/AbstractView",
         $('#loading').toggle(false);
 
         $(window).on('resize',
-            function() {
-                view.resizeContainer();
-            }
+            (function() {
+                this.resizeContainer();
+            }).bind(this)
         );
 
         //$('.disabled').attr('disabled', 'disabled').off('click');
