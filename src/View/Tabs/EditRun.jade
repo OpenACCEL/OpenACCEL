@@ -13,7 +13,7 @@
                 input(type = 'button', value = 'New', onclick = 'view.tabs.editrun.newScript()')#newscript.buttonin
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'Run', onclick = 'view.tabs.editrun.toggleExecution(this.value)')#runscript.buttonin
+                input(type = 'button', value = 'Run', onclick = 'view.tabs.editrun.toggleExecution(this.value)')#runscript.buttonin.disabled
             .inline
                 .label Iterations
                 input(type = 'number', min = '0', value = '0', onchange = 'view.tabs.editrun.setIterations(this.value)')#iterations.textin

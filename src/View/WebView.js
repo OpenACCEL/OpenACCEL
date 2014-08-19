@@ -231,8 +231,8 @@ define(["../Controller/AbstractView",
             }
         );
 
-        $('.disabled').attr('disabled', 'disabled').off('click');
-        $('.disabled').children().attr('disabled', 'disabled').off('click');
+        //$('.disabled').attr('disabled', 'disabled').off('click');
+        //$('.disabled').children().attr('disabled', 'disabled').off('click');
     }
 
     WebView.prototype = new AbstractView();
