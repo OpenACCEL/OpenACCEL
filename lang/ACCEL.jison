@@ -105,18 +105,6 @@ frac        (?:\.[0-9]+)
          */
         output += "this." + name + ".timespan = 0;\n";
 
-        /**
-         * Initialize the value in case it's a user input quantity
-         */
-        output += "if (this.report && this.report." + name + ".category === 1) {" +
-            // Initialise initial values of user input quantities
-            "if (this.report." + name + ".input.type === 'button') {" +
-                "this." + name + ".hist[0] = false;" +
-            "} else {" +
-                "this." + name + ".hist[0] = this.report." + name + ".input.parameters[0];" +
-            "}" +
-        "}\n";
-
         return output;
     }
 
