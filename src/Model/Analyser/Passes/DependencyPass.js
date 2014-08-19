@@ -27,6 +27,7 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library']
     function DependencyPass() {
         this.lib = new Library();
         this.reservedwords = this.lib.getFunctions({'all':true, 'escaped':false});
+        this.reserved = this.lib.getFunctions({'reserved': true});
     }
 
     DependencyPass.prototype = new AnalyserPass();
@@ -79,6 +80,8 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library']
                         quantities[d].reverseDeps.push(quantity.name);
                     }
                 }
+            } else if (this.reservedwords.indexOf(d) > -1 && this.reserved.indexOf(d) === -1) {
+                quantity.stdfuncs.push(d);
             }
         }
 

@@ -86,16 +86,38 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
              * @param  {String} property Property of the associated quantity
              */
             getPropertyListHTML: function(quantity, property) {
+                var html = '';
+                if (property === 'std func.') {
+                    html = 'view.tabs.editrun.report.onclickStdFunc(\'' + quantity + '\')" style="color:#55CACA;"'
+                } else {
+                    html = 'view.tabs.editrun.report.onclickProperty(\'' + quantity + '\')"';
+                }
+
                 return '' +
-                    '<div onclick = "view.tabs.editrun.report.onclickProperty(\'' + quantity + '\')" class = "hoverbold">' +
+                    '<div onclick="' + html + ' class = "hoverbold">' +
                         '<div class="ellipsis max128w">' + quantity + '</div>' +
                         '<div class="property">' + property + '</div>' +
                     '</div>';
             },
+
+            /**
+             * Called when the user clicks on a quantity name in the report
+             *
+             * @param  {String} quantity The name of the quantity that was clicked on
+             */
             onclickProperty: function(quantity) {
                 var i = view.tabs.editrun.lineNumber[quantity];
                 view.tabs.editrun.selectScriptline(i, quantity);
                 $('#line' + i).trigger('click');
+            },
+
+            /**
+             * Called when the user clicks on a standard function name in the report
+             *
+             * @param {String} name The name of the standard function that was clicked on
+             */
+            onclickStdFunc: function(name) {
+                view.setState({'help': name});
             },
 
             /**
@@ -326,7 +348,9 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             }
 
             //list used standard functions (type = standard function)
-            //TODO
+            for (var d in quantity.stdfuncs) {
+                this.report.addArg(quantity.stdfuncs[d], 'std func.');
+            }
 
             //list reverse dependencies (type = regular)
             for (var r in quantity.reverseDeps) {

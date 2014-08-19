@@ -61,6 +61,13 @@ define([], /**@lends Model.Quantity */ function() {
         this.reverseDeps = [];
 
         /**
+         * The standard library functions that appear in the definition of this quantity
+         *
+         * @type {Array}
+         */
+        this.stdfuncs = [];
+
+        /**
          * The category of this quantity. The category is I if the quantity is variable(input
          * is given by the user), II if the quantity is an output variable, III if the
          * quantity is a constant and the category is IV if it is neither of the preceding.
