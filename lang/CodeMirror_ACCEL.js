@@ -44,6 +44,7 @@ CodeMirror.defineMode("ACCEL", function() {
         'cursorX',
         'cursorY',
         'debug',
+        'descartes',
         'divide',
         'do',
         'equal',

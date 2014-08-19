@@ -219,9 +219,13 @@ case 62:
                             if($$[$0-4] === 'if' || $$[$0-4] === 'do') {
                                 // Needs underscores as it is a javascript keyword.
                                 funcname = "__" + $$[$0-4] + "__";
+                            } else if ($$[$0-4] === 'descartes') {
+                                // Rename to plot to avoid name clashes with descartes library
+                                funcname = 'plot';
                             } else {
                                 funcname = $$[$0-4];
                             }
+
                             var funcCall = funcname + $$[$0-3] + ($$[$0-2] || '');
                             if ($$[$0-1] && $$[$0-1].length > 0) {
                                 this.$ = funcCall + "," + $$[$0-1] + $$[$0];

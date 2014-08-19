@@ -69,10 +69,6 @@ function nzipcees(x, f) {
     }
 }
 
-function isNumeric(o) {
-    return !isNaN(o - 0);
-}
-
 function add(x, y) {
     return x + y;
 }

@@ -710,9 +710,13 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                             if($1 === 'if' || $1 === 'do') {
                                 // Needs underscores as it is a javascript keyword.
                                 funcname = "__" + $1 + "__";
+                            } else if ($1 === 'descartes') {
+                                // Rename to plot to avoid name clashes with descartes library
+                                funcname = 'plot';
                             } else {
                                 funcname = $1;
                             }
+
                             var funcCall = funcname + $2 + ($3 || '');
                             if ($4 && $4.length > 0) {
                                 $$ = funcCall + "," + $4 + $5;
