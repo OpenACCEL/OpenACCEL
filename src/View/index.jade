@@ -33,14 +33,14 @@ html
                             a(href = '#tab=helpdemo') Help / Demo
                         li#ioedit.navtab
                             a(href = '#tab=ioedit') IO / Edit
-                        li#analysis.disable
-                            a(href = '#tab=analysis') Analysis
-                        li#optimisation.navtab
-                            a(href = '#tab=optimisation') Genetic Optimisation
+                        li#analysis.disabled
+                            a Analysis
+                        li#optimisation.navtab.disabled
+                            a Genetic Optimisation
                         li#simulation.navtab
                             a(href = '#tab=simulation') Simulation
-                        li#network.disable
-                            a(href = '#tab=network') Network
+                        li#network.disabled
+                            a Network
 
                     include Tabs/Intro.jade
                     include Tabs/EditRun.jade

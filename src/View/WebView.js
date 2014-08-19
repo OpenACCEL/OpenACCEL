@@ -43,20 +43,6 @@ define(["../Controller/AbstractView",
          */
         this.state = $.deparam(location.hash, true);
 
-        // Support old ACCEL query strings
-        /*var query = $.deparam.querystring(true);
-        if (query.script && !this.state.script) {
-            this.state.script = query.script;
-        }
-        if (query.help && !this.state.help) {
-            this.state.help = query.help;
-        }
-        if (query.link && !this.state.link) {
-            this.state.link = query.link;
-        }
-
-        this.setState(this.state);*/
-
         /**
          * The various tabs that this view has to offer.
          */
@@ -82,6 +68,12 @@ define(["../Controller/AbstractView",
          * @param  {Boolean} initial Whether this event was fired onpageload
          */
         $(window).on('hashchange', this.onHashChange.bind(this));
+
+        $("#optimisation").on('click', function() {
+            if ($(this).hasClass("disabled")) {
+                alert("The script does not contain any quantities to be optimized.");
+            }
+        });
 
         // Loading should be done at this point.
         this.resizeContainer();
@@ -111,6 +103,42 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.setState = function(state) {
         location.hash = $.param.fragment(location.hash, state);
+    };
+
+    /**
+     * Uses the given map of quantities to update the UI.
+     *
+     * @param quantities {map<String, Quantity>} All the quantities
+     * currently in the model, including todo quantities with empty
+     * definitions.
+     */
+    WebView.prototype.setQuantities = function(quantities) {
+        // Update quantity list in edit/run tab
+        this.tabs.editrun.synchronizeScriptList(quantities);
+
+        // Update textarea/advanced editor in IO/edit
+        this.tabs.ioedit.synchronizeScriptArea();
+
+        // Check whether to disable the genetic optimisation tab
+        if (!controller.hasOptimisation()) {
+            if (!$('#optimisation').hasClass('disabled')) {
+                $('#optimisation').addClass('disabled').children("a").removeAttr('href');
+            }
+        } else {
+            if ($('#optimisation').hasClass('disabled')) {
+                $('#optimisation').removeClass('disabled').children("a").attr('href', '#tab=optimisation');
+            }
+        }
+    };
+
+    /**
+     * Displays the values of the given output quantities in the UI.
+     *
+     * @param cat2quantities {map<String, Quantity>} A map of all output
+     * quantities in the script.
+     */
+    WebView.prototype.presentResults = function(cat2quantities) {
+        this.tabs.editrun.synchronizeResults(cat2quantities);
     };
 
     /**

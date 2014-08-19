@@ -983,6 +983,16 @@ define(["Model/Script",
         };
 
         /**
+         * Returns whether the script has quantities that have to be
+         * optimized using SPEA.
+         *
+         * @return {Boolean} Whether the script contains pareto quantities
+         */
+        Controller.prototype.hasOptimisation = function() {
+            return this.script.hasOptimisation();
+        };
+
+        /**
          * Initialises the Genetic Optimisation algorithm.
          *
          * @param {Number} populationSize the desired population size

@@ -136,6 +136,16 @@ define(["Model/Analyser/Analyser",
         },
 
         /**
+         * Returns whether the script has quantities that have to be
+         * optimized using SPEA.
+         *
+         * @return {Boolean} Whether the script contains pareto quantities
+         */
+        hasOptimisation: function() {
+            return this.analyser.optimisation && Object.keys(this.quantities).length > 0;
+        },
+
+        /**
          * Sets the given executable as the executable of this script
          *
          * @param {Object} exe The executable to set

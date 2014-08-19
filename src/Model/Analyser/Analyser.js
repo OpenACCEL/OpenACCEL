@@ -50,6 +50,14 @@ define(["Model/Analyser/Passes/QuantityPass",
             this.scriptComplete = false;
 
             /**
+             * Whether the script contains quantities that have to be optimized
+             * by SPEA.
+             *
+             * @type {Boolean}
+             */
+            this.optimisation = false;
+
+            /**
              * Object containing a partitioning of all quantities into the
              * different categories.
              *
@@ -197,6 +205,11 @@ define(["Model/Analyser/Passes/QuantityPass",
                 } else {
                     // Has both dependencies and quantities that depend on this quantity: category 4
                     category = 4;
+                }
+
+                // Check whether this quantity has to be optimized by pareto
+                if (qty.pareto.isPareto === true) {
+                    this.optimisation = true;
                 }
 
                 // Add the quantity to the corresponding category set and set
