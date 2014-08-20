@@ -172,6 +172,33 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
     }
 
     /**
+     * Event that gets called when this tab gets opened.
+     */
+    EditRun.prototype.onEnterTab = function() {
+        view.hasPlot = true;
+        this.synchronizeScriptList(controller.getScript().getQuantities());
+
+        // If autoexecute is true, resume script only when it has been paused
+        // by the system, and start executing when it is not paused but compiled
+        if (controller.autoExecute) {
+            if (controller.isPaused()) {
+                controller.resume(true);
+            } else {
+                controller.run();
+            }
+        }
+    };
+
+    /**
+     * Event that gets called when this tab gets closed.
+     */
+    EditRun.prototype.onLeaveTab = function() {
+        // Pause script when leaving edit/run tab, indicating it has
+        // been paused automatically by the system and not by the user
+        controller.pause(true);
+    };
+
+    /**
      * Deletes a quantity from the script.
      *
      * @param {String} The quantity to delete.

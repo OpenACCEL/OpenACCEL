@@ -11,5 +11,19 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
     }
 
+    /**
+     * Event that gets called when this tab gets opened.
+     */
+    Analysis.prototype.onEnterTab = function() {
+
+    };
+
+    /**
+     * Event that gets called when this tab gets closed.
+     */
+    Analysis.prototype.onLeaveTab = function() {
+
+    };
+
     return Analysis;
 });

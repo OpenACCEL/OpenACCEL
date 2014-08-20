@@ -12,6 +12,32 @@ define([], /**@lends View*/ function() {
     }
 
     /**
+     * Event that gets called when this tab gets opened.
+     */
+    Simulation.prototype.onEnterTab = function() {
+        view.hasPlot = true;
+
+        // If autoexecute is true, resume script only when it has been paused
+        // by the system, and start executing when it is not paused but compiled
+        if (controller.autoExecute) {
+            if (controller.isPaused()) {
+                controller.resume(true);
+            } else {
+                controller.run();
+            }
+        }
+    };
+
+    /**
+     * Event that gets called when this tab gets closed.
+     */
+    Simulation.prototype.onLeaveTab = function() {
+        // Pause script when leaving edit/run tab, indicating it has
+        // been paused automatically by the system and not by the user
+        controller.pause(true);
+    };
+
+    /**
      * Toggles the execution of the script.
      * 
      * @param {String} 'Run' if the script should be ran, otherwise it will be paused.

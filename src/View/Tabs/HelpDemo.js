@@ -65,9 +65,13 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
     }
 
     /**
+     * Event that gets called when this tab gets opened.
+     *
      * Loads the help articles and demo scripts, if not already done.
      */
-    HelpDemo.prototype.setup = function() {
+    HelpDemo.prototype.onEnterTab = function() {
+        view.hasPlot = false;
+
         if (Object.keys(this.articlesByCategory).length !== 0) {
             return;
         }
@@ -90,6 +94,13 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         // Setup demo scripts list
         this.demoScripts = controller.getDemoScripts();
         this.synchronizeDemoScripts(this.demoScripts);
+    };
+
+    /**
+     * Event that gets called when this tab gets closed.
+     */
+    HelpDemo.prototype.onLeaveTab = function() {
+
     };
 
     /**

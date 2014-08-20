@@ -213,35 +213,7 @@ define(["../Controller/AbstractView",
      * @param  {string} tab The identifier of the tab that will be made current.
      */
     WebView.prototype.onEnterTab = function(tab) {
-        switch (tab) {
-            case 'simulation':
-            case 'editrun':
-                this.hasPlot = true;
-
-                // If autoexecute is true, resume script only when it has been paused
-                // by the system, and start executing when it is not paused but compiled
-                if (controller.autoExecute) {
-                    if (controller.isPaused()) {
-                        controller.resume(true);
-                    } else {
-                        controller.run();
-                    }
-                }
-                break;
-            case 'ioedit':
-                this.hasPlot = false;
-                setTimeout((function() {
-                    this.tabs.ioedit.updateAdvancedEditor();
-                    this.tabs.ioedit.focusAdvancedEditor();
-                }).bind(this), 100);
-                break;
-            case 'helpdemo':
-                this.hasPlot = false;
-                this.tabs.helpdemo.setup();
-                break;
-            default:
-                break;
-        }
+        this.tabs[tab].onEnterTab();
 
         //Tooltips loaded and shown
         try {
@@ -262,36 +234,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.onLeaveTab = function(tab) {
         $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
-
-        switch (tab) {
-            case 'editrun':
-                // Pause script when leaving edit/run tab, indicating it has
-                // been paused automatically by the system and not by the user
-                controller.pause(true);
-                break;
-            case 'ioedit':
-                // Build script from inputted source when leaving IO/edit
-                try {
-                    if (this.tabs.ioedit.editor) {
-                        this.tabs.ioedit.editor.save();
-                    }
-                    controller.setScriptFromSource($('#scriptarea').val());
-                    this.tabs.ioedit.showValues = false;
-                    $('#showvalues').val('Show values');
-                } catch (e) {
-                    if (typeof(e) === 'SyntaxError') {
-                        console.log(e.message);
-                    } else {
-                        console.log(e);
-                    }
-                }
-                break;
-            case 'simulation':
-                controller.pause(true);
-                break;
-            default:
-                break;
-        }
+        this.tabs[tab].onLeaveTab();
 
         //Tooltips stored and hidden
         this.tooltips[tab] = $('.tooltipcontainer').filter(":visible");

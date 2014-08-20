@@ -32,6 +32,40 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
     }
 
     /**
+     * Event that gets called when this tab gets opened.
+     */
+    IOEdit.prototype.onEnterTab = function() {
+        view.hasPlot = false;
+        this.synchronizeScriptArea();
+
+        setTimeout((function() {
+            this.updateAdvancedEditor();
+            this.focusAdvancedEditor();
+        }).bind(this), 100);
+    };
+
+    /**
+     * Event that gets called when this tab gets closed.
+     */
+    IOEdit.prototype.onLeaveTab = function() {
+        // Build script from inputted source when leaving IO/edit
+        try {
+            if (this.editor) {
+                this.editor.save();
+            }
+            controller.setScriptFromSource($('#scriptarea').val());
+            this.showValues = false;
+            $('#showvalues').val('Show values');
+        } catch (e) {
+            if (typeof(e) === 'SyntaxError') {
+                console.log(e.message);
+            } else {
+                console.log(e);
+            }
+        }
+    };
+
+    /**
      * Toggles between showing and not showing the values of quantities inside
      * the editor.
      */

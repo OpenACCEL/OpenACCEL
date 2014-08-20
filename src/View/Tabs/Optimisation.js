@@ -215,6 +215,20 @@ define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
         );
     }
 
+    /**
+     * Event that gets called when this tab gets opened.
+     */
+    Optimization.prototype.onEnterTab = function() {
+
+    };
+
+    /**
+     * Event that gets called when this tab gets closed.
+     */
+    Optimization.prototype.onLeaveTab = function() {
+
+    };
+
     Optimization.prototype.smartZoom = function() {
         view.canvasses.optimisation.smartZoom();
         view.canvasses.optimisation.draw();
