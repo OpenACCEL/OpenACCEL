@@ -103,18 +103,9 @@ define(["Model/Analyser/Analyser",
          * Call once every iteration during script execution.
          */
         step: function() {
-            // We shouldn't be stepping through an uncompiled executable.
-            if (!this.compiled) {
-                return;
-            }
-
             // Reset memoization datastructure for recursively flagging changed quantities
             // since last iteration. Do this here so it's done once every iteration
             this.flaggedAsChanged = [];
-
-            // Signal the executable that one iteration has been completed,
-            // for quantity history functionality.
-            this.exe.step();
         },
 
         /**
