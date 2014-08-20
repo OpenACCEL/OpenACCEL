@@ -132,7 +132,7 @@ define(["../Controller/AbstractView",
         this.canvasses.simulation = this.canvasCreator.createCanvas(controller.getScript(), 'plotSimulation', 800, 600);
 
         /**
-         * The canvas that is used to plot individuals of the Genetic Optimization tab.
+         * The canvas that is used to plot individuals of the Genetic Optimisation tab.
          */
         this.canvasses.optimisation = this.canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
     };

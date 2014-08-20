@@ -3,7 +3,7 @@ require.config({
 });
 
 define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
-    function Optimization() {
+    function Optimisation() {
         this.individualPropertiesBuffer = new HTMLBuffer();
 
         this.geneticOptimisationValues = {
@@ -218,26 +218,26 @@ define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
     /**
      * Event that gets called when this tab gets opened.
      */
-    Optimization.prototype.onEnterTab = function() {
+    Optimisation.prototype.onEnterTab = function() {
 
     };
 
     /**
      * Event that gets called when this tab gets closed.
      */
-    Optimization.prototype.onLeaveTab = function() {
+    Optimisation.prototype.onLeaveTab = function() {
 
     };
 
-    Optimization.prototype.smartZoom = function() {
+    Optimisation.prototype.smartZoom = function() {
         view.canvasses.optimisation.smartZoom();
         view.canvasses.optimisation.draw();
     };
 
-    Optimization.prototype.zoomToFit = function(show) {
+    Optimisation.prototype.zoomToFit = function(show) {
         view.canvasses.optimisation.zoomToFit();
         view.canvasses.optimisation.draw();
     };
 
-    return Optimization;
+    return Optimisation;
 });
