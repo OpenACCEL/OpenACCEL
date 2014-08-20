@@ -1,0 +1,14 @@
+a=descartes([radar]) 
+grid=[majPhi:6,grMajPhi:'line',majR:4,grMajR:'line',minR:20,grMinR:'tick'] 
+radar=[grid:grid,locations:[pointSize:3,thickness:1,fill:'border',x:50,y:50,icon:'radar',data:d]]
+    //  demonstrates the use of a radar plot as visualisation widget
+    //  in combination with time-dependent signals. 
+r1=slider(10,1,50.0) 
+r2=slider(10,1,50.0) 
+r3=slider(10,1,50.0) 
+r4=slider(10,1,50.0) 
+r5=slider(10,1,50.0) 
+r6=slider(10,1,50.0) 
+r=[r1,r2,r3,r4,r5,r6] 
+d=#(i,vSeq(0,6),[thickness:0.04*(r[i]+r[(i+1)%6]),rad:r[i],tag:'value='+r[i],col_r:6*(r[i]+r[(i+1)%6]),col_g:6*(r[i]+r[(i+1)%6])],vAppend)
+    

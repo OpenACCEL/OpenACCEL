@@ -1,0 +1,36 @@
+a=descartes([graph1,graph2,graph3]) 
+// This illustrates the idea of Brownian motion: random perturbations
+// to a smoothly varying signal. The changes in the signal come about
+// by integration (accumulation) over time of the rendaom perturbations.
+// In this case there are 18 independent signals,
+// used to produce three streams of bubbles. In each stream the 
+// Brownian motion controls the diameter of the bubbles, the opacity
+// the x-location and the three colour channels.
+freeze=check(false)
+// If the checkbox 'freeze'is checked, the random perturbations
+// are not added to the signals. 
+rBrown1=if(freeze,rBrown1{1},max(2,min(255,rBrown1{1}+f2*(random()*10-5))))
+rBrown2=if(freeze,rBrown2{1},max(2,min(255,rBrown2{1}+f2*(random()*10-5))))
+rBrown3=if(freeze,rBrown3{1},max(2,min(255,rBrown3{1}+f2*(random()*10-5))))
+gBrown1=if(freeze,gBrown1{1},max(2,min(255,gBrown1{1}+f2*(random()*10-5))))
+gBrown2=if(freeze,gBrown2{1},max(2,min(255,gBrown2{1}+f2*(random()*10-5))))
+gBrown3=if(freeze,gBrown3{1},max(2,min(255,gBrown3{1}+f2*(random()*10-5))))
+bBrown1=if(freeze,bBrown1{1},max(2,min(255,bBrown1{1}+f2*(random()*10-5))))
+bBrown2=if(freeze,bBrown2{1},max(2,min(255,bBrown2{1}+f2*(random()*10-5))))
+bBrown3=if(freeze,bBrown3{1},max(2,min(255,bBrown3{1}+f2*(random()*10-5)))) 
+aBrown1=if(freeze,aBrown1{1},max(2,min(255,aBrown1{1}+f2*(random()*10-5))))
+aBrown2=if(freeze,aBrown2{1},max(2,min(255,aBrown2{1}+f2*(random()*10-5)))) 
+aBrown3=if(freeze,aBrown3{1},max(2,min(255,aBrown3{1}+f2*(random()*10-5))))
+dBrown1=if(freeze,dBrown1{1},max(1,min(15,dBrown1{1}+f2*(random()*10-5))))
+dBrown2=if(freeze,dBrown2{1},max(1,min(15,dBrown2{1}+f2*(random()*10-5))))
+dBrown3=if(freeze,dBrown3{1},max(1,min(15,dBrown3{1}+f2*(random()*10-5)))) 
+xBrown1=if(freeze,xBrown1{1},max(2,min(100,xBrown1{1}+f2*(random()*10-5))))
+xBrown2=if(freeze,xBrown2{1},max(2,min(100,xBrown2{1}+f2*(random()*10-5))))
+xBrown3=if(freeze,xBrown3{1},max(2,min(100,xBrown3{1}+f2*(random()*10-5))))
+graph1=[locations:[nrLocations:30,fill:'interior',x:[mode:'shift',value:xBrown1],y:[mode: 'intp'],rad:[mode:'shift',value:dBrown1*1.5],fcol_r:[mode:'shift',value:rBrown1],fcol_g:[mode: 'shift',value:gBrown1],fcol_b:[mode:'shift',value:bBrown1],fcol_a:[mode:'shift',value:aBrown1/255]]] 
+graph2=[locations:[nrLocations:50,fill:'interior',x:[mode:'shift',value:xBrown2],y:[mode: 'intp'],rad:[mode:'shift',value:dBrown2*1.5],fcol_r:[mode:'shift',value:rBrown2],fcol_g:[mode: 'shift',value:gBrown2],fcol_b:[mode:'shift',value:bBrown2],fcol_a:[mode:'shift',value:aBrown2/255]]] 
+graph3=[locations:[nrLocations:70,fill:'interior',x:[mode:'shift',value:xBrown3],y:[mode: 'intp'],rad:[mode:'shift',value:dBrown3*1.5],fcol_r:[mode:'shift',value:rBrown3],fcol_g:[mode: 'shift',value:gBrown3],fcol_b:[mode:'shift',value:bBrown3],fcol_a:[mode:'shift',value:aBrown3/255]]] 
+f2=slider(0.50,0,5)
+// controls the effect of the random perturbations: each works via
+// an IIR-filter (infinite impulse response filter); f2 is the ratio
+// between the original value and the contribution of the new value.

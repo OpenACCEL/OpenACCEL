@@ -1,0 +1,6 @@
+x1=slider(5,0,10.0) 
+x2=slider(5,0,10.0) 
+yAdd=x1+x2
+yMult=x1*x2
+ySquare=x1*x1
+yCombi=x1+x2*x2

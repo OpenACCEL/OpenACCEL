@@ -1,0 +1,35 @@
+ 
+bf=slider(1.5,0,5)
+    //  birt rate of fox (horizontal) 
+br=slider(3,0,5)
+    //  birth rate of rabit (vertical) 
+df=slider(1,0,5)
+    //  death rate of fox (horizontal) 
+dr=slider(1,0,5)
+    //  death rate of rabit (vertical) 
+dt=slider(0.15,0.01,0.2)
+    //  how fast does time move forward?
+fLimit=slider(20,0,20)
+    //  with how many fox start fox hunt
+fShoot=slider(1,0,20)
+    // amount of fox to shoot per hunt 
+reset=button()
+    //  to restart the game 
+p=descartes([gboth,gfox,grab])
+    //  the graph 
+fH=if((time<2)||reset,150,max(0.01,fH{1}+dt*(bf*fH{1}*r{1}-df*fH{1})))
+    //  lotka volterra for fox 
+f=if(r{1}<fLimit,max(0,fH{1}-fShoot),fH{1})
+    // fox population after shooting
+color=if(r{1}<fLimit,255,0)
+    // to see when shooting is on
+gboth=[locations:[fill:'interior',nrLocations:50,rad:2.5,fcol_r:color,x:[mode:'shift',value:10+3*f],y:[mode:'shift',value:10+3*r]]]
+    //  draw the cyclic curve for the both species 
+gfox=[locations:[y:[mode:'intp'],x:[mode:'shift',10+3*f]],edges:[thickness:2,col_r:255]]
+    //  draw the fox population scrolling vertically 
+grab=[locations:[x:[mode:'intp'],y:[mode:'shift',10+3*r]],edges:[thickness:2,col_b:255]]
+    //  draw the rabbit population scrolling horizontally
+r=if((time<2)||reset,150,max(0.01,r{1}+dt*(br*r{1}-dr*f{1}*r{1})))
+    //  lotka volterra for rabbit 
+time=time{1}+1
+    //  from here to eternity

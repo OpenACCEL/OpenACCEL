@@ -1,0 +1,60 @@
+
+roadWidth=21
+    //  the number of samples in the width-direction of the road 
+roadWidth1=roadWidth-1 
+roadLength=250
+    //  the number of samples in the length-direction of the road 
+roadLength1=roadLength-1 
+nLamps=slider(3,1,30)
+    //  the number of lamps 
+pLamps=slider(0.5,0.0,2.0)
+    //  the power per lamp 
+hLamps=slider(5,0,40)
+    //  the height of the lamps above the road 
+beta=slider(0,0,200.0)
+    //  the shinyness of the road 
+dc=slider(0.5,0.0,1.0)
+    //  the relative contribution of diffuse reflection (dry road)
+sc=1-dc 
+    // the realtive contribution of specular reflection (wet road)
+wStep=100/roadWidth
+    //  how wide is one sample 
+lStep=1000/roadLength
+    //  how long is one sample 
+sStep=1000/nLamps
+    //  how far are the lamps apart 
+hW=(roadWidth-1)/2
+    //  to center the x-coodinates of the road locations symmetrically w.r.t. x=0 
+lRange=vSeq(0,roadLength)
+    //  range of length-samples 
+wRange=vSeq(0,roadWidth)
+    //  range of width-samples 
+lRange1=vSeq(0,roadLength1)
+    //  range of length samples, used to calculate the face data 
+wRange1=vSeq(0,roadWidth1)
+    //  range of width samples, used to calculate the face data 
+roadData=roadData{1|#(i,lRange,slab(i),vExtend)}
+    //  the locations of the road are only calculated once 
+slab(i)=#(j,wRange,[x:wStep*(j-hW),y:y0,z:i*lStep-70],vAppend)
+    //  the locations for one slab
+y0=-20
+    // this positions the road lower than the camera           
+fData=cond(dc==dc{1},fData{1|#(i,lRange1,fSlab(i),vExtend)},#(i,lRange1,fSlab(i),vExtend))
+    //  the loop-data for the faces data of the road are only calculated once 
+fSlab(i)=#(j,wRange1,[fcol_r:120*mark(i,j,dc),fcol_g:140*mark(i,j,dc),fcol_b:0,scol_r:125*mark(i,j,sc),scol_g:125*mark(i,j,sc),scol_b:125*mark(i,j,sc),loop:[i*roadWidth+j,i*roadWidth+j+1,(i+1)*roadWidth+j+1,(i+1)*roadWidth+j,i*roadWidth+j]],vAppend)
+    //  the corner indices for one slab of the road and the color of the faces, making a difference between road marks and non-marks
+mark(i,j,f)=if((j==hW) && ((i%ii)<7),f,0.5*f)
+    //  a mark is twice as bright as a non mark;
+    //  a mark occurs in the middle of the road and at certain i-values
+ii=12
+    // this determines the pitch of the stripes on the road
+s=[background:[fcol_r:0,fcol_g:0,fcol_b:0],locations:[data:roadData],faces:[fcol_r:120*dc,fcol_g:140*dc,fcol_b:0,scol_r:125*sc,scol_g:125*sc,scol_b:125*sc,beta:beta,fill:'interior',data:fData],camera:camera,lights:lights]
+    //  the entire scene to be plotted 
+camera=[auto:true,r:r,f:r]
+    //  camera is no-worry automatic camera 
+r=slider(80,80,400)
+    //  to tune the amount of perspective distortion 
+pl=descartes([s])
+    //  do the plotting 
+lights=#(i,vSeq(0,nLamps),[l_px:0,l_py:hLamps+y0,l_pz:(i-1)*sStep,l_r:200*pLamps,l_g:160*pLamps,l_b:150*pLamps],vAppend)
+    //  the sequence of lights

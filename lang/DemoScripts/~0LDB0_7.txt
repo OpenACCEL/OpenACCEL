@@ -1,0 +1,7 @@
+z=descartes([gr2,gr1]) 
+gr1=[locations:[x:[mode:'intp'],y:[mode:'shift',value:s]],edges:[thickness:2,col_r:255]]
+gr2=[locations:[x:[mode:'intp'],y:[mode:'shift',value:ds]],edges:[thickness:2,col_b:255]]
+s=slider(50,0,100)
+ds=(1-damp)*s+damp*ds{1}
+damp=slider(0.5,0.01,0.99)
+ 

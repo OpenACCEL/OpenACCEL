@@ -1,0 +1,71 @@
+maxX=50
+minX=-50
+maxY=50
+minY=-50
+nAtoms=slider(10,2,60)
+aRange=vSeq(0,nAtoms)
+    // we re-use the set [0,1,2,...,nAtoms-1]
+rho0=slider(2,1,15)
+time=if(nAtoms!=nAtoms{1},1,time{1}+1)
+// nr of atoms; moving the slider (re)starts the simulation
+plotResult=descartes([[locations:[nrLocations:nAtoms,fill:'interior',data:#(i,aRange,[rad:rho[i],fcol_r:col[i].red,fcol_g:col[i].grn,fcol_b:col[i].blu,x:50+r[i].x,y:50+r[i].y],vAppend)]]])
+    // one graph consisting of as many blobs as there are atoms. The x and y coordinates are
+    // taken from the 'x'- and 'y'-components of the r-vector.
+tVec(i,j)=r{1}[j]-r{1}[i]
+    // the vector pointing from atom i to atom j, with coefficients x and y
+cpl=#(i,aRange,cplOneMolecule(i),vAppend)
+    // the couplings matrix containing all info about the relations to atom i,
+    // that is: 'close' to indicate if these two atoms are in a collision-state;
+    // if close is true, 'force' is the current reaction force between them.
+tMat=#(i,aRange,tMatOneMolecule(i),vAppend)
+    // the tMatrix contains, for every pair, i-j, the t-vector between the centres
+tMatOneMolecule(i)=#(j,aRange,tVec(i,j),vAppend)
+    // the tMatOneMolecule vector contains, for every atom, 
+    // the the t-vectors between its centre and the other centres
+touch(i,j)=((vNormEuclid(tMat[i][j])<(rho[i]+rho[j])) && (i!=j) && vDot(tMat[i][j],p{1}[i]/m[i]-p{1}[j]/m[j])>0)
+    // condition for colliding contact. Three terms:
+    // 1. Are the atoms close enough?
+    // 2. No self-collision?
+    // 3. Is the relative velocity opposite to the vector connecting the centres?
+cplOneMolecule(i)=#(j,aRange,cond(touch(i,j),['close':true,'force':(mpt(i,j)/m1m2tt(i,j))*tMat[i][j]],['close':false,'force':0]),vAppend)
+    // the cplOneMolecule vector contains, for atom i, the info for the collisions between this
+    // atom and all other atoms.
+    // It sets the value to the boolean 'close', and if close==true, the
+    // current force vector. The derivation of the force vector
+    // is based on conservation of momentum, angular momentum and kinetic energy
+    // in a coordinate-free version.
+mpt(i,j)=-2*vDot(m[j]*p{1}[i]-m[i]*p{1}[j],tMat[i][j])
+    // the product (((m1p2-m2p1)t),t): the numerator of the force vector
+m1m2tt(i,j)=(m[i]+m[j])*vDot(tMat[i][j],tMat[i][j])
+    // the product (m1+m2)(t,t): the denominator of the force vector
+f=#(i,aRange,forceOnOneMolecule(i),vAppend)
+    //  calculate the forces for all atoms by concatenating
+forceOnOneMolecule(i)=#(j,aRange,cond(cpl[i][j].close,cpl[i][j].force,0),add)
+    //  adding the forces due to all other of atoms 
+rho=if((time==1)||(rho0!=rho0{1}),vConcat([10],#(i,vSequence(0,nAtoms-1),rho0,vAppend)),rho{1})
+    // the radii of the atoms
+col=if(time==1,#(i,aRange,if(i==0,[red:255,grn:0,blu:0],[red:200+50*random(),grn:200+50*random(),blu:200+50*random()]),vAppend),col{1})
+    //  colors of the atoms: first one is red, rest is white 
+m=if((time==1)||(rho0!=rho0{1}),#(i,aRange,pow((rho0/3),3),vAppend),m{1})
+    //  the masses of the atoms; first one is heavy, rest is light
+r=if(time>1,r{1}+p/m,#(i,aRange,['x':-40+80*random(),'y':-40+80*random()],vAppend))
+    //  r is obtained by integrating v; at the starting time (==1) give the initial random positions 
+p=if(time>1,wallCollide(p{1}+f),vConcat([['x':0,'y':0],['x':0.01*nAtoms*pow(rho0,3),'y':0.001*nAtoms*pow(rho0,3)]],#(i,vSequence(0,nAtoms-2),['x':0,'y':0],vAppend)))
+    // p is obtained by integrating f; at the starting time give the initial momenta. The only
+    // non-vanishing initial momentum is the momentum of one of the lighter atoms. The momentum
+    // of this atom is proportional to the total number of atoms, so that independent of
+    // the number of atoms, the average momentum will be the same; it is also proportional 
+    // to the mass of the (majority of the) atoms, so that velocity will be average
+wallCollide(a)=wallCollideLeft(wallCollideRight(wallCollideBottom(wallCollideTop(a))))
+    // the collisions with all walls
+wallCollideLeft(a)=#(i,vDom(a),cond((r{1}[i].x>(minX+rho[i])||a[i].x>0),a[i],['x':-a[i].x,'y':a[i].y]),vAppend)
+// collide left wall
+wallCollideRight(a)=#(i,vDom(a),cond((r{1}[i].x<(maxX-rho[i])||a[i].x<0),a[i],['x':-a[i].x,'y':a[i].y]),vAppend)
+// collide right wall
+wallCollideBottom(a)=#(i,vDom(a),cond((r{1}[i].y>(minY+rho[i])||a[i].y>0),a[i],['x':a[i].x,'y':-a[i].y]),vAppend)
+// collide bottom wall
+wallCollideTop(a)=#(i,vDom(a),cond((r{1}[i].y<(maxY-rho[i])||a[i].y<0),a[i],['x':a[i].x,'y':-a[i].y]),vAppend)
+// collide top wall
+
+
+    

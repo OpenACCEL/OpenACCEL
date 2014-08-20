@@ -1,0 +1,4 @@
+m=if(p<5,iMake(0,50,50),m{1}+300*random()*iSpike(50*random(),50*random(),50,50))
+a=descartes([[image:[scaleX:1,scaleY:1,mapR:m]]]) 
+q=p  
+p=p{1}+1

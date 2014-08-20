@@ -1,0 +1,44 @@
+dL=slider(25.5,15,50)
+    //  how far are the lanterns removed from each other 
+h=slider(5.5,3,30)
+    //  how high are the lanterns 
+p=slider(500.1,100,2000)
+    //  what is the power per lantern 
+a=descartes([[image:[scaleX:2,scaleY:2,mapR:lfG,mapG:lfG,mapB:cons]]])
+    //  plotting: red and green together give the light distribution. The blue channel indicates if the constraints are satisfied 
+intPenalty=paretoMin(paretoHor(log(0.00001-min(minP,minInt)+max(maxP,maxInt)-(maxP-minP))))
+    //  the intensity penalty is 0 if the maximal intensity is not larger than maxP and the minimal intensity is not less than minP 
+rMaxInt=maxInt
+    //  report the max intensity 
+rMinInt=minInt
+    //  report the min intensity 
+totPow=paretoMin(paretoVer(p*nLanterns))
+    //  calculate the total power for this length of road 
+maxP=150
+    //  the maximal intensity so that no blinding occurs 
+minP=10
+    //  the minimal intensity so that everything is at least marginally visible 
+roadLength=40
+    //  the length of road we consider 
+roadWidth=2
+    //  the width of the road 
+cons=if(lfG<minP,0,if(lfG>maxP,255,128))
+    //  calculate the constraint map: 128 if both constraints are satisfied;
+    //  0 if too dark
+    //  255 if too light 
+Wh=roadWidth/2
+    //  how far from the side of the road are the lanterns positioned 
+lfG=#(w,vSequence(0,roadWidth),lumOneSlice(w),vAppend)
+    //  calculate the light distribution over the entire road 
+lum(w,l,n)=p/(h*h+pow(abs(l-n*dL),2)+pow(abs(w-Wh),2))
+    //  this calculates the contribution of one lantern (number n) to location (w,l) 
+lumAllLant(w,l)=#(n,vSequence(-1,nLanterns),lum(w,l,n),add)
+    //  this adds the illumination of all lanterns on one piece (l,w) of the road 
+lumOneSlice(w)=#(l,vSequence(0,roadLength),lumAllLant(w,l),vAppend)
+    //  this is the contribution over one slice of the road 
+maxInt=#(m3,vDom(lfG),#(m4,vDom(lfG[m3]),lfG[m3][m4],max),max)
+    //  calculate the max intensity over the entire road 
+minInt=#(m1,vDom(lfG),#(m2,vDom(lfG[m1]),lfG[m1][m2],min),min)
+    //  calculate the min intensity over the entire road 
+nLanterns=1+roadLength/dL
+    //  the number of lanters is the length of the road divided by the distance between lanterns

@@ -1,0 +1,47 @@
+n=slider(15,4,50)
+    //  this is the resolution of the playground. 
+    //  Notice: the number of pixels to be calculated grows quadratically with n! 
+scale=50/n
+    //  the pixel size 
+blur=[[1,2,1],[2,5,2],[1,2,1]]/17
+    //  the blur kernel: the integral is just little less than 1 
+mY=if(t<2||n!=n{1},start,iConvolve(mY{1}+25*(random())*iSpike(n*random(),n*random(),n,n),blur,1,1,2))
+    //  a diffusion operator on the mY values 
+start=if(t<2||n{1}!=n,iMake(0,n,n),start{1})
+    //  to start things off 
+nRange=vSeq(0,n) 
+    // we re-use this sequence
+locationsData=do("var i,j,v=_arr; var r=[];var scale=v[0]; var n=v[1];var yy=v[2];for(i=0;i<n;i++){for(j=0;j<n;j++){r.push({'x':scale*(i-n/2),'y':Math.sqrt(yy[i][j]),'z':scale*(j-n/2),'icon':'none'})}};return r;",['arr':[scale,n,5*mY]]) 
+    // to speed up things, we have javascript generate all (x,y,z) triples
+    // in one 1-dimensional array, taking the y-values from the mY-array,
+    // and fabricating x- and z values such that a nice square table cloth results.
+    // Notice that we take a square root to have the y-values in a visually more pleasing range.
+lights=[l1,l2,l3] 
+l1=[l_px:-100,l_py:100,l_pz:100,l_r:130,l_g:  0,l_b:  0,l_x: 0.6,l_z:-0.6,l_y:-1.5]
+l2=[l_px:100, l_py:100,l_pz:100,l_r:  0,l_g:130,l_b:  0,l_x:-0.6,l_z:-0.6,l_y:-1.5]
+l3=[l_px:0,   l_py:100,l_pz:100,l_r:  0,l_g:  0,l_b:130,l_x:   0,l_z:-0.6,l_y:-1.5]
+    // an artistic arrangement of three differently colored 
+    // point light sources    
+faces=[fcol_a:1.0,fcol_r:200,fcol_g:200,fcol_b:200,scol_r:50,scol_g:50,scol_b:50,beta:beta,fill:'interior',data:facesData] 
+    // the faces property sets the diffuse and specular colors, the beta,
+    // and the facesData
+facesData=do("var i,j,v=_arr; var r=[];var nm=v[0];var n=v[1];for(i=0;i<nm;i++){for(j=0;j<nm;j++){r.push({'loop':[i*n+j,i*n+j+1,(i+1)*n+j+1,(i+1)*n+j]})}};return r;",['arr':[n-1,n]])
+    // to speed things up, we have javascript
+    // calculate the indices into the locationsData array of all
+    // locations corresponding to the four corners of each of the squares in
+    // the table cloth.
+beta=slider(4.0,0,20) 
+    // give the user control over the size of the specular highlight
+p=descartes([gr])
+    // plot everything 
+gr=[background:[fcol_r:0,fcol_g:0,fcol_b:0],lights:lights,camera:camera,locations:[data:locationsData],faces:faces] 
+    // the total scene to be plotted
+camera=[pitch:pitch,yaw:yaw,r:150,f:350,look:'orbit'] 
+    // camera control via the yaw and pitch angles
+t=t{1}+1
+    // the time increasing 
+pitch=slider(0.5,-3.1415,3.1415)
+    // give the user direct control over the pitch angle
+yaw=slider(-1.19,-3.1415,3.1415)
+    // give the user direct control over the yaw angle
+

@@ -1,0 +1,43 @@
+fill=check(false)
+// determine if interior or border should be drawn 
+w=slider(1,0,5.0) 
+// the thickness of edges and icon borders
+x1=slider(50,0,100) 
+y1=slider(70,0,100) 
+x2=slider(70,0,100) 
+y2=slider(50,0,100) 
+x3=slider(80,0,100) 
+y3=slider(20,0,100) 
+x4=slider(20,0,100) 
+y4=slider(30,0,100) 
+// defining the location of 4 points in the plane
+rad=slider(5,0,50)
+// the radius of the circle icon
+fillToken=if(fill,'interior','border') 
+// set the value of the fill token string to 'border' or 'interior'
+a=descartes([face,circle,bezier,segment]) 
+// this plots the entire scene
+circle=[locations:[pointSize:5,tag:'circle',tagy:-rad,icon:'bubble',fill:fillToken,x:x1,y:y1,rad:rad,thickness:w,col_r:255,fcol_g:255]] 
+// For a circle, we only need the 'locations' property. Since there is only one
+// icon, we don't need the data-property. This is an abbreviation mechanism: in case there is only
+// a single location, edge or face to be plotted,
+// the 'data' proprety can be omitted. The alternative would be for instance, to
+// put instead of simplt 'x:x1,y:y1', the phrase 'data:[[x:x1,y:y1]]'
+segment=[locations:[data:[[x:x1,y:y1],[x:x3,y:y3,width:6,height:14]]],edges:[pointSize:5,arrows:'end',tag:'edge(arrow)',thickness:w,b:0,e:1,col_b:255]]
+// For a line segment, we need locations. The locations property only serves to set the coordinates
+// of two endpoints. One endpoint will receive an arrow head; therefore this is equipped with
+// properties width and height: these define the dimensions of the arrow head.
+// The edges property refers to the two locations set in the 'locations'-property.
+// Since there is only a single edge, we can omit the 'data' proprety. The phrase
+// 'b:0,e:1' is an abbreviation for data:[[b:0,e:1]]'
+face=[locations:[data:[[x:x1,y:y1],[x:x2,y:y2],[x:x3,y:y3],[x:x4,y:y4]]],faces:[fill:fillToken,loop:[0,1,2,3,0],fcol_r:255,fcol_g:255,fcol_b:255,col_r:0,col_g:0,col_b:0]] 
+// To define a face, we need locations for its corners. In this case, we have four locations.
+// Instead of 'data:[[loop:[0,1,2,3,0]]]' we use the abbreviated form 'loop:[0,1,2,3,0]',
+// since there is only a single face.
+// 
+// Also notice that in order to have a closed face, the loop must contain its starting point again at the 
+// end.
+bezier=[locations:[data:[[x:x1,y:y1],[x:x2,y:y2],[x:x3,y:y3],[x:x4,y:y4]]],edges:[tagx:40,pointSize:5,shape:'bezier',b:0,bB:1,eB:2,e:3,thickness:w,tag:'bezier curve']]
+// To define a bezier curve, we first need four locations.
+// Again, since there is only one bezier, we used the abbreviated form
+// 'b:0,bB:1,eB:2,e:3' instead of 'data:[[b:0,bB:1,eB:2,e:3]]'

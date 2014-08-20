@@ -1,0 +1,34 @@
+d=descartes([[edges:edges,locations:locations]])
+//  the graph constist of two parts: locations and edges
+// this demo shows how a graph can be plotted. As
+// an example we use the so called Peterson graph: the complete graph on 5 points. 
+e1=[b:0,e:1,thickness:5,col_r:255,tag:'edge1']
+e10=[b:4,e:1,thickness:1,col_r:0,tag:'edge10']
+e2=[b:1,e:2,thickness:5,col_r:255,tag:'edge2']
+e3=[b:2,e:3,thickness:5,col_r:255,tag:'edge3']
+e4=[b:3,e:4,thickness:5,col_r:255,tag:'edge4']
+e5=[b:4,e:0,thickness:5,col_r:255,tag:'edge5']
+e6=[b:0,e:2,thickness:1,col_r:0,tag:'edge6']
+e7=[b:1,e:3,thickness:1,col_r:0,tag:'edge7']
+e8=[b:2,e:4,thickness:1,col_r:0,tag:'edge8']
+e9=[b:3,e:0,thickness:1,col_r:0,tag:'edge9']
+// in a simple version, an edge has two references to locations
+// (b and e), a thickness and one color attribute- e.g., red. It also
+// has a name, the tag-attribute.
+edges=[pointSize:4,col_g:40,col_b:220, data:[e1,e2,e3,e4,e5,e6,e7,e8,e9,e10]]
+    // this instructs Descartes to draw a sequence of edges. 
+    // The shared properties are col_g and col_b, so these are defined only once. 
+    // Since the other properties have values that differ among the edges, these are 
+    // spelled out completely in the data-property.
+n1=[x:10,y:75,tag:'location1']  
+n2=[x:50,y:90,tag:'location2']
+n3=[x:90,y:75,tag:'location3']
+n4=[x:75,y:10,tag:'location4']
+n5=[x:25,y:10,tag:'location5']
+    //  in a simple form, a location has two coordinates and a name: the tag-attribute
+
+    
+locations=[pointSize:5,tagy:6,tcol_r:255,icon:'box',width:7,height:10, fill:'both',thickness:1,col_r:0,col_g:0,col_b:0,fcol_r:200,fcol_g:180,fcol_b:130,data:[n1,n2,n3,n4,n5]]
+    // This instructs Descartes to define a collection of locations. Many properties are shared, these
+    // are the colors and the rendering style of the icon ('box'). We define them only once;
+    // the per-location data is again spelled out in detail in the data-proprety.

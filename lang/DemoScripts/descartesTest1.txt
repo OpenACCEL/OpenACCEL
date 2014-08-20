@@ -1,0 +1,52 @@
+ 
+p=descartes([gr])
+    //  plot everything 
+ps=3
+    //  this is the point size of the texts 
+shiftTextY=-2
+    //  the vertical offset of the text 
+shiftTextX=-3
+    //  the horizontal offset of the text 
+speedYaw=slider(0.0,-0.1,0.1)
+    //  the speed of rotation over the y-axis 
+speedPitch=slider(0.0,-0.1,0.1)
+    //  the spee3d of rotation over the x-axis 
+speedRoll=slider(0.0,-0.1,0.1)
+    //  the speed of rotation over the z-axis 
+yaw=yaw{1}+speedYaw
+    //  integrating the yaw-angle 
+pitch=pitch{1}+speedPitch
+    //  integrating the pitch-angle 
+roll=roll{1}+speedRoll 
+dist=slider(40,20,2000)
+    //  to adjust the distance between the camera and the centre of the scene (=0,0,0) 
+wF=slider(1.0,0.1,5.0)
+    //  the horizontal dimension of the icons 
+hF=slider(1.0,0.1,5.0)
+    //  the vertical dimension of the icons 
+cam=[eX:0,eY:0,eZ:-100,yaw:yaw,pitch:pitch,roll:roll,r:dist,f:100,look:lookMode]
+    //  the camera can be manually set to orbit mode or to pivot mode 
+d=if(n!=n{1},newD,d{1})
+    //  if the n-slider is moved, a new population of icons is created
+    //  To start the animation, the n-slider should be moved 
+n=slider(10,5,300)
+    //  how many icons we want to have 
+newD=#(i,vSeq(0,n),thing(i),vAppend)
+    //  any new configuration is an aggregation of things 
+gr=[camera:cam,locations:[thickness:2,tcol_a:0.5,tagy:shiftTextY,tagx:shiftTextX,fcol_a:1.0,pointSize:ps,fill:'both',width:wF*20/pow(n,0.333),height:hF*20/pow(n,0.333),rad:10/pow(n,0.333),data:d]]
+    //  the geometry to be plotted, with many properties set to non-defaults 
+thing(i)=[icon:iconNames[i],x:100*(random()-0.5),y:100*(random()-0.5),z:100*(random()-0.5),col_r:255*random(),col_g:255*random(),col_b:255*random(),tag:iconNames[i]]
+    //  to produce an icon with arbitrary locations (centered around 0,0,0), random colors and
+    //  fill-colors, but with a given name. Indeed, since the name is also printed
+    //  next to the icon, we cannot generate it ransomly 
+iconName(i)=if(random()>0.8,'bubble',if(random()>0.8,'box',if(random()>0.8,'triUp',if(random()>0.8,'diamond',if(random()>0.8,'triDown',if(random()>0.8,'cross',if(random()>0.8,'diagonalCross',if(random()>0.5,'hBar','vBar'))))))))
+    //  before generating the 'things', we first generate a collection of
+    //  randomly chosen icon types. This user defined function does precisely that. 
+lookMode=if(pivotOrOrbit,'pivot','orbit')
+    //  set the looking mode in dependence of the
+    //  value of the checkbox 
+pivotOrOrbit=check(false)
+    //  the checkbox to determine the looking mode 
+printLookMode=lookMode
+    //  so that the user can see the current looking mode 
+iconNames=#(i,vSeq(0,n),iconName(i),vAppend)

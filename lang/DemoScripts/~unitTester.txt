@@ -1,0 +1,11 @@
+a=3; foo2 
+b=4; foo 
+c=2; bar 
+d=a*b*c; foo3.bar 
+e=5; blah.foo 
+f=g*d/e; foo2.bar/blah 
+g=3 
+p=[3,4,5]; [foo,bar,blah] 
+q=[1,2,3]; [foo,bar,blah] 
+s=3; gnar 
+r=s*p*q; [gnar.foo2,gnar.bar2,gnar.blah2]

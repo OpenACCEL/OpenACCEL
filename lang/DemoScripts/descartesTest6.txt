@@ -1,0 +1,22 @@
+ 
+cx=cursorX()
+    //  the x-coordinate of the cursor 
+cy=cursorY()
+    //  the y-coordinate of the cursor 
+plotThing1=[[edges:[],locations:[fill:'interior',rad:[mode:'intp',low:30,high:0.1],fcol_r:[mode:'intp',low:0,high:255],fcol_g:[mode:'random',low:0,high:255],fcol_b:[mode:'random',low:0,high:255],x:[mode:'shift',value:cx],y:[mode:'shift',value:cy]]]]
+    //  this plots edges. All default properties. Even nrLocations receives a default, causing
+    //  a chain of a certain length to occr. The default icon is bubble,
+    //  but in case of the presence of edges or faces, the default is "none" 
+plotThing2=[[locations:[nrLocations:100,fill:'interior',rad:[mode:'intp',low:30,high:0.1],fcol_r:[mode:'intp',low:0,high:255],fcol_g:[mode:'random',low:0,high:255],fcol_b:[mode:'random',low:0,high:255],x:[mode:'shift',value:cx],y:[mode:'shift',value:cy]]]]
+    //  this plots locations. The default icon is now bubble. All colourfull properties are explicitly set.
+    //  Notice that colors and radii are interpolated ore given random values;
+    //  Notice also that in interpolation, the value of property 'low'
+    //  does net have to be smaller than the value of 'high'.
+    //  The x- and y-coordinates are shifted; the value properties are there to make a data-array unnessecary.
+    //  The simples form is
+    //  pl=descartes([[locations:[nrLocations:100,x:[mode:'shift',value:cx],y:[mode:'shift',value:cy]]]])
+    //  The alternative form would be
+    //  pl=descartes([[locations:[nrLocations:100,x:[mode:'shift'],y:[mode:'shift'],data:[[x:cx,y:cy]]]]]) 
+pl=descartes(cond(plotStyle,plotThing1,plotThing2)) 
+plotStyle=check(false)
+    //  to choose between bubbles and edges

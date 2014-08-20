@@ -1,0 +1,41 @@
+colorModulator=slider(5,2,300.0)
+// adjust how wildly the colors vary
+xModulator=slider(2,1,200.0)
+// adjust how wildly the x-coordinates vary
+n=slider(50,50,300)
+// how many bubbles we want to render
+maxR=slider(20,10,150)
+// the maximum radius of the bubbles
+p=descartes([gr1,gr2,gr3]) 
+plot everything:
+// that is three jets of brownian motion bubbles
+d1=[p1] 
+d2=[p2] 
+d3=[p3] 
+// each of the three jets is respresented by a data
+// field that contains one value only;
+// the other bubbles receive their property values by means of shifting
+p1=[x:s1,fcol_r:cb,fcol_g:cr,fcol_b:cg] 
+p2=[x:s2,fcol_r:cr,fcol_g:cg,fcol_b:cb] 
+p3=[x:s3,fcol_r:cg,fcol_g:cb,fcol_b:cr] 
+// these are, for each jet, the properties that are shifted from
+// bubble to bubble
+s1=max(min(100,if(t>1,s1{1}+xModulator*(random()-0.5),50)),0) 
+s2=max(min(100,if(t>1,s2{1}+xModulator*(random()-0.5),50)),0) 
+s3=max(min(100,if(t>1,s3{1}+xModulator*(random()-0.5),50)),0) 
+cr=max(min(255,if(t>1,cr{1}+colorModulator*(random()-0.5),128)) ,0)
+cg=max(min(255,if(t>1,cg{1}+colorModulator*(random()-0.5),128)) ,0)
+cb=max(min(255,if(t>1,cb{1}+colorModulator*(random()-0.5),128)) ,0)
+// the three jets each have their own x-location (s1, s2, s3), by their colors
+// are derived from a single set of three values, so that
+// at any time the three bubbles at any given location
+// in the 3 jets have complementary colors.
+t=t{1}+1
+//  the standard way to make time proceed
+gr1=[locations:[nrLocations:n+11,fill:'interior',icon:'bubble',x:[mode:'shift'],fcol_r:[mode:'shift'],fcol_g:[mode:'shift'],fcol_b:[mode:'shift'],fcol_a:0.3,y:[mode:'intp',low:0,high:100+maxR],rad:[mode:'intp',low:0,high:maxR],data:d1]] 
+gr2=[locations:[nrLocations:n+27,fill:'interior',icon:'bubble',x:[mode:'shift'],fcol_r:[mode:'shift'],fcol_g:[mode:'shift'],fcol_b:[mode:'shift'],fcol_a:0.3,y:[mode:'intp',low:0,high:100+maxR],rad:[mode:'intp',low:0,high:maxR],data:d2]] 
+gr3=[locations:[nrLocations:n-19,fill:'interior',icon:'bubble',x:[mode:'shift'],fcol_r:[mode:'shift'],fcol_g:[mode:'shift'],fcol_b:[mode:'shift'],fcol_a:0.3,y:[mode:'intp',low:0,high:100+maxR],rad:[mode:'intp',low:0,high:maxR],data:d3]]
+// each of the three jets corresponds to a separate graph, gr1 gr2 gr3. They have ewach a 
+// different value for nrLocations, hence the speeds of the three are different.
+// Notice that y is interpolated to 100+maxR instead of 100. So the bubbles continue
+// rising until they are entirely above the screen.

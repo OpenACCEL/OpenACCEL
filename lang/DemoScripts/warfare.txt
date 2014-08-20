@@ -1,0 +1,20 @@
+p=check(true)
+    //  used to reset the battle 
+e1=if(p,e1_0,max(0,e1{1}-lambda_2*e2{1}))
+    //  army 1: loose strength in dependence of the size of army 2 
+e2=if(p,e2_0,max(0,e2{1}-lambda_1*e1{1}))
+    //  army 2: loose strength in dependence of the size of army 1 
+lambda_1=slider(0.01,0,0.02)
+    //  the ratio in which army 2 looses strength as a result of the strength of army 1 
+lambda_2=slider(0.01,0,0.02)
+    //  the ratio in which army 1 looses strength as a result of the strength of army 2 
+e1_0=slider(100,0,500)
+    //  the initial size of army 1 
+e2_0=slider(100,0,500)
+    //  the initial size of army 2 
+res=descartes([graph1,graph2])
+    //  plotting the strengths of the two armies 
+graph1=[locations:[x:[mode:'intp'],y:[mode:'shift',value:e1/5],rad:1,fcol_r:255,fill:'interior']]
+    //  plotting army 1 
+graph2=[locations:[x:[mode:'intp'],y:[mode:'shift',value:e2/5],rad:1,fcol_g:255,fill:'interior']]
+    //  plotting army 2

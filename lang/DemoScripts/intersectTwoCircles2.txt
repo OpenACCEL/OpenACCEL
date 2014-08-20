@@ -1,0 +1,36 @@
+ 
+x=slider(49.69956362619996,0.0,100)
+    //  x coordinate of intersection point 
+y=slider(16.38675041962415,0.0,100.0)
+    //  y coordinate of intersection point 
+e1=paretoMin(err1+err2) 
+e2=paretoMin(err1+err2)
+    //  both e1 and e2 should be 0 for an intersection point 
+    // COntrast this with intersectTwoCricles1:
+    // there we used 2 cat-II quantites; in this case
+    // we optimize only one, using lumping.
+    // Also, we plot the slider values (=the cat.-I values)
+    // rather than the cat-II values to show the location of the 
+    // intersection point rather than the value of the penalty.
+    // In this way, the Pareto optimization begins
+    // to resemble a traditional descent method - albeit
+    // that we still have stochastics to determine the route
+    // that a point should take towards the optimum.
+xPlot=paretoHor(x)
+yPlot=paretoVer(y)
+m1x=0 
+m1y=50 
+m2x=100 
+m2y=50
+    //  these are the two midpoints 
+d1x=x-m1x 
+d1y=y-m1y 
+d2x=x-m2x 
+d2y=y-m2y
+    //  the difference vectors, connecting x and y to the two midpoints 
+err1=abs(r1-60) 
+err2=abs(r2-60)
+    //  radius 1 and 2 are both 60 
+r1=pow(d1x*d1x+d1y*d1y,0.5) 
+r2=pow(d2x*d2x+d2y*d2y,0.5)
+    

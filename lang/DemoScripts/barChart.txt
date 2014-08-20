@@ -1,0 +1,36 @@
+width=slider(5,0,20) 
+// width of the vertical bars
+height=slider(5,0,20) 
+// height of the horizontal bars
+xBase=slider(5,-50,50) 
+// x-position of the left point of the horizontal bars
+yBase=slider(5,-50,50) 
+// y-position of the lower point of the vertical bars
+a=descartes(graphs) 
+// instruction to plot everything
+amp=slider(5,0,50)
+// amplitude of the oscillations
+period=slider(20,1,50)
+// period of the oscillations
+horPerspective=check(false)
+// should the horizontal bars be plotted in perspective?
+verPerspective=check(false)
+// should the vertical bars be plotted in perspective?
+camHor=[perspective:horPerspective,auto:true]
+// the horizontal camera. Note: most properties are default
+camVer=[perspective:verPerspective,auto:true]
+// the vertical camera. Mote: most properties are default
+dataHor=#(i,vSequence(0,8),[width:amp*(1+sin((i+t)/period)),tag:"v:"+labels[i]],vAppend)
+// represents part of a running wave, propagating in time, assigned to the widths;
+dataVer=#(i,vSequence(0,8),[height:amp*(1+sin((i+t)/period)),tag:"h:"+labels[i]],vAppend)
+// represents part of a running wave, propagating in time, assigned to the widths;
+gr1=[camera:camHor,locations:[fill:'both',pointSize:3,icon:'hBar',x:xBase,y:[mode:'intp'],fcol_r:255,height:height,x:xBase,data:dataHor]]
+    //  a barchart consisting of horizontal bars 
+gr2=[camera:camVer,locations:[fill:'both',pointSize:3,icon:'vBar',y:yBase,x:[mode:'intp'],fcol_b:255,width:width,y:yBase,data:dataVer]]
+    //  a barchart consisting of vertical bars 
+graphs=[gr1,gr2] 
+// aggregate the graphs into one array
+labels=#(i,vSequence(0,20),"["+i+"]",vAppend)
+// a supply of sufficient labels
+t=t{1}+1
+// time

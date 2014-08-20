@@ -1,0 +1,65 @@
+p=descartes([gr])
+// to plot everything. In this case,
+// we want to show that a perspective mapping  
+// of Beziers where only the contrpol points
+// are perspectively transformed, does not leave the shape of
+// the bezier curves invariant.
+speedYaw=slider(0.01,0,0.1) 
+// speed of the rotation along the y-axis
+speedPitch=slider(0.0,0,0.1) 
+// speed of the rotation along the x-axis
+yaw=yaw{1}+speedYaw 
+// integrating the yaw-angle
+pitch=pitch{1}+speedPitch 
+// integrating the pitch-angle
+dist=slider(500,20,2000) 
+f=dist
+// the ratio of dist and focal length
+// should be roughly constant. That means that
+// roughty, the size of the image does not change
+// when we change dist. Only the amount of perspective
+// distortion differs.
+x0=slider(-40,-50,50)
+// controls the location of the first ring of nodes measured along the rotation axis of the 3D object
+x1=slider(-20,-50,50)
+// controls the location of the second ring of nodes measured along the rotation axis of the 3D object
+x2=slider(20,-50,50)
+// controls the location of the third ring of nodes measured along the rotation axis of the 3D object
+x3=slider(40,-50,50)
+// controls the location of the fourth ring of nodes measured along the rotation axis of the 3D object
+r0=slider(10,0,50)
+// controls the radius of the first ring of nodes of the 3D object
+r1=slider(20,0,50)
+// controls the radius of the second ring of nodes of the 3D object
+r2=slider(10,0,50)
+// controls the radius of the third ring of nodes of the 3D object
+r3=slider(20,0,50)
+// controls the radius of the fourth ring of nodes of the 3D object
+cam=[yaw:yaw,pitch:pitch,r:dist,f:f,look:'orbit'] 
+// our perspective camera
+n=slider(10,1,100)
+// from how many angle-sectors is the 3-D object constructed
+nRange=vSeq(0,n)
+// to re-use the set of values from 0 to n-1
+coss=#(i,nRange,cos(i*2*PI/n),vAppend)
+sins=#(i,nRange,sin(i*2*PI/n),vAppend)
+// all cosines and sines  of the rotation angles
+locations0=#(i,nRange,[x:x0,y:r0*coss[i],z:r0*sins[i]],vAppend)
+// the locations of the nodes in the first ring
+locations1=#(i,nRange,[x:x1,y:r1*coss[i],z:r1*sins[i]],vAppend)
+// the locations of the nodes in the second ring
+locations2=#(i,nRange,[x:x2,y:r2*coss[i],z:r2*sins[i]],vAppend)
+// the locations of the nodes in the third ring
+locations3=#(i,nRange,[x:x3,y:r3*coss[i],z:r3*sins[i]],vAppend)
+// the locations of the nodes in the fourth ring
+locationsData=vExtend(locations0,vExtend(locations1,vExtend(locations2,locations3)))
+// ll locations joined into one big array
+locations=[icon:'cross',width:3,height:3, data:locationsData]
+// to guide the eye, we plot the nodes
+edgesData=#(i,nRange,[col_r:200,col_g:0,col_b:100,b:i,bB:i+n,eB:i+2*n,e:i+3*n],vAppend)
+// the edges pick out the right indices in the location array,
+// everytime one group of 4 to define one bezier curve
+edges=[thickness:0.3,shape:'bezier',data:edgesData]
+// the edges object adds some properties to the edgesData
+gr=[camera:cam,locations:locations,edges:edges]
+// the entire graph ready to be plotted

@@ -1,0 +1,158 @@
+ 
+addPers=slider(262,1,400)
+    //  the amount of additional personnel 
+annWages=slider(18000,5000,40000)
+    //  the annual salary per chauffeur 
+kmPr=slider(2.5,0,5)
+    //  the kilometer price I charge my customers 
+myCarSlider=slider(4,0,5) 
+myRegionSlider=slider(4,0,4) 
+nrCars=slider(239,1,6000)
+    //  the number of cars in my fleet 
+nrStaff=slider(285,1,6000)
+    //  my amount of staff (=chauffeurs on my pay rol) 
+myCarName=myCar.carName
+    //  the brand name of the car of my choice 
+plotProfit=descartes([[locations:[x:[mode:'intp'],y:[mode:'shift',value:50+profit]],edges:[thickness:2,col_r:255]],[locations:[x:[mode:'intp'],y:[mode:'shift',value:100*fun]],edges:[thickness:2,col_b:255]]])
+    //  plotting the profit in real-time as a consequence of playing with the sliders 
+rFun=paretoVer(paretoMax(fun))
+    //  the fun is to be maximised and plotted vertically 
+rProfit=paretoHor(paretoMax(profit))
+    //  the profit is to be maximised and plotted horizontally 
+staffWaste=(nrStaff*wrkHpY-nrStaff*avgDpr)/(nrStaff*wrkHpY)
+    //  the amount of capacity not being used 
+avDlr=0.5
+    //  average duration of a local ride 
+carIns=300.0
+    //  the payment for car insurrence 
+chLr=0.5
+    //  chance for a local ride (as opposed to an intercity ride) 
+flPpl=1.4
+    //  the world gasoline price (in 2007!) in Euro/liter 
+fpr=5.12
+    //  the fixed offset to the ride price, to be paid for
+    //  every ride irrespective of its length 
+frTC=0.2
+    //  the fraction of people who take taxi rides at all
+    //  that is: the fraction of people who could potentially be customers 
+hourlyWage=7.5
+    //  what I have to pay for an additional (non-staff) driver 
+ilSpd=60.0
+    //  average speed (km/hour) 
+llr=2.0
+    //  the length (in km) of the average local ride 
+municipC=4000.0
+    //  what I have to pay for commissions per city (assuming a flat rate) 
+nrRpCpY=5.0
+    //  number of rides per year requested by an average customer 
+prsIns=400.0
+    //  insurrance to be payed per staff member 
+wrkHpY=1400.0
+    //  so many hours can be worked in one year 
+avLpr=chLr*llr+(1.0-chLr)*lIrr
+    //  average length (in kilometers) for a ride: weighted average
+    //  of the length of a local ride and an intercity ride 
+avgAddRinTsl=(nrReqRpy-nrStaff)/nrTslpy
+    //  average nr of rides by other personnel in all available time slots per year 
+avgDpr=chLr*avDlr+(1.0-chLr)*lIrr/ilSpd
+    //  average duration per ride:
+    //  the chance for a local ride * the length of a local ride,
+    //  plus the chance for a non-local (intercity) ride times the
+    //  average length of a intercity ride divided by the average speed 
+avgRegInTsl=nrReqRpy/nrTslpy
+    //  average nr of rides by my personnel in all available time slots per year 
+bOth=if(avgAddRinTsl>=1,poisson(min(addPers,max(1,nrCars-nrStaff)),max(avgAddRinTsl,1),true),0)
+    //  chance a request for any of the other drivers can be rewarded 
+bStff=poisson(nrStaff,avgRegInTsl,true)
+    //  the fraction of my staff that will be engaged in driving rides 
+car_buick=['carName':'buick','carPrice':70000,'fuelCons':0.16,'lifeExp':5,'fun':0.8] 
+car_chevrolet=['carName':'chevrolet','carPrice':120000,'fuelCons':0.13,'lifeExp':5,'fun':0.8]
+    //  the cat.-III data for each of the cars 
+car_fuel_cons=myCar.fuelCons
+    //  the fuel consumption for the car of my choice 
+car_fun=myCar.fun
+    //  the fun factor for the car of my choice 
+car_life_Exp=myCar.lifeExp
+    //  the life expectancy for the car of my choice 
+car_mercedes=['carName':'mercedes','carPrice':100000,'fuelCons':0.11,'lifeExp':4,'fun':0.5] 
+car_opel=['carName':'opel','carPrice':30000,'fuelCons':0.15,'lifeExp':3,'fun':0.3] 
+car_price=myCar.carPrice 
+car_rolls=['carName':'rolls','carPrice':250000,'fuelCons':0.15,'lifeExp':8,'fun':1] 
+car_vw=['carName':'vw','carPrice':35000,'fuelCons':0.11,'lifeExp':2,'fun':0] 
+comm=region_cities*municipC
+    //  the amount of commission fees I have to pay depends on the amount
+    //  of cities in the region of my choice 
+contrW=nrROth*avgDpr*hourlyWage
+    //  what do I have to pay to my contract workers (no salaries, but
+    //  hourly wages in case they have a ride 
+cttMc=ramp(kmPr,0.6,0.9,2.5,0.001)
+    //  chance that a customer will choose to have a ride with my company,
+    //  given my kilometer price (compared to the competitor's kilometer prices) 
+expenses=salaries+wrOff+fuel+comm+insur
+    //  all my expenses: salaries, writing-off, fuel and insurrances 
+ffMe=if(region=='E',1,if(region=='D',0.5,0.1))
+    //  fun for me: a large region gives much fun because of the
+    //  differences in scenery 
+ffmC=1-(nrReqRpy-(nrRStaff+nrROth))/nrReqRpy
+    //  fun for my customers: more fun if we have a larger chance to have sufficient
+    //  capacity to service a request. 
+ffmP=car_fun*ramp(annWages,10000.0,0.0,30000.0,1.0)
+    //  fun for my personnel is the product of their salaries (within bounds) and
+    //  the fun due to the brand of car they drive 
+fuel=nrRmCpY*avLpr*flPpl*car_fuel_cons
+    //  what I pay for fuel 
+fun=10.0*(ffMe*ffmC*ffmP)
+    //  the accumulated fun factors 
+income=nrRmCpY*(fpr+avLpr*kmPr)
+    //  my total income, assuming I only earn money with selling rides 
+indivCap=wrkHpY/avgDpr
+    //  the yearly capacity (in number o rides per year) of an individual chauffeur as the total working hours in
+    //  a hear divided by the avg. duration of a ride 
+insur=nrCars*carIns+(nrStaff+addPers)*prsIns
+    //  the total insurrence costs as a sum of car insurrence and staff-related insurrence 
+lIrr=region_rad
+    //  the radius of the region of my choice 
+myCar=([car_mercedes,car_opel,car_buick,car_chevrolet,car_rolls,car_vw])[myCarSlider]
+    //  the car of my choice 
+myRegion=([reg_A,reg_B,reg_C,reg_D,reg_E])[myRegionSlider]
+    //  the region of my choice 
+nrCiR=region_people
+    //  the potential number of customers in my region 
+nrROth=min(othCap*bOth,nrReqRpy-nrRStaff)
+    //  number of rides to be served by other chauffeurs 
+nrRStaff=min(staffCap*bStff,nrReqRpy)
+    //  the amount of rides being serviced by my own staff 
+nrReqRpy=nrCiR*frTC*nrRpCpY*cttMc
+    //  number of ride requests for my company per year 
+nrRmCpY=nrRStaff+nrROth
+    //  number of served rides I do, sum of the rides by my own personnel and by additional chauffeurs 
+nrTslpy=365.0*24.0/avgDpr
+    //  number of time slots per year, where one average ride corresponds to one time slot 
+othCap=min(max(nrCars-nrStaff,0),addPers)*365.0/avgDpr
+    //  the capacity (in number of serviced rides) of my additional personnel 
+profit=(income-expenses)/1000000.0
+    //  my annual profit, scaled to better fit the plotted graph 
+reg_A=['A',5,200000,1] 
+reg_B=['B',10,250000,3] 
+reg_C=['C',20,300000,14] 
+reg_D=['D',50,500000,40] 
+reg_E=['E',300,7000000,300]
+    //  data about the various regions I can choose from 
+region=myRegion[0]
+    //  the name of the region of my choice 
+region_cities=myRegion[3]
+    //  the number of cities in the region of my choice 
+region_people=myRegion[2]
+    //  the amount of people living in the region of my choice 
+region_rad=myRegion[1]
+    //  the radius of the region of my choice 
+salaries=staffSal+contrW
+    //  all I pay to salaries (staff salaries plus contract workers) 
+staffCap=min(nrStaff,nrCars)*indivCap
+    //  the total capacity (in number of rides/year) of my staff is determined by
+    //  nr drivers and nr cars 
+staffSal=annWages*nrStaff
+    //  the salary I pay to my staff only 
+wrOff=nrCars*car_price/car_life_Exp
+    //  what I have to pay yearly writing off the purchase price for my cars
+   

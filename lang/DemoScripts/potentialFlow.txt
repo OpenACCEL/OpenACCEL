@@ -1,0 +1,111 @@
+ 
+nn=16
+    //  number of nodes 
+ne=24
+    //  number of edges 
+pl=descartes([[locations:locations,edges:edges]])
+    //  plotting the nodes (locations) and edges 
+nodes=#(i,nnRange,node(i),vAppend)
+    //  creating the array of nodes 
+nnRange=vSeq(0,nn)
+    //  re-use the sequence 0,1,2,...nn-1 
+locations=[skipCheck:true,tagy:-3,data:nodes,fill:'interior',icon:'bubble',pointSize:3]
+    //  skipChekc=true to allow for descartes-strange properties such as p(=pressure)
+    //  The locations property contains the entire nodes structure 
+node(i)=[x:nodes0[i].x,y:nodes0[i].y,tag:'node'+i,p:calcP(i),fcol_r:30*nodes{1|nodes0}[i].p,rad:0.5*(1+nodes{1|nodes0}[i].p),state:if(i==0,true,if(mouseClick&&closest(i),stateSetter,nodes{1|nodes0}[i].state))]
+    //  a node has the following properties:
+    //  * x and y coordinates: taken from the initial configuration
+    //  * tag: encodes the number of the node
+    //  * p: the pressure, result of calculation
+    //  * rhe red color and the radius of the icon encode for the pressure in this node
+    //  * the state determines if this node should take part in the
+    //  numercial averaging-out, or whether it has been set to a fixed value.
+    //  Node 0 is always true: due to the minimax-principle, there always should be one node at pressure 10
+    //  for the others to be between 0 and 10.
+    //  If there is no mouseclick onto the node, the state is copied from the previous time frame. 
+mouseClick=cursorB()
+    //  has the user clicked the mouse? 
+mouseX=cursorX() 
+mouseY=cursorY()
+    //  wher did the mouse click occur? 
+calcP(i)=if(i==0,10,if(nodes{1|nodes0}[i].state,nodes{1|nodes0}[i].p+inFlux(i),0))
+    //  caluclate the pressure in a node as the previous pressure plus the influx over
+    //  all adjacent pipes. Node 0, however, has always to have pressure 10.
+    //  For a node with state=false, the pressure is zero. 
+inFlux(i)=#(j,neRange,if(pipes0[j].b==i,pipes{1|pipes0}[j].f,if(pipes0[j].e==i,-pipes{1|pipes0}[j].f,0)),add)
+    //  the flux contribution is positive for nodes that are on the e-side of a pipe,
+    //  it is negative for nodes that are on the b-side of a pipe.
+    //  The amount of flux is the f-property of that pipe. All fluxes are simply added together.
+    //  Notice that pipe friction is assumed to be equal for all pipes. 
+closest(i)=if(dist(i)==minDist,true,false)
+    //  to determine if a node is the closest one to the recent mouseclick 
+dist(i)=abs(nodes{1|nodes0}[i].x-mouseX)+abs(nodes{1|nodes0}[i].y-mouseY)
+    //  the distance, for node i, to the recent mouseclick 
+minDist=#(i,nnRange,dist(i),min)
+    //  the minimal distance of all nodes to the most recent mouseclick 
+stateSetter=check(false)
+    //  determine whether clicking on a node should have the pressure for that node drop to zero (false),
+    //  or if it should be the result of averaging with the neighbor nodes via the pipes (true). 
+edges=[skipCheck:true,data:pipes,pointSize:3]
+    //  the edges property for descartes 
+pipes=#(i,neRange,pipe(i),vAppend)
+    //  constructing all the pipes by calling ther pipe() function 
+neRange=vSeq(0,ne)
+    //  re use the range 0,1,2,.., ne-1 
+pipe(i)=[col_r:1280.0*(pipes{1|pipes0}[i].f)+128,thickness:3*abs(pipes{1|pipes0}[i].f),b:pipes0[i].b,e:pipes0[i].e,tag:'pipe'+i,f:calcF(i)]
+    //  one pipe has the properties:
+    //  * the red color: depends on the magnitude and the direction of the flow
+    //  * the thickness: depends on the magnitude of the flow only
+    //  * the b and e-properties are taken from the
+    //  initial configuration
+    //  * the tag is encodes the pipe-number
+    //  * the flow is the result of a calculation by the function calcF 
+calcF(i)=0.2*(nodes[pipes0[i].e].p-nodes[pipes0[i].b].p)*pipes0[i].cap
+    //  the flow in a pipe is proportional to the difference
+    //  in pressure in the two adjacent nodes 
+nodes0=[n0,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14,n15]
+    //  aggregate the nodes in the initial configuration 
+pipes0=[e0,e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16,e17,e18,e19,e20,e21,e22,e23]
+    //  agregate the edges in the initial configuration 
+n0=[x:20,y:20,p:10,state:true] 
+n1=[x:40,y:20,p:10,state:true] 
+n2=[x:60,y:20,p:10,state:true] 
+n3=[x:80,y:20,p:10,state:true] 
+n4=[x:20,y:40,p:10,state:true] 
+n5=[x:40,y:40,p:10,state:true] 
+n6=[x:60,y:40,p:10,state:true] 
+n7=[x:80,y:40,p:10,state:true] 
+n8=[x:20,y:60,p:10,state:true] 
+n9=[x:40,y:60,p:10,state:true] 
+n10=[x:60,y:60,p:10,state:true] 
+n11=[x:80,y:60,p:10,state:true] 
+n12=[x:20,y:80,p:10,state:true] 
+n13=[x:40,y:80,p:10,state:true] 
+n14=[x:60,y:80,p:10,state:true] 
+n15=[x:80,y:80,p:10,state:true]
+    //  the initial nodes 
+e0=[b:0,e:1,f:0,cap:1] 
+e1=[b:1,e:2,f:0,cap:1] 
+e2=[b:2,e:3,f:0,cap:1] 
+e3=[b:4,e:5,f:0,cap:1] 
+e4=[b:5,e:6,f:0,cap:1] 
+e5=[b:6,e:7,f:0,cap:1] 
+e6=[b:8,e:9,f:0,cap:1] 
+e7=[b:9,e:10,f:0,cap:1] 
+e8=[b:10,e:11,f:0,cap:1] 
+e9=[b:12,e:13,f:0,cap:1] 
+e10=[b:13,e:14,f:0,cap:1] 
+e11=[b:14,e:15,f:0,cap:1] 
+e12=[b:0,e:4,f:0,cap:1] 
+e13=[b:4,e:8,f:0,cap:1] 
+e14=[b:8,e:12,f:0,cap:1] 
+e15=[b:1,e:5,f:0,cap:1] 
+e16=[b:5,e:9,f:0,cap:1] 
+e17=[b:9,e:13,f:0,cap:1] 
+e18=[b:2,e:6,f:0,cap:1] 
+e19=[b:6,e:10,f:0,cap:1] 
+e20=[b:10,e:14,f:0,cap:1] 
+e21=[b:3,e:7,f:0,cap:1] 
+e22=[b:7,e:11,f:0,cap:1] 
+e23=[b:11,e:15,f:0,cap:1]
+    //  the initial pipes.

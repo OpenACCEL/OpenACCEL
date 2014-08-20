@@ -1,0 +1,24 @@
+mmm=cursorX() 
+// this sets the y-coordinate of the centre of the sine wave
+nnn=cursorY()
+mm=mm{1}*0.9+0.1*(mmm/3)
+nn=nn{1}*0.9+0.1*(100-nnn)/3
+// a low pass filter to make the bull's eye slowly follow the mouse.
+// Also, scale down to the artificial low resolution we use in this image of 33 x 33 
+// this sets the x-coordinate of the centre of the sine wave
+grid=[majX:17,grMajX:'line',majY:17,grMajY:'line']
+a=descartes([[image:[scaleX:3,scaleY:3,mapR:red,mapG:grn,mapB:blu]],[grid:grid]])
+// notice how the grid-functionality of Descartes is compatible with the image. 
+// We achieve this by having two graphs. The first one is an image;
+// the second one is a geometry - which is empty apart from the property 'grid'.
+// Also, the red channel views the sine wave,
+// the green and blue channels show color weges.
+// Enjoy the eery optical illusions resulting from interference between
+// the cartesian grid and the concentric color rings.
+red=#(n,vSequence(0,33),#(m,vSequence(0,33),128*(1+sin(sqrt((n-nn)*(n-nn)+(m-mm)*(m-mm)))),vAppend),vAppend) 
+// produce a sine wave that is a function of the distance to the point (nn,mm)
+grn=#(n,vSequence(0,33),#(m,vSequence(0,33),8*n,vAppend),vAppend) 
+blu=#(n,vSequence(0,33),#(m,vSequence(0,33),8*m,vAppend),vAppend) 
+// these are two wedges, one running left-right, one running top-bottom
+p=p{1}+1
+// a timer

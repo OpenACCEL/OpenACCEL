@@ -1,0 +1,35 @@
+airDamp=slider(0.005,0,0.03)
+    //  damping in the air 
+dt=slider(0.1,0.02,40.0)
+    //  how fast do we want the simulation to run 
+phi=slider(0,0,1.5)
+    //  the elevation angle for the fired ball 
+plotBall=descartes([[locations:[fill:'interior',x:r.x,y:r.y,rad:2.5]]])
+    //  draw the ball as a single blob 
+px=r.x
+    //  this is for numerical assessment of the shooting distance 
+g=-0.003
+    //  gravitation acceleration 
+groundDamp=0.02
+    // damping when rolling over the ground 
+v=0.55
+    //  initial velocity 
+boom=(r{1}.vx<0.000001)
+    //  this fires a canonball, when the previous has come to rest
+newVx=r{1}.vx*(1-velDamp*dt)
+    //  the horizonal speel is damped 
+newVy=r{1}.vy+(g-velDamp*r{1}.vy)*dt
+    //  the vertical speed is affected by gravity and damping,
+    //  damping always opposite to the motion direction 
+newX=min(r{1}.x+dt*r{1}.vx,100)
+    //  integrate x over vx, stay on the screen 
+newY=max(r{1}.y+dt*r{1}.vy,0)
+    //  integrate y over vy, stay on the screen 
+r=if(boom,startR,simR)
+    //  if the button is pressed, initialize, otherwise update 
+simR=['x':newX,'y':newY,'vx':newVx,'vy':newVy]
+    //  updating means: new values for x, y, vx, vy 
+startR=['x':0,'y':20,'vx':v*cos(phi),'vy':v*sin(phi)]
+    //  this is a canon shot 
+velDamp=if(r{1}.y>0,airDamp,groundDamp)
+    //  velocity damping in the air is different from damping when rolling on the ground

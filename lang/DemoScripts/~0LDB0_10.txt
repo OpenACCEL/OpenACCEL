@@ -1,0 +1,5 @@
+z=descartes([gr1,gr2]) 
+gr1=[locations:[x:[mode:'intp'],y:[mode:'shift',value:50+10*rate]],edges:[thickness:2,col_r:if(rate>0,0,255),col_g:if(rate>0,255,0)]]
+gr2=[locations:[x:[mode:'intp'],y:[mode:'shift',value:50+supply]],edges:[thickness:2,col_b:255]] 
+rate=slider(0,-0.5,0.5)
+supply=supply{1}+rate 

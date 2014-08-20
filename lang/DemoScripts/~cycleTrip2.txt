@@ -1,0 +1,29 @@
+ 
+W=fW*sM; kg.m2/s2
+    //  performed work is needed to overcome air friction 
+fW=c*rho*A*vMPS*vMPS; kg.m/s2
+    //  air friction is proportional to v*v 
+vKMPH=slider(15.0,0,40); km/h
+    //  speed in km/hour 
+vMPS=vKMPH*mPKM/secPH; m/s
+    //  convert speed from km/h to m/sec 
+sKM=slider(5.0,0.0,120); km
+    //  distance (in kilometer) as freely chosen 
+sM=sKM*mPKM; m 
+tSec=sM/vMPS; s
+    //  time of the ride is the product of distance and speed 
+tH=tSec/secPH; h
+    //  convert time in seconds to time in hours 
+rho=1; kg/m3
+    //  densitity of air 
+A=0.6; m2
+    //  area of the cyclist 
+c=0.5
+    //  dimensionless constant to obtain air friction. This includes the factor
+    //  0.5 from the canonical formula. Source: http://en.wikipedia.org/wiki/Drag_coefficient 
+secPH=3600; s/h
+    //  to convert hours to seconds 
+mPKM=1000; m/km
+    //  to convert kilometers to meters 
+WMin=paretoMin(paretoHor(W)); kg.m2/s2 
+tMin=paretoMin(paretoVer(tH)); h

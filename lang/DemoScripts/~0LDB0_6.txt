@@ -1,0 +1,8 @@
+z=plot([gr1,gr2]) 
+gr1=[str1,[s]]
+gr2=[str2,[50+s-s{1}]] 
+z=descartes([gr1,gr2])
+gr1=[locations:[x:[mode:'intp'],y:[mode:'shift',value:s]],edges:[thickness:2,col_r:255]]
+gr2=[locations:[x:[mode:'intp'],y:[mode:'shift',value:50+s-s{1}]],edges:[thickness:2,col_b:255]]
+s=50+25*sin(t/10) 
+t=t{1}+1

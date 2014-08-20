@@ -1,0 +1,77 @@
+nRange=vSeq(0,n)
+    // we re-use the range 0,1,2,...n-1 
+locationsData=do("var i,j,v=_arr; var r=[];var scale=v[0]; var n=v[1];var yy=v[2];for(i=0;i<n;i++){for(j=0;j<n;j++){r.push({'x':scale*(i-n/2),'y':yy[i][j],'z':scale*(j-n/2),'icon':'none'})}};return r;",['arr':[scale,n,5*xArr]]) 
+    // to make things go faster, we have javascript to compute the x,y,z triples in one single
+    // array, starting from the yy-values. The y-values are taken from the
+    // yy-array, containing the solution of the wave equations. The x and z-coordinates
+    // are calculated so as to ensure that the domain of the entire tablecloth
+    // is mapped to an x-z square of always the same size, irrespective
+    // of n.
+lights=[l1,l2,l3] 
+l1=[l_px:-100,l_py:100,l_pz:100,l_r:130,l_g:  0,l_b:  0,l_x: 0.6,l_z:-0.6,l_y:-1.5]
+l2=[l_px:100, l_py:100,l_pz:100,l_r:  0,l_g:130,l_b:  0,l_x:-0.6,l_z:-0.6,l_y:-1.5]
+l3=[l_px:0,   l_py:100,l_pz:100,l_r:  0,l_g:  0,l_b:130,l_x:   0,l_z:-0.6,l_y:-1.5]
+    // an aestheticaly pleasing arrangement of three point sources.
+faces=[fcol_a:1.0,fcol_r:1000,fcol_g:1000,fcol_b:1000,scol_r:50,scol_g:50,scol_b:50,beta:beta,fill:'interior',data:facesData] 
+    // set the diffuse and specular colors and the beta of the tablecloth;
+    // facesData contains the indices in the locations-array of the corners of each square.
+facesData=do("var i,j,v=_arr; var r=[];var nm=v[0];var n=v[1];for(i=0;i<nm;i++){for(j=0;j<nm;j++){r.push({'loop':[i*n+j,i*n+j+1,(i+1)*n+j+1,(i+1)*n+j]})}};return r;",['arr':[n-1,n]])
+    // to speed things up, have javascript calculate the indices in the locations array of each of 
+    // the four conrers of each square.
+beta=slider(4.0,0,20) 
+    // give the user control over the size of the specular highlight
+p=descartes([gr]) 
+    // plot the entire scene
+gr=[background:[fcol_r:0,fcol_g:0,fcol_b:0],lights:lights,camera:camera,locations:[data:locationsData],faces:faces] 
+    // the entire scene aggregates the information of camera, lights, locations and faces
+camera=[pitch:pitch,yaw:yaw,r:150,f:350,look:'orbit'] 
+    // the camera is controlled via the yaw and pitch angels
+t=t{1}+1 
+    // time increases
+pitch=slider(0.5,-3.1415,3.1415)
+    // give the user control over the pitch angle
+yaw=slider(-1.19,-3.1415,3.1415)
+    // give the user control over the yaw-angle
+feedback=input(0.2)
+    //  this control the force of the feedback 
+damp=slider(0.03,0.0,0.1)
+    //  to control the amount of damping 
+n=slider(20,10,50)
+    //  this is the size of the discrete grid onto which we solve the wave equation. Notice: source contributions (excitations) occur if you move the cursor over the plotting area, holding the mouse button down. 
+periodic=check(true)
+    //  controls if the convolution operator should be periodically extended 
+clamped=check(false)
+    //  controls if the convolution operator should terminate at the domain boundaries 
+boundaryType=if(periodic,0,if(clamped,1,2)) 
+scale=50/n
+rScal=round(scale)
+    //  the pixels scaling factor 
+kernel=feedback*[[-0.1,-0.2,-0.1],[-0.2,1.2,-0.2],[-0.1,-0.2,-0.1]]/20
+    //  this approximates a smooth second derivative (2D Mexican hat) 
+smooth=iGaussian(5,5,2,2); unitError
+    //  used to make soft bumps. Indeed, hard bumps would introduce high frequent noise
+    //  with a wavelength that is short compared to the sampling rate,
+    //  causing dispersion. 
+cX=cursorX() 
+cY=cursorY() 
+curX=(cX/2)/rScal 
+curY=(cY/2)/rScal
+    //  transform the cursor position to the scaled grid .
+    // This mapping is different from the mapping in the 2-D demo.
+    // Here we map the canvas to the the table cloth - but we don't take
+    // the camera perspective into account. So clicking anywhere near the border
+    // of the canvas will cause a bump anywher near the border of the table cloth;
+    // clicking in the middel of the canvas will cause a bump right in the middel of the table cloth.
+chk=cursorB() 
+bump=if(chk,iConvolve(iSpike(curY,curX,n,n),smooth,3,3,2),0)
+    //  a soft bump is obtained by applying convolution with a gaussian to a spike (at a cursor-defined location)
+    //  To start the animation, move the cursor randomly over the
+    //  gird with the button down: notice the perturbations occurring at the location of the cursor.
+    //  See how they propagate in time. 
+xN=(2-damp)*xArr{1}-((1-damp)*xArr{2}+iConvolve(xArr{1},kernel,1,1,boundaryType))
+    //  this is the homogenous solution of the partial differential equation 
+xArr=if(time<3||n{1}!=n||n{2}!=n||n{3}!=n,iMake(0,n,n),xN+bump)
+    //  the particular solution is the sum of the homogenous solution and
+    //  the initial condition and the perturbation (if there is one) 
+time=time{1}+1
+    //  the standard method to have an increasing timer 

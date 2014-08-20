@@ -6,12 +6,13 @@ define(["../Controller/AbstractView",
         "../View/Tooltip",
         "../View/Tabs/EditRun",
         "../View/Tabs/HelpDemo",
+        "../View/Tabs/Analysis",
         "../View/Tabs/IOEdit",
         "../View/Tabs/Optimisation",
         "../View/Tabs/Simulation",
         "../View/Graphics/CanvasCreator"],
         /**@lends View*/
-        function(AbstractView, Tooltip, EditRun, HelpDemo, IOEdit, Optimisation, Simulation, CanvasCreator, deparam) {
+        function(AbstractView, Tooltip, EditRun, HelpDemo, Analysis, IOEdit, Optimisation, Simulation, CanvasCreator, deparam) {
     /**
      * @class
      * @classdesc The webview is the view class for webbrowsers.
@@ -50,6 +51,7 @@ define(["../Controller/AbstractView",
         this.tabs.editrun = new EditRun();
         this.tabs.helpdemo = new HelpDemo();
         this.tabs.ioedit = new IOEdit();
+        this.tabs.analysis = new Analysis();
         this.tabs.optimisation = new Optimisation();
         this.tabs.simulation = new Simulation();
 

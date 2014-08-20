@@ -1,0 +1,82 @@
+ 
+dAction=slider(0.073,-0.1,0.1)
+    //  the relative contribution of differentiating action 
+kAction=slider(0.22,0,1)
+    //  the overall strength of the control feedback loop 
+noise=slider(0.23,0,1)
+    //  the amplitude of the random perturbation 
+pAction=slider(0.0029,-0.01,0.01)
+    //  the relative contribution of proportional action 
+showGraph=check(false)
+    //  to determine if the graph should be visible 
+cy=cursorY() 
+cx=cursorX() 
+spar=cond(abs(cy-y0)<10,cx-50,spar{1})
+    //  the set-point (=the position of the red dot) 
+tBut=button() 
+time=cond(tBut,0,time{1}+1)
+    //  resetting the time and incrementing the time
+plotStick=[locations:[icon:"none", data:[[x:x1,y:y1],[x:x2,y:y2]]],edges:[col_r:0,thickness:2,b:0,e:1]]
+    //  this represents the tilting stick (actually a slide) 
+plotPhi=[locations:[icon:"none",x:[mode:'intp'],y:[mode:'shift'],data:[[y:50+50*showphi]],nrLocations:100],edges:[col_r:255]]
+    //  this represents the angle phi as a function of time 
+plotBall=[locations:[fill:"interior",rad:d,x:rx,y:3+ry]]
+    //  this is the rolling ball
+plotAnchor=[locations:[col_r:255,width:4,height:4,thickness:2,x:sx,y:sy,icon:"diagonalCross"]]
+    // this is the little anchor point, to be moved by the user (the set point of the controller)    
+plotResult=descartes([plotPhi,plotStick,plotBall,plotAnchor])
+    //  three graphs:
+    //  the green line segment representing the stick,
+    //  the big green bubble representing the ball,
+    //  the red curve: the variation of phi 
+    //  this is the rolling ball 
+    //  three graphs:
+    //  the green line segment representing the stick,
+    //  the big green bubble representing the ball,
+    //  the red curve: the variation of phi 
+Rmax=40
+    //  determines the length of the stick 
+d=10
+    //  the diameter of the ball 
+g=0.5
+    //  the gravity 
+x0=50
+    //  the hinge, x-coordinate 
+y0=40
+    //  the hinge, y-coordinate 
+cphi=cos(phi)
+    //  so we don't have to calculate the cos every time 
+ctrlPhi=phi{1}*(1-kAction)+kAction*(pAction*(rpar{1}-spar)+dAction*(rpar{1}-rpar{2}))
+    //  the angle of the stick as a result of the feedback controllers
+    //  the first term is the own (previous) value
+    //  the second term is the proportional action: propoertional to the difference between the soll and ist-werte
+    //  the third term is the differentiating action: proportional to the first derivative 
+gpar=-g*sphi
+    //  the parallel component of gravity 
+phi=cond(time>1,noise*(random()-0.5)+ctrlPhi,0.05)
+    //  the actual angle of the stick: the controlled angle plus a noise contribution 
+rpar=cond(time>1,rpar{1}+vpar,0)
+    //  the parallel displacement: integrate over the parallel velocity 
+rx=x0+d*sphi/2+rpar*cphi
+    //  the x-coordinate of the ball 
+ry=y0+d*cphi/2+rpar*sphi
+    //  the y-coordinate of the ball 
+showphi=cond(showGraph,phi,-1)
+    //  if the graph should be shown, showPhi equals the value of phi 
+sphi=sin(phi)
+    //  so we don't have to calculate the sine every time over again 
+sx=x0+spar*cphi
+    //  the x-coordinate of the set point (=the red dot) 
+sy=y0+spar*sphi
+    //  the y-coordinate of the set point (=the red dot) 
+vpar=cond(time>1,vpar{1}+gpar,0)
+    //  the parallel component of the velocity: integrating the acceleration 
+x1=x0+Rmax*cphi
+    //  x coordinate of one end point of the stick 
+x2=x0-Rmax*cphi
+    //  x coordinate of other end point of the stick 
+y1=y0+Rmax*sphi
+    //  y coordinate of one end point of the stick 
+y2=y0-Rmax*sphi
+    //  y coordinate of other end point of the stick
+   

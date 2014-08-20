@@ -1,0 +1,36 @@
+ 
+but=button()
+    //  
+g=slider(0.002,0,0.01)
+    //  play with the gravity strength to seek stable configurations;
+    //  how long can you keep things stable? 
+plotResult=descartes([[locations:[fill:'interior',tagy:-8, data:#(i,vSequence(0,7),[x:r[i].x+50,y:r[i].y+50,rad:2.5*pow(m[i],0.333),tag:names[i],pointSize:pointSizes[i]/3],vAppend)]]])
+    //  one graph consisting of as many blobs as there are planets. The x and y coordinates are
+    //  taken from the 'x'- and 'y'-components of the r-vector that has to be transposed in order to get
+    //  the x-s and y-s in two separate vectors. The diamters are taken proportional to the
+    //  cube root of the masses 
+a=cond(time>1,f/m,0)
+    //  Newton: a=F/m 
+distVec(i,j)=r{1}[j]-r{1}[i]
+    //  the distance vector between planets i and j 
+f=#(i,vSequence(0,7),forceOnOnePlanet(i),vAppend)
+    //  calculate the forces for all planets 
+forceOnOnePlanet(i)=#(j,vSequence(0,7),if(i!=j,newton(i,j),0),add)
+    //  adding the forces due to all other of planets 
+m=[80,2,2,2,2,2,2]
+    //  one heavy sun and 6 light planets 
+names=['sun','1','2','3','4','5','6']
+    //  the text tags 
+newton(i,j)=g*m[i]*m[j]*distVec(i,j)/(pow(vNormEuclid(distVec(i,j)),3))
+    //  the law of gravity force: propertional to both masses and inverse propoertional to the
+    //  square of the distance. But
+    //  since the force is a vector, directed from mass j to mass i, we have the difference between these two
+    //  in the numerator, and the distance cubed in the denominator. 
+pointSizes=[15,8,8,8,8,8,8]
+    //  the sizes of the texts 
+r=cond(time>1,r{1}+v,[['x':0,'y':0],['x':15,'y':0],['x':7,'y':10],['x':-7,'y':10],['x':-15,'y':0],['x':-7,'y':-10],['x':7,'y':-10]])
+    //  r is obtained by integrating v; at the starting time (==1) give the initial positions 
+time=if(!but,time{1}+1,0)
+    //  reset the time to the moment of the creation of the universe 
+v=cond(time>1,v{1}+a,[['x':0,'y':0],['x':0,'y':0.1],['x':-0.05,'y':0.03],['x':-0.05,'y':-0.03],['x':0,'y':-0.1],['x':0.05,'y':-0.03],['x':0.05,'y':0.03]])
+    //  v is obtained by integrating a; at the starting time give the initial velocities

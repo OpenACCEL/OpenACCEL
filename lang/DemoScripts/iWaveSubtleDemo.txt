@@ -1,0 +1,60 @@
+severity=slider(40,1.0,512)
+feedback=input(30)
+    //  this controls the force of the feedback 
+xnR=severity*((xN%nRed)/nRed)
+    //  the color map towards the red channel 
+xnG=severity*((xN%nGrn)/nGrn)
+    //  the color map towards the grn channel 
+xnB=severity*((xN%nBlu)/nBlu)
+    //  the color map towards the blu channel 
+a=descartes([[image:[scaleX:rScal,scaleY:rScal,mapR:128+min(xnR,severity-xnR), mapG:128+min(xnG,severity-xnG), mapB:128+min(xnB,severity-xnB)]]])
+    //  plotting an image with variable pixel scaling 
+
+damp=slider(0.01,0.0,0.1)
+    //  to control the amount of damping 
+DS=slider(70,10,100)
+    //  this is the size of the discrete grid onto which we solve the wave equation. Notice: source contributions (excitations) occur if you move the cursor over the plotting area, holding the mouse button down. 
+periodic=check(false)
+    //  controls if the convolution operator should be periodically extended 
+clamped=check(false)
+    //  controls if the convolution operator should terminate at the domain boundaries 
+boundaryType=if(periodic,0,if(clamped,1,2)) 
+scal=slider(1,1,10) 
+rScal=round(scal)
+    //  the pixels scaling factor 
+kernel=feedback*[[-0.1,-0.2,-0.1],[-0.2,1.2,-0.2],[-0.1,-0.2,-0.1]]/20
+    //  this approximates a smooth second derivative (2D Mexican hat) 
+smooth=iGaussian(5,5,2,2)
+    //  used to make soft bumps. Indeed, hard bumps would introduce high frequent noise
+    //  with a wavelength that is short compared to the sampling rate,
+    //  causing dispersion. 
+cX=if(time<3,50,max(0,min(100,cX{1}+vX)))
+cY=if(time<3,50,max(0,min(100,cY{1}+vY)))
+cD=if(time<3,50,max(10,min(200,cD{1}+vD)))
+// the cursor location, and the intensity of the cursor are brownian motions
+vX=10.0*(random()-0.5)
+vY=10.0*(random()-0.5)
+vD=10.0*(random()-0.5)
+curX=(cX-(100-DS*rScal)/2)/rScal 
+curY=(cY-(100-DS*rScal)/2)/rScal
+    //  transform the cursor position to the scaled grid 
+bump=cD*iConvolve(iSpike(DS-curY,curX,DS,DS),smooth,3,3,0)
+    //  a soft bump is obtained by applying convolution 
+    // with a gaussian to a spike (at a cursor-defined location)
+    //  To start the animation, move the cursor randomly over the
+    //  gird with the button down: notice the perturbations occurring at the location of the cursor.
+    //  See how they propagate in time. 
+xN=(2-damp)*xArr{1}-((1-damp)*xArr{2}+iConvolve(xArr{1},kernel,1,1,boundaryType))
+    //  this is the homogenous solution of the partial differential equation 
+xArr=if(time<3,iMake(128,DS,DS),xN+bump)
+    //  the particular solution is the sum of the homogenous solution and
+    //  the initial condition and the perturbation (if there is one) 
+time=if(DS{1}!=DS||DS{2}!=DS||DS{3}!=DS,1,time{1}+1)
+    //  the standard method to have an increasing timer.
+    //  Time is also reset when the resolution changes.
+nRed=severity*(1.1+sin(time/1367))/2.1+1
+    //  this gradually adjusts the red-component of the color map 
+nGrn=severity*(1.1+sin(2.0+time/2951))/2.1+1
+    //  this gradually adjusts the green-component of the color map 
+nBlu=severity*(1.1+sin(4.0+time/327))/2.1+1
+    //  this gradually adjusts the blue-component of the color map 

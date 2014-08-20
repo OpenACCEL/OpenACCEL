@@ -1,0 +1,26 @@
+ 
+s=slider(50,0,100)
+    //  the size of the square and the widths of the two streams 
+xL=slider(50,0,100) 
+    //  the horizontal position of one stream 
+yL=slider(50,0,100) 
+    //  the vertical position of the other stream 
+a=descartes(graphs)
+    //  show a number of visualisation techniques:
+    //  two graphs (consisting of boxes) and one graph consisting of an isolated
+    //  plot element (also a box), everyting under interactive control. 
+graph1=[locations:[fill:'interior',nrLocations:60,x:[mode:'intp'],y:[mode:'shift',value:yL],rad:[mode:'shift',value:t/2],fcol_r:190,tag:[mode:'shift',value:"a"+random()],tagy:[mode:'shift',value:100*random()],pointSize:[mode:'shift',value:5*random()]]]
+    //  graph1 
+graph2=[locations:[fill:'interior',nrLocations:60,y:[mode:'intp'],x:[mode:'shift',value:xL],rad:[mode:'shift',value:t/2],fcol_g:100]]
+    //  graph 2 
+graph3=[locations:[fill: 'interior',icon:'box',nrLocations:1,x:xL,y:yL,width:t,height:t,fcol_r:70,fcol_g:0,fcol_b:255,tag:"een_text_met_spaties"]]
+    //  graph 3 
+graphs=[graph1,graph2,graph3]
+    //  collecting the graphs into one vector 
+t=t{1}*0.95+s*0.05
+    //  Notice the use of damping to make the behaviours smooth in time:
+    //  this is the inifinite impulse response filter t=t{1}*0.95+s*0.05.
+    //  t is used as a parameter in each of the three graphs,
+    //  hence their similar behaviour (although applying different visual modalities:
+    //  horizontal deviation, vertical deviation and size, respectively,
+    //  for the three graphs.

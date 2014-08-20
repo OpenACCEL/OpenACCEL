@@ -30,6 +30,7 @@ suite("Library", function() {
 
         test("| Loading help articles", function() {
             var articles = lib.getHelpArticles();
+            lib.getDemoScripts();
             // assert(lib.lib.standard_functions.length > 0);
             // assert(lib.lib.input_functions.length > 0);
             // assert(lib.lib.help.length > 0);

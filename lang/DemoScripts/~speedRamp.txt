@@ -1,0 +1,151 @@
+x0=0; dm
+    //  fixes the origin of the x-axis
+    //  units are in dm; one pixel corresponds to 1 dm. 
+x1=100; dm
+    //  starting point of speed ramp 
+fSW=slider(15,0.1,60); dm
+    //  front slope width 
+tSW=slider(15,0.1,60); dm
+    //  trailing slope width 
+pW=slider(30,0.0,80); dm
+    //  plateau width 
+trail=50; dm
+    //  the part after the speed ramp 
+x2=x1+fSW 
+x3=x2+pW 
+x4=x3+tSW 
+x5=x4+trail
+    //  the sailant x-locations in the road 
+yOff=40
+    //  to move the image a bit up, so that speed ramps also can have negative height 
+fH=slider(4.0,-20,20); dm
+    //  front height 
+tH=slider(4.0,-20,20); dm
+    //  trailing height 
+v=slider(100,1,500); dm/s
+    //  speed of the car. 100 dm/s = 10 m/s = 36 km/h 
+hOff=if(hOff{1}<-200,0,hOff{1}-v*dt)
+    //  where the picture of the road starts. The picture is shifted
+    //  in the opposite direction of the speed of the car, so the wheels
+    //  stay at fixed horizontal position in the image 
+t=if(!reset,t{1}+dt,0)
+    //  the time is reset when the reset button is clicked 
+reset=button()
+    //  to interrupt and reset the animation 
+dt=slider(0.01,0.005,0.02); s
+    //  sample time interval
+    //  picture=descartes([roadImg(road),whImg(fW),whImg(rW),sImg(fS),sImg(rS),chImg(ch)]) 
+picture=descartes([roadImg(road),whImg(fW),whImg(rW),sImg(fS),sImg(rS),chImg(ch),sPImg(fPS),sPImg(rPS),pImg(p)])
+    //  everything that needs to be plotted 
+road=#(i,vSeq(0,100),vVecRamp(xList+hOff,yList,i),vAppend) 
+roadImg(r)=[edges:[col_r:0,thickness:1.5],locations:[x:[mode:'intp'],data:#(i,vDom(r),[y:yOff+r[i]],vAppend)]]
+    //  the road moves in the image 
+xList=[x0,x1,x2,x3,x4,x5]
+    //  the horizontal locations of the sailant points in the speed ramp 
+yList=[0,0,fH,tH,0,0]
+    //  the vertical locations of the sailant points in the speed ramp 
+fW=if(t<=dt,[x:xF,y:0,vY:0,a:g],[x:xF,y:fW{1}.y+fW{1}.vY*dt,vY:fW{1}.vY+fW{1}.a*dt,a:g+(fS{1}.f+fColl(fW{1}))/wM]) 
+rW=if(t<=dt,[x:xR,y:0,vY:0,a:g],[x:xR,y:rW{1}.y+rW{1}.vY*dt,vY:rW{1}.vY+rW{1}.a*dt,a:g+(rS{1}.f+fColl(rW{1}))/wM])
+    //  the wheel geometry:
+    //  x-coordinates move uniformly with speed v - so they stand still in the moving image
+    //  y-coordinates (of wheel lowest point) found by integrating vY
+    //  vY (y-speed) integrating a
+    //  a is the result of gravity plus the collision force plus the force from the corresponding spring. 
+fColl(w)=-min(0,collC*(w.y-road[w.x]))-if(w.y<road[w.x],w.vY*collD,0)/dt 
+collC=4000 
+collD=0.15
+    //  a wheel shall not sink below the road, or else there is a reaction force.
+    //  We model the tire as a dampened spring. Damping does not work when the wheel is detached from the road 
+rad=6; dm
+    //  radius of a wheel 
+wM=cM/10
+    //  mass of a wheel is 10% of the mass of the chassis 
+g=-30; dm/s2
+    //  gravity velocity - given the masses, this gives nice 'falling' behavior 
+xF=30; dm
+    //  frontwheel x-position of car 
+xR=80; dm
+    //  rear wheel x-position of car 
+whImg(w)=[locations:[x:w.x,y:yOff+w.y+rad,fill:'interior',fcol_r:255,rad:rad]] 
+devFS=ch.fY-(fW.y+rad+sL) 
+devRS=ch.rY-(rW.y+rad+sL) 
+fS=if(t<=dt,[x1:xF,x2:xF,y1:rad,y2:rad+sL,f:0],[x1:xF,x2:xF,y1:fW.y+rad,y2:ch.fY,f:c*devFS+d*((ch.fY-fW.y)-(ch{1}.fY-fW{1}.y))/dt]) 
+rS=if(t<=dt,[x1:xR,x2:xR,y1:rad,y2:rad+sL,f:0],[x1:xR,x2:xR,y1:rW.y+rad,y2:ch.rY,f:c*devRS+d*((ch.rY-rW.y)-(ch{1}.rY-rW{1}.y))/dt])
+    //  geometry of the springs:
+    //  x1 and x2 both follow the location of the corresponding wheel (no dynamics)
+    //  y1 = centre of corresponding wheel
+    //  y2 = extreme point of the chassis
+    //  force = the force on the lower extreme. So compressed spring pushes downwards.
+    //  Two components: one hooke term, proportional to difference between rest length (sL) and actual length;
+    //  one damping term, proportional to difference in top- and bottom speeds of spring. 
+c=100
+    //  spring constant for the wheel suspension 
+d=170
+    //  damper constant for the wheel suspension 
+sL=5; dm
+    //  spring rest length for the wheel suspension 
+bL=slider(40,-100,500); dm
+    //  offset to spring length to have chassis off the floor - must be adjusted when car mass is adjusted
+    //  this looks better but has no influence on the dynamics. 
+sImg(s)=[edges:[col_b:255,thickness:2],locations:[data:[[x:s.x1,y:s.y1+yOff],[x:s.x2,y:s.y2+yOff+bL]]]]
+    //  to plot the springs 
+ch=if(t<=dt,[fX:xF,rX:xR,fY:rad+sL,rY:rad+sL,fVY:0,rVY:0,fAY:g,rAY:g],[fX:xF,rX:xR,fY:ch{1}.fY+ch{1}.fVY*dt,rY:ch{1}.rY+ch{1}.rVY*dt,fVY:ch{1}.fVY+ch{1}.fAY*dt,rVY:ch{1}.rVY+ch{1}.rAY*dt,fAY:g-fS{1}.f/cM,rAY:g-rS{1}.f/cM])
+    //  geometry of the chassis.We assume that front and rear
+    //  end only move vertically to the dynamics; their horizontal motion is
+    //  not coupled to the dynamics and purely dictated by the hor. location of the
+    //  wheels.
+    //  fY, rY integrate fVY and rVY;
+    //  fVY, rVY integrate aVY and rVY;
+    //  aVY and rVY are the sum of gravity and the spring forces in the front,
+    //  and rear springs, respectively.
+    //  Notice that the signs of these forces are opposite
+    //  to the signs of the forces on the wheels. 
+cM=slider(100,100,500); kg
+    //  the weight of the chassis 
+chImg(chs)=[edges:[b:0,e:1,thickness:4,col_r:255],locations:[data:[[x:chs.fX,y:chs.fY+yOff+bL],[x:chs.rX,y:chs.rY+yOff+bL]]]]
+    //  to plot the chassis 
+p=if(t<=dt,[x:(xF+xR)/2,y:3*rad+sL,m:pM,vX:0,vY:0,aX:0,aY:g],[x:p{1}.x+p{1}.vX*dt,y:p{1}.y+p{1}.vY*dt,m:pM,vX:p{1}.vX+p{1}.aX*dt,vY:p{1}.vY+p{1}.aY*dt,aX:(fPS{1}.f[0]+rPS{1}.f[0])/pM,aY:g+fCollP/pM])
+    //  the geometry of the passenger.
+    //  m: the mass
+    //  x,y: coordinates, integrating vX,vY
+    //  vX,vY: velocities, integrating accelerations
+    //  aX,aY: accelerations, given by the springs. Notice: the mass of the passenger
+    //  is considered to be negligable to the mass of the chassis. Therefore we
+    //  don't respect action = -reaction for the passenger springs: these only
+    //  excert forces on the passenger, but not on the chassis. This would be
+    //  impossible anyway for the x-components, since everything is assumed to have uniform x-motion;
+    //  it is an approximation w.r.t. the y-components. 
+fCollP=-min(0,collP*(p{1}.y-(chassY+2*rad)))-if(p{1}.y<chassY+2*rad,p{1}.vY*collPD,0)/dt
+    //  the collision force that should keep the passenger from falling through the chassis 
+chassY=(ch.fY*(xR-p{1}.x)+ch.rY*(p{1}.x-xF))/(xR-xF)
+    //  the y-coordinate of the point on the chassis with x-coordinate the x-coordinate of the passenger 
+pM=30
+    //  the mass of the passenger 
+restLfPS=if(t<=dt,sqrt(pow((xR-xF)/2,2)+rad*rad),restLfPS{1}) 
+restLrPS=if(t<=dt,sqrt(pow((xR-xF)/2,2)+rad*rad),restLrPS{1})
+    //  the rest lengths of the two springs that keep the passenger in place 
+vfPS=[p.x-xF,p.y-ch.fY] 
+vrPS=[p.x-xR,p.y-ch.rY] 
+curLfPS=vNormEuclid(vfPS) 
+curLrPS=vNormEuclid(vrPS) 
+nfPS=vfPS/curLfPS 
+nrPS=vrPS/curLrPS
+    //  the length and the unit vector corresponding to the front passenger spring
+    //  and similar for the rear passenger spring 
+fPS=if(t<=dt,[x1:xF,x2:(xF+xR)/2,y1:rad+sL,y2:p.y,f:[0,0]],[x1:xF,x2:p.x,y1:ch.fY,y2:p.y,f:(cPS*(restLfPS-curLfPS)-dPS*(curLfPS-curLfPS{1})/dt)*nfPS]) 
+rPS=if(t<=dt,[x1:xR,x2:(xF+xR)/2,y1:rad+sL,y2:p.y,f:[0,0]],[x1:xR,x2:p.x,y1:ch.rY,y2:p.y,f:(cPS*(restLrPS-curLrPS)-dPS*(curLrPS-curLrPS{1})/dt)*nrPS])
+    //  the two springs that keep the passenger in place are
+    //  euclidean springs, e.i., they work along the direction of the spring.
+    //  Their force has a Hook component and a dampened component; the latter
+    //  is derived from the change in current length since the previous evaluation 
+sPImg(s)=[[plotType:'line',col_b:0,width:2,x:[mode:'data',ref:1],y:[mode:'data',ref:2]],[s.x1,s.x2],yOff+bL+[s.y1,s.y2]]
+    //  plotting the spring that keeps the passenger in place 
+pImg(p)=[locations:[x:p.x,y:p.y+yOff+bL,fill:'interior',fcol_r:128,rad:2*rad]] 
+cPS=250
+    //  spring constant of safety belts and other passenger-fixation systems 
+dPS=110
+    //  damper constant of passenger-fixation system 
+collP=1300
+    //  collision handling reaction force to keep passenger from falling through the chassis 
+collPD=0.75
+    //  collision handling damper force to keep passenger from falling through the chassis

@@ -1,0 +1,60 @@
+ 
+camera=[auto:automaticCamera,pitch:pitch,yaw:yaw,f:f,r:r,look:'orbit']
+    //  the camera is controlled either by dragging the mouse
+    //  if automaticCamera is true, or otherwise by setting
+    //  the values of pitch or yaw
+    //  Notice that we don't touch roll in this demo.
+    //  by means of the three sliders. 
+automaticCamera=check(true)
+    //  to set automatic control on or off 
+yaw=slider(0,-3.1415,3.1415) 
+pitch=slider(0,-3.1415,3.1415)
+    //  sliders to control the camera orientation when
+    //  we are not in automatic model 
+f=slider(450,20,2000)
+    //  focal distance 
+r=slider(500,20,2000)
+    //  how far are we removed from the scene? 
+p=descartes([gr])
+    //  to plot everything 
+amp=100
+    //  the amplitude of the swings 
+freq=slider(0.04,0.02,1)
+    //  Scales the frequency of all swings.
+    //  Notice that all swings have different frequencies (omega is a linear function of i),
+    //  though: this causes the interference among
+    //  the swings, and gives rise to the various Gestalt phenomena. 
+n=slider(50,3,300)
+    //  how many swings we want 
+gr=[camera:camera,locations:locations,edges:edges]
+    //  this is one graph, consisting of the camera, the locations and the edges 
+nRange=vSeq(0,n) 
+omega=if(n==n{1},#(i,nRange,freq*(i+30)/n,vAppend),#(i,nRange,0,vAppend))
+    //  these are the omegas. The omega linearly increase with i.
+    //  The omega are constant. 
+alpha=if(n==n{1},#(i,nRange,alpha{1}[i]+omega[i],vAppend),(#(i,nRange,0,vAppend)))
+    //  these are ever-increasing values, one for each of the swings, obtained
+    //  by integrating the omega. Notice that the alpha's don't oscillate;
+    //  by forming delta=sin(alpha) we form oscillating values, one for
+    //  each swing. 
+delta=if(n==n{1},#(i,nRange,sin(alpha{1}[i]),vAppend),#(i,nRange,0,vAppend))
+    //  these are the values of sin(alpha), used
+    //  to compute the cartesian locations of the pendula (the pendula are the
+    //  lower ends of the swings).
+    //  Since the motion of the pendula
+    //  is a known, sine function of time, we don't need to
+    //  solve a differential equation but plug in the solution right away. 
+hinges=#(i,nRange,[x:100*(i-n/2)/n,y:50,z:0],vAppend)
+    //  the hinges form the data field for a collection of
+    //  locations 
+pendula=if(n==n{1},#(i,nRange,[icon:"bubble",thickness:0.1,fill:'both',col_r:0,col_g:0,col_b:0,fcol_r:i*255/n,fcol_g:128,fcol_b:(n-i)*256/n,fcol_a:1.0,x:hinges[i].x,y:hinges[i].y-amp*cos(delta[i]),z:hinges[i].z-amp*sin(delta[i])],vAppend),#(i,nRange,[x:0,y:0,z:0],vAppend))
+    //  these icons form the lower parts of the swings.
+    //  The pendula's coordinates are taken from the locations of the
+    //  hinges (=the top parts of the pendula), the length of each of the
+    //  swings, and the instantaneous angles delta. 
+edges=[thickness:0.2,arrows:'both',data:#(i,nRange,[col_r:i*255/n,col_g:128,col_b:(n-i)*256/n,b:i,e:i+n],vAppend)]
+    //  the edges connect the hinge and the pendulum (=the lower icon) for each swing.
+    //  Any edge spans between a hinge location and a pendulum location. 
+locations=[rad:4,width:15,height:25,data:vExtend(hinges,pendula)]
+    //  Notice the use of vExtend: we form an array that first contains all
+    //  hinge data, and next all pendulum data.

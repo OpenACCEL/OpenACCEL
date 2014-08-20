@@ -1,0 +1,83 @@
+n=slider(6,3,60)
+// in how many sectors is the rotationally symmetric polydron built up 
+opaque=slider(0.9,0,1) 
+// controls the translucency
+beta=slider(0.1,0,30) 
+// controls the sharpness of the specular reflection
+p=descartes([gr]) 
+// plots everything. This demo shows that
+// the persepctive projection of a plane polygon stays a plane
+// polygon, but that in extreme cases the simple
+// sorting on the z-coordinate of the centroid of each face, to determine
+// the occlusion order, is too naive.
+speedYaw=slider(0.01,0,0.1) 
+// controls the speed of rotation around the y-axis
+speedPitch=slider(0.0,0,0.1) 
+// controls the speed of rotation around the x-axis
+yaw=yaw{1}+speedYaw 
+// integrate yaw-angle
+pitch=pitch{1}+speedPitch 
+// integrate pitch-angle
+dist=slider(100,20,2000)
+// controls how close we are to the polyhedron
+f=dist
+// by setting f proportional to dist,
+// the scale on the screen should stay roughtly
+// of the same size, only the amount of 
+// perspective distortion changes 
+cam=[yaw:yaw,pitch:pitch,r:dist,f:f,look:'orbit'] 
+// the persepctive camera
+x0=slider(-40,-50,50)
+// controls the location of the first ring of corners measured along the rotation axis of the 3D object
+x1=slider(-20,-50,50)
+// controls the location of the second ring of corners measured along the rotation axis of the 3D object
+x2=slider(20,-50,50)
+// controls the location of the third ring of corners measured along the rotation axis of the 3D object
+x3=slider(40,-50,50)
+// controls the location of the fourth ring of corners measured along the rotation axis of the 3D object
+r0=slider(10,0,50)
+// controls the radius of the first ring of corners of the 3D object
+r1=slider(20,0,50)
+// controls the radius of the second ring of corners of the 3D object
+r2=slider(10,0,50)
+// controls the radius of the third ring of corners of the 3D object
+r3=slider(20,0,50)
+// controls the radius of the fourth ring of corners of the 3D object
+gr=[camera:cam,locations:locations,faces:faces,lights:lights] 
+// the total argument for descartes: camera, locations, faces (no edges) and lights.
+lights=[[]] 
+// for lights, all properties are set to default. Notice
+// the lights has, as a value, a set of light sources.
+// Hence we should set [[]] instead of [] to get a
+// completely undefined (= all default) light source configuration
+nRange=vSeq(0,n) 
+// we will reuse the sequence 0,1,2,...,n-1
+coss=#(i,nRange,cos(i*2*PI/n),vAppend) 
+sins=#(i,nRange,sin(i*2*PI/n),vAppend) 
+// all cosines and sinses of the rotation angle,
+// needed for construction the object of revolution
+locations0=#(i,nRange,[x:x0,y:r0*coss[i],z:r0*sins[i]],vAppend) 
+// the corners on the first ring
+locations1=#(i,nRange,[x:x1,y:r1*coss[i],z:r1*sins[i]],vAppend) 
+// the corners on the second ring
+locations2=#(i,nRange,[x:x2,y:r2*coss[i],z:r2*sins[i]],vAppend) 
+// the corners on the third ring
+locations3=#(i,nRange,[x:x3,y:r3*coss[i],z:r3*sins[i]],vAppend) 
+// the corners on the fourth ring
+locationsData=vExtend(locations0,vExtend(locations1,vExtend(locations2,locations3))) 
+// all four rings put together in one array using the vExtend operator
+locations=[icon:'none',data:locationsData] 
+// we don't want the locations themselves to be seen;
+// they only serve to define the object of revolution
+facesData1=#(i,nRange,[fcol_r:[mode:"random",low:0,high:600],fcol_g:[mode:"random",low:0,high:600],fcol_b:0,loop:[i,i+n,(i+1)%n+n,(i+1)%n]],vAppend) 
+// the faces in the first ring. Notice the use of 'random' to get colors in the red-green regime
+facesData2=#(i,nRange,[fcol_r:0,fcol_g:[mode:"random",low:0,high:600],fcol_b:[mode:"random",low:0,high:600],loop:[i+n,i+2*n,(i+1)%n+2*n,(i+1)%n+n]],vAppend) 
+// the faces in the second ring. Notice the use of 'random' to get colors in the green-blue regime
+facesData3=#(i,nRange,[fcol_r:[mode:"random",low:0,high:600],fcol_g:0,fcol_b:[mode:"random",low:0,high:600],loop:[i+2*n,i+3*n,(i+1)%n+3*n,(i+1)%n+2*n]],vAppend) 
+// the faces in the third ring. Notice the use of 'random' to get colors in the red-blue regime
+facesData=vExtend(facesData1,vExtend(facesData2,facesData3)) 
+// aggregate all faces data into one array
+faces=[fcol_a:opaque,beta:beta,fill:'interior',data:facesData]
+// apart from the array faceData, containing the 
+// geometry, we also set some propreties to determine the
+// behavior under lighting.

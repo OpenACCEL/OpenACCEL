@@ -1,0 +1,99 @@
+ 
+s0=slider(1,0,9) 
+s1=slider(6,0,8) 
+s2=slider(2,0,7) 
+s3=slider(3,0,6) 
+s4=slider(2,0,5) 
+s5=slider(1,0,4) 
+s6=slider(3,0,3) 
+s7=slider(0,0,2) 
+s8=slider(1,0,1)
+    //  every slider gives a choice for the next city to be chosen.
+    //  s0 has choice from all cities;
+    //  s1 has a choice for the remaining cities after s0 has been visited
+    //  s2 has a choice for the remaining cities after s0 and s1 have been visited
+    //  et cetera. 
+curRoute=route 
+d=descartes([places]);uncheckedUnit
+    //  Plotting the necessary places 
+routeAfst=[dist(D,D),dist(pn[0],D),dist(pn[1],D),dist(pn[2],D),dist(pn[3],D),dist(pn[4],D),dist(pn[5],D),dist(pn[6],D),dist(pn[7],D),dist(pn[8],D),dist(D,pn[0]),dist(pn[0],pn[0]),dist(pn[1],pn[0]),dist(pn[2],pn[0]),dist(pn[3],pn[0]),dist(pn[4],pn[0]),dist(pn[5],pn[0]),dist(pn[6],pn[0]),dist(pn[7],pn[0]),dist(pn[8],pn[0]),dist(D,pn[1]),dist(pn[0],pn[1]),dist(pn[1],pn[1]),dist(pn[2],pn[1]),dist(pn[3],pn[1]),dist(pn[4],pn[1]),dist(pn[5],pn[1]),dist(pn[6],pn[1]),dist(pn[7],pn[1]),dist(pn[8],pn[1]),dist(D,pn[2]),dist(pn[0],pn[2]),dist(pn[1],pn[2]),dist(pn[2],pn[2]),dist(pn[3],pn[2]),dist(pn[4],pn[2]),dist(pn[5],pn[2]),dist(pn[6],pn[2]),dist(pn[7],pn[2]),dist(pn[8],pn[2]),dist(D,pn[3]),dist(pn[0],pn[3]),dist(pn[1],pn[3]),dist(pn[2],pn[3]),dist(pn[3],pn[3]),dist(pn[4],pn[3]),dist(pn[5],pn[3]),dist(pn[6],pn[3]),dist(pn[7],pn[3]),dist(pn[8],pn[3]),dist(D,pn[4]),dist(pn[0],pn[4]),dist(pn[1],pn[4]),dist(pn[2],pn[4]),dist(pn[3],pn[4]),dist(pn[4],pn[4]),dist(pn[5],pn[4]),dist(pn[6],pn[4]),dist(pn[7],pn[4]),dist(pn[8],pn[4]),dist(D,pn[5]),dist(pn[0],pn[5]),dist(pn[1],pn[5]),dist(pn[2],pn[5]),dist(pn[3],pn[5]),dist(pn[4],pn[0]),dist(pn[5],pn[5]),dist(pn[6],pn[5]),dist(pn[7],pn[5]),dist(pn[8],pn[5]),dist(D,pn[6]),dist(pn[0],pn[6]),dist(pn[1],pn[6]),dist(pn[2],pn[6]),dist(pn[3],pn[6]),dist(pn[4],pn[6]),dist(pn[5],pn[6]),dist(pn[6],pn[6]),dist(pn[7],pn[6]),dist(pn[8],pn[6]),dist(D,pn[7]),dist(pn[0],pn[7]),dist(pn[1],pn[7]),dist(pn[2],pn[7]),dist(pn[3],pn[7]),dist(pn[4],pn[7]),dist(pn[5],pn[7]),dist(pn[6],pn[7]),dist(pn[7],pn[7]),dist(pn[8],pn[7]),dist(D,pn[8]),dist(pn[0],pn[8]),dist(pn[1],pn[8]),dist(pn[2],pn[8]),dist(pn[3],pn[8]),dist(pn[4],pn[8]),dist(pn[5],pn[8]),dist(pn[6],pn[8]),dist(pn[7],pn[8]),dist(pn[8],pn[8])]
+    //  routeLen=#(i,vSeq(1,10),routeAfst[((route[i])*10)+(route[i-1])],add) 
+shoPaH=paretoHor(paretoMin(routeLen));uncheckedUnit
+    //  the path should be as short as possible 
+shoPaV=paretoVer(paretoMin(routeLen));uncheckedUnit
+    //  we want to plot a pareto plot, so we have the same
+    //  value occur in two quantities, one plot
+    //  horizontally 
+startEnd=['start':route[0],'end':route[9]] 
+D=['x':50,'y':50,'w':10,'r':250,'t':'Depot']
+    //  in a simple form, a place has two coordinates, a size, a color 
+p0=['x':85,'y':65,'w':5,'r':128,'t':'place0'] 
+p1=['x':20,'y':20,'w':5,'r':128,'t':'place1'] 
+p2=['x':50,'y':80,'w':5,'r':128,'t':'place2'] 
+p3=['x':30,'y':50,'w':5,'r':128,'t':'place3'] 
+p4=['x':20,'y':90,'w':5,'r':128,'t':'place4'] 
+p5=['x':15,'y':80,'w':5,'r':128,'t':'place5'] 
+p6=['x':80,'y':20,'w':5,'r':128,'t':'place6'] 
+p7=['x':25,'y':35,'w':5,'r':128,'t':'place7'] 
+p8=['x':90,'y':30,'w':5,'r':128,'t':'place8'] 
+s9=0
+    //  For the last city, there is no other choice.
+    //  We could have put s9=slider(0,0,0), but a lider of zero length is not really a slider. 
+complement(s,t)=#(i,vDom(s),if(!occurIn(t,i),i,[]),vConcat)
+    //  The function complement(p,q) computes the vector complement of the vectors
+    //  p and q, that is: the vector of all elements from p that don't occur in q.
+    //  This represents the cities I have not yet visited once I have visited the cities in q,
+    //  where p is the full set of cities.
+    //  Notice the use of the empty vector: []. Concatenating the empty vector to a set doesn't alter that vector.
+    //  If we would have used vAppend instead, it would have inserted an element (being the empty vector),
+    //  which is not what we want. 
+dist(nextP,curP)=sqrt(pow(abs(nextP.x-curP.x),2)+pow(abs(nextP.y-curP.y),2))
+    //  distance function 
+e=[e1,e2,e3,e4,e5,e6,e7,e8,e9,e10]
+    //  the sequence of edges 
+e1=['e1':resRoute[0],'e2':resRoute[1],'w':3,'r':0,'t':'e1'] 
+e10=['e1':resRoute[9],'e2':resRoute[0],'w':3,'r':0,'t':'e10']
+    //  in a simple version, an edge has two references to nodes
+    //  (e1 and e2), a width and one color attribute- e.g., red. It also
+    //  has a name, the t-attribute. 
+e2=['e1':resRoute[1],'e2':resRoute[2],'w':3,'r':0,'t':'e2'] 
+e3=['e1':resRoute[2],'e2':resRoute[3],'w':3,'r':0,'t':'e3'] 
+e4=['e1':resRoute[3],'e2':resRoute[4],'w':3,'r':0,'t':'e4'] 
+e5=['e1':resRoute[4],'e2':resRoute[5],'w':3,'r':0,'t':'e5'] 
+e6=['e1':resRoute[5],'e2':resRoute[6],'w':3,'r':0,'t':'e6'] 
+e7=['e1':resRoute[6],'e2':resRoute[7],'w':3,'r':0,'t':'e7'] 
+e8=['e1':resRoute[7],'e2':resRoute[8],'w':3,'r':0,'t':'e8'] 
+e9=['e1':resRoute[8],'e2':resRoute[9],'w':3,'r':0,'t':'e9']  
+occurIn(t,n)=#(i,vDom(t),t[i]==n,or)
+    //  Checks if an element n occurs in a vector t.
+    //  We use a quantified expression with 'or' as operator: it is the disjoint of all terms,
+    //  where every term states if an element of t equals the probe element n.  
+path(n)=cond(n>0,vAppend(path(n-1),complement(vSeq(0,10),path(n-1))[selection[n]]),[selection[0]])
+    //  This actually computes the path of n cities recursively, as a path of n-1 cities to which
+    //  we concatenate one further city. For n=0, the first city is returned - in the form of a
+    //  vector with one element. This is [selection[0]].
+    //  For n>0, it appends the path of length n-1 with one element, selected from
+    //  the cities we have not yet visited. This vector of cities is calculated by complement(...).
+    //  Realise that the output of complement(...) is a vector; we have to
+    //  element of that vector. Hence the occurrence of [...] after
+    //  complement(...). The element that we select from complement(...) is given by the index selection[n],
+    //  and the vector selection contains the values of each of the sliders. Notice that for increasing
+    //  n, selection[n] can take fewer and fewer values. 
+pl=[p0,p1,p2,p3,p4,p5,p6,p7,p8,D]
+    //  the sequence of places and the depot 
+places=[locations:[pointSize:3,icon:'bubble', data:#(i,vDom(pl),[x:pl[i].x,y:pl[i].y,tag:pl[i].t],vAppend),rad:3,fill:'interior',fcol_r:255],edges:[pointSize:3,thickness:2,col_g:255,data:#(i,vDom(e),[b:e[i].e1,e:e[i].e2,tag:e[i].t],vAppend)]]
+    //  this instructs Descartes to draw a sequence of places. We use the 'bubble' primitive to do so,
+    //  and only specify the x and y coordinates, the diameter, one color attribute (red), and a tag (name).
+pn=[p0,p1,p2,p3,p4,p5,p6,p7,p8] 
+resRoute=route;uncheckedUnit
+    //  we want to see the actual route as a result, not only its length 
+route=path(9);uncheckedUnit
+    //  This call to path(9) constructs, for the current setting of all sliders, the
+    //  path that corresponds to these sliders. 
+routeLen=#(i,vSeq(1,10),dist(pl[route[i]],pl[route[i-1]]),add);uncheckedUnit
+    //  This is naive. It assumes that all cities are next to each other, with one
+    //  kilometer in between to subsequent ones. In a real traveling salesman
+    //  problem, here should come the calculation of the distance between
+    //  city i and i-1. 
+selection=[s0,s1,s2,s3,s4,s5,s6,s7,s8,s9]
+    //  neeeded to group all slider values into one vector. 

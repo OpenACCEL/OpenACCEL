@@ -1,0 +1,30 @@
+ 
+s=slider(50,0,100)
+    //  the height of the point in the middle of the green graph can vary between 0 and 100;
+    //  this also controls the distribution of the diameter of the bubbles in the red graph 
+a=descartes([greengraph,redGraph])
+    //  we plot two graphs: the green graph and the red graph 
+greenValues=#(i,vSequence(0,100),p(i),vAppend)
+    //  the values that form the y-values in the green graph 
+greengraph=[edges:[thickness:2,col_g:255,col_r:0,col_b:0],locations:[x:[mode:'intp'],data:#(i,vSequence(0,100),[y:greenValues[i]],vAppend)]]
+    //  this is a line graph; the x-coordinates follow by interpolation;
+    // the lower and upper bound of the interpolation are not given, therefore
+    //  these are given default values that happen to be such that the horizontal range of the graph exactly spans the plotting window.
+    //  the y-values are taken from the property data, that is: the set values greenValues.
+    //  Further properties that are set are the thickness, the green and the red color.
+    // Other propoerties (such as the blue channel, the transparency
+    //  and maybe others) are not given: these take sensible default values. 
+p(t)=vVecRamp([25,50,75],[50,s,50],t)
+    //  a function that consists of four straight line segments when formal variable t ranges from 0 to 100 
+redGraph=[locations:[fill:'interior',fcol_r:255,fcol_g:0,fcol_b:0,x:[mode:'intp'],data:#(i,vSequence(0,12),[y:redValues[i],rad:diameters[i]/2],vAppend)]]
+    //  this is a bubble graph; x coordinates are also found by interpolating over
+    //  the default interval (= the screen width, ranging from 0 to 100). The y-values are
+    //  taken from the first data set redValues; the radii are taken from the second
+    //  data set, diameters.
+    //  Again, some properties such as transparency are not specified; these are given sensible defaults. 
+redValues=#(i,vSequence(0,12),i*i,vAppend)
+    //  a sequence of 12 subsequent squares, forming a parabola 
+diameters=#(i,vSequence(0,12),(p(i*8)+50)/20,vAppend)
+    //  a sequence of 12 samples from the same function p(t) that was used to construct
+    //  the green values. This time this function is used
+    //  to modulate the diameter of the bubbles.

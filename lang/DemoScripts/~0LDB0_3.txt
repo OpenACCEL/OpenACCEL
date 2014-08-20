@@ -1,0 +1,4 @@
+s=slider(10,0,100)
+z=descartes([gr1,gr2])
+gr1=[locations:[x:[mode:'intp'],y:[mode:'shift',value:s]],edges:[]]
+gr2=[locations:[x:[mode:'intp'],y:[mode:'shift',value:s%10]],edges:[]]

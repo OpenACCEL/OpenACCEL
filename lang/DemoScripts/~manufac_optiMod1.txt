@@ -1,0 +1,31 @@
+demand=[[0,0],[75,20],[95,30],[60,45],[90,30]];[[unit/week,unit/week],[unit/week,unit/week],[unit/week,unit/week],[unit/week,unit/week],[unit/week,unit/week]]
+    //  We only sell products from the inventory, so we need the first week to produce initial supply.
+    //  Therefore no demand in the first week. 
+nrHpW=80; hour/week
+    //  number of hours per week 
+nrWeeks=5; week
+    //  we run the simulation for five weeks; 
+prod1=['PC':9.0,'SP':25.0];[PC:dollar/unit,SP:dollar/unit] 
+prod2=['PC':14.0,'SP':35.0];[PC:dollar/unit,SP:dollar/unit] 
+    //  PC: production cost,
+    //  SP: selling price 
+expenses=productionCosts
+    //  expenses consist of various contributions 
+income=income{1}+#(i,[0,1],thisWeekDemand(i)*prod[i].SP,add)
+    //  income thus far plus income this week 
+prod=[prod1,prod2]
+    //  collection of products 
+productionCosts=productionCosts{1}+#(i,[0,1],prod[i].PC*thisWeekDemand(i),add)
+    //  prod.-costs thus far plus prod.-costs of this week
+profit=income-expenses 
+    //  expenses thus far limited to production costs
+thisWeekDemand(i)=cond(week<=nrWeeks,demand[week-deltaWeek][i],zeroUnits)
+    //  the demand stops after the last week. Realize that the demand-vector indices
+    //  run from 0 ... 4, the first being zero. Further, we make thisWeekDemand
+    //  a function that returns a single value, not a vector. Hence the argument i to distinguish products. 
+week=week{1}+deltaWeek
+    //  increasing week number. This runs from 1 ... 5. 
+deltaWeek=1; week
+    // to make dimensions correct
+zeroUnits=0;unit
+    // to make dimensions correct

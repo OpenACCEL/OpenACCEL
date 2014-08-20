@@ -1,0 +1,13 @@
+a=descartes([graphs]) 
+grid=[majPhi:6,grMajPhi:'line',minPhi:18,grMinPhi:'line',majR:4,grMajR:'line',minR:20,grMinR:'tick']
+graphs=[grid:grid,locations:[fill:'border',nrLocations:25,x:50,y:50,icon:'radar',rad:[mode:'shift'],col_r:[mode:'shift'],col_g:[mode:'shift'],col_b:[mode:'shift'],thickness:[mode:'shift'],pointSize:[mode:'shift'],tag:[mode:'shift'],data:d]]
+    //  demonstrates the use of a radar plot as visualisation widget
+    //  in combination with time-dependent signals. 
+but=button() 
+r1=if(but,r1{1}+5,10+0.95*(r1{1}-10)) 
+r2=if(but,r2{1}+200,0.95*r2{1}) 
+r3=if(but,r3{1}+200,0.95*r3{1}) 
+r4=if(but,r4{1}+200,0.95*r4{1}) 
+r5=if(but,r5{1}+10,3+0.95*(r5{1}-3))
+d=[d1]
+d1=[rad:r1,col_r:r2,col_g:r2,col_b:r2,thickness:r5,pointSize:r5,tag:'woosh']

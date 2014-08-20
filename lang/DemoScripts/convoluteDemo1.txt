@@ -1,0 +1,24 @@
+ 
+m=n*random()
+// where does the spike occur?
+// this selects a random location     
+n=100
+  // the length of the graph
+yPulse=random()>0.40
+  // to trigger a new jump
+rPulse=random()>0.99
+  //  to trigger a new bubble
+pl=descartes([graph])
+    //  plotting 
+graph=[background:bg,locations:[fill:'interior',fcol_r:[mode:'random',low:0,high:255],fcol_g:[mode:'random',low:0,high:255],fcol_b:[mode:'random',low:0,high:255],x:[mode:'intp'],data:#(i,vSeq(0,n),[y:50+50*yArr[i],rad:50*rArr[i]],vAppend)]]
+// a nice 1960-ies colored set of balls 
+kernel=[0.1,0.7,1.5,0.7,0.1]/3.105 
+time=time{1}+1
+    //  the standard method to have an increasing timer 
+yArr=if(time<2,vSpike(m,n),if(yPulse,yArr{1}+(random()-0.5)*vSpike(m,n),vConvolve(yArr{1},kernel,2,0)))
+rArr=if(time<2,vSpike(m,n),if(rPulse,rArr{1}+vSpike(m,n),vConvolve(rArr{1},kernel,2,0)))
+    //  the first conditional initialises the array xArr to the proper length
+    //  the second conditional adds a spike
+    //  the third conditional performs the convolution
+bg=[fcol_r:153,fcol_g:51,fcol_b:204,fcol_a:1.0]
+   // the ACCEL color to hide the plotting canvas

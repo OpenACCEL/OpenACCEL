@@ -1,0 +1,62 @@
+sockStates=[state0,state1,state2,state3,state4,state5] 
+// the six states in the life of a sock
+state0=[where:"closet",hyg:"clean___",x:50,y:85,future:[2]  ,tag:sTag(state0{1|dummy}),fill:sFill(0)] 
+// state 0
+state1=[where:"closet",hyg:"notClean",x:80,y:65,future:[5]  ,tag:sTag(state1{1|dummy}),fill:sFill(1)] 
+// state 1
+state2=[where:"on"    ,hyg:"clean___",x:80,y:35,future:[3]  ,tag:sTag(state2{1|dummy}),fill:sFill(2)] 
+// state 2
+state3=[where:"on"    ,hyg:"notClean",x:50,y:15,future:[3,5],tag:sTag(state3{1|dummy}),fill:sFill(3)] 
+// state 3
+state4=[where:"wash"  ,hyg:"clean___",x:20,y:35,future:[0,2],tag:sTag(state4{1|dummy}),fill:sFill(4)] 
+// state 4
+state5=[where:"wash"  ,hyg:"notClean",x:20,y:64,future:[4]  ,tag:sTag(state5{1|dummy}),fill:sFill(5)]
+//state 5 
+dummy=[where:"undefined",hyg:"udefined"]
+// we need a dummy to have the function sTag compute the tag text also in the first computation,
+// when the previous value for the state quantities has not yet been computed
+sTag(st)="["+st.where+","+st.hyg+"]"
+// construct a text tag by concatenating the values for the 'where' and 'hyg'-properties
+sFill(st)=if(st==curState{1},"both","border")
+// states are rendered as empty circles, but the current state is a full circle
+arrows=[arrow02,arrow23,arrow35,arrow54,arrow42,arrow15,arrow40] 
+// the arrows-collection is spelled out as the 7 allowed state transitions.
+// Notice that we cannot trivially plot a curved arrow, so the transition from state 3 to state 3
+// is not indicated by an arrow
+arrow02=[b:0,e:2,thickness:transThickness(0,2)]
+// transition 0-->2
+arrow23=[b:2,e:3,thickness:transThickness(2,3)]
+// transition 2-->3
+arrow35=[b:3,e:5,thickness:transThickness(3,5)]
+// transition 3-->5
+arrow54=[b:5,e:4,thickness:transThickness(5,4)]
+// transition 5-->4
+arrow42=[b:4,e:2,thickness:transThickness(4,2)]
+// transition 4-->2
+arrow15=[b:1,e:5,thickness:transThickness(5,1)]
+// transition 5-->1
+arrow40=[b:4,e:0,thickness:transThickness(4,0)] 
+// transition 4-->0
+pl=descartes([[edges:[arrows:"end",data:arrows,col_r:255,col_g:0,col_b:0],locations:[data:sockStates,pointSize:4,icon:"bubble",rad:3,width:4,height:18,tagy:-7]]])
+// plot the collections of states and transitions
+curWhere=sockStates[curState].where
+// we want to inform the user about the where-property of the current state
+curHygiene=sockStates[curState].hyg
+// we want to inform the user about the hygiene-property of the current state
+curState=newState(curState{1|1})
+// calculate the new value for the current state 
+// from the previous value
+event=button()
+// this triggers a state transition
+newState(x)=cond(event,constructNewState(x),x)
+// the new state is equal to the previous state unless an
+// event has been fired. In the latter case we construct a new state
+constructNewState(x)=sockStates[x].future[floor(random()*vLen(sockStates[x].future))]
+// the construction of the new state amounts to picking a random state
+// from the possible futures of the current state
+transThickness(old,new)=if((old==curState{1|1}||old==curState{2|1}||old==curState{3|1}||old==curState{4|1}) && new==curState,4,1)
+// just for userfriendliness, we want to highlight the arrow
+// corresponding to the current state transition. Therefore we
+// make the thickness of an arrow bigger if this arrow matches
+// with the current state transition. Since a single state transition
+// goes very fast, we keep the thickness for a few subsequent calculations.

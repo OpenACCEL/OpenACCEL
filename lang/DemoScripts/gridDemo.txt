@@ -1,0 +1,11 @@
+a=descartes([graph])
+// plotting a graph - this time with a grid 
+grid=[majX:5,minX:17,grMajX:'line',grMinX:'line',majY:5,minY:17,grMajY:'line',grMinY:'line']
+// major and minor lines in both directions
+graph=[grid:grid,locations:[x:[mode:'intp'],y:[mode:'shift',value:p]],edges:[thickness:4]] 
+// notice the first part, defining a grid
+p=if(click,p{1}+50,p{1}*0.95)
+// this is the same demo as the somple click demo,
+// except we now adorn the image plane with a cartesian grid. 
+click=button()
+// click the button to generate a pulse

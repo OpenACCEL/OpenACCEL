@@ -1,0 +1,37 @@
+ 
+yaw=yaw{1}+0.01
+    //  cause automatic rotation in yaw-direction 
+pitch=pitch{1}+0.013
+    //  cause automatic rotation in pitch-direction 
+roll=roll{1}+0.017
+    //  cuase automatic rotation in roll-direction 
+n=slider(4,2,15)
+    //  how many color points do we want per dimension? 
+scale=80/n
+    //  distance between two adjacent color points 
+cScale=255/n
+    //  the step between two adjacent color points in each of the color scales 
+nH=(n-1)/2
+    //  the midway value to center the cube exacly in (0,0,0) 
+nRnge=vSeq(0,n)
+    //  the range of index values for each of the three nested loops 
+rad=slider(2,0.1,10)
+    //  to give the user control over the radii 
+alpha=slider(0.8,0,1)
+    //  to give the user control over the transparency 
+r=slider(200,20,200)
+    //  to give the user control over the radius of the camera orbit 
+camera=[pitch:pitch,yaw:yaw,roll:roll,r:r,f:r]
+    //  the rotatin camera 
+background=[fcol_r:128,fcol_g:128,fcol_b:128]
+    //  the background color corresponds to the centre of the cube 
+oneRow(red,grn)=#(blu,nRnge,[x:scale*(blu-nH),y:scale*(red-nH),z:scale*(grn-nH),fcol_r:cScale*red,fcol_g:cScale*grn,fcol_b:cScale*blu],vAppend)
+    //  for given green and red, this is one row of color poijts with increasing blue 
+onePlane(red)=#(grn,nRnge,oneRow(red,grn),vExtend)
+    //  for given red, this is one plane of color dots 
+oneCube=cond(n==n{1},oneCube{1|#(red,nRnge,onePlane(red),vExtend)},#(red,nRnge,onePlane(red),vExtend))
+    //  this is the entire color cube. Notice
+    //  the trick: we only re-compute the color cube if n changes!
+    //  Otherwise, for large n, the update rate would be too slow 
+p=descartes([[camera:camera,background:background,locations:[fcol_a:alpha,fill:'interior',rad:rad,col_r:0,col_g:0,col_b:0,data:oneCube]]])
+    //  this does the entire rendering

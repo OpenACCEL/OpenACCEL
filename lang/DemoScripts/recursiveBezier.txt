@@ -1,0 +1,71 @@
+amp=slider(0,-0.5,0.5)
+    //  how far can the deviation of the correct Bezier-ratio's be? 
+freezeA=check(false)
+    //  to freeze the animation of the coefficients
+freezeB=check(true)
+    //  to freeze the animation of the control points
+recLevel=slider(9,0,9)
+    //  what is the recursion level? 
+    // Notice: initially, the rec.-level must be maximal,
+    // to ensure that the buffer, created inside the draw()
+    // function is large enough. If we would start with a smaller
+    // number of segments, and increase it during runtime without
+    // re-starting the animtation, part of the yellow curve would be
+    // lost because of the Descartes buffer being too small.
+resetA=button()
+    //  to reset the time for the animation of the coefficients
+resetB=button()
+    //  to reset the time for the animation of the control points
+a=descartes([controlLines,bezierCurve])
+    //  plot the bezier curve, the four control points and the three control lines 
+a11=0.5+amp*sin(tA/45) 
+a12=0.5+amp*sin(tA/56) 
+a21=0.25+amp*sin(tA/67) 
+a22=0.5+amp*sin(tA/79) 
+a23=0.25+amp*sin(tA/91) 
+a31=0.125+amp*sin(tA/102) 
+a32=0.375+amp*sin(tA/66) 
+a33=0.375+amp*sin(tA/37) 
+a34=0.125+amp*sin(tA/81)
+    //  the alternative coefficients in the Bezier formula all slowly vary with time 
+allB=recBez(round(recLevel),[x1,y1],[x2,y2],[x3,y3],[x4,y4])
+    //  this evokes the recursively generated bezier curve 
+controlLines=[locations:[pointSize:3,data:[[x:x1,y:y1,tag:'p1'],[x:x2,y:y2,tag:'p2'],[x:x3,y:y3,tag:'p3'],[x:x4,y:y4,tag:'p4']]],edges:[thickness:0.1,col_r:0,col_g:0,col_b:0,data:[[b:0,e:1],[b:1,e:2],[b:2,e:3]]]]
+    // the control points and the control lines plotted in a single Descartes object
+pBezier=[plotType:'line',x:[mode:'data',ref:1],y:[mode:'data',ref:2],width:1.5,col_r:255,col_g:255,col_b:0]
+    //  the control string to steer plotting the bezier curve proper 
+bezierCurve=[locations:[data:bData],edges:[thickness:1.5,col_r:255,col_g:255,col_b:0]]
+    // no data property for edges necessary; the default
+    // is a set of line segments between any pair of subsequent locations
+bData=#(i,vDom(allB),[x:allB[i][0],y:allB[i][1]],vAppend)
+    // select one by one all the points from allB
+p0L(p1         )=p1
+p1L(p1,p2      )=(a11*p1+a12*p2) 
+p2L(p1,p2,p3   )=(a21*p1+a22*p2+a23*p3)
+p3L(p1,p2,p3,p4)=(a31*p1+a32*p2+a33*p3+a34*p4)   
+p3R(p1,p2,p3,p4)=(a31*p1+a32*p2+a33*p3+a34*p4)
+p2R(   p2,p3,p4)=(a21*p2+a22*p3+a23*p4)
+p1R(      p3,p4)=(a11*p3+a12*p4)
+p0R(         p4)=p4
+recBez(level,p1,p2,p3,p4)=cond(level==0,[p1,p4],vConcat(recBezL(level-1,p1,p2,p3,p4),recBezR(level-1,p1,p2,p3,p4)))
+    //  this is the recursive definition:
+    //  a bezier curve is the concatenation of two halve bezier curves.
+    //  The left half has p1 as its left extreme, the right half
+    //  has p4 as its right extreme.
+    //  The inbetween points are found by recursive halving,
+    //  according to the simplest corner-cutting algorithm 
+recBezL(level,px1,px2,px3,px4)=recBez(level,p0L(px1),p1L(px1,px2),p2L(px1,px2,px3),p3L(px1,px2,px3,px4))
+recBezR(level,py1,py2,py3,py4)=recBez(level,p3R(py1,py2,py3,py4),p2R(py2,py3,py4),p1R(py3,py4),p0R(py4))
+tA=if(resetA,1,if(freezeA,tA{1},tA{1}+1))
+// we can reset and freeze the time A (controls the coefficients) at will 
+tB=if(resetB,1,if(freezeB,tB{1},tB{1}+1))
+// we can reset and freeze the time B (controls the locations of the control points) at will 
+x1=20+30*sin(tB/35) 
+x2=20+30*sin(tB/98) 
+x3=80+30*sin(tB/44) 
+x4=80+30*sin(tB/59) 
+y1=20+30*sin(tB/76) 
+y2=80+30*sin(tB/68) 
+y3=80+30*sin(tB/23) 
+y4=20+30*sin(tB/234)
+// all four control points do their slow harmonic dance, avoiding periodicity

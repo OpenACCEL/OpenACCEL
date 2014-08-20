@@ -1,0 +1,5 @@
+z=descartes([gr1,gr2]) 
+gr1=[locations:[x:[mode:'intp'],y:[mode:'shift',value:s]],edges:[thickness:2,col_r:255]]
+gr2=[locations:[x:[mode:'intp'],y:[mode:'shift',value:s{delay}]],edges:[thickness:2,col_b:255]] 
+s=slider(50,0,100)
+delay=slider(1,1,100)

@@ -1,0 +1,79 @@
+accel=check(true)
+// to control if we use native javascript to calculate the function
+// values for speed up
+p=descartes([gr])  
+// plot the entire scene
+r=slider(150,20,500) 
+// control the distance between the eye point and the centre of the scene
+camera=[auto:true,r:r,f:f,look:'orbit'] 
+// a camera under direct user control: dragging the mouse over the canvas
+// controls the yaw and pitch angles
+f=2*r 
+// we choose to have the focal length proportional to the
+// distance between the eye and the centre of the scene. In
+// this way, we control the perspective distortion without affecting the size that much.
+amp=slider(0,-20.0,20.0) 
+// the visualized function surface is a circular wave. This slider controls its amplitude.
+n=slider(20,5,50)
+// the resultion, that is: the number of squares in each direction of the
+// function surface (the 'tablecloth')
+nRange=vSeq(0,n) 
+// we re-use the sequence 0,1,2,...,n-1
+nMRange=vSeq(0,n-1)
+// we also re-use the sequence 0,1,2,3,...,n-2:
+// realize that the number of faces is (n-1)*(n-1) instead of n*n
+// for n*n locations
+scale=50/n
+// used to ensure that the dimensions of the tablecloth in x- and z directions are
+// not affected by the number of squares (=n) 
+wavelength=2.05 
+// the visualized function surface is a circular wave. This slider controls its wavelength.
+freq=1.1 
+the visualized function surface is a circular wave. This slider controls its frequency.
+t=t{1}+1 
+// the increasing time
+locationsData=cond(accel,do("var g=function(x,y){return amp*Math.cos(t*freq/10+(Math.sqrt(x*x+y*y)/wavelength))};var i,j,v=_arr; var r=[];var scale=v[0]; var n=v[1];var amp=v[2]; var t=v[3]; var freq=v[4]; var wavelength=v[5];for(i=0;i<n;i++){for(j=0;j<n;j++){r.push({'x':scale*(i-n/2),'y':scale*(j-n/2),'z':g(scale*(i-n/2),scale*(j-n/2))})}};return r;",['arr':[scale,n,amp,t,freq,wavelength]]), #(i,nRange,#(j,nRange,[x:scale*(i-n/2),z:g(scale*(i-n/2),scale*(j-n/2)),y:scale*(j-n/2)],vAppend),vExtend))
+// depending on the setting of accel, this either calls a javascript fragment or
+// a set of two nested quantified expressions to calculate a set of x,y,z-triples
+// in a single array, where these x,y,z-triples form the coordinates
+// of all of the points on the tablecloth. The z-value is the function we calculate;
+// this is either the javascript (user-defined) function g(x,y) or the
+// ACCEL user defined function g(x,y), in both cases appropriately scaled. 
+g(x,y)=amp*cos(t*freq/10+(sqrt(x*x+y*y)/wavelength))
+// the user defined function to calculate the function surface as a function of x and y
+lpx=slider(0,-100,100.0)
+// the x-position of the light source
+lpy=slider(0,-100,100.0)
+// the y-position of the light source
+lpz=slider(20,20,200.0)
+// the z-position of the light source
+llx=slider(0,-50,50.0)
+// the x-coordinate of the shining direction of the light source
+lly=slider(0,-50,50.0)
+// the y-coordinate of the shining direction of the light source
+llz=slider(-5,-50,0.0)
+// the z-coordinate of the shining direction of the light source
+lights=[[l_r:255,l_g:255,l_b:255,l_px:lpx,l_py:lpy,l_pz:lpz,l_x:llx,l_z:llz,l_y:lly,l_open:lOpen,l_dropOff:lDropOff]]
+// a simple light configuration with a single overhead spot light shining in the z-direction,
+// the shining direction is always pointing at the middle of the scene.
+// The light source is a spot light source with a location that is under control of the user
+gr=[background:[fcol_r:0,fcol_g:50,fcol_b:50],lights:lights,camera:camera,locations:locations,faces:faces]
+// this is the entire scene
+locations=[data:locationsData,rad:2]
+// the array containing all the location data
+faces=[fcol_a:1.0,fcol_r:rateDiffSpec*255,fcol_g:0,fcol_b:0,scol_r:(1-rateDiffSpec)*255,scol_g:(1-rateDiffSpec)*255,scol_b:(1-rateDiffSpec)*255,beta:beta,fill:'interior',data:facesData]
+// the array containing all faces data. That is: the diffuse and specular reflection colors,
+// the size of the specular highlight, and the data, being the indices in the locationData array of all the
+// corner points of each of the squares in the tablecloth.
+facesData=cond(accel,do("var i,j,v=_arr; var r=[];var nm=v[0];var n=v[1];for(i=0;i<nm;i++){for(j=0;j<nm;j++){r.push({'loop':[i*n+j,i*n+j+1,(i+1)*n+j+1,(i+1)*n+j]})}};return r;",['arr':[n-1,n]]),#(j,nMRange,#(i,nMRange,[loop:[i+n*j,i+n*j+1,i+n*(j+1)+1,i+n*(j+1)]],vAppend),vExtend))
+// depending on the setting of accel, this executes a fragment of native javascript
+// or a set of two nested quantified expressions to find the indices in the locationsData array of all
+// the corner points of all the square faces forming the tablecloth.
+beta=slider(4.0,0,20)
+// give the user control over the size of the specular highlight
+lOpen=slider(0.05,0,1)
+// give the user control over the opening angle of the spot light 
+lDropOff=slider(0.1,0,1)
+// give the user control over the drop-off rate of the spot light.
+rateDiffSpec=slider(0.5,0,1)
+// the rate between the diffuse and the specular reflection of the surface

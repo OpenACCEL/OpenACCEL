@@ -1,0 +1,12 @@
+a=vGaussian(n,m) 
+n=slider(80,0,100)
+// n is the number of samples
+// m is the sigma of the gaussian.
+// Notice that sigma can become 'too wide' for the number of samples,
+// that is: only the central part of the Gaussian
+// is computed. Typically, n should be large compared to m.
+m=slider(5,1,100) 
+p=descartes([graph]) 
+graph=[edges:[thickness:2],locations:[data:#(i,vSeq(0,n),[x:50-n/2+i,y:20+200*a[i]],vAppend)]]
+// x-coordinates are chosen such that the bump is center screen,
+// clearly showing that the samples are taken symmetrically round the centre location.

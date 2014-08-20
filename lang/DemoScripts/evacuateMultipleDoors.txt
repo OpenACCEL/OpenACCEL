@@ -1,0 +1,42 @@
+nrPeople=vLen(pl) 
+    // how many people do we simulate
+nRange=vSeq(0,N)
+pRange=vDom(pl)
+    // we will be re-using these sets
+pl=if(reset || vLen(pl{1})==0,peopleStart,newPeople)
+    //  new distribution or initial distribution, when clicked on reset 
+reset=button()
+    //  reset button to generate new initial distribution 
+newPeople=#(i,vDom(pl{1}),if(inRoom(i),[move(i)],[]),vConcat)
+    //  aggregate everybody who is still in the room with its moved location 
+nrPeople=vLen(pl) 
+move(p)=tryMove(p,prefV(p))
+    //  see in what direction the person p would like to move, and move if possible in that direction.
+    //  return a complete, moved, person (including all properties) 
+tryMove(p,v)=if(free(p,pl{1}[p].loc+v,pl{1}[p].rad),[loc:pl{1}[p].loc+v,color:pl{1}[p].color,rad:pl{1}[p].rad],pl{1}[p])
+    //  if motion is possible, apply, otherwise stay put 
+free(myId,myLoc,myRad)=#(i,vDom(pl{1}),if(myId==i,true,distOK(myLoc,pl{1}[i].loc,myRad,pl{1}[i].rad)),and) 
+    //  check if nobody is an obstacle. I cannot block myself, and someone is not an obstacle if he is sufficiently remote 
+distOK(myLoc,otherLoc,myRad,otherRad)=vNormEuclid(myLoc-otherLoc)>(myRad+otherRad-3)
+    //  people are represented by circles each having their own radius 
+peopleStart=#(i,nRange,[color:[r:256*round(random()),g:256*round(random()),b:round(256*random())],rad:1+2*random(),loc:[10+80*random(),10+80*random()]],vAppend)
+    //  a new population consists of N people, randomly distributed over space, color and radius 
+N=slider(100,10,200)
+inRoom(p)=#(i,vDom(doors),!closeToDoor(p,i),and)
+    //  you are in the room if you are not close to a door 
+doors=[[loc:[30,0],size:[20,10]],[loc:[100,50],size:[10,30]]]
+    //  every door is a rectangle with a centre, a width and a height 
+nDoors=vLen(doors)
+    //  how many doors are there? 
+closeToDoor(p,i)=(pl{1}[p].loc[0]>doors[i].loc[0]-doors[i].size[0])&&(pl{1}[p].loc[0]<doors[i].loc[0]+doors[i].size[0])&&(pl{1}[p].loc[1]>doors[i].loc[1]-doors[i].size[1])&&(pl{1}[p].loc[1]<doors[i].loc[1]+doors[i].size[1])
+    //  you are close to a door if your location is within the rectangle of that door 
+prefV(p)=if(vNormEuclid(doors[closestDoor(p,0)].loc-pl{1}[p].loc)<100*random(),2*vNormalize(doors[closestDoor(p,0)].loc-pl{1}[p].loc),3*[random()-0.5,random()-0.5])
+    //  if you are closer to your closest door, the chance that you move towards this door is larger.
+    //  Your attempted moves per turn have the same length.
+    //  If you are far from a door, you moving direction is random 
+closestDoor(p,n)=cond(n==nDoors,n-1,cond(distToDoor(p,n)<distToDoor(p,closestDoor(p,n+1)),n,closestDoor(p,n+1)))
+    //  this would be terribly expensive withou memoizing, and is not very efficient anyway.
+    //  But it is necessary since we cannot assign a value to the distance to the closest door thusfar. 
+distToDoor(p,m)=vNormEuclid(doors[m].loc-pl{1}[p].loc)
+    //  The distance between person p and door m 
+result=descartes([[locations:[fill:'interior',nrLocations:vLen(pl),fill:'interior',data:#(i,pRange,[x:pl[i].loc[0],y:pl[i].loc[1],rad:pl[i].rad,fcol_r:pl[i].color.r,fcol_g:pl[i].color.g,fcol_b:pl[i].color.b],vAppend)]]])

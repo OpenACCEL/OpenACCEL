@@ -1,0 +1,73 @@
+ 
+buttonDown=cursorB()
+    //  
+c=slider(0.3,0,0.4400)
+    //  the spring constant: the larger, the jerkier the springs 
+cX=cursorX()
+    //  
+cY=cursorY()
+    //  
+damp=slider(0,0,1.5)
+    //  the damping 
+g=slider(0.020,0,0.100)
+    //  the gravity constant: the larger, the harder everything is pulled down 
+nn=slider(50,2,50)
+    //  
+u0=slider(1.3,1,70)
+    //  the rest length of each of the springs 
+plotResult=descartes([[locations:[fill:'interior',data:#(i,vSeq(0,n),[x:r[i].x,y:r[i].y,rad:dAve[i]/2,fcol_r:128+128*(excessLower[i]-excessUpper[i]),fcol_g:128+128*v[i].x,fcol_b:128+128*v[i].y],vAppend)]]])
+    //  plotting the chain 
+a=(fTot-damp*v{1})/m
+    //  the vector of accelerations of each of the point masses 
+dAve=max(dLower,dUpper)
+    //  the distance between successor and predecessor 
+dLower=#(j4,vSequence(0,n),if(j4<(n-1),vNormEuclid(r{1}[j4]-r{1}[j4+1]),0),vAppend)
+    //  the distance between each pointmass and its lower neighbour 
+dUpper=#(j3,vSequence(0,n),if(j3>0,vNormEuclid(r{1}[j3]-r{1}[j3-1]),0),vAppend)
+    //  the distance between each point mass and its upper neighbour 
+excessLower=u00-dLower
+    //  the length excess (compared to the rest length of the springs) with the lower neightbour:
+    //  this causes the spring beneath to produce a force 
+excessUpper=u00-dUpper
+    //  the length excess (compared to the rest length of the springs) with the upper neightbour:
+    //  this causes the spring above to produce a force to act 
+fTot=#(j7,vSequence(0,n),forceLower[j7]+forceUpper[j7]+grav,vAppend)
+    //  the vector of total force vectors, consisting of the sum of spring forces above,
+    //  below, and gravity 
+forceLower=#(j6,vSequence(0,n),if(j6<(n-1),c*excessLower[j6]*unitDirLower[j6],['x':0,'y':0]),vAppend)
+    //  for each point mass, the force due to the spring below 
+forceUpper=#(j5,vSequence(0,n),if(j5>0,c*excessUpper[j5]*unitDirUpper[j5],['x':0,'y':0]),vAppend)
+    //  for each point mass, the force due to the spring above 
+grav=['x':0,'y':-g]
+    //  the gravity force is the same for every point mass 
+hx=if(buttonDown,cX*0.05+0.95*hx{1},hx{1})
+    //  
+hy=if(buttonDown,cY*0.05+0.95*hy{1},hy{1})
+    //  the location of the topmost point is derived from the position of the cursor on the screen 
+m=if(time<=2,m0,m{1})
+    //  the vector of masses of all of the points at arbitrary time 
+m0=if(time==1,vMake(20,n),m0{1})
+    //  the definition of the masses of all of the points 
+n=round(nn)
+    //  How many springs does the chain consist of. Notice: move the chain by moving the cursor, button down. Release button --> movement of chain stops. 
+r=if(time<=2,r0,#(k,vSequence(0,n),if(k>0,r{1}[k]+v[k],['x':hx,'y':hy]),vAppend))
+    //  
+r0=if(time==1,vTranspose(['x':vMake(hx,n),'y':hy-(30/n)*vSequence(0,n)]),r0{1})
+    //  build the initial series of locations 
+time=if(n!=n{1},1,time{1}+1)
+    //  defining time as that what is every instance one larger than the previous instance
+    //  = the recursive definition of time. Notice the ifition n!=n{1}: this means
+    //  that the simulation starts by moving the n-slider. 
+u00=u0/n
+    //  scale the rest length of the springs such that for more point masses,
+    //  the springs automatically shrink 
+unitDirLower=#(j2,vSequence(0,n),if(j2<(n-1),vNormalize(r{1}[j2]-r{1}[j2+1]),['x':0,'y':0]),vAppend)
+    //  the unit vector connecting me to my lower neighbour: this is the direction the force
+    //  with my lower neighbour will have 
+unitDirUpper=#(j1,vSequence(0,n),if(j1>0,vNormalize(r{1}[j1]-r{1}[j1-1]),['x':0,'y':0]),vAppend)
+    //  the unit vector connecting me to my upperneighbour: this is the direction the force
+    //  with my upper neighbour will have 
+v=if(time<=2,v0,v{1}+a)
+    //  v is either the initial velocity or the integration of the acceleration 
+v0=if(time==1,vTranspose(['x':vMake(0,n),'y':vMake(0,n)]),v0{1})
+    //  setting up the initial velocities: all zero.

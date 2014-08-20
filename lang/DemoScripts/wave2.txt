@@ -1,0 +1,40 @@
+allow=check(true)
+    // allow random perturbations
+kernel=[-0.1,-0.3,0,0,0.8,0,0,-0.3,-0.1]/200
+    //  this is the approximated 2nd derivative of Laplacian.
+    //  Scaling the kernel is more efficient than scaling the convolved result 
+smooth=vGaussian(15,4) 
+xN=max(-0.85,min(0.85,(1+factor)*xArr{1}-factor*(xArr{2}+vConvolve(xArr{1},kernel,4,0)))) 
+yN=max(-0.85,min(0.85,(1+factor)*yArr{1}-factor*(yArr{2}+vConvolve(yArr{1},kernel,4,0)))) 
+dN=max(-0.85,min(0.85,(1+factor)*dArr{1}-factor*(dArr{2}+vConvolve(dArr{1},kernel,4,0)))) 
+rN=max(-0.85,min(0.85,(1+factor)*rArr{1}-factor*(rArr{2}+vConvolve(rArr{1},kernel,4,0)))) 
+gN=max(-0.85,min(0.85,(1+factor)*gArr{1}-factor*(gArr{2}+vConvolve(gArr{1},kernel,4,0)))) 
+bN=max(-0.85,min(0.85,(1+factor)*bArr{1}-factor*(bArr{2}+vConvolve(bArr{1},kernel,4,0)))) 
+aN=max(-0.85,min(0.85,(1+factor)*aArr{1}-factor*(aArr{2}+vConvolve(aArr{1},kernel,4,0))))
+    //  the above are the Euler integration steps for all of the arrays
+    //  clamped between -0.85 and 0.85 
+bump=(random()-0.5)*vConvolve(vSpike(n*random(),n),smooth,7,0)
+    //  this is a smooth bump 
+xArr=if(time<3,vMake(0,n),if(random()>threshhold&&allow,xN+bump,xN)) 
+yArr=if(time<3,vMake(0,n),if(random()>threshhold&&allow,yN+bump,yN)) 
+dArr=if(time<3,vMake(0,n),if(random()>threshhold&&allow,dN+bump,dN)) 
+rArr=if(time<3,vMake(0,n),if(random()>threshhold&&allow,rN+bump,rN)) 
+gArr=if(time<3,vMake(0,n),if(random()>threshhold&&allow,gN+bump,gN)) 
+bArr=if(time<3,vMake(0,n),if(random()>threshhold&&allow,bN+bump,bN)) 
+aArr=if(time<3,vMake(0,n),if(random()>threshhold&&allow,aN+bump,aN)) 
+n=slider(100,10,1500)
+// how many blobs do we have
+maxRad=slider(20,1,100)
+// to modulate the diameter of the blobs
+start=button()
+// reset simulation
+threshhold=0.995
+    //  how long is the graph 
+pl=descartes([graph])
+    //  plotting 
+graph=[locations:[data:#(i,vSeq(0,n),[x:50*(1+xArr[i]),y:50*(1+yArr[i]),rad:maxRad*(1+dArr[i]),fcol_r:128*(1+rArr[i]),fcol_f:128*(1+gArr[i]),fcol_b:128*(1+bArr[i]),fcol_a:0.5*(1+aArr[i])],vAppend),fill:'interior']] 
+    //  experimenting with various types of visuals 
+time=if(start,0,time{1}+1)
+    //  the standard method to have an increasing timer 
+factor=0.9995
+    //  to provide a little stabilizing

@@ -1,0 +1,33 @@
+n=30
+// what is the number of samples we take from the function?
+map=#(i,vSeq(0,n),row(i),vAppend)
+    //  the concept 'data' is a square matrix of n rows ... 
+row(i)=#(j,vSeq(0,n),potential(i,j),vAppend)
+    //  every row consists of n values ... 
+potential(i,j)=#(k,[0,1,2],pot(i,j,loc[k]),add)
+    //  every value is the contribution of 3 'potential' terms, added together ... 
+pot(i,j,loc)=1/(0.1+sqrt((i-loc.x)*(i-loc.x)+(j-loc.y)*(j-loc.y)))
+    //  a potential term is something that is centered around a location, and decreases to 0 at larger distance r
+    //  from this location with a 1/r behavior 
+loc=[loc1,loc2,loc3]
+    //  the loc-array is an aggregation of three locations 
+loc1=[x:x1,y:y1] 
+loc2=[x:x2,y:y2] 
+loc3=[x:x3,y:y3]
+    //  each location has two coordinates called x and y 
+x1=slider(7,-5,35) 
+y1=slider(10,-5,35)
+    //  the coordinates of the first center 
+x2=slider(23,-5,35) 
+y2=slider(5,-5,35)
+    //  the coordinates of the second center 
+x3=slider(15,-5,35) 
+y3=slider(21,-5,35)
+    //  the coordinates of the third center 
+contour=[thickness:[mode:'intp',low:3,high:0.3],col_r:[mode:'intp',low:0,high:255],col_g:[mode:'intp',low:0,high:255],col_b:[mode:'intp',low:255,high:0],map:map,data:#(i,vSeq(0,25),[iso:0.1*sqrt(i)],vAppend)]
+    //  the drawing primitive is 'contour'. Its data is pointed to by the property 'source' as being
+    //  the first data argument array ('ref:1'). The iso-values for which we want the contours to be plotted
+    //  are defined by the property 'iso' as begin the second data argument array ('ref:2'). The red-component
+    //  of the colors of the contours are defined by the property 'col_r' as being the third data argument array ('ref:3') 
+r=descartes([[background:[fcol_r:0,fcol_g:0,fcol_b:0],contour:contour]])
+   

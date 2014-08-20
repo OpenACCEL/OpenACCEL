@@ -1,0 +1,52 @@
+d=descartes([[edges:edges,locations:locations]])
+//  the graph constist of two parts: locations and edges
+// this demo shows how a graph can be plotted. As
+// an example we use the so called Peterson graph: the complete graph on 5 points. 
+dt=slider(0.1,0.01,1)
+// just for fun, we take the Peterson graph from the demo-script 'peterson.txt', 
+// and make the values of all properties a smooth function of time.
+// We use a single generator function to do so: the function gen(low,high)
+// which produces a sin-function of time oscillating between low and high.
+// The frequency is random: each quantioty has its own frequency. To this aim,
+// we fill a vector rnd[] with 70 random values opn initialization.
+//
+// Notice that the size of time increments is given by quantity dt, which is under slider control.
+
+    //  
+eStr=[plotType:'vector',type:'segment',x1:[mode:'data',ref:1],x2:[mode:'data',ref:2],y1:[mode:'data',ref:3],y2:[mode:'data',ref:4],width:[mode:'data',ref:5],col_r:[mode:'data',ref:6],col_g:[mode:'data',ref:7],col_b:[mode:'data',ref:8],tag:[mode:'data',ref:9]]
+    //  
+nStr=[plotType:'bubble',x:[mode:'data',ref:1],y:[mode:'data',ref:2],diameter:[mode:'data',ref:3],col_r:[mode:'data',ref:4],col_g:[mode:'data',ref:5],col_b:[mode:'data',ref:6],tag:[mode:'data',ref:7]]
+    //  
+e=[e1,e2,e3,e4,e5,e6,e7,e8,e9,e10]  
+e1=[b:0,e:1,thickness:gen(0,3,0),col_r:gen(0,255,10),col_g:gen(0,255,20),col_b:gen(0,255,30),tag:'edge1'] 
+e10=[b:4,e:1,thickness:gen(0,3,1),col_r:gen(0,255,11),col_g:gen(0,255,21),col_b:gen(0,255,31),tag:'edge10'] 
+e2=[b:1,e:2,thickness:gen(0,3,2),col_r:gen(0,255,12),col_g:gen(0,255,22),col_b:gen(0,255,32),tag:'edge2']  
+e3=[b:2,e:3,thickness:gen(0,3,3),col_r:gen(0,255,13),col_g:gen(0,255,23),col_b:gen(0,255,33),tag:'edge3']  
+e4=[b:3,e:4,thickness:gen(0,3,4),col_r:gen(0,255,14),col_g:gen(0,255,24),col_b:gen(0,255,34),tag:'edge4']  
+e5=[b:4,e:0,thickness:gen(0,3,5),col_r:gen(0,255,15),col_g:gen(0,255,25),col_b:gen(0,255,35),tag:'edge5'] 
+e6=[b:0,e:2,thickness:gen(0,3,6),col_r:gen(0,255,16),col_g:gen(0,255,26),col_b:gen(0,255,36),tag:'edge6']  
+e7=[b:1,e:3,thickness:gen(0,3,7),col_r:gen(0,255,17),col_g:gen(0,255,27),col_b:gen(0,255,37),tag:'edge7']  
+e8=[b:2,e:4,thickness:gen(0,3,8),col_r:gen(0,255,18),col_g:gen(0,255,28),col_b:gen(0,255,38),tag:'edge8']  
+e9=[b:3,e:0,thickness:gen(0,3,9),col_r:gen(0,255,19),col_g:gen(0,255,29),col_b:gen(0,255,39),tag:'edge9']  
+edges=[pointSize:4,col_g:40,col_b:220, data:[e1,e2,e3,e4,e5,e6,e7,e8,e9,e10]]
+    // this instructs Descartes to draw a sequence of edges. 
+    // The shared properties are col_g and col_b, so these are defined only once. 
+    // Since the other properties have values that differ among the edges, these are 
+    // spelled out completely in the data-property.
+gen(lo,hi,freq)=(lo+hi+(hi-lo)*sin(t*dt*rnd[freq]))/2
+    //  
+n1=[x:gen(0,100,65),y:gen(0,100,40),thickness:gen(0,3,45),col_r:gen(0,255,50),col_g:gen(0,255,55),col_b:gen(0,255,60),tag:'location1']
+n2=[x:gen(0,100,66),y:gen(0,100,41),thickness:gen(0,3,46),col_r:gen(0,255,51),col_g:gen(0,255,56),col_b:gen(0,255,61),tag:'location2']
+n3=[x:gen(0,100,67),y:gen(0,100,42),thickness:gen(0,3,47),col_r:gen(0,255,52),col_g:gen(0,255,57),col_b:gen(0,255,62),tag:'location3']
+n4=[x:gen(0,100,68),y:gen(0,100,43),thickness:gen(0,3,48),col_r:gen(0,255,53),col_g:gen(0,255,58),col_b:gen(0,255,63),tag:'location4']
+n5=[x:gen(0,100,69),y:gen(0,100,44),thickness:gen(0,3,49),col_r:gen(0,255,54),col_g:gen(0,255,59),col_b:gen(0,255,64),tag:'location5']
+
+locations=[pointSize:5,tagy:6,tcol_r:255,icon:'box',width:7,height:10, fill:'both',thickness:1,col_r:0,col_g:0,col_b:0,fcol_r:200,fcol_g:180,fcol_b:130,data:[n1,n2,n3,n4,n5]]
+    // This instructs Descartes to define a collection of locations. Many properties are shared, these
+    // are the colors and the rendering style of the icon ('box'). We define them only once;
+    // the per-location data is again spelled out in detail in the data-proprety.    
+
+rnd=if(t==1,#(i,vSequence(0,70),random(),vAppend),rnd{1})
+    // this calculates a sequence of random values, and keeps
+    // the same sequence for any subsequent calculation    
+t=t{1}+1

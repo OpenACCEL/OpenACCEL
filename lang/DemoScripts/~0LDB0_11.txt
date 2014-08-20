@@ -1,0 +1,10 @@
+index1=slider(0,0,10) 
+index2=slider(0,0,10) 
+printB=b 
+printC=c 
+printD=d 
+a=[1,[10,20],3] 
+b=a[index1] 
+c=b[index2]
+d=a[index1][index2]
+

@@ -1,0 +1,35 @@
+pRange=vSeq(0,7)
+    // we will re-use the sequence 0,1,2,..,6
+g=slider(0.002,0,0.01)
+    //  play with the gravity strength to seek stable configurations;
+    //  how long can you keep things stable? 
+but=button() 
+time=if(!but,time{1}+1,0)
+    //  reset the time to the moment of the creation of the universe 
+plotResult=descartes([[locations:[tagy:-8,fill:'interior',data:#(i,pRange,[x:50+r[i].x,y:50+r[i].y,rad:2.5*pow(m[i],0.333),tag:names[i],pointSize:pointSizes[i]],vAppend)]]])
+    //  one graph consisting of as many blobs as there are planets. The x and y coordinates are
+    //  taken from the 'x'- and 'y'-components of the r-vector. The radii are taken proportional to the
+    //  cube root of the masses 
+a=cond(time>1,f/m,0)
+    //  Newton: a=F/m 
+f=#(i,pRange,forceOnOnePlanet(i),vAppend)
+    //  calculate the forces for all planets 
+forceOnOnePlanet(i)=#(j,pRange,if(i!=j,newton(i,j),0),add)
+    //  adding the forces due to all other of planets 
+newton(i,j)=g*m[i]*m[j]*distVec(i,j)/(pow(vNormEuclid(distVec(i,j)),3))
+    //  the law of gravity force: propertional to both masses and inverse proportional to the
+    //  square of the distance. But
+    //  since the force is a vector, directed from mass j to mass i, we have the difference between these two
+    //  in the numerator, and the distance cubed in the denominator. 
+distVec(i,j)=r{1}[j]-r{1}[i]
+    //  the distance vector between planets i and j 
+m=[80,2,2,2,2,2,2]
+    //  one heavy sun and 6 light planets 
+names=['sun','1','2','3','4','5','6']
+    //  the text tags 
+pointSizes=[5,3,3,3,3,3,3,3]
+    //  the sizes of the texts 
+r=cond(time>1,r{1}+v,[['x':0,'y':0],['x':15,'y':0],['x':7,'y':10],['x':-7,'y':10],['x':-15,'y':0],['x':-7,'y':-10],['x':7,'y':-10]])
+    //  r is obtained by integrating v; at the starting time (==1) give the initial positions 
+v=cond(time>1,v{1}+a,[['x':0,'y':0],['x':0,'y':0.1],['x':-0.05,'y':0.03],['x':-0.05,'y':-0.03],['x':0,'y':-0.1],['x':0.05,'y':-0.03],['x':0.05,'y':0.03]])
+    // [['n':'g','x':7.4,'y':85.2],['n':'but','x':7.9,'y':92.4],['n':'time','x':28.3,'y':70.6],['n':'plotResult','x':91.1,'y':53.8],['n':'r','x':78.9,'y':59.8],['n':'m','x':6.1,'y':10.7],['n':'names','x':5.2,'y':5.2],['n':'pointSizes','x':10.1,'y':7.1],['n':'a','x':65.8,'y':18],['n':'f','x':55.2,'y':23.7],['n':'forceOnOnePlanet','x':49.5,'y':25.2],['n':'newton','x':36,'y':38.8],['n':'distVec','x':33.2,'y':55.2],['n':'v','x':78,'y':43.2]]

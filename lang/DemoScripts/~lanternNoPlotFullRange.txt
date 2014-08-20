@@ -1,0 +1,48 @@
+dL=slider(25.5,15,50)
+    //  how far are the lanterns removed from each other 
+h=slider(5.5,3,30)
+    //  how high are the lanterns 
+p=slider(500.1,100,10000)
+    //  what is the power per lantern 
+intPenalty=paretoMin(paretoHor(-min(minP,minInt)+max(maxP,maxInt)-(maxP-minP)))
+    //  the intensity penalty is 0 if the maximal intensity is not larger than maxP and the minimal intensity is not less than minP 
+rMaxInt=maxInt
+    //  report the max intensity 
+rMinInt=minInt
+    //  report the min intensity 
+totPow=paretoMin(paretoVer(p*nLanterns))
+    //  calculate the total power for this length of road 
+maxP=80
+    //  the maximal intensity so that no blinding occurs 
+minP=10
+    //  the minimal intensity so that everything is at least marginally visible 
+roadLength=100
+    //  the length of road we consider 
+roadWidth=6
+    //  the width of the road 
+Wh=roadWidth/2
+    //  how far from the side of the road are the lanterns positioned 
+maxInt=#(l,vSeq(0,roadLength+1),#(w,vSeq(0,roadWidth+1),B(l,w),max),max)
+    // calculate the max intensity over the entire road. l and w label points on the road,
+    // l measures along the road axis and w perpendicular to the road axis. We take
+    // samples one meter apart.    
+minInt=#(l,vSeq(0,roadLength+1),#(w,vSeq(0,roadWidth+1),B(l,w),min),min)
+    // similar for minimal intensity
+B(l,w)=#(n,vSeq(0,nLanterns),Bn(l,w,n),add)
+    // summates the contributions of all lanterns shining on the point (l,w)
+Bn(l,w,n)=c*p*h/pow(r(l,w,n),3)
+    // this formula takes the distance law and the cosine law into account. 
+c=1
+    // this accounts for uninteresting scaling 
+r(l,w,n)=sqrt(h*h+(w-Wh)*(w-Wh)+(l-n*dL)*(l-n*dL))
+    // this is Pythagoras
+accuIntBorder=#(l,vSeq(0,roadLength+1),B(l,0),vAppend)
+accuIntAxis=#(l,vSeq(0,roadLength+1),B(l,Wh),vAppend)
+accuMinP=#(l,vSeq(0,roadLength+1),minP,vAppend)
+accuMaxP=#(l,vSeq(0,roadLength+1),maxP,vAppend)
+    // to plot the intentsity over one strip for two different distances to the axis of the road 
+    // and the two reference intensities
+plotR=descartes([[locations:[x:[mode:'intp'],data:#(i,vSeq(0,roadLength+1),[y:accuIntBorder[i]],vAppend)],edges:[thickness:1]],[locations:[x:[mode:'intp'],data:#(i,vSeq(0,roadLength+1),[y:accuIntAxis[i]],vAppend)],edges:[thickness:1]],[locations:[x:[mode:'intp'],y:minP],edges:[thickness:1]],[locations:[x:[mode:'intp'],y:maxP],edges:[thickness:1]]])
+    // this plots the various intensities as graphs
+nLanterns=1+roadLength/dL
+    //  the number of lanters is the length of the road divided by the distance between lanterns

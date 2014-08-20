@@ -1,0 +1,40 @@
+dL=slider(25,5,50)
+// distance between the lanterns
+h=slider(5,1.5,30)
+// hieght of the lanterns
+p=slider(200,100,2000)
+// power of the lanterns
+a=descartes([[image:[scaleX:2,scaleY:2,mapR:lfG,mapG:lfG,mapB:cons]]])
+// plot the light distribution
+totPow=p*nLanterns
+// total power consumed
+maxP=150
+// max local intensity such that no blinding occurs
+minP=10
+// min local intensity such that road markings are visible
+roadLength=40
+roadWidth=10
+Wh=roadWidth/2
+// dimensions of the road
+cons=if(lfG<minP,0,if(lfG>maxP,255,128))
+// an array with values of 0, 128 or 255
+// in dependence of the min- and max intensity conditions
+lfG=#(i,vSequence(0,roadWidth),lumOneSlice(i),vAppend)
+// calculate the distriburion of light over the road
+// as an aggregation of slices
+lum(w,l,n)=p/(h*h+pow(abs(l-n*dL),2)+pow(abs(w-Wh),2))
+// a function that produces the light intensity due to a single
+// lantern with number n at a location given by coordinates l and w
+// (length and width)
+lumAllLant(w,l)=#(n,vSequence(-1,nLanterns),lum(w,l,n),add)
+// the contribution of all lanterns to the intensity in a location
+// with coordinates l and w
+lumOneSlice(w)=#(l,vSequence(0,roadLength),lumAllLant(w,l),vAppend)
+// the light distribution in one slice at w-coordinate w
+maxInt=#(i,vDom(lfG),#(j,vDom(lfG[i]),lfG[i][j],max),max)
+// the max intensity found by iterating over the entire road
+minInt=#(i,vDom(lfG),#(j,vDom(lfG[i]),lfG[i][j],min),min)
+// the min intensity found by iterating over the entire road
+nLanterns=1+roadLength/dL
+// the number of lanterns is defined by the road length and
+// the distance between two subsequent lanterns.

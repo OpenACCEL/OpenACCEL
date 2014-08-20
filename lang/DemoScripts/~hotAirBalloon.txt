@@ -1,0 +1,116 @@
+PPt=t 
+PPH=h 
+PPTBalloon=TBalloon-276 
+PPQIn=QIn 
+PPA=a 
+PPTair=TAir
+    //  constants 
+RSun=696342000 
+SSun=150000000000 
+CAir=1005 
+REarth=6378000 
+g=9.81 
+VBalloon=2800 
+MBalloon=723.5 
+MolAir=0.0289644 
+R=8.31447 
+L=0.0065 
+TAir0=288.15 
+p0=101325 
+KNyl=0.25 
+dNyl=0.01 
+ABalloon=961 
+h0=0 
+TBalloon0=300
+    //  1. From burning propane to the density inside the hot air
+    //  
+RhoBalloon=if(or(reset,step<2),(p*MolAir)/(R*TBalloon0),(p*MolAir)/(R*TBalloon{1}))
+    //  Calculating the density of the ballon with the ideal gas law 
+TBalloon=if(or(reset,step<2),TBalloon0,TBalloon{1}+Tadd)
+    //  calculating the temperature by taking the last temperatue and adding the difference. 
+Tadd=if(or(reset,step<2),0,QNetto/(CAir*VBalloon*RhoBalloon{1}))
+    //  calculating the added temperature for this step with the heat capacity of air, the netto heat income of this 
+QNetto=QIn-QOut
+    //  netto heat income in the ballon for this step 
+QIn=Burn*dt
+    //  calculating the heat income from the burner
+    // 
+    //  2. To calculate the density of air as a function of altitude, one requires additional parameters.
+    //  
+RhoAir=(p*MolAir)/(R*TAir0)
+    //  Calculating the density of the air with the ideal gas law 
+p=p0*pow(1-if(or(reset,step<2),0,(L*h{1}/TAir0)),(g*MolAir)/(R*L))
+    //  calculating the air pressure at this step 
+TAir=if(or(reset,step<2),TAir0,TAir0-(L*h{1}))
+    //  calculating the temperature of the air as a function of the altitude
+    // 
+    //  3. Calculation of the heat loss of the air inside the balloon by conductivity
+    //  
+QOut=(KNyl/dNyl)*ABalloon*Tdiff*dt
+    //  Calculating the heat loss as a concequence of condution 
+Tdiff=if(or(reset,step<2),0,TBalloon{1}-TAir)
+    //  calculating the difference of temperature between the balloon and the air
+    // 
+    //  4. Calculation of the height displacement with the buoyancy of the balloon
+    //  
+h=if(or(reset,step<2),0,h{1}+dt*v)
+    //  calculating the height of the balloon 
+v=if(or(reset,step<2),0,if(or(h{1}<0,h{1}==0),max(0,v{1}+dt*a),v{1}+dt*a))
+    //  calculating the velocity of the balloon 
+a=F/Mtot
+    //  Calculating the acceleration 
+F=RhoAir*VBalloon*g-Mtot*g
+    //  calculating the netto force by taking the buoyancy and substract the gravitational force 
+Mtot=if(or(reset,step<2),VBalloon*RhoAir+MBalloon,VBalloon*RhoBalloon{1}+MBalloon)
+    //  calculating the total mass of the balloon, by taking the constant mas and adding the mass of the air inside
+    // 
+    //  5. Calulating the balloon
+    //  
+AngHor=-acos(REarth/(REarth+h))
+    //  Calculating the angular position of the horizon as a function of the height of the balloon
+    // 
+    //  6. Position of the Sun
+    //  
+AngSun=if(or(resetsun,step<2),0.5*DSun,AngSun{1}+dt*OmSun)
+    //  angular position of the sun 
+OmSun=-0.0000729212124
+    //  angular speed of the sun 
+AngSun0=0.5*DSun
+    //  angular radius of the sun 
+DSun=2*atan(RSun/SSun)
+    //  angular diameter of the sun
+    // 
+    //  User Input
+    //  
+dt=slider(0,0,0.05)
+    //  slider to change the amount of time passed in each calculation step 
+Stop=check(1)
+    //  checkbox for setting the burner so, so that QIn is the same as the QOut 
+Bur=slider(0,0,2500000)
+    //  slider to set put the burnor on at a certain intensity 
+reset=button()
+    //  resets the balloon 
+resetsun=button()
+    //  reset the sun 
+t=if(or(reset,step<2),0,t{1}+dt)
+    //  time of the model 
+step=step{1}+1
+    //  amount of steps of the model
+    // 
+    //  Make the stop checkbox
+    //  
+bur=if(Stop==1,bur{1},QOut/dt) 
+Burn=if(Stop==1,bur,Bur)
+    // 
+    //  Plotting the visuals
+    //  
+PlotBall=[locations:[x:25,y:AngSun*2000-AngHor*2000+50.y,rad:9,fill:'interior',fcol_r:250,fcol_g:75,fcol_b:0]] 
+PlotSquare=[locations:[icon:'box',x:25,y:0,width:50,height:100,fill:'interior',fcol_a:0.9,fcol_r:75,fcol_g:115,fcol_b:50]]
+    // we use a little bit of transparency so that we can 'see' the sun even if it is below the horizon 
+PlotAir=[locations:[icon:'box',x:50,y:50,width:100,height:100,fill:'interior',fcol_r:152,fcol_g:212,fcol_b:237]]
+    //  plotting the inside of basket view of the sun 
+PlotBalloon=[locations:[x:75,y:h/15+3,rad:1.5,fill:'interior',fcol_r:250,fcol_g:246,fcol_b:63]] 
+PlotBasket=[locations:[icon:'box',x:75,y:h/15,width:2,height:1,fill:'interior',fcol_r:100,fcol_g:61,fcol_b:49]] 
+line=[locations:[icon:'box',x:50,y:50,width:0.5,height:100,col_r:1,col_g:1,col_b:1]]
+    //  plotting the ballon at a certain height 
+Plotting=descartes([PlotAir,PlotBall,PlotSquare,PlotBalloon,PlotBasket,line])

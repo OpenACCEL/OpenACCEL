@@ -1,0 +1,28 @@
+ 
+a=descartes([graphs])
+// in this case the graph is a geometry with merely
+// locations. The icons for these locations, however,
+// are rather sophisticated: they are sectors of a circular disk
+// with an adjustable radius and adjustable begin- and end angles.
+// Even stronger: these angles are not explicitly specified. Intead, we
+// use the 'frac' properties. These take values that, prior to rendering,
+// are normalized to fit in a full 2pi circle; the sectors thus resulting are
+// the angle sectors for the subsequent sectors.
+grid=[majR:4,grMajR:'line',minR:20,grMinR:'tick',majPhi:8,grMajPhi:'line',minPhi:32,grMinPhi:'tick'] 
+// a polar grid is defined to overly the pie chart.
+graphs=[grid:grid,locations:[fill:'both',pointSize:3,x:50,y:50,thickness:0.3,fcol_r:0,fcol_g:0,fcol_b:0,icon:'sector',data:d]]
+// the pie chart has both variable segment diameter, segment angle, and segment colour.
+// All these modalities can be used independently to convey information.
+d=[d1,d2,d3,d4]
+d1=[frac:f1,rad:r1,tag:'north',fcol_r:255,fcol_g:0,fcol_b:0]
+d2=[frac:f2,rad:r2,tag:'east',fcol_r:0,fcol_g:255,fcol_b:0]
+d3=[frac:f3,rad:r3,tag:'south',fcol_r:0,fcol_g:0,fcol_b:255]
+d4=[frac:f4,rad:r4,tag:'west',fcol_r:255,fcol_g:255,fcol_b:0]
+r1=slider(5,1.0,80) 
+r2=slider(5,1.0,80)
+r3=slider(5,1.0,80)
+r4=slider(5,1.0,80)
+f1=slider(5,1.0,50) 
+f2=slider(5,1.0,50)
+f3=slider(5,1.0,50)
+f4=slider(5,1.0,50)

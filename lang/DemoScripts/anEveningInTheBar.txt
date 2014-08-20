@@ -1,0 +1,31 @@
+ 
+E=paretoMin(paretoHor(MSM+MSF)); Euro
+    //  Amount of money I spend is money spent on me plus on my friends 
+L=paretoMin(paretoVer(L0-(Q*R+GTT))); minute
+    //  Amount of lonely minutes 
+MSF=P*V*R*cons; Euro
+    //  proportional to nr friends, nr rounds and price for one beer 
+MSM=P*G; Euro
+    //  proportional to the number of glasses I drink 
+GTT=max(zero,maxTalkTime*(pow(optNrGlasses,2)-pow(abs(G-optNrGlasses),2))/pow(optNrGlasses,2)); minute
+    //  Gained Talk Time is the effect of me inbibing beer on my capability of social talk 
+G=slider(0,0,20); glass
+    //  Nr glasses I drink 
+R=slider(0,0,10); round
+    //  Nr rounds I give to my friends 
+L0=360; minute
+    //  Length of an evening 
+P=2.25; Euro/glass
+    //  Price of one beer 
+Q=15; minute/round
+    //  The number of minutes of talking I get by buying my friends one round 
+V=7; friends
+    //  The number of friends 
+cons=1; glass/friends.round
+    //  one friends drinks one glass per round  
+maxTalkTime=60; minute
+    //  If I am at my best, this is the amount of time I talk I get without having to bribe my friends with rounds 
+optNrGlasses=3; glass
+    //  The nr of glasses it takes to get me in my best talkative mood 
+zero=0; minute
+    //  otherwise we cannot compute GTT 

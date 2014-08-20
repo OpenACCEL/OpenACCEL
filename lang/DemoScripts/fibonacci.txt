@@ -1,0 +1,19 @@
+niceFib0=[t1:1,t2:0] 
+// the starting term
+niceFib=[t1:niceFib{1|niceFib0}.t2,t2:niceFib{1|niceFib0}.t1+niceFib{1|niceFib0}.t2] 
+// fib is a vector with two components, t1 and t2
+// t1 is the old t2
+// t2 is the old sum of t1 and t2
+// if the old fib does not exist, we substitute fib0
+// Notice that this construction using the 
+// explicit start value for the time delay operator
+// give a much nicer code than
+// having to introduce time explicitly as in 
+time=time{1}+1 
+//used to have time explicitly represented
+uglyFib=[t1:cond(time>=1,uglyFib{1}.t2,1),t2:cond(time>1,uglyFib{1}.t1+uglyFib{1}.t2,1)] 
+// a definition involving conditional expressions involving time
+niceK=niceFib
+// the nice fib
+uglyK=uglyFib
+// k and kUgly are to make sure that there is a cat-II quantity

@@ -1,0 +1,115 @@
+balls=vSequence(0,nBalls)
+    // we need this loop over and over again in many definitions 
+cX=cursorX() 
+    // x-location of cursor to control queue
+cY=cursorY() 
+    // y-location of cursor to control queue
+help=check(false)
+    //  plot the direction of the queue 
+queueHit=cursorB()
+    // check if the cursor button is down to have the ball rolling
+rhoBall=slider(2,0.8,5.0)
+    //  radius of the balls 
+PR=descartes([plotTable,plotShadow,plotBalls,plotHighLight,plotQueue,plotQueue2])
+    //  one graph consisting of three balls. The x and y coordinates are
+    //  taken from the 'x'- and 'y'-components of the r-vector that has to be transposed in order to get
+    //  the x-s and y-s in two separate vectors. 
+collDamp=0.6
+    //  the damping coefficient for colliding balls 
+dT=0.8
+    //  to go from physical time to simulation time 
+eThreshold=0.5
+    //  the minimum kinetic energy for the balls to stay rolling 
+halfWay=50
+    //  half of the screen; used to correct the queueX and queueY coordinates 
+mBall=5
+    //  mass of the balls 
+maxX=40 
+    // determine the area of the rolling balls
+maxY=25 
+    // determine the area of the rolling balls
+minX=-40 
+    // determine the area of the rolling balls
+minY=-25 
+    // determine the area of the rolling balls
+nBalls=3
+    // nr balls
+    // This is also hard coded in the colors and in the
+    // array defining p at the moment of the shot; 
+    // if the nr balls should change, only the color
+    // arrays and the starting condition for p have to be updated 
+rollDamp=0.994
+    //  the damping coefficient for the rolling balls 
+col=['red':[255,255,255],'grn':[0,255,255],'blu':[0,255,0]]
+    //  colors of the balls: first one is red, two is white, three is yellowish 
+cpl=#(i,balls,cplOneBall(i),vAppend)
+    //  the couplings matrix containing all info about the relations to ball i,
+    //  that is: 'close' to indicate if these two balls are in a collision-state;
+    //  if close is true, 'force' is the current reaction force between them. 
+cplOneBall(i)=#(j,balls,cond(touch(i,j),['close':true,'force':(mpt(i,j)/m1m2tt(i,j))*tMat[i][j]],['close':false,'force':0]),vAppend)
+    //  the cplOneBall vector contains, for ball i, the info for the collisions between this
+    //  ball and all other balls.
+    //  It sets the value to the boolean 'close', and if close==true, the
+    //  current force vector. The derivation of the force vector
+    //  is based on conservation of momentum, angular momentum and kinetic energy
+    //  in a coordinate-free version. 
+eKin=#(i,balls,vDot(p[i],p[i])/(2*m[i]),add)
+    //  the kinetic energy 
+f=#(i,balls,forceOnOneBall(i),vAppend)
+    //  calculate the forces for all balls by concatenating 
+forceOnOneBall(i)=#(j,balls,cond(cpl[i][j].close,cpl[i][j].force,0),add)
+    //  adding the forces due to all other of balls 
+gameState=cond((eKin{1}<eThreshold)&&!queueHit,'hit',cond(queueHit,'roll','hit'))
+    //  determine which state we are in 
+m=#(i,balls,mBall,vAppend)
+    //  the mass of the balls 
+m1m2tt(i,j)=(m[i]+m[j])*vDot(tMat[i][j],tMat[i][j])
+    //  the product (m1+m2)(t,t): the denominator of the force vector 
+mpt(i,j)=-2*vDot(m[j]*p{1}[i]-m[i]*p{1}[j],tMat[i][j])
+    //  the product (((m1p2-m2p1)t),t): the numerator of the force vector 
+p=if(gameState=='roll',rollDamp*wallCollide(p{1}+f),[['x':0,'y':0],['x':r{1}[1].x-queueX,'y':r{1}[1].y-queueY],['x':0,'y':0]])
+    //  p is obtained by tame integrating f; at the starting time give the initial momenta. The only
+    //  non-vanishing initial momentum is the momentum of ball 1; this is obtained from the queue 
+    //  position minus the centre of ball 1. 
+plotBalls=[locations:[fill:'interior',data:#(i,balls,[x:halfWay+r[i].x,y:halfWay+r[i].y,fcol_r:col.red[i],fcol_g:col.grn[i],fcol_b:col.blu[i]],vAppend),rad:rhoBall]]
+    //  plot the balls 
+plotHighLight=[locations:[fill:'interior',data:#(i,balls,[x:halfWay+0.1*rhoBall+r[i].x,y:halfWay+0.5*rhoBall+r[i].y],vAppend),rad:0.375*rhoBall,fcol_r:255,fcol_g:255,fcol_b:255]]
+    //  plot the highlights on the balls 
+plotQueue=[locations:[icon:'none',data:halfWay+[[x:queueX,y:queueY],[x:r{1}[1].x,y:r{1}[1].y]]],edges:[col_r:0,col_g:0,col_b:0,thickness:0.6, shape:if(gameState=='hit','line','none'),data:[[b:0,e:1]]]]
+// during gameState==hit, the shape is 'line', otherwise no line is drawn
+plotQueue2=[locations:[icon:'none',data:halfWay+[[x:10*(r{1}[1].x-queueX)+queueX,y:10*(r{1}[1].y-queueY)+queueY],[x:r{1}[1].x,y:r{1}[1].y]]],edges:[col_g:100,col_r:0,thickness:0.2,shape:if((gameState=='hit')&& help,'line','none'),data:[[b:0,e:1]]]]
+    //  the help line to elongate the queue is drawn when in hit-mode and when help is on
+plotShadow=[locations:[fill:'interior',data:#(i,balls,[x:halfWay-0.15*rhoBall+r[i].x,y:halfWay-0.5*rhoBall+r[i].y],vAppend),fcol_r:0,fcol_g:0,fcol_b:0,fcol_a:0.5,rad:rhoBall]]
+    //  plot the shadows beneath the balls 
+plotTable=[locations:[icon:'vBar',fill:'interior',x:50,y:25,width:80,height:50,fcol_r:0,fcol_g:128]]
+    //  plot the table 
+queueX=cX-halfWay 
+queueY=cY-halfWay
+    //  the queue end position is derived from the location of the cursor 
+r=if(gameState=='roll',r{1}+dT*p/m,cond(time==1,#(i,balls,['x':halfWay*(random()-0.5),'y':0.5*halfWay*(random()-0.5)],vAppend),r{1}))
+    //  r is obtained by integrating v; at the starting time (==1) give the initial random positions 
+rho=#(i,balls,rhoBall,vAppend)
+    //  the radii of the balls 
+tMat=#(i,balls,tMatOneBall(i),vAppend)
+    //  the tMatrix contains, for every pair, i-j, the t-vector between the centres 
+tMatOneBall(i)=#(j,balls,tVec(i,j),vAppend)
+    //  the tMatOneBall vector contains, for every ball,
+    //  the the t-vectors between its centre and the other centres 
+tVec(i,j)=r{1}[j]-r{1}[i]
+    //  the vector pointing from ball i to ball j, with coefficients x and y 
+time=time{1}+1 
+touch(i,j)=((vNormEuclid(tMat[i][j])<(rho[i]+rho[j]))&&(i!=j)&&vDot(tMat[i][j],p{1}[i]/m[i]-p{1}[j]/m[j])>0)
+    //  condition for colliding contact. Three terms:
+    //  1. Are the balls close enough?
+    //  2. No self-collision?
+    //  3. Is the relative velocity opposite to the vector connecting the centres? 
+wallCollide(a)=wallCollideLeft(wallCollideRight(wallCollideBottom(wallCollideTop(a))))
+    //  the collisions with all walls 
+wallCollideBottom(a)=#(i,vDom(a),cond((r{1}[i].y>(minY+rho[i]))||(a[i].y>0),a[i],['x':collDamp*a[i].x,'y':-collDamp*a[i].y]),vAppend)
+    //  collide bottom wall 
+wallCollideLeft(a)=#(i,vDom(a),cond((r{1}[i].x>(minX+rho[i]))||(a[i].x>0),a[i],['x':-collDamp*a[i].x,'y':collDamp*a[i].y]),vAppend)
+    //  collide left wall 
+wallCollideRight(a)=#(i,vDom(a),cond((r{1}[i].x<(maxX-rho[i]))||(a[i].x<0),a[i],['x':-collDamp*a[i].x,'y':collDamp*a[i].y]),vAppend)
+    //  collide right wall 
+wallCollideTop(a)=#(i,vDom(a),cond((r{1}[i].y<(maxY-rho[i]))||(a[i].y<0),a[i],['x':collDamp*a[i].x,'y':-collDamp*a[i].y]),vAppend)
+    //  collide top wall

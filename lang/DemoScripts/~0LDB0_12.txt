@@ -1,0 +1,29 @@
+ 
+maxSpaciousness=#(i,vSequence(0,11),spaciousness(i),max)
+    //  
+Pdr=['cap':'assen','pop':489912,'area':2680.37]
+    //  
+Pfr=['cap':'leeuwarden','pop':647239,'area':5748.74]
+    //  
+Pgl=['cap':'arnhem','pop':2013903,'area':5136.51]
+    //  
+Pgr=['cap':'groningen','pop':582161,'area':2960.03]
+    //  
+Pli=['cap':'maastricht','pop':1121483,'area':2209.22]
+    //  
+Pnb=['cap':'den bosch','pop':2470184,'area':5081.76]
+    //  
+Pnh=['cap':'haarlem','pop':2719764,'area':4091.76]
+    //  
+Pov=['cap':'zwolle','pop':1138571,'area':3420.86]
+    //  
+Put=['cap':'utrecht','pop':1243161,'area':1449.12]
+    //  
+Pzh=['cap':'den haag','pop':3560205,'area':3418.50]
+    //  
+Pzl=['cap':'middelburg','pop':381202,'area':2933.89]
+    //  
+p=[Pgr,Pfr,Pdr,Pov,Pgl,Put,Pnh,Pzh,Pzl,Pnb,Pli]
+    //  
+spaciousness(i)=p[i].area/p[i].pop
+    // 

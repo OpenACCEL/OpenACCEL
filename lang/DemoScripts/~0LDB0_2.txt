@@ -1,0 +1,10 @@
+s=slider(10,0,20)
+  // this is a slider 
+r=p+q  
+  // this is an expression
+p=5  
+  // this is a constant
+q=s+t 
+  // this is an expression
+t=pow(s,3)
+  // this is a standard function

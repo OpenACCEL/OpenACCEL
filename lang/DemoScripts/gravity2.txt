@@ -1,0 +1,26 @@
+pRange=[0,1,2,3,4,5,6] 
+g=slider(0.0033,0,0.01) 
+    // play with the gravity strength to seek stable configurations;
+    // how long can you keep things stable? 
+    but=button()
+time=if(!but,time{1}+1,0)
+    //  reset the time to the moment of the creation of the universe 
+planetS=#(i,pRange,[locations:[fill:'interior',nrLocations:40,x:[mode:'shift',value:50+r[i].x],y:[mode:'shift',value:50+r[i].y],fcol_a:[mode:'intp',low:0.4,high:0],rad:[mode:'intp',low:pow(m[i],0.333),high:0]]],vAppend)
+plotResult=descartes(planetS)
+    // seven graphs; every graph is one planet. Every graph takes two properties (x and y) that are shifted in.
+    // Notice that we use the opacity (col_a) to make the trailes the planets leave a bit thin at the end. 
+    // Also, since we interpolate the radii between their proper value (the cube root of the planet's mass)
+    // and 0, the planets appear as little droplets.    
+a=if(time>1,f/m,0)
+    //  Newton: a=F/m 
+f=#(i,vSequence(0,7),#(j,vSequence(0,7),if(i!=j,g*m[i]*m[j]*(r{1}[j]-r{1}[i])/(pow(vNormEuclid(r{1}[i]-r{1}[j]),3)),0),add),vAppend)
+// the law of gravity force: propertional to both masses and inverse propoertional to the 
+// square of the distance. But
+// since the force is a vector, directed from mass j to mass i, we have the difference between these two
+// in the numerator, and the distance cubed in the denominator.
+m=[80,2,2,2,2,2,2] 
+// one heavy sun and 6 light planets
+r=if(time>1,r{1}+v,[['x':0,'y':0],['x':15,'y':0],['x':7,'y':10],['x':-7,'y':10],['x':-15,'y':0],['x':-7,'y':-10],['x':7,'y':-10]])
+    //  r is obtained by integrating v; at the starting time (==1) give the initial positions 
+v=if(time>1,v{1}+a,[['x':0,'y':0],['x':0,'y':0.1],['x':-0.05,'y':0.03],['x':-0.05,'y':-0.03],['x':0,'y':-0.1],['x':0.05,'y':-0.03],['x':0.05,'y':0.03]])
+    //  v is obtained by integrating a; at the starting time give the initial velocities
