@@ -181,8 +181,11 @@ define(["../Controller/AbstractView",
             $("li#" + newState.tab + ".navtab").addClass("ui-tabs-active");
 
             // Show contents of newly activated tab and trigger events
-            this.onLeaveTab(this.state.tab);
-            $(".tabcontent").hide();
+            if (this.state.tab) {
+                this.onLeaveTab(this.state.tab);
+                $(".tabcontent").hide();
+            }
+
             this.onEnterTab(newState.tab);
             $("#" + newState.tab + ".tabcontent").show();
         }
