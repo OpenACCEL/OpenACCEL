@@ -62,6 +62,13 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          * @type {Array}
          */
         this.demoScripts = [];
+
+        /**
+         * A list of the names of all ACCEL functions.
+         * 
+         * @type {Array}
+         */
+        this.ACCELFunctionNames = [];
     }
 
     /**
@@ -94,6 +101,9 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         // Setup demo scripts list
         this.demoScripts = controller.getDemoScripts();
         this.synchronizeDemoScripts(this.demoScripts);
+
+        // Setup ACCEL functions list
+        this.ACCELFunctionNames = controller.getACCELFunctions();
     };
 
     /**
@@ -146,7 +156,13 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      * @param {Array} articles List of article names
      */
     HelpDemo.prototype.synchronizeArticles = function(articles) {
-        this.helpArticleList.set(articles);
+        this.helpArticleList.set(articles, function(name) {
+            if (view.tabs.helpdemo.ACCELFunctionNames.indexOf(name) == -1) {
+                return "class='helparticle_nonfunction'";
+            } else {
+                return '';
+            }
+        });
     }
 
     /**
@@ -168,48 +184,43 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             return;
         }
 
-        // Construct article heading
+        // Construct normal article heading
         var title = article.fName[0].toUpperCase() + article.fName.slice(1);
         this.helpTextBuffer.append('<h1 style="padding-left: 0px;">' + title + '</h1>');
 
-        var search = view.encodeHTML($('#helpphrase').val().trim());
-
-        // Returns the given text with all matches of the search string highlighted, if any
-        function matchSearch(text) {
-            if (search === '' || search.length <= 2) {
-                return text;
-            } else {
-                return text.replace(new RegExp(search, "gi"), '<span class="help_match">$&</span>');
-            }
-        }
-
         /**----- Add every member of the article object as a separate paragraph with it's heading -----**/
+        var text;
+
         // Help
         if (article.help !== '') {
+            text = view.tabs.helpdemo.formatForHelp(article.help);
             this.helpTextBuffer.append('<h3 class="help_heading">Help</h3>');
-            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.help) + '</div>');
+            this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
         // Details
         if (article.details !== '') {
+            text = view.tabs.helpdemo.formatForHelp(article.details);
             this.helpTextBuffer.append('<h3 class="help_heading">Details</h3>');
-            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.details) + '</div>');
+            this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
         // Example
         if (article.example !== '') {
+            text = view.tabs.helpdemo.formatForHelp(article.example);
             this.helpTextBuffer.append('<h3 class="help_heading">Example</h3>');
-            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.example) + '</div>');
+            this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
         // Automapping
         if (article.autoMapping !== '') {
+            text = view.tabs.helpdemo.formatForHelp(article.autoMapping);
             this.helpTextBuffer.append('<h3 class="help_heading">Auto-mapping</h3>');
-            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.autoMapping) + '</div>');
+            this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
         // See also
-        var text = '';
+        text = '';
         var links = (article.seeAlso.indexOf(',') > -1) ? article.seeAlso.split(",") : [article.seeAlso];
         for (var j in links) {
             var link = links[j].trim();
@@ -224,12 +235,37 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
         // External
         if (article.external !== '') {
+            text = view.tabs.helpdemo.formatForHelp(article.external);
             this.helpTextBuffer.append('<h3 class="help_heading">External reference</h3>');
-            this.helpTextBuffer.append('<div class="help_text">' + matchSearch(article.external) + '</div>');
+            this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
         this.helpTextBuffer.flip();
     }
+
+    /**
+     * Formats the given piece of text for display in a help article. This formats all occurences of the ACCEL and Descartes
+     * logos and highlights all matches of the current searcg phrase, if any.
+     * 
+     * @param  {String} text The text to format for display in a help article
+     * @return {String} The formatted text
+     */
+    HelpDemo.prototype.formatForHelp = function(text) {
+        var search = view.encodeHTML($('#helpphrase').val().trim());
+
+        // Format ACCEL logo's
+        text = text.replace(new RegExp('\\+ACCELTM\\+', 'g'), '<span class="accelTM">ACCEL</span>');
+
+        // Format Descartes logo's
+        text = text.replace(new RegExp('\\+DESCARTESTM\\+', 'g'), '<span class="descartesTM">Descartes</span>');
+
+        // Highligh search matches
+        if (search !== '' && search.length > 2) {
+            text = text.replace(new RegExp(search, "gi"), '<span class="help_match">$&</span>');
+        }
+
+        return text;
+    };
 
     /**
      * Searches the help database contents for the given phrase,

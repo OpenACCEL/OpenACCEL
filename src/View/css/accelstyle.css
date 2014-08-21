@@ -26,6 +26,20 @@ body div {
 	margin: 0px;
 }
 
+.accelTM{
+  text-shadow: #301040 1px -1px 1px;
+  color: #eeddff;
+}
+
+.descartesTM{
+  text-shadow: #400000 1px -1px 1px;
+  color: #c0c000;
+}
+
+.helparticle_nonfunction {
+	color: #80c0ff;
+}
+
 .cm-red {
 	color: red;
 	font-weight: bold;

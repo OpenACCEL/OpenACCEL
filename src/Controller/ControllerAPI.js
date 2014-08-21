@@ -291,6 +291,14 @@ define(["Model/Script",
             }
         };
 
+        /** 
+         * Returns a list with the names of all built-in accel functions.
+         * @return {Array} An array containing the names of all built-in ACCEL functions
+         */
+        Controller.prototype.getACCELFunctions = function() {
+            return this.library.getFunctions({'all': true, 'escaped': false});
+        };
+
         /**
          * Sets the current left mouse button status.
          *
