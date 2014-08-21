@@ -345,9 +345,10 @@ define(["../Controller/AbstractView",
     };
 
     WebView.prototype.resizeContainer = function() {
+        var widthPercentage = 0.8;
         var windowWidth = $(window).innerWidth();
-        var fixedWidth = 900;
-        var variableWidth = windowWidth * 0.8;
+        var fixedWidth = 1600 * widthPercentage;
+        var variableWidth = windowWidth * widthPercentage;
         var newMaxWidth = Math.max(fixedWidth, variableWidth);
 
         var container = $('#container');
