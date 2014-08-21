@@ -43,6 +43,9 @@ define(["../Controller/AbstractView",
          * @type {Object}
          */
         this.state = $.deparam(location.hash, true);
+        if (!this.state.tab) {
+            this.state.tab = 'editrun';
+        }
 
         /**
          * The various tabs that this view has to offer.
@@ -216,7 +219,9 @@ define(["../Controller/AbstractView",
      * @param  {string} tab The identifier of the tab that will be made current.
      */
     WebView.prototype.onEnterTab = function(tab) {
-        this.tabs[tab].onEnterTab();
+        if (tab != 'intro') {
+            this.tabs[tab].onEnterTab();
+        }
 
         //Tooltips loaded and shown
         try {
@@ -237,7 +242,9 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.onLeaveTab = function(tab) {
         $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
-        this.tabs[tab].onLeaveTab();
+        if (tab != 'intro') {
+            this.tabs[tab].onLeaveTab();
+        }
 
         //Tooltips stored and hidden
         this.tooltips[tab] = $('.tooltipcontainer').filter(":visible");
