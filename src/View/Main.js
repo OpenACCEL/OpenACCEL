@@ -22,7 +22,6 @@ require(["Controller/ControllerAPI", "View/WebView"],
 
     view = new View();
     controller = new Controller(view);
-    view.setUpPlot();
 
     controller.setAutoExecute(true);
     controller.autoSave = true;
