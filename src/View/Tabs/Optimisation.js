@@ -2,9 +2,15 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
-    function Optimisation() {
+define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ function(HTMLBuffer, GeneticOptimisation) {
+    function Optimisation(canvasCreator) {
         this.individualPropertiesBuffer = new HTMLBuffer();
+
+        /**
+         * The main canvas where the user sees the generated population and select
+         * an indiviual.
+         */
+        this.canvas = canvasCreator.createCanvas(new GeneticOptimisation(), 'plotGO', 400, 400);
 
         this.geneticOptimisationValues = {
             population: 25,
@@ -237,6 +243,20 @@ define(["View/HTMLBuffer"], /**@lends View*/ function(HTMLBuffer) {
     Optimisation.prototype.zoomToFit = function(show) {
         view.canvasses.optimisation.zoomToFit();
         view.canvasses.optimisation.draw();
+    };
+
+    /**
+     * Clears the plot canvas
+     */
+    Optimisation.prototype.clearCanvas = function() {
+        this.canvas.clearCanvas();
+    };
+
+    /**
+     * Updates the plot canvas
+     */
+    Optimisation.prototype.drawPlot = function() {
+        this.canvas.draw();
     };
 
     return Optimisation;

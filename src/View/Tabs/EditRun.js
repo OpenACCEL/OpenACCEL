@@ -2,12 +2,12 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLBuffer) {
+define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ function(Input, HTMLBuffer, Script) {
     /**
      * @class
      * @classdesc The EditRun tab.
      */
-    function EditRun() {
+    function EditRun(canvasCreator) {
         /**
          * Number of object-elements the objectToString function
          * should generate before it is terminated.
@@ -16,6 +16,11 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          * @type {Number}
          */
         this.maxPrintElements = 1000;
+
+        /**
+         * The main canvas where the user sees or her plot.
+         */
+        this.canvas = canvasCreator.createCanvas(new Script(), 'plot', 300, 300);
 
         /**
          * Buffer to contain updated #scriptlist content
@@ -522,6 +527,21 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             this.inputs[i].initialize();
         }
     };
+
+    /**
+     * Clears the plot canvas
+     */
+    EditRun.prototype.clearCanvas = function() {
+        this.canvas.clearCanvas();
+    };
+
+    /**
+     * Updates the plot canvas
+     */
+    EditRun.prototype.drawPlot = function() {
+        this.canvas.draw();
+    };
+
 
     return EditRun;
 });

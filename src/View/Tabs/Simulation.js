@@ -2,13 +2,13 @@ require.config({
     baseUrl: "scripts"
 });
 
-define([], /**@lends View*/ function() {
+define(["Model/Script"], /**@lends View*/ function(Script) {
     /**
      * @class
      * @classdesc The Simulation tab.
      */
-    function Simulation() {
-
+    function Simulation(canvasCreator) {
+        this.canvas = canvasCreator.createCanvas(new Script(), 'plotSimulation', 800, 600);
     }
 
     /**
@@ -61,6 +61,20 @@ define([], /**@lends View*/ function() {
         controller.setIterations(iterations);
         controller.stop();
         controller.run();
+    };
+
+    /**
+     * Clears the plot canvas
+     */
+    Simulation.prototype.clearCanvas = function() {
+        this.canvas.clearCanvas();
+    };
+
+    /**
+     * Updates the plot canvas
+     */
+    Simulation.prototype.drawPlot = function() {
+        this.canvas.draw();
     };
 
     return Simulation;

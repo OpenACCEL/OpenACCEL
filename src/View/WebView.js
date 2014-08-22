@@ -27,11 +27,6 @@ define(["../Controller/AbstractView",
         this.canvasCreator = new CanvasCreator();
 
         /**
-         * The various canvasses that the view will use to plot and draw.
-         */
-        this.canvasses = {};
-
-        /**
          * Whether the current open tab has one or more plot canvasses.
          */
         this.hasPlot = false;
@@ -51,12 +46,12 @@ define(["../Controller/AbstractView",
          * The various tabs that this view has to offer.
          */
         this.tabs = {};
-        this.tabs.editrun = new EditRun();
+        this.tabs.editrun = new EditRun(this.canvasCreator);
         this.tabs.helpdemo = new HelpDemo();
         this.tabs.ioedit = new IOEdit();
         this.tabs.analysis = new Analysis();
-        this.tabs.optimisation = new Optimisation();
-        this.tabs.simulation = new Simulation();
+        this.tabs.optimisation = new Optimisation(this.canvasCreator);
+        this.tabs.simulation = new Simulation(this.canvasCreator);
 
         /**
          * The tab that is currently open.
@@ -111,41 +106,11 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Displays the values of the given output quantities in the UI.
-     *
-     * @param cat2quantities {map<String, Quantity>} A map of all output
-     * quantities in the script.
-     */
-    WebView.prototype.presentResults = function(cat2quantities) {
-        this.tabs.editrun.synchronizeResults(cat2quantities);
-    };
-
-    /**
-     * Creates the necessary plot canvases
-     */
-    WebView.prototype.setUpPlot = function() {
-        /**
-         * The small plot window that shows up in the Edit/Run tab.
-         */
-        this.canvasses.editrun = this.canvasCreator.createCanvas(controller.getScript(), 'plot', 300, 300);
-
-        /**
-         * This big plot window for the Simulation tab, which shows the same as the plot of Edit/Run.
-         */
-        this.canvasses.simulation = this.canvasCreator.createCanvas(controller.getScript(), 'plotSimulation', 800, 600);
-
-        /**
-         * The canvas that is used to plot individuals of the Genetic Optimisation tab.
-         */
-        this.canvasses.optimisation = this.canvasCreator.createCanvas(controller.getGeneticOptimisation(), 'plotGO', 400, 400);
-    };
-
-    /**
      * Clears the plot canvas
      */
-    WebView.prototype.clearPlot = function() {
-        if (this.hasPlot) {
-            this.canvasses[this.currentTab].clearCanvas();
+    WebView.prototype.clearCanvas = function() {
+        if (typeof this.tabs[this.currentTab].clearCanvas === "function") {
+            this.tabs[this.currentTab].clearCanvas();
         }
     };
 
@@ -153,8 +118,8 @@ define(["../Controller/AbstractView",
      * Updates the plot canvas
      */
     WebView.prototype.drawPlot = function() {
-        if (this.hasPlot) {
-            this.canvasses[this.currentTab].draw();
+        if (typeof this.tabs[this.currentTab].drawPlot === "function") {
+            this.tabs[this.currentTab].drawPlot();
         }
     };
 
@@ -301,9 +266,9 @@ define(["../Controller/AbstractView",
         this.resetAllPlots();
 
         var script = controller.getScript();
-        this.canvasses.editrun.setModel(script);
-        this.canvasses.simulation.setModel(script);
-        this.canvasses.optimisation.setModel(controller.getGeneticOptimisation());
+        this.tabs.editrun.canvas.setModel(script);
+        this.tabs.simulation.canvas.setModel(script);
+        this.tabs.optimisation.canvas.setModel(controller.getGeneticOptimisation());
 
         this.tabs.editrun.synchronizeScriptList(script.getQuantities());
         this.tabs.ioedit.synchronizeScriptArea();
@@ -319,16 +284,18 @@ define(["../Controller/AbstractView",
      * Event that gets called when the genetic algorithm has generated a new generation.
      */
     WebView.prototype.onNewGeneration = function() {
-        this.canvasses.optimisation.draw();
+        this.tabs.optimisation.draw();
     }
 
     /**
      * Resets all canvasses and plots, such that they are as good as new!
      */
     WebView.prototype.resetAllPlots = function() {
-        for (var key in this.canvasses) {
-            this.canvasses[key].clearCanvas();
-            this.canvasses[key].clearBuffers();
+        for (var key in this.tabs) {
+            if (this.tabs[key].canvas) {
+                this.tabs[key].canvas.clearCanvas();
+                this.tabs[key].canvas.clearBuffers();
+            }
         }
     }
 
