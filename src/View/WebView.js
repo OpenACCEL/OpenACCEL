@@ -315,7 +315,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.runtimeError = function(error) {
         console.log(error);
-        handleError(error);
+        this.handleError(error);
     };
 
     WebView.prototype.resizeContainer = function() {
