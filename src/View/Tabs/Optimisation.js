@@ -152,7 +152,7 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
 
         $('#plotGO').on('click',
             (function() {
-                var individual = view.canvasses.optimisation.getClickedIndividual();
+                var individual = this.canvas.getClickedIndividual();
                 var q;
 
                 this.individualPropertiesBuffer.empty();
