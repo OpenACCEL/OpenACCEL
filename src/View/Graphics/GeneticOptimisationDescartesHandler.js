@@ -257,7 +257,7 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
             var redVals = [];
             var greenVals = [];
             var blueVals = [];
-            var diameters = [];
+            var radii = [];
 
             var xValue;
             var yValue;
@@ -295,9 +295,9 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
                     }
                 }
                 if (inFront) {
-                    diameters.push(2);
+                    radii.push(1);
                 } else {
-                    diameters.push(1);
+                    radii.push(0.5);
                 }
             }
 
@@ -320,7 +320,7 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
                 var point       = [];
                 point.x         = xCoords[i];
                 point.y         = yCoords[i];
-                point.rad       = diameters[i];
+                point.rad       = radii[i];
                 point.fcol_r    = redVals[i];
                 point.fcol_g    = greenVals[i];
                 point.fcol_b    = blueVals[i];
