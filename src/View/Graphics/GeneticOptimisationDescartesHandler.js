@@ -300,34 +300,6 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
                 }
             }
 
-            var ctrl = {
-                'plotType': 'bubble',
-                'col_r': {
-                    'mode': 'data',
-                    'ref': 3
-                },
-                'col_g': {
-                    'mode': 'data',
-                    'ref': 4
-                },
-                'col_b': {
-                    'mode': 'data',
-                    'ref': 5
-                },
-                'diameter': {
-                    'mode': 'data',
-                    'ref': 6
-                },
-                'x': {
-                    'mode': 'data',
-                    'ref': 1
-                },
-                'y': {
-                    'mode': 'data',
-                    'ref': 2
-                }
-            };
-
             if (!popHasClickedIndividual) {
                 this.clickedIndividual = null;
             }
@@ -336,9 +308,19 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
                 throw new Error("Could not draw genetic optimisation population, a pareto variable is non-numeric.");
             }
 
-            return [
-                [ctrl, xCoords, yCoords, redVals, greenVals, blueVals, diameters]
-            ];
+            // The final drawing that will be passed on to Descartes.
+            var drawing = [[]];
+            drawing[0].locations            = [];
+            drawing[0].locations.data           = [];
+            drawing[0].locations.data.x         = xCoords;
+            drawing[0].locations.data.y         = yCoords;
+            drawing[0].locations.fill       = "interior";
+            drawing[0].locations.rad        = diameters;
+            drawing[0].locations.fcol_r     = redVals;
+            drawing[0].locations.fcol_g     = greenVals;
+            drawing[0].locations.fcol_b     = blueVals;
+
+            return drawing;
         };
 
         /**
