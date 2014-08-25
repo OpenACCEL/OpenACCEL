@@ -181,8 +181,12 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      */
     EditRun.prototype.onEnterTab = function() {
         view.hasPlot = true;
-        this.synchronizeScriptList(controller.getScript().getQuantities());
-        this.synchronizeResults(controller.getScript().getOutputQuantities());
+        var script = controller.getScript();
+        this.synchronizeScriptList(script.getQuantities());
+
+        if (script.isCompiled()) {
+            this.synchronizeResults(script.getOutputQuantities());
+        }
 
         // If autoexecute is true, resume script only when it has been paused
         // by the system, and start executing when it is not paused but compiled
