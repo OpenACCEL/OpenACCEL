@@ -60,26 +60,22 @@ define(["View/Graphics/AbstractDescartesDecorator"], /** @lends View.Graphics */
      * and all y co-ordinates multiplied by verZoom.
      */
     ZoomDescartesDecorator.prototype.decorate = function(plot) {
-        var j;
-        for (var i in plot) {
-            if (plot[i][0].x instanceof Object) {
-                for (j in plot[i][plot[i][0].x.ref]) {
-                    plot[i][plot[i][0].x.ref][j] *= this.horZoom;
-                }
-            } else {
-                plot[i][0].x *= this.horZoom;
-            }
-            if (plot[i][0].y instanceof Object) {
-                for (j in plot[i][plot[i][0].y.ref]) {
-                    plot[i][plot[i][0].y.ref][j] *= this.verZoom;
-                }
-            } else {
-                plot[i][0].y *= this.verZoom;
-            }
+        var i;
+        
+        var xPoints = plot[0].locations.data.x;
+        for (i in xPoints) {
+            xPoints[i] *= this.horZoom;
         }
+
+        var yPoints = plot[0].locations.data.y;
+        for (i in yPoints) {
+            yPoints[i] *= this.verZoom;
+        }
+
         if (this.decorator !== null) {
             plot = this.decorator.decorate(plot);
         }
+
         return plot;
     };
 

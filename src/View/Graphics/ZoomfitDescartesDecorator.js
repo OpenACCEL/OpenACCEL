@@ -125,47 +125,46 @@ define(["View/Graphics/AbstractDescartesDecorator", "View/Graphics/ZoomDescartes
          * nor fitOnce are true.
          */
         ZoomFitDescartesDecorator.prototype.decorate = function(plot) {
-            var i, j;
+            var i;
+
             if (this.alwaysFit || this.fitOnce) {
                 var horMax = -Infinity;
                 var horMin = Infinity;
                 var verMax = -Infinity;
                 var verMin = Infinity;
-                for (i in plot) {
-                    if (plot[i][0].x instanceof Object) {
-                        for (j in plot[i][plot[i][0].x.ref]) {
-                            horMax = Math.max(plot[i][plot[i][0].x.ref][j], horMax);
-                            horMin = Math.min(plot[i][plot[i][0].x.ref][j], horMin);
-                        }
-                    } else {
-                        horMax = Math.max(plot[i][0].x, horMax);
-                        horMin = Math.min(plot[i][0].x, horMin);
-                    }
-                    if (plot[i][0].y instanceof Object) {
-                        for (j in plot[i][plot[i][0].y.ref]) {
-                            verMax = Math.max(plot[i][plot[i][0].y.ref][j], verMax);
-                            verMin = Math.min(plot[i][plot[i][0].y.ref][j], verMin);
-                        }
-                    } else {
-                        verMax = Math.max(plot[i][0].y, verMax);
-                        verMin = Math.min(plot[i][0].y, verMin);
-                    }
+
+                var xPoints = plot[0].locations.data.x;
+                for (i in xPoints) {
+                    horMax = Math.max(horMax, xPoints[i]);
+                    horMin = Math.min(horMin, xPoints[i]);
                 }
+
+                var yPoints = plot[0].locations.data.y;
+                for (i in yPoints) {
+                    verMax = Math.max(verMax, yPoints[i]);
+                    verMin = Math.min(verMin, yPoints[i]);
+                }
+
                 if (horMax + verMax == Infinity || horMin + verMin == -Infinity) {
                     throw new Error("The drawing co-ordinates suggest zooming out infinitely, cannot zoom infinitely.");
                 }
+
                 this.decoratorComponents[0].pan(true, horMin, verMin);
                 this.decoratorComponents[1].zoom(true, this.marginZoomAdjust * this.coordinateScale / (horMax - horMin),
                     this.marginZoomAdjust * this.coordinateScale / (verMax - verMin));
                 this.decoratorComponents[2].pan(true, -this.margin, -this.margin);
             }
-            for (j = 0; j < this.decoratorComponents.length; j++) {
-                plot = this.decoratorComponents[j].decorate(plot);
+
+            for (i = 0; i < this.decoratorComponents.length; i++) {
+                plot = this.decoratorComponents[i].decorate(plot);
             }
+
             this.fitOnce = false;
+
             if (this.decorator !== null) {
                 plot = this.decorator.decorate(plot);
             }
+
             return plot;
         };
 
