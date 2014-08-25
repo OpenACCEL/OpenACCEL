@@ -55,14 +55,10 @@ define(["View/Graphics/AbstractDescartesDecorator"], /** @lends View.Graphics */
     PanDescartesDecorator.prototype.decorate = function(plot) {
         var i;
 
-        var xPoints = plot[0].locations.data.x;
-        for (i in xPoints) {
-            xPoints[i] -= this.horOffset;
-        }
-
-        var yPoints = plot[0].locations.data.y;
-        for (i in yPoints) {
-            yPoints[i] -= this.verOffset;
+        var points = plot[0].locations.data;
+        for (i in points) {
+            points[i].x -= this.horOffset;
+            points[i].y -= this.verOffset;
         }
 
         if (this.decorator !== null) {

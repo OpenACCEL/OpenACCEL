@@ -133,16 +133,13 @@ define(["View/Graphics/AbstractDescartesDecorator", "View/Graphics/ZoomDescartes
                 var verMax = -Infinity;
                 var verMin = Infinity;
 
-                var xPoints = plot[0].locations.data.x;
-                for (i in xPoints) {
-                    horMax = Math.max(horMax, xPoints[i]);
-                    horMin = Math.min(horMin, xPoints[i]);
-                }
+                var points = plot[0].locations.data;
+                for (i in points) {
+                    horMax = Math.max(horMax, points[i].x);
+                    horMin = Math.min(horMin, points[i].x);
 
-                var yPoints = plot[0].locations.data.y;
-                for (i in yPoints) {
-                    verMax = Math.max(verMax, yPoints[i]);
-                    verMin = Math.min(verMin, yPoints[i]);
+                    verMax = Math.max(verMax, points[i].y);
+                    verMin = Math.min(verMin, points[i].y);
                 }
 
                 if (horMax + verMax == Infinity || horMin + verMin == -Infinity) {
@@ -151,7 +148,7 @@ define(["View/Graphics/AbstractDescartesDecorator", "View/Graphics/ZoomDescartes
 
                 this.decoratorComponents[0].pan(true, horMin, verMin);
                 this.decoratorComponents[1].zoom(true, this.marginZoomAdjust * this.coordinateScale / (horMax - horMin),
-                    this.marginZoomAdjust * this.coordinateScale / (verMax - verMin));
+                this.marginZoomAdjust * this.coordinateScale / (verMax - verMin));
                 this.decoratorComponents[2].pan(true, -this.margin, -this.margin);
             }
 

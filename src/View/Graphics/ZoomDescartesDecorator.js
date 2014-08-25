@@ -62,14 +62,10 @@ define(["View/Graphics/AbstractDescartesDecorator"], /** @lends View.Graphics */
     ZoomDescartesDecorator.prototype.decorate = function(plot) {
         var i;
         
-        var xPoints = plot[0].locations.data.x;
-        for (i in xPoints) {
-            xPoints[i] *= this.horZoom;
-        }
-
-        var yPoints = plot[0].locations.data.y;
-        for (i in yPoints) {
-            yPoints[i] *= this.verZoom;
+        var points = plot[0].locations.data;
+        for (i in points) {
+            points[i].x *= this.horZoom;
+            points[i].y *= this.verZoom;
         }
 
         if (this.decorator !== null) {

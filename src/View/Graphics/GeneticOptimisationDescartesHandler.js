@@ -262,7 +262,8 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
             var xValue;
             var yValue;
 
-            for (var i = population.length - 1; i >= 0; i--) {
+            var i;
+            for (i = population.length - 1; i >= 0; i--) {
                 currentIndividual = population[i];
 
                 xValue = currentIndividual.outputvector[horKey].value;
@@ -311,14 +312,21 @@ define(["View/Graphics/AbstractDescartesHandler", "View/Graphics/QuarterfitDesca
             // The final drawing that will be passed on to Descartes.
             var drawing = [[]];
             drawing[0].locations            = [];
-            drawing[0].locations.data           = [];
-            drawing[0].locations.data.x         = xCoords;
-            drawing[0].locations.data.y         = yCoords;
+            drawing[0].locations.data       = [];
             drawing[0].locations.fill       = "interior";
-            drawing[0].locations.rad        = diameters;
-            drawing[0].locations.fcol_r     = redVals;
-            drawing[0].locations.fcol_g     = greenVals;
-            drawing[0].locations.fcol_b     = blueVals;
+
+            // Fill in the data for each single point.
+            for (i = 0; i < xCoords.length; i++) {
+                var point       = [];
+                point.x         = xCoords[i];
+                point.y         = yCoords[i];
+                point.rad       = diameters[i];
+                point.fcol_r    = redVals[i];
+                point.fcol_g    = greenVals[i];
+                point.fcol_b    = blueVals[i];
+
+                drawing[0].locations.data.push(point);
+            }
 
             return drawing;
         };
