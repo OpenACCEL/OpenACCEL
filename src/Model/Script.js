@@ -202,15 +202,7 @@ define(["Model/Analyser/Analyser",
                 'script not compiled because incomplete');
             }
 
-            // Try evaluating the value. Throw RuntimeError if an error is thrown
-            var value;
-            try {
-                value = this.exe.getValue(qtyName);
-            } catch(e) {
-                throw new RuntimeError(e.message);
-            }
-
-            return value;
+            return this.exe.getValue(qtyName);
         },
 
         /**
