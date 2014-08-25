@@ -236,13 +236,13 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
     };
 
     Optimisation.prototype.smartZoom = function() {
-        view.canvasses.optimisation.smartZoom();
-        view.canvasses.optimisation.draw();
+        this.canvas.smartZoom();
+        this.canvas.draw();
     };
 
     Optimisation.prototype.zoomToFit = function(show) {
-        view.canvasses.optimisation.zoomToFit();
-        view.canvasses.optimisation.draw();
+        this.canvas.zoomToFit();
+        this.canvas.draw();
     };
 
     /**

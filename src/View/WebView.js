@@ -284,7 +284,7 @@ define(["../Controller/AbstractView",
      * Event that gets called when the genetic algorithm has generated a new generation.
      */
     WebView.prototype.onNewGeneration = function() {
-        this.tabs.optimisation.draw();
+        this.tabs.optimisation.drawPlot();
     }
 
     /**
