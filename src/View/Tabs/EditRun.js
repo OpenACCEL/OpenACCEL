@@ -185,7 +185,12 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         this.synchronizeScriptList(script.getQuantities());
 
         if (script.isCompiled()) {
-            this.synchronizeResults(script.getOutputQuantities());
+            try {
+                var outputQuantities = script.getOutputQuantities();
+                this.synchronizeResults();
+            } catch (e) {
+                view.runtimeError(e);
+            }
         }
 
         // If autoexecute is true, resume script only when it has been paused
