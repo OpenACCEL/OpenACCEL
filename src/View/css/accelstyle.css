@@ -572,6 +572,14 @@ span#checkUnitsMsg {
 	font-weight: bold;
 }
 
+.propname_row {
+	cursor: pointer;
+}
+
+.propname_row:hover div.propname{
+	text-decoration: underline;
+}
+
 .operator {
 	color: #AA00AA;
 }

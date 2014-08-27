@@ -105,8 +105,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
                 }
 
                 return '' +
-                    '<div onclick="' + html + ' class = "hoverbold">' +
-                        '<div class="ellipsis max128w">' + quantity + '</div>' +
+                    '<div onclick="' + html + ' class="propname_row">' +
+                        '<div class="ellipsis max128w propname">' + quantity + '</div>' +
                         '<div class="property">' + property + '</div>' +
                     '</div>';
             },
