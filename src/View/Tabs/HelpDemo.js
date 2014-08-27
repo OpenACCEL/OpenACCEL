@@ -65,7 +65,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
         /**
          * A list of the names of all ACCEL functions.
-         * 
+         *
          * @type {Array}
          */
         this.ACCELFunctionNames = [];
@@ -192,49 +192,58 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         var text;
 
         // Help
-        if (article.help !== '') {
+        if (article.help && article.help !== '') {
             text = view.tabs.helpdemo.formatForHelp(article.help);
             this.helpTextBuffer.append('<h3 class="help_heading">Help</h3>');
             this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
         // Details
-        if (article.details !== '') {
+        if (article.details && article.details !== '') {
             text = view.tabs.helpdemo.formatForHelp(article.details);
             this.helpTextBuffer.append('<h3 class="help_heading">Details</h3>');
             this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
         // Example
-        if (article.example !== '') {
+        if (article.example && article.example !== '') {
             text = view.tabs.helpdemo.formatForHelp(article.example);
             this.helpTextBuffer.append('<h3 class="help_heading">Example</h3>');
             this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
+        // Abbreviation
+        if (article.abbreviation && article.abbreviation !== '') {
+            text = view.tabs.helpdemo.formatForHelp(article.abbreviation);
+            this.helpTextBuffer.append('<h3 class="help_heading">Abbreviation</h3>');
+            this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
+        }
+
         // Automapping
-        if (article.autoMapping !== '') {
+        if (article.autoMapping && article.autoMapping !== '') {
             text = view.tabs.helpdemo.formatForHelp(article.autoMapping);
             this.helpTextBuffer.append('<h3 class="help_heading">Auto-mapping</h3>');
             this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
         }
 
         // See also
-        text = '';
-        var links = (article.seeAlso.indexOf(',') > -1) ? article.seeAlso.split(",") : [article.seeAlso];
-        for (var j in links) {
-            var link = links[j].trim();
-            var extraText = (view.tabs.helpdemo.articles[link]) ? ',"helpcat":"' + view.tabs.helpdemo.articles[link].cat + '"' : '';
+        if (article.seeAlso && article.seeAlso !== '') {
+            text = '';
+            var links = (article.seeAlso.indexOf(',') > -1) ? article.seeAlso.split(",") : [article.seeAlso];
+            for (var j in links) {
+                var link = links[j].trim();
+                var extraText = (view.tabs.helpdemo.articles[link]) ? ',"helpcat":"' + view.tabs.helpdemo.articles[link].cat + '"' : '';
 
-            text += '<a id="articlelink_' + j + '" class="alink" onclick=\'view.setState({"help":"' + link + '"' + extraText + '});\'>' + link + '</a>, ';
+                text += '<a id="articlelink_' + j + '" class="alink" onclick=\'view.setState({"help":"' + link + '"' + extraText + '});\'>' + link + '</a>, ';
+            }
+            text = text.substring(0, text.length-2);
+
+            this.helpTextBuffer.append('<h3 class="help_heading">See also</h3>');
+            this.helpTextBuffer.append('<div id="seealso" class="help_text">' + text + '</div>');
         }
-        text = text.substring(0, text.length-2);
-
-        this.helpTextBuffer.append('<h3 class="help_heading">See also</h3>');
-        this.helpTextBuffer.append('<div id="seealso" class="help_text">' + text + '</div>');
 
         // External
-        if (article.external !== '') {
+        if (article.external && article.external !== '') {
             text = view.tabs.helpdemo.formatForHelp(article.external);
             this.helpTextBuffer.append('<h3 class="help_heading">External reference</h3>');
             this.helpTextBuffer.append('<div class="help_text">' +  text + '</div>');
@@ -246,7 +255,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
     /**
      * Formats the given piece of text for display in a help article. This formats all occurences of the ACCEL and Descartes
      * logos and highlights all matches of the current searcg phrase, if any.
-     * 
+     *
      * @param  {String} text The text to format for display in a help article
      * @return {String} The formatted text
      */

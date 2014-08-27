@@ -291,7 +291,7 @@ define(["Model/Script",
             }
         };
 
-        /** 
+        /**
          * Returns a list with the names of all built-in accel functions.
          * @return {Array} An array containing the names of all built-in ACCEL functions
          */
@@ -352,7 +352,11 @@ define(["Model/Script",
 
             // If script isn't compiled yet compile it now
             if (!this.script.isCompiled()) {
-                this.compileScript(this.script);
+                try {
+                    this.compileScript(this.script);
+                } catch (e) {
+                    this.view.runtimeError(e);
+                }
             }
 
             // If the execution has reached the last iteration and has stopped there,
@@ -551,6 +555,10 @@ define(["Model/Script",
 
                 // Restore the script from the retrieved source
                 this.setScriptFromSource(src, true);
+
+                return true;
+            } else {
+                return false;
             }
         };
 
@@ -725,7 +733,7 @@ define(["Model/Script",
                 this.measurements = new Array(this.numMeasurements);
             }
 
-            if (script.isComplete()) {
+            if (script.isComplete()/* && script.verifyDAG()*/) {
                 // Compile script and signal script and view that it has been compiled.
                 script.setExecutable(this.compiler.compile(script));
                 this.view.onNewScript();

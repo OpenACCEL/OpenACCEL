@@ -50,15 +50,46 @@ define([], /**@lends Model.Quantity */ function() {
          * An array containing all quantities on which this quantity is dependent.
          * Example: If the script contains a line 'a = b + c,'
          * then a, b, and c are quantities and quantity a is dependent on b and c.
+         *
          * @type {String[]}
          */
         this.dependencies = [];
+
+        /**
+         * All dependencies which do not occur in the form of a history expression.
+         *
+         * @type {Array}
+         */
+        this.nonhistDeps = [];
+
+        /**
+         * The reachable quantities in the dependency graph of this quantity.
+         * Contains the dependencies of this quantity, their dependencies etc.
+         *
+         * @type {Array}
+         */
+        this.reachables = [];
 
         /**
          * An array containing all quantities that depend on this quantity.
          * @type {String[]}
          */
         this.reverseDeps = [];
+
+        /**
+         * All reverse dependencies which do not occur in the form of a history expression.
+         *
+         * @type {Array}
+         */
+        this.reverseNonhistDeps = [];
+
+        /**
+         * The reachable quantities in the reverse dependency graph of this quantity.
+         * Contains the reverse dependencies of this quantity, their reverse dependencies etc.
+         *
+         * @type {Array}
+         */
+        this.reverseReachables = [];
 
         /**
          * The standard library functions that appear in the definition of this quantity
@@ -180,10 +211,12 @@ define([], /**@lends Model.Quantity */ function() {
     /**
      * Marks this quantity as todo and resets all nessecary fields.
      *
+     * @param {String} name (Optional) The name to give to this todo-quantity
      * @post All fields except name have been reset to their default values.
      *      source has been updated.
      */
-    Quantity.prototype.markAsTodo = function() {
+    Quantity.prototype.markAsTodo = function(name) {
+        this.name = (typeof name === 'undefined') ? this.name : name;
         this.todo = true;
         this.definition = '';
         this.LHS = '';
@@ -198,6 +231,12 @@ define([], /**@lends Model.Quantity */ function() {
         this.input = {
             type: null,
             parameters: []
+        };
+        this.pareto = {
+            isPareto: false,
+            isMaximize: false,
+            isHorizontal: false,
+            isVertical: false
         };
     };
 

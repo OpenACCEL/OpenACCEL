@@ -291,6 +291,19 @@ define(["Model/Analyser/Analyser",
         },
 
         /**
+         * Verifies whether the current, complete script is a DAG and thus
+         * whether it doesn't contain circular dependencies.
+         *
+         * @throws {RuntimeError} If script is circular
+         * @return {Boolean} true If script is a valid DAG
+         */
+        verifyDAG: function() {
+            this.analyser.determineReachability(this.quantities);
+
+            return true;
+        },
+
+        /**
          * Deletes the given quantity from the script if it's in there,
          * or sets it as todo-item if nessecary
          *
@@ -324,10 +337,12 @@ define(["Model/Analyser/Analyser",
                     } else {
                         // Remove us from reverse-dependency array
                         this.quantities[d].reverseDeps = _.without(this.quantities[d].reverseDeps, qtyName);
+                        this.quantities[d].reverseNonhistDeps = _.without(this.quantities[d].reverseNonhistDeps, qtyName);
                     }
                 } else {
                     // Remove us from reverse-dependency array
                     this.quantities[d].reverseDeps = _.without(this.quantities[d].reverseDeps, qtyName);
+                    this.quantities[d].reverseNonhistDeps = _.without(this.quantities[d].reverseNonhistDeps, qtyName);
                 }
             }).bind(this));
 

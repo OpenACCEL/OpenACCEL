@@ -28,7 +28,7 @@ body div {
 
 .accelTM{
   text-shadow: #301040 1px -1px 1px;
-  color: #eeddff;
+  color: #CCA2F7;
 }
 
 .descartesTM{
@@ -43,6 +43,25 @@ body div {
 .cm-red {
 	color: red;
 	font-weight: bold;
+}
+
+#mainbox {
+	display: flex;
+	display: -webkit-flex;
+	flex-flow: row nowrap;
+	-webkit-flex-flow: row nowrap;
+	justify-content: flex-start;
+	-webkit-justify-content: flex-start;
+}
+
+.flexautofill {
+	flex: 1 1 auto;
+	-webkit-flex: 1 1 auto;
+}
+
+.flexfixed {
+	flex: 0 0 initial;
+	-webkit-flex: 0 0 initial;
 }
 
 #plot_canvas {
@@ -476,6 +495,7 @@ span#checkUnitsMsg {
 	padding-left: 0px;
 	padding-right: 0px;
 	min-width: 250px;
+	max-width: 500px;
 	color: #000000;
 	/*font-size: 14px;*/
 }
@@ -564,6 +584,8 @@ span#checkUnitsMsg {
 	padding-left: 2px;
 	padding-right: 2px;
 	cursor: pointer;
+	text-align: right;
+	with: 2%;
 }
 
 /* JQUERY SLIDER CSS */
@@ -681,10 +703,10 @@ span#checkUnitsMsg {
  */
 
 #helptext {
-	width: 600px;
+	width: 700px;
 }
 
-#helptext h3 {
+#helptext h1 {
 	text-transform: capitalize;
 }
 

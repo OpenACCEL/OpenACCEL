@@ -25,7 +25,12 @@ require(["Controller/ControllerAPI", "View/WebView"],
 
     controller.setAutoExecute(true);
     controller.autoSave = true;
-    controller.restoreSavedScript();
+
+    try {
+        controller.restoreSavedScript();
+    } catch (e) {
+        view.handleError(e);
+    }
 
     // Trigger hashchange on initial page load
     $(window).trigger('hashchange', true);

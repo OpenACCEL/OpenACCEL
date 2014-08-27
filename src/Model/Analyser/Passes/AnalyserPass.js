@@ -21,7 +21,7 @@ define(['Model/Analyser/Passes/Pass'], /**@lends Model.Analyser.Passes*/ functio
      * @classdesc Analyses a single line of code and updates the quantities in the script.
      */
     function AnalyserPass() {
-        
+
     }
 
     AnalyserPass.prototype = new Pass();
@@ -41,7 +41,7 @@ define(['Model/Analyser/Passes/Pass'], /**@lends Model.Analyser.Passes*/ functio
      * @pre quantities != undefined
      * @pre quantity != null
      * @pre quantity != undefined
-     * @return {Object} An object containing all the  quantities in the script with their 
+     * @return {Object} An object containing all the  quantities in the script with their
      * attributes such as parameters and dependencies.
      */
     AnalyserPass.prototype.analyse = function(line, quantity, quantities) {
@@ -57,14 +57,14 @@ define(['Model/Analyser/Passes/Pass'], /**@lends Model.Analyser.Passes*/ functio
             throw new Error('AnalyserPass.analyse.pre violated:' +
                 'quantities is null or undefined');
         }
-        
+
         return quantity;
     };
 
     /**
      * Extracts all Variables, both functions and other Variables, from the given string
      * Does not include dummy variables of quantified expressions
-     * 
+     *
      * @param  {String} def String to get the Variables from
      * @return {Sting[]}     Array of quantity names
      */
@@ -74,7 +74,51 @@ define(['Model/Analyser/Passes/Pass'], /**@lends Model.Analyser.Passes*/ functio
         var dummies = this.getDummies(s); // determine dummies
         var match;
         var output = [];
-        
+
+        while (match = regexvar.exec(s)) {
+            if (dummies.indexOf(match[1]) == -1 && isNaN(match[1])) {
+                output.push(match[1]);
+            }
+        }
+        return output;
+    };
+
+    /**
+     * Extracts all history variables from the given string
+     * Does not include dummy variables of quantified expressions
+     *
+     * @param  {String} def String to get the variables from
+     * @return {Sting[]}     Array of quantity names
+     */
+    AnalyserPass.prototype.getHistoryVariables = function(s) {
+        var regexvar = new RegExp(this.regexes.histvars);
+        s = s.replace(this.stringregex, ""); // remove string definitions
+        var dummies = this.getDummies(s); // determine dummies
+        var match;
+        var output = [];
+
+        while (match = regexvar.exec(s)) {
+            if (dummies.indexOf(match[1]) == -1 && isNaN(match[1])) {
+                output.push(match[1]);
+            }
+        }
+        return output;
+    };
+
+    /**
+     * Extracts all non-history variables, both functions and normal, from the given string
+     * Does not include dummy variables of quantified expressions
+     *
+     * @param  {String} def String to get the variables from
+     * @return {Sting[]}     Array of quantity names
+     */
+    AnalyserPass.prototype.getNonHistoryVariables = function(s) {
+        var regexvar = new RegExp(this.regexes.nonhistvars);
+        s = s.replace(this.stringregex, ""); // remove string definitions
+        var dummies = this.getDummies(s); // determine dummies
+        var match;
+        var output = [];
+
         while (match = regexvar.exec(s)) {
             if (dummies.indexOf(match[1]) == -1 && isNaN(match[1])) {
                 output.push(match[1]);

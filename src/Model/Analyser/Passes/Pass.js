@@ -57,6 +57,29 @@ define([], /**@lends Model.Analyser.Passes*/ function() {
         this.regexes.variables = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*:))/g;
 
         /**
+         * Regex to get all quantity identifiers that occur in a history
+         * expression, BOTH functions and others
+         *
+         * Warning!
+         * This regex has one capturing group
+         * so to get the actual variable name, look at this subgroup,
+         * not at the complete match.
+         * @type {RegExp}
+         */
+        this.regexes.histvars = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?=\s*{))/g;
+
+        /**
+         * Regex to get all non-history quantity identifiers, BOTH functions and others
+         *
+         * Warning!
+         * This regex has one capturing group
+         * so to get the actual variable name, look at this subgroup,
+         * not at the complete match.
+         * @type {RegExp}
+         */
+        this.regexes.nonhistvars = /(?:^|[^\w.])(\w*[a-zA-Z_]\w*\b(?!\s*[{:]))/g;
+
+        /**
          * Regex to get all quantity identifiers, BOTH functions and others
          *
          * Warning!

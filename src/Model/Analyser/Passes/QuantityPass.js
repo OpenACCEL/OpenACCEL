@@ -91,12 +91,13 @@ define(['underscore', 'Model/Analyser/Passes/AnalyserPass', 'Model/Quantity'],
                     } else {
                         // Remove us from reverse-dependency array
                         d.reverseDeps = _.without(d.reverseDeps, qtyName);
+                        d.reverseNonhistDeps = _.without(d.reverseNonhistDeps, qtyName);
                     }
                 } else {
                     // Remove us from reverse-dependency array
                     d.reverseDeps = _.without(d.reverseDeps, qtyName);
+                    d.reverseNonhistDeps = _.without(d.reverseNonhistDeps, qtyName);
                 }
-
             }
         }
 

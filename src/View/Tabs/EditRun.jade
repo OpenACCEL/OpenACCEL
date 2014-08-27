@@ -18,46 +18,47 @@
                 .label Iterations
                 input(type = 'number', min = '0', value = '0', onchange = 'view.tabs.editrun.setIterations(this.value)')#iterations.textin
 
-    .inline
-        #scriptlistdiv
-            .label Listing
-            .textin
-                #pendingscriptline
-                    .inline.ellipsis
-                    #pendingloader.inline
-                #scriptlistcontainer
-                    #scriptlist
+    div
+        .inline
+            #scriptlistdiv
+                .label Quantities
+                .textin
+                    #pendingscriptline
+                        .inline.ellipsis
+                        #pendingloader.inline
+                    #scriptlistcontainer
+                        #scriptlist
 
-    .inline100
-        #tododiv
-            .label To do
-            .report
-                #todolist.verticalmenu
-        #arglistdiv
-            .label Arg. of&nbsp;
-                .inline.quantityname.max128w.ellipsis
-            .report
-                #arglist.divtable
-        #argtodiv
-            .label
-                .inline.quantityname.max128w.ellipsis
-                | &nbsp;is Arg. to
-            .report
-                #argtolist.divtable
+        .inline100
+            #tododiv
+                .label To do
+                .report
+                    #todolist.verticalmenu
+            #arglistdiv
+                .label Arg. of&nbsp;
+                    .inline.quantityname.max128w.ellipsis
+                .report
+                    #arglist.divtable
+            #argtodiv
+                .label
+                    .inline.quantityname.max128w.ellipsis
+                    | &nbsp;is Arg. to
+                .report
+                    #argtolist.divtable
 
-    .inline100
-        #userinputdiv
-            .label User input
-            #userinput.group
+        .inline100
+            #userinputdiv
+                .label User input
+                #userinput.group
 
-    .inline100
-        #resultdiv
-            .label Results
-            .group
-                #result.divtable
+        .inline(style='float:right;')
+            #plotdiv
+                .label Plot:
+                .group
+                    #plot
 
-    .inline
-        #plotdiv
-            .label Plot:
-            .group
-                #plot
+        .inline100(style='float:right;')
+            #resultdiv
+                .label Results
+                .group
+                    #result.divtable

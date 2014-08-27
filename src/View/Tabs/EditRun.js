@@ -49,6 +49,12 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         this.inputs = [];
 
         /**
+         * The maximum width of the quantity definition column in the quantity list.
+         * @type {Number}
+         */
+        this.definitionWidth = '128';
+
+        /**
          * Object containing tools to modify the contents of the todo list, argument lists and result list
          * @memberof View
          * @type {Object}
@@ -463,9 +469,9 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         return '' +
             '<input type="radio" name="script" id="line' + linenr + '" value="' + left + ' = ' + right + '">' +
             '<label for="line' + linenr + '" onclick = "view.tabs.editrun.selectScriptline(' + linenr + ', \'' + quantity + '\');">' +
-                '<div class="inline ellipsis max128w">' + left + '</div>' +
+                '<div class="inline ellipsis qtyname" style="max-width: 110px;">' + left + '</div>' +
                 '<div class="inline operator">=</div>' +
-                '<div class="inline ellipsis max128w">' + right + '</div>' +
+                '<div class="inline ellipsis" style="max-width: 240px;">' + right + '</div>' +
                 '<div class="inline comment">(cat.=' + category + ')</div>' +
                 '<a onclick="view.tabs.editrun.deleteQuantity(\'' + quantity + '\')" class="inline lineoption">delete</a>' +
             '</label>';
