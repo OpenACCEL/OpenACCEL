@@ -76,6 +76,10 @@ body div {
 	text-overflow: ellipsis;
 }
 
+#helpcategories > a {
+	text-transform: capitalize;
+}
+
 .help_match {
 	background-color: red;
 }

@@ -86,11 +86,11 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         // Get help articles and partition them into categories
         this.articles = controller.getHelpArticles();
         this.articlesByCategory = this.buildHelpDatabase(this.articles);
-        this.articleNames = Object.keys(this.articles);
+        this.articleNames = Object.keys(this.articles).sort();
 
         // Construct category and article lists
         var categories = Object.keys(this.articlesByCategory);
-        categories.unshift("All articles");
+        categories.sort().unshift("All articles");
 
         this.synchronizeCategories(categories);
         this.synchronizeArticles(this.articleNames);
@@ -99,7 +99,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.showHelpArticle(this.articleNames[0]);
 
         // Setup demo scripts list
-        this.demoScripts = controller.getDemoScripts();
+        this.demoScripts = controller.getDemoScripts().sort();
         this.synchronizeDemoScripts(this.demoScripts);
 
         // Setup ACCEL functions list
@@ -343,9 +343,9 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         var articles;
 
         if (category === 'All articles') {
-            articles = Object.keys(view.tabs.helpdemo.articles);
+            articles = Object.keys(view.tabs.helpdemo.articles).sort();
         } else {
-            articles = Object.keys(view.tabs.helpdemo.articlesByCategory[category]);
+            articles = Object.keys(view.tabs.helpdemo.articlesByCategory[category]).sort();
         }
 
         view.tabs.helpdemo.synchronizeArticles(articles);
