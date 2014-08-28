@@ -26,12 +26,18 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          * The lists for the help categories, help articles and demo scripts, respectively
          */
         this.helpCategoryList = new this.Input.SelectionList('#helpcategories', function(cat) {
+            $('#helpcategories > a').removeClass('help_current');
+            $('#helpcategories > a[value="' + cat + '"]').addClass('help_current');
             view.setState({'helpcat': cat});
         });
         this.helpArticleList = new this.Input.SelectionList('#helparticles', function(article) {
+            $('#helparticles > a').removeClass('help_current');
+            $('#helparticles > a[value="' + article + '"]').addClass('help_current');
             view.setState({'help': article});
         });
         this.demoScriptList = new this.Input.SelectionList('#demoscripts', function(script) {
+            $('#demoscripts > a').removeClass('help_current');
+            $('#demoscripts > a[value="' + script + '"]').addClass('help_current');
             view.setState({'script': script});
         });
 
@@ -97,6 +103,10 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
         // Display first help article
         this.showHelpArticle(this.articleNames[0]);
+
+        // Highlight current category and help article
+        $('#helpcategories > a[value="All articles"]').addClass('help_current');
+        $('#helparticles > a[value="' + this.articleNames[0] + '"]').addClass('help_current');
 
         // Setup demo scripts list
         this.demoScripts = controller.getDemoScripts().sort();
@@ -183,6 +193,9 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
             this.helpTextBuffer.flip();
             return;
         }
+
+        $('#helparticles > a').removeClass('help_current');
+        $('#helparticles > a[value="' + artName + '"]').addClass('help_current');
 
         // Construct normal article heading
         var title = article.fName[0].toUpperCase() + article.fName.slice(1);

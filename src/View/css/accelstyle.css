@@ -576,6 +576,13 @@ span#checkUnitsMsg {
 	cursor: pointer;
 }
 
+a.help_current {
+	border-bottom: 1px #331144 solid;
+	color: #FFFFFF;
+	background: #9933CC;
+	padding-left: 3px;
+}
+
 .propname_row:hover div.propname{
 	text-decoration: underline;
 }
