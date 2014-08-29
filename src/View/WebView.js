@@ -92,17 +92,28 @@ define(["../Controller/AbstractView",
     WebView.prototype = new AbstractView();
 
     /**
+     * Replaces the current application state with the new one.
+     *
+     * @param {Object} state The state object to set the application state to
+     * @post The application state has been set to the parameters of the given
+     * state object
+     */
+    WebView.prototype.setState = function(state) {
+        location.hash = $.param.fragment(location.hash, state, 2);
+    };
+
+    /**
      * Merges the attributes in the given object into the
      * current state, overriding any existing attributes with
-     * the same name.
+     * the same name
      *
      * @param {Object} state The state object with attributes to
      * merge into the current state.
      * @post The attributes of the given object are merged into the current
      * application state
      */
-    WebView.prototype.setState = function(state) {
-        location.hash = $.param.fragment(location.hash, state);
+    WebView.prototype.addState = function(state) {
+        location.hash = $.param.fragment(location.hash, state, 0);
     };
 
     /**
@@ -132,18 +143,20 @@ define(["../Controller/AbstractView",
     WebView.prototype.onHashChange = function(e, initial) {
         var newState = $.deparam(e.fragment, true);
 
+        // Default
+        if (typeof newState.tab === 'undefined') {
+            newState.tab = "editrun";
+        }
+
+        // Make tab consistent with possible other variables in hash
+        if (newState.script) {
+            newState.tab = "editrun";
+        } else if (newState.help) {
+            newState.tab = "helpdemo";
+        }
+
         // Activate other tab when nessecary
-        if ((newState.tab && (newState.tab !== this.state.tab)) || initial === true || newState.help || newState.script || newState.link) {
-            if (typeof newState.tab === 'undefined') {
-                newState.tab = "editrun";
-            }
-
-            if (newState.script) {
-                newState.tab = "editrun";
-            } else if (newState.help) {
-                newState.tab = "helpdemo";
-            }
-
+        if ((newState.tab && (newState.tab !== this.state.tab)) || initial === true) {
             // Make correct tab active
             $("li.navtab").removeClass("ui-tabs-active");
             $("li#" + newState.tab + ".navtab").addClass("ui-tabs-active");
@@ -154,23 +167,13 @@ define(["../Controller/AbstractView",
                 $(".tabcontent").hide();
             }
 
-            this.onEnterTab(newState.tab);
             $("#" + newState.tab + ".tabcontent").show();
-        }
-
-        // Update current help category if nessecary
-        if (newState.helpcat && (newState.helpcat !== this.state.helpcat || initial === true)) {
-            this.tabs.helpdemo.selectHelpCategory(newState.helpcat);
-        }
-
-        // Update shown help article if nessecary
-        if (newState.help) {
-            this.tabs.helpdemo.showHelpArticle(newState.help);
-        }
-
-        // Load requested demo script
-        if (newState.script) {
-            controller.loadDemoScript(newState.script);
+            this.onEnterTab(newState);
+        } else {
+            // Hashchange within current tab
+            if (this.tabs[newState.tab].onHashChange) {
+                this.tabs[newState.tab].onHashChange(this.state, newState);
+            }
         }
 
         // Update state variable
@@ -183,19 +186,19 @@ define(["../Controller/AbstractView",
      * @param  {Event} event The jQuery event that was fired
      * @param  {string} tab The identifier of the tab that will be made current.
      */
-    WebView.prototype.onEnterTab = function(tab) {
-        if (tab != 'intro') {
-            this.tabs[tab].onEnterTab();
+    WebView.prototype.onEnterTab = function(newState) {
+        if (this.tabs[newState.tab].onEnterTab) {
+            this.tabs[newState.tab].onEnterTab(newState);
         }
 
         //Tooltips loaded and shown
         try {
-            this.tooltips[tab].toggle(true);
+            this.tooltips[newState.tab].toggle(true);
         } catch(e) {
 
         }
 
-        this.currentTab = tab;
+        this.currentTab = newState.tab;
         this.resizeContainer();
     };
 

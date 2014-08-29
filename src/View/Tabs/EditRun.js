@@ -128,7 +128,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
              * @param {String} name The name of the standard function that was clicked on
              */
             onclickStdFunc: function(name) {
-                view.setState({'help': name});
+                view.setState({'tab': 'helpdemo', 'help': name});
             },
 
             /**
@@ -185,27 +185,34 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
     /**
      * Event that gets called when this tab gets opened.
      */
-    EditRun.prototype.onEnterTab = function() {
-        view.hasPlot = true;
-        var script = controller.getScript();
-        this.synchronizeScriptList(script.getQuantities());
+    EditRun.prototype.onEnterTab = function(newState) {
+        // if a demo script should be loaded, load it
+        if (newState.script) {
+            controller.loadDemoScript(newState.script);
+        } else {
+            // A new script may have been compiled/loaded, so synchronize
+            // list of quantities
+            view.hasPlot = true;
+            var script = controller.getScript();
+            this.synchronizeScriptList(script.getQuantities());
 
-        if (script.isCompiled()) {
-            try {
-                var outputQuantities = script.getOutputQuantities();
-                this.synchronizeResults();
-            } catch (e) {
-                view.runtimeError(e);
+            if (script.isCompiled()) {
+                try {
+                    var outputQuantities = script.getOutputQuantities();
+                    this.synchronizeResults();
+                } catch (e) {
+                    view.runtimeError(e);
+                }
             }
-        }
 
-        // If autoexecute is true, resume script only when it has been paused
-        // by the system, and start executing when it is not paused but compiled
-        if (controller.autoExecute) {
-            if (controller.isPaused()) {
-                controller.resume(true);
-            } else {
-                controller.run();
+            // If autoexecute is true, resume script only when it has been paused
+            // by the system, and start executing when it is not paused but compiled
+            if (controller.autoExecute) {
+                if (controller.isPaused()) {
+                    controller.resume(true);
+                } else {
+                    controller.run();
+                }
             }
         }
     };

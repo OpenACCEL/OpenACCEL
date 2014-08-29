@@ -28,17 +28,17 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         this.helpCategoryList = new this.Input.SelectionList('#helpcategories', function(cat) {
             $('#helpcategories > a').removeClass('help_current');
             $('#helpcategories > a[value="' + cat + '"]').addClass('help_current');
-            view.setState({'helpcat': cat});
+            view.addState({'helpcat': cat});
         });
         this.helpArticleList = new this.Input.SelectionList('#helparticles', function(article) {
             $('#helparticles > a').removeClass('help_current');
             $('#helparticles > a[value="' + article + '"]').addClass('help_current');
-            view.setState({'help': article});
+            view.addState({'help': article});
         });
         this.demoScriptList = new this.Input.SelectionList('#demoscripts', function(script) {
             $('#demoscripts > a').removeClass('help_current');
             $('#demoscripts > a[value="' + script + '"]').addClass('help_current');
-            view.setState({'script': script});
+            view.setState({'tab': 'editrun', 'script': script});
         });
 
         /**
@@ -75,6 +75,14 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
          * @type {Array}
          */
         this.ACCELFunctionNames = [];
+
+        /**
+         * Whether this tab will be entered for the first time the
+         * next time it's entered.
+         *
+         * @type {Boolean}
+         */
+        this.firstEnter = true;
     }
 
     /**
@@ -82,38 +90,46 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      *
      * Loads the help articles and demo scripts, if not already done.
      */
-    HelpDemo.prototype.onEnterTab = function() {
+    HelpDemo.prototype.onEnterTab = function(newState) {
         view.hasPlot = false;
 
-        if (Object.keys(this.articlesByCategory).length !== 0) {
-            return;
+        // If this is the first time the tab is activated, setup everything
+        if (this.firstEnter) {
+            // Get help articles and partition them into categories
+            this.articles = controller.getHelpArticles();
+            this.articlesByCategory = this.buildHelpDatabase(this.articles);
+            this.articleNames = Object.keys(this.articles).sort();
+
+            // Construct category and article lists
+            var categories = Object.keys(this.articlesByCategory);
+            categories.sort().unshift("All articles");
+
+            this.synchronizeCategories(categories);
+
+            // Setup demo scripts list
+            this.demoScripts = controller.getDemoScripts().sort();
+            this.synchronizeDemoScripts(this.demoScripts);
+
+            // Setup ACCEL functions list
+            this.ACCELFunctionNames = controller.getACCELFunctions();
+            this.firstEnter = false;
         }
 
-        // Get help articles and partition them into categories
-        this.articles = controller.getHelpArticles();
-        this.articlesByCategory = this.buildHelpDatabase(this.articles);
-        this.articleNames = Object.keys(this.articles).sort();
+        // Load initial help category and/or article if given
+        if (newState.help) {
+            this.selectHelpCategory(this.articles[newState.help].cat);
+            this.showHelpArticle(newState.help);
+        } else {
+            if (newState.helpcat) {
+                this.selectHelpCategory(newState.helpcat);
+                $('#helparticles > a').first().trigger('click');
+            } else {
+                this.synchronizeArticles(this.articleNames);
 
-        // Construct category and article lists
-        var categories = Object.keys(this.articlesByCategory);
-        categories.sort().unshift("All articles");
-
-        this.synchronizeCategories(categories);
-        this.synchronizeArticles(this.articleNames);
-
-        // Display first help article
-        this.showHelpArticle(this.articleNames[0]);
-
-        // Highlight current category and help article
-        $('#helpcategories > a[value="All articles"]').addClass('help_current');
-        $('#helparticles > a[value="' + this.articleNames[0] + '"]').addClass('help_current');
-
-        // Setup demo scripts list
-        this.demoScripts = controller.getDemoScripts().sort();
-        this.synchronizeDemoScripts(this.demoScripts);
-
-        // Setup ACCEL functions list
-        this.ACCELFunctionNames = controller.getACCELFunctions();
+                // Display first help article in entire list
+                this.showHelpArticle(this.articleNames[0]);
+            }
+        }
     };
 
     /**
@@ -121,6 +137,22 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      */
     HelpDemo.prototype.onLeaveTab = function() {
 
+    };
+
+    /**
+     * Event that gets called when the hash changes but
+     * stays within this tab
+     */
+    HelpDemo.prototype.onHashChange = function(oldState, newState) {
+        // Update current help category if nessecary
+        if (newState.helpcat && (newState.helpcat !== oldState.helpcat)) {
+            view.tabs.helpdemo.selectHelpCategory(newState.helpcat);
+        }
+
+        // Update shown help article if nessecary
+        if (newState.help) {
+            view.tabs.helpdemo.showHelpArticle(newState.help);
+        }
     };
 
     /**
@@ -247,7 +279,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
                 var link = links[j].trim();
                 var extraText = (view.tabs.helpdemo.articles[link]) ? ',"helpcat":"' + view.tabs.helpdemo.articles[link].cat + '"' : '';
 
-                text += '<a id="articlelink_' + j + '" class="alink" onclick=\'view.setState({"help":"' + link + '"' + extraText + '});\'>' + link + '</a>, ';
+                text += '<a id="articlelink_' + j + '" class="alink" onclick=\'view.addState({"help":"' + link + '"' + extraText + '});\'>' + link + '</a>, ';
             }
             text = text.substring(0, text.length-2);
 
@@ -360,6 +392,9 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         } else {
             articles = Object.keys(view.tabs.helpdemo.articlesByCategory[category]).sort();
         }
+
+        $('#helpcategories > a').removeClass('help_current');
+        $('#helpcategories > a[value="' + category + '"]').addClass('help_current');
 
         view.tabs.helpdemo.synchronizeArticles(articles);
     }

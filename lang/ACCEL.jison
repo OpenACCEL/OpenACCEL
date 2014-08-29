@@ -105,6 +105,15 @@ frac        (?:\.[0-9]+)
          */
         output += "this." + name + ".timespan = 0;\n";
 
+        /**
+         * Whether this quantity has been touched in the current
+         * execution iteration. Yes means it has been, or is still being,
+         * evaluated. Used to detect cyclic dependencies at runtime.
+         *
+         * @type {Boolean}
+         */
+        output += "this." + name + ".touched = false;\n";
+
         return output;
     }
 

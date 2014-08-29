@@ -133,6 +133,13 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         if (report.isTimeDependent) {
             // If the current time-step value has not been evaluated yet, do it now.
             if (history[0] === undefined) {
+                // Check for cyclic dependencies: if this quantity has been touched before it means that the system
+                // is still evaluating it's expression and there is a cyclic dependency
+                if (quantity.touched === true) {
+                    throw new RuntimeError("Cyclic dependency detected for quantity " + report.name);
+                }
+                quantity.touched = true;
+
                 // For non-input quantities, evaluate the expression of this quantity and store it
                 // in the history datastructure
                 if (report.category !== 1) {
@@ -156,10 +163,19 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             // Quantity value does not change with time: check if it has been evaluated already
             // and hasn't changed (applicable to user input). Else evaluate it now and store result
             if (history[0] === undefined || quantity.hasChanged) {
+                // Check for cyclic dependencies: if this quantity has been touched before it means that the system
+                // is still evaluating it's expression and there is a cyclic dependency
+                if (quantity.touched === true) {
+                    throw new RuntimeError("Cyclic dependency detected for quantity " + report.name);
+                }
+
+                quantity.touched = true;
                 history[0] = quantity.expr();
                 quantity.hasChanged = false;
             }
         }
+
+
 
         return history[0];
     };
@@ -286,8 +302,11 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
     Executable.prototype.step = function() {
         if (this.report) {
             for (var qty in this.report) {
-                // Evaluate all quantities that are time dependent and that aren't functions
-                if (this.report[qty].isTimeDependent && this.report[qty].parameters.length === 0) {
+                // Evaluate all quantities that aren't functions. This also
+                // ensures that all quantities will have been evaluated even if they weren't required
+                // for the computation of any output quantities in this iteration. This prevents missing
+                // values in the history arrays of quantities.
+                if ((this.report[qty].isTimeDependent || this[qty].hasChanged) && this.report[qty].parameters.length === 0) {
                     this[qty]();
                 }
 
@@ -302,6 +321,9 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
 
                     this[qty].cache = {};
                 }
+
+                // Reset touched flags
+                this[qty].touched = false;
             }
         }
     };

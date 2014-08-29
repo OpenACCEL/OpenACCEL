@@ -139,7 +139,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
         $(".cm-builtin","div.CodeMirror").on("dblclick", function(e) {
             e.preventDefault();
 
-            view.setState({'help': e.target.innerHTML});
+            view.setState({'tab': 'helpdemo', 'help': e.target.innerHTML});
             e.stopPropagation();
             e.cancelBubble = true;
         });
