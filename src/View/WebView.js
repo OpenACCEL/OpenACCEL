@@ -49,7 +49,7 @@ define(["../Controller/AbstractView",
         this.tabs.editrun = new EditRun(this.canvasCreator);
         this.tabs.helpdemo = new HelpDemo();
         this.tabs.ioedit = new IOEdit();
-        this.tabs.analysis = new Analysis();
+        this.tabs.analysis = new Analysis(this.canvasCreator);
         this.tabs.optimisation = new Optimisation(this.canvasCreator);
         this.tabs.simulation = new Simulation(this.canvasCreator);
 

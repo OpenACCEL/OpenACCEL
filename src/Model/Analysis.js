@@ -21,7 +21,47 @@ define([], /** @lends Model */ function() {
      * @class
      * @classdesc Main class for the analysis of a script.
      */
-    function Analysis () {}
+    function Analysis () {
+        /**
+         * The range of the plot window.
+         */
+        this.range = {
+            min: -Infinity,
+            max: Infinity
+        };
+
+        /**
+         * The domain of the plot window.
+         *
+         * Both the horizontal (x) and vertical (y) axes can have domains.
+         * The vertical domain is neccessary for contour plots.
+         */
+        this.domain = {
+            x: {
+                min: -Infinity,
+                max: Infinity
+            },
+
+            y: {
+                min: -Infinity,
+                max: Infinity
+            }
+        };
+
+        /**
+         * The grid that will serve as a plot background.
+         */
+        this.grid = {
+            majX: 5,
+            minX: 21,
+            grMajX: 'line',
+            grMinX: 'line',
+            majY: 5,
+            minY: 21,
+            grMajY: 'line',
+            grMinY: 'line'
+        };
+    }
 
     /**
      * Analyses the script.

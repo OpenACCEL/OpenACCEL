@@ -16,9 +16,17 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["View/Graphics/DescartesHandlerFactory", "View/Graphics/Canvas", "View/Graphics/ScriptDescartesHandler", "View/Graphics/GeneticOptimisationDescartesHandler"],
+define(["View/Graphics/DescartesHandlerFactory",
+        "View/Graphics/Canvas",
+        "View/Graphics/ScriptDescartesHandler",
+        "View/Graphics/GeneticOptimisationDescartesHandler",
+        "View/Graphics/AnalysisDescartesHandler" ],
     /** @lends View.Graphics */
-    function(DescartesHandlerFactory, Canvas, ScriptDescartesHandler, GeneticOptimisationDescartesHandler) {
+    function(DescartesHandlerFactory,
+             Canvas,
+             ScriptDescartesHandler,
+             GeneticOptimisationDescartesHandler,
+             AnalysisDescartesHandler) {
 
         /**
          * @class
@@ -43,6 +51,11 @@ define(["View/Graphics/DescartesHandlerFactory", "View/Graphics/Canvas", "View/G
              * Add GeneticOptimisationDescartesHandler to the factory, to support drawing the GeneticOptimisation class.
              */
             this.factory.addHandler(new GeneticOptimisationDescartesHandler());
+
+            /**
+             * Add AnalysisDescartesHandler to the factory, to support drawing the Analysis class.
+             */
+            this.factory.addHandler(new AnalysisDescartesHandler());
         };
 
         CanvasCreator.prototype = {
