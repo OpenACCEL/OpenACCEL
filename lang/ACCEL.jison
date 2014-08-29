@@ -113,6 +113,7 @@ frac        (?:\.[0-9]+)
          * @type {Boolean}
          */
         output += "this." + name + ".touched = false;\n";
+        output += "this." + name + ".historyTouched = false;\n";
 
         return output;
     }

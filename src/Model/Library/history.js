@@ -4,6 +4,8 @@ function history(quantity, time, base) {
     }
 
     quantity = exe[quantity];
+
+    // Bounds check for history span
     if (time > quantity.timespan) {
         quantity.timespan = time;
     }

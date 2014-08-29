@@ -915,6 +915,7 @@ performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
          * @type {Boolean}
          */
         output += "this." + name + ".touched = false;\n";
+        output += "this." + name + ".historyTouched = false;\n";
 
         return output;
     }

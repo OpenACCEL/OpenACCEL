@@ -488,9 +488,14 @@ define(["Model/Script",
          * Stops script execution if currently executing and resets
          * the script.
          *
+         * @param {Boolean} reset Whether to also reset the executable
          * @post this.executing == false && this.currentIteration == 1
          */
-        Controller.prototype.stop = function() {
+        Controller.prototype.stop = function(reset) {
+            if (typeof reset === 'undefined') {
+                reset = true;
+            }
+
             if (this.executing || this.paused) {
                 clearInterval(this.runloop);
 
@@ -502,7 +507,9 @@ define(["Model/Script",
                 this.view.setStatus(this.status);
 
                 // Reset the execution state
-                this.reset();
+                if (reset === true) {
+                    this.reset();
+                }
             }
         };
 
@@ -531,7 +538,7 @@ define(["Model/Script",
 
             // Stop execution, create new script and let the view update the
             // quantities and results lists
-            this.stop();
+            this.stop(false);
             this.script = new Script();
             this.view.onNewScript();
 
@@ -733,7 +740,7 @@ define(["Model/Script",
                 this.measurements = new Array(this.numMeasurements);
             }
 
-            if (script.isComplete()/* && script.verifyDAG()*/) {
+            if (script.isComplete()) {
                 // Compile script and signal script and view that it has been compiled.
                 script.setExecutable(this.compiler.compile(script));
                 this.view.onNewScript();

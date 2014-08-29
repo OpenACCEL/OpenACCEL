@@ -324,6 +324,7 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
 
                 // Reset touched flags
                 this[qty].touched = false;
+                this[qty].historyTouched = false;
             }
         }
     };
