@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /** @lends Model */ function() {
+define(["underscore"], /** @lends Model */ function(_) {
 
     /**
      * @class
@@ -92,8 +92,8 @@ define([], /** @lends Model */ function() {
      * @param {Object} The target interval object.
      */
     Analysis.prototype.setInterval = function(target, source) {
-        if (source.min) {
-            if (source.max) {
+        if (_.isNumber(source.min)) {
+            if (_.isNumber(source.max)) {
                 if (source.min >= source.max) {
                     throw new Error("[" + range.min + ", " + range.max + "] is not a valid range.");
                 } else {
@@ -107,7 +107,7 @@ define([], /** @lends Model */ function() {
                     target.min = source.min;
                 }
             }
-        } else if (source.max) {
+        } else if (_.isNumber(source.max)) {
             if (target.min >= source.max) {
                 throw new Error("[" + target.min + ", " + range.max + "] is not a valid range.");
             } else {
