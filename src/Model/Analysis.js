@@ -66,6 +66,12 @@ define([], /** @lends Model */ function() {
          * The script that this class will analyse.
          */
         this.script;
+
+        /**
+         * The number of iterations, or points that should be plot
+         * for a normal comparison plot.
+         */
+        this.numIterations = 50;
     }
 
     /**
@@ -152,6 +158,26 @@ define([], /** @lends Model */ function() {
      */
     Analysis.prototype.getDomain = function() {
         return this.domain;
+    };
+
+    /**
+     * Set the number of iterations, or points that should be plot
+     * for a normal comparison plot.
+     *
+     * @pre num > 0.
+     * @param {Number} The number of points that should be evaluated.
+     */
+    Analysis.prototype.setNumIterations = function(num) {
+        if (num > 0) {
+            this.numIterations = num;
+        }
+    };
+
+    /**
+     * @return the number of iterations, or points that should be plot for a normal comparison plot.
+     */
+    Analysis.prototype.getNumIterations = function() {
+        return this.numIterations;
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
