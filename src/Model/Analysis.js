@@ -61,14 +61,21 @@ define([], /** @lends Model */ function() {
             grMajY: 'line',
             grMinY: 'line'
         };
+
+        /**
+         * The script that this class will analyse.
+         */
+        this.script;
     }
 
     /**
-     * Analyses the script.
+     * Sets the script to analyse.
      *
      * @param {Script} script The script that needs to be analysed.
      */
-    Analysis.prototype.analyse = function(script) {};
+    Analysis.prototype.setScript = function(script) {
+        this.script = script;
+    };
 
     /**
      * Sets a target interval to source interval.
