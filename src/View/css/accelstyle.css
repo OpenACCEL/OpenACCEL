@@ -68,6 +68,14 @@ body div {
 	background-color: #cc9ae5;
 }
 
+#plotSimulation_canvas {
+	background-color: #cc9ae5;
+}
+
+#plotAnalysis_canvas {
+	background-color: #cc9ae5;
+}
+
 #demoscripts, #helparticles, #helpcategories {
 	max-height: 450px;
 	max-width: 145px;
