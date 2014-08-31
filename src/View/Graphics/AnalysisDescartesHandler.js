@@ -27,6 +27,11 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
              * @type {Analysis}
              */
             this.modelElement = modelElement;
+
+            this.propagatables.push({
+                name: "getAnalysis",
+                func: this.getAnalysis.bind(this)
+            });
         }
 
         AnalysisDescartesHandler.prototype = new AbstractDescartesHandler();
@@ -49,6 +54,13 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
          */
         AnalysisDescartesHandler.prototype.getInstance = function(modelElement) {
             return new AnalysisDescartesHandler(modelElement);
+        };
+
+        /**
+         * @return The analysis model element.
+         */
+        AnalysisDescartesHandler.prototype.getAnalysis = function() {
+            return this.modelElement;
         };
 
         /**
@@ -100,8 +112,21 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
          * @return {Object[]} The descartes drawing based on this.modelElement.population.
          */
         AnalysisDescartesHandler.prototype.getDrawing = function() {
+            var data = this.modelElement.compare("x", "y");
+            var deltaRange = data.range.max - data.range.min;
+            var deltaDomain = data.domain.max - data.domain.min;
+
+            // The points have to be modified such that they fit in a x: [0, 100], y: [0, 100] plot.
+            for (var i = 0; i < data.points.length; i++) {
+                data.points[i].y = 100 * (data.points[i].y - data.range.min) / deltaRange;
+                data.points[i].x = 100 * (data.points[i].x - data.domain.min) / deltaDomain;
+            }
+
             var drawing = {
                 grid: this.modelElement.grid,
+                locations: {
+                    data: data.points
+                },
                 edges: {
                     thickness: 2
                 }

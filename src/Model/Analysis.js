@@ -180,6 +180,52 @@ define(["underscore"], /** @lends Model */ function(_) {
         return this.numIterations;
     };
 
+    Analysis.prototype.compare = function(x, y) {
+        if (this.script && this.script.isCompiled()) {
+            // Check whether both quantities exist in the script.
+            if (!this.script.hasQuantity(x) || !this.script.hasQuantity(y)) {
+                throw new Error("One of the quantities, " + x + " or " + y + " is not an existing script quantity.");
+            }
+
+            // Todo: dependency check.
+            var exe = this.script.exe;
+            var domain = this.getDomain().x;
+            if (!_.isFinite(domain.min) || !_.isFinite(domain.max)) {
+                throw new Error("Domain is not finite: [" + domain.min + ", " + domain.max + "].");
+            }
+
+            var interval = domain.max - domain.min;
+            var step = interval / this.getNumIterations();
+            var data = {};
+            data.points = [];
+
+            // Try to calculate the values.
+            for (var i = domain.min; i < domain.max; i += step) {
+                exe.setValue(x, i);
+                var ans = exe.getValue(y);
+                data.points.push({x: i, y: ans});
+                exe.reset();
+            }
+
+            // With the calculated answers, we can clamp the range of the plot.
+            var range = {
+                min: _.min(data.points, function(point) { return point.y; }).y,
+                max: _.max(data.points, function(point) { return point.y; }).y
+            };
+            if (!_.isFinite(range.min) || !_.isFinite(range.max)) {
+                throw new Error("Range is not finite: [" + range.min + ", " + range.max + "].");
+            }
+            this.setRange(range);
+
+            data.range = range;
+            data.domain = domain;
+
+            return data;
+        }
+
+        return [];
+    }
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Analysis;
 });
