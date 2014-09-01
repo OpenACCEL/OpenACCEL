@@ -49,10 +49,17 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
 
         // Update range values.
         var range = this.getRange();
-        if (range) {
-            $("#rangeFrom").val(this.getRange().min);
-            $("#rangeTo").val(this.getRange().max);
-        }
+        var rangeFrom = range.min.toFixed(4);
+        var rangeTo = range.max.toFixed(4);
+        $("#rangeFrom").val(rangeFrom);
+        $("#rangeTo").val(rangeTo);
+
+        // Update domain values.
+        var domain = this.getDomain();
+        var domainFrom = domain.x.min.toFixed(4);
+        var domainTo = domain.x.max.toFixed(4);
+        $("#domainFrom").val(domainFrom);
+        $("#domainTo").val(domainTo);
     };
 
     /**
