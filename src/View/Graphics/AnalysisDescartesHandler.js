@@ -126,7 +126,8 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
          * @return {Object[]} The descartes drawing based on this.modelElement.population.
          */
         AnalysisDescartesHandler.prototype.getDrawing = function() {
-            var data = this.modelElement.compare("x", "y");
+            var analysis = this.getAnalysis();
+            var data = analysis.compare("x", "y");
             var deltaRange = data.range.max - data.range.min;
             var deltaDomain = data.domain.max - data.domain.min;
 
