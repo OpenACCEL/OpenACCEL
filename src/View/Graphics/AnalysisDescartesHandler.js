@@ -42,6 +42,11 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
                 grMinY: 'line'
             };
 
+            /**
+             * whether getDrawing() should return a clamped plot.
+             */
+            this.bClamp = true;
+
             this.propagatables.push({
                 name: "getAnalysis",
                 func: this.getAnalysis.bind(this)
@@ -131,9 +136,18 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
             var deltaRange = data.range.max - data.range.min;
             var deltaDomain = data.domain.max - data.domain.min;
 
+            // In case of no clamping, we'll want to range as set by the user.
+            var analysisRange = analysis.getRange();
+            var analysisDeltaRange = analysisRange.max - analysisRange.min;
+
             // The points have to be modified such that they fit in a x: [0, 100], y: [0, 100] plot.
             for (var i = 0; i < data.points.length; i++) {
-                data.points[i].y = 100 * (data.points[i].y - data.range.min) / deltaRange;
+                if (this.bClamp) {
+                    data.points[i].y = 100 * (data.points[i].y - data.range.min) / deltaRange;
+                } else {
+                    data.points[i].y = 100 * (data.points[i].y - analysisRange.min) / analysisDeltaRange;
+                }
+
                 data.points[i].x = 100 * (data.points[i].x - data.domain.min) / deltaDomain;
             }
 
@@ -146,6 +160,11 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
                     thickness: 2
                 }
             };
+
+            // If we're clamping, we should set the clamped range of the analysis model.
+            if (this.bClamp) {
+                analysis.setRange(data.range);
+            }
 
             return [drawing];
         };

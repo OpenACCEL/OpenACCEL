@@ -201,7 +201,6 @@ define(["underscore"], /** @lends Model */ function(_) {
             if (!_.isFinite(range.min) || !_.isFinite(range.max)) {
                 throw new Error("Range is not finite: [" + range.min + ", " + range.max + "].");
             }
-            this.setRange(range);
 
             data.range = range;
             data.domain = domain;
