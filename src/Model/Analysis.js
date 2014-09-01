@@ -49,20 +49,6 @@ define(["underscore"], /** @lends Model */ function(_) {
         };
 
         /**
-         * The grid that will serve as a plot background.
-         */
-        this.grid = {
-            majX: 5,
-            minX: 21,
-            grMajX: 'line',
-            grMinX: 'line',
-            majY: 5,
-            minY: 21,
-            grMajY: 'line',
-            grMinY: 'line'
-        };
-
-        /**
          * The script that this class will analyse.
          */
         this.script;

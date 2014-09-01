@@ -28,6 +28,20 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
              */
             this.modelElement = modelElement;
 
+            /**
+             * The grid that will serve as a plot background.
+             */
+            this.grid = {
+                majX: 5,
+                minX: 21,
+                grMajX: 'line',
+                grMinX: 'line',
+                majY: 5,
+                minY: 21,
+                grMajY: 'line',
+                grMinY: 'line'
+            };
+
             this.propagatables.push({
                 name: "getAnalysis",
                 func: this.getAnalysis.bind(this)
@@ -123,7 +137,7 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
             }
 
             var drawing = {
-                grid: this.modelElement.grid,
+                grid: this.grid,
                 locations: {
                     data: data.points
                 },
