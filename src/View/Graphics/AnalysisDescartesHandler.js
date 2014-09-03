@@ -43,7 +43,7 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
             };
 
             /**
-             * whether getDrawing() should return a clamped plot.
+             * Whether getDrawing() should return a clamped plot.
              */
             this.bClamp = true;
 
