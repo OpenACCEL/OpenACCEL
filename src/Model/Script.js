@@ -137,6 +137,65 @@ define(["Model/Analyser/Analyser",
         },
 
         /**
+         * Returns whether quantity "end" is reachable from "start", by
+         * isReachable: function(start, end, maxDepth)(recursively) traversing the dependency graph.
+         * 
+         * @param  {String}  start The name of the quantity at which to start
+         * traversing the dependency graph. 
+         * @param  {String}  end The name of the quantity to try to reach from "start"
+         * @param {Number} maxDepth The maximum recursion depth to allow while testing.
+         * Leave empty to set to the number of quantities in the script.
+         * @return {Boolean} Whether end is reachable from start.
+         */
+        isReachable: function(start, end, maxDepth) {
+            if (typeof maxDepth === 'undefined') {
+                maxDepth = Object.keys(this.quantities).length;
+            }
+
+            if (maxDepth === 0) {
+                // We reached the maximum recursion depth: return negative
+                return false;
+            }
+
+            // Base case: we reached the end from start, so return true
+            if (start === end) {
+                return true;
+            }
+
+            // Check to see whether end is reachable from
+            // any of the dependencies of start. If so, it's also
+            // reachable from start of course
+            var dependencies = this.quantities[start].dependencies;
+            for (var elem in dependencies) {
+                var dep = dependencies[elem];
+                if (this.isReachable(dep, end, maxDepth-1)) {
+                    return true;
+                }
+            }
+
+            // Not reachable from any dependencies of start, so neither from
+            // start itself!
+            return false;
+        },
+
+        /**
+         * Constructs the reachability arrays for every quantity in the script.
+         */
+        determineReachability: function() {
+
+        },
+
+        /**
+         * Returns the reachable quantities from the given quantity
+         *
+         * @param {String} qtyname The quantity of which to determine
+         * the reachable quantities
+         */
+        getReachables: function() {
+
+        },
+
+        /**
          * Sets the given executable as the executable of this script
          *
          * @param {Object} exe The executable to set
@@ -286,19 +345,6 @@ define(["Model/Analyser/Analyser",
             } catch (e) {
                 throw new SyntaxError(e, source);
             }
-
-            return true;
-        },
-
-        /**
-         * Verifies whether the current, complete script is a DAG and thus
-         * whether it doesn't contain circular dependencies.
-         *
-         * @throws {RuntimeError} If script is circular
-         * @return {Boolean} true If script is a valid DAG
-         */
-        verifyDAG: function() {
-            this.analyser.determineReachability(this.quantities);
 
             return true;
         },

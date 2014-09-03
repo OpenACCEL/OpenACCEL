@@ -238,130 +238,6 @@ define(["Model/Analyser/Passes/QuantityPass",
         };
 
         /**
-         * Determines, for each quantity in the given set, the quantities that are
-         * reachable in the dependency and reverse dependency graphs.
-         *
-         * @param  {Object} quantities The quantities to analyse
-         * @post The reachables and reverseReachables properties of every quantity
-         * in quantities have been set.
-         * @throws {RuntimeError} If the script is circular
-         * @returns {Boolean} true
-         */
-        Analyser.prototype.determineReachability = function(quantities) {
-            this.reachability = {};
-            this.curReachGraph = [];
-
-            // For all quantities, determine all reachable quantities.
-            for (var elem in quantities) {
-                var q = quantities[elem];
-                this.getReachability(q, false, quantities);
-            }
-
-            // Reset memoization!
-            this.reachability = {};
-
-            console.log("Reverse!");
-
-            // For all quantities, determine all reverse reachable quantities.
-            for (var elem in quantities) {
-                var q = quantities[elem];
-                this.getReachability(q, true, quantities);
-            }
-
-            return true;
-        };
-
-        /**
-         * Fills in the (reverse) reachability array of the given quantity and all
-         * it's (reverse) dependencies. Also checks for circular dependencies when constructing
-         * the normal reachability graph. This is not done for the reverse graph, because it's assumed
-         * that one is constructed after constructing the normal graph.
-         *
-         * @param  {Quantity} q The quantity of which to fill in the (reverse) reachable quantities
-         * @param  {Boolean} reverse Whether the reverse reachable quantities should be filled in (true),
-         * or the normally reachable ones (false)
-         * @modifies this.reachability
-         * @throws {RuntimeError} If the reachability graph of this quantity is circular
-         * @returns {Array} The (reverse) reachable quantities of the given quantity
-         */
-        Analyser.prototype.getReachability = function(q, reverse, quantities) {
-            // Debug
-            if (this.curReachGraph.length === 0) {
-                console.log("----Checking " + q.name);
-            } else {
-                console.log("Checking " + q.name);
-            }
-
-            // Memoization. If quantity has already been handled, return the saved result
-            var existing = this.reachability[q.name];
-            if (existing) {
-                return existing;
-            }
-
-            // Add quantity as leaf to the currently explored/checked path in the graph
-            this.curReachGraph.push(q.name);
-
-            // Determine which way to search, 'normal' or reverse. Only check the non-history dependencies,
-            // history quantities
-            var searchKey = (reverse === true) ? 'reverseDeps' : 'dependencies';
-            var cyclicCheckKey = (reverse === true) ? 'reverseNonhistDeps' : 'nonhistDeps';
-            var resultKey = (reverse === true) ? 'reverseReachables' : 'reachables';
-            var reachables = q[searchKey].slice(0);
-
-            // Determine (reverse) reachable quantities
-            for (var elem in q[searchKey]) {
-                var nodeName = q[searchKey][elem];
-                var node = quantities[nodeName];
-
-                // Check whether this quantity would introduce a circular dependency
-                // when added to the currently explored path
-                if (this.curReachGraph.indexOf(nodeName) > -1) {
-                    // This dependency would make the graph circular. Check whether it is
-                    // only a history expression (which does not cause a cyclic dependency) or not
-                    if (q[cyclicCheckKey].indexOf(nodeName) > -1) {
-                        // It really is a circular dependency!
-                        this.curReachGraph.push(nodeName);
-                        var curpath = this.graphPathToString(this.curReachGraph);
-                        throw new RuntimeError("Script has circular dependency: " + curpath);
-                    }
-
-                    // Else: history expression. This means that it won't result in any additional
-                    // reachable quantities and cannot be evaluated because it is currently
-                    // being evaluated higher up in the recursion tree!
-                } else {
-                    // No circular dependency, add all reachables of this dependency to the list for this quantity
-                    reachables = reachables.concat(this.getReachability(node, reverse, quantities));
-                }
-            }
-
-            this.curReachGraph.pop();
-
-            // Store result in quantity and add to memoization datastructure
-            this.reachability[q.name] = reachables;
-            q[resultKey] = reachables;
-
-            return reachables;
-        };
-
-        /**
-         * Returns a string representation of the given path in a graph.
-         *
-         * @param {Array} path An array representing the path in the graph,
-         * containing all elements in the path from the root to the leaf node.
-         * @return {String} A string representation of path
-         */
-        Analyser.prototype.graphPathToString = function(path) {
-            var ans = "";
-
-            for (var elem in path) {
-                var node = path[elem];
-                ans += node + " -> ";
-            }
-
-            return ans.substr(0, ans.length-4);
-        };
-
-        /**
          * Determines whether the quantity is a user input and determines the type of the user input.
          * Returns null if the quantity is not defined by user input (is not category I).
          * @param  {String} definition the definition of the desired quantity
@@ -429,6 +305,24 @@ define(["Model/Analyser/Passes/QuantityPass",
                     quantity.pareto.isVertical = true;
                 }
             }
+        };
+
+        /**
+         * Returns a string representation of the given path in a graph.
+         *
+         * @param {Array} path An array representing the path in the graph,
+         * containing all elements in the path from the root to the leaf node.
+         * @return {String} A string representation of path
+         */
+        Analyser.prototype.graphPathToString = function(path) {
+            var ans = "";
+
+            for (var elem in path) {
+                var node = path[elem];
+                ans += node + " -> ";
+            }
+
+            return ans.substr(0, ans.length-4);
         };
 
         // Exports all macros.
