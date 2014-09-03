@@ -743,6 +743,7 @@ define(["Model/Script",
             if (script.isComplete()) {
                 // Compile script and signal script and view that it has been compiled.
                 script.setExecutable(this.compiler.compile(script));
+                script.determineReachability();
                 this.view.onNewScript();
 
                 return true;
