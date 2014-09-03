@@ -364,6 +364,8 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
             if (this[qty].hist) {
                 this[qty].hist.length = 0;
                 this[qty].timespan = 0;
+                this[qty].touched = false;
+                this[qty].historyTouched = false;
             }
         }
 
