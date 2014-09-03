@@ -91,6 +91,14 @@ define(["Model/Analyser/Analyser",
          */
         this.flaggedAsChanged = [];
 
+        /**
+         * Contains the quantities for which the reachable quantities have already been
+         * determined and stored in the reachables property.
+         *
+         * @type {Array}
+         */
+        this.determinedReachables = [];
+
         // Initialise with given source if not undefined
         if (typeof source !== 'undefined') {
             this.addSource(source);
@@ -139,12 +147,13 @@ define(["Model/Analyser/Analyser",
         /**
          * Returns whether quantity "end" is reachable from "start", by
          * isReachable: function(start, end, maxDepth)(recursively) traversing the dependency graph.
-         * 
+         *
          * @param  {String}  start The name of the quantity at which to start
-         * traversing the dependency graph. 
+         * traversing the dependency graph.
          * @param  {String}  end The name of the quantity to try to reach from "start"
          * @param {Number} maxDepth The maximum recursion depth to allow while testing.
-         * Leave empty to set to the number of quantities in the script.
+         * Leave empty to set to the number of quantities in the script. This can also be used
+         * to test whether end is reachable from start within maxDepth #steps.
          * @return {Boolean} Whether end is reachable from start.
          */
         isReachable: function(start, end, maxDepth) {
@@ -152,7 +161,7 @@ define(["Model/Analyser/Analyser",
                 maxDepth = Object.keys(this.quantities).length;
             }
 
-            if (maxDepth === 0) {
+            if (maxDepth < 0) {
                 // We reached the maximum recursion depth: return negative
                 return false;
             }
@@ -180,19 +189,66 @@ define(["Model/Analyser/Analyser",
 
         /**
          * Constructs the reachability arrays for every quantity in the script.
+         *
+         * @post The reachables and reverseReachables arrays have been filled in
+         * for every quantity, together representing the reachability graph.
          */
         determineReachability: function() {
+            // Reset memoization datastructure
+            this.determinedReachables = [];
 
+            var numQuantities = Object.keys(this.quantities).length;
+            for (var elem in this.quantities) {
+                // If all quantities have been handled, return
+                var numHandled = this.determinedReachables.length;
+                if (numHandled === numQuantities) {
+                    return;
+                }
+
+                var q = this.quantities[elem];
+                this.getReachables(q, numQuantities);
+            }
+
+            // Now the reachables arrays have been filled in for all quantities
+            // and we are done
         },
 
         /**
          * Returns the reachable quantities from the given quantity
          *
-         * @param {String} qtyname The quantity of which to determine
+         * @param {Quantity} q The quantity of which to determine
          * the reachable quantities
+         * @param {Number} maxDepth The maximum recursion depth to allow while testing.
          */
-        getReachables: function() {
+        getReachables: function(q, maxDepth) {
+            // If this quantity has already been handled, return immediately
+            if (this.determinedReachables.indexOf(q.name) > -1) {
+                return q.reachables;
+            }
 
+            // Check whether we're not exceeding the maximum recursion depth.
+            // This is used to detect cyclic dependencies in the script.
+            if (maxDepth < 0) {
+                throw new RuntimeError("Cannot determine reachability graph. There may be a cyclic dependency in the script.");
+            }
+
+            // Do a depth-first search in the dependency tree and add all
+            // found dependencies to this quantities' reachables property
+            var reachables = q.dependencies;    // May be the empty array
+            for (var elem in q.dependencies) {
+                var depName = q.dependencies[elem];
+                var dep = this.quantities[depName];
+
+                reachables = reachables.concat(this.getReachables(dep, maxDepth-1));
+            }
+
+            // Now all reachables of this quantity have been added to the reachables
+            // variable, so set this array as the reachables array of q
+            q.reachables = reachables;
+
+            // Update memoization structure and return result
+            this.determinedReachables.push(q.name);
+            return reachables;
         },
 
         /**
