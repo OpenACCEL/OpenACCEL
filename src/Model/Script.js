@@ -197,16 +197,32 @@ define(["Model/Analyser/Analyser",
             // Reset memoization datastructure
             this.determinedReachables = [];
 
+            // Determine reachability graph
             var numQuantities = Object.keys(this.quantities).length;
             for (var elem in this.quantities) {
                 // If all quantities have been handled, return
                 var numHandled = this.determinedReachables.length;
                 if (numHandled === numQuantities) {
-                    return;
+                    break;
                 }
 
                 var q = this.quantities[elem];
-                this.getReachables(q, numQuantities);
+                this.getReachables(q, numQuantities, false);
+            }
+
+            // Reset memoization datastructure again
+            this.determinedReachables = [];
+
+            // Determine reverse reachability graph
+            for (var elem in this.quantities) {
+                // If all quantities have been handled, return
+                var numHandled = this.determinedReachables.length;
+                if (numHandled === numQuantities) {
+                    break;
+                }
+
+                var q = this.quantities[elem];
+                this.getReachables(q, numQuantities, true);
             }
 
             // Now the reachables arrays have been filled in for all quantities
@@ -214,16 +230,18 @@ define(["Model/Analyser/Analyser",
         },
 
         /**
-         * Returns the reachable quantities from the given quantity
+         * Returns the (reverse) reachable quantities from the given quantity
          *
          * @param {Quantity} q The quantity of which to determine
-         * the reachable quantities
+         * the (reverse) reachable quantities
          * @param {Number} maxDepth The maximum recursion depth to allow while testing.
+         * @param {Boolean} reverse Whether to determine the reverse reachable quantities
+         * (=true) or the 'normal' reachable ones (=false)
          */
-        getReachables: function(q, maxDepth) {
+        getReachables: function(q, maxDepth, reverse) {
             // If this quantity has already been handled, return immediately
             if (this.determinedReachables.indexOf(q.name) > -1) {
-                return q.reachables;
+                return (reverse) ? q.reverseReachables : q.reachables;
             }
 
             // Check whether we're not exceeding the maximum recursion depth.
@@ -234,17 +252,22 @@ define(["Model/Analyser/Analyser",
 
             // Do a depth-first search in the dependency tree and add all
             // found dependencies to this quantities' reachables property
-            var reachables = q.dependencies;    // May be the empty array
-            for (var elem in q.dependencies) {
-                var depName = q.dependencies[elem];
+            var searchArray = (reverse) ? q.reverseDeps : q.dependencies;
+            var reachables = searchArray.slice(0);    // May be the empty array
+            for (var elem in searchArray) {
+                var depName = searchArray[elem];
                 var dep = this.quantities[depName];
 
-                reachables = reachables.concat(this.getReachables(dep, maxDepth-1));
+                reachables = reachables.concat(this.getReachables(dep, maxDepth-1, reverse));
             }
 
             // Now all reachables of this quantity have been added to the reachables
             // variable, so set this array as the reachables array of q
-            q.reachables = reachables;
+            if (reverse) {
+                q.reverseReachables = reachables;
+            } else {
+                q.reachables = reachables;
+            }
 
             // Update memoization structure and return result
             this.determinedReachables.push(q.name);
