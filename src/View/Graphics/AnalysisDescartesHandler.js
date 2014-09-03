@@ -122,11 +122,7 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
         };
 
         /**
-         * Returns the descartes drawing of the Individuals in this.modelElement.population.
-         * The individuals are here represented by their paretoHor and paretoVer quantities as positions
-         * on the x and y axis, respectively. Any Individual in the pareto front has a different colour and
-         * diameter from the Individuals outside of the pareto front. The point corresponding to
-         * this.clickedIndividual is highlighted with yet another different colour.
+         * Returns the descartes drawing of the of the comparison or contour between various quantities.
          *
          * @return {Object[]} The descartes drawing based on this.modelElement.population.
          */
