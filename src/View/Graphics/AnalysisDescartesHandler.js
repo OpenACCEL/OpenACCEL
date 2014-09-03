@@ -47,6 +47,13 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
              */
             this.bClamp = true;
 
+            /**
+             * When clamping is enabled, the margin make ssure that there's
+             * a small border around the actual graph, such that it's not
+             * entirely stuck to the canvas borders.
+             */
+            this.clampMargin = 4;
+
             this.propagatables.push({
                 name: "getAnalysis",
                 func: this.getAnalysis.bind(this)
@@ -139,7 +146,7 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
             // The points have to be modified such that they fit in a x: [0, 100], y: [0, 100] plot.
             for (var i = 0; i < data.points.length; i++) {
                 if (this.bClamp) {
-                    data.points[i].y = 100 * (data.points[i].y - data.range.min) / deltaRange;
+                    data.points[i].y = (100 - this.clampMargin) * (data.points[i].y - data.range.min) / deltaRange + this.clampMargin / 2;
                 } else {
                     data.points[i].y = 100 * (data.points[i].y - analysisRange.min) / analysisDeltaRange;
                 }
@@ -159,6 +166,9 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
 
             // If we're clamping, we should set the clamped range of the analysis model.
             if (this.bClamp) {
+                var margin = 1 / (1 - this.clampMargin / 100);
+                data.range.min *= margin;
+                data.range.max *= margin;
                 analysis.setRange(data.range);
             }
 

@@ -74,6 +74,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
 
         if (analysis) {
             analysis.setRange(range);
+            this.setClamp(false);
+            $("#toClamp").prop("checked", false);
             this.drawPlot();
         }
     };
@@ -115,6 +117,43 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
 
         if (analysis) {
             return analysis.getDomain();
+        }
+    };
+
+    /**
+     * Sets whether the analysis plot should be clamped or not
+     * If the plot should be clamped, it will be redrawn.
+     *
+     * @param {Boolean} Whether the plot window should be clamped or not.
+     */
+    Analysis.prototype.setClamp = function(bClamp) {
+        this.canvas.handler.bClamp = bClamp;
+
+        // If we were not clamped, we'll have to redraw the plot!
+        if (bClamp) {
+            this.drawPlot();
+        }
+    };
+
+    /**
+     * Sets the margin of clamping for the range.
+     * The margin itself gets clamped between 0 and 95.
+     *
+     * @param {Number} The clamp margin.
+     */
+    Analysis.prototype.setClampMargin = function(margin) {
+        if (margin < 0) {
+            margin = 0;
+        } else if (margin > 95) {
+            margin = 95;
+        }
+
+        $("#clampMargin").val(margin.toFixed(4));
+        this.canvas.handler.clampMargin = margin;
+
+        // Redraw the plot if clamping was enabled.
+        if (this.canvas.handler.bClamp) {
+            this.drawPlot();
         }
     };
 

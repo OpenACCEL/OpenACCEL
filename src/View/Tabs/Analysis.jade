@@ -7,6 +7,16 @@
 				table(style = "width:50%")
 					tr
 						td
+							.label Clamp Range:
+						td
+							.label Clamp Margin Percentage:
+					tr
+						td
+							input(id = 'toClamp', type = 'checkbox', checked = 'true', onclick = 'view.tabs.analysis.setClamp(this.checked)')
+						td
+							input(id = 'clampMargin', type = 'number', value = '4', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setClampMargin(val)')
+					tr
+						td
 							.label Domain From:
 						td
 							.label Domain To:
