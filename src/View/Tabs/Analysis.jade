@@ -11,7 +11,7 @@
 						td
 							.label Clamp Margin Percentage:
 					tr
-						td
+						td(align = 'center')
 							input(id = 'toClamp', type = 'checkbox', checked = 'true', onclick = 'view.tabs.analysis.setClamp(this.checked)')
 						td
 							input(id = 'clampMargin', type = 'number', value = '4', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setClampMargin(val)')
