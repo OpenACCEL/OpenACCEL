@@ -8,7 +8,7 @@ define(["Model/Script"], /**@lends View*/ function(Script) {
      * @classdesc The Simulation tab.
      */
     function Simulation(canvasCreator) {
-        this.canvas = canvasCreator.createCanvas(new Script(), 'plotSimulation', 800, 600);
+        this.canvas = canvasCreator.createCanvas(new Script(), "simulation_plot", 800, 600);
     }
 
     /**
@@ -45,10 +45,10 @@ define(["Model/Script"], /**@lends View*/ function(Script) {
     Simulation.prototype.toggleExecution = function(action) {
         if (action === 'Run') {
             controller.run();
-            $('#runscriptSimulation').val('Pause');
+            $('#simulation_runscript').val('Pause');
         } else {
             controller.pause();
-            $('#runscriptSimulation').val('Run');
+            $('#simulation_runscript').val('Run');
         }
     };
 

@@ -1,14 +1,14 @@
 #simulation.tabcontent
     div
-        #scriptoptions
+        #simulation_scriptoptions
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'Reset', onclick = 'controller.reset()')#newscript.buttonin
+                input(type = 'button', value = 'Reset', onclick = 'controller.reset()')#simulation_newscript.buttonin
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'Run', onclick = 'view.tabs.simulation.toggleExecution(this.value)')#runscriptSimulation.buttonin
+                input(type = 'button', value = 'Run', onclick = 'view.tabs.simulation.toggleExecution(this.value)')#simulation_runscript.buttonin
             .inline
                 .label Iterations
-                input(type = 'number', min = '0', value = '0', onchange = 'view.tabs.simulation.setIterations(this.value)')#iterationsSimulation.textin
+                input(type = 'number', min = '0', value = '0', onchange = 'view.tabs.simulation.setIterations(this.value)')#simulation_iterations.textin
         .inline
-            #plotSimulation
+            #simulation_plot
