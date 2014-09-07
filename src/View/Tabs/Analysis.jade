@@ -5,14 +5,24 @@
 			.group
 				table(style = "width:50%")
 					tr
+						td
+							.label Line Plot
+						td
+							.label Contour Plot
+					tr
+						td(align = 'center')
+							input(id = 'analysis_linePlot', type = 'radio', checked = 'true', name = "plotType", onclick = 'view.tabs.analysis.setPlotType("line")')
+						td(align = 'center')
+							input(id = 'analysis_contourPlot', type = 'radio', name = "plotType", onclick = 'view.tabs.analysis.setPlotType("contour")')
+					tr
 						td(colspan = '2', align = 'center')
 							#analysis_plot
-					tr
+					tr(class = "analysis_lineSettings")
 						td
 							.label Clamp Range:
 						td
 							.label Clamp Margin Percentage:
-					tr
+					tr(class = "analysis_lineSettings")
 						td(align = 'center')
 							input(id = 'analysis_toClamp', type = 'checkbox', checked = 'true', onclick = 'view.tabs.analysis.setClamp(this.checked)')
 						td
@@ -27,6 +37,16 @@
 							input(id = 'analysis_domainXFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {min: val}})')
 						td
 							input(id = 'analysis_domainXTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {max: val}})')
+					tr(class = "analysis_contourSettings")
+						td
+							.label Domain Y From:
+						td
+							.label Domain Y To:
+					tr(class = "analysis_contourSettings")
+						td
+							input(id = 'analysis_domainYFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({y: {min: val}})')
+						td
+							input(id = 'analysis_domainYTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({y: {max: val}})')
 					tr
 						td
 							.label Range From:
@@ -37,3 +57,13 @@
 							input(id = 'analysis_rangeFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({min: val})')
 						td
 							input(id = 'analysis_rangeTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({max: val})')
+					tr(class = 'analysis_contourSettings')
+						td
+							.label Nr. Contours:
+						td
+							.label Nr. Samples:
+					tr(class = "analysis_contourSettings")
+						td
+							input(id = 'analysis_nrContours', type = 'number', value = '10', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setContourNumbers(val)')
+						td
+							input(id = 'analysis_nrSamples', type = 'number', value = '10', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setContourSamples(val)')

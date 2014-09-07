@@ -13,6 +13,9 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
          * in case they are dependant on each other.
          */
         this.canvas = canvasCreator.createCanvas(new AnalysisModel(), "analysis_plot", 300, 300);
+
+        // Default mode is just a regular line plot.
+        this.setPlotType("line");
     }
 
     /**
@@ -33,6 +36,25 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
     Analysis.prototype.onLeaveTab = function() {
 
     };
+
+    /**
+     * Handles the switching between different kind of plot types.
+     * Supported types are 'line' and 'contour'.
+     *
+     * @return The new plot type.
+     */
+    Analysis.prototype.setPlotType = function(type) {
+        switch (type) {
+            case "contour":
+                $(".analysis_contourSettings").show();
+                $(".analysis_lineSettings").hide();
+                break;
+            default: // "line"
+                $(".analysis_contourSettings").hide();
+                $(".analysis_lineSettings").show();
+                break;
+        }
+    }
 
     /**
      * Clears the plot canvas
@@ -61,6 +83,11 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
         var domainXTo = domain.x.max.toFixed(4);
         $("#analysis_domainXFrom").val(domainXFrom);
         $("#analysis_domainXTo").val(domainXTo);
+
+        var domainYFrom = domain.y.min.toFixed(4);
+        var domainYTo = domain.y.max.toFixed(4);
+        $("#analysis_domainYFrom").val(domainYFrom);
+        $("#analysis_domainYTo").val(domainYTo);
     };
 
     /**
