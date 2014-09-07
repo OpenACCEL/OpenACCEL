@@ -410,16 +410,16 @@ define(["../Controller/AbstractView",
         switch(error.constructor.name) {
             case 'SyntaxError':
                 // Can be either a lexical scanner or parsing error. Handle appropriately
-                errormsg = new this.syntaxErrorMessage(this.errorCount, error, '#scriptline');
+                errormsg = new this.syntaxErrorMessage(this.errorCount, error, '#editrun_scriptline');
                 break;
             case 'TypeError':
                 //previously thrown when excessive whitespace was input
                 break;
             case 'RuntimeError':
-                errormsg = new this.runtimeErrorMessage(this.errorCount, error, '#scriptoptions');
+                errormsg = new this.runtimeErrorMessage(this.errorCount, error, '#editrun_scriptoptions');
                 break;
             case 'Error':
-                errormsg = new this.runtimeErrorMessage(this.errorCount, error, '#scriptoptions');
+                errormsg = new this.runtimeErrorMessage(this.errorCount, error, '#editrun_scriptoptions');
                 break;
             default:
                 errormsg = {

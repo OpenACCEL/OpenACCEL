@@ -64,7 +64,7 @@ body div {
 	-webkit-flex: 0 0 initial;
 }
 
-#plot_canvas {
+#editrun_plot_canvas {
 	background-color: #cc9ae5;
 }
 
@@ -461,7 +461,7 @@ span#checkUnitsMsg {
 	margin-right: 4px;
 }
 
-#scriptline {
+#editrun_scriptline {
 	position: relative;
 	width: 640px;
 	height: 16px;
@@ -469,10 +469,10 @@ span#checkUnitsMsg {
     white-space: nowrap;
     overflow: hidden;
 }
-#scriptline br {
+#editrun_scriptline br {
     display:none;
 }
-#scriptline * {
+#editrun_scriptline * {
     display:inline;
     white-space:nowrap;
     visibility: hidden;
@@ -480,21 +480,21 @@ span#checkUnitsMsg {
     height: 0;
 }
 
-#scriptoptions {
+#editrun_scriptoptions {
 	display: inline-block;
 	float: right;
 }
 
-#iterations {
+#editrun_iterations {
 	width: 60px;
 }
 
-#scriptlistdiv .textin {
+#editrun_scriptlistdiv .textin {
 	padding-left: 0px;
 	padding-right: 0px;
 }
 
-#scriptlistcontainer {
+#editrun_scriptlistcontainer {
 	height: 400px;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -502,7 +502,7 @@ span#checkUnitsMsg {
 	padding-right: 0px;
 }
 
-#scriptlist {
+#editrun_scriptlist {
 	display: table;
 	padding-left: 0px;
 	padding-right: 0px;
@@ -511,30 +511,30 @@ span#checkUnitsMsg {
 	color: #000000;
 	/*font-size: 14px;*/
 }
-#scriptlist input {
+#editrun_scriptlist input {
 	display: none;
 }
-#scriptlist label {
+#editrun_scriptlist label {
 
 }
-#scriptlist label:hover {
+#editrun_scriptlist label:hover {
 	color: #9933CC;
 	background: #DDDDDD;
 }
-#scriptlist input + label {
+#editrun_scriptlist input + label {
 	display: table-row;
 }
-#scriptlist input:checked + label {
+#editrun_scriptlist input:checked + label {
 	color: #EEEEEE;
 	background: #331144;
 }
-#scriptlist label div {
+#editrun_scriptlist label div {
 	display: table-cell;
 	padding-left: 2px;
 	padding-right: 2px;
 }
 
-#pendingscriptline {
+#editrun_pendingscriptline {
 	display: none;
 	height: 0px;
 	padding-left: 2px;
@@ -543,11 +543,11 @@ span#checkUnitsMsg {
 	color: #9933CC;
 }
 
-#pendingscriptline > div:first-child {
+#editrun_pendingscriptline > div:first-child {
 	max-width: 465px;
 }
 
-#pendingloader {
+#editrun_pendingloader {
 	display: none;
 	width: 20px;
 	height: 20px;
@@ -557,11 +557,11 @@ span#checkUnitsMsg {
 	background-repeat: no-repeat;
 }
 
-#userinput {
+#editrun_userinput {
 	color: #FFFFFF;
 }
 
-#result .operator {
+#editrun_result .operator {
 	color: #FFDDFF;
 }
 

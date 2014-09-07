@@ -20,21 +20,21 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         /**
          * The main canvas where the user sees or her plot.
          */
-        this.canvas = canvasCreator.createCanvas(new Script(), 'plot', 300, 300);
+        this.canvas = canvasCreator.createCanvas(new Script(), "editrun_plot", 300, 300);
 
         /**
          * Buffer to contain updated #scriptlist content
          * @memberof View
          * @type {HTMLBuffer}
          */
-        this.scriptListBuffer = new HTMLBuffer("#scriptlist");
+        this.scriptListBuffer = new HTMLBuffer("#editrun_scriptlist");
 
         /**
          * Buffer to contain updated #userinput content
          * @memberof View
          * @type {HTMLBuffer}
          */
-        this.userInputBuffer = new HTMLBuffer("#userinput");
+        this.userInputBuffer = new HTMLBuffer("#editrun_userinput");
 
         /**
          * Input element creation class.
@@ -72,14 +72,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
                     '</div>';
             },
             onclickTodo: function(quantity) {
-                $('#scriptline').html(quantity + ' =&nbsp;');
+                $('#editrun_scriptline').html(quantity + ' =&nbsp;');
             },
 
             /**
              * Buffer to contain updated #todolist content
              * @type {HTMLBuffer}
              */
-            todoListBuffer: new HTMLBuffer("#todolist"),
+            todoListBuffer: new HTMLBuffer("#editrun_todolist"),
 
             /**
              * Adds a quantity to be defined to the #todo element
@@ -119,7 +119,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             onclickProperty: function(quantity) {
                 var i = view.tabs.editrun.lineNumber[quantity];
                 view.tabs.editrun.selectScriptline(i, quantity);
-                $('#line' + i).trigger('click');
+                $('#editrun_line' + i).trigger('click');
             },
 
             /**
@@ -135,7 +135,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
              * Buffer to contain updated #arglist content
              * @type {HTMLBuffer}
              */
-            argListBuffer: new HTMLBuffer("#arglist"),
+            argListBuffer: new HTMLBuffer("#editrun_arglist"),
 
             /**
              * Adds a quantity to the list of quantities which are a parameter to the selected quantity
@@ -151,7 +151,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
              * Buffer to contain updated #argtolist content
              * @type {HTMLBuffer}
              */
-            argToListBuffer: new HTMLBuffer("#argtolist"),
+            argToListBuffer: new HTMLBuffer("#editrun_argtolist"),
 
             /**
              * Adds a quantity to the list of quantities which use the selected quantity as a parameter
@@ -168,13 +168,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
              *
              * @type ValueList
              */
-            resultList: new this.Input.ValueList('#result')
+            resultList: new this.Input.ValueList('#editrun_result')
         };
 
-        $('#scriptline').keypress(
+        $('#editrun_scriptline').keypress(
             function(e) {
                 if (e.which === 13) {
-                    $('#enterline').click();
+                    $('#editrun_enterline').click();
                 }
             }
         );
@@ -261,7 +261,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
 
                     this.setPendingScriptLine(null);
 
-                    view.selectContent('#scriptline');
+                    view.selectContent('#editrun_scriptline');
                 }).bind(this),
                 10
             );
@@ -274,15 +274,15 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      * @param {String} 'Run' if the script should be ran, otherwise it will be paused.
      */
     EditRun.prototype.toggleExecution = function(action) {
-        if ($('#runscript').hasClass('disabled')) {
+        if ($('#editrun_runscript').hasClass('disabled')) {
             alert("The script is not complete yet. Please define all quantities in the to-do list.");
         } else {
             if (action === 'Run') {
                 controller.run();
-                $('#runscript').val('Pause');
+                $('#editrun_runscript').val('Pause');
             } else {
                 controller.pause();
-                $('#runscript').val('Run');
+                $('#editrun_runscript').val('Run');
             }
         }
     };
@@ -364,12 +364,12 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
 
         // Disable run button when script is incomplete, else enable (again)
         if (enableRun === false || quantities === null) {
-            if (!$('#runscript').hasClass('disabled')) {
-                $('#runscript').addClass('disabled');
+            if (!$('#editrun_runscript').hasClass('disabled')) {
+                $('#editrun_runscript').addClass('disabled');
             }
         } else {
-            if ($('#runscript').hasClass('disabled')) {
-                $('#runscript').removeClass('disabled');
+            if ($('#editrun_runscript').hasClass('disabled')) {
+                $('#editrun_runscript').removeClass('disabled');
             }
         }
     };
@@ -405,7 +405,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         if ($('#line' + linenr).length > 0) {
             var quantity = controller.getQuantity(quantityname);
 
-            var scriptline = $('#scriptline');
+            var scriptline = $('#editrun_scriptline');
             scriptline.text(quantity.source);
 
             $('.quantityname').text(quantityname);
@@ -441,7 +441,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      */
     EditRun.prototype.deselectScriptline = function() {
         this.selectScriptline(null, null);
-        $('#scriptline').text('');
+        $('#editrun_scriptline').text('');
     };
 
     /**
@@ -452,14 +452,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         this.synchronizeScriptList(null);
         this.synchronizeResults(null);
         this.selectScriptline(null, null);
-        $('#scriptline').text('');
+        $('#editrun_scriptline').text('');
     };
 
     EditRun.prototype.setExecuting = function(executing) {
         if (executing) {
-            $('#runscript').val('Pause');
+            $('#editrun_runscript').val('Pause');
         } else {
-            $('#runscript').val('Run');
+            $('#editrun_runscript').val('Run');
         }
     };
 
@@ -502,19 +502,19 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
 
 
     EditRun.prototype.setPendingScriptLine = function(line) {
-        var pendingline = $('#pendingscriptline');
+        var pendingline = $('#editrun_pendingscriptline');
 
         if (line === null) {
             pendingline.animate({height: 0, opacity: 0}, 400,
                 function() {
                     pendingline.toggle(false);
-                    $('#pendingloader').toggle(false);
+                    $('#editrun_pendingloader').toggle(false);
                 }
             );
         } else {
-            $('#pendingscriptline > div').first().html(line);
+            $('#editrun_pendingscriptline > div').first().html(line);
             pendingline.toggle(true);
-            $('#pendingloader').toggle(true);
+            $('#editrun_pendingloader').toggle(true);
             pendingline.css({height: '20px', opacity: 1});
         }
     };

@@ -3,62 +3,62 @@
         .inline
             .label Script line
             //input(type = 'text')#scriptline.textin
-            #scriptline.inline.textin(contenteditable)
+            #editrun_scriptline.inline.textin(contenteditable)
         .inline
             .label &nbsp;
-            input(type = 'button', value = 'Enter', onclick = 'view.tabs.editrun.addQuantity($("#scriptline").text())')#enterline.buttonin
-        #scriptoptions
+            input(type = 'button', value = 'Enter', onclick = 'view.tabs.editrun.addQuantity($("#editrun_scriptline").text())')#editrun_enterline.buttonin
+        #editrun_scriptoptions
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'New', onclick = 'view.tabs.editrun.newScript()')#newscript.buttonin
+                input(type = 'button', value = 'New', onclick = 'view.tabs.editrun.newScript()')#editrun_newscript.buttonin
             .inline
                 .label &nbsp;
-                input(type = 'button', value = 'Run', onclick = 'view.tabs.editrun.toggleExecution(this.value)')#runscript.buttonin.disabled
+                input(type = 'button', value = 'Run', onclick = 'view.tabs.editrun.toggleExecution(this.value)')#editrun_runscript.buttonin.disabled
             .inline
                 .label Iterations
-                input(type = 'number', min = '0', value = '0', onchange = 'view.tabs.editrun.setIterations(this.value)')#iterations.textin
+                input(type = 'number', min = '0', value = '0', onchange = 'view.tabs.editrun.setIterations(this.value)')#editrun_iterations.textin
 
     div
         .inline
-            #scriptlistdiv
+            #editrun_scriptlistdiv
                 .label Quantities
                 .textin
-                    #pendingscriptline
+                    #editrun_pendingscriptline
                         .inline.ellipsis
-                        #pendingloader.inline
-                    #scriptlistcontainer
-                        #scriptlist
+                        #editrun_pendingloader.inline
+                    #editrun_scriptlistcontainer
+                        #editrun_scriptlist
 
         .inline100
-            #tododiv
+            #editrun_tododiv
                 .label To do
                 .report
-                    #todolist.verticalmenu
-            #arglistdiv
+                    #editrun_todolist.verticalmenu
+            #editrun_arglistdiv
                 .label Arg. of&nbsp;
                     .inline.quantityname.max128w.ellipsis
                 .report
-                    #arglist.divtable
-            #argtodiv
+                    #editrun_arglist.divtable
+            #editrun_argtodiv
                 .label
                     .inline.quantityname.max128w.ellipsis
                     | &nbsp;is Arg. to
                 .report
-                    #argtolist.divtable
+                    #editrun_argtolist.divtable
 
         .inline100
-            #userinputdiv
+            #editrun_userinputdiv
                 .label User input
-                #userinput.group
+                #editrun_userinput.group
 
         .inline(style='float:right;')
-            #plotdiv
+            #editrun_plotdiv
                 .label Plot:
                 .group
-                    #plot
+                    #editrun_plot
 
         .inline100(style='float:right;')
-            #resultdiv
+            #editrun_resultdiv
                 .label Results
                 .group
-                    #result.divtable
+                    #editrun_result.divtable
