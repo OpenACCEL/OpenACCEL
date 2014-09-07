@@ -12,7 +12,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
          * The plot windopw where one quantity can be plotted against the other,
          * in case they are dependant on each other.
          */
-        this.canvas = canvasCreator.createCanvas(new AnalysisModel(), 'plotAnalysis', 300, 300);
+        this.canvas = canvasCreator.createCanvas(new AnalysisModel(), "analysis_plot", 300, 300);
     }
 
     /**
@@ -51,15 +51,16 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
         var range = this.getRange();
         var rangeFrom = range.min.toFixed(4);
         var rangeTo = range.max.toFixed(4);
-        $("#rangeFrom").val(rangeFrom);
-        $("#rangeTo").val(rangeTo);
+        $("#analysis_rangeFrom").val(rangeFrom);
+        $("#analysis_rangeTo").val(rangeTo);
 
         // Update domain values.
         var domain = this.getDomain();
-        var domainFrom = domain.x.min.toFixed(4);
-        var domainTo = domain.x.max.toFixed(4);
-        $("#domainFrom").val(domainFrom);
-        $("#domainTo").val(domainTo);
+
+        var domainXFrom = domain.x.min.toFixed(4);
+        var domainXTo = domain.x.max.toFixed(4);
+        $("#analysis_domainXFrom").val(domainXFrom);
+        $("#analysis_domainXTo").val(domainXTo);
     };
 
     /**
@@ -75,7 +76,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
         if (analysis) {
             analysis.setRange(range);
             this.setClamp(false);
-            $("#toClamp").prop("checked", false);
+            $("#analysis_toClamp").prop("checked", false);
             this.drawPlot();
         }
     };
@@ -148,7 +149,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
             margin = 95;
         }
 
-        $("#clampMargin").val(margin.toFixed(4));
+        $("#analysis_clampMargin").val(margin.toFixed(4));
         this.canvas.handler.clampMargin = margin;
 
         // Redraw the plot if clamping was enabled.

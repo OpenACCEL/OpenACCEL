@@ -6,7 +6,7 @@
 				table(style = "width:50%")
 					tr
 						td(colspan = '2', align = 'center')
-							#plotAnalysis
+							#analysis_plot
 					tr
 						td
 							.label Clamp Range:
@@ -14,19 +14,19 @@
 							.label Clamp Margin Percentage:
 					tr
 						td(align = 'center')
-							input(id = 'toClamp', type = 'checkbox', checked = 'true', onclick = 'view.tabs.analysis.setClamp(this.checked)')
+							input(id = 'analysis_toClamp', type = 'checkbox', checked = 'true', onclick = 'view.tabs.analysis.setClamp(this.checked)')
 						td
-							input(id = 'clampMargin', type = 'number', value = '4', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setClampMargin(val)')
+							input(id = 'analysis_clampMargin', type = 'number', value = '4', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setClampMargin(val)')
 					tr
 						td
-							.label Domain From:
+							.label Domain X From:
 						td
-							.label Domain To:
+							.label Domain X To:
 					tr
 						td
-							input(id = 'domainFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {min: val}})')
+							input(id = 'analysis_domainXFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {min: val}})')
 						td
-							input(id = 'domainTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {max: val}})')
+							input(id = 'analysis_domainXTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {max: val}})')
 					tr
 						td
 							.label Range From:
@@ -34,6 +34,6 @@
 							.label Range To:
 					tr
 						td
-							input(id = 'rangeFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({min: val})')
+							input(id = 'analysis_rangeFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({min: val})')
 						td
-							input(id = 'rangeTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({max: val})')
+							input(id = 'analysis_rangeTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({max: val})')
