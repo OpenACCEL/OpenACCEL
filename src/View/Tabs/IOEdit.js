@@ -26,7 +26,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
         // when preference in localStorage is set as such
         this.cm = CodeMirror;
         if (localStorage.useAdvancedEditor === 'true') {
-            $('#useCM').prop("checked", true);
+            $('#ioedit_useCM').prop("checked", true);
             this.toggleCM();
         }
     }
@@ -53,9 +53,9 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
             if (this.editor) {
                 this.editor.save();
             }
-            controller.setScriptFromSource($('#scriptarea').val());
+            controller.setScriptFromSource($('#ioedit_scriptarea').val());
             this.showValues = false;
-            $('#showvalues').val('Show values');
+            $('#ioedit_showvalues').val('Show values');
         } catch (e) {
             if (typeof(e) === 'SyntaxError') {
                 console.log(e.message);
@@ -78,13 +78,13 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
             this.editor.save();
         }
 
-        var source = $('#scriptarea').val();
+        var source = $('#ioedit_scriptarea').val();
         controller.setScriptFromSource(source);
 
         if (this.showValues) {
             try {
                 this.synchronizeScriptArea({'includeValues': true});
-                $('#showvalues').val('Hide values');
+                $('#ioedit_showvalues').val('Hide values');
             } catch (e) {
                 // Catch any syntax error messages, or messages thrown when the script
                 // cannot be compiled because it's not complete yet
@@ -92,7 +92,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
             }
         } else {
             this.synchronizeScriptArea({'includeValues': false});
-            $('#showvalues').val('Show values');
+            $('#ioedit_showvalues').val('Show values');
         }
     };
 
@@ -101,7 +101,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
      */
     IOEdit.prototype.constructAdvancedEditor = function() {
         // Construct editor
-        var advEditor = this.cm.fromTextArea(document.getElementById('scriptarea'), {
+        var advEditor = this.cm.fromTextArea(document.getElementById('ioedit_scriptarea'), {
             mode: 'ACCEL',
             theme: 'default',
             lineNumbers: true,
@@ -178,7 +178,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
      * @return {Boolean} Whether the advanced editor is currently being used
      */
     IOEdit.prototype.usingAdvancedEditor = function() {
-        return $('#useCM').is(':checked');
+        return $('#ioedit_useCM').is(':checked');
     };
 
     /**
@@ -187,7 +187,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
      */
     IOEdit.prototype.updateAdvancedEditor = function() {
         if (this.usingAdvancedEditor()) {
-            this.editor.setValue($('#scriptarea').val());
+            this.editor.setValue($('#ioedit_scriptarea').val());
             this.editor.setSize(645, 400);
             this.editor.refresh();
             this.cm.signal(this.editor, "changes");
@@ -208,35 +208,35 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
      * and displays them after the quantities inside the editor
      */
     IOEdit.prototype.checkUnits = function() {
-        $('#checkUnitsMsg').css({'color':'white', 'visibility':'visible', 'display':'block'});
-        $('#checkUnitsMsg').text('Checking units...');
-        $('#showvalues').val('Show values');
+        $('#ioedit_checkUnitsMsg').css({'color':'white', 'visibility':'visible', 'display':'block'});
+        $('#ioedit_checkUnitsMsg').text('Checking units...');
+        $('#ioedit_showvalues').val('Show values');
         this.showValues = false;
-        $('#clearerrors').css({'visibility':'hidden'});
+        $('#ioedit_clearerrors').css({'visibility':'hidden'});
         if (this.usingAdvancedEditor()) {
             this.editor.save();
         }
 
         setTimeout((function() {
             try {
-                var source = $('#scriptarea').val();
+                var source = $('#ioedit_scriptarea').val();
                 controller.checkUnits(source);
-                $('#checkUnitsMsg').css({'color':'rgb(31,212,60)'});
-                $('#checkUnitsMsg').text('Units OK');
+                $('#ioedit_checkUnitsMsg').css({'color':'rgb(31,212,60)'});
+                $('#ioedit_checkUnitsMsg').text('Units OK');
             } catch (e) {
                 // If the script wasn't simply incomplete but actual unit errors occured...
                 if (!e.incomplete) {
-                    $('#checkUnitsMsg').css({'color':'red'});
-                    $('#checkUnitsMsg').text('Unit error(s)!');
-                    $('#clearerrors').css({'visibility':'visible'});
+                    $('#ioedit_checkUnitsMsg').css({'color':'red'});
+                    $('#ioedit_checkUnitsMsg').text('Unit error(s)!');
+                    $('#ioedit_clearerrors').css({'visibility':'visible'});
                 } else {
                     // Script incomplete, hide progress message but don't indicate unit errors
-                    $('#checkUnitsMsg').hide();
+                    $('#ioedit_checkUnitsMsg').hide();
                 }
                 alert(e.message);
             } finally {
                 this.synchronizeScriptArea({'includeCheckedUnits':true});
-                setTimeout(function() {$('#checkUnitsMsg').fadeOut(400);}, 2500);
+                setTimeout(function() {$('#ioedit_checkUnitsMsg').fadeOut(400);}, 2500);
             }
         }).bind(this), 100);
     };
@@ -249,11 +249,11 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
         if (this.usingAdvancedEditor()) {
             this.editor.save();
         }
-        var source = $('#scriptarea').val();
+        var source = $('#ioedit_scriptarea').val();
         controller.setScriptFromSource(source);
 
         this.synchronizeScriptArea({'includeCheckedUnits':false});
-        $('#clearerrors').css({'visibility':'hidden'});
+        $('#ioedit_clearerrors').css({'visibility':'hidden'});
     };
 
     /**
@@ -271,7 +271,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
 
         // Retrieve current contents of the script and update the textarea
         var script = controller.scriptToString(options);
-        $('#scriptarea').val(script);
+        $('#ioedit_scriptarea').val(script);
 
         // Let the advanced editor update itself too, if in use
         this.updateAdvancedEditor();

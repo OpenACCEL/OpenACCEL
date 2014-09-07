@@ -2,18 +2,18 @@
     div
         .inline
             .label Options
-            input(type = 'button', value = 'Show values' onclick = 'view.tabs.ioedit.toggleValues()')#showvalues.buttonin
+            input(type = 'button', value = 'Show values' onclick = 'view.tabs.ioedit.toggleValues()')#ioedit_showvalues.buttonin
         .inline(style='vertical-align: bottom;')
-            input(type = 'button', value = 'Check units' onclick = 'view.tabs.ioedit.checkUnits()')#checkunits.buttonin
+            input(type = 'button', value = 'Check units' onclick = 'view.tabs.ioedit.checkUnits()')#ioedit_checkunits.buttonin
         .inline(style='vertical-align: bottom;')
-            input(type = 'button', value = 'Clear unit errors' onclick = 'view.tabs.ioedit.clearUnitErrors()')#clearerrors.buttonin
+            input(type = 'button', value = 'Clear unit errors' onclick = 'view.tabs.ioedit.clearUnitErrors()')#ioedit_clearerrors.buttonin
         .inline(style='vertical-align: bottom; margin-bottom: 5px;')
-            span#checkUnitsMsg Checking units...
+            span#ioedit_checkUnitsMsg Checking units...
         .inline(style='float:right; margin-top: 25px; margin-right: 10px;')
             span(style='margin-right:5px') Use advanced editor
-            input(type='checkbox', onchange='view.tabs.ioedit.toggleCM()')#useCM
+            input(type='checkbox', onchange='view.tabs.ioedit.toggleCM()')#ioedit_useCM
     .inline
         .label Script
         .textin
             .inline
-                textarea(cols="90")#scriptarea
+                textarea(cols="90")#ioedit_scriptarea

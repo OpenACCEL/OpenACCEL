@@ -743,14 +743,14 @@ a.help_current {
  *
  */
 
-#scriptlineinfo > div > div {
+#ioedit_scriptlineinfo > div > div {
 	padding-left: 4px;
 	padding-right: 4px;
 	font-size: 12px;
 	color: #444444;
 }
 
-#scriptarea {
+#ioedit_scriptarea {
 	height: 400px;
 	resize: none;
 	border: none;
