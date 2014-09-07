@@ -764,16 +764,16 @@ a.help_current {
  *
  */
 
-#GOsidebar .group {
+#optimisation_sidebar .group {
 	padding-top: 8px;
 }
 
-#GOsidebar .buttonin {
+#optimisation_sidebar .buttonin {
 	width: 100%;
 	margin-top: 8px;
 }
 
-#mutationvalue > ul {
+#optimisation_mutationvalue > ul {
 	list-style: none;
 	margin-top: 0px;
 	margin-bottom: 8px;
@@ -794,11 +794,11 @@ a.help_current {
 	border: 1px #331144 solid;
 }
 
-#mutation .ui-slider-range:first-child {
+#optimisation_mutation .ui-slider-range:first-child {
 	background: #331144;
 }
 
-#mutation .ui-slider-range {
+#optimisation_mutation .ui-slider-range {
 	background: #9900AA;
 }
 

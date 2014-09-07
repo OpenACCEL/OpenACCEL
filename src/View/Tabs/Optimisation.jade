@@ -1,48 +1,48 @@
 #optimisation.tabcontent
-	#GOsidebar.inline(style = 'width: 200px')
+	#optimisation_sidebar.inline(style = 'width: 200px')
 		div
 			.label Initialisation
 			.group
 				div
 					.inline Population size&nbsp;
-					#populationsizevalue.inline.slidervalue
-					#populationsize.GOcontrol
-				input(type = 'button', value = 'Initialise')#initGO.buttonin
+					#optimisation_populationsizevalue.inline.slidervalue
+					#optimisation_populationsize.optimisation_control
+				input(type = 'button', value = 'Initialise')#optimisation_init.buttonin
 
 		div
 			.label Generations
 			.group
 				div
 					.inline Generations per click&nbsp;
-					#stepsizevalue.inline.slidervalue
-					#stepsize.GOcontrol
-				input(type = 'button', value = 'Generate next')#stepGO.buttonin
+					#optimisation_stepsizevalue.inline.slidervalue
+					#optimisation_stepsize.optimisation_control
+				input(type = 'button', value = 'Generate next')#optimisation_step.buttonin
 
 		div
 			.label Algorithm settings
-			#settingsGO.group
+			#optimisation_settings.group
 				div
 					.inline Crossover&nbsp;
-					#crossovervalue.inline.slidervalue
-					#crossover.GOcontrol
+					#optimisation_crossovervalue.inline.slidervalue
+					#optimisation_crossover.optimisation_control
 				div
 					.inline Mutation distribution&nbsp;
-					#mutationvalue.inline.slidervalue
-					#mutation.GOcontrol
+					#optimisation_mutationvalue.inline.slidervalue
+					#optimisation_mutation.optimisation_control
 				div
 					.inline Maximum on front&nbsp;
-					#maxfrontvalue.inline.slidervalue
-					#maxfront.GOcontrol
+					#optimisation_maxfrontvalue.inline.slidervalue
+					#optimisation_maxfront.optimisation_control
 
 	.inline
 		.label Visualisation
-		#plotGOdiv.group
-			#plotGO(style = 'width: 400px; heigth: 400px; background: #CCCCCC;')
+		#optimisation_plotdiv.group
+			#optimisation_plot(style = 'width: 400px; heigth: 400px; background: #CCCCCC;')
 
 	.inline
 		.label Visualisation controls
-		#plotGOcontrols.group
-			input(type = 'button', value = 'Smart zoom')#smartzoomGO.buttonin
-			input(type = 'button', value = 'Zoom to fit')#zoomtofitGO.buttonin
+		#optimisation_plotcontrols.group
+			input(type = 'button', value = 'Smart zoom')#optimisation_smartzoom.buttonin
+			input(type = 'button', value = 'Zoom to fit')#optimisation_zoomtofit.buttonin
 		.label Individual properties
-		#propertiesGO.group
+		#optimisation_properties.group

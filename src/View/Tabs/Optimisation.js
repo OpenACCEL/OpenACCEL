@@ -10,7 +10,7 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
          * The main canvas where the user sees the generated population and select
          * an indiviual.
          */
-        this.canvas = canvasCreator.createCanvas(new GeneticOptimisation(), 'plotGO', 400, 400);
+        this.canvas = canvasCreator.createCanvas(new GeneticOptimisation(), 'optimisation_plot', 400, 400);
 
         this.geneticOptimisationValues = {
             population: 25,
@@ -20,42 +20,42 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
             maxfront: 50
         };
 
-        $('#populationsize').slider({
+        $('#optimisation_populationsize').slider({
             range: "min",
             value: this.geneticOptimisationValues.population,
             min: 1,
             max: 500,
             step: 1,
             slide: (function(event, ui) {
-                $('#populationsizevalue').html('(' + ui.value + ')');
+                $('#optimisation_populationsizevalue').html('(' + ui.value + ')');
 
                 this.geneticOptimisationValues.population = ui.value;
                 //No controller call until the associated button is pressed
             }).bind(this)
         });
 
-        $('#stepsize').slider({
+        $('#optimisation_stepsize').slider({
             range: "min",
             value: this.geneticOptimisationValues.stepsize,
             min: 1,
             max: 100,
             step: 1,
             slide: (function(event, ui) {
-                $('#stepsizevalue').html('(' + ui.value + ')');
+                $('#optimisation_stepsizevalue').html('(' + ui.value + ')');
 
                 this.geneticOptimisationValues.stepsize = ui.value;
                 //No controller call until the associated button is pressed
             }).bind(this)
         });
 
-        $('#crossover').slider({
+        $('#optimisation_crossover').slider({
             range: 'min',
             value: this.geneticOptimisationValues.crossover,
             min: 1,
             max: 100,
             step: 1,
             slide: (function(event, ui) {
-                $('#crossovervalue').html('(' + ui.value + '%)');
+                $('#optimisation_crossovervalue').html('(' + ui.value + '%)');
 
                 this.geneticOptimisationValues.crossover = ui.value;
                 try {
@@ -64,7 +64,7 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
             }).bind(this)
         });
 
-        var mutationcontrol = $('#mutation');
+        var mutationcontrol = $('#optimisation_mutation');
         //Add second range div
         mutationcontrol.prepend('<div class="ui-slider-range ui-widget-header ui-corner-all"></div>');
         //jQuery sliderify
@@ -79,11 +79,11 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
                 var arbitrary = ui.values[1] - close;
                 var random = 100 - arbitrary - close;
 
-                $('#mutation .ui-slider-range:first-child').css({
+                $('#optimisation_mutation .ui-slider-range:first-child').css({
                     width: close + '%'
                 });
 
-                $('#mutationvalue').html('' +
+                $('#optimisation_mutationvalue').html('' +
                         '<ul>' +
                             '<li>' +
                                 '<div class = "legendbox" style = "background: #331144"></div>' +
@@ -108,14 +108,14 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
             }).bind(this)
         });
 
-        $('#maxfront').slider({
+        $('#optimisation_maxfront').slider({
             range: "min",
             value: this.geneticOptimisationValues.maxfront,
             min: 1,
             max: 100,
             step: 1,
             slide: (function(event, ui) {
-                $('#maxfrontvalue').html('(' + ui.value + '%)');
+                $('#optimisation_maxfrontvalue').html('(' + ui.value + '%)');
 
                 this.geneticOptimisationValues.maxfront = ui.value;
                 try {
@@ -124,7 +124,7 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
             }).bind(this)
         });
 
-        var GOControls = $('.GOcontrol');
+        var GOControls = $('.optimisation_control');
         GOControls.each(
             function(index, element) {
                 var control = $(GOControls[index]);
@@ -135,22 +135,22 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
             }
         );
 
-        $('#initGO').on('click',
+        $('#optimisation_init').on('click',
             (function() {
                 controller.initialiseGeneticOptimisation(this.geneticOptimisationValues.population);
                 this.individualPropertiesBuffer.empty();
-                this.individualPropertiesBuffer.flip("#propertiesGO");
+                this.individualPropertiesBuffer.flip("#optimisation_properties");
             }).bind(this)
         );
 
-        $('#stepGO').on('click',
+        $('#optimisation_step').on('click',
             (function() {
                 controller.nextGeneration(this.geneticOptimisationValues.stepsize);
-                $('#plotGO').trigger('click');
+                $('#optimisation_plot').trigger('click');
             }).bind(this)
         );
 
-        $('#plotGO').on('click',
+        $('#optimisation_plot').on('click',
             (function() {
                 var individual = this.canvas.getClickedIndividual();
                 var q;
@@ -158,7 +158,7 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
                 this.individualPropertiesBuffer.empty();
 
                 if (individual === null) {
-                    this.individualPropertiesBuffer.flip("#propertiesGO");
+                    this.individualPropertiesBuffer.flip("#optimisation_properties");
                     return;
                 }
 
@@ -204,17 +204,17 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
 
                 this.individualPropertiesBuffer.append('</div>');
 
-                this.individualPropertiesBuffer.flip("#propertiesGO");
+                this.individualPropertiesBuffer.flip("#optimisation_properties");
             }).bind(this)
         );
 
-        $('#smartzoomGO').on('click',
+        $('#optimisation_smartzoom').on('click',
             (function() {
                 this.smartZoom();
             }).bind(this)
         );
 
-        $('#zoomtofitGO').on('click',
+        $('#optimisation_zoomtofit').on('click',
             (function() {
                 this.zoomToFit();
             }).bind(this)
