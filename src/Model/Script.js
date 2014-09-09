@@ -145,6 +145,24 @@ define(["Model/Analyser/Analyser",
         },
 
         /**
+         * Returns true when the script contains quantities that have a history.
+         *
+         * @return {Boolean} Whether there are any quantities in the script that
+         * have a history.
+         */
+        hasHistory: function() {
+            for (var elem in this.quantities) {
+                var q = this.quantities[elem];
+
+                if (Object.keys(q.dependencies).length > Object.keys(q.nonhistDeps).length) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        /**
          * Returns whether quantity "end" is reachable from "start", by
          * isReachable: function(start, end, maxDepth)(recursively) traversing the dependency graph.
          *
@@ -244,10 +262,10 @@ define(["Model/Analyser/Analyser",
                 return (reverse) ? q.reverseReachables : q.reachables;
             }
 
-            // Check whether we're not exceeding the maximum recursion depth.
-            // This is used to detect cyclic dependencies in the script.
+            // Check whether we're not exceeding the maximum recursion depth
             if (maxDepth < 0) {
-                throw new RuntimeError("Cannot determine reachability graph. There may be a cyclic dependency in the script.");
+                return [];
+                // throw new RuntimeError("Cannot determine reachability graph. There may be a cyclic dependency in the script.");
             }
 
             // Do a depth-first search in the dependency tree and add all

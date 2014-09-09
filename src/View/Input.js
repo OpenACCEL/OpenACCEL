@@ -356,5 +356,93 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         };
     }
 
+
+    /**
+     * Class to generate a table of selectable items
+     *
+     * @memberof View
+     * @param  {String}   selector Element to put the list in
+     * @param  {Function} callback Function to be called when an item is clicked
+     */
+    function SelectionTable(selector, callback) {
+        this.selector = selector;
+        this.callback = callback;
+
+        /**
+         * Buffer to contain HTML for the required list
+         *
+         * @type {HTMLBuffer}
+         */
+        this.buffer = new HTMLBuffer();
+
+        /**
+         * Generates HTML for an item in the required list of selectable links
+         *
+         * @param {Number} i At which row to insert this element.
+         * @param  {String} item String to represent an item in the list
+         * @param {String} html (Optional) Additional html code to give to this element in the list
+         * @return {String} HTML for an item in the required list of selectable links
+         */
+        this.getItemHTML = function(i, item, html) {
+            if (typeof html === 'undefined') {
+                html = '';
+            }
+
+            return '' +
+                '<a ' + html + ' id = "' + this.selector.substring(1) + 'Item' + i + '" value = "' + item + '">' + item + '</a>';
+        };
+
+        /**
+         * Adds an item to the list of selectable links
+         *
+         * @param {Number} i At which row to insert this element.
+         * @param  {String} item String to represent an item in the list
+         * @param {String} html (Optional) Additional html code to give to this element in the list
+         */
+        this.addItem = function(i, item, html) {
+            this.buffer.append(this.getItemHTML(i, item, html));
+        };
+
+
+        this.initializeItem = function(i) {
+            var itemselector = this.selector + 'Item' + i;
+
+            $(itemselector).on('click', {list: this},
+                function(e) {
+                    e.data.list.callback.call(this.caller, $(this).text());
+                }
+            );
+        };
+
+        /**
+         * Set the items contained in the list
+         *
+         * @param {String[]} items Strings to represent the items in the list
+         * @param {Function} htmlfunc (Optional) A function that takes an element from items as
+         * argument and returns optional additional html code for that element.
+         */
+        this.set = function(items, htmlfunc) {
+            this.items = items;
+            this.buffer.empty();
+            var i;
+
+            if (typeof htmlfunc !== 'undefined') {
+                for (i in items) {
+                    this.addItem(i, items[i], htmlfunc(items[i]));
+                }
+            } else {
+                for (i in items) {
+                    this.addItem(i, items[i]);
+                }
+            }
+
+            this.buffer.flip(this.selector);
+
+            for (i in items) {
+                this.initializeItem(i);
+            }
+        };
+    }
+
     return Input;
 });

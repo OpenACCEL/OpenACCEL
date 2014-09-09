@@ -58,6 +58,9 @@ define(["underscore"], /** @lends Model */ function(_) {
          * for a normal comparison plot.
          */
         this.numIterations = 50;
+
+        this.argument = undefined;
+        this.result = undefined;
     }
 
     /**
@@ -166,11 +169,11 @@ define(["underscore"], /** @lends Model */ function(_) {
         return this.numIterations;
     };
 
-    Analysis.prototype.compare = function(x, y) {
+    Analysis.prototype.compare = function() {
         if (this.script && this.script.isCompiled()) {
             // Check whether both quantities exist in the script.
-            if (!this.script.hasQuantity(x) || !this.script.hasQuantity(y)) {
-                throw new Error("One of the quantities, " + x + " or " + y + " is not an existing script quantity.");
+            if (!this.script.hasQuantity(this.argument) || !this.script.hasQuantity(this.result)) {
+                throw new Error("One of the quantities, " + this.argument + " or " + this.result + " is not an existing script quantity.");
             }
 
             // Todo: dependency check.
@@ -187,8 +190,8 @@ define(["underscore"], /** @lends Model */ function(_) {
 
             // Try to calculate the values.
             for (var i = domain.min; i < domain.max; i += step) {
-                exe.setValue(x, i);
-                var ans = exe.getValue(y);
+                exe.setValue(this.argument, i);
+                var ans = exe.getValue(this.result);
                 data.points.push({x: i, y: ans});
                 exe.reset();
             }

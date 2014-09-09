@@ -742,8 +742,16 @@ define(["Model/Script",
 
             if (script.isComplete()) {
                 // Compile script and signal script and view that it has been compiled.
-                script.setExecutable(this.compiler.compile(script));
-                script.determineReachability();
+                try {
+                    script.setExecutable(this.compiler.compile(script));
+
+                    //if (script.hasHistory() === false) {
+                        script.determineReachability();
+                    //}
+                } catch (e) {
+                    this.view.runtimeError(e);
+                }
+
                 this.view.onNewScript();
 
                 return true;
@@ -964,18 +972,18 @@ define(["Model/Script",
             // given source
             this.newScript(!restoring);
             var added = this.script.addSource(source);
-            this.view.onModifiedQuantity();
+            //this.view.onModifiedQuantity();
 
             // Test whether we're in the process of restoring a script from the backup
-            // store. If we are, don't save it again and don't compile it.
+            // store. If we are, don't save it back to the store again!
             if (!restoring) {
                 // If autosave is enabled, save script to backup store
                 if (this.autoSave) {
                     this.saveScriptToBackupStore(this.script.getSource());
                 }
-
-                this.compileScript(this.script);
             }
+
+            this.compileScript(this.script);
 
             return added;
         };

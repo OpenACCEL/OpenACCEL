@@ -1,7 +1,17 @@
 #analysis.tabcontent
 	div
+		.inline(style='width:450px')
+		.inline
+			.label(style='width:100px;') Arguments
+			.an_listcontainer
+				#an_arguments.report.verticalmenu
+		.inline(style='margin-left: 20px;')
+			.label(style='width:100px;') Results
+			.an_listcontainer
+				#an_results.report.verticalmenu
 		.inline(style='float:right;')
 			.label Plot:
+			div#an_errormessage
 			.group
 				table(style = "width:50%")
 					tr

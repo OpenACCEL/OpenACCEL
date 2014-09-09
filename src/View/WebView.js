@@ -75,6 +75,12 @@ define(["../Controller/AbstractView",
             }
         });
 
+        $("#analysis").on('click', function() {
+            if ($(this).hasClass("disabled")) {
+                alert("The script has not been compiled yet.");
+            }
+        });
+
         // Loading should be done at this point.
         this.resizeContainer();
         $('#loading').toggle(false);
@@ -210,7 +216,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.onLeaveTab = function(tab) {
         $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
-        if (tab != 'intro') {
+        if (this.tabs[tab].onLeaveTab) {
             this.tabs[tab].onLeaveTab();
         }
 
@@ -226,14 +232,19 @@ define(["../Controller/AbstractView",
         var script = controller.getScript();
 
         // Check whether to disable the genetic optimisation tab
-        if (!controller.hasOptimisation()) {
-            if (!$('#optimisation').hasClass('disabled')) {
-                $('#optimisation').addClass('disabled').children("a").removeAttr('href');
-            }
-        } else {
+        if (controller.hasOptimisation()) {
             if ($('#optimisation').hasClass('disabled')) {
                 $('#optimisation').removeClass('disabled').children("a").attr('href', '#tab=optimisation');
             }
+        } else {
+            if (!$('#optimisation').hasClass('disabled')) {
+                $('#optimisation').addClass('disabled').children("a").removeAttr('href');
+            }
+        }
+
+        // Disable analysis tab. Will be re-enabled again when the script is compiled
+        if (!$('#analysis').hasClass('disabled')) {
+            $('#analysis').addClass('disabled').children("a").removeAttr('href');
         }
 
         switch(this.currentTab) {
@@ -273,13 +284,21 @@ define(["../Controller/AbstractView",
         this.tabs.simulation.canvas.setModel(script);
         this.tabs.optimisation.canvas.setModel(controller.getGeneticOptimisation());
 
+        // Synchronize edit/run and IO/edit tabs with new script
+        this.tabs.editrun.resetEditRun();
         this.tabs.editrun.synchronizeScriptList(script.getQuantities());
         this.tabs.ioedit.synchronizeScriptArea();
 
+        // Check whether to disable the genetic optimisation tab
         if (!controller.hasOptimisation) {
             if (!$('#optimisation').hasClass('disabled')) {
                 $('#optimisation').addClass('disabled').children("a").removeAttr('href');
             }
+        }
+
+        // Enable the analysis tab if needed
+        if ($('#analysis').hasClass('disabled')) {
+            $('#analysis').removeClass('disabled').children("a").attr('href', '#tab=analysis');
         }
     }
 

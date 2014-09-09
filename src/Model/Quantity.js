@@ -325,6 +325,16 @@ define([], /**@lends Model.Quantity */ function() {
         return def;
     };
 
+    Quantity.prototype.getComment = function() {
+        var comment = '';
+
+        for (var i = 0; i < this.comment.length; i++) {
+            comment += this.comment[i] + '\n';
+        }
+
+        return comment.slice(0,-2);
+    };
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Quantity;
 });

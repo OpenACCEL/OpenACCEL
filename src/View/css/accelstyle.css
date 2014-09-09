@@ -210,7 +210,7 @@ body div {
 	font-size: 14px;
 }
 
-.verticalmenu > a {
+.verticalmenu a {
 	display: block;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -218,11 +218,70 @@ body div {
 	border-bottom: 1px transparent solid;
 	cursor: pointer;
 	text-decoration: none;
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.verticalmenu > a:hover {
+.verticalmenu a:hover {
 	border-bottom: 1px #331144 solid;
 	color: #FFFFFF;
 	background: #9933CC;
+}
+
+.an_listcontainer {
+	height: 400px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	min-width: 150px;
+}
+
+.an_greyedout {
+	color: rgb(162, 153, 153);
+}
+
+#an_arguments, #an_results {
+	display: table;
+	margin-left: 3px;
+	font-size: 12px;
+}
+
+.an_tblhead {
+	display: table-cell;
+	font-weight: bold;
+}
+
+#an_errormessage {
+	color: red;
+	font-weight: bold;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 3px;
+	display: none;
+}
+
+.an_qtyname {
+	max-width: 70px;
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: table-cell !important;
+}
+
+.an_qtycomment {
+	color: #00cc00;
+	text-decoration: underline;
+	cursor: pointer;
+	display: table-cell !important;
+	padding-right: 5px;
+	padding-left: 2px;
+}
+
+.an_qtyvalue {
+	color: #00ffff;
+	max-width: 45px;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	display: table-cell !important;
 }
 
 .alink {
