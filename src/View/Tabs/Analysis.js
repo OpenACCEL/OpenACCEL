@@ -106,8 +106,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
                 $('#an_errormessage').show();
             } else {
                 if (script.isReachable(state.result, state.argument) === true) {
-                    this.analysis.argument = state.argument;
-                    this.analysis.result = state.result;
+                    this.analysis.setX(state.argument);
+                    this.analysis.setY(state.result);
                     this.drawPlot();
                 } else {
                     $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argument);
@@ -142,8 +142,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
                 $('#an_errormessage').show();
             } else {
                 if (script.isReachable(state.result, state.argument) === true) {
-                    this.analysis.argument = state.argument;
-                    this.analysis.result = state.result;
+                    this.analysis.setX(state.argument);
+                    this.analysis.setY(state.result);
                     this.drawPlot();
                 } else {
                     $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argument);

@@ -135,7 +135,7 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
          */
         AnalysisDescartesHandler.prototype.getDrawing = function() {
             var analysis = this.getAnalysis();
-            var data = analysis.compare();
+            var data = analysis.compare2D();
             var deltaRange = data.range.max - data.range.min;
             var deltaDomain = data.domain.max - data.domain.min;
 

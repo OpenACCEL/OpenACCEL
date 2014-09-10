@@ -49,6 +49,13 @@ define(["underscore"], /** @lends Model */ function(_) {
         };
 
         /**
+         * The 2D and 3D quantities to use when requesting an analysis comparison.
+         */
+        this.x = undefined;
+        this.y = undefined;
+        this.z = undefined;
+
+        /**
          * The script that this class will analyse.
          */
         this.script;
@@ -58,10 +65,34 @@ define(["underscore"], /** @lends Model */ function(_) {
          * for a normal comparison plot.
          */
         this.numIterations = 50;
-
-        this.argument = undefined;
-        this.result = undefined;
     }
+
+    /**
+     * Sets the quantity for the horizontal axis.
+     *
+     * @param {String} The quantity for the horizontal axis.
+     */
+    Analysis.prototype.setX = function(x) {
+        this.x = x;
+    };
+
+    /**
+     * Sets the quantity for the vertical axis.
+     *
+     * @param {String} The quantity for the vertical axis.
+     */
+    Analysis.prototype.setY = function(y) {
+        this.y = y;
+    };
+
+    /**
+     * Sets the quantity for the upward axis.
+     *
+     * @param {String} The quantity for the upward axis.
+     */
+    Analysis.prototype.setZ = function(z) {
+        this.z = z;
+    };
 
     /**
      * Sets the script to analyse.
@@ -169,7 +200,56 @@ define(["underscore"], /** @lends Model */ function(_) {
         return this.numIterations;
     };
 
-    Analysis.prototype.compare = function() {
+    /**
+     * Create a data set that allows the comparison of two quantities.
+     * This is ideal for a line plot.
+     *
+     * @return {Object} An object containing the calculated (x, y) points, range and domain.
+     */
+    Analysis.prototype.compare2D = function() {
+        if (this.script && this.script.isCompiled() && this.x && this.y) {
+            // Check whether both quantities exist in the script.
+            if (!this.script.hasQuantity(this.x) || !this.script.hasQuantity(this.y)) {
+                throw new Error("One of the quantities, " + this.x + " or " + this.y + " is not an existing script quantity.");
+            }
+
+            // Todo: dependency check.
+            var exe = this.script.exe;
+            var domain = this.getDomain().x;
+            if (!_.isFinite(domain.min) || !_.isFinite(domain.max)) {
+                throw new Error("Domain is not finite: [" + domain.min + ", " + domain.max + "].");
+            }
+
+            var interval = domain.max - domain.min;
+            var step = interval / this.getNumIterations();
+            var data = {};
+            data.points = [];
+
+            // Try to calculate the values.
+            for (var i = domain.min; i < domain.max; i += step) {
+                exe.setValue(this.x, i);
+                var ans = exe.getValue(this.y);
+                data.points.push({x: i, y: ans});
+                exe.reset();
+            }
+
+            // With the calculated answers, we can clamp the range of the plot.
+            var range = {
+                min: _.min(data.points, function(point) { return point.y; }).y,
+                max: _.max(data.points, function(point) { return point.y; }).y
+            };
+            if (!_.isFinite(range.min) || !_.isFinite(range.max)) {
+                throw new Error("Range is not finite: [" + range.min + ", " + range.max + "].");
+            }
+
+            data.range = range;
+            data.domain = domain;
+
+            return data;
+        }
+
+        return [];
+    }
         if (this.script && this.script.isCompiled()) {
             // Check whether both quantities exist in the script.
             if (!this.script.hasQuantity(this.argument) || !this.script.hasQuantity(this.result)) {
