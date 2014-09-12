@@ -21,9 +21,9 @@
 							.label Contour Plot
 					tr
 						td(align = 'center')
-							input(id = 'analysis_linePlot', type = 'radio', checked = 'true', name = "plotType", onclick = 'view.addState({"mode": "graph"});')
+							input(id = 'analysis_linePlot', type = 'radio', checked = 'true', name = "plotType", onclick = 'view.setState({"tab": "analysis", "mode": "graph"});')
 						td(align = 'center')
-							input(id = 'analysis_contourPlot', type = 'radio', name = "plotType", onclick = 'view.addState({"mode": "contour"});')
+							input(id = 'analysis_contourPlot', type = 'radio', name = "plotType", onclick = 'view.setState({"tab": "analysis", "mode": "contour"});')
 					tr
 						td(colspan = '2', align = 'center')
 							#analysis_plot

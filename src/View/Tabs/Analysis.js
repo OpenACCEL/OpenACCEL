@@ -287,17 +287,41 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
         });
 
         if (state.argument !== undefined) {
+            // Ready to draw graph plot
             var script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
                 $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
                 $('#an_errormessage').show();
             } else {
                 if (script.isReachable(state.result, state.argument) === true) {
+                    // Draw plot
                     this.analysis.argument = state.argument;
                     this.analysis.result = state.result;
                     this.drawPlot();
                 } else {
                     $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argument);
+                    $('#an_errormessage').show();
+                }
+            }
+        } else if (state.argH !== undefined && state.argV !== undefined) {
+            // Ready to draw contour plot
+            var script = controller.getScript();
+            if (script.hasHistory() === true && controller.numIterations === 0) {
+                $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
+                $('#an_errormessage').show();
+            } else {
+                if (script.isReachable(state.result, state.argH) === true) {
+                    if (script.isReachable(state.result, state.argV) === true) {
+                        // Draw plot
+                        // this.analysis.argument = state.argument;
+                        // this.analysis.result = state.result;
+                        // this.drawPlot();
+                    } else {
+                        $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argV);
+                        $('#an_errormessage').show();
+                    }
+                } else {
+                    $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argH);
                     $('#an_errormessage').show();
                 }
             }
