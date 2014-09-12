@@ -248,6 +248,7 @@ body div {
 .an_tblhead {
 	display: table-cell;
 	font-weight: bold;
+	text-align: left;
 }
 
 #an_errormessage {
@@ -281,6 +282,16 @@ body div {
 	max-width: 45px;
 	overflow-x: hidden;
 	text-overflow: ellipsis;
+	display: table-cell !important;
+}
+
+.an_qtyHarg, .an_qtyVarg {
+	color: #00cc00;
+	text-decoration: underline;
+	cursor: pointer;
+	padding: 0px 2px;
+	text-align: center;
+	width: 8px;
 	display: table-cell !important;
 }
 

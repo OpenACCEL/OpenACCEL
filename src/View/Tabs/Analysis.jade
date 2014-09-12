@@ -1,6 +1,6 @@
 #analysis.tabcontent
 	div
-		.inline(style='width:450px')
+		.inline(style='width:500px')
 		.inline
 			.label(style='width:100px;') Arguments
 			.an_listcontainer
@@ -21,20 +21,21 @@
 							.label Contour Plot
 					tr
 						td(align = 'center')
-							input(id = 'analysis_linePlot', type = 'radio', checked = 'true', name = "plotType", onclick = 'view.tabs.analysis.setPlotType("line")')
+							input(id = 'analysis_linePlot', type = 'radio', checked = 'true', name = "plotType", onclick = 'view.addState({"mode": "graph"});')
 						td(align = 'center')
-							input(id = 'analysis_contourPlot', type = 'radio', name = "plotType", onclick = 'view.tabs.analysis.setPlotType("contour")')
+							input(id = 'analysis_contourPlot', type = 'radio', name = "plotType", onclick = 'view.addState({"mode": "contour"});')
 					tr
 						td(colspan = '2', align = 'center')
 							#analysis_plot
 					tr(class = "analysis_lineSettings")
 						td
-							.label Clamp Range:
+							.label Clamp:
 						td
 							.label Clamp Margin Percentage:
 					tr(class = "analysis_lineSettings")
-						td(align = 'center')
-							input(id = 'analysis_toClamp', type = 'checkbox', checked = 'true', onclick = 'view.tabs.analysis.setClamp(this.checked)')
+						td(align = 'left', style='padding-left: 7px; padding-top: 5px; font-size: 13px;')
+							span Clamp range
+							input(id = 'analysis_toClamp', type = 'checkbox', checked = 'true', onclick = 'view.tabs.analysis.setClamp(this.checked)', style='float:right; margin-right: 10px;')
 						td
 							input(id = 'analysis_clampMargin', type = 'number', value = '4', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setClampMargin(val)')
 					tr

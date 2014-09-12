@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ function(Input, HTMLBuffer, AnalysisModel) {
+define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@lends View*/ function(Input, HTMLBuffer, AnalysisModel, _) {
     /**
      * @class
      * @classdesc The Analysis tab.
@@ -35,6 +35,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
         this.compareQuantities = {};
 
         this.analysis = undefined;
+
+        this.mode = "graph";
     }
 
     /**
@@ -50,35 +52,74 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
 
         $('#an_errormessage').hide();
 
+        // Determine whether to use a contour or graph plot
+        if (state.mode === 'graph' || (state.argument && state.mode === undefined)) {
+            // When there is an argument parameter, this overrides the rest and
+            // leads to the "default": a graph plot
+            this.mode = "graph";
+        } else if (state.argH || state.argV || state.mode === 'contour') {
+            this.mode = "contour";
+        } else {
+            this.mode = "graph";
+        }
+
+        // Set option element to correct value
+        this.setPlotType(this.mode);
+
         // Construct the lists with the current atomic integer quantities
         this.setupLists();
 
         // Select appropriate quantities in the list, based on the hash
-        if (state.argument) {
+        if (state.argument && this.mode === 'graph') {
             this.updateArgument(state);
+        } else {
+            if (state.argH && this.mode === 'contour') {
+                this.updateArgH(state);
+            }
+            if (state.argV && this.mode === 'contour') {
+                this.updateArgV(state);
+            }
         }
+
         if (state.result) {
             this.updateResult(state);
         }
     };
 
+    /**
+     * Gets called when the hash changes while in the analysis tab
+     *
+     * @param  {Object} oldState The previous hash state
+     * @param  {Object} newState The new hash state
+     */
     Analysis.prototype.onHashChange = function(oldState, newState) {
+        // Determine whether to use a contour or graph plot
+        if (oldState.mode !== newState.mode) {
+            this.mode = newState.mode;
+
+            // Set option element to correct value
+            this.setPlotType(this.mode);
+
+            // Construct the lists with the current atomic integer quantities
+            this.setupLists();
+        }
+
         // New argument selected
-        if ((oldState.argument !== newState.argument) && newState.argument !== undefined) {
+        if ((oldState.argument !== newState.argument) && newState.argument !== undefined && view.tabs.analysis.mode === 'graph') {
             view.tabs.analysis.updateArgument(newState);
+        } else {
+            if ((oldState.argH !== newState.argH) && newState.argH !== undefined && view.tabs.analysis.mode === 'contour') {
+                view.tabs.analysis.updateArgH(newState);
+            }
+            if ((oldState.argV !== newState.argV) && newState.argV !== undefined && view.tabs.analysis.mode === 'contour') {
+                view.tabs.analysis.updateArgV(newState);
+            }
         }
 
         // New result selected
         if ((oldState.result !== newState.result) && newState.result !== undefined) {
             view.tabs.analysis.updateResult(newState);
         }
-    };
-
-    /**
-     * Event that gets called when this tab gets closed.
-     */
-    Analysis.prototype.onLeaveTab = function() {
-
     };
 
     Analysis.prototype.updateArgument = function(state) {
@@ -111,6 +152,116 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
                     this.drawPlot();
                 } else {
                     $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argument);
+                    $('#an_errormessage').show();
+                }
+            }
+        }
+    };
+
+    Analysis.prototype.updateArgH = function(state) {
+        $('#an_errormessage').hide();
+        $('#an_arguments .an_qtyHarg').removeClass("an_current").html("&nbsp;&nbsp;");
+        $('#an_arguments div[data-quantity="' + state.argH + '"]').find(".an_qtyHarg").addClass("an_current").text("H");
+
+        // Grey-out all non-reversereachable quantities in the results table
+        var reachables = view.tabs.analysis.compareQuantities[state.argH].quantity.reverseReachables;
+        if (state.argV) {
+            // Take into account the reachables of the argV parameter!
+            var reachV = view.tabs.analysis.compareQuantities[state.argV].quantity.reverseReachables;
+            reachables = _.intersection(reachables, reachV);
+        }
+
+        $('#an_results a.an_qtyname').removeClass("an_greyedout");
+        $('#an_results a.an_qtyname').each(function() {
+            var qty = $(this).text();
+            if (reachables.indexOf(qty) === -1) {
+                $(this).addClass('an_greyedout');
+                /*if ($(this).hasClass("help_current")) {
+                    $(this).removeClass("help_current");
+                }*/
+            }
+        });
+
+        if (state.result !== undefined) {
+            var script = controller.getScript();
+            if (script.hasHistory() === true && controller.numIterations === 0) {
+                $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
+                $('#an_errormessage').show();
+            } else {
+                if (script.isReachable(state.result, state.argH) === true) {
+                    if (state.argV) {
+                        if (script.isReachable(state.result, state.argV) === true) {
+                            // Draw contour plot
+                            // this.analysis.argument = state.argument;
+                            // this.analysis.result = state.result;
+                            // this.drawPlot();
+                        } else {
+                            // Result not reachable from argV
+                            $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argV);
+                            $('#an_errormessage').show();
+                        }
+                    }
+
+                    // No argV selected yet: do nothing now
+
+                } else {
+                    // Result not reachable from argH
+                    $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argH);
+                    $('#an_errormessage').show();
+                }
+            }
+        }
+    };
+
+    Analysis.prototype.updateArgV = function(state) {
+        $('#an_errormessage').hide();
+        $('#an_arguments .an_qtyVarg').removeClass("an_current").html("&nbsp;&nbsp;");
+        $('#an_arguments div[data-quantity="' + state.argV + '"]').find(".an_qtyVarg").addClass("an_current").text("V");
+
+        // Grey-out all non-reversereachable quantities in the results table
+        var reachables = view.tabs.analysis.compareQuantities[state.argV].quantity.reverseReachables;
+        if (state.argH) {
+            // Take into account the reachables of the argH parameter!
+            var reachH = view.tabs.analysis.compareQuantities[state.argH].quantity.reverseReachables;
+            reachables = _.intersection(reachables, reachH);
+        }
+
+        $('#an_results a.an_qtyname').removeClass("an_greyedout");
+        $('#an_results a.an_qtyname').each(function() {
+            var qty = $(this).text();
+            if (reachables.indexOf(qty) === -1) {
+                $(this).addClass('an_greyedout');
+                /*if ($(this).hasClass("help_current")) {
+                    $(this).removeClass("help_current");
+                }*/
+            }
+        });
+
+        if (state.result !== undefined) {
+            var script = controller.getScript();
+            if (script.hasHistory() === true && controller.numIterations === 0) {
+                $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
+                $('#an_errormessage').show();
+            } else {
+                if (script.isReachable(state.result, state.argV) === true) {
+                    if (state.argH) {
+                        if (script.isReachable(state.result, state.argH) === true) {
+                            // Draw contour plot
+                            // this.analysis.argument = state.argument;
+                            // this.analysis.result = state.result;
+                            // this.drawPlot();
+                        } else {
+                            // Result not reachable from argV
+                            $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argH);
+                            $('#an_errormessage').show();
+                        }
+                    }
+
+                    // No argH selected yet: do nothing now
+
+                } else {
+                    // Result not reachable from argV
+                    $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argV);
                     $('#an_errormessage').show();
                 }
             }
@@ -192,11 +343,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
     };
 
     Analysis.prototype.makeLists = function() {
-        // TODO: poll value of checkbox
-        if (true) {
+        if (this.mode === 'graph') {
             this.makeGraphList();
+            $("#an_arguments").css("width", "");
+            $("#an_arguments").parent().css("min-width", "150px");
         } else {
             this.makeContourList();
+            $("#an_arguments").css("width", "165px");
+            $("#an_arguments").parent().css("min-width", "190px");
         }
 
         this.makeResultsList();
@@ -247,7 +401,66 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
     };
 
     Analysis.prototype.makeContourList = function() {
-        console.log(this.compareQuantities);
+        this.argList.empty();
+
+        // Make table heading
+        this.argList.append('<div style="display: table-row"><div class="inline an_tblhead">Name</div><div class="inline an_tblhead" title="Description of quantity">?</div><div class="inline an_tblhead">Value</div><div class="inline an_tblhead" style="text-align: center;">H</div><div class="inline an_tblhead" style="text-align: center;">V</div></div>');
+
+        // Fill table with quantities
+        for (var elem in this.compareQuantities) {
+            var obj = this.compareQuantities[elem];
+            var qtyName = obj.quantity.name;
+            var comment = obj.quantity.getComment();
+            var value = obj.value;
+
+            var html = '<div style="display: table-row" data-quantity="' + qtyName + '">';
+            html += '<a class="inline an_qtyname" id="arg_' + qtyName + '" value="' + qtyName + '">' + qtyName + '</a>';
+            html += '<div class="inline an_qtycomment" title="' + comment + '">?</div>';
+            html += '<div class="inline an_qtyvalue">' + value + '</div>';
+            html += '<div class="inline an_qtyHarg">&nbsp;&nbsp;</div>';
+            html += '<div class="inline an_qtyVarg">&nbsp;&nbsp;</div></div>';
+
+            this.argList.append(html);
+        }
+
+        // Show contents
+        this.argList.flip();
+
+        // Attach event handlers
+        $('#an_arguments .an_qtycomment').on('click', function(e) {
+            var comment = $(this).attr('title');
+            if (comment === '') {
+                alert("No comment found for this quantity");
+            } else {
+                alert(comment);
+            }
+
+            e.stopPropagation();
+            e.cancelBubble = true;
+        });
+
+        // Attach event handlers
+        $('#an_arguments .an_qtyHarg').on('click', function(e) {
+            var argH = $(this).parent().data("quantity");
+            view.addState({'argH': argH});
+        }).hover(function(e) {
+            $(this).text("H");
+        }, function(e) {
+            if (!$(this).hasClass("an_current")) {
+                $(this).html("&nbsp;&nbsp;");
+            }
+        });
+
+        $('#an_arguments .an_qtyVarg').on('click', function(e) {
+            var argV = $(this).parent().data("quantity");
+            view.addState({'argV': argV});
+        }).hover(function(e) {
+            $(this).text("V");
+        }, function(e) {
+            if (!$(this).hasClass("an_current")) {
+                $(this).html("&nbsp;&nbsp;");
+            }
+        });
     };
 
     Analysis.prototype.makeResultsList = function() {
@@ -303,10 +516,12 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis"], /**@lends View*/ fun
     Analysis.prototype.setPlotType = function(type) {
         switch (type) {
             case "contour":
+                $("#analysis_contourPlot").attr('checked', true);
                 $(".analysis_contourSettings").show();
                 $(".analysis_lineSettings").hide();
                 break;
             default: // "line"
+                $("#analysis_linePlot").attr('checked', true);
                 $(".analysis_contourSettings").hide();
                 $(".analysis_lineSettings").show();
                 break;
