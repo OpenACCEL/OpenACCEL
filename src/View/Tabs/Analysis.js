@@ -540,12 +540,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
     Analysis.prototype.setPlotType = function(type) {
         switch (type) {
             case "contour":
-                $("#analysis_contourPlot").attr('checked', true);
+                $("#an_graphswitch_contour").removeClass("toggleswitchoption").addClass("toggleswitchoption_current");
+                $("#an_graphswitch_graph").removeClass("toggleswitchoption_current").addClass("toggleswitchoption");
                 $(".analysis_contourSettings").show();
                 $(".analysis_lineSettings").hide();
                 break;
             default: // "line"
-                $("#analysis_linePlot").attr('checked', true);
+                $("#an_graphswitch_graph").removeClass("toggleswitchoption").addClass("toggleswitchoption_current");
+                $("#an_graphswitch_contour").removeClass("toggleswitchoption_current").addClass("toggleswitchoption");
                 $(".analysis_contourSettings").hide();
                 $(".analysis_lineSettings").show();
                 break;
