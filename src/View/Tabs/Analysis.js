@@ -44,7 +44,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
         this.analysis = this.canvas.getAnalysis();
         if (this.analysis) {
             this.analysis.setScript(controller.getScript());
-            this.analysis.setDomain({x: {min:0, max: 10}});
+            this.analysis.setDomain({x: {min:0, max: 10}, y: {min:0, max: 10}});
             this.clearCanvas();
         }
 
