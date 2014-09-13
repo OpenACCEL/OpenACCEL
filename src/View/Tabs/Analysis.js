@@ -15,7 +15,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
         this.canvas = canvasCreator.createCanvas(new AnalysisModel(), "analysis_plot", 300, 300);
 
         // Default mode is just a regular line plot.
-        this.setPlotType("line");
+        this.setPlotType("graph");
 
         /**
          * The HTML buffers for the list of argument and result quantities
@@ -35,8 +35,6 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
         this.compareQuantities = {};
 
         this.analysis = undefined;
-
-        this.mode = "graph";
     }
 
     /**
@@ -95,10 +93,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
     Analysis.prototype.onHashChange = function(oldState, newState) {
         // Determine whether to use a contour or graph plot
         if (oldState.mode !== newState.mode) {
-            this.mode = newState.mode;
-
             // Set option element to correct value
-            this.setPlotType(this.mode);
+            this.setPlotType(newState.mode);
 
             // Construct the lists with the current atomic integer quantities
             this.setupLists();
@@ -543,12 +539,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
                 $("#an_graphswitch_graph").removeClass("toggleswitchoption_current").addClass("toggleswitchoption");
                 $(".analysis_contourSettings").show();
                 $(".analysis_lineSettings").hide();
+                this.mode = "contour";
                 break;
             default: // "line"
                 $("#an_graphswitch_graph").removeClass("toggleswitchoption").addClass("toggleswitchoption_current");
                 $("#an_graphswitch_contour").removeClass("toggleswitchoption_current").addClass("toggleswitchoption");
                 $(".analysis_contourSettings").hide();
                 $(".analysis_lineSettings").show();
+                this.mode = "graph";
                 break;
         }
     }
