@@ -224,6 +224,8 @@ define(["underscore"], /** @lends Model */ function(_) {
             var step = interval / this.getNumIterations();
             var data = {};
             data.points = [];
+            data.range = { min: Infinity, max: -Infinity };
+            data.domain = domain;
 
             // Try to calculate the values.
             for (var i = domain.min; i < domain.max; i += step) {
@@ -231,55 +233,72 @@ define(["underscore"], /** @lends Model */ function(_) {
                 var ans = exe.getValue(this.y);
                 data.points.push({x: i, y: ans});
                 exe.reset();
+
+                // With the calculated answers, we can clamp the range of the plot.
+                if (ans < data.range.min) {
+                    data.range.min = ans;
+                } else if (ans > data.range.max) {
+                    data.range.max = ans;
+                }
             }
 
-            // With the calculated answers, we can clamp the range of the plot.
-            var range = {
-                min: _.min(data.points, function(point) { return point.y; }).y,
-                max: _.max(data.points, function(point) { return point.y; }).y
-            };
-            if (!_.isFinite(range.min) || !_.isFinite(range.max)) {
+            if (!_.isFinite(data.range.min) || !_.isFinite(data.range.max)) {
                 throw new Error("Range is not finite: [" + range.min + ", " + range.max + "].");
             }
-
-            data.range = range;
-            data.domain = domain;
 
             return data;
         }
 
         return [];
     }
-        if (this.script && this.script.isCompiled()) {
+
+    /**
+     * Create a data set that allows the comparison of three quantities.
+     * This is ideal for a contour plot.
+     *
+     * @return {Object} An object containing the calculated (x, y, z) points, range and domain.
+     */
+    Analysis.prototype.compare3D = function() {
+        if (this.script && this.script.isCompiled() && this.x && this.y && this.z) {
             // Check whether both quantities exist in the script.
-            if (!this.script.hasQuantity(this.argument) || !this.script.hasQuantity(this.result)) {
-                throw new Error("One of the quantities, " + this.argument + " or " + this.result + " is not an existing script quantity.");
+            if (!this.script.hasQuantity(this.x) || !this.script.hasQuantity(this.y) || !this.script.hasQuantity(this.z)) {
+                throw new Error("One of the quantities, " + this.x + ", " + this.y + " or " + this.z + " is not an existing script quantity.");
             }
 
             // Todo: dependency check.
             var exe = this.script.exe;
-            var domain = this.getDomain().x;
-            if (!_.isFinite(domain.min) || !_.isFinite(domain.max)) {
-                throw new Error("Domain is not finite: [" + domain.min + ", " + domain.max + "].");
+            var domainX = this.getDomain().x;
+            if (!_.isFinite(domainX.min) || !_.isFinite(domainX.max)) {
+                throw new Error("Horizontal domain is not finite: [" + domainX.min + ", " + domainX.max + "].");
             }
 
-            var interval = domain.max - domain.min;
-            var step = interval / this.getNumIterations();
+            var domainY = this.getDomain().y;
+            if (!_.isFinite(domainY.min) || !_.isFinite(domainY.max)) {
+                throw new Error("Vertical domain is not finite: [" + domainY.min + ", " + domainY.max + "].");
+            }
+
+            var intervalX = domainX.max - domainX.min;
+            var intervalY = domainY.max - domainY.min;
+            var stepX = intervalX / this.getNumIterations();
+            var stepY = intervalY / this.getNumIterations();
             var data = {};
             data.points = [];
 
             // Try to calculate the values.
-            for (var i = domain.min; i < domain.max; i += step) {
-                exe.setValue(this.argument, i);
-                var ans = exe.getValue(this.result);
-                data.points.push({x: i, y: ans});
-                exe.reset();
+            for (var i = domainX.min; i < domainX.max; i += stepX) {
+                for (var j = domainY.min; j < domainY.max; j += stepY) {
+                    exe.setValue(this.x, i);
+                    exe.setValue(this.y, j);
+                    var ans = exe.getValue(this.z);
+                    data.points.push({x: i, y: j, z: z});
+                    exe.reset();
+                }
             }
 
             // With the calculated answers, we can clamp the range of the plot.
             var range = {
-                min: _.min(data.points, function(point) { return point.y; }).y,
-                max: _.max(data.points, function(point) { return point.y; }).y
+                min: _.min(data.points, function(point) { return point.z; }).z,
+                max: _.max(data.points, function(point) { return point.z; }).z
             };
             if (!_.isFinite(range.min) || !_.isFinite(range.max)) {
                 throw new Error("Range is not finite: [" + range.min + ", " + range.max + "].");
