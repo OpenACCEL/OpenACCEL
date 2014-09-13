@@ -283,29 +283,38 @@ define(["underscore"], /** @lends Model */ function(_) {
             var stepY = intervalY / this.getNumIterations();
             var data = {};
             data.points = [];
+            data.range = { min: Infinity, max: -Infinity };
+            data.domain = this.getDomain();
 
             // Try to calculate the values.
+            var counter = 0;
             for (var i = domainX.min; i < domainX.max; i += stepX) {
+                data.points[counter] = [];
+
                 for (var j = domainY.min; j < domainY.max; j += stepY) {
                     exe.setValue(this.x, i);
                     exe.setValue(this.y, j);
                     var ans = exe.getValue(this.z);
-                    data.points.push({x: i, y: j, z: z});
+
+                    // We're not pushing an object with x, y, z, but immediatly
+                    // push the answer in a 2D array, for Descartes.
+                    data.points[counter].push(ans);
                     exe.reset();
+
+                    // With the calculated answers, we can clamp the range of the plot.
+                    if (ans < data.range.min) {
+                        data.range.min = ans;
+                    } else if (ans > data.range.max) {
+                        data.range.max = ans;
+                    }
                 }
+
+                counter++;
             }
 
-            // With the calculated answers, we can clamp the range of the plot.
-            var range = {
-                min: _.min(data.points, function(point) { return point.z; }).z,
-                max: _.max(data.points, function(point) { return point.z; }).z
-            };
-            if (!_.isFinite(range.min) || !_.isFinite(range.max)) {
-                throw new Error("Range is not finite: [" + range.min + ", " + range.max + "].");
+            if (!_.isFinite(data.range.min) || !_.isFinite(data.range.max)) {
+                throw new Error("Range is not finite: [" + data.range.min + ", " + data.range.max + "].");
             }
-
-            data.range = range;
-            data.domain = domain;
 
             return data;
         }

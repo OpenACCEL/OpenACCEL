@@ -54,9 +54,31 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
              */
             this.clampMargin = 4;
 
+            /**
+             * Whether the descartes handler should draw a normal line graph, or contour plot.
+             */
+            this.mode = "graph";
+
+            /**
+             * The amount of contours to plot, when plotting contour lines.
+             *
+             * @type {Number}
+             */
+            this.nrContours = 10;
+
             this.propagatables.push({
                 name: "getAnalysis",
                 func: this.getAnalysis.bind(this)
+            });
+
+            this.propagatables.push({
+                name: "setPlotType",
+                func: this.setPlotType.bind(this)
+            });
+
+            this.propagatables.push({
+                name: "setNrContours",
+                func: this.setNrContours.bind(this)
             });
         }
 
@@ -88,6 +110,25 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
         AnalysisDescartesHandler.prototype.getAnalysis = function() {
             return this.modelElement;
         };
+
+        /**
+         * Handles the switching between different kind of plot types.
+         * Supported types are 'line' and 'contour'.
+         */
+        AnalysisDescartesHandler.prototype.setPlotType = function(type) {
+            this.mode = type;
+        };
+
+        /**
+         * Handles the switching between different kind of plot types.
+         * Supported types are 'line' and 'contour'.
+         */
+        AnalysisDescartesHandler.prototype.setNrContours = function(nr) {
+            if (nr < 0 || nr == Infinity) {
+                this.nrContours = 10;
+            }
+        };
+
 
         /**
          * Adds a new descartes object to the array of descartes objects to be drawn to.
@@ -134,6 +175,18 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
          * @return {Object[]} The descartes drawing based on this.modelElement.population.
          */
         AnalysisDescartesHandler.prototype.getDrawing = function() {
+            switch (this.mode) {
+                case "contour":
+                    return this.getContourDrawing();
+                default:
+                    return this.getGraphDrawing();
+            }
+        };
+
+        /**
+         * @return Drawing of a normal line plot between two quantities.
+         */
+        AnalysisDescartesHandler.prototype.getGraphDrawing = function() {
             var analysis = this.getAnalysis();
             var data = analysis.compare2D();
             var deltaRange = data.range.max - data.range.min;
@@ -172,6 +225,35 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
                 analysis.setRange(data.range);
             }
 
+            return [drawing];
+        };
+
+        /**
+         * @return Drawing of a contour plot between three quantities.
+         */
+        AnalysisDescartesHandler.prototype.getContourDrawing = function() {
+            var analysis = this.getAnalysis();
+            var data = analysis.compare3D();
+
+            var drawing = {
+                grid: this.grid,
+                contour: {
+                    nrContours: this.nrContours,
+                    map: data.points,
+                    iso: {
+                        mode: "intp",
+                        low: data.range.min,
+                        high: data.range.max
+                    },
+                    col_r: {
+                        mode: "intp",
+                        low: 0,
+                        high: 255
+                    }
+                }
+            };
+
+            analysis.setRange(data.range);
             return [drawing];
         };
 

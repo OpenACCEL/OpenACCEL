@@ -307,10 +307,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
             } else {
                 if (script.isReachable(state.result, state.argH) === true) {
                     if (script.isReachable(state.result, state.argV) === true) {
-                        // Draw plot
-                        // this.analysis.argument = state.argument;
-                        // this.analysis.result = state.result;
-                        // this.drawPlot();
+                        this.analysis.setX(state.argH);
+                        this.analysis.setY(state.argV);
+                        this.analysis.setZ(state.result);
+                        this.drawPlot();
                     } else {
                         $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argV);
                         $('#an_errormessage').show();
@@ -556,7 +556,9 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
                 this.mode = "graph";
                 break;
         }
-    }
+
+        this.canvas.setPlotType(type);
+    };
 
     /**
      * Clears the plot canvas
@@ -685,6 +687,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
         if (this.canvas.handler.bClamp) {
             this.drawPlot();
         }
+    };
+
+    Analysis.prototype.setNrContours = function(nr) {
+        this.canvas.setNrContours(nr);
     };
 
     return Analysis;
