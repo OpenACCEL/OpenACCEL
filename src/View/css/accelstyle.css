@@ -228,6 +228,39 @@ body div {
 	background: #9933CC;
 }
 
+.toggleswitch {
+	display: block;
+	width: 98%;
+	padding: 0px;
+	background: linear-gradient(#993399, #662266);
+	border: 1px solid black;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+a.toggleswitchoption {
+	cursor: pointer;
+	display: inline-block;
+	width: 50%;
+	text-align: center;
+	padding: 1px 0px;
+}
+
+a.toggleswitchoption:hover {
+	background: linear-gradient(#662266, #993399);
+}
+
+a.toggleswitchoption_current {
+	cursor: pointer;
+	display: inline-block;
+	width: 50%;
+	text-align: center;
+	padding: 1px 0px;
+	background: #9933CC;
+	font-style: italic;
+}
+
 .an_listcontainer {
 	height: 400px;
 	overflow-x: hidden;
@@ -248,6 +281,7 @@ body div {
 .an_tblhead {
 	display: table-cell;
 	font-weight: bold;
+	text-align: left;
 }
 
 #an_errormessage {
@@ -281,6 +315,16 @@ body div {
 	max-width: 45px;
 	overflow-x: hidden;
 	text-overflow: ellipsis;
+	display: table-cell !important;
+}
+
+.an_qtyHarg, .an_qtyVarg {
+	color: #00cc00;
+	text-decoration: underline;
+	cursor: pointer;
+	padding: 0px 2px;
+	text-align: center;
+	width: 8px;
 	display: table-cell !important;
 }
 
