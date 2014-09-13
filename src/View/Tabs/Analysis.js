@@ -527,6 +527,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
     };
 
     /**
+     * @return The current plottype of the analysis tab.
+     */
+    Analysis.prototype.getPlotType = function() {
+        return this.mode;
+    }
+
+    /**
      * Handles the switching between different kind of plot types.
      * Supported types are 'line' and 'contour'.
      *
