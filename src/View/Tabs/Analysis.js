@@ -14,8 +14,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
          */
         this.canvas = canvasCreator.createCanvas(new AnalysisModel(), "analysis_plot", 300, 300);
 
-        // Default mode is just a regular line plot.
-        this.setPlotType("graph");
+        /**
+         * Which mode to use for plotting the graphs: graph or contour.
+         *
+         * @type {String}
+         */
+        this.mode = "graph";
+        this.setPlotType(this.mode);
 
         /**
          * The HTML buffers for the list of argument and result quantities
@@ -24,6 +29,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
          */
         this.argList = new HTMLBuffer('#an_arguments');
         this.resultList = new HTMLBuffer('#an_results');
+
+        /**
+         * The sensitivity analysis html table buffer.
+         *
+         * @type {HTMLBuffer}
+         */
+        this.analysisTable = new HTMLBuffer('#an_senscontainer');
 
         /**
          * The quantities in the script that can be plotted. These are the quantities
@@ -48,7 +60,16 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
             this.clearCanvas();
         }
 
+        // Hide error messages for graph
         $('#an_errormessage').hide();
+
+        // Disable/enable sensitivity analysis button
+        var script = controller.getScript();
+        if (script.isCompiled() === false) {
+            $('#dosensan').addClass('disabled');
+        } else {
+            $('#dosensan').removeClass('disabled');
+        }
 
         // Determine whether to use a contour or graph plot
         if (state.mode === 'graph' || (state.argument && state.mode === undefined)) {
@@ -117,6 +138,55 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
             view.tabs.analysis.updateResult(newState);
         }
     };
+
+    /**
+     * Performs the sensitivity analysis and constructs and displays the results table for it.
+     */
+    Analysis.prototype.sensAnalysis = function() {
+        var script = controller.getScript();
+        if (script.isCompiled() === false) {
+            alert("Unable to do sensitivity analysis: the script has not been compiled yet.")
+        } else {
+            this.analysisTable.empty();
+
+            // Get all category 2 quantities that have a numeric atomic value
+            var cat2quantities = [];
+            for (var elem in this.compareQuantities) {
+                var q = this.compareQuantities[elem].quantity;
+                if (q.category === 2) {
+                    cat2quantities.push(q.name);
+                }
+            }
+
+
+            /*--- Table heading ---*/
+            var head = '<div class="an_senstblhdrow"><div class="an_senstblhd" style="text-align: left">Name</div>';
+            head += '<div class="an_senstblhd">Delta</div>';
+
+            for (var elem in cat2quantities) {
+                var qName = cat2quantities[elem];
+                head += '<div class="an_senstblhd">' + qName + '</div>';
+            }
+
+            head += '</div>';
+            this.analysisTable.append(head);
+
+
+            /*--- Standard deviation row ---*/
+            var stdev = '<div class="an_senstblstdrow"><div class="tblcell">Std. dev:</div>';
+            stdev += '<div class="tblcell">Percent:</div>';
+
+            for (var elem in cat2quantities) {
+                var qName = cat2quantities[elem];
+                stdev += '<div class="tblcell">' + this.analysis.calcStdDev(qName).toString() + '</div>';
+            }
+
+            stdev += '</div>';
+            this.analysisTable.append(stdev);
+
+            this.analysisTable.flip();
+        }
+    }
 
     Analysis.prototype.updateArgument = function(state) {
         $('#an_errormessage').hide();
@@ -188,9 +258,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@le
                     if (state.argV) {
                         if (script.isReachable(state.result, state.argV) === true) {
                             // Draw contour plot
-                            // this.analysis.argument = state.argument;
-                            // this.analysis.result = state.result;
-                            // this.drawPlot();
+                            this.analysis.setX(state.argH);
+                            this.analysis.setY(state.argV);
+                            this.analysis.setZ(state.result);
+                            this.drawPlot();
                         } else {
                             // Result not reachable from argV
                             $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argV);

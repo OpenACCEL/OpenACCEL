@@ -284,6 +284,27 @@ a.toggleswitchoption_current {
 	text-align: left;
 }
 
+.an_senstblhdrow {
+	display: table-row;
+	font-weight: bold;
+	text-align: center;
+}
+
+.an_senstblhd {
+	display: table-cell;
+	padding: 1px 2px;
+}
+
+.an_senstblstdrow {
+	display: table-row;
+	color: #ff8800;
+	text-align: center;
+}
+
+.tblcell {
+	display: table-cell;
+}
+
 #an_errormessage {
 	color: red;
 	font-weight: bold;
@@ -291,6 +312,18 @@ a.toggleswitchoption_current {
 	padding-top: 10px;
 	padding-bottom: 3px;
 	display: none;
+}
+
+#dosensan {
+	margin-top: 4px;
+}
+
+#an_senscontainer {
+	display: table;
+	margin-top: 8px;
+	margin-left: 3px;
+	font-size: 13px;
+	background: #882288;
 }
 
 .an_qtyname {
