@@ -10,11 +10,6 @@ if (inNode) {
     require = require('requirejs');
 } else {
     require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
         baseUrl: 'scripts'
     });
 }
@@ -28,11 +23,10 @@ define(["Model/Script",
         "Model/Exceptions/RuntimeError",
         "Model/EMO/GeneticOptimisation",
         "Controller/AbstractView",
-        "Model/Library",
-        "underscore"
+        "Model/Library"
     ],
     /**@lends Controller*/
-    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, Library, _) {
+    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, Library) {
         /**
          * @class
          * @classdesc The Controller is the intermediar between the Model and the View.

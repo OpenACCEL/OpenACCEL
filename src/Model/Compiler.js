@@ -12,11 +12,6 @@ if (inNode) {
 } else {
     globalScope = window;
     require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
         baseUrl: "scripts"
     });
 }
@@ -24,7 +19,7 @@ if (inNode) {
 
 define(["Model/FileLoader",
         "Model/Library",
-        "underscore",
+        "lodash",
         "Model/Compilation/Parsers/ACCELParser",
         "Model/Exceptions/SyntaxError",
         "Model/Executable"

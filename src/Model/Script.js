@@ -20,7 +20,7 @@ if (inNode) {
 // If all requirements are loaded, we may create our 'class'.
 define(["Model/Analyser/Analyser",
         "Model/Quantity",
-        "underscore",
+        "lodash",
         "Model/Compilation/Parsers/ACCELParser",
         "Model/Exceptions/SyntaxError",
         "Model/Exceptions/RuntimeError"],

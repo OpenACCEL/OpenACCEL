@@ -10,11 +10,6 @@ if (inNode) {
     require = require('requirejs');
 } else {
     require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
         baseUrl: "scripts"
     });
 }
@@ -24,7 +19,7 @@ define(["Model/Analyser/Passes/QuantityPass",
         "Model/Analyser/Passes/DependencyPass",
         "Model/Quantity",
         "Model/Exceptions/RuntimeError",
-        'underscore'
+        'lodash'
     ],
     /**@lends Model.Analyser*/
     function(QuantityPass, DependencyPass, Quantity, RuntimeError, _) {

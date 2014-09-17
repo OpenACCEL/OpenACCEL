@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(['underscore', 'Model/Analyser/Passes/AnalyserPass', 'Model/Quantity'],
+define(['lodash', 'Model/Analyser/Passes/AnalyserPass', 'Model/Quantity'],
         /**@lends Model.Analyser.Passes*/
         function(_, AnalyserPass, Quantity) {
     /**

@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "underscore"], /**@lends View*/ function(Input, HTMLBuffer, AnalysisModel, _) {
+define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends View*/ function(Input, HTMLBuffer, AnalysisModel, _) {
     /**
      * @class
      * @classdesc The Analysis tab.

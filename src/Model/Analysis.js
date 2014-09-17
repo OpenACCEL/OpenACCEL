@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["underscore"], /** @lends Model */ function(_) {
+define(["lodash"], /** @lends Model */ function(_) {
 
     /**
      * @class

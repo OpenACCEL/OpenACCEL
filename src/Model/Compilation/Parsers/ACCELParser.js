@@ -12,11 +12,6 @@ if (inNode) {
 } else {
     globalScope = window;
     require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
         baseUrl: "scripts"
     });
 }

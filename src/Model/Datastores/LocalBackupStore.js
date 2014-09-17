@@ -10,17 +10,12 @@ if (inNode) {
     require = require('requirejs');
 } else {
     require.config({
-        shim: {
-            'underscore': {
-                exports: '_'
-            }
-        },
         baseUrl: 'scripts'
     });
 }
 /*******************************************************************/
 
-define(["underscore"], /**@lends Model.Datastores*/ function(_) {
+define(["lodash"], /**@lends Model.Datastores*/ function(_) {
     /**
      * @class
      * @classdesc This class can load and save quantities to localStorage.

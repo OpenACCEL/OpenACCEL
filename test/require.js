@@ -2,10 +2,5 @@
 
 requirejs = require("requirejs");
 requirejs.config({
-    shim: {
-        'underscore': {
-            exports: '_'
-        }
-    },
     baseUrl: __dirname + "/../src/"
 });

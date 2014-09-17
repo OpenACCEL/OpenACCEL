@@ -76,7 +76,7 @@ deploy() {
 
     # Copy library files.
     cp lib/*                                                                             bin/scripts/
-    cp node_modules/underscore/underscore-min.js                                         bin/scripts/underscore.js
+    cp node_modules/lodash/dist/lodash.min.js                                            bin/scripts/lodash.js
     cp node_modules/jquery/dist/jquery.min.js                                            bin/scripts/jquery.js
     cp node_modules/requirejs/require.js                                                 bin/scripts/require.js
 

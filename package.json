@@ -71,7 +71,7 @@
         "jsdoc": "3.3.x",
         "mocha": "1.21.x",
         "requirejs": "2.1.x",
-        "underscore": "1.6.x",
+        "lodash": "2.4.x",
         "uglify-js": "2.4.x"
     }
 }
