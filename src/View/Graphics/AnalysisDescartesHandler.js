@@ -189,6 +189,15 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
         AnalysisDescartesHandler.prototype.getGraphDrawing = function() {
             var analysis = this.getAnalysis();
             var data = analysis.compare2D();
+
+            // Before we do anything, we must make sure the range is an actual interval.
+            // In the case of a constant line, we will just add a small offset ourself.
+            if (data.range.min == data.range.max) {
+                data.range.min -= 1;
+                data.range.max += 1;
+                analysis.setRange(data.range);
+            }
+
             var deltaRange = data.range.max - data.range.min;
             var deltaDomain = data.domain.max - data.domain.min;
 
