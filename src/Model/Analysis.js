@@ -126,21 +126,21 @@ define(["underscore"], /** @lends Model */ function(_) {
         if (_.isNumber(source.min)) {
             if (_.isNumber(source.max)) {
                 if (source.min >= source.max) {
-                    throw new Error("[" + range.min + ", " + range.max + "] is not a valid range.");
+                    throw new Error("[" + source.min + ", " + source.max + "] is not a valid interval.");
                 } else {
                     target.min = source.min;
                     target.max = source.max;
                 }
             } else {
                 if (source.min >= target.max) {
-                    throw new Error("[" + range.min + ", " + target.max + "] is not a valid range.");
+                    throw new Error("[" + source.min + ", " + target.max + "] is not a valid interval.");
                 } else {
                     target.min = source.min;
                 }
             }
         } else if (_.isNumber(source.max)) {
             if (target.min >= source.max) {
-                throw new Error("[" + target.min + ", " + range.max + "] is not a valid range.");
+                throw new Error("[" + target.min + ", " + source.max + "] is not a valid interval.");
             } else {
                 target.max = source.max;
             }
@@ -254,7 +254,7 @@ define(["underscore"], /** @lends Model */ function(_) {
             }
 
             if (!_.isFinite(data.range.min) || !_.isFinite(data.range.max)) {
-                throw new Error("Range is not finite: [" + range.min + ", " + range.max + "].");
+                throw new Error("Range is not finite: [" + data.range.min + ", " + data.range.max + "].");
             }
 
             return data;
