@@ -246,10 +246,12 @@ define(["underscore"], /** @lends Model */ function(_) {
                 exe.reset();
 
                 // With the calculated answers, we can clamp the range of the plot.
-                if (ans < data.range.min) {
-                    data.range.min = ans;
-                } else if (ans > data.range.max) {
-                    data.range.max = ans;
+                if (_.isFinite(ans)) {
+                    if (ans < data.range.min) {
+                        data.range.min = ans;
+                    } else if (ans > data.range.max) {
+                        data.range.max = ans;
+                    }
                 }
             }
 
@@ -313,10 +315,12 @@ define(["underscore"], /** @lends Model */ function(_) {
                     exe.reset();
 
                     // With the calculated answers, we can clamp the range of the plot.
-                    if (ans < data.range.min) {
-                        data.range.min = ans;
-                    } else if (ans > data.range.max) {
-                        data.range.max = ans;
+                    if (_.isFinite(ans)) {
+                        if (ans < data.range.min) {
+                            data.range.min = ans;
+                        } else if (ans > data.range.max) {
+                            data.range.max = ans;
+                        }
                     }
                 }
 
