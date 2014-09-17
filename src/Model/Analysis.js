@@ -263,7 +263,7 @@ define(["underscore"], /** @lends Model */ function(_) {
         }
 
         return [];
-    }
+    };
 
     /**
      * Create a data set that allows the comparison of three quantities.
@@ -335,7 +335,7 @@ define(["underscore"], /** @lends Model */ function(_) {
         }
 
         return [];
-    }
+    };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Analysis;
