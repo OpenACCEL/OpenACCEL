@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["lodash"], /** @lends Model */ function(_) {
+define(["Model/Script", "lodash"], /** @lends Model */ function(Script, _) {
 
     /**
      * @class
@@ -100,7 +100,9 @@ define(["lodash"], /** @lends Model */ function(_) {
      * @param {Script} script The script that needs to be analysed.
      */
     Analysis.prototype.setScript = function(script) {
-        this.script = script;
+        if (script instanceof Script ) {
+            this.script = script;
+        }
     };
 
     /**
