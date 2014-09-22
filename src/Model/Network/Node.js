@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define([], /** @lends Model.Network */ function() {
+define(["Model/Quantity"], /** @lends Model.Network */ function(Quantity) {
 
     /**
      * @class
