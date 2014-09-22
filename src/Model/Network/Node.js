@@ -45,6 +45,14 @@ define([], /** @lends Model.Network */ function() {
         this.y = 0;
 
         /**
+         * I don't have the slightest clue what these do.
+         */
+        this.xn = 0;
+        this.yn = 0;
+        this.xp = 0;
+        this.yp = 0;
+
+        /**
          * The force of a node that pushes it into its correct position.
          */
         this.force = {
