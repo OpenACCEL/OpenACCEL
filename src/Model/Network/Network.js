@@ -129,6 +129,8 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
             node.yp             = node.y;
             node.force.x        = 0;
             node.force.y        = 0;
+            node.hops.up        = 0;
+            node.hops.down      = 0;
             nodes[quantityName] = node;
         }
 
