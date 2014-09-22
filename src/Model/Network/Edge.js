@@ -37,6 +37,18 @@ define([], /** @lends Model.Network */ function() {
          */
         this.end = undefined;
 
+        /**
+         * The type of the edge. For example, an edge may be a 'regular' edge, if
+         * it just connects two normal dependencies. It can also be 'delay', in case
+         * the dependency is actually a time dependency.
+         */
+        this.type = "regular";
+
+        /**
+         * No idea what these two variables mean.
+         */
+        this.upStr = 0;
+        this.dnStr = 0;
     }
 
     // Exports are needed, such that other modules may invoke methods from this module file.
