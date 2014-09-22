@@ -171,6 +171,113 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
         return null;
     };
 
+    /**
+     * Calculates the forces of each node, which makes the move into position.
+     */
+    Network.prototype.calcForces = function() {
+        var nodes = this.getNodes();
+        var edges = this.getEdges();
+
+        // First, reset all forces to zero.
+        for (var node in nodes) {
+            nodes[node].force.x = 0;
+            nodes[node].force.y = 0;
+        }
+
+        // See that the categories are positioned with respect to each other,
+        // according to the conventional scheme. Copied from original ACCEL.
+        var i, j;
+        var catI, catJ;
+        for (i in nodes) {
+            for (j in nodes) {
+                catI = nodes[i].quantity.category;
+                catJ = nodes[j].quantity.category;
+
+                if ((catI === 1 && catJ === 4) ||
+                    (catI === 3 && catJ === 4) ||
+                    (catI === 4 && catJ === 2) ||
+                    (catI === 1 && catJ === 2) ||
+                    (catI === 3 && catJ === 2))
+                {
+                    if (nodes[i].x > nodes[j].x) {
+                        nodes[i].force.x -= 5 * this.spring;
+                        nodes[j].force.x += 5 * this.spring;
+                    }
+                }
+
+                if ((catI === 1 && catJ === 3) ||
+                    (catI === 1 && catJ === 4) ||
+                    (catI === 4 && catJ === 3) ||
+                    (catI === 1 && catJ === 2) ||
+                    (catI === 2 && catJ === 3))
+                {
+                    if (nodes[i].x > nodes[j].x) {
+                        nodes[i].force.y -= 5 * this.spring;
+                        nodes[j].force.y += 5 * this.spring;
+                    }
+                }
+            }
+
+            if (nodes[i].x <                   5) { nodes[i].force.x += 5 * this.spring; }
+            if (nodes[i].x > this.unitLength - 5) { nodes[i].force.x -= 5 * this.spring; }
+            if (nodes[i].y <                   5) { nodes[i].force.y += 5 * this.spring; }
+            if (nodes[i].y > this.unitLength - 5) { nodes[i].force.y -= 5 * this.spring; }
+        }
+
+        // Next, we make sure that all edge starts are left of the edge tails.
+        for (var edge in edges) {
+            if (edges[edge].end.x < edges[edge].start.x) {
+                if (edges[edge].type === "regular") {
+                    edges[edge].end.force.x     += 5 * this.spring;
+                    edges[edge].start.force.x   -= 5 * this.spring;
+                }
+            }
+        }
+
+        // Next, make sure nodes are not cluttered.
+        var dx, dy, r, dux, duy;
+        for (i in nodes) {
+            for (j in nodes) {
+                if (i !== j) {
+                    dx  = nodes[i].x - nodes[j].x;
+                    dy  = nodes[i].y - nodes[j].y;
+                    r   = Math.sqrt(dx * dx + dy * dy + 0.00001);
+                    dux = dx / r;
+                    duy = dy / r;
+
+                    if (r < this.tooCloseForComfort) {
+                        nodes[i].force.x += 0.5 * this.spring * (this.tooCloseForComfort - r) * dux;
+                        nodes[i].force.y += 0.5 * this.spring * (this.tooCloseForComfort - r) * duy;
+                        nodes[j].force.x -= 0.5 * this.spring * (this.tooCloseForComfort - r) * dux;
+                        nodes[j].force.y -= 0.5 * this.spring * (this.tooCloseForComfort - r) * duy;
+                    }
+                }
+            }
+        }
+    };
+
+    /**
+     * Updates the location of the nodes, after the forces have been calculated.
+     */
+    Network.prototype.updateLocations = function() {
+        var node;
+        var nodes = this.getNodes();
+
+        for (node in nodes) {
+            if (nodes[node] !== this.recentlyClickedNode) {
+                nodes[node].xn = (2 * nodes[node].x - nodes[node].xp + nodes[node].force.x) - this.damp * (nodes[node].x - nodes[node].xp);
+                nodes[node].yn = (2 * nodes[node].y - nodes[node].yp + nodes[node].force.y) - this.damp * (nodes[node].y - nodes[node].yp);
+            }
+        }
+
+        for(node in nodes){
+            nodes[node].xp  = nodes[node].x;
+            nodes[node].yp  = nodes[node].y;
+            nodes[node].x   = nodes[node].xn;
+            nodes[node].y   = nodes[node].yn;
+        }
+    };
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Network;
 });
