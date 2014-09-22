@@ -24,30 +24,30 @@ define([], /** @lends Model.Network */ function() {
     function Node () {
 
         /**
-         * The name of the node.
+         * The quantity that this node represents.
          *
-         * @type {String}
+         * @type {Quantity}
          */
-        var name;
+        this.quantity = undefined;
 
         /**
          * The x-position of the node.
          *
-         * @type {int}
+         * @type {Number}
          */
-        var x;
+        this.x = 0;
 
         /**
          * The y-position of the node.
          *
-         * @type {int}
+         * @type {Number}
          */
-        var y;
+        this.y = 0;
 
         /**
          * The force of a node that pushes it into its correct position.
          */
-        var force = {
+        this.force = {
             x: 0,
             y: 0
         }

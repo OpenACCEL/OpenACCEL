@@ -24,12 +24,11 @@ define([], /** @lends Model.Network */ function() {
     function Network () {
 
         /**
-         * The quantities to be displayed in the network.
+         * The script that contains the quantities to be displayed in the network.
          *
-         * @type {Quantity[]}
+         * @type {Script}
          */
-        var quantities;
-    }
+        this.script = undefined;
 
     /**
      * Set the quantities to be displayed in the network.
