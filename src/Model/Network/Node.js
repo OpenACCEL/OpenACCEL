@@ -43,6 +43,14 @@ define([], /** @lends Model.Network */ function() {
          * @type {int}
          */
         var y;
+
+        /**
+         * The force of a node that pushes it into its correct position.
+         */
+        var force = {
+            x: 0,
+            y: 0
+        }
     }
 
     // Exports are needed, such that other modules may invoke methods from this module file.
