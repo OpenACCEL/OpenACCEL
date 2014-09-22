@@ -104,6 +104,60 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
     };
 
     /**
+     * Builds the network from the script.
+     */
+    Network.prototype.buildNetwork = function() {
+        if (!this.script) {
+            return;
+        }
+
+        var quantities = this.script.getQuantities();
+        var quantityName;
+
+        // Create a node for each quantity.
+        var node;
+        var nodes = this.getNodes();
+
+        for (quantityName in quantities) {
+            node                = new Node();
+            node.quantity       = quantities[quantityName];
+            node.x              = this.unitLength * Math.random();
+            node.y              = this.unitLength * Math.random();
+            node.xn             = 0;
+            node.xp             = node.x;
+            node.yn             = 0;
+            node.yp             = node.y;
+            node.force.x        = 0;
+            node.force.y        = 0;
+            nodes[quantityName] = node;
+        }
+
+        // Create edges for all nodes.
+        var edge;
+        var edges = this.getEdges();
+
+        for (quantityName in quantities) {
+            // The quantity will be the start of the edge,
+            // and the dependency will be the end.
+            for (var dependency in quantities[quantityName].dependencies) {
+                edge            = new Edge();
+                edge.start      = this.findNode(quantityName);
+                edge.end        = this.findNode(dependency);
+                edge.upStr      = 0;
+                edge.dnStr      = 0;
+
+                if (dependency in quantities[quantityName].nonhistDeps) {
+                    edge.type   = "regular";
+                } else {
+                    edge.type   = "delay";
+                }
+
+                edges.push(edge);
+            }
+        }
+    };
+
+    /**
      * Find a node by its name.
      *
      * @param  {String} The name of the node to find.
