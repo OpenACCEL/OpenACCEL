@@ -28,14 +28,14 @@ define([], /** @lends Model.Network */ function() {
          *
          * @type {Node}
          */
-        var start;
+        this.start = undefined;
 
         /**
          * The name of the Edge.
          *
          * @type {Node}
          */
-        var end;
+        this.end = undefined;
 
     }
 
