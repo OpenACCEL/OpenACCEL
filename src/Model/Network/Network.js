@@ -224,10 +224,10 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
                 }
             }
 
-            if (nodes[i].x <                   5) { nodes[i].force.x += 5 * this.spring; }
-            if (nodes[i].x > this.unitLength - 5) { nodes[i].force.x -= 5 * this.spring; }
-            if (nodes[i].y <                   5) { nodes[i].force.y += 5 * this.spring; }
-            if (nodes[i].y > this.unitLength - 5) { nodes[i].force.y -= 5 * this.spring; }
+                 if (nodes[i].x <                   5) { nodes[i].force.x += 5 * this.spring; }
+            else if (nodes[i].x > this.unitLength - 5) { nodes[i].force.x -= 5 * this.spring; }
+                 if (nodes[i].y <                   5) { nodes[i].force.y += 5 * this.spring; }
+            else if (nodes[i].y > this.unitLength - 5) { nodes[i].force.y -= 5 * this.spring; }
         }
 
         // Next, we make sure that all edge starts are left of the edge tails.
