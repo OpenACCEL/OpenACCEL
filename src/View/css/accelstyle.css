@@ -76,6 +76,10 @@ body div {
 	background-color: #cc9ae5;
 }
 
+#network_plot_canvas {
+	background-color: #cc9ae5;
+}
+
 #demoscripts, #helparticles, #helpcategories {
 	max-height: 450px;
 	max-width: 145px;
