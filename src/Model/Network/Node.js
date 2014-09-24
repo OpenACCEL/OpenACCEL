@@ -31,6 +31,15 @@ define(["Model/Quantity"], /** @lends Model.Network */ function(Quantity) {
         this.quantity = undefined;
 
         /**
+         * A unique identifier for the node.
+         * This is because descartes wants to identify each node
+         * by a number, and not by its name.
+         *
+         * @type {Number}
+         */
+        this.id = NaN;
+
+        /**
          * The x-position of the node.
          *
          * @type {Number}
