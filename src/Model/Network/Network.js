@@ -135,16 +135,18 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
         }
 
         // Create edges for all nodes.
+        var dependencies;
         var edge;
         var edges = this.getEdges();
 
         for (quantityName in quantities) {
             // The quantity will be the start of the edge,
             // and the dependency will be the end.
-            for (var dependency in quantities[quantityName].dependencies) {
+            dependencies = quantities[quantityName].dependencies;
+            for (var dependency in dependencies) {
                 edge            = new Edge();
                 edge.start      = this.findNode(quantityName);
-                edge.end        = this.findNode(dependency);
+                edge.end        = this.findNode(dependencies[dependency]);
                 edge.upStr      = 0;
                 edge.dnStr      = 0;
 
