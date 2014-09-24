@@ -20,13 +20,15 @@ define(["View/Graphics/DescartesHandlerFactory",
         "View/Graphics/Canvas",
         "View/Graphics/ScriptDescartesHandler",
         "View/Graphics/GeneticOptimisationDescartesHandler",
-        "View/Graphics/AnalysisDescartesHandler" ],
+        "View/Graphics/AnalysisDescartesHandler",
+        "View/Graphics/NetworkDescartesHandler" ],
     /** @lends View.Graphics */
     function(DescartesHandlerFactory,
              Canvas,
              ScriptDescartesHandler,
              GeneticOptimisationDescartesHandler,
-             AnalysisDescartesHandler) {
+             AnalysisDescartesHandler,
+             NetworkDescartesHandler) {
 
         /**
          * @class
@@ -56,6 +58,11 @@ define(["View/Graphics/DescartesHandlerFactory",
              * Add AnalysisDescartesHandler to the factory, to support drawing the Analysis class.
              */
             this.factory.addHandler(new AnalysisDescartesHandler());
+
+            /**
+             * Add NetworkDescartesHandler to the factory, to support drawing the Network class.
+             */
+            this.factory.addHandler(new NetworkDescartesHandler());
         };
 
         CanvasCreator.prototype = {
