@@ -217,9 +217,9 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
                     (catI === 1 && catJ === 2) ||
                     (catI === 2 && catJ === 3))
                 {
-                    if (nodes[i].x > nodes[j].x) {
-                        nodes[i].force.y -= 5 * this.spring;
-                        nodes[j].force.y += 5 * this.spring;
+                    if (nodes[i].y < nodes[j].y) {
+                        nodes[i].force.y += 5 * this.spring;
+                        nodes[j].force.y -= 5 * this.spring;
                     }
                 }
             }
@@ -276,7 +276,7 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
             }
         }
 
-        for(node in nodes){
+        for (node in nodes){
             nodes[node].xp  = nodes[node].x;
             nodes[node].yp  = nodes[node].y;
             nodes[node].x   = nodes[node].xn;
