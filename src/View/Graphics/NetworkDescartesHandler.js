@@ -148,8 +148,8 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Network/Network"],
             
             for (i in edges) {
                 edgesData.push({
-                    b:          edges[i].end,
-                    e:          edges[i].start,
+                    b:          edges[i].end.id,
+                    e:          edges[i].start.id,
                     thickness:  Math.max(edges[i].dnStr, edges[i].upStr) + 0.1,
                     col_r:      edges[i].type === 'regular' ? (edges[i].upStr > edges[i].dnStr ? 255 : 0) : 0,
                     col_b:      edges[i].type === 'regular' ? (edges[i].upStr <= edges[i].dnStr ? 255 : 0) : 0,

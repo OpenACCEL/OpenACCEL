@@ -117,10 +117,12 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
         // Create a node for each quantity.
         var node;
         var nodes = this.getNodes();
+        var nodeCounter = 0;
 
         for (quantityName in quantities) {
             node                = new Node();
             node.quantity       = quantities[quantityName];
+            node.id             = nodeCounter++;
             node.x              = this.unitLength * Math.random();
             node.y              = this.unitLength * Math.random();
             node.xn             = 0;
