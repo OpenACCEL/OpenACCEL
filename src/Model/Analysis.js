@@ -58,7 +58,7 @@ define(["Model/Script", "lodash"], /** @lends Model */ function(Script, _) {
         /**
          * The script that this class will analyse.
          */
-        this.script;
+        this.script = undefined;
 
         /**
          * The number of iterations, or points that should be plot
