@@ -151,7 +151,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
 
             // Get all category 2 quantities that have a numeric atomic value
             var cat2quantities = [];
-            for (var elem in this.compareQuantities) {
+            var elem;
+            for (elem in this.compareQuantities) {
                 var q = this.compareQuantities[elem].quantity;
                 if (q.category === 2) {
                     cat2quantities.push(q.name);
@@ -163,8 +164,9 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             var head = '<div class="an_senstblhdrow"><div class="an_senstblhd" style="text-align: left">Name</div>';
             head += '<div class="an_senstblhd">Delta</div>';
 
-            for (var elem in cat2quantities) {
-                var qName = cat2quantities[elem];
+            var qName;
+            for (elem in cat2quantities) {
+                qName = cat2quantities[elem];
                 head += '<div class="an_senstblhd">' + qName + '</div>';
             }
 
@@ -176,8 +178,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             var stdev = '<div class="an_senstblstdrow"><div class="tblcell">Std. dev:</div>';
             stdev += '<div class="tblcell">Percent:</div>';
 
-            for (var elem in cat2quantities) {
-                var qName = cat2quantities[elem];
+            for (elem in cat2quantities) {
+                qName = cat2quantities[elem];
                 stdev += '<div class="tblcell">' + this.analysis.calcStdDev(qName).toString() + '</div>';
             }
 
@@ -353,9 +355,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
         //     }
         // });
 
+        var script;
         if (state.argument !== undefined) {
             // Ready to draw graph plot
-            var script = controller.getScript();
+            script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
                 $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
                 $('#an_errormessage').show();
@@ -371,7 +374,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             }
         } else if (state.argH !== undefined && state.argV !== undefined) {
             // Ready to draw contour plot
-            var script = controller.getScript();
+            script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
                 $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
                 $('#an_errormessage').show();

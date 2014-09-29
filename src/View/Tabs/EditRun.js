@@ -421,8 +421,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             }
 
             //list used standard functions (type = standard function)
-            for (var d in quantity.stdfuncs) {
-                this.report.addArg(quantity.stdfuncs[d], 'std func.');
+            for (var s in quantity.stdfuncs) {
+                this.report.addArg(quantity.stdfuncs[s], 'std func.');
             }
 
             //list reverse dependencies (type = regular)
