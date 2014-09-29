@@ -292,7 +292,6 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
             } catch (err) {
                 console.log(err);
                 throw (err);
-                return false;
             }
         }
 
