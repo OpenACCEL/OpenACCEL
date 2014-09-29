@@ -264,8 +264,9 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
      */
     Executable.prototype.findFirstError = function(obj) {
         if (obj instanceof Array) {
-            for (obj2 in obj) {
-                var err = this.findFirstError(obj[obj2]);
+            var err;
+            for (var obj2 in obj) {
+                err = this.findFirstError(obj[obj2]);
                 if (err !== '') {
                     return err;
                 }
