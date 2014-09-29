@@ -230,12 +230,17 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
             else if (nodes[i].y > this.unitLength - 5) { nodes[i].force.y -= 5 * this.spring; }
         }
 
-        // Next, we make sure that all edge starts are left of the edge tails.
+        // Next, we make sure that all edge starts are left of the edge tails
+        // if they are of the same category.
+        var start, end;
         for (var edge in edges) {
-            if (edges[edge].end.x < edges[edge].start.x) {
+            start = edges[edge].start;
+            end = edges[edge].end;
+
+            if (start.quantity.category === end.quantity.category && end.x < start.x) {
                 if (edges[edge].type === "regular") {
-                    edges[edge].end.force.x     += 5 * this.spring;
-                    edges[edge].start.force.x   -= 5 * this.spring;
+                    end.force.x     += 5 * this.spring;
+                    start.force.x   -= 5 * this.spring;
                 }
             }
         }
