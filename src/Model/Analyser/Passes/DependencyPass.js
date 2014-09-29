@@ -49,8 +49,9 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library']
         var deps = this.getNonHistoryVariables(quantity.definition);
 
         // Identify all non-history dependencies and add them to the quantities
-        for (var dep in deps) {
-            var d = deps[dep];
+        var dep, d;
+        for (dep in deps) {
+            d = deps[dep];
 
             // It could be that the dependent variable is not yet in the quantities because
             // it has not been defined yet. Therefore, instead test whether the variable
@@ -98,8 +99,8 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library']
         quantity.dependencies = quantity.nonhistDeps.slice(0);
 
         deps = this.getHistoryVariables(quantity.definition);
-        for (var dep in deps) {
-            var d = deps[dep];
+        for (dep in deps) {
+            d = deps[dep];
 
             // It could be that the dependent variable is not yet in the quantities because
             // it has not been defined yet. Therefore, instead test whether the variable

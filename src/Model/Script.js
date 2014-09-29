@@ -217,14 +217,15 @@ define(["Model/Analyser/Analyser",
 
             // Determine reachability graph
             var numQuantities = Object.keys(this.quantities).length;
-            for (var elem in this.quantities) {
+            var elem, numHandled, q;
+            for (elem in this.quantities) {
                 // If all quantities have been handled, return
-                var numHandled = this.determinedReachables.length;
+                numHandled = this.determinedReachables.length;
                 if (numHandled === numQuantities) {
                     break;
                 }
 
-                var q = this.quantities[elem];
+                q = this.quantities[elem];
                 this.getReachables(q, numQuantities, false);
             }
 
@@ -232,14 +233,14 @@ define(["Model/Analyser/Analyser",
             this.determinedReachables = [];
 
             // Determine reverse reachability graph
-            for (var elem in this.quantities) {
+            for (elem in this.quantities) {
                 // If all quantities have been handled, return
-                var numHandled = this.determinedReachables.length;
+                numHandled = this.determinedReachables.length;
                 if (numHandled === numQuantities) {
                     break;
                 }
 
-                var q = this.quantities[elem];
+                q = this.quantities[elem];
                 this.getReachables(q, numQuantities, true);
             }
 
