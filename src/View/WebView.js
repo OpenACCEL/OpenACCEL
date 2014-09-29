@@ -257,7 +257,7 @@ define(["../Controller/AbstractView",
                 this.tabs.ioedit.synchronizeScriptArea();
                 break;
         }
-    }
+    };
 
     /**
      * Event that gets called when the controller has issued a new iteration for the script.
@@ -273,7 +273,7 @@ define(["../Controller/AbstractView",
 
         // Draw a plot if one is visible on the current view tab.
         this.drawPlot();
-    }
+    };
 
     /**
      * Event that gets called when the controller has compiled a new script.
@@ -302,14 +302,14 @@ define(["../Controller/AbstractView",
         if ($('#analysis').hasClass('disabled')) {
             $('#analysis').removeClass('disabled').children("a").attr('href', '#tab=analysis');
         }
-    }
+    };
 
     /**
      * Event that gets called when the genetic algorithm has generated a new generation.
      */
     WebView.prototype.onNewGeneration = function() {
         this.tabs.optimisation.drawPlot();
-    }
+    };
 
     /**
      * Resets all canvasses and plots, such that they are as good as new!
@@ -321,7 +321,7 @@ define(["../Controller/AbstractView",
                 this.tabs[key].canvas.clearBuffers();
             }
         }
-    }
+    };
 
     /**
      * Changes UI elements depending on whether the OpenACCEL model is being executed.
@@ -389,7 +389,7 @@ define(["../Controller/AbstractView",
         // Ensure the popup is never displayed outside of the input field
         var minX = errorContainer.offset().left;
         var maxX = errorContainer.offset().left + errorContainer.outerWidth();
-        this.x = (pos.left-3 < minX) ? minX : ((pos.left-3 > maxX) ? maxX : pos.left-3)
+        this.x = (pos.left-3 < minX) ? minX : ((pos.left-3 > maxX) ? maxX : pos.left-3);
         this.y = 16 + pos.top;
         this.text = '';
         if (error.type === 'lexical') {

@@ -99,7 +99,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             getPropertyListHTML: function(quantity, property) {
                 var html = '';
                 if (property === 'std func.') {
-                    html = 'view.tabs.editrun.report.onclickStdFunc(\'' + quantity + '\')" style="color:#55CACA;"'
+                    html = 'view.tabs.editrun.report.onclickStdFunc(\'' + quantity + '\')" style="color:#55CACA;"';
                 } else {
                     html = 'view.tabs.editrun.report.onclickProperty(\'' + quantity + '\')"';
                 }

@@ -67,7 +67,7 @@ define(["Model/Quantity"], /** @lends Model.Network */ function(Quantity) {
         this.force = {
             x: 0,
             y: 0
-        }
+        };
 
         /**
          * Node hops, whatever that may mean.
@@ -75,7 +75,7 @@ define(["Model/Quantity"], /** @lends Model.Network */ function(Quantity) {
         this.hops = {
             up: 0,
             down: 0
-        }
+        };
     }
 
     // Exports are needed, such that other modules may invoke methods from this module file.

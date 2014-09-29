@@ -190,7 +190,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
      */
     HelpDemo.prototype.synchronizeCategories = function(categories) {
         this.helpCategoryList.set(categories);
-    }
+    };
 
     /**
      * Displays the given articles in the articles list.
@@ -205,7 +205,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
                 return '';
             }
         });
-    }
+    };
 
     /**
      * Shows the contents of the help article with the given name,
@@ -295,7 +295,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         }
 
         this.helpTextBuffer.flip();
-    }
+    };
 
     /**
      * Formats the given piece of text for display in a help article. This formats all occurences of the ACCEL and Descartes
@@ -382,7 +382,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         }
 
         this.synchronizeArticles(matches);
-    }
+    };
 
     HelpDemo.prototype.selectHelpCategory = function(category) {
         var articles;
@@ -397,19 +397,19 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         $('#helpcategories > a[value="' + category + '"]').addClass('help_current');
 
         view.tabs.helpdemo.synchronizeArticles(articles);
-    }
+    };
 
     HelpDemo.prototype.selectHelpArticle = function(article) {
         view.tabs.helpdemo.showHelpArticle(view.tabs.helpdemo.articles[article]);
-    }
+    };
 
     HelpDemo.prototype.loadDemoScript= function(demoscript) {
         console.log('demoscript: ' + demoscript);
-    }
+    };
 
     HelpDemo.prototype.synchronizeDemoScripts = function(demoscripts) {
         this.demoScriptList.set(demoscripts);
-    }
+    };
 
     return HelpDemo;
 });
