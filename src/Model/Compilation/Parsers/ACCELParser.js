@@ -31,7 +31,7 @@ define(["Model/Compilation/Parsers/ACCELScriptParser",
              * The actual ACCEL JISON parser to use to parse the script.
              * Can either be the script or unit parser.
              */
-            this.parser;
+            this.parser = undefined;
 
             /**
              * Whether the script parser has already been initialised
