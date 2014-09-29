@@ -147,7 +147,7 @@ define(["Model/Script", "lodash"], /** @lends Model */ function(Script, _) {
                 target.max = source.max;
             }
         }
-    }
+    };
 
     /**
      * Sets the range of the plot window.
