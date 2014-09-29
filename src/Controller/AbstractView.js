@@ -43,35 +43,35 @@ define([], /**@lends Controller*/ function() {
      */
     AbstractView.prototype.onModifiedQuantity = function() {
 
-    }
+    };
 
     /**
      * Event that gets called when the controller has issued a new iteration for the script.
      */
     AbstractView.prototype.onNextStep = function() {
 
-    }
+    };
 
     /**
      * Event that gets called when the controller has compiled a new script.
      */
     AbstractView.prototype.onNewScript = function() {
 
-    }
+    };
 
     /**
      * Event that gets called when the genetic algorithm has generated a new generation.
      */
     AbstractView.prototype.onNewGeneration = function() {
 
-    }
+    };
 
     /**
      * Resets all canvasses and plots, such that they are as good as new!
      */
     AbstractView.prototype.resetAllPlots = function() {
 
-    }
+    };
 
     /**
      * Informs the view about the current status of the program. This could be for instance
