@@ -181,7 +181,7 @@ define(["Model/FileLoader",
         Compiler.prototype.parseUnits = function(script) {
             // Parse the units and handle any syntax errors
             var unitCode = "";
-            var currentQuantity = undefined;
+            var currentQuantity;
 
             try {
                 // For each quantity, get the unit, parse it and add to the quantity in the executable.
