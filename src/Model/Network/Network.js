@@ -182,6 +182,9 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
         return null;
     };
 
+    /**
+     * Calculates the stream values of edges of the most recently clicked node.
+     */
     Network.prototype.streams = function() {
         if (this.recentlyClickedNode) {
             this.recentlyClickedNode.hops.up   = 1;
@@ -192,13 +195,23 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
         }
     };
 
+    /**
+     * Find the stream values of edges of a particular node.
+     *
+     * @param node The starting node.
+     * @param direction Whether to find "up" or "down" stream values.
+     * @param hops The number of 'hops' used in the algorithm.
+     */
     Network.prototype.findStream = function(node, direction, hops) {
         if (!node) {
             return;
         }
 
+        // Left and right have no real meaning, other than saving some code duplication.
+        var left, right;
+
         var edges = this.getEdges();
-        var edge, left, right;
+        var edge;
         for (edge in edges) {
             switch (direction) {
                 case "up":

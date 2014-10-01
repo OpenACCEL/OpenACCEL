@@ -88,12 +88,9 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Network/Netwo
 
         /**
          * The click callback to be used by descartes when the mouse is clicked over it.
-         * This callback sets this.clickedIndividual to the Individual represented by the point closest to the click.
-         * The distance used here is euclidean distance.
          *
          * @param x {float} The mouse position on the x axis, normalised to [0...1].
          * @param y {float} The mouse position on the y axis, normalised to [0...1].
-         * @modifies this.clickedIndividual {Individual} Changed to the Individual closest to the click.
          */
         NetworkDescartesHandler.prototype.clickCallback = function(x, y) {
             var point = this.mapPoint({
@@ -145,6 +142,12 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Network/Netwo
             this.drawInstances();
         };
 
+        /**
+         * The move callback to be used by descartes when the mouse moves over the canvas.
+         *
+         * @param x {float} The mouse position on the x axis, normalised to [0...1].
+         * @param y {float} The mouse position on the y axis, normalised to [0...1].
+         */
         NetworkDescartesHandler.prototype.moveCallback = function(x, y) {
             var network = this.getNetwork();
             var nodes = network.getNodes();

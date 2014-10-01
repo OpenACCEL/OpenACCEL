@@ -24,14 +24,16 @@ define([], /** @lends Model.Network */ function() {
     function Edge () {
 
         /**
-         * The name of the Edge.
+         * The start of the edge, the "from" part.
+         * This is the "tail" in the old version of ACCEL.
          *
          * @type {Node}
          */
         this.start = undefined;
 
         /**
-         * The name of the Edge.
+         * End end of the edge, the "to" part.
+         * This is the "head" in the old version of ACCEL.
          *
          * @type {Node}
          */
