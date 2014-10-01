@@ -71,6 +71,11 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
          * @type {Node}
          */
         this.recentlyClickedNode = undefined;
+
+        /**
+         * The dropoff rate concerning finding up and down-streams.
+         */
+        this.dropOffRate = 0.5;
     }
 
     /**
@@ -120,20 +125,20 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
         var nodeCounter = 0;
 
         for (quantityName in quantities) {
-            node                = new Node();
-            node.quantity       = quantities[quantityName];
-            node.id             = nodeCounter++;
-            node.x              = this.unitLength * Math.random();
-            node.y              = this.unitLength * Math.random();
-            node.xn             = 0;
-            node.xp             = node.x;
-            node.yn             = 0;
-            node.yp             = node.y;
-            node.force.x        = 0;
-            node.force.y        = 0;
-            node.hops.up        = 0;
-            node.hops.down      = 0;
-            nodes[quantityName] = node;
+            node                    = new Node();
+            node.quantity           = quantities[quantityName];
+            node.id                 = nodeCounter++;
+            node.x                  = this.unitLength * Math.random();
+            node.y                  = this.unitLength * Math.random();
+            node.xn                 = 0;
+            node.xp                 = node.x;
+            node.yn                 = 0;
+            node.yp                 = node.y;
+            node.force.x            = 0;
+            node.force.y            = 0;
+            node.hops.up            = 0;
+            node.hops.down          = 0;
+            nodes[quantityName]     = node;
         }
 
         // Create edges for all nodes.
@@ -146,16 +151,16 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
             // and the dependency will be the end.
             dependencies = quantities[quantityName].dependencies;
             for (var dependency in dependencies) {
-                edge            = new Edge();
-                edge.start      = this.findNode(quantityName);
-                edge.end        = this.findNode(dependencies[dependency]);
-                edge.upStr      = 0;
-                edge.dnStr      = 0;
+                edge                = new Edge();
+                edge.start          = this.findNode(quantityName);
+                edge.end            = this.findNode(dependencies[dependency]);
+                edge.stream.up      = 0;
+                edge.stream.down    = 0;
 
                 if (dependency in quantities[quantityName].nonhistDeps) {
-                    edge.type   = "regular";
+                    edge.type       = "regular";
                 } else {
-                    edge.type   = "delay";
+                    edge.type       = "delay";
                 }
 
                 edges.push(edge);
@@ -175,6 +180,48 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
         }
 
         return null;
+    };
+
+    Network.prototype.streams = function() {
+        if (this.recentlyClickedNode) {
+            this.recentlyClickedNode.hops.up   = 1;
+            this.recentlyClickedNode.hops.down = 1;
+
+            this.findStream(this.recentlyClickedNode, "up", 1);
+            this.findStream(this.recentlyClickedNode, "down", 1);
+        }
+    };
+
+    Network.prototype.findStream = function(node, direction, hops) {
+        if (!node) {
+            return;
+        }
+
+        var edges = this.getEdges();
+        var edge, left, right;
+        for (edge in edges) {
+            switch (direction) {
+                case "up":
+                    left = edges[edge].start;
+                    right = edges[edge].end;
+                    break;
+                case "down":
+                    left = edges[edge].end;
+                    right = edges[edge].start;
+                    break;
+                default:
+                    throw "No proper stream direction: " + direction;
+            }
+
+            if (left === node && right !== node) {
+                edges[edge].stream[direction] = hops;
+
+                if (right.hops[direction] === 0) {
+                    right.hops[direction] = hops;
+                    this.findStream(right, direction, hops * this.dropOffRate);
+                }
+            }
+        }
     };
 
     /**

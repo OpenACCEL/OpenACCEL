@@ -47,8 +47,10 @@ define([], /** @lends Model.Network */ function() {
         /**
          * No idea what these two variables mean.
          */
-        this.upStr = 0;
-        this.dnStr = 0;
+        this.stream = {
+            up: 0,
+            down: 0
+        };
     }
 
     // Exports are needed, such that other modules may invoke methods from this module file.

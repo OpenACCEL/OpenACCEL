@@ -119,7 +119,7 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Network/Netwo
                 thisDist = Math.pow(xx - nodes[node].x, 2) + Math.pow(yy - nodes[node].y, 2);
 
                 if (thisDist < closestDist) {
-                    closestNode = node;
+                    closestNode = nodes[node];
                     closestDist = thisDist;
                 }
             }
@@ -132,12 +132,14 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Network/Netwo
                     nodes[node].hops.down = 0;
                 }
 
+                var edges = network.getEdges();
                 for (edge in edges) {
-                    edges[edge].upStr = 0;
-                    edges[edge].dnStr = 0;
+                    edges[edge].stream.up = 0;
+                    edges[edge].stream.down = 0;
               }
             } else {
               network.recentlyClickedNode = closestNode;
+              network.streams();
             }
 
             this.drawInstances();
@@ -150,10 +152,10 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Network/Netwo
             var yy = y * network.unitLength;
 
             if (network.recentlyClickedNode) {
-                nodes[network.recentlyClickedNode].x  = xx;
-                nodes[network.recentlyClickedNode].y  = yy;
-                nodes[network.recentlyClickedNode].xn = xx;
-                nodes[network.recentlyClickedNode].yn = yy;
+                network.recentlyClickedNode.x  = xx;
+                network.recentlyClickedNode.y  = yy;
+                network.recentlyClickedNode.xn = xx;
+                network.recentlyClickedNode.yn = yy;
             }
         };
 
@@ -205,9 +207,9 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Network/Netwo
                 edgesData.push({
                     b:          edges[i].end.id,
                     e:          edges[i].start.id,
-                    thickness:  Math.max(edges[i].dnStr, edges[i].upStr) + 0.1,
-                    col_r:      edges[i].type === 'regular' ? (edges[i].upStr > edges[i].dnStr ? 255 : 0) : 0,
-                    col_b:      edges[i].type === 'regular' ? (edges[i].upStr <= edges[i].dnStr ? 255 : 0) : 0,
+                    thickness:  Math.max(edges[i].stream.down, edges[i].stream.up) + 0.1,
+                    col_r:      edges[i].type === 'regular' ? (edges[i].stream.down > edges[i].stream.up ? 255 : 0) : 0,
+                    col_b:      edges[i].type === 'regular' ? (edges[i].stream.down <= edges[i].stream.up ? 255 : 0) : 0,
                     col_g:      edges[i].type === 'regular' ? 0 : 255
                   });
             }
