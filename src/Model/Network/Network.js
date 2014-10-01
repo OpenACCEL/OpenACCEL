@@ -102,7 +102,7 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
      * @param {Script} The script that contains the quantities to be displayed in the network.
      */
     Network.prototype.setScript = function(script) {
-        if (script instanceof Script) {
+        if (script instanceof Script && script !== this.script) {
             this.script = script;
             this.buildNetwork();
         }
