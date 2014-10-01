@@ -153,12 +153,9 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
 
         /**
          * The click callback to be used by descartes when the mouse is clicked over it.
-         * This callback sets this.clickedIndividual to the Individual represented by the point closest to the click.
-         * The distance used here is euclidean distance.
          *
          * @param x {float} The mouse position on the x axis, normalised to [0...1].
          * @param y {float} The mouse position on the y axis, normalised to [0...1].
-         * @modifies this.clickedIndividual {Individual} Changed to the Individual closest to the click.
          */
         AnalysisDescartesHandler.prototype.clickCallback = function(x, y) {
             var point = this.mapPoint({
