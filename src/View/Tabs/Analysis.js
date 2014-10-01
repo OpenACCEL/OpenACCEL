@@ -398,8 +398,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
     };
 
     /**
-     * Determines the quantities in the script that can be plotted,
-     * @return {[type]} [description]
+     * Determines the quantities in the script that can be plotted.
      */
     Analysis.prototype.setupLists = function() {
         this.compareQuantities = {};
