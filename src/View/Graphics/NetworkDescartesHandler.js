@@ -12,9 +12,9 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["View/Graphics/AbstractDescartesHandler", "Model/Network/Network"],
+define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Network/Network"],
     /** @lends View.Graphics */
-    function(AbstractDescartesHandler, Network) {
+    function(_, AbstractDescartesHandler, Network) {
 
         /**
          * @class
@@ -74,11 +74,13 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Network/Network"],
          */
         NetworkDescartesHandler.prototype.addDescartes = function(div, width, height) {
             var click = this.clickCallback.bind(this);
+            var move  = this.moveCallback.bind(this);
             this.descartesInstances[div] = new descartes({
                 dN: div,
                 cW: width,
                 cH: height,
-                cB: click
+                cB: click,
+                cMove: move
             });
 
             this.descartesInstances[div].setUpGraph();
@@ -99,7 +101,60 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Network/Network"],
                 'y': y * this.coordinateScale
             });
 
+            var network = this.getNetwork();
+            var nodes = network.getNodes();
+
+            if (_.size(nodes) === 0) {
+                return;
+            }
+
+            var xx = x * network.unitLength;
+            var yy = y * network.unitLength;
+            var closestNode = null;
+            var closestDist = Infinity;
+            var thisDist    = 0;
+
+            var node;
+            for (node in nodes){
+                thisDist = Math.pow(xx - nodes[node].x, 2) + Math.pow(yy - nodes[node].y, 2);
+
+                if (thisDist < closestDist) {
+                    closestNode = node;
+                    closestDist = thisDist;
+                }
+            }
+
+            if (closestNode === network.recentlyClickedNode) {
+                network.recentlyClickedNode = null;
+                var edge;
+                for (node in nodes) {
+                    nodes[node].hops.up = 0;
+                    nodes[node].hops.down = 0;
+                }
+
+                for (edge in edges) {
+                    edges[edge].upStr = 0;
+                    edges[edge].dnStr = 0;
+              }
+            } else {
+              network.recentlyClickedNode = closestNode;
+            }
+
             this.drawInstances();
+        };
+
+        NetworkDescartesHandler.prototype.moveCallback = function(x, y) {
+            var network = this.getNetwork();
+            var nodes = network.getNodes();
+            var xx = x * network.unitLength;
+            var yy = y * network.unitLength;
+
+            if (network.recentlyClickedNode) {
+                nodes[network.recentlyClickedNode].x  = xx;
+                nodes[network.recentlyClickedNode].y  = yy;
+                nodes[network.recentlyClickedNode].xn = xx;
+                nodes[network.recentlyClickedNode].yn = yy;
+            }
         };
 
         /**
@@ -145,7 +200,7 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Network/Network"],
                     pointSize:  2 * Math.max(nodes[i].hops.down, nodes[i].hops.up) + 1.2
                 });
             }
-            
+
             for (i in edges) {
                 edgesData.push({
                     b:          edges[i].end.id,

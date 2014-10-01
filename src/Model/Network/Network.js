@@ -37,7 +37,7 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
          *
          * @type {map<String, Node>}
          */
-        this.nodes = [];
+        this.nodes = {};
 
         /**
          * The edges of the script / network.
