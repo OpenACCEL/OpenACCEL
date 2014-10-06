@@ -133,16 +133,17 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         if (report.isTimeDependent) {
             // If the current time-step value has not been evaluated yet, do it now.
             if (history[0] === undefined) {
-                // Check for cyclic dependencies: if this quantity has been touched before it means that the system
-                // is still evaluating it's expression and there is a cyclic dependency
-                if (quantity.touched === true) {
-                    throw new RuntimeError("Cyclic dependency detected for quantity " + report.name);
-                }
-                quantity.touched = true;
-
                 // For non-input quantities, evaluate the expression of this quantity and store it
                 // in the history datastructure
                 if (report.category !== 1) {
+                    // Check for cyclic dependencies. Only non-input quantities can cause cyclic dependencies.
+                    // If this quantity has been touched before it means that the system
+                    // is still evaluating it's expression and there is a cyclic dependency
+                    if (quantity.touched === true) {
+                        throw new RuntimeError("Cyclic dependency detected for quantity " + report.name);
+                    }
+                    quantity.touched = true;
+
                     history[0] = quantity.expr();
                 } else {
                     // For input quantities, which do not have executable library functions,
