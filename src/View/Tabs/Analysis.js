@@ -194,17 +194,17 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
         $('#an_arguments a.an_qtyname[value="' + state.argument + '"]').addClass("help_current");
 
         // Grey-out all non-reversereachable quantities in the results table
-        var reachables = view.tabs.analysis.compareQuantities[state.argument].quantity.reverseReachables;
-        $('#an_results a.an_qtyname').removeClass("an_greyedout");
-        $('#an_results a.an_qtyname').each(function() {
-            var qty = $(this).text();
-            if (reachables.indexOf(qty) === -1) {
-                $(this).addClass('an_greyedout');
-                /*if ($(this).hasClass("help_current")) {
-                    $(this).removeClass("help_current");
-                }*/
-            }
-        });
+        // var reachables = view.tabs.analysis.compareQuantities[state.argument].quantity.reverseReachables;
+        // $('#an_results a.an_qtyname').removeClass("an_greyedout");
+        // $('#an_results a.an_qtyname').each(function() {
+        //     var qty = $(this).text();
+        //     if (reachables.indexOf(qty) === -1) {
+        //         $(this).addClass('an_greyedout');
+        //         /*if ($(this).hasClass("help_current")) {
+        //             $(this).removeClass("help_current");
+        //         }*/
+        //     }
+        // });
 
         if (state.result !== undefined) {
             var script = controller.getScript();
@@ -237,16 +237,16 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             reachables = _.intersection(reachables, reachV);
         }
 
-        $('#an_results a.an_qtyname').removeClass("an_greyedout");
-        $('#an_results a.an_qtyname').each(function() {
-            var qty = $(this).text();
-            if (reachables.indexOf(qty) === -1) {
-                $(this).addClass('an_greyedout');
-                /*if ($(this).hasClass("help_current")) {
-                    $(this).removeClass("help_current");
-                }*/
-            }
-        });
+        // $('#an_results a.an_qtyname').removeClass("an_greyedout");
+        // $('#an_results a.an_qtyname').each(function() {
+        //     var qty = $(this).text();
+        //     if (reachables.indexOf(qty) === -1) {
+        //         $(this).addClass('an_greyedout');
+        //         /*if ($(this).hasClass("help_current")) {
+        //             $(this).removeClass("help_current");
+        //         }*/
+        //     }
+        // });
 
         if (state.result !== undefined) {
             var script = controller.getScript();
@@ -293,16 +293,16 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             reachables = _.intersection(reachables, reachH);
         }
 
-        $('#an_results a.an_qtyname').removeClass("an_greyedout");
-        $('#an_results a.an_qtyname').each(function() {
-            var qty = $(this).text();
-            if (reachables.indexOf(qty) === -1) {
-                $(this).addClass('an_greyedout');
-                /*if ($(this).hasClass("help_current")) {
-                    $(this).removeClass("help_current");
-                }*/
-            }
-        });
+        // $('#an_results a.an_qtyname').removeClass("an_greyedout");
+        // $('#an_results a.an_qtyname').each(function() {
+        //     var qty = $(this).text();
+        //     if (reachables.indexOf(qty) === -1) {
+        //         $(this).addClass('an_greyedout');
+        //         /*if ($(this).hasClass("help_current")) {
+        //             $(this).removeClass("help_current");
+        //         }*/
+        //     }
+        // });
 
         if (state.result !== undefined) {
             var script = controller.getScript();
@@ -341,17 +341,17 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
         $('#an_results a.an_qtyname[value="' + state.result + '"]').addClass("help_current");
 
         // Grey-out all non-reachable quantities in the arguments table
-        var reachables = view.tabs.analysis.compareQuantities[state.result].quantity.reachables;
-        $('#an_arguments a.an_qtyname').removeClass("an_greyedout");
-        $('#an_arguments a.an_qtyname').each(function() {
-            var qty = $(this).text();
-            if (reachables.indexOf(qty) === -1) {
-                $(this).addClass('an_greyedout');
-                /*if ($(this).hasClass("help_current")) {
-                    $(this).removeClass("help_current");
-                }*/
-            }
-        });
+        // var reachables = view.tabs.analysis.compareQuantities[state.result].quantity.reachables;
+        // $('#an_arguments a.an_qtyname').removeClass("an_greyedout");
+        // $('#an_arguments a.an_qtyname').each(function() {
+        //     var qty = $(this).text();
+        //     if (reachables.indexOf(qty) === -1) {
+        //         $(this).addClass('an_greyedout');
+        //         /*if ($(this).hasClass("help_current")) {
+        //             $(this).removeClass("help_current");
+        //         }*/
+        //     }
+        // });
 
         if (state.argument !== undefined) {
             // Ready to draw graph plot
@@ -413,10 +413,15 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
                 var qname = qty.name;
                 var val = exe.getValue(qname);
 
-                if (isNumeric(val) && !(val instanceof Array)) {
+                if (isNumeric(val) && !(val instanceof Array) && val !== false && val !== true && val !== '') {
                     this.compareQuantities[qname] = {'quantity': qty, 'value': val.toPrecision(2)};
                 }
             }
+
+            // Sort the quantities alphabetically by name
+            this.compareQuantities = _.sortBy(this.compareQuantities, function(elem) {
+                return elem.quantity.name;
+            });
 
             // Now actually construct the HTML for the lists and populate them
             this.makeLists();

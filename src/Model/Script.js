@@ -220,7 +220,7 @@ define(["Model/Analyser/Analyser",
             for (var elem in this.quantities) {
                 // If all quantities have been handled, return
                 var numHandled = this.determinedReachables.length;
-                if (numHandled === numQuantities) {
+                if (numHandled >= numQuantities) {
                     break;
                 }
 
@@ -235,7 +235,7 @@ define(["Model/Analyser/Analyser",
             for (var elem in this.quantities) {
                 // If all quantities have been handled, return
                 var numHandled = this.determinedReachables.length;
-                if (numHandled === numQuantities) {
+                if (numHandled >= numQuantities) {
                     break;
                 }
 
@@ -259,7 +259,7 @@ define(["Model/Analyser/Analyser",
         getReachables: function(q, maxDepth, reverse) {
             // If this quantity has already been handled, return immediately
             if (this.determinedReachables.indexOf(q.name) > -1) {
-                return (reverse) ? q.reverseReachables : q.reachables;
+                return (reverse === true) ? q.reverseReachables : q.reachables;
             }
 
             // Check whether we're not exceeding the maximum recursion depth
@@ -270,7 +270,7 @@ define(["Model/Analyser/Analyser",
 
             // Do a depth-first search in the dependency tree and add all
             // found dependencies to this quantities' reachables property
-            var searchArray = (reverse) ? q.reverseDeps : q.dependencies;
+            var searchArray = (reverse === true) ? q.reverseDeps : q.dependencies;
             var reachables = searchArray.slice(0);    // May be the empty array
             for (var elem in searchArray) {
                 var depName = searchArray[elem];

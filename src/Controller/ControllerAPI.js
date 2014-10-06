@@ -740,7 +740,7 @@ define(["Model/Script",
                     script.setExecutable(this.compiler.compile(script));
 
                     //if (script.hasHistory() === false) {
-                        script.determineReachability();
+                        //script.determineReachability();
                     //}
                 } catch (e) {
                     this.view.runtimeError(e);
