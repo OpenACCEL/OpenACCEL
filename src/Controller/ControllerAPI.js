@@ -602,7 +602,7 @@ define(["Model/Script",
             }
 
             this.stop();
-            this.numIterations = iterations;
+            this.numIterations = parseInt(iterations);
             this.geneticOptimisation.numIterations = iterations;
             if (this.autoExecute) {
                 this.run();

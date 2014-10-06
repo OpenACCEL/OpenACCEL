@@ -303,8 +303,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      */
     EditRun.prototype.setIterations = function(iterations) {
         controller.setIterations(iterations);
-        controller.stop();
-        controller.run();
+        // controller.stop();
+        // controller.run();
     };
 
     /**
