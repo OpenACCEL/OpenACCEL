@@ -332,7 +332,7 @@ define([], /**@lends Model.Quantity */ function() {
             comment += this.comment[i] + '\n';
         }
 
-        return comment.slice(0,-2);
+        return comment.slice(0,-1);
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
