@@ -608,6 +608,24 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
     };
 
     /**
+     * Make the plot show an error message.
+     *
+     * @param {String} error The error message to show.
+     */
+    Analysis.prototype.setError = function(error) {
+        this.canvas.setError(error);
+        this.drawPlot();
+    };
+
+    /**
+     * Clears any error from the graph.
+     */
+    Analysis.prototype.clearError = function() {
+        this.canvas.clearError();
+        this.drawPlot();
+    };
+
+    /**
      * @return The current plottype of the analysis tab.
      */
     Analysis.prototype.getPlotType = function() {
