@@ -12,9 +12,9 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
+define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
     /** @lends View.Graphics */
-    function(AbstractDescartesHandler, Analysis) {
+    function(_, AbstractDescartesHandler, Analysis) {
 
         /**
          * @class
@@ -40,6 +40,27 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
                 minY: 21,
                 grMajY: 'line',
                 grMinY: 'line'
+            };
+
+            /**
+             * A graph that shows an error message at the center.
+             */
+            this.errorGraph = {
+                'background': {
+                    'fcol_a': 1,
+                    'fcol_r': 153,
+                    'fcol_g':51,
+                    'fcol_b':204
+                },
+                'locations': {
+                    'x': 50,
+                    'y': 50,
+                    'tag': '',
+                    'pointSize': 4,
+                    'tcol_r': 255,
+                    'tcol_g': 255,
+                    'tcol_b': 255
+                }
             };
 
             /**
@@ -79,6 +100,21 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
             this.propagatables.push({
                 name: "setNrContours",
                 func: this.setNrContours.bind(this)
+            });
+
+            this.propagatables.push({
+                name: "getError",
+                func: this.getError.bind(this)
+            });
+
+            this.propagatables.push({
+                name: "setError",
+                func: this.setError.bind(this)
+            });
+
+            this.propagatables.push({
+                name: "clearError",
+                func: this.clearError.bind(this)
             });
         }
 
@@ -167,11 +203,40 @@ define(["View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
         };
 
         /**
+         * @return The error message of the graph if present. Empty string if
+         *         no error is present.
+         */
+        AnalysisDescartesHandler.prototype.getError = function() {
+            return this.errorGraph.locations.tag;
+        };
+
+        /**
+         * Make the plot show an error message.
+         *
+         * @param {String} error The error message to show.
+         */
+        AnalysisDescartesHandler.prototype.setError = function(error) {
+            this.errorGraph.locations.tag = error;
+        };
+
+        /**
+         * Clears any error from the graph.
+         */
+        AnalysisDescartesHandler.prototype.clearError = function() {
+            this.setError("");
+        };
+
+        /**
          * Returns the descartes drawing of the of the comparison or contour between various quantities.
          *
          * @return {Object[]} The descartes drawing based on this.modelElement.population.
          */
         AnalysisDescartesHandler.prototype.getDrawing = function() {
+            // Before we do anything, check for an error message and show that instead.
+            if (!_.isEmpty(this.getError())) {
+                return [this.errorGraph];
+            }
+
             switch (this.mode) {
                 case "contour":
                     return this.getContourDrawing();

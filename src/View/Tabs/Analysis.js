@@ -103,6 +103,9 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
         if (state.result) {
             this.updateResult(state);
         }
+
+        // Finally, update the plot to show its latest status.
+        this.drawPlot();
     };
 
     /**
