@@ -40,7 +40,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             b: {
                 name: 'b',
@@ -51,7 +52,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             c: {
                 name: 'c',
@@ -62,7 +64,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             f: {
                 name: 'f',
@@ -73,7 +76,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             g: {
                 name: 'g',
@@ -84,7 +88,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             h: {
                 name: 'h',
@@ -95,7 +100,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             i: {
                 name: 'i',
@@ -106,7 +112,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             j: {
                 name: 'j',
@@ -117,7 +124,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             k: {
                 name: 'k',
@@ -128,7 +136,8 @@ suite("DependencyPass", function() {
                 todo: false,
                 dependencies: [],
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             }
         };
 
@@ -145,7 +154,8 @@ suite("DependencyPass", function() {
                 dependencies: ['b', 'c'],
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: ['j']
+                reverseDeps: ['j'],
+                stdfuncs: []
             },
             b: {
                 name: 'b',
@@ -156,7 +166,8 @@ suite("DependencyPass", function() {
                 dependencies: [],
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: ['a', 'f', 'g', 'h', 'i']
+                reverseDeps: ['a', 'f', 'g', 'h', 'i'],
+                stdfuncs: []
             },
             c: {
                 name: 'c',
@@ -167,7 +178,8 @@ suite("DependencyPass", function() {
                 dependencies: [],
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: ['a', 'g', 'h']
+                reverseDeps: ['a', 'g', 'h'],
+                stdfuncs: []
             },
             f: {
                 name: 'f',
@@ -178,7 +190,8 @@ suite("DependencyPass", function() {
                 dependencies: ['b'],
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: ['j']
+                reverseDeps: ['j'],
+                stdfuncs: []
             },
             g: {
                 name: 'g',
@@ -189,7 +202,8 @@ suite("DependencyPass", function() {
                 source: 'g = [2, b, x:c]',
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             h: {
                 name: 'h',
@@ -200,7 +214,8 @@ suite("DependencyPass", function() {
                 source: 'h = [b, x:[1, y:c, b], 3]',
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             i: {
                 name: 'i',
@@ -211,7 +226,8 @@ suite("DependencyPass", function() {
                 source: 'i = b * b',
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: []
             },
             j: {
                 name: 'j',
@@ -222,7 +238,8 @@ suite("DependencyPass", function() {
                 source: 'j = f(a) + sin(1)',
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: ['sin']
             },
             k: {
                 name: 'k',
@@ -233,7 +250,8 @@ suite("DependencyPass", function() {
                 source: 'k = #(i, [1,2,3], i * i, add)',
                 todo: false,
                 isTimeDependent: false,
-                reverseDeps: []
+                reverseDeps: [],
+                stdfuncs: ['add']
             }
 
         };
