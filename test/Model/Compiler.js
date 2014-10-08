@@ -442,6 +442,12 @@ suite("Compiler", function() {
                 var code = fs.readFileSync(dir + "/" + file, "utf8");
                 
                 try {
+                    // Broken scripts.
+                    switch (file) {
+                        case 'anEveningInTheBar.txt': // Cannot redefine 'E'.
+                        return;
+                    }
+
                     var script = new Script(code);
                     compiler.compile(script);
                 } catch(e) {
@@ -461,9 +467,15 @@ suite("Compiler", function() {
                     // Skip these broken scripts.
                     // They do not work with units because of the script itself is broken.
                     switch (file) {
-                        case 'optimalManufacturingLine1.accel':
-                        case 'optimalManufacturingLine2.accel':
-                        case 'steepestDescent.accel':
+                        case 'optimalManufacturingLine1.txt':
+                        case 'optimalManufacturingLine2.txt':
+                        case 'steepestDescent.txt':
+                        return;
+                    }
+
+                    // Broken scripts.
+                    switch (file) {
+                        case 'anEveningInTheBar.txt': // Cannot redefine 'E'.
                         return;
                     }
 
