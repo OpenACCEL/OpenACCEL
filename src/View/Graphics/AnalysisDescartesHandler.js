@@ -55,7 +55,7 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
                 'locations': {
                     'x': 50,
                     'y': 50,
-                    'tag': '',
+                    'tag': 'No graph',
                     'pointSize': 4,
                     'tcol_r': 255,
                     'tcol_g': 255,
