@@ -31,6 +31,15 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
         this.script = undefined;
 
         /**
+         * The old source of the script. This is used to see if the script
+         * has generated a new binary, and thus if a new network has to be
+         * created. The reason why we check on the source level, is even a
+         * change in the source logic, without editing scripts, can change
+         * dependencies.
+         */
+        this.oldSource = "";
+
+        /**
          * The nodes of the script / network. Each node represents a quantity.
          * This is a dictionary of quantities, defined by their name as a string.
          * Associated with each quantity is its node.
@@ -102,9 +111,14 @@ define(["Model/Script", "Model/Network/Node", "Model/Network/Edge"], /** @lends 
      * @param {Script} The script that contains the quantities to be displayed in the network.
      */
     Network.prototype.setScript = function(script) {
-        if (script instanceof Script && script !== this.script) {
+        if (script instanceof Script) {
             this.script = script;
-            this.buildNetwork();
+
+            var newSource = script.getSource();
+            if (this.oldSource !== newSource) {
+                this.buildNetwork();
+                this.oldSource = newSource;
+            }
         }
     };
 
