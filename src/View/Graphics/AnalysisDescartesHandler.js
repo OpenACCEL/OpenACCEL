@@ -252,6 +252,11 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
             var analysis = this.getAnalysis();
             var data = analysis.compare2D();
 
+            // Check if we actually got a result.
+            if (_.isEmpty(data)) {
+                return [this.errorGraph];
+            }
+
             // Before we do anything, we must make sure the range is an actual interval.
             // In the case of a constant line, we will just add a small offset ourself.
             if (data.range.min == data.range.max) {
@@ -305,6 +310,11 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Analysis"],
         AnalysisDescartesHandler.prototype.getContourDrawing = function() {
             var analysis = this.getAnalysis();
             var data = analysis.compare3D();
+
+            // Check if we actually got a result.
+            if (_.isEmpty(data)) {
+                return [this.errorGraph];
+            }
 
             var drawing = {
                 grid: this.grid,
