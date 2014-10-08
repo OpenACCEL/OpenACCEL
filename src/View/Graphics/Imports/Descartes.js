@@ -41,7 +41,7 @@ var descartes = function (arg) {
   var pRandom = []
   var nrRandom = 200
   var pRandomIndex=0
-    // used if the arguments for colours or thicknesses of 
+    // used if the arguments for colours or thicknesses of
     // contour curves are not explicitly specified; pseudo random values are
     // then used that stay the same in subsequent renderings.
   var TEXTWIDTHOFFSET = 6;
@@ -66,7 +66,7 @@ var descartes = function (arg) {
   var identity=[[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]
   var virtualTrackBall=clone(identity)
   var autoCamBase=[[0,0,0],[1,0,0],[0,1,0],[0,0,1]]
-  // the camera, when under auto-control, 
+  // the camera, when under auto-control,
   // is incrementally rotated. Therefore we have to preserve the camera state.
   // This is done in the form of a set of vectors; the first one is the eye point in 3-space;
   // the other 3 are the hor, vert and gaze unit vectors.
@@ -186,7 +186,7 @@ var descartes = function (arg) {
     // to store all templates containing default values and help info for all Descartes concepts
   var tpl = []
   var validProperties = []
-  for (var i = 0; i < NRDESCARTESPROPS; i++) { 
+  for (var i = 0; i < NRDESCARTESPROPS; i++) {
     tpl[i] = []
     validProperties[i] = ''
   }
@@ -269,7 +269,7 @@ var descartes = function (arg) {
   var _x3 = 'x3'
   var _y3 = 'y3'
   var _z3 = 'z3'
-    // location properties: x,y,z coordinates prior to perspective transformation	
+    // location properties: x,y,z coordinates prior to perspective transformation
   var _b = 'b'
   var _e = 'e'
     // edge properties: begin and end indices. These are indices into the locations array
@@ -307,7 +307,7 @@ var descartes = function (arg) {
     // edge property: the text color for a text tag
     // location property: the text color for a text tag
   var _data = 'data'
-    // location, edge and face property: the data array containing the 
+    // location, edge and face property: the data array containing the
     // properties for individual locations, edges of faces
   var _mode = 'mode'
     // location property: to specify interpolation, or shift modes
@@ -340,7 +340,7 @@ var descartes = function (arg) {
   var _contour = 'contour'
   var _geometry = 'geometry'
     // only one of 'image', 'contour' or 'geometry' properties can be probided
-    // for a graph. If none is present, 'geometry' is assumed.  
+    // for a graph. If none is present, 'geometry' is assumed.
   var _iso = 'iso'
     // property for 'contour' graph
   var _mapR = 'mapR'
@@ -443,7 +443,7 @@ var descartes = function (arg) {
   }
     //-------------------------------------------------------------------
     // defaults and manuals for location properties
-    //--------------------------------------------------------------------- 
+    //---------------------------------------------------------------------
   tpl[LOC][_x] = {
     'v': 0,
     'e': 'x-coordinate of a location',
@@ -650,7 +650,7 @@ var descartes = function (arg) {
     'a': [_b, _e, _eB, _bezier, _locations]
   }
   //to ensure perspective transformation of arrow head dimensions, the
-  // height and width properties of the 
+  // height and width properties of the
   // corresponding locations are used to determine
   // the size of the arrow heads.
   tpl[EDG][_arrows] = {
@@ -1417,7 +1417,7 @@ var descartes = function (arg) {
     }
     //----------------------------------------------------------------------
   this.enforceRedraw = function () {
-    // this detroys the memory e.g. as used in shift 
+    // this detroys the memory e.g. as used in shift
     archive = []
     initGlobals()
   }
@@ -1461,7 +1461,7 @@ var descartes = function (arg) {
         var yM = 1 - y / cH
         if (camera.auto) {
           if (mouseDownState) {
-            // mouse moves near to centre of screen: interpret mouse movements as 
+            // mouse moves near to centre of screen: interpret mouse movements as
             // rotations of virtual trackbal (no quaternions - simply horizontal/vertical - pitch/yaw)
             virtualTrackBall=calcVirtualTrackBall(xM,yM,mouseLocX,mouseLocY)
           } else {
@@ -1499,7 +1499,7 @@ var descartes = function (arg) {
   var calcVirtualTrackBall=function(xNew,yNew,xOld,yOld){
   // this is a simplified implementation. If the camera has an 'auto' proprety and this is
   // set to true, a circle appears on the screen when the mouse is clicked.
-  // Mouse movements within the circle cause roations over the 
+  // Mouse movements within the circle cause roations over the
   // (camera) h or v axes; outside the circle, the k-axis.
   var axis=[]
   // we first compute the orientation of the rotation axis in the camera x-y
@@ -1526,7 +1526,7 @@ var descartes = function (arg) {
     var axLen=vLen(axis)
     // these last two assignments are a matter of heuristic: to distribute the contribution of k-axis
     // rotation more or less evenly
-    
+
     var cosAngle=Math.cos(Math.asin(sinAngle))
     var nAxis=vScalMul(1.0/axLen,axis)
     // this axis is drived in the coordinate system of the current camera.
@@ -1541,7 +1541,7 @@ var descartes = function (arg) {
     for(i=0;i<3;i++){
       nAxis[i]=nnAxis[i]
     }
-    console.log("exc="+excentricity+" axis="+nAxis[0]+","+nAxis[1]+","+nAxis[2])
+    //console.log("exc="+excentricity+" axis="+nAxis[0]+","+nAxis[1]+","+nAxis[2])
     var aCross=[[0,-nAxis[2],nAxis[1]],[nAxis[2],0,-nAxis[0]],[-nAxis[1],nAxis[0],0]]
     var aTensor=[]
       for(i=0;i<3;i++){
@@ -1581,7 +1581,7 @@ var descartes = function (arg) {
   // dArg is an array, one numbered element for each graph.
   // Further, there may be properties grid, lights and camera.
   // One graph is also an array. A graph can either be:
-  // a contour, an image or a geometry (=default).  
+  // a contour, an image or a geometry (=default).
   this.draw = function (dArg) {
     var i = 0;
     statusReport = "";
@@ -1742,9 +1742,9 @@ var descartes = function (arg) {
           lArr[i][_l_z] /= lNorm
         }
         lArr[i][_l_y] = -lArr[i][_l_y]
-        // this is because the y-axis runs from top to bottom, and is therefore inverted in 
+        // this is because the y-axis runs from top to bottom, and is therefore inverted in
         // the mapping to the viewport. To make light directions consistehnt, we have to invert the y-component
-        // of the shining direction.          
+        // of the shining direction.
       }
       return lArr
     }
@@ -1756,14 +1756,14 @@ var descartes = function (arg) {
         lCamera[k] = cameraInfo.hasOwnProperty(k) ? cameraInfo[k] : tpl[CAM][k].v
       }
       if (cameraInfo[_auto]) {
-        // if auto is set to true, the camera has to undergo a rotation 
+        // if auto is set to true, the camera has to undergo a rotation
         // that is taken from the virtual trackball. The auto-mode only makes sense in
         // orbit mode (otherwise the entire virtual trackball concept is lost), so we ignore the
         // setting of property _look
         //
-        // We form 4 points in 3-space, being the camera eye point (0), the horPoint (1), the verPoint (2), and 
+        // We form 4 points in 3-space, being the camera eye point (0), the horPoint (1), the verPoint (2), and
         // the gazePoint (3), and rotate all three using the virtual trackball, These are stored in a global
-        // variable to keep the camera state: the variable autoCamBase. 
+        // variable to keep the camera state: the variable autoCamBase.
         //
         // First displace the camera such that the gaze point, that is the point at distance r in front of
         // the camera, coincides with the origin (which is the rotation centre).
@@ -1809,7 +1809,7 @@ var descartes = function (arg) {
           if (cameraInfo.hasOwnProperty(_roll) || cameraInfo.hasOwnProperty(_yaw) || cameraInfo.hasOwnProperty(_pitch) || cameraInfo[_auto]) {
             // never mind if there also had been set some carthesion orientation properties: if toll-pitch-yaw
             // definitions are provided upon input, these will be used and overrule
-            // any present carthesian ones. Dependinn look (orbit ot pivot), the 
+            // any present carthesian ones. Dependinn look (orbit ot pivot), the
             // gaze point or the eye point, as well as the distance from the gaze point, r,  will be taken into account.
             lCamera[_eX] = lCamera[_gX] + lCamera[_r] * sy * cx
             lCamera[_eY] = lCamera[_gY] + lCamera[_r] * sx
@@ -2232,7 +2232,7 @@ var descartes = function (arg) {
             }
 
         }
-      }  
+      }
     }
     //-----------------------------------------------------------------------
   var dealWithContourIntp = function () {
@@ -2242,7 +2242,7 @@ var descartes = function (arg) {
           for (k in contours[i]) {
             if (k != _map) {
               if (contours[i][k] instanceof Object) {
-                // this is not an atomic value: then it should be 
+                // this is not an atomic value: then it should be
                 // the instruction to interpolate
                 // In any case, there should be a property 'mode'
                 if (contours[i][k].hasOwnProperty(_mode)) {
@@ -2395,7 +2395,7 @@ var descartes = function (arg) {
       if (statusReport == '') dealWithLocationShiftIntp(b)
         // make the backup
       if (statusReport == '') backUpLocationData(b)
-        // deal with the _frac-property 
+        // deal with the _frac-property
       if (statusReport == '') dealWithFrac()
         // deal with the radar icon
       if (statusReport == '') dealWithRadar()
@@ -2409,13 +2409,13 @@ var descartes = function (arg) {
     }
     //---------------------------------------------------------------------------
   var processFaces = function (a, b) {
-      // there is no special processing required for faces, unlike for locations 
+      // there is no special processing required for faces, unlike for locations
       // see if we need to replace values for some of the properties in elements of the edges-array
       if (statusReport == '') dealWithFaceShiftIntp()
     }
     //-----------------------------------------------------------------------------
   var fillInTemplateIntoLocations = function (d, dataPresent) {
-  // we must check for the presence of x,y,(z) coordinates here, because 
+  // we must check for the presence of x,y,(z) coordinates here, because
   // soon thre will be a perspective transformation. If we would postpone the check until the rendering
   // of the location, it would be too late to detect that x and or y and or z are missing.
       if (!dataPresent) {
@@ -2431,7 +2431,7 @@ var descartes = function (arg) {
               locations[0][_z] = tpl[LOC][_z].v
             }
           }
-        
+
       } else {
         for (var i = 0; i < d.length; i++) {
           var vITemplate = new clone(lTemplate)
@@ -2452,7 +2452,7 @@ var descartes = function (arg) {
     }
     //-----------------------------------------------------------------------------
   var fillInTemplateIntoEdges = function (d, dataPresent) {
-      //  if the edges array is still empty, 
+      //  if the edges array is still empty,
       // and if no b or e propreties are given, fill it with default deges.
       // that is one edge between any two subsequent locations.
       if (!dataPresent) {
@@ -2469,7 +2469,7 @@ var descartes = function (arg) {
             // pointers instead of an atomic variable.
             edges.push(eITemplate)
             dealWithEdgesDataArray(eITemplate,i)
-          } 
+          }
           for (i = 0; i < locations.length - 1; i++) {
             edges[i][_b] = i
             edges[i][_e] = i + 1
@@ -2543,7 +2543,7 @@ var descartes = function (arg) {
         if (k != _data) {
           if (tpl[LOC].hasOwnProperty(k)) {
             lTemplate[k] = a[_locations][k]
-          } 
+          }
         } else {
           dataPresent = true
         }
@@ -2558,7 +2558,7 @@ var descartes = function (arg) {
         if (k != _data) {
           if (tpl[EDG].hasOwnProperty(k)) {
             eTemplate[k] = a[_edges][k]
-          } 
+          }
         } else {
           dataPresent = true
         }
@@ -2573,7 +2573,7 @@ var descartes = function (arg) {
         if (k != _data) {
           if (tpl[FCE].hasOwnProperty(k)) {
             fTemplate[k] = a[_faces][k]
-          } 
+          }
         } else {
           dataPresent = true
         }
@@ -2605,7 +2605,7 @@ var descartes = function (arg) {
         for (var k in di) {
           if (tpl[LOC].hasOwnProperty(k)) {
               locations[i][k] = di[k]
-          } 
+          }
         }
       }
     }
@@ -2615,7 +2615,7 @@ var descartes = function (arg) {
         for (var k in ei) {
           if (tpl[EDG].hasOwnProperty(k)) {
               edges[i][k] = ei[k]
-          } 
+          }
         }
       }
     }
@@ -2677,8 +2677,8 @@ var descartes = function (arg) {
         if (statusReport == '') {
           for (k in locations[i]) {
             if (locations[i][k] instanceof Object) {
-              // this is not an atomic value: then it should be 
-              // the instruction to interpolate or to shift 
+              // this is not an atomic value: then it should be
+              // the instruction to interpolate or to shift
               // In any case, there should be a property 'mode'
               if (locations[i][k].hasOwnProperty(_mode)) {
                 switch (locations[i][k][_mode]) {
@@ -2721,7 +2721,7 @@ var descartes = function (arg) {
                         locations[i][k] = b[_locations][i - 1][k]
                       }
                     }
-					        } 
+					        }
                 } else {
                   if(locations[0][k].hasOwnProperty(_value)){
                     locations[0][k]=locations[0][k][_value]
@@ -2747,7 +2747,7 @@ var descartes = function (arg) {
         if (statusReport == '') {
           for (k in edges[i]) {
             if (edges[i][k] instanceof Object) {
-              // this is not an atomic value: then it should be 
+              // this is not an atomic value: then it should be
               // the instruction to interpolate or to shift
               // In any case, there should be a property 'mode'
               if (edges[i][k].hasOwnProperty(_mode)) {
@@ -2816,7 +2816,7 @@ var descartes = function (arg) {
         if (statusReport == '') {
           for (k in faces[i]) {
             if (faces[i][k] instanceof Object && k!=_loop) {
-              // this is not an atomic value: then it should be 
+              // this is not an atomic value: then it should be
               // the instruction to interpolate or to shift
               // In any case, there should be a property 'mode'
               if (faces[i][k].hasOwnProperty(_mode)) {
@@ -3042,9 +3042,9 @@ var descartes = function (arg) {
             break
           case _bezier:
             // 3D beziers are not correctly supported. If we transform and map to 2D the vertices
-            // then the resulting 2D vertices are not the control points for the 
+            // then the resulting 2D vertices are not the control points for the
             // transformed bezier. Deviations are generally not very large though;
-            // a future fix could be to do some subdivisions to make the difference 
+            // a future fix could be to do some subdivisions to make the difference
             // small enough to become unnoticeable.
             doBezier(ei)
             if (ei.hasOwnProperty(_arrows)) {
@@ -3127,7 +3127,7 @@ var descartes = function (arg) {
           var x = (lb[_x] + le[_x]) / 2
           var y = (lb[_y] + le[_y]) / 2
           if (ei[_tag]) {
-            // figure out text placement. 
+            // figure out text placement.
             var textX = mrx((ei.hasOwnProperty(_tagx) ? ei[_tagx] : tpl[EDG][_tagx].v) + x)
             var textY = mry((ei.hasOwnProperty(_tagy) ? ei[_tagy] : tpl[EDG][_tagy].v) + y)
             if (ei[_tag] != '') {
@@ -3378,8 +3378,8 @@ var descartes = function (arg) {
         // doesn't play a role
       var distReduceSpec = 1
         // reduction due to distance along the light ray
-        // since the light beam keeps diverging 
-        // before and after the reflection.        
+        // since the light beam keeps diverging
+        // before and after the reflection.
       for (var l = 0; l < lights.length; l++) {
         if (lights[l].hasOwnProperty(_l_px)) {
           // it is a point source or a spot source. So we have to take both distance and direction into account
@@ -3404,7 +3404,7 @@ var descartes = function (arg) {
           if (lights[l].hasOwnProperty(_l_dropOff)) {
             if (lights[l][_l_dropOff] > 0) {
               // it is a spot source with a finite opening angle
-              // calculate the angle. Realize that both (lInX, lInY, lInZ) and the _l_x, _l_y, _l_z properties of lights[l] are normalized 
+              // calculate the angle. Realize that both (lInX, lInY, lInZ) and the _l_x, _l_y, _l_z properties of lights[l] are normalized
               // Further, notice that lInX is pointing from the surface to the light source, whereas _l_x etc. point from the light source to
               // the surface.
               var dotAng = -lInX * lights[l][_l_x] + lInY * lights[l][_l_y] - lInZ * lights[l][_l_z]
@@ -3419,7 +3419,7 @@ var descartes = function (arg) {
                 spotReduce=1/(ANGLEFACTOR*aOpen*aOpen)
               } else {
                 spotReduce = 0
-              }              
+              }
             }
           }
         }
@@ -3433,7 +3433,7 @@ var descartes = function (arg) {
         }
         dot *=((distReduce*spotReduce)/onePi)
         // since n is normalized to 1/256 and lIn is normalized to 1, the dot is normalized to 1/256
-        // The additional normalisation of 1/pi is for energy conservation; see 
+        // The additional normalisation of 1/pi is for energy conservation; see
         // http://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/
         fcr += (dot * lights[l][_l_r] * myR)
         fcg += (dot * lights[l][_l_g] * myG)
@@ -3441,14 +3441,14 @@ var descartes = function (arg) {
         // should we add a specular contribution?
         // In that case, the user is responsible that the sum
         // of the reflection coefficients for diffuse
-        // and specular doesn't exceed 256 (per channel) to 
+        // and specular doesn't exceed 256 (per channel) to
         // preserve energy conservation
         if (f.hasOwnProperty(_beta)) {
           if (f[_beta] >= 0) {
             var sr = f.hasOwnProperty(_scol_r) ? f[_scol_r] : 256
             var sg = f.hasOwnProperty(_scol_g) ? f[_scol_g] : 256
             var sb = f.hasOwnProperty(_scol_b) ? f[_scol_b] : 256
-              // do specular term. 
+              // do specular term.
             var ex = camera[_eX] - px
             var ey = camera[_eY] - py
             var ez = camera[_eZ] - pz
@@ -3473,7 +3473,7 @@ var descartes = function (arg) {
             // this again is a remaineder of the y-axis running down.
             if (hDotn > 0) {
               var spec = spotReduce*distReduceSpec*(f[_beta]+8) * Math.pow(hDotn, f[_beta]) / (8*256.0*onePi)
-                // we adopt the convention that the color of the highlight is modulated by the 
+                // we adopt the convention that the color of the highlight is modulated by the
                 // the reflection color of the surface. Remember that n is normalized to 1/256.
                 // Since h is normalized to 256, the dot product is correctly normalized.
                 // The additional factor (8+beta)/(8pi) comes from energy normalization
@@ -3504,7 +3504,7 @@ var descartes = function (arg) {
                   // we have three subsequent non-colinear ones.
                   // Also, if the two neighbours of i=0 happen to form a concave
                   // angle, the normal vector is oriented wrongly.
-                  // A more stable method to compute the surface normal sould be to start in the 
+                  // A more stable method to compute the surface normal sould be to start in the
                   // centroid, and compute the average normal by form cross products for all pairs of subsequent
                   // 'spokes'. The is something for later.
                   var lIndex0 = f.loop[i]

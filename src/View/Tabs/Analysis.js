@@ -61,7 +61,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
         }
 
         // Hide error messages for graph
-        $('#an_errormessage').hide();
+        this.canvas.clearError();
 
         // Disable/enable sensitivity analysis button
         var script = controller.getScript();
@@ -194,70 +194,64 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
     };
 
     Analysis.prototype.updateArgument = function(state) {
-        $('#an_errormessage').hide();
+        this.canvas.clearError();
         $('#an_arguments a.an_qtyname').removeClass("an_greyedout").removeClass("help_current");
         $('#an_arguments a.an_qtyname[value="' + state.argument + '"]').addClass("help_current");
 
         // Grey-out all non-reversereachable quantities in the results table
         // var reachables = view.tabs.analysis.compareQuantities[state.argument].quantity.reverseReachables;
-        // $('#an_results a.an_qtyname').removeClass("an_greyedout");
-        // $('#an_results a.an_qtyname').each(function() {
-        //     var qty = $(this).text();
-        //     if (reachables.indexOf(qty) === -1) {
-        //         $(this).addClass('an_greyedout');
-        //         /*if ($(this).hasClass("help_current")) {
-        //             $(this).removeClass("help_current");
-        //         }*/
-        //     }
-        // });
+        var script = controller.getScript();
+        $('#an_results a.an_qtyname').removeClass("an_greyedout");
+        $('#an_results a.an_qtyname').each(function() {
+            var qty = $(this).text();
+            if (script.isReachable(qty, state.argument) === false) {
+                $(this).addClass('an_greyedout');
+            }
+        });
 
         if (state.result !== undefined) {
             var script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
-                $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
-                $('#an_errormessage').show();
+                this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
                 if (script.isReachable(state.result, state.argument) === true) {
                     this.analysis.setX(state.argument);
                     this.analysis.setY(state.result);
                     this.drawPlot();
                 } else {
-                    $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argument);
-                    $('#an_errormessage').show();
+                    this.setError("Quantity " + state.result + " does not depend on " + state.argument);
                 }
             }
         }
     };
 
     Analysis.prototype.updateArgH = function(state) {
-        $('#an_errormessage').hide();
+        this.canvas.clearError();
         $('#an_arguments .an_qtyHarg').removeClass("an_current").html("&nbsp;&nbsp;");
         $('#an_arguments div[data-quantity="' + state.argH + '"]').find(".an_qtyHarg").addClass("an_current").text("H");
 
         // Grey-out all non-reversereachable quantities in the results table
-        var reachables = view.tabs.analysis.compareQuantities[state.argH].quantity.reverseReachables;
-        if (state.argV) {
+        // var reachables = view.tabs.analysis.compareQuantities[state.argH].quantity.reverseReachables;
+        /*if (state.argV) {
             // Take into account the reachables of the argV parameter!
             var reachV = view.tabs.analysis.compareQuantities[state.argV].quantity.reverseReachables;
             reachables = _.intersection(reachables, reachV);
-        }
+        }*/
 
-        // $('#an_results a.an_qtyname').removeClass("an_greyedout");
-        // $('#an_results a.an_qtyname').each(function() {
-        //     var qty = $(this).text();
-        //     if (reachables.indexOf(qty) === -1) {
-        //         $(this).addClass('an_greyedout');
-        //         /*if ($(this).hasClass("help_current")) {
-        //             $(this).removeClass("help_current");
-        //         }*/
-        //     }
-        // });
+        var script = controller.getScript();
+
+        $('#an_results a.an_qtyname').removeClass("an_greyedout");
+        $('#an_results a.an_qtyname').each(function() {
+            var qty = $(this).text();
+            if (script.isReachable(qty, state.argH) === false || (state.argV && script.isReachable(qty, state.argV) === false)) {
+                $(this).addClass('an_greyedout');
+            }
+        });
 
         if (state.result !== undefined) {
             var script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
-                $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
-                $('#an_errormessage').show();
+                this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
                 if (script.isReachable(state.result, state.argH) === true) {
                     if (state.argV) {
@@ -269,8 +263,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
                             this.drawPlot();
                         } else {
                             // Result not reachable from argV
-                            $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argV);
-                            $('#an_errormessage').show();
+                            this.setError("Quantity " + state.result + " does not depend on " + state.argV);
                         }
                     }
 
@@ -278,54 +271,51 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
 
                 } else {
                     // Result not reachable from argH
-                    $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argH);
-                    $('#an_errormessage').show();
+                    this.setError("Quantity " + state.result + " does not depend on " + state.argH);
                 }
             }
         }
     };
 
     Analysis.prototype.updateArgV = function(state) {
-        $('#an_errormessage').hide();
+        this.canvas.clearError();
         $('#an_arguments .an_qtyVarg').removeClass("an_current").html("&nbsp;&nbsp;");
         $('#an_arguments div[data-quantity="' + state.argV + '"]').find(".an_qtyVarg").addClass("an_current").text("V");
 
         // Grey-out all non-reversereachable quantities in the results table
-        var reachables = view.tabs.analysis.compareQuantities[state.argV].quantity.reverseReachables;
+        /*var reachables = view.tabs.analysis.compareQuantities[state.argV].quantity.reverseReachables;
         if (state.argH) {
             // Take into account the reachables of the argH parameter!
             var reachH = view.tabs.analysis.compareQuantities[state.argH].quantity.reverseReachables;
             reachables = _.intersection(reachables, reachH);
-        }
+        }*/
 
-        // $('#an_results a.an_qtyname').removeClass("an_greyedout");
-        // $('#an_results a.an_qtyname').each(function() {
-        //     var qty = $(this).text();
-        //     if (reachables.indexOf(qty) === -1) {
-        //         $(this).addClass('an_greyedout');
-        //         /*if ($(this).hasClass("help_current")) {
-        //             $(this).removeClass("help_current");
-        //         }*/
-        //     }
-        // });
+        var script = controller.getScript();
+
+        $('#an_results a.an_qtyname').removeClass("an_greyedout");
+        $('#an_results a.an_qtyname').each(function() {
+            var qty = $(this).text();
+            if (script.isReachable(qty, state.argV) === false || (state.argH && script.isReachable(qty, state.argH) === false)) {
+                $(this).addClass('an_greyedout');
+            }
+        });
 
         if (state.result !== undefined) {
             var script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
-                $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
-                $('#an_errormessage').show();
+                this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
                 if (script.isReachable(state.result, state.argV) === true) {
                     if (state.argH) {
                         if (script.isReachable(state.result, state.argH) === true) {
                             // Draw contour plot
-                            // this.analysis.argument = state.argument;
-                            // this.analysis.result = state.result;
-                            // this.drawPlot();
+                            this.analysis.setX(state.argH);
+                            this.analysis.setY(state.argV);
+                            this.analysis.setZ(state.result);
+                            this.drawPlot();
                         } else {
                             // Result not reachable from argV
-                            $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argH);
-                            $('#an_errormessage').show();
+                            this.setError("Quantity " + state.result + " does not depend on " + state.argH);
                         }
                     }
 
@@ -333,16 +323,15 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
 
                 } else {
                     // Result not reachable from argV
-                    $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argV);
-                    $('#an_errormessage').show();
+                    this.setError("Quantity " + state.result + " does not depend on " + state.argV);
                 }
             }
         }
     };
 
     Analysis.prototype.updateResult = function(state) {
-        $('#an_errormessage').hide();
-        $('#an_results a.an_qtyname').removeClass("an_greyedout").removeClass("help_current");
+        this.canvas.clearError();
+        $('#an_results a.an_qtyname').removeClass("help_current");
         $('#an_results a.an_qtyname[value="' + state.result + '"]').addClass("help_current");
 
         // Grey-out all non-reachable quantities in the arguments table
@@ -363,24 +352,22 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             // Ready to draw graph plot
             script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
-                $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
-                $('#an_errormessage').show();
+                this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
                 if (script.isReachable(state.result, state.argument) === true) {
                     this.analysis.setX(state.argument);
                     this.analysis.setY(state.result);
                     this.drawPlot();
                 } else {
-                    $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argument);
-                    $('#an_errormessage').show();
+                    this.canvas.clearError();
+                    this.setError("Quantity " + state.result + " does not depend on " + state.argument);
                 }
             }
         } else if (state.argH !== undefined && state.argV !== undefined) {
             // Ready to draw contour plot
             script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
-                $('#an_errormessage').html("Cannot draw graph: script uses history operator<br />and iterations are set to 0.");
-                $('#an_errormessage').show();
+                this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
                 if (script.isReachable(state.result, state.argH) === true) {
                     if (script.isReachable(state.result, state.argV) === true) {
@@ -389,12 +376,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
                         this.analysis.setZ(state.result);
                         this.drawPlot();
                     } else {
-                        $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argV);
-                        $('#an_errormessage').show();
+                        this.setError("Quantity " + state.result + " does not depend on " + state.argV);
                     }
                 } else {
-                    $('#an_errormessage').text("Quantity " + state.result + " does not depend on " + state.argH);
-                    $('#an_errormessage').show();
+                    this.setError("Quantity " + state.result + " does not depend on " + state.argH);
                 }
             }
         }
