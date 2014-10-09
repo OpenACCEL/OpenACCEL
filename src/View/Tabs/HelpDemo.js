@@ -354,6 +354,9 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
                 $(this).html(newText);
             });
 
+            // Display all demo's again
+            this.synchronizeDemoScripts(this.demoScripts);
+
             return;
         }
 
@@ -382,6 +385,17 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         }
 
         this.synchronizeArticles(matches);
+
+        // Search in demo scripts list
+        matches = [];
+        for (var elem in this.demoScripts) {
+            var demo = this.demoScripts[elem];
+            if (re.test(demo)) {
+                matches.push(demo);
+            }
+        }
+
+        this.synchronizeDemoScripts(matches);
     };
 
     HelpDemo.prototype.selectHelpCategory = function(category) {
