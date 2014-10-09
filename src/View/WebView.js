@@ -292,10 +292,12 @@ define(["../Controller/AbstractView",
         this.tabs.ioedit.synchronizeScriptArea();
 
         // Check whether to disable the genetic optimisation tab
-        if (!controller.hasOptimisation) {
+        if (!controller.hasOptimisation()) {
             if (!$('#optimisation').hasClass('disabled')) {
                 $('#optimisation').addClass('disabled').children("a").removeAttr('href');
             }
+        } else {
+            $('#optimisation').removeClass('disabled').children("a").attr('href', '#tab=optimisation');
         }
 
         // Enable the analysis tab if needed
