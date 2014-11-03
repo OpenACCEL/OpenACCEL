@@ -411,17 +411,6 @@ a.toggleswitchoption_current {
 	color: black;
 }
 
-span#checkUnitsMsg {
-	color: white;
-	font-size: 13px;
-	visibility: hidden;
-	margin-left: 14px;
-}
-
-#clearerrors {
-	visibility: hidden;
-}
-
 .buttonin {
 	position: relative;
 	z-index: 1;
@@ -896,6 +885,17 @@ a.help_current {
 	border: none;
 	padding: 0px;
 	font-size: 12px;
+}
+
+span#ioedit_checkUnitsMsg {
+	color: white;
+	font-size: 13px;
+	visibility: hidden;
+	margin-left: 14px;
+}
+
+#ioedit_clearerrors {
+	visibility: hidden;
 }
 
 /**
