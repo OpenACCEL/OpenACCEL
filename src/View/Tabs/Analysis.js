@@ -147,6 +147,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
      */
     Analysis.prototype.sensAnalysis = function() {
         var script = controller.getScript();
+
         if (script.isCompiled() === false) {
             alert("Unable to do sensitivity analysis: the script has not been compiled yet.");
         } else {

@@ -244,6 +244,10 @@ define(["../Controller/AbstractView",
             }
         }
 
+        // Clear analysis table
+        this.tabs.analysis.analysisTable.empty();
+        this.tabs.analysis.analysisTable.flip();
+
         // Disable analysis tab. Will be re-enabled again when the script is compiled
         if (!$('#analysis').hasClass('disabled')) {
             $('#analysis').addClass('disabled').children("a").removeAttr('href');
@@ -277,8 +281,10 @@ define(["../Controller/AbstractView",
 
     /**
      * Event that gets called when the controller has compiled a new script.
+     *
+     * @param {Boolean} empty Whether the new script is an empty script.
      */
-    WebView.prototype.onNewScript = function() {
+    WebView.prototype.onNewScript = function(empty) {
         this.resetAllPlots();
 
         var script = controller.getScript();
@@ -291,6 +297,10 @@ define(["../Controller/AbstractView",
         this.tabs.editrun.synchronizeScriptList(script.getQuantities());
         this.tabs.ioedit.synchronizeScriptArea();
 
+        // Clear analysis table
+        this.tabs.analysis.analysisTable.empty();
+        this.tabs.analysis.analysisTable.flip();
+
         // Check whether to disable the genetic optimisation tab
         if (!controller.hasOptimisation()) {
             if (!$('#optimisation').hasClass('disabled')) {
@@ -301,8 +311,14 @@ define(["../Controller/AbstractView",
         }
 
         // Enable the analysis tab if needed
-        if ($('#analysis').hasClass('disabled')) {
-            $('#analysis').removeClass('disabled').children("a").attr('href', '#tab=analysis');
+        if (!empty) {
+            if ($('#analysis').hasClass('disabled')) {
+                $('#analysis').removeClass('disabled').children("a").attr('href', '#tab=analysis');
+            }
+        } else {
+            if (!$('#analysis').hasClass('disabled')) {
+                $('#analysis').addClass('disabled').children("a").removeAttr('href');
+            }
         }
     };
 

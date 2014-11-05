@@ -534,7 +534,7 @@ define(["Model/Script",
             // quantities and results lists
             this.stop(false);
             this.script = new Script();
-            this.view.onNewScript();
+            this.view.onNewScript(true);
 
             if (clearStore && this.autoSave && window.localStorage) {
                 this.autoSaveStore.clear();

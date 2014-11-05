@@ -296,7 +296,7 @@ a.toggleswitchoption_current {
 
 .an_senstblhd {
 	display: table-cell;
-	padding: 1px 2px;
+	padding: 1px 7px;
 }
 
 .an_senstblstdrow {
@@ -307,6 +307,7 @@ a.toggleswitchoption_current {
 
 .tblcell {
 	display: table-cell;
+	padding: 2px 7px;
 }
 
 #an_errormessage {
