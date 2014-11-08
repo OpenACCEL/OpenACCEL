@@ -286,6 +286,8 @@ a.toggleswitchoption_current {
 	display: table-cell;
 	font-weight: bold;
 	text-align: left;
+	text-decoration: underline;
+	padding-bottom: 2px;
 }
 
 .an_senstblhdrow {
@@ -297,6 +299,8 @@ a.toggleswitchoption_current {
 .an_senstblhd {
 	display: table-cell;
 	padding: 1px 7px;
+	text-decoration: underline;
+	padding-bottom: 2px;
 }
 
 .an_senstblstdrow {
@@ -305,9 +309,48 @@ a.toggleswitchoption_current {
 	text-align: center;
 }
 
+.an_senstblrow {
+	display: table-row;
+	color: white;
+	text-align: center;
+}
+
 .tblcell {
 	display: table-cell;
 	padding: 2px 7px;
+}
+
+.tblcell_qty1name {
+	color: #ffff00;
+	display: table-cell;
+	padding: 2px 7px;
+	text-align: left;
+}
+
+.tblcell_qty3name {
+	color: #cccc00;
+	display: table-cell;
+	padding: 2px 7px;
+	text-align: left;
+}
+
+.percinput {
+	width: 30px;
+	text-align: center;
+}
+
+.tblcell_qty1val {
+	color: #00ffff;
+	display: table-cell;
+	padding: 2px 7px;
+	text-align: center;
+}
+
+.tblcell_qty3val {
+	color: #00cccc;
+	display: table-cell;
+	padding: 2px 7px;
+	text-align: center;
 }
 
 #an_errormessage {

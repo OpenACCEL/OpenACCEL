@@ -23,6 +23,21 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
         this.setPlotType(this.mode);
 
         /**
+         * Whether to use percentages or absolute spreading in the sensitivity analysis.
+         *
+         * @type {String}
+         */
+        this.calcmode = 'p';
+
+        /**
+         * The percentual or absolute deviations with which the sensitivity will be computed
+         * for a cat 1 or 3 quantity. Keyed by quantity name.
+         *
+         * @type {Object}
+         */
+        this.percs = {};
+
+        /**
          * The HTML buffers for the list of argument and result quantities
          *
          * @type {HTMLBuffer}
@@ -40,7 +55,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
         /**
          * The quantities in the script that can be plotted. These are the quantities
          * that have atomic numeric values. Keyed by quantity name, value is an object
-         * {Quantity, value}.
+         * {'quantity': Quantity, 'value': value}.
          *
          * @type {Object}
          */
@@ -143,6 +158,45 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
     };
 
     /**
+     * Calculates the sensitivity of the given cat 1 or 3 quantity w.r.t. all
+     * cat 2 quantities
+     *
+     * @param  {String} qname the name of the quantity of which to compute the sensitivity
+     * @return {Number} The calculated sensitivity for each cat 2 quantity
+     */
+    Analysis.prototype.calcSensitivity = function(q) {
+        // body...
+    };
+
+    /**
+     * Returns the given value except when the given quantity is a cat 1 slider: in that
+     * case the value is clipped to the range of the slider and rounded if nessecary.
+     *
+     * @param  {String} q The name of the quantity of which to carefully set the value
+     * @param  {Number} v The value to try to set
+     * @return {Number} The given value, clipped to appropriate range and rounded if nessecary.
+     */
+    Analysis.prototype.carefullySetValue = function(q, v) {
+        var qty = controller.getScript().getQuantity(q);
+        var cat = qty.category;
+
+        if (cat === 1) {
+            var inp = qty.input;
+            if (inp.type === 'slider') {
+                if (v < inp.parameters[1]) {
+                    v = inp.parameters[1];
+                }
+
+                if (v > inp.parameters[2]) {
+                    v = inp.parameters[2];
+                }
+            }
+        }
+
+        return v;
+    };
+
+    /**
      * Performs the sensitivity analysis and constructs and displays the results table for it.
      */
     Analysis.prototype.sensAnalysis = function() {
@@ -153,25 +207,152 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
         } else {
             this.analysisTable.empty();
 
-            // Get all category 2 quantities that have a numeric atomic value
-            var cat2quantities = [];
+            // Arrays of the category 2 and category 1 or 3 quantities, respectively
+            var cat2qs = [];
+            var cat13qs = [];
+
+            // Datastructure holding the information in the sensitivity table. It is actually a 2d-array
+            // with as first index the category 1 or 3 quantity (row) and as second index the cat 2
+            // quantity (column). The value is the computed sensitivity, absolute or relative.
+            var senstbl = {};
+
+            // Same structure as senstbl, but with the reverse order of the 2 indices.
+            // Used to calculate the variances.
+            var pseudoPDs = {};
+
+            // Determine all category 2 and category (1 or 3) quantities that have a numeric, atomic value
             var elem;
             for (elem in this.compareQuantities) {
                 var q = this.compareQuantities[elem].quantity;
                 if (q.category === 2) {
-                    cat2quantities.push(q.name);
+                    cat2qs.push(q.name);
+                } else if (q.category === 1 || q.category === 3) {
+                    cat13qs.push(q.name);
                 }
             }
 
+            // Fill in default percentage values
+            for (var elem in cat13qs) {
+                var q = cat13qs[elem];
+                this.percs[q] = 1.0;
+            }
+
+            // Create 2d arrays
+            for (var elem in cat13qs) {
+                var q = cat13qs[elem];
+                senstbl[q] = {};
+            }
+            for (var elem in cat2qs) {
+                var q = cat2qs[elem];
+                pseudoPDs[q] = {};
+            }
+
+            /*----- Calculate table values -----*/
+            for (elem in cat13qs) {
+                var nul = [];
+                var plus = [];
+                var min = [];
+
+                var q13 = cat13qs[elem];
+                var value;
+                for (el in this.compareQuantities) {
+                    if (this.compareQuantities[el].quantity.name === q13) {
+                        value = this.compareQuantities[el].value;
+                        break;
+                    }
+                }
+
+                // Determine the delta to use, as specified by the user or if not, the default of 1.0
+                var delta;
+                if (this.calcmode === 'p') {
+                    delta = this.percs[q13] * value / 100;
+                } else {
+                    delta = this.percs[q13];
+                }
+
+                // Get current values of all cat2 quantities, and prepare pos and neg objects
+                // with same values for now
+                for (elem in cat2qs) {
+                    var q2 = cat2qs[elem];
+                    var q2val;
+                    for (el in this.compareQuantities) {
+                        if (this.compareQuantities[el].quantity.name === q2) {
+                            q2val = this.compareQuantities[el].value;
+                            break;
+                        }
+                    }
+
+                    nul.push({'name': q2, 'value': q2val});
+                    plus.push({'name': q2, 'value': q2val});
+                    min.push({'name': q2, 'value': q2val});
+                }
+
+                // Get value of current+delta and current-delta for all cat2 quantities
+                // We cannot simply increment and decrement the current value with delta
+                // because we have to take into account quantities that are input sliders
+                // which have upper and lower bounds
+                var plusval = this.carefullySetValue(q13, value+delta)
+                var minusval = this.carefullySetValue(q13, value-delta);
+                script.exe.executeQuantities([{'name': q13, 'value': plusval}], plus, 1);
+                script.exe.executeQuantities([{'name': q13, 'value': minusval}], min, 1);
+                script.exe.setValue(q13, value);
+
+                // Convert arrays which now hold the values to indexed objects for convenience
+                var plusres = {};
+                var minres = {};
+                var nulres = {};
+                for (var el in plus) {
+                    var obj = plus[el];
+                    plusres[obj.name] = obj.value;
+                }
+                for (var el in min) {
+                    var obj = min[el];
+                    minres[obj.name] = obj.value;
+                }
+                for (var el in nul) {
+                    var obj = nul[el];
+                    nulres[obj.name] = obj.value;
+                }
+
+                // Determine all sensitivity results and store them in the table
+                for (elem in nul) {
+                    var q2 = nul[elem].name;
+                    if (isNumeric(nulres[q2]) && isNumeric(plusres[q2]) && isNumeric(minres[q2])) {
+                        // First store the pseudo-partial derivative
+                        var pd = (Math.abs(plusres[q2]-nulres[q2]) + Math.abs(minres[q2]-nulres[q2]))/(2*delta);
+                        pseudoPDs[q2][q13] = pd;
+
+                        // Now compute the actual sensitivity for display in the table
+                        var sens = (Math.abs(plusres[q2]-nulres[q2]) + Math.abs(minres[q2]-nulres[q2]))/2.0;
+                        if (this.calcmode === 'a') {
+                            senstbl[q13][q2] = sens.toPrecision(2);
+                        } else {
+                            // Relative sensitivity
+                            if (nulres[q2] != 0) {
+                                senstbl[q13][q2] = (sens / (0.01 * nulres[q2] * this.percs[q13])).toPrecision(2);
+                            } else {
+                                // Division by zero
+                                if (plusres[q2] === minres[q2]) {
+                                    senstbl[q13][q2] = '0/0';
+                                } else {
+                                    senstbl[q13][q2] = '.../0';
+                                }
+                            }
+                        }
+                    } else {
+                        // Results of plus, min or nul not numeric
+                        senstbl[q13][q2] = 'NaN';
+                    }
+                }
+            }
 
             /*--- Table heading ---*/
             var head = '<div class="an_senstblhdrow"><div class="an_senstblhd" style="text-align: left">Name</div>';
             head += '<div class="an_senstblhd">Delta</div>';
 
             var qName;
-            for (elem in cat2quantities) {
-                qName = cat2quantities[elem];
-                head += '<div class="an_senstblhd">' + qName + '</div>';
+            for (elem in cat2qs) {
+                head += '<div class="an_senstblhd">' + cat2qs[elem] + '</div>';
             }
 
             head += '</div>';
@@ -179,16 +360,63 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
 
 
             /*--- Standard deviation row ---*/
-            var stdev = '<div class="an_senstblstdrow"><div class="tblcell">Std. dev:</div>';
+            var stdev = '<div class="an_senstblstdrow"><div class="tblcell" style="text-align: left;">Std. dev:</div>';
             stdev += '<div class="tblcell">Percent:</div>';
 
-            for (elem in cat2quantities) {
-                qName = cat2quantities[elem];
-                stdev += '<div class="tblcell">' + this.analysis.calcStdDev(qName).toString() + '</div>';
+            for (elem in cat2qs) {
+                stdev += '<div class="tblcell">' + this.analysis.calcStdDev(cat2qs[elem]).toString() + '</div>';
             }
 
             stdev += '</div>';
             this.analysisTable.append(stdev);
+
+
+            /*--- Table body ---*/
+            // First all category 1 quantities
+            for (row in senstbl) {
+                if (script.getQuantity(row).category !== 1) {
+                    continue;
+                }
+
+                var tbody = '<div class="an_senstblrow">';
+                var column = senstbl[row];
+
+                // Cat 1 or 3 quantity name
+                tbody += '<div class="tblcell_qty1name">' + row + '</div>';
+                // Absolute or relative deviation used
+                tbody += '<div class="tblcell"><input id="perc_' + row + '" type="number" class="percinput" value="1" /></div>';
+                // Make sure to display the sensitivities of the cat 2 quantities in the same order
+                // as the quantities are displayed in the column heading
+                for (col in cat2qs) {
+                    tbody += '<div class="tblcell_qty1val">' + column[cat2qs[col]] + '</div>';
+                }
+
+                tbody += '</div>';
+                this.analysisTable.append(tbody);
+            }
+
+            // Then all category 3 quantities
+            for (row in senstbl) {
+                if (script.getQuantity(row).category !== 3) {
+                    continue;
+                }
+
+                var tbody = '<div class="an_senstblrow">';
+                var column = senstbl[row];
+
+                // Cat 1 or 3 quantity name
+                tbody += '<div class="tblcell_qty3name">' + row + '</div>';
+                // Absolute or relative deviation used
+                tbody += '<div class="tblcell"><input id="perc_' + row + '" type="number" class="percinput" value="1" /></div>';
+                // Make sure to display the sensitivities of the cat 2 quantities in the same order
+                // as the quantities are displayed in the column heading
+                for (col in cat2qs) {
+                    tbody += '<div class="tblcell_qty3val">' + column[cat2qs[col]] + '</div>';
+                }
+
+                tbody += '</div>';
+                this.analysisTable.append(tbody);
+            }
 
             this.analysisTable.flip();
         }
@@ -405,7 +633,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
                 var val = exe.getValue(qname);
 
                 if (isNumeric(val) && !(val instanceof Array) && val !== false && val !== true && val !== '') {
-                    this.compareQuantities[qname] = {'quantity': qty, 'value': val.toPrecision(2)};
+                    this.compareQuantities[qname] = {'quantity': qty, 'value': val};
                 }
             }
 
@@ -453,7 +681,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             var obj = this.compareQuantities[elem];
             var qtyName = obj.quantity.name;
             var comment = obj.quantity.getComment();
-            var value = obj.value;
+            var value = obj.value.toPrecision(2);
 
             var html = '<div style="display: table-row">';
             html += '<a class="inline an_qtyname" id="arg_' + qtyName + '" value="' + qtyName + '">' + qtyName + '</a>';
@@ -497,7 +725,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             var obj = this.compareQuantities[elem];
             var qtyName = obj.quantity.name;
             var comment = obj.quantity.getComment();
-            var value = obj.value;
+            var value = obj.value.toPrecision(2);
 
             var html = '<div style="display: table-row" data-quantity="' + qtyName + '">';
             html += '<a class="inline an_qtyname" id="arg_' + qtyName + '" value="' + qtyName + '">' + qtyName + '</a>';
@@ -560,7 +788,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "lodash"], /**@lends 
             var obj = this.compareQuantities[elem];
             var qtyName = obj.quantity.name;
             var comment = obj.quantity.getComment().trim();
-            var value = obj.value;
+            var value = obj.value.toPrecision(2);
 
             var html = '<div style="display: table-row">';
             html += '<a class="inline an_qtyname" id="arg_' + qtyName + '" value="' + qtyName + '">' + qtyName + '</a>';
