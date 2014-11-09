@@ -14,6 +14,10 @@ html
         link(rel = 'stylesheet', type = 'text/css', href = 'css/accelstyle.css')
         link(rel = 'stylesheet', type = 'text/css', href = 'css/codemirror.css')
     body
+        noscript
+            div#noscriptdiv
+                h1(style='margin-top: 10px; margin-bottom: 7px;') Javascript disabled
+                span Javascript seems to be disabled. OpenACCEL needs javascript in order to work. Please enable it in your browser.
         #loading(style = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000000; background: #FFDDFF; background: linear-gradient(#FFDDFF, #FFFFFF); text-align: center')
             .inline(style = 'position: relative; top: 100px')
                 div(style = 'background-image: url("../img/logoV2.png"); background-size: 100% auto; background-repeat: no-repeat; width: 800px; height: 200px;')
