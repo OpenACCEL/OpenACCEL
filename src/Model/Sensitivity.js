@@ -115,6 +115,10 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
      */
     Sensitivity.prototype.analyse = function(quantities) {
         this.compareQuantities = quantities;
+        this.senstbl = {};
+        this.pseudoPDs = {};
+        this.senscat2 = [];
+        this.senscat13 = [];
 
         var script = controller.getScript();
         if (script.isCompiled() === false) {
@@ -151,7 +155,7 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             /*----- Calculate table values -----*/
             for (elem in this.senscat13) {
                 var q13 = this.senscat13[elem];
-                this.calcSensitivity(q13, this.senscat2, (this.calcmode === 'p'));
+                this.calcSensitivity(q13, (this.calcmode === 'p'));
             }
 
             // Draw table
@@ -160,14 +164,13 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
     };
 
     /**
-     * Calculates the sensitivities of all quantities in q2s relative to the given
+     * Calculates the sensitivities of all cat 2 quantities relative to the given
      * cat 1 or 3 (q13) quantity, absolute or relative, and updates the values in the
      * table datastructure. Also updates the entries in the pseudo partial derivatives
      * table.
      *
      * @param  {String} q13 The name of the cat 1 or 3 quantity of which to
      * update the sensitivities
-     * @param {Array} q2s Array of cat 2 quantities of which to update the sensitivities.
      * @param {Boolean} relative Whether to compute the relative sensitivities, as
      * opposed to the absolute ones.
      * @post this.senstbl[q13] and this.pseudoPDs have been recalculated based on the current
@@ -175,7 +178,7 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
      * @modifies this.senstbl
      * @modifies this.pseudoPDs
      */
-    Sensitivity.prototype.calcSensitivity = function(q13, q2s, relative) {
+    Sensitivity.prototype.calcSensitivity = function(q13, relative) {
         var script = controller.getScript();
         var nul = []
         var plus = [];
@@ -364,18 +367,20 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
                 e.preventDefault();
 
                 var q13 = e.target.id.substring(5);
-                view.tabs.analysis.percs[q13] = parseInt($(e.target).val());
-                view.tabs.analysis.calcSensitivity(q13, this.senscat2, this.calcmode);
-                view.tabs.analysis.drawTable();
+                var calcmode = view.tabs.analysis.sensitivity.calcmode;
+                view.tabs.analysis.sensitivity.percs[q13] = parseFloat($(e.target).val());
+                view.tabs.analysis.sensitivity.calcSensitivity(q13, (calcmode === 'p'));
+                view.tabs.analysis.sensitivity.drawTable();
 
                 e.stopPropagation();
                 e.cancelBubble = true;
             }
         }).on("change", function(e) {
             var q13 = e.target.id.substring(5);
-            view.tabs.analysis.percs[q13] = parseInt($(e.target).val());
-            view.tabs.analysis.calcSensitivity(q13, this.senscat2, this.calcmode);
-            view.tabs.analysis.drawTable();
+            var calcmode = view.tabs.analysis.sensitivity.calcmode;
+            view.tabs.analysis.sensitivity.percs[q13] = parseFloat($(e.target).val());
+            view.tabs.analysis.sensitivity.calcSensitivity(q13, (calcmode === 'p'));
+            view.tabs.analysis.sensitivity.drawTable();
 
             e.stopPropagation();
             e.cancelBubble = true;

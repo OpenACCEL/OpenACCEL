@@ -390,6 +390,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
             this.resultList.flip();
             this.resultList.hideIfEmpty();
         }
+
+        this.sensitivity.compareQuantities = this.compareQuantities;
     };
 
     Analysis.prototype.makeLists = function() {
