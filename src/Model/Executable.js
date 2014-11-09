@@ -603,6 +603,9 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         for (key in outputs) {
             elem = outputs[key];
             this.setHasChanged(elem.name, true);
+        }
+        for (key in outputs) {
+            elem = outputs[key];
             elem.value = this.getValue(elem.name);
         }
 

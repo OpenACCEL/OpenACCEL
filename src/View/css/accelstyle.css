@@ -307,6 +307,7 @@ a.toggleswitchoption_current {
 	display: table-row;
 	color: #ff8800;
 	text-align: center;
+	font-weight: bold;
 }
 
 .an_senstblrow {
@@ -386,6 +387,13 @@ a.toggleswitchoption_current {
 	color: #00cc00;
 	text-decoration: underline;
 	cursor: pointer;
+	display: table-cell !important;
+	padding-right: 5px;
+	padding-left: 2px;
+}
+
+.an_qtynocomment {
+	color: #B0B6B0;
 	display: table-cell !important;
 	padding-right: 5px;
 	padding-left: 2px;

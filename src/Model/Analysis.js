@@ -106,17 +106,6 @@ define(["Model/Script", "lodash"], /** @lends Model */ function(Script, _) {
     };
 
     /**
-     * Calculates the standard deviation of the given quantity.
-     *
-     * @param  {String} qName The name of the quantity of which to calculate
-     * the standard deviation
-     * @return {Number} The standard deviation of qName
-     */
-    Analysis.prototype.calcStdDev = function(qName) {
-        return 1;
-    };
-
-    /**
      * Sets a target interval to source interval.
      * An example input would be: setRange(this.range, {min: 5, max:10}).
      *
