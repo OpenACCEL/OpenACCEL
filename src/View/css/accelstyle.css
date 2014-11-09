@@ -321,6 +321,16 @@ a.toggleswitchoption_current {
 	padding: 2px 7px;
 }
 
+.tblcell_error {
+	display: table-cell;
+	padding: 2px 7px;
+	color: red;
+	text-align: center;
+	text-decoration: underline;
+	cursor: pointer;
+	font-weight: bold;
+}
+
 .tblcell_qty1name {
 	color: #ffff00;
 	display: table-cell;
@@ -373,6 +383,7 @@ a.toggleswitchoption_current {
 	margin-left: 3px;
 	font-size: 13px;
 	background: #882288;
+	padding-top: 4px;
 }
 
 .an_qtyname {

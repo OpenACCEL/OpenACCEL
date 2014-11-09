@@ -224,9 +224,25 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
         var plusval = this.carefullySetValue(q13, value+delta)
         var minusval = this.carefullySetValue(q13, value-delta);
 
-        script.exe.executeQuantities([{'name': q13, 'value': plusval}], plus, 0);
-        script.exe.executeQuantities([{'name': q13, 'value': minusval}], min, 0);
-        script.exe.setValue(q13, value);    // Make sure to reset the value!
+        var err = false;
+        try {
+            script.exe.executeQuantities([{'name': q13, 'value': plusval}], plus, 0);
+            script.exe.executeQuantities([{'name': q13, 'value': minusval}], min, 0);
+        } catch (e) {
+            // Fill in error message. We do not add something to the this.pseudoPDs array
+            // so this value will just be ignored when computing the variances.
+            for (elem in this.senscat2) {
+                var q2 = this.senscat2[elem];
+                this.senstbl[q13][q2] = e.message;
+            }
+            err = true;
+        } finally {
+            // Make sure to reset the value!
+            script.exe.setValue(q13, value);
+        }
+        if (err === true) {
+            return;
+        }
 
         // Convert arrays which now hold the result values to indexed objects, for convenience
         var plusres = {};
@@ -302,10 +318,11 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
 
         /*--- Standard deviation row ---*/
         var stdev = '<div class="an_senstblstdrow"><div class="tblcell" style="text-align: left;">Std. dev:</div>';
-        stdev += '<div class="tblcell">Percent:</div>';
+        var btnvalue = (this.calcmode === 'a') ? "Absolute:" : "Percentage:";
+        stdev += '<div class="tblcell"><input id="sens_modebutton" type="button" class="buttonin" value="' + btnvalue + '" onclick="view.tabs.analysis.sensitivity.toggleMode();" title="Toggle between absolute and relative sensitivity" /></div>';
 
         for (elem in this.senscat2) {
-            stdev += '<div class="tblcell">' + this.computeStdDev(this.senscat2[elem]) + '</div>';
+            stdev += '<div class="tblcell">' + this.computeVariance(this.senscat2[elem]) + '</div>';
         }
 
         stdev += '</div>';
@@ -329,7 +346,12 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             // Make sure to display the sensitivities of the cat 2 quantities in the same order
             // as the quantities are displayed in the column heading
             for (col in this.senscat2) {
-                tbody += '<div class="tblcell_qty1val">' + column[this.senscat2[col]] + '</div>';
+                var v = column[this.senscat2[col]];
+                if (isNumeric(v)) {
+                    tbody += '<div class="tblcell_qty1val" style="' + this.getStyleForValue(v, 1) + '">' + v + '</div>';
+                } else {
+                    tbody += '<div class="tblcell_error" title="' + v + '">err</div>';
+                }
             }
 
             tbody += '</div>';
@@ -352,7 +374,12 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             // Make sure to display the sensitivities of the cat 2 quantities in the same order
             // as the quantities are displayed in the column heading
             for (col in this.senscat2) {
-                tbody += '<div class="tblcell_qty3val">' + column[this.senscat2[col]] + '</div>';
+                var v = column[this.senscat2[col]];
+                if (isNumeric(v)) {
+                    tbody += '<div class="tblcell_qty3val" style="' + this.getStyleForValue(v, 3) + '">' + v + '</div>';
+                } else {
+                    tbody += '<div class="tblcell_error" title="' + v + '">err</div>';
+                }
             }
 
             tbody += '</div>';
@@ -385,6 +412,53 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             e.stopPropagation();
             e.cancelBubble = true;
         });
+
+        // Click on error messages
+        $('.tblcell_error').on('click', function(e) {
+            var msg = $(this).attr('title');
+            alert(msg);
+
+            e.stopPropagation();
+            e.cancelBubble = true;
+        });
+    };
+
+    Sensitivity.prototype.getStyleForValue = function(val, cat) {
+        if (this.calcmode === 'p') {
+            if (val > 1.5) {
+                return "color: #ff0000";
+            } else {
+                if (cat === 1) {
+                    return "color: #ffffff";
+                } else {
+                    return "color: #aaaaaa";
+                }
+            }
+        } else {
+            if (cat === 1) {
+                return "color: #ffffff";
+            } else {
+                return "color: #aaaaaa";
+            }
+        }
+    };
+
+    /**
+     * Changes the mode from relative to absolute, or the other way around,
+     * depending on the current value.
+     *
+     * @post this.calcmode has been toggled from 'p' to 'a' or the other way around.
+     */
+    Sensitivity.prototype.toggleMode = function() {
+        if (this.calcmode === 'a') {
+            this.calcmode = 'p';
+            $("#sens_modebutton").attr("value", "Percentage:");
+            this.analyse(this.compareQuantities);
+        } else {
+            this.calcmode = 'a';
+            $("#sens_modebutton").attr("value", "Absolute:");
+            this.analyse(this.compareQuantities);
+        }
     };
 
     /**
@@ -394,8 +468,42 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
      * compute the standard deviation.
      * @return {Number} The standard deviation of q2.
      */
-    Sensitivity.prototype.computeStdDev = function(q2) {
-        return 1;
+    Sensitivity.prototype.computeVariance = function(q2) {
+        // First check whether the value isn't zero!
+        var value;
+        for (el in this.compareQuantities) {
+            if (this.compareQuantities[el].quantity.name === q2) {
+                value = this.compareQuantities[el].value;
+                break;
+            }
+        }
+        if (value === 0) {
+            return ".../0";
+        }
+
+        var sum = 0;
+        for (elem in this.pseudoPDs[q2]) {
+            var pd = this.pseudoPDs[q2][elem];
+
+            var sig = 0.0;
+            if (this.calcmode === 'a') {
+                sig = this.percs[elem];
+            } else {
+                var val;
+                for (el in this.compareQuantities) {
+                    if (this.compareQuantities[el].quantity.name === elem) {
+                        val = this.compareQuantities[el].value;
+                        break;
+                    }
+                }
+                sig = this.percs[elem] * val / 100.0;
+            }
+
+            sum += Math.pow(pd*sig, 2);
+        }
+
+        var rSig = Math.sqrt(sum) * (100/value);
+        return rSig.toPrecision(2);
     };
 
     // Exports are needed, such that other modules may invoke methods from this module file.
