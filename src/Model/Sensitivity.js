@@ -318,8 +318,9 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
 
         /*--- Standard deviation row ---*/
         var stdev = '<div class="an_senstblstdrow"><div class="tblcell" style="text-align: left;">Std. dev:</div>';
-        var btnvalue = (this.calcmode === 'a') ? "Absolute:" : "Percentage:";
-        stdev += '<div class="tblcell"><input id="sens_modebutton" type="button" class="buttonin" value="' + btnvalue + '" onclick="view.tabs.analysis.sensitivity.toggleMode();" title="Toggle between absolute and relative sensitivity" /></div>';
+        var phtml = (this.calcmode === 'p') ? 'selected="selected" ' : ' ';
+        var ahtml = (this.calcmode === 'a') ? 'selected="selected" ' : ' ';
+        stdev += '<div class="tblcell"><select id="sens_calcmode" onchange="view.tabs.analysis.sensitivity.setMode(this.value);" title="Toggle between absolute and relative sensitivity"><option ' + phtml + 'value="p">Percentual</option><option ' + ahtml + 'value="a">Absolute</option></select></div>';
 
         for (elem in this.senscat2) {
             stdev += '<div class="tblcell">' + this.computeVariance(this.senscat2[elem]) + '</div>';
@@ -444,21 +445,20 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
     };
 
     /**
-     * Changes the mode from relative to absolute, or the other way around,
-     * depending on the current value.
+     * Changes the sensitivity calculation mode to mode, which can either be
+     * 'a' for absolute, or 'p' for relative. Subsequently recalculates and
+     * redraws the entire sensitivity table.
      *
-     * @post this.calcmode has been toggled from 'p' to 'a' or the other way around.
+     * @param {String} mode The mode to use to compute the sensitivities. Use 'a' for
+     * absolute and 'p' for relative/percentual.
+     * @post this.calcmode === mode
      */
-    Sensitivity.prototype.toggleMode = function() {
-        if (this.calcmode === 'a') {
-            this.calcmode = 'p';
-            $("#sens_modebutton").attr("value", "Percentage:");
-            this.analyse(this.compareQuantities);
-        } else {
-            this.calcmode = 'a';
-            $("#sens_modebutton").attr("value", "Absolute:");
-            this.analyse(this.compareQuantities);
+    Sensitivity.prototype.setMode = function(mode) {
+        if (mode !== 'a' && mode !== 'p') {
+            mode = 'p';
         }
+        this.calcmode = mode;
+        this.analyse(this.compareQuantities);
     };
 
     /**
