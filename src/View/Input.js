@@ -68,7 +68,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
 
     Slider.prototype.getHTML = function() {
         return '' +
-            '<div id = "userinput' + this.identifier + '">' +
+            '<div id = "userinput' + this.identifier + '" class="editrun_userinputentry">' +
                 '<div class = "inline">' + this.label + '</div>' +
                 '<div id = "userslider' + this.identifier + 'value" class = "inline">(' + this.val + ')</div>' +
                 '<div id = "userslider' + this.identifier + '"></div>' +
@@ -104,7 +104,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
 
     CheckBox.prototype.getHTML = function() {
         return '' +
-            '<div id = "userinput' + this.identifier + '">' +
+            '<div id = "userinput' + this.identifier + '" class="editrun_userinputentry">' +
                 '<label for = "usercheck' + this.identifier + '">' + this.label + '</label>' +
                 '<div class = "inline checkboxin">' +
                     '<input type = "checkbox" id = "usercheck' + this.identifier + '" ' + (this.val === true ? 'checked' : '') + '>' +
@@ -146,7 +146,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
 
     TextBox.prototype.getHTML = function() {
         return '' +
-            '<div id = "userinput' + this.identifier + '">' +
+            '<div id = "userinput' + this.identifier + '" class="editrun_userinputentry">' +
                 '<label for = "usertext' + this.identifier + '">' + this.label + '</label>' +
                 '<input type = "text" id = "usertext' + this.identifier + '" class = "textin" value = "' + this.val + '">' +
             '</div>';
@@ -186,7 +186,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
 
     Button.prototype.getHTML = function() {
         return '' +
-            '<div id = "userinput' + this.identifier + '">' +
+            '<div id = "userinput' + this.identifier + '" class="editrun_userinputentry">' +
                 '<label for = "userbutton' + this.identifier + '">' + this.quantity + '</label>' +
                 '<input type = "button" id = "userbutton' + this.identifier + '" class = "buttonin" value = "' + this.label + '">' +
             '</div>';

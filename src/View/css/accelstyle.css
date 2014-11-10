@@ -772,6 +772,13 @@ a.toggleswitchoption_current {
 
 #editrun_userinput {
 	color: #FFFFFF;
+	max-width: 130px;
+}
+
+.editrun_userinputentry {
+	max-width: 130px;
+	word-break: break-all;
+	word-wrap: break-word;
 }
 
 #editrun_result .operator {
@@ -779,8 +786,10 @@ a.toggleswitchoption_current {
 }
 
 .resultvalue {
-	width: 128px;
+	max-width: 100px;
 	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .resultvalue:hover {
 	font-weight: bold;
