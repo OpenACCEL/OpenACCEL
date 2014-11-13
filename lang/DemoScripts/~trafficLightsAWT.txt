@@ -1,0 +1,183 @@
+ 
+delayEastward=slider(29,1,100)
+    //  controls the time delay between any two subsequent cars arriving from the West 
+delayWestward=slider(5,1,100)
+    //  controls the time delay between any two subsequent cars arriving from the East 
+waitLoc=[passLoc[0]-v[0]*delayEastward,passLoc[1]-v[1]*delayWestward]
+    //  cars that are not taking part in the traffic have to wait at
+    //  this location (outside the screen). Index 0: eastward bound traffic,
+    //  index 1: westward bound traffic. This index convention applies
+    //  throughout; the dummy 'd' serves
+    //  to distinguish eastward and westward bound. 
+startLoc=[-3,103]
+    //  initially (upon reset), one car (in both directions)
+    //  is placed in the start location, and put in 'riding' mode.
+    //  Once this car passes the 'passLoc' location, the next follows, and so on.
+    //  So this serves to bootstrap the entire traffic. 
+passLoc=[-5,105]
+    //  If my predecessor passes this location, I am allowed to start riding.
+    //  Notice that, playing with these values, the frequency of the east and westward
+    //  traffic streams can be controlled. Indeed, a next car is allowed to
+    //  depart of its predecessor passes passLoc. In the case the values
+    //  are symmetric round x=50, and the speeds in east and west are equal,
+    //  the frequencies are equal as well. 
+critStartLoc=[30,70] 
+critStopLoc=[35,65]
+    //  a car between the critStartLoc and critStopLoc, in either direction,
+    //  when encountering a red signal, has to stop. Cars that are beyond this point
+    //  are allowed to carry on; cars earlier than this section are not under
+    //  the influence of the signal light,
+    //  but they may have to stop if their are cars in front of them. 
+endLoc=[115,-15]
+    //  a car beyond this location is 'ready' and leaves the simulation
+    //  and is put back in the waitLoc to wait for a next round. 
+v=[0.7,-0.7]
+    //  the eastward and westward velocities (notice: they may be different! 
+randAmp=slider(0,0,1.0)
+    //  to allow a certain amount of randomness in the speed of the cars. 
+nCars=40
+    //  the total amount of cars, in either direction, in the simulation 
+carLength=1.5
+    //  this determines how close cars can get 
+resetButton=button()
+    //  to enforce a reset to the simulation 
+reset=resetButton||delayEastward!=delayEastward{1}||delayWestward!=delayWestward{1}||timeRedRed1!=timeRedRed1{1}||timeRedGreen!=timeRedGreen{1}||timeRedRed2!=timeRedRed2{1}||timeGreenRed!=timeGreenRed{1}
+    //  to reset the entire simulation, also when one of the delays changes
+    //  or when one of the traffic light settings changes 
+waiting=0 
+riding=1
+    //  every car has an internal state with values 'waiting' or 'riding'.
+    //  'riding' may mean, though, that a car cannot make
+    //  progress because of another car in front. 
+carRange=vSeq(0,nCars)
+    //  the sequence used to iterate over all cars 
+time=cond(reset,0,if(time{1}==eventTimes[state{1}],0,time{1}+1))
+    //  there are four global states, corresponding with the various traffic light combinations.
+    //  Every time when the next state is reached, the time is reset.
+    //  The four states can have different lengths. 
+state=cond(reset,0,if(time{1}==eventTimes[state{1}],(state{1}+1)%4,state{1}))
+    //  this causes the global states to alternate in a round-robin fashion: 0,1,2,3,0,1,2,3,0,... 
+timeRedRed1=slider(38,1,200)
+    //  allow the user to set the red-red time following green-red 
+timeRedGreen=slider(20,1,200)
+    //  allow the user to set the red-green time 
+timeRedRed2=slider(38,1,200)
+    //  allow the user to set the red-red time following red-green 
+timeGreenRed=slider(100,1,200)
+    //  allow the user to set the green-red time 
+eventTimes=[timeRedRed1,timeRedGreen,timeRedRed2,timeGreenRed]
+    //  to allow the round-robin state sequencer to do its work, aggregate
+    //  the time lapses of all states in an array 
+rr=[mode:'random',low:0,high:155] 
+rg=[mode:'random',low:0,high:155] 
+rb=[mode:'random',low:100,high:255]
+    //  for cosmetic reasons, we want to have all cars
+    //  different colors in all shades of blue - that allows to better
+    //  distinguish them 
+c=#(d,[0,1],cond(reset,c0[d],nC[d]),vAppend)
+    //  c is an array of two arrays of cars;
+    //  c[0] is an array of eastward cars, c[1] is an array of westward cars.
+    //  The array is either a newly calculated array nC, which is based
+    //  on the previous state of the system,
+    //  or it is the initial condition c0.
+    //  A car is a concept with three properties: a state, w, which is 'waiting' or 'riding',
+    //  a property s which is the x-coordinate, in other words the distance travelled
+    //  for an eastbound car, or minus this distance for a westward car,
+    //  and a velocity. The velocity is only determined once during each ride:
+    //  the first time when c0 is calculated, and the second time when a car has
+    //  reached the end of the journey and is recycled for a next round. 
+c0=#(d,[0,1],vAppend(#(i,vSeq(0,nCars-1),[d:0,s:waitLoc[d],w:waiting,v:v[d]*(1+randAmp*random())],vAppend),[d:0,s:startLoc[d],w:riding,v:v[d]*(1+randAmp*random())]),vAppend)
+    //  The arrangement of cars in the initial state. All cars are positioned at
+    //  the waitLoc for the appropriate destination (d=0: eastward, d=1: westward).
+    //  The state of each car is 'waiting', and the cars
+    //  each receive one (randomized) velocity which will be their cruise
+    //  velocity - provided that there is no car in front of them to slow them down.
+	//  Property d is the duration for this car, that is the amount of calculate cycles
+	//  since it was created.
+    //  Furthermore, there is one car in each direction that is not in 'waiting'-state,
+    //  but in 'riding' state, and that is placed in startLoc. 
+nC=#(d,[0,1],#(i,carRange,nextCar(d,i),vAppend),vAppend)
+    //  To calculate the next positions of all cars, iterate over both directions
+    //  and iterate over all cars in one direction. The function nextCar() calculates,
+    //  for car with index j in direction d, its new state. 
+nextCar(d,j)=if(ready(d,j),[d:0,s:waitLoc[d],w:waiting,v:v[d]*(1+randAmp*random())],notArrivedYetCar(d,j))
+    //  The function ready(d,j) checks if car (d,j) has reach the end of his
+    //  journey. If so, it is placed back in the waiting position.
+    //  Otherwise we have to deal with a car that is not yet arrived. 
+ready(d,j)=if(d==0,myS(d,j)>endLoc[d],myS(d,j)<endLoc[d])
+    //  'Ready' means that my location is beyond the endLoc. Notice
+    //  that this can involve a > or a < check, depending on the direction. 
+notArrivedYetCar(d,j)=if(c{1|c0}[d][j].w==waiting,perhapsDepart(d,j),ride(d,j))
+    //  A car that has not yet arrived and that is still waiting may perhaps
+    //  depart. A car that has not yet arrived but that is not waiting
+    //  is riding, and therefore should carry on riding. 
+perhapsDepart(d,j)=if(allowStart(d,j),[d:0,s:waitLoc[d]+myV(d,j),w:riding,v:myV(d,j)],[d:0,s:waitLoc[d],w:waiting,v:myV(d,j)])
+    //  The condition for a car to depart is, that it should be allowed to start. In that
+    //  case its state goes to 'riding', and its position is displaced over an amount
+    //  corresponding to its velocity. (We ignore acceleration). 
+allowStart(d,j)=if(d==0,(myS(d,(j+nCars-1)%nCars)>passLoc[d]),(myS(d,(j+nCars-1)%nCars)<passLoc[d]))
+    //  This function calculates if my predecessor (= the car with index one lower than myself.
+    //  But since the javascript modulo function might give a negative output
+    //  if the argument is negative, we add nCars to the index) has moved
+    //  beyond the location passLoc.
+    //  Notice that, to find my predecessor, I have to calculate its index modulo nCars,
+    //  since the array c is used as a cyclic array: cars that have completed the simulation
+    //  are put back at the top. 
+ride(d,j)=[d:myD(d,j)+1,s:if(free(d,j),myS(d,j)+myV(d,j),myS(d,j)),w:riding,v:myV(d,j)]
+    //  riding means: careful riding. So: if the road in front of you is
+    //  free, you may increment the location, otherwise you have to stay put.
+    //  We again ignore accelerations and braking. 
+free(d,j)=freeRide(d,j)&&permit(d,j)
+    //  There can be two reasons for not being free to move on:
+    //  the road in front of you may not be free, or
+    //  you may not have permission because of the traffic lights. 
+freeRide(d,j)=if(d==0,((myS(d,j)>nextS(d,j))||((myS(d,j)+myV(d,j))<(nextS(d,j)-carLength))),((myS(d,j)<nextS(d,j))||((myS(d,j)+myV(d,j))>(nextS(d,j)+carLength))))
+    //  I am free to ride on if my predecessor is in fact behind me (that happens now
+    //  and then in a cyclic array!), or if it is so far ahead of
+    //  me that I can move forward with an amount myV(d,j), and still have
+    //  a carLength space. Again the two tests in east and westward bound directions
+    //  are slightly different. 
+nextS(d,j)=c{1|c0[d]}[d][(j+nCars-1)%nCars].s
+    //  calculate the location of my predecessor. Again use the modulo nCars trick
+    //  because of the cyclic array. 
+myS(d,j)=c{1|c0}[d][j].s
+    //  my location (rather: my location at the previous time step) 
+myV(d,j)=c0[d][j].v
+    //  my speed 
+myD(d,j)=c{1|c0}[d][j].d
+    // my duration
+permit(d,j)=(!criticalSection(d,c{1|c0[d]}[d][j].s)||trafficLightGreen(d))
+    //  This checks if I have permission to move on with regard to the
+    //  state of my traffic light. 
+criticalSection(d,s)=if(d==0,(s>critStartLoc[d]&&s<critStopLoc[d]),(s<critStartLoc[d]&&s>critStopLoc[d]))
+    //  The traffic light only dictates my permission if I am in the critical section 
+trafficLightGreen(d)=if(d==0,(state==1),(state==3))
+    //  The traffic light states alternate in round robin fashion
+    //  through the 4 possible states. This picks out the state
+    //  where my traffic light is green. 
+pl=descartes([road,lamps,eastCars,westCars])
+    //  the entire animation contains an image of the road,
+    //  the traffic lights, and two streams of cars. 
+eastCars=[locations:[icon:'box',width:carLength,height:3,col_r:rr,col_g:rg,col_b:rb,data:#(i,carRange,[y:lane(0,c[0][i].s),x:c[0][i].s],vAppend)]]
+    //  this is the plot-able representation of the eastward cars 
+westCars=[locations:[icon:'box',width:carLength,height:3,col_r:rr,col_g:rg,col_b:rb,data:#(i,carRange,[y:lane(1,c[1][i].s),x:c[1][i].s],vAppend)]]
+    //  this is the plot-able representation of the westward cars 
+lane(d,x)=if(d==0,vVecRamp([-10,critStartLoc[0],critStopLoc[0],critStopLoc[1],critStartLoc[1],110],[45,45,49,49,45,45],x),vVecRamp([-10,critStartLoc[0],critStopLoc[0],critStopLoc[1],critStartLoc[1],110],[55,55,51,51,55,55],x))
+    //  The y-coordinates of the cars are taken from the function 'lane'. This does a
+    //  piecewise linear interpolation betweed appropriate coordinates, using the function
+    //  vecVecRamp(). 
+road=[locations:[data:[[x:0,y:60],[x:critStartLoc[0],y:60],[x:critStopLoc[0],y:55],[x:critStopLoc[1],y:55],[x:critStartLoc[1],y:60],[x:100,y:60],[x:100,y:40],[x:critStartLoc[1],y:40],[x:critStopLoc[1],y:45],[x:critStopLoc[0],y:45],[x:critStartLoc[0],y:40],[x:0,y:40]]],faces:[fill:'both',loop:[0,1,2,3,4,5,6,7,8,9,10,11,0],fcol_r:180,fcol_g:170,fcol_b:150]]
+    //  the road is merely one (non-convex) 12-gon 
+lamps=[locations:[icon:'box',fill:'both',col_r:0,col_g:0,col_b:0,width:4,height:4,data:[[x:critStopLoc[0],y:35,fcol_r:if(state!=1,255,0),fcol_g:0,fcol_b:0],[x:critStopLoc[0],y:30,fcol_g:if(state==1,255,0),fcol_r:0,fcol_b:0],[x:critStopLoc[1],y:70,fcol_r:if(state!=3,255,0),fcol_g:0,fcol_b:0],[x:critStopLoc[1],y:65,fcol_g:if(state==3,255,0),fcol_r:0,fcol_b:0]]]]
+    //  The lamps consist of four well-placed rectangular boxes; the colors are taken
+    //  from the current value of 'state'.
+nrReadyCars=if(reset,0,if(carFinished,nrReadyCars{1|0}+1,nrReadyCars{1|0}))
+    //  counts the number of finished cars
+nrReady=nrReadyCars
+totDurationReadyCars=if(reset,0,totDurationReadyCars{1|0}+#(d,[0,1],#(j,carRange,if(ready(d,j),c{1|c0}[d][j].d,0),add),add))
+    // the total waiting time (duration) of all cars that have finished thus far.
+totDurReadyCars=totDurationReadyCars
+averageWaitingTime=round(totDurationReadyCars/nrReadyCars)
+    // the average waiting time
+carFinished=#(d,[0,1],#(j,carRange,ready(d,j),or),or)
+    //  produce true if there is a car who was ready.

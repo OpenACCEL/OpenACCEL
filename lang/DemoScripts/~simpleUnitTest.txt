@@ -1,0 +1,6 @@
+a=3; foo 
+b=4; foo 
+c=2; bar 
+d=a*b*c; foo2.bar 
+e=5; blah 
+f=d/e; foo2.bar/blah

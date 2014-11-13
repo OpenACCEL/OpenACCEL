@@ -1,0 +1,20 @@
+ 
+R0=slider(1.5,0.1,3.0)
+    //  the common red time 
+f1=slider(13.3,0.1,25)
+    //  the number of cars per minute approaching from direction 1 
+f2=slider(5.0,0.1,25)
+    //  the number of cars per minute approaching from direction 2 
+f0=slider(40,0.1,70)
+    //  the number of cars per minute leaving the narrow passage 
+m=#(i,vSeq(0,25),row(i),vAppend)
+    //  the matrix m consists of 24 rows ... 
+row(i)=#(j,vSeq(0,25),f(i,j),vAppend)
+    //  each row consists of 24 values ... 
+f(R1,R2)=(f0/(2*(f1+f2)))*((f1/(f0-f1))*(2*R0+R1)*(2*R0+R1)+(f2/(f0-f2))*(2*R0+R2)*(2*R0+R2))/(2*R0+R1+R2)
+    //  the user defined function to calculate the function surface as a function of x and y 
+contourPlt=[data:#(i,vSeq(0,30),[iso:i],vAppend),map:m]
+    //  The contour plot shows a single iso curve at height determined by p 
+r=('plot OK'==descartes([[contour:contourPlt]]))
+    //  if everything with respect to plotting goes well, we just see the value 'true' in the
+    //  result list

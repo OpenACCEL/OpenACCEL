@@ -10,10 +10,6 @@ reset=button()
     //  to reset time to 0 
 z=descartes([gr1,gr2])
     //  the plotting magic 
-str1='width:{value:10},col_r:{value:255},x:{mode:intp},y:{mode:shift,ref:1}'
-    //  define the looks of the red curve 
-str2='width:{value:10},col_b:{value:255},x:{mode:intp},y:{mode:shift,ref:1}'
-    //  define the looks of the blue curve 
 F=-c*u{1}-mu*v{1}
     //  Hooke + damping 
 a=F/m
@@ -23,7 +19,7 @@ discr=mu*mu-4*m*c
 gr1=[locations:[x:[mode:'intp'],y:[mode:'shift',value:40+10*u]],edges:[thickness:2,col_r:255]]
     //  the approximated curve 
 gr2=[locations:[x:[mode:'intp'],y:[mode:'shift',value:45+10*u_exact]],edges:[thickness:2,col_g:255]]
-    //  the exact curve  
+    //  the exact curve 
 lambda_img=cond(discr>0,0,sqrt(-discr)/(2*m))
     //  the imaginary part of the exponential: oscillating part 
 lambda_real=cond(discr>0,(-mu+sqrt(discr))/(2*m),-mu/(2*m))
@@ -35,4 +31,4 @@ u=if(reset,1,u{1}+delta*v)
 u_exact=cond(discr>0,exp(lambda_real*t),exp(lambda_real*t)*cos(lambda_img*t))
     //  the exact solution: a product of a damping and an oscillation 
 v=if(reset,0,v{1}+delta*a)
-    //  discretely updating v 
+    //  discretely updating v

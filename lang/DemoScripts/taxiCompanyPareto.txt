@@ -13,8 +13,6 @@ nrStaff=slider(285,1,6000)
     //  my amount of staff (=chauffeurs on my pay rol) 
 myCarName=myCar.carName
     //  the brand name of the car of my choice 
-plotProfit=descartes([[locations:[x:[mode:'intp'],y:[mode:'shift',value:50+profit]],edges:[thickness:2,col_r:255]],[locations:[x:[mode:'intp'],y:[mode:'shift',value:100*fun]],edges:[thickness:2,col_b:255]]])
-    //  plotting the profit in real-time as a consequence of playing with the sliders 
 rFun=paretoVer(paretoMax(fun))
     //  the fun is to be maximised and plotted vertically 
 rProfit=paretoHor(paretoMax(profit))

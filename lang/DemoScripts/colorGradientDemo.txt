@@ -1,0 +1,17 @@
+rad=slider(5,0,50)
+    //  the logical screen width is 100, so the radius 50 maximally fills the entire screen 
+x=slider(50,0,100) 
+y=slider(50,0,100)
+    //  the location of the circle moves from fully left to fully right with slider x
+    //  and similar for y 
+plotResult=descartes([[locations:[x:x,y:y,rad:rad,fill:'interior',grad:grad]]])
+    //  this illustrates that the default coordinates, both cartesian and for diameters,
+    //  are between 0 and 100 
+grad=[offX0,offY0,0,offX1,offY1,rad,[[lowStop,255,0,0,1.0],[midStop,0,255,0,1.0],[highStop,0,0,255,1.0]]] 
+offX0=slider(0,-50,50)
+offY0=slider(0,-50,50)
+offX1=slider(0,-50,50)
+offY1=slider(0,-50,50)
+lowStop=slider(0.1,0,1)
+midStop=slider(0.5,0,1)
+highStop=slider(0.9,0,1)

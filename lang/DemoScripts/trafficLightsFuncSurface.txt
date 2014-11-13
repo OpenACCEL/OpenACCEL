@@ -1,0 +1,83 @@
+R0=slider(1.5,0.1,3.0)
+    //  the common red time 
+f1=slider(13.3,0.1,25)
+    //  the number of cars per minute approaching from direction 1 
+f2=slider(5.0,0.1,25)
+    //  the number of cars per minute approaching from direction 2 
+f0=slider(40,0.1,70)
+    //  the number of cars per minute leaving the narrow passage 
+p=descartes([gr])
+    //  plot the entire scene 
+r=150
+    //  the distance between the eye point and the centre of the scene 
+yaw=-0.93
+    //  control the yaw angle of the camera 
+roll=0.96
+    //  control the roll angle of the camera 
+pitch=2.01
+    //  control the pitch angle of the camera 
+camera=[auto:true,yaw:yaw,roll:roll,pitch:pitch,r:r,f:f,look:'orbit']
+    //  a camera under direct user control by means of the pitch and yaw sliders 
+f=2*r
+    //  we choose to have the focal length proportional to the
+    //  distance between the eye and the centre of the scene. In
+    //  this way, we control the perspective distortion without affecting the size that much. 
+n=30
+    //  the resolution, that is: the number of squares in each direction of the
+    //  function surface (the 'tablecloth') 
+nRange=vSeq(0,n)
+    //  we re-use the sequence 0,1,2,...,n-1 
+nMRange=vSeq(0,n-1)
+    // we also re-use the sequence 0,1,2,3,...,n-2:
+    // realize that the number of faces is (n-1)*(n-1) instead of n*n
+    // for n*n locations
+k=max(1,min(n-2,round(25*n/50)))
+    // make sure that also the index values k-1 and k+1 are defined
+l=max(1,min(n-2,round(25*n/50)))
+    // make sure that also the index values l-1 and l+1 are defined
+origin=[x:0,y:0,z:0]
+    // used for drawing the coordinate frame
+xEndPoint=[x:20,y:0,z:0,width:2,height:6,tag:'R1',tcol_r:255,tcol_g:255,tcol_b:255,pointSize:2.5]
+yEndPoint=[x:0,y:20,z:0,width:2,height:6,tag:'R2',tcol_r:255,tcol_g:255,tcol_b:255,pointSize:2.5]
+zEndPoint=[x:0,y:0,z:20,width:2,height:6,tag:'F',tcol_r:255,tcol_g:255,tcol_b:255,pointSize:2.5]
+    // the three endpoints of the coordinate axes.
+    // The widths and heights serve to give the arrow a nicer look.
+locationsData=#(i,nRange,#(j,nRange,[x:i,z:g(i,j),y:j],vAppend),vExtend)
+    //  a set of two nested quantified expressions to calculate a set of x,y,z-triples
+    //  in a single array, where these x,y,z-triples form the coordinates
+    //  of all of the points on the tablecloth. The z-value is the function we calculate;
+    //  this is the ACCEL user defined function g(x,y), appropriately scaled.
+g(R1,R2)=(f0/(2*(f1+f2)))*((f1/(f0-f1))*(2*R0+R1)*(2*R0+R1)+(f2/(f0-f2))*(2*R0+R2)*(2*R0+R2))/(2*R0+R1+R2)    
+    //  the user defined function to calculate the function surface as a function of R1`and R2 
+    
+lights=[l_x:-0.5,l_y:-0.5,l_z:-1]
+    //  a simple light configuration with a single directional light shining roughly in the z-direction, 
+gr=[background:[fcol_r:0,fcol_g:50,fcol_b:50],lights:lights,camera:camera,locations:locations,faces:faces,edges:edges]
+    //  this is the entire scene 
+locations=[data:vExtend(locationsData,[origin,xEndPoint,yEndPoint,zEndPoint]),rad:1]
+    //  the array containing all the location data 
+faces=[data:facesData,fcol_r:400,fcol_g:400,fcol_b:400,fcol_a:1.0]
+    //  the array containing all faces data. That is: the diffuse reflection color and the data,
+    //  being the indices in the locationData array of all the
+    //  corner points of each of the squares in the tablecloth. 
+facesData=#(j,nMRange,#(i,nMRange,[loop:[i+n*j,i+n*j+1,i+n*(j+1)+1,i+n*(j+1)]],vAppend),vExtend)
+    //  depending on the setting of accel, this executes a fragment of native javascript
+    //  or a set of two nested quantified expressions to find the indices in the locationsData array of all
+    //  the corner points of all the square faces forming the tablecloth. 
+edge1Data=#(i,nRange,[],vAppend) 
+edge2Data=#(i,nRange,[],vAppend)
+    //  These are the indices in locationsData for the corners of all the squares,
+    //  we also need to have the indices of the two special curves we want to show.
+    //  In the quantities edge1Data and edge2Data we also set the color and thickness properties. 
+edges=[thickness:1,data:edgeData]
+    //  all edge information from the scene 
+edgeData=vExtend(vExtend(edge1Data,edge2Data),tgData)
+    //  the edge data (essentially the indices in the locationsData array) of the
+    //  collection of faces and of the axes is aggregated by means
+    //  of vExtend into a single 1D array
+tgData=[xAxis,yAxis,zAxis]
+   // the total collection of edges
+xAxis=[arrows:'end',col_r:150,col_g:0,col_b:150,b:n*n,e:n*n+1]
+yAxis=[arrows:'end',col_r:150,col_g:0,col_b:150,b:n*n,e:n*n+2]
+zAxis=[arrows:'end',col_r:150,col_g:0,col_b:150,b:n*n,e:n*n+3]
+  // define the three axes of the coordinate frame

@@ -1,0 +1,10 @@
+ 
+x=slider(50,0,100) 
+y=slider(50,0,100)
+    //  the location of the circle moves from fully left to fully right with slider x
+    //  and similar for y 
+plotResult=descartes([[locations:[x:x,y:y,icon:'sprite','spriteData':[[[255,0,0,255],[0,255,0,255]],[[0,255,0,255],[255,0,0,255]]],fill:'interior',width:w,height:h]]])
+    //  this illustrates that the default coordinates, both cartesian and for diameters,
+    //  are between 0 and 100 
+w=slider(3,1,40) 
+h=slider(3,1,40)

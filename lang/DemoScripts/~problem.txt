@@ -1,0 +1,13 @@
+ 
+p=descartes([lineElField])
+    //  plot bothe the direction field and the probe 
+lineElField=[locations:lineElLoc]
+    //  the direction field consists of locations and edges 
+lineElLoc=[data:lineElLocData]
+    //  the locations 
+lineElLocData=vExtend([[x:3,y:4],[x:6,y:8],[x:3,y:4],[x:6,y:8]],[[x:10,y:12,width:3,height:7],[x:17,y:22,width:3,height:7],[x:10,y:12,width:3,height:7],[x:17,y:22,width:3,height:7]]); [[x:1,y:1],[x:1,y:1],[x:1,y:1],[x:1,y:1],[x:1,y:1,width:1,height:1],[x:1,y:1,width:1,height:1],[x:1,y:1,width:1,height:1],[x:1,y:1,width:1,height:1]]
+    //  locations contain of base points (the tails of the arrows) and the heads of the arrows
+lineElLocDataEnd=#(i,iRnge,[[x:10,y:12,width:3,height:7],[x:17,y:22,width:3,height:7]],vExtend)
+    //  one row of location of arrow heads 
+iRnge=vSeq(0,2)
+    //  we re-cycle the sequence 0,1,2,...,n01

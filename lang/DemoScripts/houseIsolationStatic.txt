@@ -1,0 +1,109 @@
+ 
+totCosts=paretoMin(paretoHor(heatCosts*secPerMonth+investCosts/nrMonthsILiveHere)); euro/month
+    //  I want to minimize all costs 
+secPerMonth=30*24*3600; s/month
+    //  heat flow is in joules/s; payments are per month 
+nrMonthsILiveHere=120; month
+    //  to add heating and investment dimensionally correct 
+heatCosts=nrm3sGas*pricePerm3; euro/s
+    //  costs per month 
+pricePerm3=myGas.price; euro/m3
+    //  the price of one cubic meter for the gas when purchased by my gas company 
+nrm3sGas=heat/calValue; m3/s
+    //  how much cubic meters do I purchase per month 
+calValue=myGas.calValue; joule/m3 
+myGas=gases[indexOfMyGas]; [calValue:joule/m3,price:euro/m3]
+    //  the gas of my choice 
+indexOfMyGas=slider(0,0,2)
+    //  index to choose my gas 
+gases=[gas1,gas2,gas3]; [[calValue:joule/m3,price:euro/m3],[calValue:joule/m3,price:euro/m3],[calValue:joule/m3,price:euro/m3]]
+    //  the collection of gas (companies) to choose from 
+gas1=[calValue:31000000,price:0.65]; [calValue:joule/m3,price:euro/m3]
+    //  characterisation of the first type of gas 
+    //  Caloric value taken from http://nl.wikipedia.org/wiki/Aardgas
+gas2=[calValue:25000000,price:0.6]; [calValue:joule/m3,price:euro/m3]
+    //  characterisation of the second type of gas 
+gas3=[calValue:15000000,price:0.7]; [calValue:joule/m3,price:euro/m3]
+    //  characterisation of the third type of gas 
+heat=leakedRoof+leakedWalls+leakedWindows; joule/s
+    //  joule per time unit leaking through various parts of the house 
+leakedRoof=areaRoof*flowRoof; joule/s
+    //  heat leaking through the roof 
+leakedWindows=areaWindows*flowWindows; joule/s
+    //  heat leaking through the windows 
+leakedWalls=areaWalls*flowWalls; joule/s
+    //  heat leaking through the walls 
+areaRoof=128; m2
+    //  the area of my roof 
+areaWindows=70; m2
+    //  the area of my windows 
+areaWalls=300; m2
+    //  the area of my walls 
+flowRoof=max(0.0,deltaT*ffRoof); joule/s.m2
+    //  the heat flow through the roof is the amount of joules/time per temperature difference 
+flowWindows=max(0.0,deltaT*ffWindows); joule/s.m2
+    //  the heat flow through the windows is the amount of joules/time per temperature difference 
+flowWalls=max(0.0,deltaT*ffWalls); joule/s.m2
+    //  the heat flow through the walls is the amount of joules/time per temperature difference 
+deltaT=max(0,Tin-Tout); C
+    //  assume the entire house has the same inside temperature 
+Tout=15; C
+    //  brrrr 
+Tin=slider(19,10.0,25.0); C
+    //  a thermostat is used to define the inside temperature.
+    //  We assume that the boiler and radiator have infinite capacity!
+    //  That is: any desired temperature can be achieved without losses 
+comfort=paretoMin(paretoVer(abs(Tin-Tcomf))); C
+    //  See the trade-off between comfort and costs 
+Tcomf=19.5; C
+    //  If Tin==Tcomf I couldnt be happier 
+ffRoof=lambdaRoof*myRoofInsMat.lambda/(lambdaRoof*myRoofInsMat.th+myRoofInsMat.lambda*thRoof); joule/s.m2.C
+    //  heat conductivity of the roof as a result of the
+    //  roof proper and the isolation layer 
+ffWindows=lambdaWindows*myWindowInsMat.lambda/(lambdaWindows*myWindowInsMat.th+myWindowInsMat.lambda*thWindows); joule/s.m2.C
+    //  heat conductivity of the windows as a result of the
+    //  windows proper and the isolation layer (=air between the two sheets of glass) 
+ffWalls=lambdaWalls*myWallInsMat.lambda/(lambdaWalls*myWallInsMat.th+myWallInsMat.lambda*thWalls); joule/s.m2.C
+    //  heat conductivity of the wall as a result of the
+    //  wall proper and the isolation layer 
+thRoof=0.2; m
+    //  thickness of the roof proper 
+thWalls=0.4; m
+    //  thickness of the walls propert 
+thWindows=0.05; m
+    //  thickness of the windows proper 
+lambdaWalls=0.1; joule/s.m.C
+    //  the thermal conductivity of unisolated wall material (numeric value =fake) 
+lambdaRoof=0.5; joule/s.m.C
+    //  the thermal conductivity of unisolated roof material (numeric value=fake) 
+lambdaWindows=0.8; joule/s.m.C
+    //  the thermal conductivity of unisolated window material (numeric value=fake) 
+myWallInsMat=wallInsMat[wallInsMatChoice]; [lambda:joule/s.m.C,price:euro/m2,th:m]
+    //  my material of choice to isolate walls 
+myRoofInsMat=roofInsMat[roofInsMatChoice]; [lambda:joule/s.m.C,price:euro/m2,th:m]
+    //  my material of choice to isolate roof 
+myWindowInsMat=windowInsMat[windowInsMatChoice]; [lambda:joule/s.m.C,price:euro/m2,th:m]
+    //  my material of choice to isolate windows 
+wallInsMatChoice=slider(0,0,2)
+    //  choose walls insolation material 
+roofInsMatChoice=slider(0,0,2)
+    //  choose roof insolation material 
+windowInsMatChoice=slider(0,0,2)
+    //  choose window insolation material 
+wallInsMat=[waMat1,waMat2,waMat3]; [[lambda:joule/s.m.C,price:euro/m2,th:m],[lambda:joule/s.m.C,price:euro/m2,th:m],[lambda:joule/s.m.C,price:euro/m2,th:m]]
+    //  the material to isolate walls with
+    //  See e.g. http://www.joostdevree.nl/shtmls/warmtegeleidingscoefficient.shtml 
+waMat1=[lambda:0.2,price:12,th:0.05]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+waMat2=[lambda:0.1,price:120,th:0.10]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+waMat3=[lambda:0.15,price:20,th:0.07]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+roofInsMat=[roMat1,roMat2,roMat3]; [[lambda:joule/s.m.C,price:euro/m2,th:m],[lambda:joule/s.m.C,price:euro/m2,th:m],[lambda:joule/s.m.C,price:euro/m2,th:m]]
+    //  the material to isolate roofs with 
+roMat1=[lambda:0.3,price:12,th:0.05]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+roMat2=[lambda:0.8,price:6,th:0.07]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+roMat3=[lambda:0.2,price:25,th:0.1]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+windowInsMat=[wiMat1,wiMat2,wiMat3]; [[lambda:joule/s.m.C,price:euro/m2,th:m],[lambda:joule/s.m.C,price:euro/m2,th:m],[lambda:joule/s.m.C,price:euro/m2,th:m]]
+    //  the material to isolate windows with 
+wiMat1=[lambda:0.5,price:18,th:0.25]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+wiMat2=[lambda:0.3,price:23,th:0.2]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+wiMat3=[lambda:0.6,price:10,th:0.15]; [lambda:joule/s.m.C,price:euro/m2,th:m] 
+investCosts=myWindowInsMat.price*areaWindows+myWallInsMat.price*areaWalls+myRoofInsMat.price*areaRoof; euro

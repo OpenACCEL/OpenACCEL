@@ -1,0 +1,13 @@
+m=#(i,vSeq(0,25),row(i),vAppend)
+    //  the matrix m consists of 24 rows ... 
+row(i)=#(j,vSeq(0,25),f(i/3-4,j/3-4),vAppend)
+    //  each row consists of 24 values ... 
+f(x,y)=x*x-y*y
+    //  ... and each value is one sample of the function x. 
+c=slider(3,-5.0,5.0)
+    //  this is the iso-value
+contourPlt=[data:[[iso:c]],map:m]
+    //  The contour plot shows a single iso curve at height determined by p
+r=('plot OK'==descartes([[contour:contourPlt]]))
+    //  if everything with respect to plotting goes well, we just see the value 'true' in the
+    //  result list

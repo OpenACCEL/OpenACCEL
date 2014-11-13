@@ -1,0 +1,14 @@
+m=#(i,vSeq(0,25),row(i),vAppend)
+    //  the matrix m consists of 24 rows ... 
+row(i)=#(j,vSeq(0,25),f(i/3-4,j/3-4),vAppend)
+    //  each row consists of 24 values ... 
+f(x,y)=x*x*x-p*x*y
+    //  ... and each value is one sample of the function x. 
+p=slider(3,-5.0,5.0)
+    // this is a parameter, determining the shape of the saddle
+contourPlt=[data:#(i,vSeq(0,31),[iso:2*i-30],vAppend),map:m,thickness:[mode:'intp',low:0,high:2],col_r:[mode:'intp',low:0,high:255]]
+    //  The contour plot shows 30 iso curves at heights ranging from -30 to 30,
+    //  thickness and red values vary accordingly
+r=('plot OK'==descartes([[contour:contourPlt]]))
+    //  if everything with respect to plotting goes well, we just see the value 'true' in the
+    //  result list 

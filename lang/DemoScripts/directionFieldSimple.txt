@@ -1,0 +1,74 @@
+
+p=descartes([lineElField,probe])
+    //  plot bothe the direction field and the probe 
+lineElField=[locations:lineElLoc,edges:lineElEdges]
+    //  the direction field consists of locations and edges 
+lineElLoc=[data:lineElLocData]
+    //  the locations 
+lineElLocData=vExtend(lineElLocDataBase,lineElLocDataEnd)
+    //  locations contain of base points (the tails of the arrows) and the heads of the arrows 
+lineElLocDataBase=#(i,iRnge,oneLocRowBase(i),vExtend)
+    //  one row of locations of arrow tails 
+lineElLocDataEnd=#(i,iRnge,oneLocRowEnd(i),vExtend)
+    //  one row of location of arrow heads 
+iRnge=vSeq(0,n)
+    //  we re-cycle the sequence 0,1,2,...,n01 
+n=slider(10,4,25)
+    //  the resolution: in how many points do we sample the direction field? 
+scale=100/n
+    //  to convert integer sample indices to actual (metric) coordinate values 
+offset=scale/2
+    //  to have the field nicely centered in the image 
+arrowLength=75/n
+    //  arbitrary, just for the visual rendition of the arrows 
+oneLocRowBase(i)=#(j,iRnge,[x:i*scale+offset,y:j*scale+offset],vAppend)
+    //  the locations of the tails (=base points) of all of the arrows in one row 
+oneLocRowEnd(i)=#(j,iRnge,vExtend(xyShift(i*scale,j*scale,xyNormalize(arrowEnd(i,j),arrowLength)),[width:1.5,height:5]),vAppend)
+    //  the locations of the arrows heads of all of the arrows in one row 
+lineElEdges=[data:#(i,vSeq(0,n*n),[thickness:0.5,b:i,e:i+n*n,arrows:'end'],vAppend)]
+    //  the arrows themselves are defined by two indices in the locations arrays 
+xyNormalize(v,nrm)=[x:nrm*v.x/sqrt(v.x*v.x+v.y*v.y),y:nrm*v.y/sqrt(v.x*v.x+v.y*v.y)]
+    //  make sure all the arrows have the same length 
+xyShift(x,y,v)=[x:x+v.x+offset,y:y+v.y+offset]
+    //  arrow heads are positioned with respect to arrow tails (bases) 
+arrowEnd(i,j)=[x:1,y:field[i][j]]
+    //  the vertical slant of an arrow is defined by the contents of the direction field 
+field=#(i,iRnge,fieldRow(i),vAppend)
+    //  the field is an aggregate of rows 
+fieldRow(i)=#(j,iRnge,i*C/n,vAppend) 
+probe=[locations:[x:q.x,y:q.y,rad:2.5,fill:'interior']]
+    //  this is the (moving) probe 
+q=if(mouseDown,mouseLoc,newQ(q{1|initLoc}))
+    //  the probe starts when the user clicks the mouse; otherwise
+    //  it is drawn on a new location 
+mouseDown=cursorB()
+    //  is the mouse down? 
+mouseLocX=cursorX() 
+mouseLocY=cursorY()
+    //  where is the mouse? 
+mouseLoc=[x:mouseLocX,y:mouseLocY]
+    //  compose mouse location from its two coordinates 
+newQ(qq)=if(qq.x>safe&&qq.x<100-safe&&qq.y>safe&&qq.y<100-safe,[x:qq.x+xDelta,y:qq.y+yIncrement],qq)
+    //  only compute a new location if we are not outside the field 
+initLoc=[x:0,y:0]
+    //  where to start if nothing yet has happened 
+xDelta=1
+    //  the x-increment 
+safe=3
+    //  stay outside the borders of the field 
+yIncrement=fieldInterpolate((q{1}.x-offset)/scale,(q{1}.y-offset)/scale)
+    //  find the y-increment of the moving probe from interpolating in the field-array 
+fieldInterpolate(h,v)=intp(h,v)
+    //  the interpolation of the field array ... 
+intp(h,v)=intp1(h,v)+intp2(h,v)+intp3(h,v)+intp4(h,v)
+    //  is a bilinear interpolant, consisting of four terms 
+intp1(h,v)=field[floor(h)][floor(v)]*(ceil(h)-h)*(ceil(v)-v)
+    //  lower left corner 
+intp2(h,v)=field[ceil(h)][floor(v)]*(h-floor(h))*(ceil(v)-v)
+    //  lower right corner 
+intp3(h,v)=field[floor(h)][ceil(v)]*(ceil(h)-h)*(v-floor(v))
+    //  upper left corner 
+intp4(h,v)=field[ceil(h)][ceil(v)]*(h-floor(h))*(v-floor(v))
+    //  upper right corner 
+C=slider(0.5,-2,2)
+    //  the C-parameter of the growth function
