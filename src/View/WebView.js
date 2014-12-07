@@ -22,7 +22,7 @@ define(["../Controller/AbstractView",
     function WebView() {
         /**
          * The CanvasCreator is responsible for creating drawable canvases for e.g. the Network tab and
-         * script visualisations.
+         * script visualizations.
          *
          * @type {CanvasCreator}
          */
@@ -65,12 +65,8 @@ define(["../Controller/AbstractView",
         this.tooltips = {};
         this.errorCount = 0;
 
-        /**
-         * Fired when the hash fragment of the URL changes.
-         *
-         * @param  {Event} e The jQuery event object.
-         * @param  {Boolean} initial Whether this event was fired onpageload
-         */
+
+        // --- Setup event handlers --- //
         $(window).on('hashchange', this.onHashChange.bind(this));
 
         $("#optimisation").on('click', function() {
@@ -78,7 +74,6 @@ define(["../Controller/AbstractView",
                 alert("The script does not contain any quantities to be optimized.");
             }
         });
-
         $("#analysis").on('click', function() {
             if ($(this).hasClass("disabled")) {
                 alert("The script has not been compiled yet.");
@@ -102,7 +97,7 @@ define(["../Controller/AbstractView",
     WebView.prototype = new AbstractView();
 
     /**
-     * Replaces the current application state with the new one.
+     * Replaces the current application state with the given one.
      *
      * @param {Object} state The state object to set the application state to
      * @post The application state has been set to the parameters of the given
@@ -115,19 +110,19 @@ define(["../Controller/AbstractView",
     /**
      * Merges the attributes in the given object into the
      * current state, overriding any existing attributes with
-     * the same name
+     * the same name.
      *
      * @param {Object} state The state object with attributes to
      * merge into the current state.
      * @post The attributes of the given object are merged into the current
-     * application state
+     * application state.
      */
     WebView.prototype.addState = function(state) {
         location.hash = $.param.fragment(location.hash, state, 0);
     };
 
     /**
-     * Clears the plot canvas
+     * Clears the plot canvas of the current tab, if there is any
      */
     WebView.prototype.clearCanvas = function() {
         if (typeof this.tabs[this.currentTab].clearCanvas === "function") {
@@ -136,7 +131,7 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Updates the plot canvas
+     * Updates the plot canvas of the current tab, if there is any
      */
     WebView.prototype.drawPlot = function() {
         if (typeof this.tabs[this.currentTab].drawPlot === "function") {
@@ -158,7 +153,7 @@ define(["../Controller/AbstractView",
             newState.tab = "editrun";
         }
 
-        // Make tab consistent with possible other variables in hash
+        // Make "tab" variable consistent with possible other variables in hash
         if (newState.script) {
             newState.tab = "editrun";
         } else if (newState.help) {
@@ -201,12 +196,10 @@ define(["../Controller/AbstractView",
             this.tabs[newState.tab].onEnterTab(newState);
         }
 
-        //Tooltips loaded and shown
+        // Restore and show tooltips for this tab
         try {
             this.tooltips[newState.tab].toggle(true);
-        } catch(e) {
-
-        }
+        } catch(e) {}
 
         this.currentTab = newState.tab;
         this.resizeContainer();
@@ -224,13 +217,14 @@ define(["../Controller/AbstractView",
             this.tabs[tab].onLeaveTab();
         }
 
-        //Tooltips stored and hidden
+        // Store currently visible tooltips for this tab, so they can be shown
+        // again when switching back to this tab
         this.tooltips[tab] = $('.tooltipcontainer').filter(":visible");
         this.tooltips[tab].toggle(false);
     };
 
     /**
-     * Event that gets called when one of the quantity definitions have been modified.
+     * Event that gets called when one of the quantity definitions has been modified.
      */
     WebView.prototype.onModifiedQuantity = function() {
         var script = controller.getScript();
@@ -250,7 +244,7 @@ define(["../Controller/AbstractView",
         this.tabs.analysis.analysisTable.empty();
         this.tabs.analysis.analysisTable.flip();
 
-        // Disable analysis tab. Will be re-enabled again when the script is compiled
+        // Disable analysis tab. Will be re-enabled again when/if the script is compiled
         if (!$('#analysis').hasClass('disabled')) {
             $('#analysis').addClass('disabled').children("a").removeAttr('href');
         }
@@ -266,7 +260,7 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Event that gets called when the controller has issued a new iteration for the script.
+     * Event that gets called when the controller has issued a new iteration of the script.
      */
     WebView.prototype.onNextStep = function() {
         var script = controller.getScript();
@@ -277,7 +271,7 @@ define(["../Controller/AbstractView",
                 break;
         }
 
-        // Draw a plot if one is visible on the current view tab.
+        // Draw a plot if one is visible in the current view tab.
         this.drawPlot();
     };
 
@@ -287,9 +281,10 @@ define(["../Controller/AbstractView",
      * @param {Boolean} empty Whether the new script is an empty script.
      */
     WebView.prototype.onNewScript = function(empty) {
+        var script = controller.getScript();
         this.resetAllPlots();
 
-        var script = controller.getScript();
+        // Set models for view canvases
         this.tabs.editrun.canvas.setModel(script);
         this.tabs.simulation.canvas.setModel(script);
         this.tabs.optimisation.canvas.setModel(controller.getGeneticOptimisation());
@@ -332,7 +327,7 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Resets all canvasses and plots, such that they are as good as new!
+     * Resets all canvasses and plots
      */
     WebView.prototype.resetAllPlots = function() {
         for (var key in this.tabs) {
@@ -353,7 +348,7 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Displays the passed runtime error to the user.
+     * Handles the given runtime error.
      *
      * @param {RuntimeError} err The error that occured during runtime.
      */
@@ -362,9 +357,16 @@ define(["../Controller/AbstractView",
         this.handleError(error);
     };
 
+    /**
+     * Resizes the view container in response to viewport changes and
+     * tab switches.
+     *
+     * @post The view container has been resized if nessecary.
+     */
     WebView.prototype.resizeContainer = function() {
-        var widthPercentage = 0.8;
         var windowWidth = $(window).innerWidth();
+
+        var widthPercentage = 0.8;
         var fixedWidth = 1600 * widthPercentage;
         var variableWidth = windowWidth * widthPercentage;
         var newMaxWidth = Math.max(fixedWidth, variableWidth);
@@ -386,6 +388,7 @@ define(["../Controller/AbstractView",
             }
         );
     };
+
 
     WebView.prototype.syntaxErrorMessage = function(id, error, selector) {
         this.id = id;
@@ -477,11 +480,20 @@ define(["../Controller/AbstractView",
         errorTooltip.set(errormsg.text);
     };
 
+    /**
+     * Removes the focus of any selected element(s).
+     */
     WebView.prototype.deselect = function() {
         var sel = window.getSelection();
         sel.removeAllRanges();
     };
 
+    /**
+     * Removes any existing selection and selects the
+     * contents of the given selector.
+     *
+     * @param  {Node} selector The HTML element of which to select the contents.
+     */
     WebView.prototype.selectContent = function(selector) {
         var element = $(selector)[0];
         var range = document.createRange();
@@ -491,6 +503,13 @@ define(["../Controller/AbstractView",
         sel.addRange(range);
     };
 
+    /**
+     * Encodes/escapes HTML entities that disturb the layout when used unescaped.
+     * Currently the characters "&", "<" and ">" are escaped.
+     *
+     * @param  {String} string The string to escape
+     * @return {String} The escaped string.
+     */
     WebView.prototype.encodeHTML = function(string) {
         return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     };

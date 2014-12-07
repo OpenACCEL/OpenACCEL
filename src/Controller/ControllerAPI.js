@@ -147,14 +147,6 @@ define(["Model/Script",
             this.autoSave = false;
 
             /**
-             * Whether the application uses web workers or not. DO NOT
-             * SET DIRECTLY. Use setShouldUseWorkers().
-             *
-             * @param {Boolean}
-             */
-            this.useWorkers = false;
-
-            /**
              * The Quantity Store used for autosaving the script.
              *
              * @type {LocalBackupStore}
@@ -178,7 +170,7 @@ define(["Model/Script",
             /**
              * For performance profiling
              */
-            if (inBrowser) {
+            /*if (inBrowser) {
                 this.curMeasurement = 0;
                 this.numMeasurements = 1000;
                 this.measurements = new Array(this.numMeasurements);
@@ -195,7 +187,7 @@ define(["Model/Script",
                             return new Date().getTime();
                         };
                 })();
-            }
+            }*/
         }
 
         /**
@@ -376,7 +368,7 @@ define(["Model/Script",
                         this.view.runtimeError(e);
                         this.stop();
                     }
-                }).bind(this), 16
+                }).bind(this), 16   /** Number of milliseconds between executions of runloop **/
             );
         };
 
@@ -403,10 +395,10 @@ define(["Model/Script",
          * @post The view has received the current values of all output quantities.
          */
         Controller.prototype.execute = function() {
-            var pretime, posttime;
+            /*var pretime, posttime;
             if (inBrowser) {
                 pretime = performance.now();
-            }
+            }*/
 
             // Extra check to make sure that the model is complete and we are
             // really (still) executing
@@ -432,11 +424,11 @@ define(["Model/Script",
                 this.stop();
             }
 
-            if (inBrowser && this.curMeasurement < this.numMeasurements) {
+            /*if (inBrowser && this.curMeasurement < this.numMeasurements) {
                 posttime = performance.now();
                 this.measurements[this.curMeasurement] = posttime-pretime;
                 this.curMeasurement++;
-            }
+            }*/
         };
 
         /**
@@ -465,7 +457,7 @@ define(["Model/Script",
                 this.view.setStatus(this.status);
 
                 // Performance measurements
-                if (inBrowser && this.curMeasurement > 0) {
+                /*if (inBrowser && this.curMeasurement > 0) {
                     var total = this.measurements.slice(0, this.curMeasurement).reduce(function(a, b) {
                         return a + b;
                     });
@@ -474,7 +466,7 @@ define(["Model/Script",
 
                     console.log("Average iteration time: " + avg);
                     console.log("#Measurements: " + this.curMeasurement);
-                }
+                }*/
             }
         };
 
@@ -561,16 +553,6 @@ define(["Model/Script",
             } else {
                 return false;
             }
-        };
-
-        /**
-         * Signals the controller to switch state to the given tab.
-         *
-         * @param tab {Number} The tab to switch to.
-         * @post this.currentTab = tab
-         */
-        Controller.prototype.switchTab = function(tab) {
-            this.currentTab = tab;
         };
 
         /**

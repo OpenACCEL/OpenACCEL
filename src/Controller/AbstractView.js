@@ -1,5 +1,6 @@
 /**
- * AbstractView.
+ * @fileOverview AbstractView class
+ * @author Edward Brinkmann
  */
 
 /** Browser vs. Node ***********************************************/
@@ -16,7 +17,7 @@ if (inNode) {
 /*******************************************************************/
 
 // If all requirements are loaded, we may create our 'class'.
-define([], /**@lends Controller*/ function() {
+define([], /**@lends Model.AbstractView */ function() {
     /**
      * @class
      * @classdesc Interface declaring the methods that the view with which the Controller will
