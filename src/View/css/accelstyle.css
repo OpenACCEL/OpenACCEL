@@ -286,6 +286,12 @@ a.toggleswitchoption_current {
 	font-style: italic;
 }
 
+.an_graphinput {
+	width: 65%;
+	margin-top: 6px;
+	margin-left: 6px;
+}
+
 .an_listcontainer {
 	height: 400px;
 	overflow-x: hidden;

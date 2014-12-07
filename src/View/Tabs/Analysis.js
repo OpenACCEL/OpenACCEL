@@ -59,6 +59,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
          * @type {Model.Analysis}
          */
         this.analysis = undefined;
+
+        $("#graphmode").on("change", function() {
+            var mode = $(this).val();
+            view.setState({"tab": "analysis", "mode": mode});
+        });
+
+        $("#analysis_domainXFrom, #analysis_domainXTo, #analysis_rangeFrom, #analysis_rangeTo").attr('disabled', true).css("background-color", "#ccc");
     }
 
     /**
@@ -593,15 +600,15 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
     Analysis.prototype.setPlotType = function(type) {
         switch (type) {
             case "contour":
-                $("#an_graphswitch_contour").removeClass("toggleswitchoption").addClass("toggleswitchoption_current");
-                $("#an_graphswitch_graph").removeClass("toggleswitchoption_current").addClass("toggleswitchoption");
+                $("#analysis_domainXFrom, #analysis_domainXTo, #analysis_rangeFrom, #analysis_rangeTo").removeAttr('disabled').css("background-color", "white");
+                $("#graphmode").val("contour");
                 $(".analysis_contourSettings").show();
                 $(".analysis_lineSettings").hide();
                 this.mode = "contour";
                 break;
-            default: // "line"
-                $("#an_graphswitch_graph").removeClass("toggleswitchoption").addClass("toggleswitchoption_current");
-                $("#an_graphswitch_contour").removeClass("toggleswitchoption_current").addClass("toggleswitchoption");
+            default: // "graph"
+                $("#analysis_domainXFrom, #analysis_domainXTo, #analysis_rangeFrom, #analysis_rangeTo").attr('disabled', true).css("background-color", "#ccc");
+                $("#graphmode").val("graph");
                 $(".analysis_contourSettings").hide();
                 $(".analysis_lineSettings").show();
                 this.mode = "graph";
@@ -714,7 +721,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
 
         // If we were not clamped, we'll have to redraw the plot!
         if (bClamp) {
+            $("#analysis_domainXFrom, #analysis_domainXTo, #analysis_rangeFrom, #analysis_rangeTo").attr('disabled', true).css("background-color", "#ccc");
             this.drawPlot();
+        } else {
+            $("#analysis_domainXFrom, #analysis_domainXTo, #analysis_rangeFrom, #analysis_rangeTo").removeAttr('disabled').css("background-color", "white");
         }
     };
 

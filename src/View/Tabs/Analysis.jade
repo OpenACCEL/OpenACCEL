@@ -17,10 +17,11 @@
 			.group
 				table(style = "width:50%")
 					tr
-						td(align = 'center', colspan='2', style='padding:0px; padding-top: 3px;')
-							div.toggleswitch
-								a#an_graphswitch_graph.toggleswitchoption(onclick='view.setState({"tab": "analysis", "mode": "graph"})', style='border-top-left-radius: 8px; border-bottom-left-radius: 8px;') Graph
-								a#an_graphswitch_contour.toggleswitchoption(onclick='view.setState({"tab": "analysis", "mode": "contour"})', style='border-top-right-radius: 8px; border-bottom-right-radius: 8px;') Contour
+						td(align = 'center', colspan='2', style='padding: 0px; padding-top: 3px; padding-bottom: 3px;')
+							span(style='font-weight: bold;') Graph type:
+							select#graphmode(style='margin-left: 15px; vertical-align: middle;')
+								option(value='graph') Graph
+								option(value='contour') Contour
 					tr
 						td(colspan = '2', align = 'center')
 							#analysis_plot
@@ -34,7 +35,7 @@
 							span Clamp range
 							input(id = 'analysis_toClamp', type = 'checkbox', checked = 'true', onclick = 'view.tabs.analysis.setClamp(this.checked)', style='float:right; margin-right: 10px;')
 						td
-							input(id = 'analysis_clampMargin', type = 'number', value = '4', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setClampMargin(val)')
+							input(class='an_graphinput', id = 'analysis_clampMargin', type = 'number', value = '4', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setClampMargin(val)')
 					tr
 						td
 							.label Domain X From:
@@ -42,9 +43,9 @@
 							.label Domain X To:
 					tr
 						td
-							input(id = 'analysis_domainXFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {min: val}})')
+							input(class='an_graphinput', id = 'analysis_domainXFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {min: val}})')
 						td
-							input(id = 'analysis_domainXTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {max: val}})')
+							input(class='an_graphinput', id = 'analysis_domainXTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({x: {max: val}})')
 					tr(class = "analysis_contourSettings")
 						td
 							.label Domain Y From:
@@ -52,9 +53,9 @@
 							.label Domain Y To:
 					tr(class = "analysis_contourSettings")
 						td
-							input(id = 'analysis_domainYFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({y: {min: val}})')
+							input(class='an_graphinput', id = 'analysis_domainYFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({y: {min: val}})')
 						td
-							input(id = 'analysis_domainYTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({y: {max: val}})')
+							input(class='an_graphinput', id = 'analysis_domainYTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setDomain({y: {max: val}})')
 					tr
 						td
 							.label Range From:
@@ -62,9 +63,9 @@
 							.label Range To:
 					tr
 						td
-							input(id = 'analysis_rangeFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({min: val})')
+							input(class='an_graphinput', id = 'analysis_rangeFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({min: val})')
 						td
-							input(id = 'analysis_rangeTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({max: val})')
+							input(class='an_graphinput', id = 'analysis_rangeTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({max: val})')
 					tr(class = 'analysis_contourSettings')
 						td
 							.label Nr. Contours:
@@ -72,6 +73,6 @@
 							.label Nr. Samples:
 					tr(class = "analysis_contourSettings")
 						td
-							input(id = 'analysis_nrContours', type = 'number', value = '10', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setNrContours(val)')
+							input(class='an_graphinput', id = 'analysis_nrContours', type = 'number', value = '10', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setNrContours(val)')
 						td
-							input(id = 'analysis_nrSamples', type = 'number', value = '10', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setContourSamples(val)')
+							input(class='an_graphinput', id = 'analysis_nrSamples', type = 'number', value = '10', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setContourSamples(val)')
