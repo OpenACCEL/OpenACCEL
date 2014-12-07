@@ -2,8 +2,12 @@
     "name": "OpenACCEL",
     "preferGlobal": false,
     "author": "Kees van Overveld <k.van.overveld@wxs.nl>",
-    "description": "The ACCEL-system is a light-weight, general purpose modelling environment for mathematical modelling. It combines some ideas from spreadsheets, Matlab, and traditional highschool mathematics.",
+    "description": "The OpenACCEL-system is a lightweight, general-purpose modeling environment for mathematical modeling. It combines some ideas from spreadsheets, Matlab, and traditional highschool mathematics.",
     "contributors": [
+        {
+            "name": "Edward Brinkmann",
+            "email": "e.k.brinkmann@student.tue.nl"
+        },
         {
             "name": "Roy Stoof",
             "email": "contact@protoman.net"
@@ -19,10 +23,6 @@
         {
             "name": "Roel Jacobs",
             "email": "r.jacobs@student.tue.nl"
-        },
-        {
-            "name": "Edward Brinkmann",
-            "email": "e.k.brinkmann@student.tue.nl"
         },
         {
             "name": "Philippe Denissen",

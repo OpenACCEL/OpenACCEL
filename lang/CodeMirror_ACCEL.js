@@ -1,7 +1,7 @@
 /**
- * CodeMirror mode file that provides syntax highlighting support for the ACCEL
- * languague by defining a lexical scanner that consumes tokens and returns
- * css classes that should be used to style the consumed token in the input stream.
+ * CodeMirror "mode" file that provides syntax highlighting support for the ACCEL
+ * language. It defines a lexical scanner that consumes tokens and returns the
+ * css classes which should be used to style the consumed token in the input stream.
  */
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
