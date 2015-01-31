@@ -24,11 +24,11 @@ function poisson(x, y, z) {
                     return poisson;
                 } else {
                     //from: http://www.questia.com/googleScholar.qst?docId=5000227714
-                    a = Math.exp(-b);
-                    poisson = a;
-                    for (i = 2; i < a + 1; i++) {
-                        a = a * b / (i - 1);
-                        poisson += a;
+                    var dummy = Math.exp(-b);
+                    poisson = dummy;
+                    for (i = 2; i <= a + 1; i++) {
+                        dummy = dummy * b / (i - 1);
+                        poisson += dummy;
                     }
                     return poisson;
                 }

@@ -166,9 +166,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
     };
 
     Analysis.prototype.updateArgument = function(state) {
+        var newarg = state.argument;
         this.canvas.clearError();
         $('#an_arguments a.an_qtyname').removeClass("an_greyedout").removeClass("help_current");
-        $('#an_arguments a.an_qtyname[value="' + state.argument + '"]').addClass("help_current");
+        $('#an_arguments a.an_qtyname[value="' + newarg + '"]').addClass("help_current");
 
         // Grey-out all non-reversereachable quantities in the results table
         // var reachables = view.tabs.analysis.compareQuantities[state.argument].quantity.reverseReachables;
@@ -176,28 +177,53 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
         $('#an_results a.an_qtyname').removeClass("an_greyedout");
         $('#an_results a.an_qtyname').each(function() {
             var qty = $(this).text();
-            if (script.isReachable(qty, state.argument) === false) {
+            if (script.isReachable(qty, newarg) === false) {
                 $(this).addClass('an_greyedout');
             }
         });
+
+        // Set margins. If the selected argument is a slider, use the slider range as domain.
+        // Else, set the domain to be centered around the current value.
+        var argVal, slider, slidmin=0, slidmax=0;
+        for (var elem in this.compareQuantities) {
+            var qty = this.compareQuantities[elem];
+            if (qty.quantity.name === newarg) {
+                argVal = qty.value;
+                slider = (qty.quantity.category === 1 && qty.quantity.input.type === 'slider');
+                if (slider) {
+                    slidmin = qty.quantity.input[1];
+                    slidmax = qty.quantity.input[2];
+                    this.setDomain({'x': {'min':slidmin, 'max':slidmax} });
+                } else {
+                    if (argVal !== 0) {
+                        this.setDomain({'x': {'min':argVal/2, 'max':argVal*2} });
+                    } else {
+                        this.setDomain({'x': {'min':-1, 'max':1} });
+                    }
+                }
+
+                break;
+            }
+        }
 
         if (state.result !== undefined) {
             var script = controller.getScript();
             if (script.hasHistory() === true && controller.numIterations === 0) {
                 this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
-                if (script.isReachable(state.result, state.argument) === true) {
-                    this.analysis.setX(state.argument);
+                if (script.isReachable(state.result, newarg) === true) {
+                    this.analysis.setX(newarg);
                     this.analysis.setY(state.result);
                     this.drawPlot();
                 } else {
-                    this.setError("Quantity " + state.result + " does not depend on " + state.argument);
+                    this.setError("Quantity " + state.result + " does not depend on " + newarg);
                 }
             }
         }
     };
 
     Analysis.prototype.updateArgH = function(state) {
+        var newarg = state.argH;
         this.canvas.clearError();
         $('#an_arguments .an_qtyHarg').removeClass("an_current").html("&nbsp;&nbsp;");
         $('#an_arguments div[data-quantity="' + state.argH + '"]').find(".an_qtyHarg").addClass("an_current").text("H");
@@ -219,6 +245,30 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 $(this).addClass('an_greyedout');
             }
         });
+
+        // Set margins. If the selected argument is a slider, use the slider range as domain.
+        // Else, set the domain to be centered around the current value.
+        var argVal, slider, slidmin=0, slidmax=0;
+        for (var elem in this.compareQuantities) {
+            var qty = this.compareQuantities[elem];
+            if (qty.quantity.name === newarg) {
+                argVal = qty.value;
+                slider = (qty.quantity.category === 1 && qty.quantity.input.type === 'slider');
+                if (slider) {
+                    slidmin = qty.quantity.input[1];
+                    slidmax = qty.quantity.input[2];
+                    this.setDomain({'x': {'min':slidmin, 'max':slidmax} });
+                } else {
+                    if (argVal !== 0) {
+                        this.setDomain({'x': {'min':argVal/2, 'max':argVal*2} });
+                    } else {
+                        this.setDomain({'x': {'min':-1, 'max':1} });
+                    }
+                }
+
+                break;
+            }
+        }
 
         if (state.result !== undefined) {
             var script = controller.getScript();
@@ -250,6 +300,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
     };
 
     Analysis.prototype.updateArgV = function(state) {
+        var newarg = state.argV;
         this.canvas.clearError();
         $('#an_arguments .an_qtyVarg').removeClass("an_current").html("&nbsp;&nbsp;");
         $('#an_arguments div[data-quantity="' + state.argV + '"]').find(".an_qtyVarg").addClass("an_current").text("V");
@@ -271,6 +322,30 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 $(this).addClass('an_greyedout');
             }
         });
+
+        // Set margins. If the selected argument is a slider, use the slider range as domain.
+        // Else, set the domain to be centered around the current value.
+        var argVal, slider, slidmin=0, slidmax=0;
+        for (var elem in this.compareQuantities) {
+            var qty = this.compareQuantities[elem];
+            if (qty.quantity.name === newarg) {
+                argVal = qty.value;
+                slider = (qty.quantity.category === 1 && qty.quantity.input.type === 'slider');
+                if (slider) {
+                    slidmin = qty.quantity.input[1];
+                    slidmax = qty.quantity.input[2];
+                    this.setDomain({'y': {'min':slidmin, 'max':slidmax} });
+                } else {
+                    if (argVal !== 0) {
+                        this.setDomain({'y': {'min':argVal/2, 'max':argVal*2} });
+                    } else {
+                        this.setDomain({'y': {'min':-1, 'max':1} });
+                    }
+                }
+
+                break;
+            }
+        }
 
         if (state.result !== undefined) {
             var script = controller.getScript();
@@ -305,6 +380,30 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
         this.canvas.clearError();
         $('#an_results a.an_qtyname').removeClass("help_current");
         $('#an_results a.an_qtyname[value="' + state.result + '"]').addClass("help_current");
+
+        // Set margins. If the selected argument is a slider, use the slider range as domain.
+        // Else, set the domain to be centered around the current value.
+        var argVal, slider, slidmin=0, slidmax=0;
+        for (var elem in this.compareQuantities) {
+            var qty = this.compareQuantities[elem];
+            if (qty.quantity.name === state.result) {
+                argVal = qty.value;
+                slider = (qty.quantity.category === 1 && qty.quantity.input.type === 'slider');
+                if (slider) {
+                    slidmin = qty.quantity.input[1];
+                    slidmax = qty.quantity.input[2];
+                    this.setRange({'min':slidmin, 'max':slidmax});
+                } else {
+                    if (argVal !== 0) {
+                        this.setRange({'min':argVal/2, 'max':argVal*2});
+                    } else {
+                        this.setRange({'min':-1, 'max':1});
+                    }
+                }
+
+                break;
+            }
+        }
 
         // Grey-out all non-reachable quantities in the arguments table
         // var reachables = view.tabs.analysis.compareQuantities[state.result].quantity.reachables;
@@ -375,7 +474,12 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 var qname = qty.name;
                 var val = exe.getValue(qname);
 
-                if (isNumeric(val) && !(val instanceof Array) && val !== false && val !== true && val !== '') {
+                if (!qty.isUserFunction() &&
+                    isNumeric(val) &&
+                    !(val instanceof Array) &&
+                    val !== false &&
+                    val !== true &&
+                    val !== '') {
                     this.compareQuantities[qname] = {'quantity': qty, 'value': val};
                 }
             }
@@ -633,21 +737,21 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
 
         // Update range values.
         var range = this.getRange();
-        var rangeFrom = range.min.toFixed(4);
-        var rangeTo = range.max.toFixed(4);
+        var rangeFrom = range.min.toFixed(2);
+        var rangeTo = range.max.toFixed(2);
         $("#analysis_rangeFrom").val(rangeFrom);
         $("#analysis_rangeTo").val(rangeTo);
 
         // Update domain values.
         var domain = this.getDomain();
 
-        var domainXFrom = domain.x.min.toFixed(4);
-        var domainXTo = domain.x.max.toFixed(4);
+        var domainXFrom = domain.x.min.toFixed(2);
+        var domainXTo = domain.x.max.toFixed(2);
         $("#analysis_domainXFrom").val(domainXFrom);
         $("#analysis_domainXTo").val(domainXTo);
 
-        var domainYFrom = domain.y.min.toFixed(4);
-        var domainYTo = domain.y.max.toFixed(4);
+        var domainYFrom = domain.y.min.toFixed(2);
+        var domainYTo = domain.y.max.toFixed(2);
         $("#analysis_domainYFrom").val(domainYFrom);
         $("#analysis_domainYTo").val(domainYTo);
     };

@@ -1,5 +1,14 @@
 {
     "help_articles": {
+        "Kees van Overveld": {
+            "fName": "Kees van Overveld",
+            "cat": "general",
+            "help": "Creator of ACCEL, the predecessor of OpenACCEL.",
+            "example": "",
+            "details": "",
+            "seeAlso": "",
+            "external": ""
+        },
         "auto-mapping": {
             "fName": "auto-mapping",
             "cat": "algebra",

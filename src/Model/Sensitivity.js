@@ -180,41 +180,32 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
      */
     Sensitivity.prototype.calcSensitivity = function(q13, relative) {
         var script = controller.getScript();
-        var nul = []
-        var plus = [];
-        var min = [];
+        var exe = script.exe;
+        var nul = {};
+        var plus = {};
+        var min = {};
 
-        var value;
-        for (el in this.compareQuantities) {
-            if (this.compareQuantities[el].quantity.name === q13) {
-                value = this.compareQuantities[el].value;
-                break;
-            }
-        }
+        // Reset script state to initial state. This does save the values of user input quantities
+        exe.reset();
+        var value = parseFloat(exe.getValue(q13));
 
         // Determine the delta to use, as specified by the user or if not, the default of 1.0
         var delta;
         if (relative === true) {
-            delta = this.percs[q13] * value / 100;
+            delta = parseFloat(this.percs[q13] * value / 100);
         } else {
-            delta = this.percs[q13];
+            delta = parseFloat(this.percs[q13]);
         }
 
         // Get current values of all cat2 quantities, and prepare pos and neg objects
         // with same values for now
         for (elem in this.senscat2) {
             var q2 = this.senscat2[elem];
-            var q2val;
-            for (el in this.compareQuantities) {
-                if (this.compareQuantities[el].quantity.name === q2) {
-                    q2val = this.compareQuantities[el].value;
-                    break;
-                }
-            }
+            var q2val = parseFloat(exe.getValue(q2));
 
-            nul.push({'name': q2, 'value': q2val});
-            plus.push({'name': q2, 'value': q2val});
-            min.push({'name': q2, 'value': q2val});
+            nul[q2] = q2val;
+            plus[q2] = q2val;
+            min[q2] = q2val;
         }
 
         // Get value of current+delta and current-delta for all cat2 quantities
@@ -226,60 +217,44 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
 
         var err = false;
         try {
-            script.exe.executeQuantities([{'name': q13, 'value': plusval}], plus, 0);
-            script.exe.executeQuantities([{'name': q13, 'value': minusval}], min, 0);
+            exe.executeQuantitySensitivity({'name': q13, 'value': plusval}, plus);
+            exe.executeQuantitySensitivity({'name': q13, 'value': minusval}, min);
         } catch (e) {
             // Fill in error message. We do not add something to the this.pseudoPDs array
             // so this value will just be ignored when computing the variances.
             for (elem in this.senscat2) {
                 var q2 = this.senscat2[elem];
-                this.senstbl[q13][q2] = e.message;
+                this.senstbl[q13][q2] = "Error: " + e.message;
             }
+
             err = true;
-        } finally {
-            // Make sure to reset the value!
-            script.exe.setValue(q13, value);
         }
+
+        // Abort if there has been an error, the error message has already been set above as the
+        // result of this quantity in the sensitivity table
         if (err === true) {
             return;
         }
 
-        // Convert arrays which now hold the result values to indexed objects, for convenience
-        var plusres = {};
-        var minres = {};
-        var nulres = {};
-        for (var el in plus) {
-            var obj = plus[el];
-            plusres[obj.name] = obj.value;
-        }
-        for (var el in min) {
-            var obj = min[el];
-            minres[obj.name] = obj.value;
-        }
-        for (var el in nul) {
-            var obj = nul[el];
-            nulres[obj.name] = obj.value;
-        }
-
         // Determine all sensitivity results and store them in the table
         for (elem in nul) {
-            var q2 = nul[elem].name;
-            if (isNumeric(nulres[q2]) && isNumeric(plusres[q2]) && isNumeric(minres[q2])) {
+            var q2 = elem;
+            if (isNumeric(nul[q2]) && isNumeric(plus[q2]) && isNumeric(min[q2])) {
                 // First store the pseudo-partial derivative
-                var pd = (Math.abs(plusres[q2]-nulres[q2]) + Math.abs(minres[q2]-nulres[q2]))/(2*delta);
+                var pd = (Math.abs(plus[q2]-nul[q2]) + Math.abs(min[q2]-nul[q2]))/(2*delta);
                 this.pseudoPDs[q2][q13] = pd;
 
                 // Now compute the actual sensitivity for display in the table
-                var sens = (Math.abs(plusres[q2]-nulres[q2]) + Math.abs(minres[q2]-nulres[q2]))/2.0;
+                var sens = (Math.abs(plus[q2]-nul[q2]) + Math.abs(min[q2]-nul[q2]))/2.0;
                 if (!relative) {
                     this.senstbl[q13][q2] = sens.toPrecision(2);
                 } else {
                     // Relative sensitivity
-                    if (nulres[q2] != 0) {
-                        this.senstbl[q13][q2] = (sens / (0.01 * nulres[q2] * this.percs[q13])).toPrecision(2);
+                    if (nul[q2] != 0) {
+                        this.senstbl[q13][q2] = Math.abs((sens / (0.01 * nul[q2] * this.percs[q13]))).toPrecision(2);
                     } else {
                         // Division by zero
-                        if (plusres[q2] === minres[q2]) {
+                        if (plus[q2] === min[q2]) {
                             this.senstbl[q13][q2] = '0/0';
                         } else {
                             this.senstbl[q13][q2] = '.../0';
@@ -348,7 +323,7 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             // as the quantities are displayed in the column heading
             for (col in this.senscat2) {
                 var v = column[this.senscat2[col]];
-                if (isNumeric(v)) {
+                if (v.substr(0,5) != "Error") {
                     tbody += '<div class="tblcell_qty1val" style="' + this.getStyleForValue(v, 1) + '">' + v + '</div>';
                 } else {
                     tbody += '<div class="tblcell_error" title="' + v + '">err</div>';
@@ -376,7 +351,7 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             // as the quantities are displayed in the column heading
             for (col in this.senscat2) {
                 var v = column[this.senscat2[col]];
-                if (isNumeric(v)) {
+                if (v.substr(0,5) != "Error") {
                     tbody += '<div class="tblcell_qty3val" style="' + this.getStyleForValue(v, 3) + '">' + v + '</div>';
                 } else {
                     tbody += '<div class="tblcell_error" title="' + v + '">err</div>';
@@ -502,7 +477,7 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             sum += Math.pow(pd*sig, 2);
         }
 
-        var rSig = Math.sqrt(sum) * (100/value);
+        var rSig = Math.abs(Math.sqrt(sum) * (100/value));
         return rSig.toPrecision(2);
     };
 

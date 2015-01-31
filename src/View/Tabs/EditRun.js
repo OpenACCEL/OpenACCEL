@@ -241,15 +241,15 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      * @param {String} The quantity to add.
      */
     EditRun.prototype.addQuantity = function(string) {
-        this.setPendingScriptLine(string);
-
         string = string.trim();
         if (string === '') {
             //Do nothing if nothing was entered
             this.setPendingScriptLine(null);
         } else {
+            this.setPendingScriptLine(string);
             setTimeout(
                 (function() {
+                    // Clear error messages that might be currently visible
                     $('.tooltipcontainer > .errormessage').filter(":visible").trigger('click');
 
                     try {

@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["Model/Script", "lodash"], /** @lends Model */ function(Script, _) {
+define(["Model/Script", "lodash"], /** @lends Model.Analysis */ function(Script, _) {
 
     /**
      * @class
@@ -100,7 +100,7 @@ define(["Model/Script", "lodash"], /** @lends Model */ function(Script, _) {
      * @param {Script} script The script that needs to be analysed.
      */
     Analysis.prototype.setScript = function(script) {
-        if (script instanceof Script ) {
+        if (script instanceof Script) {
             this.script = script;
         }
     };
@@ -110,8 +110,8 @@ define(["Model/Script", "lodash"], /** @lends Model */ function(Script, _) {
      * An example input would be: setRange(this.range, {min: 5, max:10}).
      *
      * @throws {Error} An invalid range, meaning min >= max.
-     * @param {Object} The source interval object.
-     * @param {Object} The target interval object.
+     * @param {Object} source The source interval object.
+     * @param {Object} target The target interval object.
      */
     Analysis.prototype.setInterval = function(target, source) {
         if (_.isNumber(source.min)) {

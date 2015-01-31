@@ -6,8 +6,8 @@ build() {
     jade
     documentation
     deploy
-    post_deploy
-    compress
+    #post_deploy
+    #compress
 }
 
 # Quickbuild
@@ -15,7 +15,7 @@ quickbuild() {
     clean
     jade
     deploy
-    post_deploy
+    #post_deploy
 }
 
 # Testing.
@@ -97,8 +97,8 @@ deploy() {
 
     # Copy scripts.
     cp -r src/* bin/scripts
-    find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
-    find bin/scripts/Model/Library -type f -not -name "Functions.js" -exec rm {} \;
+    #find bin/scripts -type f -not -regex ".*\.s?js" -exec rm {} \;
+    #find bin/scripts/Model/Library -type f -not -name "Functions.js" -exec rm {} \;
 
     # Copy images.
     cp -r src/View/img bin/img/
@@ -116,7 +116,7 @@ deploy() {
 
 # Post Deployment
 post_deploy() {
-    # Set time depency functions in quantitypass.js
+    # Set time dependency functions in quantitypass.js
     path_functions="src/Model/Library/Functions.js"
     path_quantitypass="bin/scripts/Model/Analyser/Passes/QuantityPass.js"
     regex=".isTimeDependent = true;"

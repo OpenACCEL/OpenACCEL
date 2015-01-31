@@ -612,5 +612,46 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         this.reset();
     };
 
+    /**
+     * Used in sensitivity analysis. Executes the quantities given in the outputs argument after setting the quantities
+     * given in the inputs argument to the given values. Resets the executable afterwards.
+     *
+     * @param {Object} q13 Object having a 'name' and 'value' field containing the name and value of the quantity
+     * to set before executing the output quantities
+     * @param {Dictionary} outputs Dictionary with as keys the names of the quantities to execute. The values will be set
+     * by this function.
+     */
+    Executable.prototype.executeQuantitySensitivity = function(q13, outputs) {
+        // Set value of given category 1 or 3 quantity
+        origValue = this.getValue(q13.name);
+        this.setValue(q13.name, q13.value);
+
+        // Flag all category 2 and 4 quantities to be recomputed
+        for (key in this.report) {
+            elem = this.report[key];
+
+            if (elem.category === 1 || elem.category === 3) {
+                this[key].hasChanged = false;
+            } else {
+                this[key].hasChanged = true;
+                if (this[key].hist) {
+                    this[key].hist.length = 0;
+                }
+            }
+
+            this[key].touched = false;
+        }
+
+        // Compute all given output quantities and fill in their values in the given
+        // dictionary
+        for (key in outputs) {
+            outputs[key] = parseFloat(this.getValue(key));
+        }
+
+        // Reset executable to original state
+        this.reset();
+        this.setValue(q13.name, origValue);
+    };
+
     return Executable;
 });

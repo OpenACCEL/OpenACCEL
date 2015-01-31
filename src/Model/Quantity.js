@@ -335,6 +335,15 @@ define([], /**@lends Model.Quantity */ function() {
         return comment.slice(0,-1);
     };
 
+    /**
+     * Returns whether the Quantity is a user function.
+     *
+     * @return {Boolean} Whether the quantity is a user function.
+     */
+    Quantity.prototype.isUserFunction = function() {
+        return this.parameters.length > 0
+    };
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return Quantity;
 });
