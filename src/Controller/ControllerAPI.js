@@ -786,6 +786,9 @@ define(["Model/Script",
 
             // Update value in exe
             this.script.setConstant(qtyName, value);
+
+            // Emit event
+            jQuery.event.trigger("userInputChanged", [qtyName, value]);
         };
 
 

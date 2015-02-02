@@ -60,6 +60,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
          */
         this.analysis = undefined;
 
+        /**
+         * Whether the sensitivity table should be updated when the analysis tab is activated.
+         * This is the case when e.g. user input controls have been changed.
+         *
+         * @type {Boolean}
+         */
+        this.shouldUpdate = false;
+
         $("#graphmode").on("change", function() {
             var mode = $(this).val();
             view.setState({"tab": "analysis", "mode": mode});
@@ -125,6 +133,11 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
 
         // Finally, update the plot to show its latest status.
         this.drawPlot();
+
+        // Update sensitivity table when needed
+        if (this.shouldUpdate && !this.analysisTable.isEmpty()) {
+            this.sensAnalysis();
+        }
     };
 
     /**
@@ -163,6 +176,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
 
     Analysis.prototype.sensAnalysis = function() {
         this.sensitivity.analyse(this.compareQuantities);
+        this.shouldUpdate = false;
     };
 
     Analysis.prototype.updateArgument = function(state) {
@@ -226,7 +240,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
         var newarg = state.argH;
         this.canvas.clearError();
         $('#an_arguments .an_qtyHarg').removeClass("an_current").html("&nbsp;&nbsp;");
-        $('#an_arguments div[data-quantity="' + state.argH + '"]').find(".an_qtyHarg").addClass("an_current").text("H");
+        $('#an_arguments div[data-quantity="' + newarg + '"]').find(".an_qtyHarg").addClass("an_current").text("H");
 
         // Grey-out all non-reversereachable quantities in the results table
         // var reachables = view.tabs.analysis.compareQuantities[state.argH].quantity.reverseReachables;
@@ -303,7 +317,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
         var newarg = state.argV;
         this.canvas.clearError();
         $('#an_arguments .an_qtyVarg').removeClass("an_current").html("&nbsp;&nbsp;");
-        $('#an_arguments div[data-quantity="' + state.argV + '"]').find(".an_qtyVarg").addClass("an_current").text("V");
+        $('#an_arguments div[data-quantity="' + newarg + '"]').find(".an_qtyVarg").addClass("an_current").text("V");
 
         // Grey-out all non-reversereachable quantities in the results table
         /*var reachables = view.tabs.analysis.compareQuantities[state.argV].quantity.reverseReachables;

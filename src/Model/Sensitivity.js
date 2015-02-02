@@ -397,6 +397,12 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             e.stopPropagation();
             e.cancelBubble = true;
         });
+
+        // Register for user input updates
+        $(document).on("userInputChanged", function(qtyName, value) {
+            // Signal that view should be updated when displayed
+            view.tabs.analysis.shouldUpdate = true;
+        });
     };
 
     Sensitivity.prototype.getStyleForValue = function(val, cat) {
