@@ -116,21 +116,21 @@ define(["Model/Script", "lodash"], /** @lends Model.Analysis */ function(Script,
     Analysis.prototype.setInterval = function(target, source) {
         if (_.isNumber(source.min)) {
             if (_.isNumber(source.max)) {
-                if (source.min >= source.max) {
+                if (source.min > source.max) {
                     throw new Error("[" + source.min + ", " + source.max + "] is not a valid interval.");
                 } else {
                     target.min = source.min;
                     target.max = source.max;
                 }
             } else {
-                if (source.min >= target.max) {
+                if (source.min > target.max) {
                     throw new Error("[" + source.min + ", " + target.max + "] is not a valid interval.");
                 } else {
                     target.min = source.min;
                 }
             }
         } else if (_.isNumber(source.max)) {
-            if (target.min >= source.max) {
+            if (target.min > source.max) {
                 throw new Error("[" + target.min + ", " + source.max + "] is not a valid interval.");
             } else {
                 target.max = source.max;
@@ -309,7 +309,7 @@ define(["Model/Script", "lodash"], /** @lends Model.Analysis */ function(Script,
                     if (_.isFinite(ans)) {
                         if (ans < data.range.min) {
                             data.range.min = ans;
-                        } else if (ans > data.range.max) {
+                        } if (ans > data.range.max) {
                             data.range.max = ans;
                         }
                     }
