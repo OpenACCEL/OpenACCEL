@@ -45,6 +45,32 @@ body div {
 	font-weight: bold;
 }
 
+.center {
+	text-align: center;
+}
+
+.go_tbl_header {
+	font-weight: bold;
+	padding-left: 3px;
+}
+
+.go_tbl_heading {
+	background-color: #7E297E;
+	border-bottom: 1px solid black;
+	padding: 3px;
+	text-align: left;
+}
+
+.go_tbl_cell {
+	padding: 2px;
+	padding-left: 3px;
+}
+
+.go_table {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
 #mainbox {
 	display: flex;
 	display: -webkit-flex;

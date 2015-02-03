@@ -164,45 +164,45 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
 
                 this.individualPropertiesBuffer.append('' +
                     '<h4>Category I quantities</h4>' +
-                    '<div class = "divtable">' +
-                        '<div>' +
-                            '<div><em>name</em></div>' +
-                            '<div><em>value</em></div>' +
-                            '<div><em>minimum</em></div>' +
-                            '<div><em>maximum</em></div>' +
-                        '</div>');
+                    '<table class="go_table">' +
+                        '<tr class="go_tbl_heading">' +
+                            '<th class="go_tbl_header">name</th>' +
+                            '<th class="go_tbl_header center">value</th>' +
+                            '<th class="go_tbl_header center">minimum</th>' +
+                            '<th class="go_tbl_header center" style="padding-right: 3px;">maximum</th>' +
+                        '</tr>');
 
                 for (q in individual.inputvector) {
                     this.individualPropertiesBuffer.append('' +
-                        '<div>' +
-                            '<div class = "max128w ellipsis">' + individual.inputvector[q].name + '</div>' +
-                            '<div class = "max128w ellipsis">' + individual.inputvector[q].value + '</div>' +
-                            '<div class = "max128w ellipsis">' + individual.inputvector[q].minimum + '</div>' +
-                            '<div class = "max128w ellipsis">' + individual.inputvector[q].maximum + '</div>' +
-                        '</div>');
+                        '<tr>' +
+                            '<td class = "max128w go_tbl_cell">' + individual.inputvector[q].name + '</td>' +
+                            '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].value.toFixed(5) + '</td>' +
+                            '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].minimum + '</td>' +
+                            '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].maximum + '</td>' +
+                        '</tr>');
                 }
 
-                this.individualPropertiesBuffer.append('</div>');
+                this.individualPropertiesBuffer.append('</table>');
 
                 this.individualPropertiesBuffer.append('' +
                     '<h4>Category II quantities</h4>' +
-                    '<div class = "divtable">' +
-                        '<div>' +
-                            '<div><em>name</em></div>' +
-                            '<div><em>value</em></div>' +
-                            '<div><em>optimisation</em></div>' +
-                        '</div>');
+                    '<table class="go_table">' +
+                        '<tr class="go_tbl_heading">' +
+                            '<th class="go_tbl_header">name</th>' +
+                            '<th class="go_tbl_header center">value</th>' +
+                            '<th class="go_tbl_header center style="padding-right: 3px;"">optimisation</th>' +
+                        '</tr>');
 
                 for (q in individual.outputvector) {
                     this.individualPropertiesBuffer.append('' +
-                        '<div>' +
-                            '<div class = "max128w ellipsis">' + individual.outputvector[q].name + '</div>' +
-                            '<div class = "max128w ellipsis">' + individual.outputvector[q].value + '</div>' +
-                            '<div class = "max128w ellipsis">' + (individual.outputvector[q].maximize ? 'Maximized' : 'Minimized') + '</div>' +
-                        '</div>');
+                        '<tr>' +
+                            '<td class = "max128w go_tbl_cell">' + individual.outputvector[q].name + '</td>' +
+                            '<td class = "max128w go_tbl_cell center">' + individual.outputvector[q].value.toFixed(5) + '</td>' +
+                            '<td class = "max128w go_tbl_cell center">' + (individual.outputvector[q].maximize ? 'Maximized' : 'Minimized') + '</td>' +
+                        '</tr>');
                 }
 
-                this.individualPropertiesBuffer.append('</div>');
+                this.individualPropertiesBuffer.append('</table>');
 
                 this.individualPropertiesBuffer.flip("#optimisation_properties");
             }).bind(this)
