@@ -131,9 +131,6 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
             this.updateResult(state);
         }
 
-        // Finally, update the plot to show its latest status.
-        this.drawPlot();
-
         // Update sensitivity table when needed
         if (this.shouldUpdate && !this.analysisTable.isEmpty()) {
             this.sensAnalysis();
@@ -180,14 +177,15 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
     };
 
     Analysis.prototype.updateArgument = function(state) {
-        var newarg = state.argument;
         this.canvas.clearError();
+        this.analysis.setX(newarg);
+
+        var script = controller.getScript();
+        var newarg = state.argument;
         $('#an_arguments a.an_qtyname').removeClass("an_greyedout").removeClass("help_current");
         $('#an_arguments a.an_qtyname[value="' + newarg + '"]').addClass("help_current");
 
         // Grey-out all non-reversereachable quantities in the results table
-        // var reachables = view.tabs.analysis.compareQuantities[state.argument].quantity.reverseReachables;
-        var script = controller.getScript();
         $('#an_results a.an_qtyname').removeClass("an_greyedout");
         $('#an_results a.an_qtyname').each(function() {
             var qty = $(this).text();
@@ -226,7 +224,6 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
                 if (script.isReachable(state.result, newarg) === true) {
-                    this.analysis.setX(newarg);
                     this.analysis.setY(state.result);
                     this.drawPlot();
                 } else {
@@ -237,8 +234,11 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
     };
 
     Analysis.prototype.updateArgH = function(state) {
-        var newarg = state.argH;
         this.canvas.clearError();
+        this.analysis.setX(state.argH);
+
+        var script = controller.getScript();
+        var newarg = state.argH;
         $('#an_arguments .an_qtyHarg').removeClass("an_current").html("&nbsp;&nbsp;");
         $('#an_arguments div[data-quantity="' + newarg + '"]').find(".an_qtyHarg").addClass("an_current").text("H");
 
@@ -250,7 +250,6 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
             reachables = _.intersection(reachables, reachV);
         }*/
 
-        var script = controller.getScript();
 
         $('#an_results a.an_qtyname').removeClass("an_greyedout");
         $('#an_results a.an_qtyname').each(function() {
@@ -291,10 +290,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
             } else {
                 if (script.isReachable(state.result, state.argH) === true) {
                     if (state.argV) {
+                        this.analysis.setY(state.argV);
+
                         if (script.isReachable(state.result, state.argV) === true) {
                             // Draw contour plot
-                            this.analysis.setX(state.argH);
-                            this.analysis.setY(state.argV);
                             this.analysis.setZ(state.result);
                             this.drawPlot();
                         } else {
@@ -314,8 +313,11 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
     };
 
     Analysis.prototype.updateArgV = function(state) {
-        var newarg = state.argV;
         this.canvas.clearError();
+        this.analysis.setY(state.argV);
+
+        var script = controller.getScript();
+        var newarg = state.argV;
         $('#an_arguments .an_qtyVarg').removeClass("an_current").html("&nbsp;&nbsp;");
         $('#an_arguments div[data-quantity="' + newarg + '"]').find(".an_qtyVarg").addClass("an_current").text("V");
 
@@ -326,8 +328,6 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
             var reachH = view.tabs.analysis.compareQuantities[state.argH].quantity.reverseReachables;
             reachables = _.intersection(reachables, reachH);
         }*/
-
-        var script = controller.getScript();
 
         $('#an_results a.an_qtyname').removeClass("an_greyedout");
         $('#an_results a.an_qtyname').each(function() {
@@ -368,10 +368,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
             } else {
                 if (script.isReachable(state.result, state.argV) === true) {
                     if (state.argH) {
+                        this.analysis.setX(state.argH);
+
                         if (script.isReachable(state.result, state.argH) === true) {
                             // Draw contour plot
-                            this.analysis.setX(state.argH);
-                            this.analysis.setY(state.argV);
                             this.analysis.setZ(state.result);
                             this.drawPlot();
                         } else {
@@ -392,6 +392,12 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
 
     Analysis.prototype.updateResult = function(state) {
         this.canvas.clearError();
+        if (this.mode == 'graph') {
+            this.analysis.setY(state.result);
+        } else {
+            this.analysis.setZ(state.result);
+        }
+
         $('#an_results a.an_qtyname').removeClass("help_current");
         $('#an_results a.an_qtyname[value="' + state.result + '"]').addClass("help_current");
 
@@ -419,6 +425,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
             }
         }
 
+        /* Disabled because it leads to bad user experience */
         // Grey-out all non-reachable quantities in the arguments table
         // var reachables = view.tabs.analysis.compareQuantities[state.result].quantity.reachables;
         // $('#an_arguments a.an_qtyname').removeClass("an_greyedout");
@@ -440,8 +447,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
                 if (script.isReachable(state.result, state.argument) === true) {
+                    // Draw graph plot
                     this.analysis.setX(state.argument);
-                    this.analysis.setY(state.result);
                     this.drawPlot();
                 } else {
                     this.canvas.clearError();
@@ -455,10 +462,11 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 this.setError("Cannot draw graph: script uses history operator and iterations are set to 0.");
             } else {
                 if (script.isReachable(state.result, state.argH) === true) {
+                    this.analysis.setX(state.argH);
+
                     if (script.isReachable(state.result, state.argV) === true) {
-                        this.analysis.setX(state.argH);
+                        // Draw contour plot
                         this.analysis.setY(state.argV);
-                        this.analysis.setZ(state.result);
                         this.drawPlot();
                     } else {
                         this.setError("Quantity " + state.result + " does not depend on " + state.argV);

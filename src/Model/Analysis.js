@@ -240,7 +240,7 @@ define(["Model/Script", "lodash"], /** @lends Model.Analysis */ function(Script,
                 if (_.isFinite(ans)) {
                     if (ans < data.range.min) {
                         data.range.min = ans;
-                    } else if (ans > data.range.max) {
+                    } if (ans > data.range.max) {
                         data.range.max = ans;
                     }
                 }
