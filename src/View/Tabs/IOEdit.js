@@ -106,7 +106,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
             theme: 'default',
             lineNumbers: true,
             lineWrapping: false,
-            undoDepth: 100,             // Try to save some memory
+            undoDepth: 50,             // Try to save some memory
             viewportMargin: Infinity    // Always render entire document, so that text search and e.g. added event handlers work correctly
             //gutters: []
         });
@@ -152,9 +152,13 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
     IOEdit.prototype.toggleCM = function() {
         var use;
         if (this.usingAdvancedEditor()) {
+            // Get width of current editor, set advanced editor
+            // to be the same size
+            currentWidth = $("#ioedit_scriptarea").width();
+
             // Construct CodeMirror editor from textarea
             this.editor = this.constructAdvancedEditor();
-            this.editor.setSize(645, 400);
+            this.editor.setSize(currentWidth, 400);
             this.editor.refresh();
             use = true;
         } else {
