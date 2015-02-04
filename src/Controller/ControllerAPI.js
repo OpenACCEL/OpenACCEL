@@ -368,7 +368,7 @@ define(["Model/Script",
                         this.view.runtimeError(e);
                         this.stop();
                     }
-                }).bind(this), 16   /** Number of milliseconds between executions of runloop **/
+                }).bind(this), 5   /** Number of milliseconds between executions of runloop **/
             );
         };
 

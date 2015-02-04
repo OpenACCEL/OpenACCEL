@@ -483,7 +483,13 @@ define(["Model/Script", "View/Input", "View/HTMLBuffer", "lodash"], /** @lends M
             sum += Math.pow(pd*sig, 2);
         }
 
-        var rSig = Math.abs(Math.sqrt(sum) * (100/value));
+        var rSig;
+        if (this.calcmode === 'a') {
+            rSig = Math.abs(Math.sqrt(sum));
+        } else {
+            rSig = Math.abs(Math.sqrt(sum) * (100/value));
+        }
+
         return rSig.toPrecision(2);
     };
 
