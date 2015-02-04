@@ -26,7 +26,7 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library']
      */
     function DependencyPass() {
         this.lib = new Library();
-        this.reservedwords = this.lib.getFunctions({'all':true, 'escaped':false});
+        this.reservedwords = this.lib.getFunctions({'standard':true, 'inputs': true, 'escaped':false});
         this.reserved = this.lib.getFunctions({'reserved': true});
     }
 
@@ -60,7 +60,7 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library']
             // as well.
             if (quantity.parameters.indexOf(d) === -1 &&
                 quantity.dependencies.indexOf(d) === -1 &&
-                this.reservedwords.indexOf(d) === -1) {
+                this.reservedwords.indexOf(d) === -1 && (this.reserved.indexOf(d) == -1 || controller.script.hasQuantity(d))) {
 
                 quantity.nonhistDeps.push(d);
 

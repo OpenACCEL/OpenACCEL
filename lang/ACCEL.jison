@@ -622,19 +622,19 @@ string                  :   STRING
 
 predefinedConstant      :   PI
                             {{
-                                if (yy.units) { $$ = "new UnitObject(Math.PI)"; } else { $$ = "predefinedConstant('PI')";  }
+                                $$ = "predefinedConstant('PI')";
                             }}
                         |   E
                             {{
-                                if (yy.units) { $$ = "new UnitObject(Math.E)"; } else { $$ = "predefinedConstant('E')"; }
+                                $$ = "predefinedConstant('E')";
                             }}
                         |   TRUE
                             {{
-                                if (yy.units) { $$ = "new UnitObject(true)"; } else { $$ = "predefinedConstant('true')"; }
+                                $$ = "predefinedConstant('true')";
                             }}
                         |   FALSE
                             {{
-                                if (yy.units) { $$ = "new UnitObject(false)"; } else { $$ = "predefinedConstant('false')"; }
+                                $$ = "predefinedConstant('false')";
                             }}
                         ;
 
