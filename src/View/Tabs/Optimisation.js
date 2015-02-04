@@ -190,7 +190,7 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
                         '<tr class="go_tbl_heading">' +
                             '<th class="go_tbl_header">name</th>' +
                             '<th class="go_tbl_header center">value</th>' +
-                            '<th class="go_tbl_header center style="padding-right: 3px;"">optimisation</th>' +
+                            '<th class="go_tbl_header center" style="padding-right: 3px;">optimisation</th>' +
                         '</tr>');
 
                 for (q in individual.outputvector) {

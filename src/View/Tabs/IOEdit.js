@@ -58,6 +58,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
             $('#ioedit_showvalues').val('Show values');
         } catch (e) {
             if (typeof(e) === 'SyntaxError') {
+                alert(e.message);
                 console.log(e.message);
             } else {
                 console.log(e);

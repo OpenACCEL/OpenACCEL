@@ -378,6 +378,26 @@ quantityDef             :   quantityName '=' expr (UNIT)?
                             // Ignore units, there is a seperate parser for those.
                             $$ = yy.createQuantity($1, $3);
                         }}
+                        |   E '=' expr (UNIT)?
+                        {{
+                            // Ignore units, there is a seperate parser for those.
+                            $$ = yy.createQuantity('__' + $1 + '__', $3);
+                        }}
+                        |   PI '=' expr (UNIT)?
+                        {{
+                            // Ignore units, there is a seperate parser for those.
+                            $$ = yy.createQuantity('__' + $1 + '__', $3);
+                        }}
+                        |   TRUE '=' expr (UNIT)?
+                        {{
+                            // Ignore units, there is a seperate parser for those.
+                            $$ = yy.createQuantity('__' + $1 + '__', $3);
+                        }}
+                        |   FALSE '=' expr (UNIT)?
+                        {{
+                            // Ignore units, there is a seperate parser for those.
+                            $$ = yy.createQuantity('__' + $1 + '__', $3);
+                        }}
                         ;
 
 /**
@@ -388,6 +408,26 @@ quantityInput           :   quantityName '=' inputCall (UNIT)?
                         {{
                             // Ignore units, there is a seperate parser for those.
                             $$ = yy.createQuantity($1, $3);
+                        }}
+                        |   E '=' inputCall (UNIT)?
+                        {{
+                            // Ignore units, there is a seperate parser for those.
+                            $$ = yy.createQuantity('__' + $1 + '__', $3);
+                        }}
+                        |   PI '=' inputCall (UNIT)?
+                        {{
+                            // Ignore units, there is a seperate parser for those.
+                            $$ = yy.createQuantity('__' + $1 + '__', $3);
+                        }}
+                        |   TRUE '=' inputCall (UNIT)?
+                        {{
+                            // Ignore units, there is a seperate parser for those.
+                            $$ = yy.createQuantity('__' + $1 + '__', $3);
+                        }}
+                        |   FALSE '=' inputCall (UNIT)?
+                        {{
+                            // Ignore units, there is a seperate parser for those.
+                            $$ = yy.createQuantity('__' + $1 + '__', $3);
                         }}
                         ;
 
@@ -420,6 +460,22 @@ quantityFuncDef         :   quantityFuncName '=' expr (UNIT)?
 quantityFuncName        :   quantityName '(' dummy (dummyAdditional)* ')'
                         {{
                             $$ = $1;
+                        }}
+                        |   E '(' dummy (dummyAdditional)* ')'
+                        {{
+                            $$ = '__' + $1 + '__';
+                        }}
+                        |   PI '(' dummy (dummyAdditional)* ')'
+                        {{
+                            $$ = '__' + $1 + '__';
+                        }}
+                        |   TRUE '(' dummy (dummyAdditional)* ')'
+                        {{
+                            $$ = '__' + $1 + '__';
+                        }}
+                        |   FALSE '(' dummy (dummyAdditional)* ')'
+                        {{
+                            $$ = '__' + $1 + '__';
                         }}
                         ;
 
@@ -566,19 +622,19 @@ string                  :   STRING
 
 predefinedConstant      :   PI
                             {{
-                                if (yy.units) { $$ = "new UnitObject(Math.PI)"; } else { $$ = "Math.PI";  }
+                                if (yy.units) { $$ = "new UnitObject(Math.PI)"; } else { $$ = "predefinedConstant('PI')";  }
                             }}
                         |   E
                             {{
-                                if (yy.units) { $$ = "new UnitObject(Math.E)"; } else { $$ = "Math.E"; }
+                                if (yy.units) { $$ = "new UnitObject(Math.E)"; } else { $$ = "predefinedConstant('E')"; }
                             }}
                         |   TRUE
                             {{
-                                if (yy.units) { $$ = "new UnitObject(true)"; } else { $$ = "true"; }
+                                if (yy.units) { $$ = "new UnitObject(true)"; } else { $$ = "predefinedConstant('true')"; }
                             }}
                         |   FALSE
                             {{
-                                if (yy.units) { $$ = "new UnitObject(false)"; } else { $$ = "false"; }
+                                if (yy.units) { $$ = "new UnitObject(false)"; } else { $$ = "predefinedConstant('false')"; }
                             }}
                         ;
 
@@ -663,6 +719,98 @@ history                 :   scalarVar '{' expr (historyBase)?'}'
                                 $$ = "history('__" + qty + "__'," + $3 + ")";
                             }
                         }}
+                        |   E '{' expr (historyBase)?'}'
+                        {{
+                            if (yy.dummies && yy.dummies.indexOf($1) > -1) {
+                                // Cannot ask for the history of a parameter.
+                                yy.parseError("Dummy variables cannot have history", {
+                                    text: "history of " + $1,
+                                    loc: this._$
+                                });
+                            }
+
+                            // If the quantity is not a dummy variable, we are guaranteed it is in the format
+                            // 'this.__$1__()'. We can use this information to pass the quantity string to the library function.
+                            var qty = $1;
+
+                            // Check for a base case 'b'. We wrap this base case 'b' in function instead of directly
+                            // executing it, as a means of optimization. This way the value of 'b' will not always be
+                            // unnecessaryily calculated. We expect that the base case will not be called often anyway.
+                            if ($4 && $4.length > 0) {
+                                $$ = "history('__" + qty + "__'," + $3 + ",(function(){return " + $4 + ";}).bind(this))";
+                            } else {
+                                $$ = "history('__" + qty + "__'," + $3 + ")";
+                            }
+                        }}
+                        |   PI '{' expr (historyBase)?'}'
+                        {{
+                            if (yy.dummies && yy.dummies.indexOf($1) > -1) {
+                                // Cannot ask for the history of a parameter.
+                                yy.parseError("Dummy variables cannot have history", {
+                                    text: "history of " + $1,
+                                    loc: this._$
+                                });
+                            }
+
+                            // If the quantity is not a dummy variable, we are guaranteed it is in the format
+                            // 'this.__$1__()'. We can use this information to pass the quantity string to the library function.
+                            var qty = $1;
+
+                            // Check for a base case 'b'. We wrap this base case 'b' in function instead of directly
+                            // executing it, as a means of optimization. This way the value of 'b' will not always be
+                            // unnecessaryily calculated. We expect that the base case will not be called often anyway.
+                            if ($4 && $4.length > 0) {
+                                $$ = "history('__" + qty + "__'," + $3 + ",(function(){return " + $4 + ";}).bind(this))";
+                            } else {
+                                $$ = "history('__" + qty + "__'," + $3 + ")";
+                            }
+                        }}
+                        |   TRUE '{' expr (historyBase)?'}'
+                        {{
+                            if (yy.dummies && yy.dummies.indexOf($1) > -1) {
+                                // Cannot ask for the history of a parameter.
+                                yy.parseError("Dummy variables cannot have history", {
+                                    text: "history of " + $1,
+                                    loc: this._$
+                                });
+                            }
+
+                            // If the quantity is not a dummy variable, we are guaranteed it is in the format
+                            // 'this.__$1__()'. We can use this information to pass the quantity string to the library function.
+                            var qty = $1;
+
+                            // Check for a base case 'b'. We wrap this base case 'b' in function instead of directly
+                            // executing it, as a means of optimization. This way the value of 'b' will not always be
+                            // unnecessaryily calculated. We expect that the base case will not be called often anyway.
+                            if ($4 && $4.length > 0) {
+                                $$ = "history('__" + qty + "__'," + $3 + ",(function(){return " + $4 + ";}).bind(this))";
+                            } else {
+                                $$ = "history('__" + qty + "__'," + $3 + ")";
+                            }
+                        }}
+                        |   FALSE '{' expr (historyBase)?'}'
+                        {{
+                            if (yy.dummies && yy.dummies.indexOf($1) > -1) {
+                                // Cannot ask for the history of a parameter.
+                                yy.parseError("Dummy variables cannot have history", {
+                                    text: "history of " + $1,
+                                    loc: this._$
+                                });
+                            }
+
+                            // If the quantity is not a dummy variable, we are guaranteed it is in the format
+                            // 'this.__$1__()'. We can use this information to pass the quantity string to the library function.
+                            var qty = $1;
+
+                            // Check for a base case 'b'. We wrap this base case 'b' in function instead of directly
+                            // executing it, as a means of optimization. This way the value of 'b' will not always be
+                            // unnecessaryily calculated. We expect that the base case will not be called often anyway.
+                            if ($4 && $4.length > 0) {
+                                $$ = "history('__" + qty + "__'," + $3 + ",(function(){return " + $4 + ";}).bind(this))";
+                            } else {
+                                $$ = "history('__" + qty + "__'," + $3 + ")";
+                            }
+                        }}
                         ;
 
 /**
@@ -725,6 +873,42 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                         |   quantityName '(' expr? (funcCallArgList)* ')'
                         {{
                             var funcCall = "this." + $1 + $2 + ($3 || "");
+                            if ($4 && $4.length > 0) {
+                                $$ = funcCall + "," + $4 + $5;
+                            } else {
+                                $$ = funcCall + $5;
+                            }
+                        }}
+                        |   E '(' expr? (funcCallArgList)* ')'
+                        {{
+                            var funcCall = "this.__" + $1 + '__' + $2 + ($3 || "");
+                            if ($4 && $4.length > 0) {
+                                $$ = funcCall + "," + $4 + $5;
+                            } else {
+                                $$ = funcCall + $5;
+                            }
+                        }}
+                        |   PI '(' expr? (funcCallArgList)* ')'
+                        {{
+                            var funcCall = "this.__" + $1 + '__' + $2 + ($3 || "");
+                            if ($4 && $4.length > 0) {
+                                $$ = funcCall + "," + $4 + $5;
+                            } else {
+                                $$ = funcCall + $5;
+                            }
+                        }}
+                        |   TRUE '(' expr? (funcCallArgList)* ')'
+                        {{
+                            var funcCall = "this.__" + $1 + '__' + $2 + ($3 || "");
+                            if ($4 && $4.length > 0) {
+                                $$ = funcCall + "," + $4 + $5;
+                            } else {
+                                $$ = funcCall + $5;
+                            }
+                        }}
+                        |   FALSE '(' expr? (funcCallArgList)* ')'
+                        {{
+                            var funcCall = "this.__" + $1 + '__' + $2 + ($3 || "");
                             if ($4 && $4.length > 0) {
                                 $$ = funcCall + "," + $4 + $5;
                             } else {

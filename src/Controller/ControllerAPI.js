@@ -833,11 +833,16 @@ define(["Model/Script",
          * @return {Object} Script
          */
         Controller.prototype.loadDemoScript = function(name) {
-            var source = this.library.getDemoScript(name);
-            this.setScriptFromSource(source);
-
-            if (this.autoExecute) {
-                this.run();
+            var source = '';
+            try {
+                source = this.library.getDemoScript(name);
+                this.setScriptFromSource(source);
+                if (this.autoExecute) {
+                    this.run();
+                }
+            } catch (e) {
+                alert("Error loading demo script: " + e.message);
+                console.log("Error loading demo script: " + e.message);
             }
         };
 
