@@ -21,7 +21,7 @@
         "About OpenACCEL": {
             "fName": "About OpenACCEL",
             "cat": "general",
-            "help": "OpenACCEL is a ...",
+            "help": "OpenACCEL is the successor of ACCEL, which was created by Kees van Overveld. The initial development of OpenACCEL was commissioned by Kees and carried out by the following team of Computer Science Bachelor students:<br/><ul><li>Edward Brinkmann</li><li>Philippe Denissen</li><li>Carl van Dueren Den Hollander</li><li>Leo van Gansewinkel</li><li>Roel Jacobs</li><li>Kevin de Ridder</li><li>Jacco Snoeren</li><li>Roy Stoof</li><li>Loc Tran</li></ul>Development began during the Software Engineering Projects (SEP) in Semester B Quartile 4 2014 at Eindhoven University of Technology. Afterwards OpenACCEL continued to be developed by Edward Brinkmann and Roy Stoof. It is currently being maintained by Edward." ,
             "example": "",
             "details": "",
             "seeAlso": "Kees van Overveld,kees",
