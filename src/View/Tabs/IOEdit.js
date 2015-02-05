@@ -15,6 +15,8 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
          */
         this.editor = null;
 
+        this.editorWidth = 0;
+
         /**
          * Whether to show the values of the quantities inside the editor.
          *
@@ -27,7 +29,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
         this.cm = CodeMirror;
         if (localStorage.useAdvancedEditor === 'true') {
             $('#ioedit_useCM').prop("checked", true);
-            this.toggleCM();
+            this.toggleCM(true);
         }
     }
 
@@ -149,13 +151,18 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
     /**
      * Toggles between the advanced and basic editor, based on the
      * value of the corresponding checkbox in the UI.
+     *
+     * @param {Boolean} onload Whether this function is called on tab load.
      */
-    IOEdit.prototype.toggleCM = function() {
+    IOEdit.prototype.toggleCM = function(onload) {
         var use;
         if (this.usingAdvancedEditor()) {
             // Get width of current editor, set advanced editor
             // to be the same size
-            currentWidth = $("#ioedit_scriptarea").width();
+            var currentWidth = parseInt(localStorage.getItem("advancedEditorWidth"));
+            if (currentWidth === null) {
+                currentWidth = $("#ioedit_scriptarea").width();
+            }
 
             // Construct CodeMirror editor from textarea
             this.editor = this.constructAdvancedEditor();
@@ -174,6 +181,9 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
 
         // Save preference to localStorage
         localStorage.useAdvancedEditor = use;
+        if (use) {
+            localStorage.advancedEditorWidth = currentWidth;
+        }
     };
 
 
@@ -193,7 +203,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
     IOEdit.prototype.updateAdvancedEditor = function() {
         if (this.usingAdvancedEditor()) {
             this.editor.setValue($('#ioedit_scriptarea').val());
-            this.editor.setSize(645, 400);
+            //this.editor.setSize(645, 400);
             this.editor.refresh();
             this.cm.signal(this.editor, "changes");
         }

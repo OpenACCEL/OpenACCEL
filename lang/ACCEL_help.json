@@ -6,7 +6,25 @@
             "help": "Creator of ACCEL, the predecessor of OpenACCEL.",
             "example": "",
             "details": "",
-            "seeAlso": "",
+            "seeAlso": "kees, About OpenACCEL",
+            "external": ""
+        },
+        "kees": {
+            "fName": "kees",
+            "cat": "special",
+            "help": "Shows information about Kees van Overveld, the creator of ACCEL.",
+            "example": "a=kees()",
+            "details": "",
+            "seeAlso": "Kees van Overveld, About OpenACCEL",
+            "external": ""
+        },
+        "About OpenACCEL": {
+            "fName": "About OpenACCEL",
+            "cat": "general",
+            "help": "OpenACCEL is a ...",
+            "example": "",
+            "details": "",
+            "seeAlso": "Kees van Overveld,kees",
             "external": ""
         },
         "auto-mapping": {

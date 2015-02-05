@@ -117,7 +117,11 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
         // Load initial help category and/or article if given
         if (newState.help) {
-            this.selectHelpCategory(this.articles[newState.help].cat);
+            // Only attempt to acces cat attribute if this article
+            // actually exists!
+            if (this.articles.hasOwnProperty(newState.help)) {
+                this.selectHelpCategory(this.articles[newState.help].cat);
+            }
             this.showHelpArticle(newState.help);
         } else {
             if (newState.helpcat) {
@@ -220,7 +224,7 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
 
         // If article not found, display error message
         if (!article) {
-            this.helpTextBuffer.append('<h1 style="padding-left: 0px;">Article not found!</h1>');
+            this.helpTextBuffer.append('<h1 style="padding-left: 0px;">Help article not found</h1>');
             this.helpTextBuffer.append('<div class="help_text">It may have been removed, or the name may be incorrect.</div>');
             this.helpTextBuffer.flip();
             return;
