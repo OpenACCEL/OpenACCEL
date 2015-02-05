@@ -37,7 +37,6 @@ var descartes = function (arg) {
   // strict = true or false: when false, descartes skips over non-fatal exceptions, typically by
   // tacitly suppressing a problematic plot action.
   //
-  var mr = Math.round
   var pRandom = []
   var nrRandom = 200
   var pRandomIndex=0
@@ -137,18 +136,18 @@ var descartes = function (arg) {
   var fillStyle, strokeStyle, textStyle, lineThicknessStyle, fillTopology
     // these are defined as global so as to save passing parameters
   var mrx = function (x) {
-    return mr(x * vPTx)
+    return x * vPTx
   }
   var mry = function (x) {
-    return mr(cH - x * vPTy)
+    return cH - x * vPTy
   }
   var mryRel = function (x) {
     // used to map relative distance, e.i. vectors, no locations, from
     // logic coordinates to screen coordinates.
-    return mr(-x * vPTy)
+    return (-x * vPTy)
   }
   var mrr = function (x) {
-      return mr(x * vPTm)
+      return x * vPTm
     }
     // mapping functions to do the viewport-screen coordinates mapping
   var cF = (arg.cF) ? arg.cF : '';
@@ -284,6 +283,8 @@ var descartes = function (arg) {
   var _width = 'width'
   var _height = 'height'
     // location properties: determine the dimensions of an icon and the dimensions of an arrow head
+  var _grad = 'grad'
+    // gradient property
   var _col_r = 'col_r'
   var _col_g = 'col_g'
   var _col_b = 'col_b'
@@ -337,6 +338,12 @@ var descartes = function (arg) {
     // the values for the icon-property
     // If none is present, 'bubble' is assumed
   var _image = 'image'
+  var _sprite='sprite'
+    // a sprite is a (typically small) image that can be put anywhere:
+    // it is one of the icon-values
+  var _spriteData='spriteData'
+    // the pixel rgba-values forming a sprite in a 3D array: spriteData[x][y][0] is the red value of
+    // the upper left pixel, etc.
   var _contour = 'contour'
   var _geometry = 'geometry'
     // only one of 'image', 'contour' or 'geometry' properties can be probided
@@ -471,6 +478,12 @@ var descartes = function (arg) {
     'd': 'Value is subject to perspective transformation when applied in 3D',
     'a': [_radar, _sector, _bubble, _icon]
   }
+  tpl[LOC][_grad] = {
+    'v': [0,0,10,0,0,20,[[0,255,0,0,1.0],[1,0,255,0,1.0]]],
+    'e': 'circular color gradient for bubble icon',
+    'd': 'produce a circular gradient of colors. The argument is an array. The first 6 elements define the geometry; the 7th element is an array defining the stops with color information over the gradient. The geometry consists of the properties x0,y0,r0,x1,y1,r1. Here, x0 and y0 define the center of the inner point of the cricular gradient, relative with respect to the center of the icon. r0 is the inner radius. The outer point is defined by x1,y1, again relative w.r.t. the center of the icon; r1 is the outer radius of the gradient. The array that is the 7th argument contains at least two elements, being the first and last stop. A stop is an array with 5 elements: the normalised radius value of the stop (0 ... 1), and next the rgba values (rgb between 0 ... 255, a between 0 ... 1)<br><br>Notice: the gradient feature passes a compound argument at descartes level directly to html-level without checking for structural correctness. This means that all sorts of non-caught runtime exceptions may occur e.g. if the argument vector for _grad is not well-formed, perhaps leading to stopping the calling application (such as ACCEL). At some later point we should provide error checking here! Also, it has not been checked what happens if the gradient feature is passed at global level (i.e., not as a propoerty of each individual icon, but as a collection of icons. Will it be copied correctly to each individual icon? I doubr it. So be prepared for unexpected visuals or uncaught runtime exception with liberal use of _grad.',
+    'a': [_bubble,_icon]
+  }
   tpl[LOC][_phi1] = {
     'v': 0,
     'e': 'start angle for icon "sector". Sector ranges from phi1 to phi2',
@@ -509,8 +522,14 @@ var descartes = function (arg) {
   tpl[LOC][_icon] = {
     'v': _bubble,
     'e': 'Specify the type of icon to be rendered at this location',
-    'd': '<ul><li>"none": no visual icon</li><li>"bubble": icon with circular shape</li><li>"box": icon with rectangular shape, centered at x,y location</li><li>"hBar": icon with rectangular shape, (x,y) define midpoint of left side</li><li>"vBar": icon with rectangular shape, (x,y) define midpoint of lower side</li><li>"sector": icon with wedge-shape, part of a pie chart</li><li>"radar": icon in the shape of one point in a radar plot</li><li>"triUp": icon in the shape of an isosceles triangle pointing up</li><li>"triDown": icon in the form of an isosceles triangle pointing down</li><li>"diamond:"icon in the form of a symmetrical lozenge</li><li>"cross": icon in the form of a latin cross</li><li>"diagonalCross": icon in the form of a diagonal cross.</li></ul><br><br>All icons except cross and diagonalCross can be filled (fill:interior or fill:both).<br><br>All icons can have their borders drawn (fill:border or fill:both). Fill colors and border colors can be set independently; border thickness can be set. <br><br>Geometry of icons is governed by properties "width" and "height" (box,hBar,vBar,triUp,triDown,diamond,cross,diagonalCross); by property "rad" (bubble,sector, radar); and by by properties "phi1", "phi2", "frac" (sector). In 3D rendering, icons are rendered with their dimensions in accordance with perspective transformation; they are always depicted to be parallel to the viewing plane, however, so no foreshortening.<br><br>The default value icon is "bubble", but in case the "edges" property is set in a geometry, the default is "none".',
-    'a': [_bubble, _box, _hBar, _vBar, _sector, _radar, _triUp, _triDown, _diamond, _cross, _diagonalCross, _width, _height, _rad, _phi1, _phi2, _frac, _fill, _border, _interior, _thickness]
+    'd': '<ul><li>"none": no visual icon</li><li>"bubble": icon with circular shape</li><li>"box": icon with rectangular shape, centered at x,y location</li><li>"hBar": icon with rectangular shape, (x,y) define midpoint of left side</li><li>"vBar": icon with rectangular shape, (x,y) define midpoint of lower side</li><li>"sector": icon with wedge-shape, part of a pie chart</li><li>"radar": icon in the shape of one point in a radar plot</li><li>"triUp": icon in the shape of an isosceles triangle pointing up</li><li>"triDown": icon in the form of an isosceles triangle pointing down</li><li>"diamond": icon in the form of a symmetrical lozenge</li><li>"cross": icon in the form of a latin cross</li><li>"diagonalCross": icon in the form of a diagonal cross.</li><li>"sprite": (small) pixel map with arbitrary placement.</li></ul><br><br>All icons except cross, diagonalCross and sprite can be filled (fill:interior or fill:both).<br><br>All icons can have their borders drawn (fill:border or fill:both). Fill colors and border colors can be set independently; border thickness can be set. <br><br>Geometry of icons is governed by properties "width" and "height" (box,hBar,vBar,triUp,triDown,diamond,cross,diagonalCross); by property "rad" (bubble,sector, radar); and by by properties "phi1", "phi2", "frac" (sector). In 3D rendering, icons are rendered with their dimensions in accordance with perspective transformation; they are always depicted to be parallel to the viewing plane, however, so no foreshortening.<br><br>The default value icon is "bubble", but in case the "edges" property is set in a geometry, the default is "none".',
+    'a': [_bubble, _box, _hBar, _vBar, _sector, _radar, _triUp, _triDown, _diamond, _cross, _diagonalCross, _sprite, _width, _height, _rad, _phi1, _phi2, _frac, _fill, _border, _interior, _thickness]
+  }
+  tpl[LOC][_spriteData]={
+    'v':[[[255,0,0,255],[0,255,0,255]],[[0,255,0,255],[255,0,0,255]]],
+    'e': 'specifies the sprite pixel map for icon type sprite',
+    'd': 'Every pixel in the sprite is represented by 4 values: r,g,b,a; all four 0 ... 255. Pixels are arranged in a rectangular array, so spriteData[x][y][2] is the blue component of the pixels at location x,y. Notice: the renderer uses HTML operation putImagedata for this-operations. PutImageData does not do compositing. So The alpha-channel data is formally not correctly taken into account. Still it seems to work OK with ACCEL -// provided that there is only a background. For other applications, it is recommended to do the compositing in the calling application. if you need genuine alpha blending.',
+    'a':[_sprite]
   }
   tpl[LOC][_width] = {
     'v': 10,
@@ -913,8 +932,8 @@ var descartes = function (arg) {
   }
   tpl[CTR][_nrContours]={
     'e':'Set the number of iso-values for which a contour should be drawn',
-	'd':'In case the iso values are given by means of a data-array, thenumber of contours to calculate follows from the number of entries in the data-array. In simple cases, such as a single iso value, or iso-values tat can be obtained by linear interpolation, it is not necessary to provide a data-array, similarly as in the case of locations, edges or faces. In that case we can still control the number of contours by assigning a value to this property.',
-	'v':5
+  'd':'In case the iso values are given by means of a data-array, thenumber of contours to calculate follows from the number of entries in the data-array. In simple cases, such as a single iso value, or iso-values tat can be obtained by linear interpolation, it is not necessary to provide a data-array, similarly as in the case of locations, edges or faces. In that case we can still control the number of contours by assigning a value to this property.',
+  'v':5
   }
   //-------------------------------------------------------------------
   // defaults and manuals for image properties
@@ -988,7 +1007,7 @@ var descartes = function (arg) {
   tpl[GEN][_intp] = {
     'e': 'One of the values for the "mode" property',
     'd': 'This instructs a value to be interpolated between a low and a high value, both of which are optional',
-    'x': 'To interpolate a property, say the x-coordinate of a series of locations, over the width of the canvas, it suffices to write<br><br>x:[mode:"intp"],<br><br>as the default values for "low" and "high" correspond to the left and right borders of the canvas. For a color property, however, one would have to write <br><br>col_r:[mode:"ïntp",low:0,high:255]<br><br>and for the opacity property e.g. in coloring the interior of an icon, <br><br>fcol_a:[mode:"intp",low:0,high:1]',
+    'x': 'To interpolate a property, say the x-coordinate of a series of locations, over the width of the canvas, it suffices to write<br><br>x:[mode:"intp"],<br><br>as the default values for "low" and "high" correspond to the left and right borders of the canvas. For a color property, however, one would have to write <br><br>col_r:[mode:"ï¿½ntp",low:0,high:255]<br><br>and for the opacity property e.g. in coloring the interior of an icon, <br><br>fcol_a:[mode:"intp",low:0,high:1]',
     'a': [_mode, _data, _shift, _random]
   }
   tpl[GEN][_shift] = {
@@ -2522,12 +2541,12 @@ var descartes = function (arg) {
       var dataPresent = false
       for (var k in a) {
         if (k != _data) {
-		  if(k!=_map){
+      if(k!=_map){
             if (tpl[CTR].hasOwnProperty(k)) {
               cTemplate[k] = a[k]
             } else {
               setStatus("Descartes: property <" + k + "> is not recognized as a property of 'contour'. Valid properties are " + validProperties[CTR] + ".", true)
-			}
+      }
           }
         } else {
           dataPresent = true
@@ -2716,12 +2735,12 @@ var descartes = function (arg) {
                 if(i>=1){
                 // b is the archive
                   if (b[_locations]) {
-				            if (b[_locations][i - 1]) {
+                    if (b[_locations][i - 1]) {
                       if (b[_locations][i - 1][k]) {
                         locations[i][k] = b[_locations][i - 1][k]
                       }
                     }
-					        }
+                  }
                 } else {
                   if(locations[0][k].hasOwnProperty(_value)){
                     locations[0][k]=locations[0][k][_value]
@@ -2979,8 +2998,6 @@ var descartes = function (arg) {
           // we do the styles. Indeed, it might be that we want
           // to have just text placement.
           setLocationDrawStyles(vi)
-
-
           switch (vi[_icon]) {
           case _none:
             break;
@@ -3017,6 +3034,9 @@ var descartes = function (arg) {
           case _radar:
             doRadar(vi)
             break
+          case _sprite:
+            doSprite(vi)
+          break
           default:
             setStatus("Descartes: unknown icon <" + locations[i][_icon] + "> in location nr. " + i + ".", true)
             break
@@ -3149,23 +3169,25 @@ var descartes = function (arg) {
       case _end:
       case _both:
       case _none:
-        var x1 = mrx(locations[ei.b][_x])
-        var x2 = mrx(locations[ei.e][_x])
-        var y1 = mry(locations[ei.b][_y])
-        var y2 = mry(locations[ei.e][_y])
-        if (locations[ei.b].hasOwnProperty(_z) && locations[ei.e].hasOwnProperty(_z)) {
-          var z1 = locations[ei.b][_z]
-          var z2 = locations[ei.e][_z]
-        }
-        if (ei[_arrows] == _begin || ei[_arrows] == _both) {
-          var vHB = locations[ei.b].hasOwnProperty(_height) ? locations[ei.b][_height] : tpl[LOC][_height].v
-          var vWB = locations[ei.b].hasOwnProperty(_width) ? locations[ei.b][_width] : tpl[LOC][_width].v
-          drawArrow(x1, y1, z1, x2, y2, z2, vHB, vWB)
-        }
-        if (ei[_arrows] == _end || ei[_arrows] == _both) {
-          var vHE = locations[ei.e].hasOwnProperty(_height) ? locations[ei.e][_height] : tpl[LOC][_height].v
-          var vWE = locations[ei.e].hasOwnProperty(_width) ? locations[ei.e][_width] : tpl[LOC][_width].v
-          drawArrow(x2, y2, z2, x1, y1, z1, vHE, vWE)
+        if (locations[ei.b] && locations[ei.e]) {
+          var x1 = mrx(locations[ei.b][_x])
+          var x2 = mrx(locations[ei.e][_x])
+          var y1 = mry(locations[ei.b][_y])
+          var y2 = mry(locations[ei.e][_y])
+          if (locations[ei.b].hasOwnProperty(_z) && locations[ei.e].hasOwnProperty(_z)) {
+            var z1 = locations[ei.b][_z]
+            var z2 = locations[ei.e][_z]
+          }
+          if (ei[_arrows] == _begin || ei[_arrows] == _both) {
+            var vHB = locations[ei.b].hasOwnProperty(_height) ? locations[ei.b][_height] : tpl[LOC][_height].v
+            var vWB = locations[ei.b].hasOwnProperty(_width) ? locations[ei.b][_width] : tpl[LOC][_width].v
+            drawArrow(x1, y1, z1, x2, y2, z2, vHB, vWB)
+          }
+          if (ei[_arrows] == _end || ei[_arrows] == _both) {
+            var vHE = locations[ei.e].hasOwnProperty(_height) ? locations[ei.e][_height] : tpl[LOC][_height].v
+            var vWE = locations[ei.e].hasOwnProperty(_width) ? locations[ei.e][_width] : tpl[LOC][_width].v
+            drawArrow(x2, y2, z2, x1, y1, z1, vHE, vWE)
+          }
         }
         break
       default:
@@ -3658,18 +3680,87 @@ var descartes = function (arg) {
         }
       }
     }
+    // ----------------------------------------------------------------------
+  var doSprite=function(p){
+  // notice: this icon uses the spriteData property if present.
+  // spriteData passes a compound argument at descartes level
+  // directly to html-level without checking for structural correctness.
+  // This means that all sorts of non-caught runtime exceptions may occur
+  // e.g. if the argument vector for _spriteData is not well-formed.
+  // At some later point we should provide error checking here!
+  // Also, it has not been checked what happens if the spriteData feature is passed at global level (i.e., not as a property of each individual
+  // icon, but as a collection of icons. Will it be copied correctly to each individual icon? I doubt it. So be prepared
+  // for unexcpeted visuals or uncaught runtime exception with liberal use of _sprite.
+  //
+  var ww = Math.abs(mrx(p.hasOwnProperty(_width) ? p[_width] : tpl[LOC][_width].v))
+  var hh = Math.abs(mryRel(p.hasOwnProperty(_height) ? p[_height] : tpl[LOC][_height].v))
+  // ww and hh are the dimensions the sprite should have in the canvas
+  var sD = p.hasOwnProperty(_spriteData) ? p[_spriteData] : tpl[LOC][_spriteData].v
+  var w = sD[0].length
+  var h = sD.length
+  // w and h are the dimensions of the provided sprite data
+  var fw=w/ww
+  var fh=h/hh
+  var imgData = ctx.createImageData(ww,hh);
+  var d=imgData.data;
+  var run = 0;
+    for (var yy = 0; yy < hh; yy++) {
+      var py=Math.floor(yy*fh)
+      for (var xx = 0; xx < ww; xx++) {
+        var px=Math.floor(xx*fw)
+        for(var cc=0;cc<4;cc++){
+          d[run++] = sD[py][px][cc]
+        }
+      }
+    }
+  if(p.hasOwnProperty(_z)){
+    dLPush({
+        'z': p[_z],
+        'w': 'i',
+        'i': imgData,
+        'p': [mrx(p[_x])-ww/2,mry(p[_y])-hh/2]
+    });
+  } else {
+    dLPush({
+        'w': 'i',
+        'i': imgData,
+        'p': [mrx(p[_x])-ww/2,mry(p[_y])-hh/2]
+    });
+  }
+}
     //-----------------------------------------------------------------------
   var doBubble = function (p) {
+  // notice: the gradient feature passes a compound argument at descartes level
+  // directly to html-level without checking for structural correctness.
+  // This means that all sorts of non-caught runtime exceptions may occur
+  // e.g. if the argument vector for _grad is not well-formed.
+  // At some later point we should provide error checking here!
+  // Also, it has not been checked what happens if the gradient feature is passed at global level (i.e., not as a property of each individual
+  // icon, but as a collection of icons. Will it be copied correctly to each individual icon? I doubt it. So be prepared
+  // for unexcpeted visuals or uncaught runtime exception with liberal use of _grad.
       var pPars = [mrr(p.hasOwnProperty(_rad) ? p[_rad] : tpl[LOC][_rad].v), 0, twoPi, false]
       var cPars = [
         [mrx(p[_x]), mry(p[_y])]
       ]
+      if(p.hasOwnProperty(_grad)){
+        try{
+          var bubbleFillStyle=ctx.createRadialGradient(cPars[0][0]+mrx(p[_grad][0]),cPars[0][1]+mryRel(p[_grad][1]),mrr(p[_grad][2]),cPars[0][0]+mrx(p[_grad][3]),cPars[0][1]+mryRel(p[_grad][4]),mrr(p[_grad][5]))
+          var nrStops=p[_grad][6].length
+          for(var i=0;i<nrStops;i++){
+            bubbleFillStyle.addColorStop(p[_grad][6][i][0],'rgba(' +p[_grad][6][i][1] + ',' + p[_grad][6][i][2] + ',' + p[_grad][6][i][3] + ',' + p[_grad][6][i][4] + ')')
+          }
+        } catch(err){
+          setStatus("gradient caused error; error msg="+err,false)
+        }
+      } else {
+        bubbleFillStyle=fillStyle
+      }
       if (p.hasOwnProperty(_z)) {
         if (fillTopology == _interior) {
           dLPush({
             'w': 'a',
             'z': p[_z],
-            'f': fillStyle,
+            'f': bubbleFillStyle,
             'c': cPars,
             'p': pPars
           })
@@ -3688,7 +3779,7 @@ var descartes = function (arg) {
               'w': 'a',
               'z': p[_z],
               's': strokeStyle,
-              'f': fillStyle,
+              'f': bubbleFillStyle,
               'c': cPars,
               'l': lineThicknessStyle,
               'p': pPars
@@ -3699,7 +3790,7 @@ var descartes = function (arg) {
         if (fillTopology == _interior) {
           dLPush({
             'w': 'a',
-            'f': fillStyle,
+            'f': bubbleFillStyle,
             'c': cPars,
             'p': pPars
           })
@@ -3716,7 +3807,7 @@ var descartes = function (arg) {
             dLPush({
               'w': 'a',
               's': strokeStyle,
-              'f': fillStyle,
+              'f': bubbleFillStyle,
               'c': cPars,
               'l': lineThicknessStyle,
               'p': pPars
