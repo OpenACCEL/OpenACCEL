@@ -14,6 +14,17 @@ define(["Model/Network/Network"], /**@lends View*/ function(NetworkModel) {
          * The loop that is necessary to update the plot.
          */
         this.drawLoop = undefined;
+
+        $('#nw_dropOffRate').slider({
+            range: "min",
+            value: 5,
+            min: 1,
+            max: 10,
+            step: 1,
+            slide: (function(event, ui) {
+                this.canvas.getNetwork().dropOffRate = ui.value/10;
+            }).bind(this)
+        });
     }
 
     /**
