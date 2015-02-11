@@ -41,7 +41,19 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         this.val = val;
         this.min = min;
         this.max = max;
+        this.range = 200;   // The actual slider range of the input element. Values inside this range are
+                            // converted to the user given range. In other words, this determines the step size
+                            // in the same way the old ACCEL does.
 
+        /**
+         * Not used anymore, but this was the originally intended way to compute the range of a slider.
+         * For compatibility with the old ACCEL, we reverted to a fixed actual range of 200.
+         *
+         * @param  {[type]} val [description]
+         * @param  {[type]} min [description]
+         * @param  {[type]} max [description]
+         * @return {[type]}     [description]
+         */
         this.getStepSize = function(val, min, max) {
             var stepsizes = [Math.pow(10, -view.getPrecision(val)),
                              Math.pow(10, -view.getPrecision(min)),
@@ -52,18 +64,21 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
 
         this.properties = {
             range: "min",
-            value: this.val,
-            min: this.min,
-            max: this.max,
-            step: this.getStepSize(this.val, this.min, this.max),
+            value: this.range * (this.val - this.min) / (this.max - this.min),
+            min: 0,
+            max: 200,
+            step: 1,
 
             quantity: this.quantity, //Non-jquery addition to get the associated quantity within the slide function's scope
             identifier: this.identifier, //Non-jquery addition to get the associated quantity within the slide function's scope
-            slide: function(event, ui) {
-                controller.setUserInputQuantity(quantity, ui.value);
-                $('#userslider' + identifier + 'value').html('(' + ui.value + ')');
-            }
         };
+
+        this.properties.slide = (function(event, ui) {
+            sliderValue = ui.value;
+            convertedValue = this.min + parseFloat(sliderValue) * (this.max - this.min) / this.range;
+            controller.setUserInputQuantity(quantity, convertedValue);
+            $('#userslider' + identifier + 'value').html('(' + convertedValue + ')');
+        }).bind(this);
     }
 
     Slider.prototype.getHTML = function() {

@@ -185,11 +185,15 @@ define([], /**@lends Model.Quantity */ function() {
          * This input object contains the type of the input e.g. slider, checkbox.
          * The parameters of this input are the parameters of the input method. For example,
          * in a slider the start and end limits and the default value.
+         * The round attribute determines whether slider input values should be rounded off or not.
+         * This is determined in the Analyser based on whether the range is given as floats or integers.
+         *
          * @type {Object}
          */
         this.input = {
             type: null,
-            parameters: []
+            parameters: [],
+            round: false
         };
 
         /**

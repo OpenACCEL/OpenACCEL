@@ -206,6 +206,16 @@ define(["Model/Analyser/Passes/QuantityPass",
                     // The quantity has an input element, so it is category 1
                     category = 1;
                     qty.input.parameters = this.findInputParameters(qty.definition, qty.input.type);
+
+                    // Determine whether to round off input values: round if all given parameters are passed
+                    // as integers, do not round if one of them is passed as floating point digit
+                    if (qty.input.type == 'slider') {
+                        if (isFloat(qty.input.parameters[0]) || isFloat(qty.input.parameters[1]) || isFloat(qty.input.parameters[2])) {
+                            qty.input.round = false;
+                        } else {
+                            qty.input.round = true;
+                        }
+                    }
                 } else if (qty.reverseDeps.length === 0 && qty.parameters.length === 0) {
                     // If there are no quantities that depend on this quantity, it is category
                     // 2 (output)
