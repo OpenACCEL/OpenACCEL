@@ -33,7 +33,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
      * @class
      * @classdesc Dynamic slider input class to be generated according to ACCEL script requirements
      */
-    function Slider(identifier, quantity, label, val, min, max) {
+    function Slider(identifier, quantity, label, val, min, max, rnd) {
         this.identifier = identifier;
         this.quantity = quantity;
         this.label = label;
@@ -41,6 +41,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         this.val = val;
         this.min = min;
         this.max = max;
+        this.round = rnd;
         this.range = 200;   // The actual slider range of the input element. Values inside this range are
                             // converted to the user given range. In other words, this determines the step size
                             // in the same way the old ACCEL does.
@@ -70,14 +71,23 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
             step: 1,
 
             quantity: this.quantity, //Non-jquery addition to get the associated quantity within the slide function's scope
-            identifier: this.identifier, //Non-jquery addition to get the associated quantity within the slide function's scope
+            identifier: this.identifier //Non-jquery addition to get the associated quantity within the slide function's scope
         };
 
         this.properties.slide = (function(event, ui) {
+            //event.preventDefault();
+
             sliderValue = ui.value;
-            convertedValue = this.min + parseFloat(sliderValue) * (this.max - this.min) / this.range;
-            controller.setUserInputQuantity(quantity, convertedValue);
-            $('#userslider' + identifier + 'value').html('(' + convertedValue + ')');
+            convertedValue = this.min + parseFloat(sliderValue) * (this.max - this.min) / 200;
+            if (this.round) {
+                convertedValue = Math.round(convertedValue);
+                $(this).val(convertedValue);
+            }
+            controller.setUserInputQuantity(this.quantity, convertedValue);
+            $('#userslider' + this.identifier + 'value').html('(' + convertedValue + ')');
+
+            //event.stopPropagation();
+            //event.cancelBubble = true;
         }).bind(this);
     }
 

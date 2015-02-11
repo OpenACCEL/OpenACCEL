@@ -339,7 +339,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             if (quantity.category == 1) {
                 switch (quantity.input.type) {
                     case 'slider':
-                        this.addInput(new this.Input.Slider(i, quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2])));
+                        this.addInput(new this.Input.Slider(i, quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2]), quantity.input.round));
                         break;
                     case 'check':
                         this.addInput(new this.Input.CheckBox(i, quantity.name, quantity.name, quantity.input.parameters[0]));
