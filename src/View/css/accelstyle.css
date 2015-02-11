@@ -40,6 +40,27 @@ body div {
 	color: #80c0ff;
 }
 
+#nw_qtyDescription {
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-left: 5px;
+	text-align: left;
+	font-size: 14px;
+	color: white;
+}
+
+#nw_qtyDefinition {
+	font-weight: bold;
+	display: block;
+}
+
+#nw_qtyComment {
+	font-weight: normal;
+	display: block;
+	color: #E0E0E0;
+}
+
 .cm-red {
 	color: red;
 	font-weight: bold;

@@ -134,9 +134,15 @@ define(["lodash", "View/Graphics/AbstractDescartesHandler", "Model/Network/Netwo
                     edges[edge].stream.up = 0;
                     edges[edge].stream.down = 0;
               }
+
+              // Empty quantity description
+              $("#nw_qtyDefinition").text("No node selected");
+              $("#nw_qtyComment").html("&nbsp;");
             } else {
               network.recentlyClickedNode = closestNode;
               network.streams();
+              $("#nw_qtyDefinition").text(closestNode.quantity.source);
+              $("#nw_qtyComment").text(closestNode.quantity.getComment());
             }
 
             this.drawInstances();
