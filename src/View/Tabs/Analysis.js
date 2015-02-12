@@ -177,11 +177,11 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
     };
 
     Analysis.prototype.updateArgument = function(state) {
+        var newarg = state.argument;
         this.canvas.clearError();
         this.analysis.setX(newarg);
 
         var script = controller.getScript();
-        var newarg = state.argument;
         $('#an_arguments a.an_qtyname').removeClass("an_greyedout").removeClass("help_current");
         $('#an_arguments a.an_qtyname[value="' + newarg + '"]').addClass("help_current");
 
@@ -203,14 +203,16 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 argVal = qty.value;
                 slider = (qty.quantity.category === 1 && qty.quantity.input.type === 'slider');
                 if (slider) {
-                    slidmin = qty.quantity.input[1];
-                    slidmax = qty.quantity.input[2];
+                    slidmin = qty.quantity.input.parameters[1];
+                    slidmax = qty.quantity.input.parameters[2];
                     this.setDomain({'x': {'min':slidmin, 'max':slidmax} });
                 } else {
-                    if (argVal !== 0) {
-                        this.setDomain({'x': {'min':argVal/2, 'max':argVal*2} });
-                    } else {
+                    if (argVal === 0) {
                         this.setDomain({'x': {'min':-1, 'max':1} });
+                    } else if (argVal > 0) {
+                        this.setDomain({'x': {'min':argVal/2, 'max':argVal*2} });
+                    } else if (argVal < 0) {
+                        this.setDomain({'x': {'min':argVal*2, 'max':argVal/2} });
                     }
                 }
 
@@ -268,14 +270,16 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 argVal = qty.value;
                 slider = (qty.quantity.category === 1 && qty.quantity.input.type === 'slider');
                 if (slider) {
-                    slidmin = qty.quantity.input[1];
-                    slidmax = qty.quantity.input[2];
+                    slidmin = qty.quantity.input.parameters[1];
+                    slidmax = qty.quantity.input.parameters[2];
                     this.setDomain({'x': {'min':slidmin, 'max':slidmax} });
                 } else {
-                    if (argVal !== 0) {
-                        this.setDomain({'x': {'min':argVal/2, 'max':argVal*2} });
-                    } else {
+                    if (argVal === 0) {
                         this.setDomain({'x': {'min':-1, 'max':1} });
+                    } else if (argVal > 0) {
+                        this.setDomain({'x': {'min':argVal/2, 'max':argVal*2} });
+                    } else if (argVal < 0) {
+                        this.setDomain({'x': {'min':argVal*2, 'max':argVal/2} });
                     }
                 }
 
@@ -346,14 +350,16 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 argVal = qty.value;
                 slider = (qty.quantity.category === 1 && qty.quantity.input.type === 'slider');
                 if (slider) {
-                    slidmin = qty.quantity.input[1];
-                    slidmax = qty.quantity.input[2];
+                    slidmin = qty.quantity.input.parameters[1];
+                    slidmax = qty.quantity.input.parameters[2];
                     this.setDomain({'y': {'min':slidmin, 'max':slidmax} });
                 } else {
-                    if (argVal !== 0) {
-                        this.setDomain({'y': {'min':argVal/2, 'max':argVal*2} });
-                    } else {
+                    if (argVal === 0) {
                         this.setDomain({'y': {'min':-1, 'max':1} });
+                    } else if (argVal > 0) {
+                        this.setDomain({'y': {'min':argVal/2, 'max':argVal*2} });
+                    } else if (argVal < 0) {
+                        this.setDomain({'y': {'min':argVal*2, 'max':argVal/2} });
                     }
                 }
 
@@ -410,14 +416,16 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
                 argVal = qty.value;
                 slider = (qty.quantity.category === 1 && qty.quantity.input.type === 'slider');
                 if (slider) {
-                    slidmin = qty.quantity.input[1];
-                    slidmax = qty.quantity.input[2];
-                    this.setRange({'min':slidmin, 'max':slidmax});
+                    slidmin = qty.quantity.input.parameters[1];
+                    slidmax = qty.quantity.input.parameters[2];
+                    this.setRange({'min':slidmin, 'max':slidmax}, true);
                 } else {
-                    if (argVal !== 0) {
-                        this.setRange({'min':argVal/2, 'max':argVal*2});
-                    } else {
-                        this.setRange({'min':-1, 'max':1});
+                    if (argVal === 0) {
+                        this.setRange({'min':-1, 'max':1}, true);
+                    } else if (argVal > 0) {
+                        this.setRange({'min':argVal/2, 'max':argVal*2}, true);
+                    } else if (argVal < 0) {
+                        this.setRange({'min':argVal*2, 'max':argVal/2}, true);
                     }
                 }
 
@@ -785,13 +793,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
      * @throws {Error} An invalid range, meaning min >= max.
      * @param A range object, containing a min or max property, or both.
      */
-    Analysis.prototype.setRange = function(range) {
+    Analysis.prototype.setRange = function(range, clamp) {
         var analysis = this.canvas.getAnalysis();
 
         if (analysis) {
             analysis.setRange(range);
-            this.setClamp(false);
-            $("#analysis_toClamp").prop("checked", false);
+            this.setClamp(clamp);
+            $("#analysis_toClamp").prop("checked", clamp);
             this.drawPlot();
         }
     };

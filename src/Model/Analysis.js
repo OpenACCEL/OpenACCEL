@@ -114,6 +114,7 @@ define(["Model/Script", "lodash"], /** @lends Model.Analysis */ function(Script,
      * @param {Object} target The target interval object.
      */
     Analysis.prototype.setInterval = function(target, source) {
+        console.log("Current: [" + target.min + "," + target.max + "], New: [" + source.min + "," + source.max + "]");
         if (_.isNumber(source.min)) {
             if (_.isNumber(source.max)) {
                 if (source.min > source.max) {
@@ -245,6 +246,8 @@ define(["Model/Script", "lodash"], /** @lends Model.Analysis */ function(Script,
                     }
                 }
             }
+
+            console.log("Min: " + data.range.min + ". Max: " + data.range.max);
 
             if (!_.isFinite(data.range.min) || !_.isFinite(data.range.max)) {
                 throw new Error("Range is not finite: [" + data.range.min + ", " + data.range.max + "].");

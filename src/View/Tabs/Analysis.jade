@@ -63,9 +63,9 @@
 							.label Range To:
 					tr
 						td
-							input(class='an_graphinput', id = 'analysis_rangeFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({min: val})')
+							input(class='an_graphinput', id = 'analysis_rangeFrom', type = 'number', value = '0', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({min: val}, false)')
 						td
-							input(class='an_graphinput', id = 'analysis_rangeTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({max: val})')
+							input(class='an_graphinput', id = 'analysis_rangeTo', type = 'number', value = '50', onchange = 'var val = parseFloat(this.value); view.tabs.analysis.setRange({max: val}, false)')
 					tr(class = 'analysis_contourSettings')
 						td
 							.label Nr. Contours:
