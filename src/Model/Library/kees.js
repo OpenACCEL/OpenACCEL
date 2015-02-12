@@ -7,7 +7,7 @@ function kees() {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(keesImg, (canvas.width-keesImg.width)/2, (canvas.height-keesImg.height)/2);
     };
-    keesImg.src = "../../../img/kees2.jpg";
+    keesImg.src = "../../../img/kees.jpg";
     controller.pause();
 
     return "The creator of ACCEL, the predecessor of OpenACCEL.";
