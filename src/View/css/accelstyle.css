@@ -148,6 +148,10 @@ body div {
 	background-color: #cc9ae5;
 }
 
+#simulation_plot {
+	display: inline-block;
+}
+
 #analysis_plot_canvas {
 	background-color: #cc9ae5;
 }
@@ -838,6 +842,20 @@ a.toggleswitchoption_current {
 #editrun_userinput {
 	color: #FFFFFF;
 	max-width: 130px;
+}
+
+#simulation_userinput {
+	color: #FFFFFF;
+	max-width: 130px;
+	display: inline-block;
+}
+
+#simulation_userinputdiv {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 10px;
+	position: relative;
+	top: -23px;
 }
 
 .editrun_userinputentry {

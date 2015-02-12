@@ -84,7 +84,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
                 $(this).val(convertedValue);
             }
             controller.setUserInputQuantity(this.quantity, convertedValue);
-            $('#userslider' + this.identifier + 'value').html('(' + convertedValue + ')');
+            $('#userslider' + this.identifier + 'value').html('(' + convertedValue.toPrecision(3) + ')');
 
             //event.stopPropagation();
             //event.cancelBubble = true;
