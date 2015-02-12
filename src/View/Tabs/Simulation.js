@@ -46,9 +46,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             }
         }
 
-        if (controller.getScript().isCompiled()) {
-            this.makeInputs(controller.getScript().quantities);
-        }
+        this.makeInputs(controller.getScript().quantities);
 
         // Disable run button when script is incomplete, else enable (again)
         if (!controller.getScript().isComplete()) {

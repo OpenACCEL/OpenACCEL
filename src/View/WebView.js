@@ -253,6 +253,9 @@ define(["../Controller/AbstractView",
             case 'editrun':
                 this.tabs.editrun.synchronizeScriptList(script.getQuantities());
                 break;
+            case 'simulation':
+                this.tabs.simulation.makeInputs(script.getQuantities());
+                break;
             case 'ioedit':
                 this.tabs.ioedit.synchronizeScriptArea();
                 break;
@@ -289,10 +292,11 @@ define(["../Controller/AbstractView",
         this.tabs.simulation.canvas.setModel(script);
         this.tabs.optimisation.canvas.setModel(controller.getGeneticOptimisation());
 
-        // Synchronize edit/run and IO/edit tabs with new script
+        // Synchronize edit/run, IO/edit and Simulation tabs with new script
         this.tabs.editrun.resetEditRun();
         this.tabs.editrun.synchronizeScriptList(script.getQuantities());
         this.tabs.ioedit.synchronizeScriptArea();
+        this.tabs.simulation.makeInputs(script.getQuantities());
 
         // Clear analysis table
         this.tabs.analysis.analysisTable.empty();
