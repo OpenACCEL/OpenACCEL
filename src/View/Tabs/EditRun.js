@@ -182,6 +182,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         this.lineNumber = {};
 
         this.lastResults = {};
+
+        this.fastmode = true;
     }
 
     /**
@@ -541,7 +543,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      */
     EditRun.prototype.resetInputs = function() {
         this.userInputBuffer.empty();
+        var fastmodeHTML = (this.fastmode) ? " checked='checked'" : "";
+        this.userInputBuffer.append("<div id='editrun_inputheader'><input type='checkbox' id='editrun_input_fasttoggle'" + fastmodeHTML + " onclick='view.tabs.editrun.setFastmode()' /><span style='vertical-align: middle;'>Fast mode</span></div>");
         this.inputs = [];
+    };
+
+    EditRun.prototype.setFastmode = function() {
+        this.fastmode = $('#editrun_input_fasttoggle').is(':checked');
     };
 
     /**

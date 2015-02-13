@@ -28,6 +28,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         this.inputs = [];
 
         this.canvas = canvasCreator.createCanvas(new Script(), "simulation_plot", 800, 600);
+
+        this.fastmode = true;
     }
 
     /**
@@ -182,7 +184,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      */
     Simulation.prototype.resetInputs = function() {
         this.userInputBuffer.empty();
+        var fastmodeHTML = (this.fastmode) ? " checked='checked'" : "";
+        this.userInputBuffer.append("<div id='simulation_inputheader'><input type='checkbox' id='simulation_input_fasttoggle'" + fastmodeHTML + " onclick='view.tabs.simulation.setFastmode()' /><span style='vertical-align: middle;'>Fast mode</span></div>");
         this.inputs = [];
+    };
+
+    Simulation.prototype.setFastmode = function() {
+        this.fastmode = $('#simulation_input_fasttoggle').is(':checked');
     };
 
     return Simulation;

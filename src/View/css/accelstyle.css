@@ -26,6 +26,25 @@ body div {
 	margin: 0px;
 }
 
+#editrun_input_fasttoggle, #simulation_input_fasttoggle {
+	vertical-align: middle;
+	margin-right: 2px;
+	position: relative;
+	left: -5px;
+}
+
+#editrun_inputheader, #simulation_inputheader {
+	vertical-align: middle;
+	border-bottom: 1px dotted #222;
+	margin-bottom: 7px;
+	padding-bottom: 1px;
+	position: relative;
+	top: -2px;
+	font-size: 13px;
+	color: rgb(210, 188, 211);
+	text-align: center;
+}
+
 .accelTM{
   text-shadow: #301040 1px -1px 1px;
   color: #CCA2F7;

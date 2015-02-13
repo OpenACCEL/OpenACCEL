@@ -75,19 +75,24 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         };
 
         this.properties.slide = (function(event, ui) {
-            //event.preventDefault();
-
             sliderValue = ui.value;
             convertedValue = this.min + parseFloat(sliderValue) * (this.max - this.min) / 200;
             if (this.round) {
                 convertedValue = Math.round(convertedValue);
-                $(this).val(convertedValue);
             }
-            controller.setUserInputQuantity(this.quantity, convertedValue);
-            $('#userslider' + this.identifier + 'value').html('(' + convertedValue.toFixed(2) + ')');
 
-            //event.stopPropagation();
-            //event.cancelBubble = true;
+            $(this).val(convertedValue);
+            this.val = convertedValue;
+            controller.setUserInputQuantity(this.quantity, convertedValue);
+
+            // Only update slider value in UI continuously if fastmode is disabled
+            if (!view.tabs[view.currentTab].fastmode) {
+                $('#userslider' + this.identifier + 'value').html('(' + convertedValue.toFixed(2) + ')');
+            }
+        }).bind(this);
+
+        this.properties.stop = (function(event, ui) {
+            $('#userslider' + this.identifier + 'value').html('(' + this.val.toFixed(2) + ')');
         }).bind(this);
     }
 
