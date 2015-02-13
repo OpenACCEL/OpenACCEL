@@ -318,6 +318,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      * @param  {Object} quantities All quantities registered in the model
      */
     EditRun.prototype.synchronizeScriptList = function(quantities) {
+        this.lastResults = {};
         var enableRun = true;
         var script = controller.getScript();
         var exe = script.exe;
@@ -388,13 +389,20 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         this.initInputs();
 
         // Disable run button when script is incomplete, else enable (again)
-        if (enableRun === false || quantities === null) {
+        if (enableRun === false || quantities === null || Object.keys(quantities).length == 0) {
+            this.synchronizeResults(null);
             if (!$('#editrun_runscript').hasClass('disabled')) {
                 $('#editrun_runscript').addClass('disabled');
+            }
+            if (!$('#editrun_reset').hasClass('disabled')) {
+                $('#editrun_reset').addClass('disabled');
             }
         } else {
             if ($('#editrun_runscript').hasClass('disabled')) {
                 $('#editrun_runscript').removeClass('disabled');
+            }
+            if ($('#editrun_reset').hasClass('disabled')) {
+                $('#editrun_reset').removeClass('disabled');
             }
         }
     };
@@ -406,7 +414,17 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      * @param  {Object} quantities All category 2 quantities registered in the model
      */
     EditRun.prototype.synchronizeResults = function(quantities) {
-        var needsUpdate = false;
+        var needsUpdate = (quantities == null);
+
+        // Remove deleted quantities
+        for (var q in this.lastResults) {
+            var quantity = quantities[q];
+            if (!quantities.hasOwnProperty(q)) {
+                delete this.lastResults[quantity.name];
+                console.log("Deleted " + q);
+                needsUpdate = true;
+            }
+        }
 
         var numResults = 0;
         for (var q in quantities) {

@@ -15,6 +15,9 @@
                 .label &nbsp;
                 input(type = 'button', value = 'Run', onclick = 'view.tabs.editrun.toggleExecution(this.value)')#editrun_runscript.buttonin.disabled
             .inline
+                .label &nbsp;
+                input(type = 'button', value = 'Reset', onclick = 'controller.reset()')#editrun_reset.buttonin.disabled
+            .inline
                 .label Iterations
                 input(type = 'number', min = '0', value = '0', onchange = 'view.tabs.editrun.setIterations(this.value)')#editrun_iterations.textin
 

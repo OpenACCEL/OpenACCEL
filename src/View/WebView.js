@@ -349,6 +349,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.setExecuting = function(executing) {
         this.tabs.editrun.setExecuting(executing);
+        this.tabs.simulation.setExecuting(executing);
     };
 
     /**

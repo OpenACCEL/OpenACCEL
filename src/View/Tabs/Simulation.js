@@ -86,6 +86,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         }
     };
 
+    Simulation.prototype.setExecuting = function(executing) {
+        if (executing) {
+            $('#simulation_runscript').val('Pause');
+        } else {
+            $('#simulation_runscript').val('Run');
+        }
+    };
+
     /**
      * Sets the amount of iterations the script should be ran.
      *
@@ -130,6 +138,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
 
             if (!quantity.todo) {
                 i++;
+            } else {
+                enableRun = false;
             }
 
             if (quantity.category == 1) {
@@ -171,6 +181,23 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
                         console.log('Unknown input type');
                         break;
                 }
+            }
+        }
+
+        // Disable buttons when script is incomplete, else enable (again)
+        if (enableRun === false || quantities === null) {
+            if (!$('#simulation_runscript').hasClass('disabled')) {
+                $('#simulation_runscript').addClass('disabled');
+            }
+            if (!$('#simulation_reset').hasClass('disabled')) {
+                $('#simulation_reset').addClass('disabled');
+            }
+        } else {
+            if ($('#simulation_runscript').hasClass('disabled')) {
+                $('#simulation_runscript').removeClass('disabled');
+            }
+            if ($('#simulation_reset').hasClass('disabled')) {
+                $('#simulation_reset').removeClass('disabled');
             }
         }
 
