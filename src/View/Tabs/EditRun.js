@@ -229,6 +229,9 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
                     controller.run();
                 }
             }
+
+            // Restore render speed
+            $('#editrun_renderspeed').val(controller.renderspeed);
         }
     };
 
