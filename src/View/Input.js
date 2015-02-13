@@ -84,7 +84,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
                 $(this).val(convertedValue);
             }
             controller.setUserInputQuantity(this.quantity, convertedValue);
-            $('#userslider' + this.identifier + 'value').html('(' + convertedValue + ')');
+            $('#userslider' + this.identifier + 'value').html('(' + convertedValue.toFixed(2) + ')');
 
             //event.stopPropagation();
             //event.cancelBubble = true;
@@ -232,6 +232,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         this.selector = selector;
         this.initialized = false;
         this.size = 0;
+        this.values;
 
         /**
          * Buffer to contain HTML for the required list
@@ -244,13 +245,13 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
         this.getEntryHTML = function(i, left, right) {
             return '' +
                 '<div id = "' + this.selector.substring(1) + 'Entry' + i + '">' +
-                    '<div class = "ellipsis max128w">' + left + '</div>' +
-                    '<div class = "operator"> = </div>' +
+                    '<div class = "ellipsis max128w editrun_result_qtyname">' + left + '</div>' +
+                    '<div class = "operator "> = </div>' +
                     '<div class = "ellipsis max128w resultvalue">' + right + '</div>' +
                 '</div>';
         };
 
-        this.initialize = function(size) {
+        this.initialize = function(size, values) {
             this.buffer.empty();
             var i;
 
@@ -276,8 +277,13 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
             this.initialized = true;
         };
 
-        this.set = function(values) {
-            var newsize = Object.keys(values).length;
+        this.set = function(values, numValues) {
+            var newsize;
+            if (typeof numValues === 'undefined') {
+                newsize = Object.keys(values).length;
+            } else {
+                newsize = numValues;
+            }
 
             if (!this.initialized || newsize != this.size) {
                 this.size = newsize;
@@ -289,7 +295,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
             for (var v in values) {
                 var columns = entries.eq(i++).children();
                 columns.eq(0).text(v);
-                columns.eq(2).html(values[v]);
+                columns.eq(2).text(values[v]);
             }
         };
     }

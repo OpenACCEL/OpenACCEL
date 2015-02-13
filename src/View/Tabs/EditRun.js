@@ -180,6 +180,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         );
 
         this.lineNumber = {};
+
+        this.lastResults = {};
     }
 
     /**
@@ -381,14 +383,28 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      * @param  {Object} quantities All category 2 quantities registered in the model
      */
     EditRun.prototype.synchronizeResults = function(quantities) {
-        var resultValues = {};
+        var needsUpdate = false;
 
+        var numResults = 0;
         for (var q in quantities) {
             var quantity = quantities[q];
-            resultValues[quantity.name] = objectToString(controller.getQuantityValue(quantity.name), this.maxPrintElements);
+            var val = objectToString(controller.getQuantityValue(quantity.name), this.maxPrintElements);
+
+            if (!this.lastResults.hasOwnProperty(quantity.name)) {
+                needsUpdate = true;
+                this.lastResults[quantity.name] = val;
+            } else if (this.lastResults[quantity.name] != val) {
+                needsUpdate = true;
+                this.lastResults[quantity.name] = val;
+            }
+
+            numResults++;
         }
 
-        this.report.resultList.set(resultValues);
+        if (needsUpdate) {
+            console.log("Updating!");
+            this.report.resultList.set(this.lastResults, numResults);
+        }
     };
 
     /**

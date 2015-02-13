@@ -1063,7 +1063,7 @@ define(["Model/Script",
                 if (iterations > 0) {
                     this.nextGeneration(iterations);
                 }
-            }).bind(this), 1);
+            }).bind(this), 10);
 
         };
 
