@@ -179,6 +179,17 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             }
         );
 
+        $('#editrun_renderspeed').slider({
+            range: "min",
+            value: 19,
+            min: 4,
+            max: 20,
+            step: 1,
+            slide: (function(event, ui) {
+                controller.setRenderSpeed(24-ui.value)
+            }).bind(this)
+        });
+
         this.lineNumber = {};
 
         this.lastResults = {};

@@ -115,6 +115,14 @@ define(["Model/Script",
             this.paused = false;
 
             /**
+             * The number of milliseconds to wait between iterations.
+             * Do not set directly but use the setter!
+             *
+             * @type {Number}
+             */
+            this.renderspeed = 5;
+
+            /**
              * Whether, if the script is paused, it has
              * been paused by the system.
              *
@@ -225,6 +233,22 @@ define(["Model/Script",
          */
         Controller.prototype.setAutoExecute = function(autoExecute) {
             this.autoExecute = autoExecute;
+        };
+
+        /**
+         * Sets the number of milliseconds to wait between consecutive iterations
+         * of script execution.
+         *
+         * @param {Number} speed Integer larger than 4
+         */
+        Controller.prototype.setRenderSpeed = function(speed) {
+            if (speed < 4) {
+                speed = 4;
+            }
+            console.log(speed);
+            this.pause();
+            this.resume();
+            this.renderspeed = speed;
         };
 
         /**
@@ -368,7 +392,7 @@ define(["Model/Script",
                         this.view.runtimeError(e);
                         this.stop();
                     }
-                }).bind(this), 5   /** Number of milliseconds between executions of runloop **/
+                }).bind(this), this.renderspeed   /** Number of milliseconds between executions of runloop **/
             );
         };
 
