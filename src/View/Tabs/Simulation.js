@@ -121,6 +121,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
     Simulation.prototype.makeInputs = function(quantities) {
         var enableRun = true;
         this.resetInputs();
+        var script = controller.getScript();
+        var exe = script.exe;
 
         var i = 0;
         for (var q in quantities) {
@@ -133,16 +135,36 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             if (quantity.category == 1) {
                 switch (quantity.input.type) {
                     case 'slider':
-                        this.addInput(new this.Input.Slider(i + "_sim", quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2]), quantity.input.round));
+                        if (script.isCompiled()) {
+                            this.addInput(new this.Input.Slider(i + "_sim", quantity.name, quantity.name, exe.getValue(quantity.name), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2]), quantity.input.round));
+                        } else {
+                            this.addInput(new this.Input.Slider(i + "_sim", quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2]), quantity.input.round));
+                        }
+
                         break;
                     case 'check':
-                        this.addInput(new this.Input.CheckBox(i + "_sim", quantity.name, quantity.name, quantity.input.parameters[0]));
+                        if (script.isCompiled()) {
+                            this.addInput(new this.Input.CheckBox(i + "_sim", quantity.name, quantity.name, exe.getValue(quantity.name)));
+                        } else {
+                            this.addInput(new this.Input.CheckBox(i + "_sim", quantity.name, quantity.name, quantity.input.parameters[0]));
+                        }
+
                         break;
                     case 'button':
-                        this.addInput(new this.Input.Button(i + "_sim", quantity.name, 'Click me', quantity.input.parameters[0]));
+                        if (script.isCompiled()) {
+                            this.addInput(new this.Input.Button(i + "_sim", quantity.name, 'Click me', exe.getValue(quantity.name)));
+                        } else {
+                            this.addInput(new this.Input.Button(i + "_sim", quantity.name, 'Click me', quantity.input.parameters[0]));
+                        }
+
                         break;
                     case 'text':
-                        this.addInput(new this.Input.TextBox(i + "_sim", quantity.name, quantity.name, quantity.input.parameters[0]));
+                        if (script.isCompiled()) {
+                            this.addInput(new this.Input.TextBox(i + "_sim", quantity.name, quantity.name, exe.getValue(quantity.name)));
+                        } else {
+                            this.addInput(new this.Input.TextBox(i + "_sim", quantity.name, quantity.name, quantity.input.parameters[0]));
+                        }
+
                         break;
                     default:
                         //Unknown input type

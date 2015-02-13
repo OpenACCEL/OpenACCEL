@@ -319,6 +319,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
      */
     EditRun.prototype.synchronizeScriptList = function(quantities) {
         var enableRun = true;
+        var script = controller.getScript();
+        var exe = script.exe;
 
         this.scriptListBuffer.empty();
         this.lineNumber = {};
@@ -343,16 +345,35 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             if (quantity.category == 1) {
                 switch (quantity.input.type) {
                     case 'slider':
-                        this.addInput(new this.Input.Slider(i, quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2]), quantity.input.round));
+                        if (script.isCompiled()) {
+                            this.addInput(new this.Input.Slider(i, quantity.name, quantity.name, exe.getValue(quantity.name), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2]), quantity.input.round));
+                        } else {
+                            this.addInput(new this.Input.Slider(i, quantity.name, quantity.name, parseFloat(quantity.input.parameters[0]), parseFloat(quantity.input.parameters[1]), parseFloat(quantity.input.parameters[2]), quantity.input.round));
+                        }
+
                         break;
                     case 'check':
-                        this.addInput(new this.Input.CheckBox(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                        if (script.isCompiled()) {
+                            this.addInput(new this.Input.CheckBox(i, quantity.name, quantity.name, exe.getValue(quantity.name)));
+                        } else {
+                            this.addInput(new this.Input.CheckBox(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                        }
+
                         break;
                     case 'button':
-                        this.addInput(new this.Input.Button(i, quantity.name, 'Click me', quantity.input.parameters[0]));
+                        if (script.isCompiled()) {
+                            this.addInput(new this.Input.Button(i, quantity.name, 'Click me', exe.getValue(quantity.name)));
+                        } else {
+                            this.addInput(new this.Input.Button(i, quantity.name, 'Click me', quantity.input.parameters[0]));
+                        }
+
                         break;
                     case 'text':
-                        this.addInput(new this.Input.TextBox(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                        if (script.isCompiled()) {
+                            this.addInput(new this.Input.TextBox(i, quantity.name, quantity.name, exe.getValue(quantity.name)));
+                        } else {
+                            this.addInput(new this.Input.TextBox(i, quantity.name, quantity.name, quantity.input.parameters[0]));
+                        }
                         break;
                     default:
                         //Unknown input type
@@ -404,7 +425,6 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         }
 
         if (needsUpdate) {
-            console.log("Updating!");
             this.report.resultList.set(this.lastResults, numResults);
         }
     };
