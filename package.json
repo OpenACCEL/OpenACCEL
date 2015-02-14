@@ -63,7 +63,7 @@
     },
     "dependencies": {
         "benchmark": "1.0.x",
-        "codemirror": "4.3.x",
+        "codemirror": "4.12.x",
         "http-server": "0.6.x",
         "jade": "1.5.x",
         "jison" : "0.4.x",

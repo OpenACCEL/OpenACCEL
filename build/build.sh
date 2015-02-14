@@ -73,6 +73,7 @@ deploy() {
     mkdir -p                                                                             bin/scripts/cm/mode/ACCEL
     mkdir -p                                                                             bin/scripts/cm/theme/
     mkdir -p                                                                             bin/scripts/lang
+    mkdir -p                                                                             bin/css
 
     # Copy library files.
     cp lib/*                                                                             bin/scripts/
@@ -82,6 +83,7 @@ deploy() {
 
     # Copy CodeMirror files.
     cp node_modules/codemirror/lib/codemirror.js                                         bin/scripts/cm/lib/codemirror.js
+    cp node_modules/codemirror/lib/codemirror.css                                        bin/css/codemirror.css
     cp lang/CodeMirror_ACCEL.js                                                          bin/scripts/cm/mode/ACCEL/ACCEL.js
 
     # Generating monofunc library functions.
@@ -104,7 +106,7 @@ deploy() {
     cp -r src/View/img bin/img/
 
     # Copy style sheets.
-    cp -r src/View/css bin/css/
+    cp -r src/View/css/ bin/css
 
     # Copy demo scripts.
     cp -r lang/DemoScripts bin/DemoScripts
