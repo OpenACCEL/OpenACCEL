@@ -4,14 +4,26 @@ require.config({
 
 define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ function(HTMLBuffer, GeneticOptimisation) {
     function Optimisation(canvasCreator) {
+        /**
+         * HTMl buffer containing the information about a certain individual.
+         *
+         * @type {HTMLBuffer}
+         */
         this.individualPropertiesBuffer = new HTMLBuffer();
 
         /**
          * The main canvas where the user sees the generated population and select
          * an indiviual.
+         *
+         * @type {Canvas}
          */
         this.canvas = canvasCreator.createCanvas(new GeneticOptimisation(), 'optimisation_plot', 400, 400);
 
+        /**
+         * The default optimisation parameters.
+         *
+         * @type {Object}
+         */
         this.geneticOptimisationValues = {
             population: 25,
             stepsize: 1,
@@ -20,6 +32,13 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
             maxfront: 50
         };
 
+        this.registerCallbacks();
+    }
+
+    /**
+     * Sets up all callbacks for events within this tab.
+     */
+    Optimisation.prototype.registerCallbacks = function() {
         $('#optimisation_populationsize').slider({
             range: "min",
             value: this.geneticOptimisationValues.population,
@@ -152,59 +171,7 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
 
         $('#optimisation_plot').on('click',
             (function() {
-                var individual = this.canvas.getClickedIndividual();
-                var q;
-
-                this.individualPropertiesBuffer.empty();
-
-                if (individual === null) {
-                    this.individualPropertiesBuffer.flip("#optimisation_properties");
-                    return;
-                }
-
-                this.individualPropertiesBuffer.append('' +
-                    '<h4>Category I quantities</h4>' +
-                    '<table class="go_table">' +
-                        '<tr class="go_tbl_heading">' +
-                            '<th class="go_tbl_header">name</th>' +
-                            '<th class="go_tbl_header center">value</th>' +
-                            '<th class="go_tbl_header center">minimum</th>' +
-                            '<th class="go_tbl_header center" style="padding-right: 3px;">maximum</th>' +
-                        '</tr>');
-
-                for (q in individual.inputvector) {
-                    this.individualPropertiesBuffer.append('' +
-                        '<tr>' +
-                            '<td class = "max128w go_tbl_cell">' + individual.inputvector[q].name + '</td>' +
-                            '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].value.toFixed(5) + '</td>' +
-                            '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].minimum + '</td>' +
-                            '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].maximum + '</td>' +
-                        '</tr>');
-                }
-
-                this.individualPropertiesBuffer.append('</table>');
-
-                this.individualPropertiesBuffer.append('' +
-                    '<h4>Category II quantities</h4>' +
-                    '<table class="go_table">' +
-                        '<tr class="go_tbl_heading">' +
-                            '<th class="go_tbl_header">name</th>' +
-                            '<th class="go_tbl_header center">value</th>' +
-                            '<th class="go_tbl_header center" style="padding-right: 3px;">optimisation</th>' +
-                        '</tr>');
-
-                for (q in individual.outputvector) {
-                    this.individualPropertiesBuffer.append('' +
-                        '<tr>' +
-                            '<td class = "max128w go_tbl_cell">' + individual.outputvector[q].name + '</td>' +
-                            '<td class = "max128w go_tbl_cell center">' + individual.outputvector[q].value.toFixed(5) + '</td>' +
-                            '<td class = "max128w go_tbl_cell center">' + (individual.outputvector[q].maximize ? 'Maximized' : 'Minimized') + '</td>' +
-                        '</tr>');
-                }
-
-                this.individualPropertiesBuffer.append('</table>');
-
-                this.individualPropertiesBuffer.flip("#optimisation_properties");
+                this.onClickPlot();
             }).bind(this)
         );
 
@@ -219,7 +186,7 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
                 this.zoomToFit();
             }).bind(this)
         );
-    }
+    };
 
     /**
      * Event that gets called when this tab gets opened.
@@ -233,6 +200,65 @@ define(["View/HTMLBuffer", "Model/EMO/GeneticOptimisation"], /**@lends View*/ fu
      */
     Optimisation.prototype.onLeaveTab = function() {
 
+    };
+
+    /**
+     * Called when the user clicks on the plot.
+     */
+    Optimisation.prototype.onClickPlot = function() {
+        var individual = this.canvas.getClickedIndividual();
+        var q;
+
+        this.individualPropertiesBuffer.empty();
+
+        if (individual === null) {
+            this.individualPropertiesBuffer.flip("#optimisation_properties");
+            return;
+        }
+
+        this.individualPropertiesBuffer.append('' +
+            '<h4>Category I quantities</h4>' +
+            '<table class="go_table">' +
+                '<tr class="go_tbl_heading">' +
+                    '<th class="go_tbl_header">name</th>' +
+                    '<th class="go_tbl_header center">value</th>' +
+                    '<th class="go_tbl_header center">minimum</th>' +
+                    '<th class="go_tbl_header center" style="padding-right: 3px;">maximum</th>' +
+                '</tr>');
+
+        for (q in individual.inputvector) {
+            this.individualPropertiesBuffer.append('' +
+                '<tr>' +
+                    '<td class = "max128w go_tbl_cell">' + individual.inputvector[q].name + '</td>' +
+                    '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].value.toFixed(5) + '</td>' +
+                    '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].minimum + '</td>' +
+                    '<td class = "max128w go_tbl_cell center">' + individual.inputvector[q].maximum + '</td>' +
+                '</tr>');
+        }
+
+        this.individualPropertiesBuffer.append('</table>');
+
+        this.individualPropertiesBuffer.append('' +
+            '<h4>Category II quantities</h4>' +
+            '<table class="go_table">' +
+                '<tr class="go_tbl_heading">' +
+                    '<th class="go_tbl_header">name</th>' +
+                    '<th class="go_tbl_header center">value</th>' +
+                    '<th class="go_tbl_header center" style="padding-right: 3px;">optimisation</th>' +
+                '</tr>');
+
+        for (q in individual.outputvector) {
+            this.individualPropertiesBuffer.append('' +
+                '<tr>' +
+                    '<td class = "max128w go_tbl_cell">' + individual.outputvector[q].name + '</td>' +
+                    '<td class = "max128w go_tbl_cell center">' + individual.outputvector[q].value.toFixed(5) + '</td>' +
+                    '<td class = "max128w go_tbl_cell center">' + (individual.outputvector[q].maximize ? 'Maximized' : 'Minimized') + '</td>' +
+                '</tr>');
+        }
+
+        this.individualPropertiesBuffer.append('</table>');
+
+        this.individualPropertiesBuffer.flip("#optimisation_properties");
     };
 
     Optimisation.prototype.smartZoom = function() {

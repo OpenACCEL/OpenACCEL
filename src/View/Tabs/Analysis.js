@@ -9,13 +9,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
      */
     function Analysis(canvasCreator) {
         /**
-         * The plot windopw where one quantity can be plotted against the other,
+         * The plot window where one quantity can be plotted against the other,
          * in case they are dependant on each other.
          */
         this.canvas = canvasCreator.createCanvas(new AnalysisModel(), "analysis_plot", 300, 300);
 
         /**
          * Which mode to use for plotting the graphs: graph or contour.
+         * 'graph' is a standard 2d plot, 'contour' plots contour lines.
          *
          * @type {String}
          */
@@ -23,11 +24,17 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
         this.setPlotType(this.mode);
 
         /**
-         * The HTML buffers for the list of argument and result quantities
+         * The HTML buffer for the list of argument quantities
          *
          * @type {HTMLBuffer}
          */
         this.argList = new HTMLBuffer('#an_arguments');
+
+        /**
+         * The HTML buffer for the list of result quantities
+         *
+         * @type {HTMLBuffer}
+         */
         this.resultList = new HTMLBuffer('#an_results');
 
         /**
@@ -68,13 +75,30 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
          */
         this.shouldUpdate = false;
 
+        this.registerCallbacks();
+    }
+
+    /**
+     * Sets up all callbacks for events within this tab.
+     */
+    Analysis.prototype.registerCallbacks = function() {
         $("#graphmode").on("change", function() {
             var mode = $(this).val();
             view.setState({"tab": "analysis", "mode": mode});
         });
 
+        // Called when the script has been modified
+        $(document).on("onModifiedQuantity", function(event, quantities) {
+            view.tabs.analysis.onModifiedQuantity(quantities);
+        });
+
+        // Called when a new script has been compiled
+        $(document).on("onNewScript", function(event, quantities) {
+            view.tabs.analysis.onNewScript(quantities);
+        });
+
         $("#analysis_domainXFrom, #analysis_domainXTo, #analysis_rangeFrom, #analysis_rangeTo").attr('disabled', true).css("background-color", "#ccc");
-    }
+    };
 
     /**
      * Event that gets called when this tab gets opened.
@@ -169,6 +193,28 @@ define(["View/Input", "View/HTMLBuffer", "Model/Analysis", "Model/Sensitivity", 
         if ((oldState.result !== newState.result) && newState.result !== undefined) {
             view.tabs.analysis.updateResult(newState);
         }
+    };
+
+    /**
+     * Called when the script is modified.
+     *
+     * @param  {Object} quantities All quantities in the current script
+     */
+    Analysis.prototype.onModifiedQuantity = function(quantities) {
+        // Clear sensitivity table
+        this.analysisTable.empty();
+        this.analysisTable.flip();
+    };
+
+    /**
+     * Called when the controller has compiled a new script.
+     *
+     * @param  {Object} quantities All quantities in the current script
+     */
+    Analysis.prototype.onNewScript = function(quantities) {
+        // Clear sensitivity table
+        this.analysisTable.empty();
+        this.analysisTable.flip();
     };
 
     Analysis.prototype.sensAnalysis = function() {

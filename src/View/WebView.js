@@ -41,6 +41,7 @@ define(["../Controller/AbstractView",
          */
         this.state = $.deparam(location.hash, true);
         if (!this.state.tab) {
+            // Set default tab to Edit/run
             this.state.tab = 'editrun';
         }
 
@@ -62,13 +63,26 @@ define(["../Controller/AbstractView",
          */
         this.currentTab = "";
 
+        /**
+         * Datastructure holding all currently active tooltips
+         * for every tab.
+         *
+         * @type {Object}
+         */
         this.tooltips = {};
+
+        /**
+         * Number of current errors.
+         *
+         * @type {Number}
+         */
         this.errorCount = 0;
 
 
         // --- Setup event handlers --- //
         $(window).on('hashchange', this.onHashChange.bind(this));
 
+        // Display reason of disabled buttons when clicked
         $("#optimisation").on('click', function() {
             if ($(this).hasClass("disabled")) {
                 alert("The script does not contain any quantities to be optimized.");
@@ -89,9 +103,6 @@ define(["../Controller/AbstractView",
                 this.resizeContainer();
             }).bind(this)
         );
-
-        //$('.disabled').attr('disabled', 'disabled').off('click');
-        //$('.disabled').children().attr('disabled', 'disabled').off('click');
     }
 
     WebView.prototype = new AbstractView();
@@ -101,7 +112,7 @@ define(["../Controller/AbstractView",
      *
      * @param {Object} state The state object to set the application state to
      * @post The application state has been set to the parameters of the given
-     * state object
+     * state object, overwriting the previous state
      */
     WebView.prototype.setState = function(state) {
         location.hash = $.param.fragment(location.hash, state, 2);
@@ -109,8 +120,8 @@ define(["../Controller/AbstractView",
 
     /**
      * Merges the attributes in the given object into the
-     * current state, overriding any existing attributes with
-     * the same name.
+     * current state, only overriding any existing attributes *with
+     * the same name*.
      *
      * @param {Object} state The state object with attributes to
      * merge into the current state.
@@ -192,7 +203,7 @@ define(["../Controller/AbstractView",
      * @param  {string} tab The identifier of the tab that will be made current.
      */
     WebView.prototype.onEnterTab = function(newState) {
-        if (this.tabs[newState.tab].onEnterTab) {
+        if (typeof this.tabs[newState.tab].onEnterTab === "function") {
             this.tabs[newState.tab].onEnterTab(newState);
         }
 
@@ -213,7 +224,7 @@ define(["../Controller/AbstractView",
      */
     WebView.prototype.onLeaveTab = function(tab) {
         $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
-        if (this.tabs[tab].onLeaveTab) {
+        if (typeof this.tabs[tab].onLeaveTab === "function") {
             this.tabs[tab].onLeaveTab();
         }
 
@@ -240,26 +251,13 @@ define(["../Controller/AbstractView",
             }
         }
 
-        // Clear analysis table
-        this.tabs.analysis.analysisTable.empty();
-        this.tabs.analysis.analysisTable.flip();
-
         // Disable analysis tab. Will be re-enabled again when/if the script is compiled
         if (!$('#analysis').hasClass('disabled')) {
             $('#analysis').addClass('disabled').children("a").removeAttr('href');
         }
 
-        switch(this.currentTab) {
-            case 'editrun':
-                this.tabs.editrun.synchronizeScriptList(script.getQuantities());
-                break;
-            case 'simulation':
-                this.tabs.simulation.makeInputs(script.getQuantities());
-                break;
-            case 'ioedit':
-                this.tabs.ioedit.synchronizeScriptArea();
-                break;
-        }
+        // Signal tabs
+        jQuery.event.trigger("onModifiedQuantity", [script.getQuantities()]);
     };
 
     /**
@@ -268,11 +266,8 @@ define(["../Controller/AbstractView",
     WebView.prototype.onNextStep = function() {
         var script = controller.getScript();
 
-        switch(this.currentTab) {
-            case 'editrun':
-                this.tabs.editrun.synchronizeResults(script.getOutputQuantities());
-                break;
-        }
+        // Signal tabs
+        jQuery.event.trigger("onNextStep", [script.getOutputQuantities()]);
 
         // Draw a plot if one is visible in the current view tab.
         this.drawPlot();
@@ -291,16 +286,6 @@ define(["../Controller/AbstractView",
         this.tabs.editrun.canvas.setModel(script);
         this.tabs.simulation.canvas.setModel(script);
         this.tabs.optimisation.canvas.setModel(controller.getGeneticOptimisation());
-
-        // Synchronize edit/run, IO/edit and Simulation tabs with new script
-        this.tabs.editrun.resetEditRun();
-        this.tabs.editrun.synchronizeScriptList(script.getQuantities());
-        this.tabs.ioedit.synchronizeScriptArea();
-        this.tabs.simulation.makeInputs(script.getQuantities());
-
-        // Clear analysis table
-        this.tabs.analysis.analysisTable.empty();
-        this.tabs.analysis.analysisTable.flip();
 
         // Check whether to disable the genetic optimisation tab
         if (!controller.hasOptimisation()) {
@@ -321,6 +306,9 @@ define(["../Controller/AbstractView",
                 $('#analysis').addClass('disabled').children("a").removeAttr('href');
             }
         }
+
+        // Signal tabs
+        jQuery.event.trigger("onNewScript", [script.getQuantities()]);
     };
 
     /**
@@ -394,7 +382,14 @@ define(["../Controller/AbstractView",
         );
     };
 
-
+    /**
+     * Returns an appropriate error message for syntax errors.
+     *
+     * @param  {Number} id [description]
+     * @param  {SyntaxError} error The SyntaxError object
+     * @param  {String} selector The jQuery selector of the element in which to
+     * display the error
+     */
     WebView.prototype.syntaxErrorMessage = function(id, error, selector) {
         this.id = id;
 
@@ -429,6 +424,14 @@ define(["../Controller/AbstractView",
         }
     };
 
+    /**
+     * Returns an appropriate error message for runtime errors.
+     *
+     * @param  {Number} id [description]
+     * @param  {RuntimeError} error The RuntimeError object
+     * @param  {String} selector The jQuery selector of the element in which to
+     * display the error
+     */
     WebView.prototype.runtimeErrorMessage = function(id, error, selector) {
         this.x = 0;
         this.y = 0;
@@ -452,6 +455,11 @@ define(["../Controller/AbstractView",
         }
     };
 
+    /**
+     * Called when an error occured during script execution or compilation.
+     *
+     * @param {Object} error The error that occured.
+     */
     WebView.prototype.handleError = function(error) {
         var errormsg = null;
         this.errorCount++;
@@ -461,15 +469,12 @@ define(["../Controller/AbstractView",
                 // Can be either a lexical scanner or parsing error. Handle appropriately
                 errormsg = new this.syntaxErrorMessage(this.errorCount, error, '#editrun_scriptline');
                 break;
-            case 'TypeError':
-                //previously thrown when excessive whitespace was input
-                break;
+
             case 'RuntimeError':
-                errormsg = new this.runtimeErrorMessage(this.errorCount, error, '#editrun_scriptoptions');
-                break;
             case 'Error':
                 errormsg = new this.runtimeErrorMessage(this.errorCount, error, '#editrun_scriptoptions');
                 break;
+
             default:
                 errormsg = {
                     id: this.errorCount,

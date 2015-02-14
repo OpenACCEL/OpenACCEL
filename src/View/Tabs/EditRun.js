@@ -71,7 +71,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
                         '<div class="ellipsis max128w">' + quantity + '</div>' +
                     '</div>';
             },
+
+            /**
+             * Called when the user clicks on a quanitty name in the todo list
+             *
+             * @param  {String} quantity Name of the quantity that was clicked on
+             */
             onclickTodo: function(quantity) {
+                // Ready quantity input field to begin defining this quantity
                 $('#editrun_scriptline').html(quantity + ' =&nbsp;');
             },
 
@@ -82,19 +89,20 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             todoListBuffer: new HTMLBuffer("#editrun_todolist"),
 
             /**
-             * Adds a quantity to be defined to the #todo element
+             * Adds a quantity that still has to be defined to the #todo element
              *
-             * @param {String} quantity Quantity to be implemented
+             * @param {String} quantity Todo quantity
              */
             addTodo: function(quantity) {
                 view.tabs.editrun.report.todoListBuffer.append(this.getTodoListHTML(quantity));
             },
 
             /**
-             * Generates HTML for an item in a list of quantities with a certain property
+             * Generates HTML for an item with a certain property, in a list of quantities. The property
+             * can be e.g. a standard function.
              *
              * @param  {String} quantity Quantity of which a property is being displayed
-             * @param  {String} property Property of the associated quantity
+             * @param  {String} property Property of the associated quantity.
              */
             getPropertyListHTML: function(quantity, property) {
                 var html = '';
@@ -117,6 +125,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
              * @param  {String} quantity The name of the quantity that was clicked on
              */
             onclickProperty: function(quantity) {
+                // Highlight clicked quantity in script list
                 var i = view.tabs.editrun.lineNumber[quantity];
                 view.tabs.editrun.selectScriptline(i, quantity);
                 $('#editrun_line' + i).trigger('click');
@@ -126,8 +135,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
              * Called when the user clicks on a standard function name in the report
              *
              * @param {String} name The name of the standard function that was clicked on
+             * @post The help article of the clicked on function is displayed
              */
             onclickStdFunc: function(name) {
+                // Open help article of the clicked-on function
                 view.setState({'tab': 'helpdemo', 'help': name});
             },
 
@@ -138,7 +149,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             argListBuffer: new HTMLBuffer("#editrun_arglist"),
 
             /**
-             * Adds a quantity to the list of quantities which are a parameter to the selected quantity
+             * Adds the given quantity with the given property to the list of arguments of the currently
+             * selected quantity.
              *
              * @param {String} quantity Quantity which is an argument for the selected quantity
              * @param {String} property [description]
@@ -154,9 +166,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             argToListBuffer: new HTMLBuffer("#editrun_argtolist"),
 
             /**
-             * Adds a quantity to the list of quantities which use the selected quantity as a parameter
+             * Adds the given quantity with the given property to the list of arguments to the currently
+             * selected quantity.
              *
-             * @param {String} quantityQuantity for which the selected quantity is an argument
+             * @param {String} quantity Quantity of which the selected quantity is an argument
              * @param {String} property [description]
              */
             addArgto: function(quantity, property) {
@@ -171,6 +184,41 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             resultList: new this.Input.ValueList('#editrun_result')
         };
 
+        /**
+         * Object containing the line numbers for all quantity definitions in the script list.
+         * Keyed by quantity name, values are the line numbers.
+         *
+         * @type {Object}
+         */
+        this.lineNumber = {};
+
+        /**
+         * Dictionary holding the last obtained results of the output quantities.
+         * Used for caching and preventing continous updating of the results div.
+         * Keyed by quantity name, values are the most recent quantity values.
+         *
+         * @type {Object}
+         */
+        this.lastResults = {};
+
+        /**
+         * Whether to enable fast mode for the user inputs. Fast mode means only update
+         * values of the sliders in the UI at the end of a slider drag event, disabled
+         * means update continuously. Disabling this causes a significant performance slowdown
+         * when interacting with sliders and plotting something.
+         *
+         * @type {Boolean}
+         */
+        this.fastmode = true;
+
+        this.registerCallbacks();
+    }
+
+    /**
+     * Sets up all callbacks for events within this tab.
+     */
+    EditRun.prototype.registerCallbacks = function() {
+        // Enable the use of the enter key in the quantity input field
         $('#editrun_scriptline').keypress(
             function(e) {
                 if (e.which === 13) {
@@ -179,6 +227,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             }
         );
 
+        // Make renderspeed div a slider and register callbacks
         $('#editrun_renderspeed').slider({
             range: "min",
             value: 19,
@@ -187,15 +236,27 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             step: 1,
             slide: (function(event, ui) {
                 controller.setRenderSpeed(24-ui.value)
+            }).bind(this),
+            stop: (function(event, ui) {
+                controller.setRenderSpeed(24-ui.value)
             }).bind(this)
         });
 
-        this.lineNumber = {};
+        // Called when the script has been modified
+        $(document).on("onModifiedQuantity", function(event, quantities) {
+            view.tabs.editrun.onModifiedQuantity(quantities);
+        });
 
-        this.lastResults = {};
+        // Called when a new script has been compiled
+        $(document).on("onNewScript", function(event, quantities) {
+            view.tabs.editrun.onNewScript(quantities);
+        });
 
-        this.fastmode = true;
-    }
+        // Called when the controller has issued a new iteration of the script
+        $(document).on("onNextStep", function(event, quantities) {
+            view.tabs.editrun.onNextStep(quantities);
+        });
+    };
 
     /**
      * Event that gets called when this tab gets opened.
@@ -211,6 +272,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
             var script = controller.getScript();
             this.synchronizeScriptList(script.getQuantities());
 
+            // Display results if script is compiled
             if (script.isCompiled()) {
                 try {
                     var outputQuantities = script.getOutputQuantities();
@@ -230,7 +292,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
                 }
             }
 
-            // Restore render speed
+            // Restore render speed setting
             $('#editrun_renderspeed').val(controller.renderspeed);
         }
     };
@@ -242,6 +304,34 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         // Pause script when leaving edit/run tab, indicating it has
         // been paused automatically by the system and not by the user
         controller.pause(true);
+    };
+
+    /**
+     * Called when the script is modified.
+     *
+     * @param  {Object} quantities All quantities in the current script
+     */
+    EditRun.prototype.onModifiedQuantity = function(quantities) {
+        this.synchronizeScriptList(quantities);
+    };
+
+    /**
+     * Called when the controller has issued a new iteration of the script.
+     *
+     * @param  {Object} quantities All output quantities in the current script
+     */
+    EditRun.prototype.onNextStep = function(quantities) {
+        this.synchronizeResults(quantities);
+    };
+
+    /**
+     * Called when the controller has compiled a new script.
+     *
+     * @param  {Object} quantities All quantities in the new (current) script
+     */
+    EditRun.prototype.onNewScript = function(quantities) {
+        this.resetEditRun();
+        this.synchronizeScriptList(quantities);
     };
 
     /**

@@ -15,6 +15,13 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
          */
         this.editor = null;
 
+        /**
+         * The saved width of the standard editor. Used to determine the width to
+         * give to the advanced editor, when switched on. Also saved in a cookie on
+         * the client.
+         *
+         * @type {Number}
+         */
         this.editorWidth = 0;
 
         /**
@@ -31,7 +38,24 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
             $('#ioedit_useCM').prop("checked", true);
             this.toggleCM(true);
         }
+
+        this.registerCallbacks();
     }
+
+    /**
+     * Sets up all callbacks for events within this tab.
+     */
+    IOEdit.prototype.registerCallbacks = function() {
+        // Called when the script has been modified
+        $(document).on("onModifiedQuantity", function(event, quantities) {
+            view.tabs.ioedit.onModifiedQuantity(quantities);
+        });
+
+        // Called when a new script has been compiled
+        $(document).on("onNewScript", function(event, quantities) {
+            view.tabs.ioedit.onNewScript(quantities);
+        });
+    };
 
     /**
      * Event that gets called when this tab gets opened.
@@ -66,6 +90,24 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
                 console.log(e);
             }
         }
+    };
+
+    /**
+     * Called when the script is modified.
+     *
+     * @param  {Object} quantities All quantities in the current script
+     */
+    IOEdit.prototype.onModifiedQuantity = function(quantities) {
+        this.synchronizeScriptArea();
+    };
+
+    /**
+     * Called when the controller has compiled a new script.
+     *
+     * @param  {Object} quantities All quantities in the current script
+     */
+    IOEdit.prototype.onNewScript = function(quantities) {
+        this.synchronizeScriptArea();
     };
 
     /**

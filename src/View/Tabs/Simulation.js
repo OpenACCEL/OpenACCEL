@@ -10,6 +10,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
     function Simulation(canvasCreator) {
         /**
          * Buffer to contain updated #userinput content
+         *
          * @memberof View
          * @type {HTMLBuffer}
          */
@@ -22,15 +23,46 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
 
         /**
          * Array of input javascript objects
+         *
          * @memberof View
          * @type {Array}
          */
         this.inputs = [];
 
+        /**
+         * Plot canvas used in this tab.
+         *
+         * @type {Canvas}
+         */
         this.canvas = canvasCreator.createCanvas(new Script(), "simulation_plot", 800, 600);
 
+        /**
+         * Whether to enable fast mode for the user inputs. Fast mode means only update
+         * values of the sliders in the UI at the end of a slider drag event, disabled
+         * means update continuously. Disabling this causes a significant performance slowdown
+         * when interacting with sliders and plotting something.
+         *
+         * @type {Boolean}
+         */
         this.fastmode = true;
+
+        this.registerCallbacks();
     }
+
+    /**
+     * Sets up all callbacks for events within this tab.
+     */
+    Simulation.prototype.registerCallbacks = function() {
+        // Called when the script has been modified
+        $(document).on("onModifiedQuantity", function(event, quantities) {
+            view.tabs.simulation.onModifiedQuantity(quantities);
+        });
+
+        // Called when a new script has been compiled
+        $(document).on("onNewScript", function(event, quantities) {
+            view.tabs.simulation.onNewScript(quantities);
+        });
+    };
 
     /**
      * Event that gets called when this tab gets opened.
@@ -69,6 +101,24 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
         // Pause script when leaving edit/run tab, indicating it has
         // been paused automatically by the system and not by the user
         controller.pause(true);
+    };
+
+    /**
+     * Called when the script is modified.
+     *
+     * @param  {Object} quantities All quantities in the current script
+     */
+    Simulation.prototype.onModifiedQuantity = function(quantities) {
+        this.makeInputs(quantities);
+    };
+
+    /**
+     * Called when the controller has compiled a new script.
+     *
+     * @param  {Object} quantities All quantities in the current script
+     */
+    Simulation.prototype.onNewScript = function(quantities) {
+        this.makeInputs(quantities);
     };
 
     /**
