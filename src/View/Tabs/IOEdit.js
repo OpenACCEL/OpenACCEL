@@ -202,7 +202,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
             // Get width of current editor, set advanced editor
             // to be the same size
             var currentWidth = parseInt(localStorage.getItem("advancedEditorWidth"));
-            if (currentWidth === null) {
+            if (currentWidth === null || isNaN(currentWidth)) {
                 currentWidth = $("#ioedit_scriptarea").width();
             }
 
