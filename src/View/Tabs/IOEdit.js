@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(CodeMirror) {
+define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(CodeMirror) {
     /**
      * @class
      * @classdesc The IOEdit tab.
@@ -149,6 +149,7 @@ define(["cm/lib/codemirror", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(C
         var advEditor = this.cm.fromTextArea(document.getElementById('ioedit_scriptarea'), {
             mode: 'ACCEL',
             theme: 'default',
+            matchBrackets: true,
             lineNumbers: true,
             lineWrapping: false,
             undoDepth: 50,             // Try to save some memory

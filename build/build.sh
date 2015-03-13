@@ -71,7 +71,8 @@ deploy() {
     # Create required directories and all subdirectories that do not yet exist.
     mkdir -p                                                                             bin/scripts/cm/lib
     mkdir -p                                                                             bin/scripts/cm/mode/ACCEL
-    mkdir -p                                                                             bin/scripts/cm/theme/
+    mkdir -p                                                                             bin/scripts/cm/theme
+    mkdir -p                                                                             bin/scripts/cm/addon/edit
     mkdir -p                                                                             bin/scripts/lang
     mkdir -p                                                                             bin/css
 
@@ -83,6 +84,7 @@ deploy() {
 
     # Copy CodeMirror files.
     cp node_modules/codemirror/lib/codemirror.js                                         bin/scripts/cm/lib/codemirror.js
+    cp node_modules/codemirror/addon/edit/matchbrackets.js                               bin/scripts/cm/addon/edit/matchbrackets.js
     cp node_modules/codemirror/lib/codemirror.css                                        bin/css/codemirror.css
     cp lang/CodeMirror_ACCEL.js                                                          bin/scripts/cm/mode/ACCEL/ACCEL.js
 

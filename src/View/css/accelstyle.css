@@ -583,6 +583,16 @@ a.toggleswitchoption_current {
 	color: black;
 }
 
+.CodeMirror-matchingbracket {
+	color: green;
+	font-weight: bold;
+}
+
+.CodeMirror-nonmatchingbracket {
+	color: red;
+	font-weight: bold;
+}
+
 .buttonin {
 	position: relative;
 	z-index: 1;
@@ -596,6 +606,7 @@ a.toggleswitchoption_current {
 	background: #662266;
 	background: linear-gradient(#993399, #662266);
 	color: #FFFFFF;
+	cursor: pointer;
 }
 .buttonin:hover {
 	background: #882288;

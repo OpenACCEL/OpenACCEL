@@ -8,7 +8,8 @@
             input(type = 'button', value = 'Search' onclick = 'view.tabs.helpdemo.searchHelp($("#helpphrase").val())')#helpsearch.buttonin
         .inline
             .label &nbsp;
-            input(type = 'button', value = 'Ask for help' onclick = 'view.tabs.helpdemo.toggleValues()')#helpmail.buttonin.disabled
+            a(href='mailto:help@openaccel.nl?subject=[OpenACCEL HELP] Help')
+                input(type = 'button', value = 'Ask for help' onclick = 'view.tabs.helpdemo.toggleValues()')#helpmail.buttonin
     .inline100
         .label Help categories
         #helpcategories.report.verticalmenu
