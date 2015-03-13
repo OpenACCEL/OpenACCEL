@@ -42,7 +42,7 @@ define(["../Controller/AbstractView",
         this.state = $.deparam(location.hash, true);
         if (!this.state.tab) {
             // Set default tab to Edit/run
-            this.state.tab = 'editrun';
+            this.state.tab = 'intro';
         }
 
         /**
@@ -161,7 +161,7 @@ define(["../Controller/AbstractView",
 
         // Default
         if (typeof newState.tab === 'undefined') {
-            newState.tab = "editrun";
+            newState.tab = "intro";
         }
 
         // Make "tab" variable consistent with possible other variables in hash

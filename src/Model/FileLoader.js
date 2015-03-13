@@ -278,8 +278,8 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                 context: this,
                 success: function(result) {
                     if (!result) {
-                        console.log("File " + file + " was not ok? Help!?");
-                        console.log(file + ": " + result);
+                        console.log("Error loading file " + file);
+                        alert("Error loading file " + file);
                         return false;
                     }
 

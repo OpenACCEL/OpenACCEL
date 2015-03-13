@@ -583,6 +583,54 @@ a.toggleswitchoption_current {
 	color: black;
 }
 
+#metadiv {
+	position: absolute;
+	right: 8px;
+	top: 5px;
+}
+
+#versionlink, #about {
+	text-decoration: underline;
+	color: #888;
+	cursor: pointer;
+}
+
+.versiondatespan {
+	font-style: italic;
+	color: #ddd;
+}
+
+#footer {
+	margin: auto;
+	margin-top: -15px;
+	text-align: center;
+}
+
+#footer > span {
+	cursor: pointer;
+	color: #888;
+	text-decoration: underline;
+	display: inline-block;
+}
+
+#footer > span:hover {
+	color: black;
+}
+
+.versionspan {
+	color: #ccc;
+	text-decoration: underline;
+	margin-right: 10px;
+}
+
+#versionlink:hover, #about:hover {
+	color: black;
+}
+
+#helplink, #buglink {
+	text-decoration: none;
+}
+
 .CodeMirror-matchingbracket {
 	color: green;
 	font-weight: bold;

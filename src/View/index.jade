@@ -23,6 +23,11 @@ html
                 div(style = 'background-image: url("../img/logoV2.png"); background-size: 100% auto; background-repeat: no-repeat; width: 800px; height: 200px;')
                 h1(style = 'color: #662266;') Loading...
 
+        .div#metadiv
+            span#about(onclick='view.setState({"tab": "helpdemo", "help": "About OpenACCEL"})') About
+            &nbsp;
+            span#versionlink(onclick='view.setState({"tab": "helpdemo", "help": "Changelog"})') v0.9
+
         #container
             #top
                 #logo
@@ -54,3 +59,4 @@ html
                     include Tabs/Optimisation.jade
                     include Tabs/Simulation.jade
                     include Tabs/Network.jade
+        #footer
