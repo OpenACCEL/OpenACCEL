@@ -617,6 +617,19 @@ a.toggleswitchoption_current {
 	color: black;
 }
 
+#editrun_inputcontainer > .CodeMirror {
+	position: relative;
+	z-index: 1;
+	margin: 2px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	border-top: 1px #331144 solid;
+	background: #FFFFFF;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
 .versionspan {
 	color: #ccc;
 	text-decoration: underline;

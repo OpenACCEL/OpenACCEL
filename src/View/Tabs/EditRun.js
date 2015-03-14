@@ -2,12 +2,26 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ function(Input, HTMLBuffer, Script) {
+define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(Input, HTMLBuffer, Script, CodeMirror) {
     /**
      * @class
      * @classdesc The EditRun tab.
      */
     function EditRun(canvasCreator) {
+        /**
+         * An instance of the advanced (CodeMirror) editor currently being used, if any.
+         *
+         * @type {CodeMirror}
+         */
+        this.editor = null;
+
+        /**
+         * The CodeMirror instance to use in this tab
+         *
+         * @type {CodeMirror}
+         */
+        this.cm = CodeMirror;
+
         /**
          * Number of object-elements the objectToString function
          * should generate before it is terminated.
@@ -79,7 +93,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
              */
             onclickTodo: function(quantity) {
                 // Ready quantity input field to begin defining this quantity
-                $('#editrun_scriptline').html(quantity + ' =&nbsp;');
+                view.tabs.editrun.editor.setValue(quantity + '=');
             },
 
             /**
@@ -211,6 +225,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
          */
         this.fastmode = true;
 
+        this.setupCM();
+
         this.registerCallbacks();
     }
 
@@ -335,12 +351,85 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
     };
 
     /**
+     * Constructs an advanced (CodeMirror) editor and replaces the standard textarea with it.
+     */
+    EditRun.prototype.setupCM = function() {
+        // Construct editor
+        this.editor = this.cm.fromTextArea(document.getElementById('editrun_scriptline'), {
+            mode: 'ACCEL',
+            theme: 'default',
+            matchBrackets: true,
+            lineNumbers: false,
+            lineWrapping: false,
+            undoDepth: 50,             // Try to save some memory
+            viewportMargin: Infinity    // Always render entire document, so that text search and e.g. added event handlers work correctly
+            //gutters: []
+        });
+
+        /**--- Register events ---*/
+        // When a piece of text is 'dropped' into the editor, clear the current contents
+        // first
+        this.editor.on("drop", function(instance, e) {
+            // Do not prevent the default and just clear the contents of the editor.
+            // Let the event propagate further and let CodeMirror handle the rest
+            this.editor.setValue('');
+        });
+
+        // Add event handlers to all built-in functions for showing help
+        this.editor.on("changes", this.setupFunctionClickEvents);
+
+        // Disallow adding more lines than one
+        // now disallow adding newlines in the following simple way
+        this.editor.on("beforeChange", function(instance, change) {
+            var newtext = change.text.join("").replace(/\n/g, ""); // remove ALL \n !
+            change.update(change.from, change.to, [newtext]);
+            return true;
+        });
+
+        // Submit quantity when user presses enter while the editor has focus
+        this.editor.on("keyHandled", (function(instance, key) {
+            if (key == "Enter") {
+                this.submitQuantity();
+            }
+        }).bind(this));
+
+        setTimeout((function() {
+            this.cm.signal(this.editor, "changes");
+        }).bind(this), 100);
+
+        this.editor.setSize(600, this.editor.defaultTextHeight() + 8);
+        this.editor.refresh();
+    };
+
+    /**
+     * Registers event handlers for all built-in function names
+     * currently present in the contents of the editor.
+     */
+    EditRun.prototype.setupFunctionClickEvents = function(instance, changes) {
+        // Start looking in the dom tree only from the CodeMirror div down
+        $(".cm-builtin").on("dblclick", function(e) {
+            e.preventDefault();
+
+            view.setState({'tab': 'helpdemo', 'help': e.target.innerHTML});
+            e.stopPropagation();
+            e.cancelBubble = true;
+        });
+    };
+
+    /**
      * Deletes a quantity from the script.
      *
      * @param {String} The quantity to delete.
      */
     EditRun.prototype.deleteQuantity = function(quantity) {
         controller.deleteQuantity(quantity);
+    };
+
+    EditRun.prototype.submitQuantity = function() {
+        this.editor.save();
+        var qty = $("#editrun_scriptline").val();
+        this.editor.setValue('');
+        this.addQuantity(qty);
     };
 
     /**

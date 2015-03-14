@@ -1,12 +1,12 @@
 #editrun.tabcontent
     div
-        .inline
+        .inline#editrun_inputcontainer
             .label Script line
             //input(type = 'text')#scriptline.textin
-            #editrun_scriptline.inline.textin(contenteditable)
+            textarea(cols="100", rows="1")#editrun_scriptline.inline.textin
         .inline
             .label &nbsp;
-            input(type = 'button', value = 'Enter', onclick = 'view.tabs.editrun.addQuantity($("#editrun_scriptline").text())')#editrun_enterline.buttonin
+            input(style='vertical-align: middle', type = 'button', value = 'Enter', onclick = 'view.tabs.editrun.submitQuantity()')#editrun_enterline.buttonin
         #editrun_scriptoptions
             .inline
                 .label &nbsp;
