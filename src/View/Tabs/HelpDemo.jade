@@ -10,6 +10,9 @@
             .label &nbsp;
             a#helplink(href='mailto:help@openaccel.nl?subject=[OpenACCEL HELP] Help')
                 input(type = 'button', value = 'Ask for help')#helpmail.buttonin
+        .inline(style='float: right; margin-right: 10px;')
+            .label &nbsp;
+            input(type = 'button', value = 'Submit script' onclick = 'view.tabs.helpdemo.submitScript()')#submitscript.buttonin
     .inline100
         .label Help categories
         #helpcategories.report.verticalmenu

@@ -165,7 +165,7 @@ define(["../Controller/AbstractView",
         }
 
         // Make "tab" variable consistent with possible other variables in hash
-        if (newState.script) {
+        if (newState.script || newState.userscript) {
             newState.tab = "editrun";
         } else if (newState.help) {
             newState.tab = "helpdemo";

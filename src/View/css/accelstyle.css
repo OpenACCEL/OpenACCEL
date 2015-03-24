@@ -31,6 +31,10 @@ body div {
        line-height: 22px;
 }
 
+#submitscript {
+
+}
+
 .editor_text_syntaxerror {
        padding-top: 2px !important;
        padding-bottom: 2px !important;

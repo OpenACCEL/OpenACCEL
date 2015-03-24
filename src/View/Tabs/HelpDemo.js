@@ -1,6 +1,18 @@
-require.config({
-    baseUrl: "scripts"
-});
+/* Browser vs. Node ***********************************************/
+inBrowser = typeof window !== 'undefined';
+inNode = !inBrowser;
+
+if (inNode) {
+    require = require('requirejs');
+    fileModule = "fs";
+} else {
+    fileModule = "jquery";
+
+    require.config({
+        baseUrl: "scripts"
+    });
+}
+/*******************************************************************/
 
 define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLBuffer) {
     /**
@@ -185,6 +197,47 @@ define(["View/Input", "View/HTMLBuffer"], /**@lends View*/ function(Input, HTMLB
         }
 
         return db;
+    };
+
+    /**
+     * Asks the user for a script name and submits the script to the server.
+     */
+    HelpDemo.prototype.submitScript = function() {
+        var name = prompt("Please enter a name to identify your script. If the name you propose is not unique, we will add a number to it", "myScriptName");
+        if (name == null) {
+            return;
+        }
+
+        var script = controller.getScriptSource();
+        if (script.length <= 3) {
+            alert("Error: There is no script to submit.")
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "http://www.openaccel.nl/php/keyMapDBI.php?task=setPost",
+            data : {
+                'propName': name,
+                'pst' : script
+            },
+            context: this,
+            success: function(result, status) {
+                alert("Script succesfully uploaded. Visit this link to view your script:\n\nhttp://www.openaccel.nl/#userscript=" + result);
+            },
+            error: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            fail: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            async: true
+        });
     };
 
     /**

@@ -871,6 +871,41 @@ define(["Model/Script",
         };
 
         /**
+         * Loads user script from the server.
+         *
+         * @param name {String} name of user script
+         * @pre name != null
+         * @pre name != undefined
+         * @return {Object} Script
+         */
+        Controller.prototype.loadUserScript = function(name) {
+            $.ajax({
+                type: "GET",
+                url: "http://www.openaccel.nl/php/keyMapDBI.php?task=getTerm&key=" + name,
+                context: this,
+                success: function(result, status) {
+                    this.setScriptFromSource(result);
+                    if (this.autoExecute) {
+                        this.run();
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
+                    controller.ajaxError(this.errorMessage + err.responseText);
+                    this.errorMessage = "";
+                    return false;
+                },
+                fail: function(err) {
+                    console.log(err);
+                    controller.ajaxError(this.errorMessage + err.responseText);
+                    this.errorMessage = "";
+                    return false;
+                },
+                async: true
+            });
+        };
+
+        /**
          * Saves script on server and, returns a link to the script.
          *
          * @param name {String} name of script

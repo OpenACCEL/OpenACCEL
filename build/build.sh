@@ -14,7 +14,11 @@ build() {
 quickbuild() {
     clean
     jade
-    deploy
+    case "$1" in
+        "") deploy ;;
+        --server) deploy $1 ;;
+    esac
+
     #post_deploy
 }
 
@@ -116,6 +120,11 @@ deploy() {
     # Copy information database
     cp lang/ACCEL_functions.json                                                         bin/scripts/lang/ACCEL_functions.json
     cp lang/ACCEL_help.json                                                              bin/scripts/lang/ACCEL_help.json
+
+    # Deploy for server: replace fileloader with server one
+    case "$1" in
+        --server) cp src/Model/ServerFileLoader.js bin/scripts/Model/FileLoader.js; echo "Deployed for server" ;;
+    esac
 }
 
 # Post Deployment
@@ -160,6 +169,9 @@ case "$1" in
                         "") test ; shift ;;
                         *)  test $2 ; shift ;;
                     esac ;;
-    --quickbuild)   quickbuild ;;
+    --quickbuild)   case "$2" in
+                        "") quickbuild ; shift ;;
+                        --server) quickbuild $2 ; shift ;;
+                    esac ;;
     *)              echo "Invalid argument(s)." ; exit 1 ;;
 esac
