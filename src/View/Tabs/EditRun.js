@@ -292,6 +292,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
         // if a demo script should be loaded, load it
         if (newState.script) {
             controller.loadDemoScript(newState.script);
+        } else if (newState.userscript) {
+            controller.loadUserScript(newState.userscript);
         } else {
             // A new script may have been compiled/loaded, so synchronize
             // list of quantities

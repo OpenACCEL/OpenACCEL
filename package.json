@@ -55,6 +55,7 @@
         "doc-latex": "jsdoc -c JSDoc2Latex/conf.json -d doc-latex/ src/ -r",
         "build": "sh build/build.sh --build",
         "quickbuild": "sh build/build.sh --quickbuild",
+        "quickbuild-server": "sh build/build.sh --quickbuild --server",
         "test": "sh build/build.sh --test",
         "benchmark": "sh build/build.sh --benchmark",
         "start": "http-server bin/ -c-1",
