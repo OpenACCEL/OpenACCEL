@@ -26,6 +26,36 @@ body div {
 	margin: 0px;
 }
 
+.editor_line_syntaxerror {
+       background-color: rgb(255, 128, 128);
+       line-height: 22px;
+}
+
+.editor_text_syntaxerror {
+       padding-top: 2px !important;
+       padding-bottom: 2px !important;
+}
+
+.editor_error_token {
+       font-weight: bold !important;
+       color: red !important;
+}
+
+.editor_line_widget {
+       text-align: left;
+       background-color: rgb(255, 163, 163);
+       color: #4D4D4D;
+       font-style: italic;
+       font-size: 13px;
+       padding-left: 4px;
+       padding-top: 2px;
+       padding-bottom: 2px;
+}
+
+.editor_lw_hd {
+       font-style:normal;
+}
+
 #editrun_input_fasttoggle, #simulation_input_fasttoggle {
 	vertical-align: middle;
 	margin-right: 2px;
@@ -624,10 +654,17 @@ a.toggleswitchoption_current {
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+	border: 1px solid black;
 	border-top: 1px #331144 solid;
 	background: #FFFFFF;
 	vertical-align: middle;
 	margin-right: 5px;
+	height: auto !important;
+}
+
+.#editrun_inputcontainer > .CodeMirror-scroll {
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 .versionspan {
@@ -645,12 +682,15 @@ a.toggleswitchoption_current {
 }
 
 .CodeMirror-matchingbracket {
-	color: green;
 	font-weight: bold;
 }
 
 .CodeMirror-nonmatchingbracket {
 	color: red;
+	font-weight: bold;
+}
+
+.errorwidget_heading {
 	font-weight: bold;
 }
 

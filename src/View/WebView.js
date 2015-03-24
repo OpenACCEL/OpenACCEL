@@ -394,25 +394,14 @@ define(["../Controller/AbstractView",
         this.id = id;
 
         var errorContainer = $(selector);
-        var source = errorContainer.text();
-        var errorLines = source.split('\n');
-
-        var errorEnd = errorLines[error.lastLine - 1];
-
-        errorLines[error.firstLine - 1] = errorEnd.substr(0, error.endPos) + '<span id = "errorlocation' + this.id + '"></span>' + errorEnd.substr(error.endPos);
-
-        var newsource = errorLines.join('\n');
-        errorContainer.html(newsource);
-
-        var errorlocation = $('#errorlocation' + this.id);
+        var editor = view.tabs.editrun.editor;
+        var errorlocation = $('span.editor_error_token').first();
         var pos = errorlocation.offset();
-
-        errorContainer.children().remove();
 
         // Ensure the popup is never displayed outside of the input field
         var minX = errorContainer.offset().left;
         var maxX = errorContainer.offset().left + errorContainer.outerWidth();
-        this.x = (pos.left-3 < minX) ? minX : ((pos.left-3 > maxX) ? maxX : pos.left-3);
+        this.x = (pos.left-3 < minX) ? minX+errorlocation.outerWidth()/2 : ((pos.left-3 > maxX) ? maxX : pos.left-3+errorlocation.outerWidth()/2);
         this.y = 16 + pos.top;
         this.text = '';
         if (error.type === 'lexical') {

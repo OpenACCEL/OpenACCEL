@@ -16,6 +16,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
         this.editor = null;
 
         /**
+         * The CodeMirror text marker used to mark errors in the input field.
+         *
+         * @type {CodeMiror.TextMarker}
+         */
+        this.errorMarker = null;
+
+        /**
          * The CodeMirror instance to use in this tab
          *
          * @type {CodeMirror}
@@ -278,6 +285,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
      * Event that gets called when this tab gets opened.
      */
     EditRun.prototype.onEnterTab = function(newState) {
+        if (!this.errorMarker) {
+            this.clearErrors();
+        }
+
         // if a demo script should be loaded, load it
         if (newState.script) {
             controller.loadDemoScript(newState.script);
@@ -317,6 +328,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
      * Event that gets called when this tab gets closed.
      */
     EditRun.prototype.onLeaveTab = function() {
+        if (!this.errorMarker) {
+            this.clearErrors();
+        }
+
         // Pause script when leaving edit/run tab, indicating it has
         // been paused automatically by the system and not by the user
         controller.pause(true);
@@ -358,6 +373,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
         this.editor = this.cm.fromTextArea(document.getElementById('editrun_scriptline'), {
             mode: 'ACCEL',
             theme: 'default',
+            autofocus: true,
             matchBrackets: true,
             lineNumbers: false,
             lineWrapping: false,
@@ -417,19 +433,81 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
     };
 
     /**
+     * Takes the current value from the CodeMirror input line,
+     * checks the syntax and if valid submits it to the controller.
+     *
+     * @return {Boolean} Whether the quantity was submitted
+     */
+    EditRun.prototype.submitQuantity = function() {
+        this.editor.save();
+        var qty = $("#editrun_scriptline").val();
+
+        if (this.check(qty)) {
+            this.editor.setValue('');
+            this.addQuantity(qty);
+        } else {
+            this.addQuantity(qty);
+        }
+    };
+
+    /**
+     * Checks the given quantity definition for syntax errors, and handles
+     * displaying of any errors that might be present.
+     *
+     * @param {String} qty The quantity definition to check for errors
+     * @return {Boolean} Whether the given line is error-free
+     */
+    EditRun.prototype.check = function(qty) {
+        // Clear any existing line widget and remove
+        // error styling
+        this.clearErrors();
+
+        try {
+            controller.checkSyntax(qty);
+            return true;
+        } catch (e) {
+            this.setError(e);
+            return false;
+        }
+    };
+
+    /**
+     * Clears any displayed errors in the editor
+     */
+    EditRun.prototype.clearErrors = function() {
+        this.editor.removeLineClass(0, "background", "editor_line_syntaxerror");
+        this.editor.removeLineClass(0, "text", "editor_text_syntaxerror");
+
+        if (this.errorMarker) {
+            this.errorMarker.clear();
+            this.errorMarker = null;
+        }
+
+        $("#editrun_inputcontainer > .CodeMirror").css({"background-color": "white"});
+        this.editor.focus();
+    };
+
+    /**
+     * Sets the given error for the given line.
+     *
+     * @param {CodeMirror.LineHandle} lineHandle The line on which to set the error
+     * @param {SyntaxError} error The error to display
+     */
+    EditRun.prototype.setError = function(error) {
+        this.editor.addLineClass(0, "background", "editor_line_syntaxerror");
+        this.editor.addLineClass(0, "text", "editor_text_syntaxerror");
+        this.errorMarker = this.editor.markText({'line': 0, 'ch': error.endPos}, {'line': 0, 'ch': error.endPos+1}, {'className': 'editor_error_token'});
+
+        $("#editrun_inputcontainer > .CodeMirror").css({"background-color": "rgb(255, 163, 163);"});
+    };
+
+    /**
      * Deletes a quantity from the script.
      *
      * @param {String} The quantity to delete.
      */
     EditRun.prototype.deleteQuantity = function(quantity) {
         controller.deleteQuantity(quantity);
-    };
-
-    EditRun.prototype.submitQuantity = function() {
-        this.editor.save();
-        var qty = $("#editrun_scriptline").val();
-        this.editor.setValue('');
-        this.addQuantity(qty);
     };
 
     /**
@@ -439,30 +517,22 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
      */
     EditRun.prototype.addQuantity = function(string) {
         string = string.trim();
-        if (string === '') {
-            //Do nothing if nothing was entered
-            this.setPendingScriptLine(null);
-        } else {
-            this.setPendingScriptLine(string);
-            setTimeout(
-                (function() {
-                    // Clear error messages that might be currently visible
-                    $('.tooltipcontainer > .errormessage').filter(":visible").trigger('click');
+        setTimeout(
+            (function() {
+                // Clear error messages that might be currently visible
+                $('.tooltipcontainer > .errormessage').filter(":visible").trigger('click');
 
-                    try {
-                        controller.addQuantity(string);
-                    } catch (error) {
-                        console.log(error);
-                        view.handleError(error);
-                    }
+                try {
+                    controller.addQuantity(string);
+                } catch (error) {
+                    console.log(error);
+                    view.handleError(error);
+                }
 
-                    this.setPendingScriptLine(null);
-
-                    view.selectContent('#editrun_scriptline');
-                }).bind(this),
-                10
-            );
-        }
+                view.selectContent('#editrun_scriptline');
+            }).bind(this),
+            10
+        );
     };
 
     /**
@@ -654,8 +724,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
         if ($('#line' + linenr).length > 0) {
             var quantity = controller.getQuantity(quantityname);
 
-            var scriptline = $('#editrun_scriptline');
-            scriptline.text(quantity.source);
+            this.editor.setValue(quantity.source);
 
             $('.quantityname').text(quantityname);
 
