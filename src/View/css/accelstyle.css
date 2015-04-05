@@ -30,6 +30,10 @@ body div {
 	background-color: rgb(255, 128, 128);
 }
 
+#ioedit_qtylist {
+	overflow-y: auto;
+}
+
 .editor_line_highlight {
 	background-color: #A3E0A3;
 }

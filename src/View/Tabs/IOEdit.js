@@ -208,6 +208,7 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
         // Set sorting to linenumber as the script as it is now will be processed
         // in the inputted order and thus the linenumbers will be updated to their
         // current position as well
+        $("#ioedit_qtyselector").val("");
         this.sortby = "linenum";
         $("#ioedit_qtysort").val("linenum");
         this.sortQuantities(this.sortby);
@@ -290,7 +291,25 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
             this.editor.refresh();
             this.cm.signal(this.editor, "changes");
             this.focusEditor();
+            this.updateQuantitySelector();
         }
+    };
+
+    /**
+     * Updates the combobox for selecting a quantity to go to
+     */
+    IOEdit.prototype.updateQuantitySelector = function() {
+        var dataList = $("#ioedit_qtylist");
+        dataList.empty();
+
+        var quantities = controller.getScript().quantities;
+        var qties = _.sortBy(quantities, "name");
+        for (var elem in qties) {
+            var qtyname = qties[elem].name;
+            var opt = $("<option></option>").attr("value", qtyname);
+            dataList.append(opt);
+        }
+
     };
 
     /**
@@ -303,7 +322,14 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
         $(".CodeMirror-linebackground").removeClass("editor_line_highlight");
 
         // Get line number of given quantity
-        var linenum = controller.getScript().getQuantity(qty).linenum;
+        var quantity;
+        try {
+            quantity = controller.getScript().getQuantity(qty);
+        } catch (e) {
+            return;
+        }
+
+        var linenum = quantity.linenum;
 
         // Highlight line and place cursor in it
         this.editor.addLineClass(linenum, "background", "editor_line_highlight");
