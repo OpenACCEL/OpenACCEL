@@ -52,6 +52,8 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
          */
         this.lineWidgets = {};
 
+        this.lastJumpedToQuantity = null;
+
         // Setup CodeMirror instance and also setup advanced editor in IO/edit tab
         // when preference in localStorage is set as such
         this.cm = CodeMirror;
@@ -132,6 +134,8 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
              * @param  {String} quantity The name of the quantity that was clicked on
              */
             onclickProperty: function(quantity) {
+                // Remove all current highlighting of other lines
+                $(".CodeMirror-linebackground").removeClass("editor_line_highlight");
                 view.tabs.ioedit.scrollToQuantity(quantity);
             },
 
@@ -312,7 +316,13 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
             'matchCase': false,
             'data': qtynames,
             'onItemSelect': function() {
-                view.tabs.ioedit.scrollToQuantity($("#ioedit_qtyselector").val());
+                var jumpto = $("#ioedit_qtyselector").val();
+                if (jumpto != view.tabs.ioedit.lastJumpedToQuantity) {
+                    // Remove all current highlighting of other lines
+                    $(".CodeMirror-linebackground").removeClass("editor_line_highlight");
+                    view.tabs.ioedit.scrollToQuantity(jumpto);
+                    view.tabs.ioedit.lastJumpedToQuantity = jumpto;
+                }
             }
         });
     };
@@ -323,9 +333,6 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
      * @param  {String} qty The name of the quantity to scroll to
      */
     IOEdit.prototype.scrollToQuantity = function(qty) {
-        // Remove all current highlighting of other lines
-        $(".CodeMirror-linebackground").removeClass("editor_line_highlight");
-
         // Get line number of given quantity
         var quantity;
         try {
@@ -336,13 +343,14 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
 
         var linenum = quantity.linenum;
 
-        // Highlight line and place cursor in it
-        this.editor.addLineClass(linenum, "background", "editor_line_highlight");
-
         // Scroll to the line at which it is currently located
         var t = this.editor.charCoords({line: linenum, ch: 0}, "local").top;
         var middleHeight = this.editor.getScrollerElement().offsetHeight / 2;
         this.editor.scrollTo(null, t - middleHeight - 5);
+
+        // Highlight line and place cursor in it
+        this.updateReport(quantity.name);
+        this.editor.addLineClass(linenum, "background", "editor_line_highlight");
     };
 
     /**
@@ -590,6 +598,8 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
 
             this.currentLine = newLineNum;
         }
+
+        console.log("Removed");
     };
 
     /**

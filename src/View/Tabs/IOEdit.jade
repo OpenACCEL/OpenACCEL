@@ -11,7 +11,7 @@
             .inline(style='vertical-align: bottom; margin-bottom: 5px;')
                 span#ioedit_checkUnitsMsg Checking units...
             .inline(style='float: right; position: relative; top: 40px; z-index: 100;')
-                input#ioedit_qtyselector.textin(list='ioedit_qtylist', style='padding: 2px 4px; vertical-align: middle;', placeholder='Go to quantity...')
+                input#ioedit_qtyselector.textin(list='ioedit_qtylist', style='padding: 2px 4px; vertical-align: middle;', placeholder='Go to quantity...', onclick='this.select();')
                 select(id="ioedit_qtysort", name="ioedit_qtysort", style="margin-left: 7px;", onchange="view.tabs.ioedit.sortQuantities(this.value);")
                     option(value="linenum") Line number
                     option(value="name") Name
