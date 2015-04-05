@@ -55,6 +55,14 @@ define(["Model/Analyser/Analyser",
         this.source = '';
 
         /**
+         * The number of initial newlines to prepend to the script source
+         * when returning it from e.g. toString()
+         *
+         * @type {Number}
+         */
+        this.initialNewLines = 0;
+
+        /**
          * Whether the script has been modified since the
          * last time that this.toSource() was called.
          *
@@ -423,6 +431,19 @@ define(["Model/Analyser/Analyser",
             // First check whether the given piece of script is valid ACCEL code
             this.checkSyntax(source);
 
+            // Determine number of newlines before first quantity definition
+            src = source.split("\n");
+            if (Object.keys(this.quantities).length == 0) {
+                this.initialNewLines = 0;
+                for (var i=0; i<src.length; i++) {
+                    if (src[i] == "") {
+                        this.initialNewLines ++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
             // Analyse the added line of code and add the defined quantity to the model
             var added = this.analyser.analyse(source, this.quantities);
             this.scriptChanged();
@@ -722,10 +743,26 @@ define(["Model/Analyser/Analyser",
                 throw new Error("Script.toString.pre violated: trying to include values in source while script is not compiled.");
             }
 
-            // Iterate through all quantities and append their string representation to the source code
+            // If sort order is given, sort quantities accordingly
+            var qties;
+            if (options.sort === "name") {
+                qties = _.sortBy(this.quantities, 'name');
+            } else if (options.sort === "category") {
+                qties = _.sortBy(this.quantities, 'category');
+            } else {
+                qties = _.sortBy(this.quantities, 'linenum');
+            }
+
+            // Prepend correct number of newlines to script
             var lines = [];
-            for (var qtyName in this.quantities) {
-                var qty = this.quantities[qtyName];
+            for (var i=0; i<this.initialNewLines; i++) {
+                lines.push("");
+            }
+
+            // Iterate through all quantities and append their string representation to the source code
+            var i=0;
+            for (var qtyName in qties) {
+                var qty = qties[qtyName];
 
                 // Do not include quantities in the script string that are undefined!
                 if (!qty.todo) {
@@ -733,11 +770,13 @@ define(["Model/Analyser/Analyser",
                     if (options.includeValues || options.includeCheckedUnits) {
                         // Compute the value and save it in the quantity. Then call
                         // toString of the quantity so it can use the computed value.
-                        qty.value = this.getQuantityValue(qtyName);
+                        qty.value = this.getQuantityValue(qty.name);
                     }
 
                     lines.push(qty.toString(options));
                 }
+
+                i = qty.linenum+qty.comment.length;
             }
 
             this.source = lines.join("\n");

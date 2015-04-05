@@ -29,7 +29,7 @@ require(["Controller/ControllerAPI", "View/WebView"],
     try {
         controller.restoreSavedScript();
     } catch (e) {
-        view.handleError(e);
+        view.setState({'tab': 'ioedit', 'loadLocal': true});
     }
 
     // Trigger hashchange on initial page load

@@ -27,37 +27,36 @@ body div {
 }
 
 .editor_line_syntaxerror {
-       background-color: rgb(255, 128, 128);
-       line-height: 22px;
+	background-color: rgb(255, 128, 128);
 }
 
-#submitscript {
-
+.editor_line_highlight {
+	background-color: #A3E0A3;
 }
 
 .editor_text_syntaxerror {
-       padding-top: 2px !important;
-       padding-bottom: 2px !important;
+	padding-top: 2px !important;
+	padding-bottom: 2px !important;
 }
 
 .editor_error_token {
-       font-weight: bold !important;
-       color: red !important;
+	font-weight: bold !important;
+	color: red !important;
 }
 
 .editor_line_widget {
-       text-align: left;
-       background-color: rgb(255, 163, 163);
-       color: #4D4D4D;
-       font-style: italic;
-       font-size: 13px;
-       padding-left: 4px;
-       padding-top: 2px;
-       padding-bottom: 2px;
+	text-align: left;
+	background-color: rgb(255, 163, 163);
+	color: #4D4D4D;
+	font-style: italic;
+	font-size: 13px;
+	padding-left: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 .editor_lw_hd {
-       font-style:normal;
+	font-style:normal;
 }
 
 #editrun_input_fasttoggle, #simulation_input_fasttoggle {

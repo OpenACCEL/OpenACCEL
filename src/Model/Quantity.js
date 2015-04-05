@@ -32,6 +32,14 @@ define([], /**@lends Model.Quantity */ function() {
         this.name = '';
 
         /**
+         * The line number at which this quantity was added. Used to reconstruct
+         * the script exactly as it was entered in especially the IO/edit tab.
+         *
+         * @type {Number}
+         */
+        this.linenum = -1;
+
+        /**
          * The entire 'left-hand side' of the definition of this quantity: it's name
          * with optionally it's arguments.
          *
@@ -137,7 +145,10 @@ define([], /**@lends Model.Quantity */ function() {
 
         /**
          * An optional comment explaining the quantity.
-         * Can span multiple lines, each entry in the array is one line
+         * Can span multiple lines, each entry in the array is one line.
+         * If the value is equal to "#*$@&##", this denotes that it is actually
+         * a blank line inserted by the user. This will be correctly handled by the getComment()
+         * and toString() methods.
          *
          * @type {String[]}
          */
@@ -254,7 +265,11 @@ define([], /**@lends Model.Quantity */ function() {
             var comment = '';
 
             for (var i = 0; i < this.comment.length; i++) {
-                comment += '\n //' + this.comment[i];
+                if (this.comment[i] == "#*$@&##") {
+                    comment += "\n";
+                } else {
+                    comment += '\n //' + this.comment[i];
+                }
             }
 
             def += comment;
@@ -315,7 +330,11 @@ define([], /**@lends Model.Quantity */ function() {
             var comment = '';
 
             for (var i = 0; i < this.comment.length; i++) {
-                comment += '\n //' + this.comment[i];
+                if (this.comment[i] == "#*$@&##") {
+                    comment += "\n";
+                } else {
+                    comment += '\n //' + this.comment[i];
+                }
             }
 
             def += comment;
@@ -333,7 +352,9 @@ define([], /**@lends Model.Quantity */ function() {
         var comment = '';
 
         for (var i = 0; i < this.comment.length; i++) {
-            comment += this.comment[i] + '\n';
+            if (this.comment[i] != "#*$@&##") {
+                comment += this.comment[i] + '\n';
+            }
         }
 
         return comment.slice(0,-1);

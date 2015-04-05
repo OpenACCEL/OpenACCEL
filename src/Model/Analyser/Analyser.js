@@ -143,6 +143,9 @@ define(["Model/Analyser/Passes/QuantityPass",
             // are assigned to this quantity
             var prevQuantity = null;
 
+            // Current line number at which to insert next quantity
+            var currentLineNum = Object.keys(quantities).length;
+
             // List of all quantities parsed from the given source
             var added = [];
 
@@ -150,7 +153,6 @@ define(["Model/Analyser/Passes/QuantityPass",
             lines.forEach((function(line) {
                 line = line.trim();
 
-                // Only process non-blank lines
                 if (line.replace(/ +?/g, '') !== '') {
                     // Handle comments
                     if (line.substring(0, 2) === '//') {
@@ -166,10 +168,19 @@ define(["Model/Analyser/Passes/QuantityPass",
                         for (var i = 0; i < this.passes.length; i++) {
                             prevQuantity = this.passes[i].analyse(line, prevQuantity, quantities);
                         }
+                        prevQuantity.linenum = currentLineNum;
                         this.findPareto(prevQuantity);
                         added.push(prevQuantity);
                     }
+                } else {
+                    if (prevQuantity !== null) {
+                        // Add "magic value" to comments array to denote empty line
+                        prevQuantity.comment.push("#*$@&##");
+                    }
                 }
+
+                // No matter the contents of the line, increase line number
+                currentLineNum += 1;
             }).bind(this));
 
             return added;

@@ -857,16 +857,10 @@ define(["Model/Script",
          * @return {Object} Script
          */
         Controller.prototype.loadDemoScript = function(name) {
-            var source = '';
-            try {
-                source = this.library.getDemoScript(name);
-                this.setScriptFromSource(source);
-                if (this.autoExecute) {
-                    this.run();
-                }
-            } catch (e) {
-                alert("Error loading demo script: " + e.message);
-                console.log("Error loading demo script: " + e.message);
+            var source = this.library.getDemoScript(name);
+            this.setScriptFromSource(source);
+            if (this.autoExecute) {
+                this.run();
             }
         };
 
@@ -1022,7 +1016,7 @@ define(["Model/Script",
             if (!restoring) {
                 // If autosave is enabled, save script to backup store
                 if (this.autoSave) {
-                    this.saveScriptToBackupStore(this.script.getSource());
+                    this.saveScriptToBackupStore(this.script.toString({'includeComments': true}));
                 }
             }
 

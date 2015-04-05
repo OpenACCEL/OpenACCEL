@@ -86,7 +86,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
             controller.setUserInputQuantity(this.quantity, convertedValue);
 
             // Only update slider value in UI continuously if fastmode is disabled
-            if (!view.tabs[view.currentTab].fastmode || !view.hasPlot) {
+            if (!view.tabs.editrun.fastmode || !view.hasPlot) {
                 $('#userslider' + this.identifier + 'value').html('(' + convertedValue.toFixed(2) + ')');
             }
         }).bind(this);

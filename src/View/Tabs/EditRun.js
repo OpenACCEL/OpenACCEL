@@ -530,8 +530,6 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
                     console.log(error);
                     view.handleError(error);
                 }
-
-                view.selectContent('#editrun_scriptline');
             }).bind(this),
             10
         );
@@ -852,6 +850,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
 
     EditRun.prototype.setFastmode = function() {
         this.fastmode = $('#editrun_input_fasttoggle').is(':checked');
+        view.tabs.simulation.fastmode = $('#editrun_input_fasttoggle').is(':checked');
     };
 
     /**

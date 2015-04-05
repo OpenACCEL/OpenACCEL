@@ -290,6 +290,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script"], /**@lends View*/ funct
 
     Simulation.prototype.setFastmode = function() {
         this.fastmode = $('#simulation_input_fasttoggle').is(':checked');
+        view.tabs.editrun.fastmode = $('#simulation_input_fasttoggle').is(':checked');
     };
 
     return Simulation;

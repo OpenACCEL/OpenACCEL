@@ -173,15 +173,20 @@ define(["../Controller/AbstractView",
 
         // Activate other tab when nessecary
         if ((newState.tab && (newState.tab !== this.state.tab)) || initial === true) {
+            // Show contents of newly activated tab and trigger events
+            if (this.state.tab) {
+                if (!this.onLeaveTab(this.state.tab)) {
+                    // Abort tab switch
+                    this.setState(this.state);
+                    return;
+                }
+
+                $(".tabcontent").hide();
+            }
+
             // Make correct tab active
             $("li.navtab").removeClass("ui-tabs-active");
             $("li#" + newState.tab + ".navtab").addClass("ui-tabs-active");
-
-            // Show contents of newly activated tab and trigger events
-            if (this.state.tab) {
-                this.onLeaveTab(this.state.tab);
-                $(".tabcontent").hide();
-            }
 
             $("#" + newState.tab + ".tabcontent").show();
             this.onEnterTab(newState);
@@ -217,21 +222,29 @@ define(["../Controller/AbstractView",
     };
 
     /**
-     * Called just before a tab is left and made hidden
+     * Called just before a tab is left and made hidden. Returns
+     * whether the tab switch should be executed (true) or aborted (false)
      *
      * @param  {Event} event The jQuery event that was fired
      * @param  {string} tab The identifier of the tab that will be hidden
+     * @return {Boolean} Whether to proceed with tab switching
      */
     WebView.prototype.onLeaveTab = function(tab) {
+        var switchTab = true;
         $('.tooltipcontainer > .datamessage').filter(":visible").trigger('click');
         if (typeof this.tabs[tab].onLeaveTab === "function") {
-            this.tabs[tab].onLeaveTab();
+            switchTab = this.tabs[tab].onLeaveTab();
+            if (switchTab === undefined) {
+                switchTab = true;
+            }
         }
 
         // Store currently visible tooltips for this tab, so they can be shown
         // again when switching back to this tab
         this.tooltips[tab] = $('.tooltipcontainer').filter(":visible");
         this.tooltips[tab].toggle(false);
+
+        return switchTab;
     };
 
     /**

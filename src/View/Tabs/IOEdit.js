@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(CodeMirror) {
+define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(HTMLBuffer, CodeMirror) {
     /**
      * @class
      * @classdesc The IOEdit tab.
@@ -31,15 +31,159 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
          */
         this.showValues = false;
 
+        /**
+         * The line inside which the cursor is currently placed.
+         *
+         * @type {Number}
+         */
+        this.currentLine = null;
+
+        /**
+         * Property of quantities by which to sort them in the editor.
+         *
+         * @type {String}
+         */
+        this.sortby = "linenum";
+
+        /**
+         * All currently displayed line widgets in the advanced editor.
+         *
+         * @type {[LineWidget]}
+         */
+        this.lineWidgets = {};
+
         // Setup CodeMirror instance and also setup advanced editor in IO/edit tab
         // when preference in localStorage is set as such
         this.cm = CodeMirror;
-        if (localStorage.useAdvancedEditor === 'true') {
-            $('#ioedit_useCM').prop("checked", true);
+        if (localStorage.useAdvancedEditor === 'false') {
+            this.toggleCM(false);
+        } else {
             this.toggleCM(true);
         }
 
+        /**
+         * Object containing tools to modify the contents of the todo list
+         *
+         * @type {Object}
+         */
+        this.report = {
+            /**
+             * Generates HTML for an item in the list of todos
+             *
+             * @param {String} quantity Quantity which is to be implemented
+             */
+            getTodoListHTML: function(quantity) {
+                return '' +
+                    '<div onclick = "view.tabs.ioedit.report.onclickTodo(\'' + quantity + '\')" class = "hoverbold">' +
+                        '<div class="ellipsis max128w">' + quantity + '</div>' +
+                    '</div>';
+            },
+
+            /**
+             * Called when the user clicks on a quanitty name in the todo list
+             *
+             * @param  {String} quantity Name of the quantity that was clicked on
+             */
+            onclickTodo: function(quantity) {
+                // Ready quantity input field to begin defining this quantity
+                $('#ioedit_scriptline').html(quantity + ' =&nbsp;');
+            },
+
+            /**
+             * Buffer to contain updated #todolist content
+             * @type {HTMLBuffer}
+             */
+            todoListBuffer: new HTMLBuffer("#ioedit_todolist"),
+
+            /**
+             * Adds a quantity that still has to be defined to the #todo element
+             *
+             * @param {String} quantity Todo quantity
+             */
+            addTodo: function(quantity) {
+                view.tabs.ioedit.report.todoListBuffer.append(this.getTodoListHTML(quantity));
+            },
+
+            /**
+             * Generates HTML for an item with a certain property, in a list of quantities. The property
+             * can be e.g. a standard function.
+             *
+             * @param  {String} quantity Quantity of which a property is being displayed
+             * @param  {String} property Property of the associated quantity.
+             */
+            getPropertyListHTML: function(quantity, property) {
+                var html = '';
+                if (property === 'std func.') {
+                    html = 'view.tabs.ioedit.report.onclickStdFunc(\'' + quantity + '\')" style="color:#55CACA;"';
+                } else {
+                    html = 'view.tabs.ioedit.report.onclickProperty(\'' + quantity + '\')"';
+                }
+
+                return '' +
+                    '<div onclick="' + html + ' class="propname_row">' +
+                        '<div class="ellipsis max128w propname">' + quantity + '</div>' +
+                        '<div class="property">' + property + '</div>' +
+                    '</div>';
+            },
+
+            /**
+             * Called when the user clicks on a quantity name in the report
+             *
+             * @param  {String} quantity The name of the quantity that was clicked on
+             */
+            onclickProperty: function(quantity) {
+                view.tabs.ioedit.scrollToQuantity(quantity);
+            },
+
+            /**
+             * Called when the user clicks on a standard function name in the report
+             *
+             * @param {String} name The name of the standard function that was clicked on
+             * @post The help article of the clicked on function is displayed
+             */
+            onclickStdFunc: function(name) {
+                // Open help article of the clicked-on function
+                view.setState({'tab': 'helpdemo', 'help': name});
+            },
+
+            /**
+             * Buffer to contain updated #arglist content
+             * @type {HTMLBuffer}
+             */
+            argListBuffer: new HTMLBuffer("#ioedit_arglist"),
+
+            /**
+             * Adds the given quantity with the given property to the list of arguments of the currently
+             * selected quantity.
+             *
+             * @param {String} quantity Quantity which is an argument for the selected quantity
+             * @param {String} property [description]
+             */
+            addArg: function(quantity, property) {
+                view.tabs.ioedit.report.argListBuffer.append(this.getPropertyListHTML(quantity, property));
+            },
+
+            /**
+             * Buffer to contain updated #argtolist content
+             * @type {HTMLBuffer}
+             */
+            argToListBuffer: new HTMLBuffer("#ioedit_argtolist"),
+
+            /**
+             * Adds the given quantity with the given property to the list of arguments to the currently
+             * selected quantity.
+             *
+             * @param {String} quantity Quantity of which the selected quantity is an argument
+             * @param {String} property [description]
+             */
+            addArgto: function(quantity, property) {
+                view.tabs.ioedit.report.argToListBuffer.append(this.getPropertyListHTML(quantity, property));
+            }
+        };
+
         this.registerCallbacks();
+
+        $("#ioedit_qtysort").css({'margin-right': $("#ioedit_tododiv").outerWidth()+15});
     }
 
     /**
@@ -60,14 +204,37 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
     /**
      * Event that gets called when this tab gets opened.
      */
-    IOEdit.prototype.onEnterTab = function() {
-        view.hasPlot = false;
-        this.synchronizeScriptArea();
+    IOEdit.prototype.onEnterTab = function(state) {
+        // Set sorting to linenumber as the script as it is now will be processed
+        // in the inputted order and thus the linenumbers will be updated to their
+        // current position as well
+        this.sortby = "linenum";
+        $("#ioedit_qtysort").val("linenum");
+        this.sortQuantities(this.sortby);
 
-        setTimeout((function() {
-            this.updateAdvancedEditor();
-            this.focusAdvancedEditor();
-        }).bind(this), 100);
+        view.hasPlot = false;
+        this.report.todoListBuffer.empty();
+        this.report.todoListBuffer.flip();
+
+        // Determine which script source to display in editor
+        if (state.script) {
+            // Display source of demoscript that contained an error
+            var script = controller.library.getDemoScript(state.script);
+            this.setEditorContents(script);
+            this.saveScript();
+        } else if (state.loadLocal) {
+            // Display source of script in localStorage that contained an error
+            if (controller.autoSaveStore.hasScript()) {
+                var script = controller.autoSaveStore.loadScript();
+                this.setEditorContents(script);
+                this.saveScript();
+            }
+        } else {
+            // Just obtain the current script from the controller and display it
+            var script = this.getCurrentScript();
+            this.setEditorContents(script);
+            this.updateTodoList();
+        }
     };
 
     /**
@@ -75,39 +242,210 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
      */
     IOEdit.prototype.onLeaveTab = function() {
         // Build script from inputted source when leaving IO/edit
-        try {
-            if (this.editor) {
-                this.editor.save();
-            }
-            controller.setScriptFromSource($('#ioedit_scriptarea').val());
+        var ok = this.saveScript();
+        if (!ok) {
+            alert("There are errors in the script. Please fix them first");
+        }
+
+        return ok;
+    };
+
+    /**
+     * Saves the current contents of the editor to the controller.
+     *
+     * @return {Boolean} Whether the script has been succesfully saved. False
+     * if for example a syntax error occured.
+     */
+    IOEdit.prototype.saveScript = function() {
+        // Save contents to underlying textarea input
+        if (this.editor) {
+            this.editor.save();
+        }
+
+        // Check script for syntax errors
+        var script = $('#ioedit_scriptarea').val();
+        if (this.checkScript(script)) {
+            controller.setScriptFromSource(script);
+
             this.showValues = false;
             $('#ioedit_showvalues').val('Show values');
-        } catch (e) {
-            if (typeof(e) === 'SyntaxError') {
-                alert(e.message);
-                console.log(e.message);
-            } else {
-                console.log(e);
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    /**
+     * Sets the contents of the editor to the given source, updates
+     * the editor and focusses it
+     *
+     * @param {String} source The new contents for the editor.
+     */
+    IOEdit.prototype.setEditorContents = function(source) {
+        $('#ioedit_scriptarea').val(source);
+
+        // Let the advanced editor update itself too, if in use
+        if (this.usingEditor()) {
+            this.editor.setValue(source);
+            this.editor.refresh();
+            this.cm.signal(this.editor, "changes");
+            this.focusEditor();
+        }
+    };
+
+    /**
+     * Scrolls the editor so that the given quantity is visible inside the viewport.
+     *
+     * @param  {String} qty The name of the quantity to scroll to
+     */
+    IOEdit.prototype.scrollToQuantity = function(qty) {
+        // Remove all current highlighting of other lines
+        $(".CodeMirror-linebackground").removeClass("editor_line_highlight");
+
+        // Get line number of given quantity
+        var linenum = controller.getScript().getQuantity(qty).linenum;
+
+        // Highlight line and place cursor in it
+        this.editor.addLineClass(linenum, "background", "editor_line_highlight");
+
+        // Scroll to the line at which it is currently located
+        var t = this.editor.charCoords({line: linenum, ch: 0}, "local").top;
+        var middleHeight = this.editor.getScrollerElement().offsetHeight / 2;
+        this.editor.scrollTo(null, t - middleHeight - 5);
+    };
+
+    /**
+     * Sets by which attribute to sort the quantities in the script.
+     * @param  {[type]} sort [description]
+     * @return {[type]}      [description]
+     */
+    IOEdit.prototype.sortQuantities = function(sort) {
+        this.sortby = sort;
+        this.setEditorContents(this.getCurrentScript());
+    };
+
+    /**
+     * Updates the todo list based on the given set of quantities
+     *
+     * @param  {Object} quantities Set of quantities
+     */
+    IOEdit.prototype.updateTodoList = function() {
+        var quantities = controller.getScript().quantities;
+        this.report.todoListBuffer.empty();
+
+        // Loop through all quantities in script and add TODO quantities
+        // to the todo list
+        for (var q in quantities) {
+            var quantity = quantities[q];
+            if (quantity.todo) {
+                this.report.addTodo(quantity.name);
             }
+        }
+
+        this.report.todoListBuffer.flip();
+    };
+
+    /**
+     * Checks the script for syntax errors, and handles
+     * displaying of any errors that might be present.
+     *
+     * @return {Boolean} Whether the given script is error-free
+     */
+    IOEdit.prototype.checkScript = function(script) {
+        if (this.usingEditor()) {
+            var lines = script.split("\n");
+            var scriptOK=true;
+
+            // Check syntax of every line separately, and save errors
+            this.editor.eachLine((function(lineHandle) {
+                if (!this.checkLine(lineHandle)) {
+                    scriptOK = false;
+                }
+            }).bind(this));
+
+            // Return whether the script was error-free
+            return scriptOK;
+        }
+    };
+
+    /**
+     * Checks the given line for syntax errors, and handles
+     * displaying of any errors that might be present.
+     *
+     * @return {Boolean} Whether the given line is error-free
+     */
+    IOEdit.prototype.checkLine = function(lineHandle) {
+        // Clear any existing line widget and remove
+        // error styling
+        var i = this.editor.getLineNumber(lineHandle);
+        this.clearLineErrors(i);
+
+        try {
+            controller.checkSyntax(lineHandle.text);
+            return true;
+        } catch (e) {
+            this.setLineError(lineHandle, e);
+            return false;
+        }
+    };
+
+    /**
+     * Sets the given error for the given line.
+     *
+     * @param {CodeMirror.LineHandle} lineHandle The line on which to set the error
+     * @param {SyntaxError} error The error to display
+     */
+    IOEdit.prototype.setLineError = function(lineHandle, error) {
+        // Construct line widget DOM element from error message
+        var i = this.editor.getLineNumber(lineHandle);
+        var lineWidget = $("<div class='editor_line_widget'>" + error.message + "</div>")[0];
+
+        // Add error line widget below current line, and save the widget so we
+        // can clear it later
+        this.editor.addLineClass(lineHandle, "background", "editor_line_syntaxerror");
+        this.editor.addLineClass(lineHandle, "text", "editor_text_syntaxerror");
+        this.lineWidgets[i] = this.editor.addLineWidget(lineHandle, lineWidget);
+        this.editor.markText({'line': i, 'ch': error.endPos}, {'line': i, 'ch': error.endPos+1}, {'className': 'editor_error_token'});
+    };
+
+    /**
+     * Clears the given line number of any errors that might
+     * be displayed at the moment
+     *
+     * @param {Number} line The line number which to clear from errors
+     */
+    IOEdit.prototype.clearLineErrors = function(line) {
+        // Remove error styling
+        this.editor.removeLineClass(line, "background", "editor_line_syntaxerror");
+        this.editor.removeLineClass(line, "text", "editor_text_syntaxerror");
+
+        // Delete line widget
+        if (this.lineWidgets.hasOwnProperty(line)) {
+            this.lineWidgets[line].clear();
+            delete this.lineWidgets[line];
         }
     };
 
     /**
      * Called when the script is modified.
      *
-     * @param  {Object} quantities All quantities in the current script
+     * @param {Object} quantities All quantities in the current script
      */
     IOEdit.prototype.onModifiedQuantity = function(quantities) {
-        this.synchronizeScriptArea();
+        // Do nothing for now, we do not respond to events of changed scripts
+        // here as the user is busy editing the script in this tab himself.
     };
 
     /**
      * Called when the controller has compiled a new script.
      *
-     * @param  {Object} quantities All quantities in the current script
+     * @param {Object} quantities All quantities in the current script
      */
     IOEdit.prototype.onNewScript = function(quantities) {
-        this.synchronizeScriptArea();
+        // Clear all displayed error messages
+        for (var elem in this.lineWidgets) {
+            delete this.lineWidgets[elem];
+        }
     };
 
     /**
@@ -115,20 +453,17 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
      * the editor.
      */
     IOEdit.prototype.toggleValues = function() {
-        this.showValues = !this.showValues;
+        var shouldShowValues = !this.showValues;
 
         // First save the current contents of the textarea to the script,
         // so that any changes that might have been made won't be lost
-        if (this.usingAdvancedEditor()) {
-            this.editor.save();
-        }
+        this.saveScript();  // This sets this.showValues to false!
+        this.showValues = shouldShowValues;
 
-        var source = $('#ioedit_scriptarea').val();
-        controller.setScriptFromSource(source);
-
-        if (this.showValues) {
+        if (shouldShowValues) {
             try {
-                this.synchronizeScriptArea({'includeValues': true});
+                var script = this.getCurrentScript({'includeValues': true});
+                this.setEditorContents(script);
                 $('#ioedit_showvalues').val('Hide values');
             } catch (e) {
                 // Catch any syntax error messages, or messages thrown when the script
@@ -136,7 +471,8 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
                 alert(e.message);
             }
         } else {
-            this.synchronizeScriptArea({'includeValues': false});
+            var script = this.getCurrentScript({'includeValues': false});
+            this.setEditorContents(script);
             $('#ioedit_showvalues').val('Show values');
         }
     };
@@ -169,6 +505,11 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
         // Add event handlers to all built-in functions for showing help
         advEditor.on("changes", this.setupFunctionClickEvents);
 
+        // Add event handler to detect when the cursor changes line number
+        advEditor.on("cursorActivity", (function(cm) {
+            this.onCursorActivity(cm);
+        }).bind(this));
+
         setTimeout((function() {
             this.cm.signal(advEditor, "changes");
         }).bind(this), 100);
@@ -192,6 +533,82 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
     };
 
     /**
+     * Called when the cursor position in the editor changes
+     *
+     * @param {CodeMirror} cm The CodeMirror instance that fired the event
+     */
+    IOEdit.prototype.onCursorActivity = function(cm) {
+        var newLineNum = cm.getCursor().line;
+        if (this.currentLine !== newLineNum && !this.editor.somethingSelected()) {
+            // Retrieve current cursor position to restore it later
+            var cursor = this.editor.getCursor();
+
+            // Check script syntax, let controller analyse, parse and optionally compile
+            // it and update editor with the parsed script
+            if (this.saveScript()) {
+                var script = this.getCurrentScript();
+                this.setEditorContents(script);
+
+                // Update todo list and report, and restore cursor position
+                this.updateTodoList();
+                this.editor.setCursor(cursor);
+
+                var quantityname = this.editor.getLine(cursor.line).split("=")[0];
+                this.updateReport(quantityname);
+            }
+
+            this.currentLine = newLineNum;
+        }
+    };
+
+    /**
+     * Updates the argument-of and -to lists based on the
+     * given quantity
+     *
+     * @param  {String} quantityname The name of the quantity
+     */
+    IOEdit.prototype.updateReport = function(quantityname) {
+        // Update argument-of of and argument-to lists
+        this.report.argListBuffer.empty();
+        this.report.argToListBuffer.empty();
+
+        var quantity;
+        try {
+            quantity = controller.getQuantity(quantityname);
+
+            // list parameters (type = dummy)
+            for (var p in quantity.parameters) {
+                this.report.addArg(quantity.parameters[p], 'dummy');
+            }
+
+            // list dependencies (type = regular)
+            for (var d in quantity.dependencies) {
+                this.report.addArg(quantity.dependencies[d], 'regular');
+            }
+
+            // list used standard functions (type = standard function)
+            for (var s in quantity.stdfuncs) {
+                this.report.addArg(quantity.stdfuncs[s], 'std func.');
+            }
+
+            // list reverse dependencies (type = regular)
+            for (var r in quantity.reverseDeps) {
+                this.report.addArgto(quantity.reverseDeps[r], 'regular');
+            }
+        } catch (e) {
+            quantityname = "";
+        }
+
+        $('.quantityname').text(quantityname);
+
+        this.report.argListBuffer.flip();
+        this.report.argToListBuffer.flip();
+
+        // Update position of dropdown sort input
+        $("#ioedit_qtysort").css({'margin-right': $("#ioedit_tododiv").outerWidth()+15});
+    };
+
+    /**
      * Toggles between the advanced and basic editor, based on the
      * value of the corresponding checkbox in the UI.
      *
@@ -199,7 +616,7 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
      */
     IOEdit.prototype.toggleCM = function(onload) {
         var use;
-        if (this.usingAdvancedEditor()) {
+        if (this.usingEditor()) {
             // Get width of current editor, set advanced editor
             // to be the same size
             var currentWidth = parseInt(localStorage.getItem("advancedEditorWidth"));
@@ -235,28 +652,15 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
      *
      * @return {Boolean} Whether the advanced editor is currently being used
      */
-    IOEdit.prototype.usingAdvancedEditor = function() {
-        return $('#ioedit_useCM').is(':checked');
-    };
-
-    /**
-     * Causes the advanced editor, when in use, to update it's contents
-     * based on the contents of the underlying textarea.
-     */
-    IOEdit.prototype.updateAdvancedEditor = function() {
-        if (this.usingAdvancedEditor()) {
-            this.editor.setValue($('#ioedit_scriptarea').val());
-            //this.editor.setSize(645, 400);
-            this.editor.refresh();
-            this.cm.signal(this.editor, "changes");
-        }
+    IOEdit.prototype.usingEditor = function() {
+        return true;
     };
 
     /**
      * Gives focus to the advanced editor when in use, causing it to redraw.
      */
-    IOEdit.prototype.focusAdvancedEditor = function() {
-        if (this.usingAdvancedEditor()) {
+    IOEdit.prototype.focusEditor = function() {
+        if (this.usingEditor()) {
             this.editor.focus();
         }
     };
@@ -271,7 +675,8 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
         $('#ioedit_showvalues').val('Show values');
         this.showValues = false;
         $('#ioedit_clearerrors').css({'visibility':'hidden'});
-        if (this.usingAdvancedEditor()) {
+
+        if (this.usingEditor()) {
             this.editor.save();
         }
 
@@ -293,7 +698,8 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
                 }
                 alert(e.message);
             } finally {
-                this.synchronizeScriptArea({'includeCheckedUnits':true});
+                var script = this.getCurrentScript({'includeCheckedUnits':true});
+                this.setEditorContents(script);
                 setTimeout(function() {$('#ioedit_checkUnitsMsg').fadeOut(400);}, 2500);
             }
         }).bind(this), 100);
@@ -304,21 +710,25 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
      */
     IOEdit.prototype.clearUnitErrors = function() {
         // First save the current contents so any changes won't be lost
-        if (this.usingAdvancedEditor()) {
+        if (this.usingEditor()) {
             this.editor.save();
         }
         var source = $('#ioedit_scriptarea').val();
         controller.setScriptFromSource(source);
 
-        this.synchronizeScriptArea({'includeCheckedUnits':false});
+        var script = this.getCurrentScript({'includeCheckedUnits':false});
+        this.setEditorContents(script);
         $('#ioedit_clearerrors').css({'visibility':'hidden'});
     };
 
     /**
-     * Retrieves the current script source from the controller and displays it in the edit area
-     * @param  {Boolean} includeUnits Whether to also display checked units
+     * Retrieves and returns the current script source from the controller
+     *
+     * @param {Object} options Object containing parameters which determine
+     * what is included in the returned source.
      */
-    IOEdit.prototype.synchronizeScriptArea = function(options) {
+    IOEdit.prototype.getCurrentScript = function(options) {
+        // Set defaults options object if none is given
         if (typeof options === 'undefined') {
             options = {};
         }
@@ -326,13 +736,12 @@ define(["cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL
         // Set options
         options.includeComments = true;
         options.includeUnits = true;
+        options.sort = this.sortby;
 
-        // Retrieve current contents of the script and update the textarea
+        // Retrieve and return current source of the script
         var script = controller.scriptToString(options);
-        $('#ioedit_scriptarea').val(script);
 
-        // Let the advanced editor update itself too, if in use
-        this.updateAdvancedEditor();
+        return script;
     };
 
     return IOEdit;
