@@ -299,17 +299,22 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
      * Updates the combobox for selecting a quantity to go to
      */
     IOEdit.prototype.updateQuantitySelector = function() {
-        var dataList = $("#ioedit_qtylist");
-        dataList.empty();
-
         var quantities = controller.getScript().quantities;
         var qties = _.sortBy(quantities, "name");
+        var qtynames = [];
         for (var elem in qties) {
             var qtyname = qties[elem].name;
-            var opt = $("<option></option>").attr("value", qtyname);
-            dataList.append(opt);
+            qtynames.push(qtyname);
         }
 
+        $("#ioedit_qtyselector").quickselect({
+            'minChars': 1,
+            'matchCase': false,
+            'data': qtynames,
+            'onItemSelect': function() {
+                view.tabs.ioedit.scrollToQuantity($("#ioedit_qtyselector").val());
+            }
+        });
     };
 
     /**
