@@ -12,7 +12,7 @@
         "Changelog": {
             "fName": "Changelog",
             "cat": "general",
-            "help": "<span class='versionspan'>v0.92</span><span class='versiondatespan'>(24-03-2015)</span><br /><ul><li>Added ability to upload scripts</li></ul><span class='versionspan'>v0.91</span><span class='versiondatespan'>(24-03-2015)</span><br /><ul><li>Added syntax highlighting to edit/run tab</li></ul><span class='versionspan'>v0.9</span><span class='versiondatespan'>(13-03-2015)</span><br /><ul><li>First public release</li></ul>",
+            "help": "<span class='versionspan'>v1.00</span><span class='versiondatespan'>(09-04-2015)</span><br /><ul><li>Proper syntax error handling in IO/edit</li><li>Added functionality to sort quantities in IO/edit</li><li>Added functionality to search for quantities in IO/edit</li><li>Better error messages in IO/edit</li><li>Improved error handling in Edit/run</li></ul><span class='versionspan'>v0.92</span><span class='versiondatespan'>(24-03-2015)</span><br /><ul><li>Added ability to upload scripts</li></ul><span class='versionspan'>v0.91</span><span class='versiondatespan'>(24-03-2015)</span><br /><ul><li>Added syntax highlighting to edit/run tab</li></ul><span class='versionspan'>v0.9</span><span class='versiondatespan'>(13-03-2015)</span><br /><ul><li>First public release</li></ul>",
             "example": "",
             "details": "",
             "seeAlso": "About OpenACCEL",
