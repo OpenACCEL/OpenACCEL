@@ -312,9 +312,11 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
         }
 
         $("#ioedit_qtyselector").quickselect({
-            'minChars': 1,
+            'minChars': 0,
             'matchCase': false,
+            'matchMethod': 'startsWith',
             'data': qtynames,
+            'autoSelectFirst': false,
             'onItemSelect': function() {
                 var jumpto = $("#ioedit_qtyselector").val();
                 if (jumpto != view.tabs.ioedit.lastJumpedToQuantity) {
