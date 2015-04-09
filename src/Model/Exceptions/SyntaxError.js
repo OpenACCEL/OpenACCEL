@@ -82,6 +82,30 @@ define([], /**@lends Model.Error*/ function() {
         }
     }
 
+    /**
+     * Returns a human-readable message describing the SyntaxError.
+     *
+     * @return {String} A human-readable error message about this error.
+     */
+    SyntaxError.prototype.toReadable = function() {
+        var message = "";
+
+        if (this.type == "parsing") {
+            message += "Parsing error: expected ";
+            for (var elem in this.expected) {
+                message += this.expected[elem];
+                if (elem < this.expected.length-1) {
+                    message += " or ";
+                }
+            }
+            message += ", found: '" + this.found + "'";
+        } else {
+            message = this.message;
+        }
+
+        return message;
+    };
+
     // Exports are needed, such that other modules may invoke methods from this module file.
     return SyntaxError;
 });

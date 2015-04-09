@@ -437,7 +437,7 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
     IOEdit.prototype.setLineError = function(lineHandle, error) {
         // Construct line widget DOM element from error message
         var i = this.editor.getLineNumber(lineHandle);
-        var lineWidget = $("<div class='editor_line_widget'>" + error.message + "</div>")[0];
+        var lineWidget = $("<div class='editor_line_widget'>" + error.toReadable() + "</div>")[0];
 
         // Add error line widget below current line, and save the widget so we
         // can clear it later
