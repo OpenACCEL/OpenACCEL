@@ -2,51 +2,51 @@ showTangents=check(false)
 showTangentPlane=check(false)
 showNormal=check(false)
 p=descartes([gr])
-    //  plot the entire scene 
+    //  plot the entire scene
 r=150
-    //  the distance between the eye point and the centre of the scene 
+    //  the distance between the eye point and the centre of the scene
 yaw=0.94
-    //  control the yaw angle of the camera 
+    //  control the yaw angle of the camera
 roll=1.01
-    //  control the roll angle of the camera 
+    //  control the roll angle of the camera
 pitch=-1.04
-    //  control the pitch angle of the camera 
+    //  control the pitch angle of the camera
 camera=[yaw:yaw,roll:roll,pitch:pitch,r:r,f:f,look:'orbit']
-    //  a camera under direct user control by means of the pitch and yaw sliders 
+    //  a camera under direct user control by means of the pitch and yaw sliders
 f=2*r
     //  we choose to have the focal length proportional to the
     //  distance between the eye and the centre of the scene. In
-    //  this way, we control the perspective distortion without affecting the size that much. 
+    //  this way, we control the perspective distortion without affecting the size that much.
 amp=slider(-2.5,-20.0,20.0)
-    //  the visualized function surface is a circular wave. This slider controls its amplitude. 
+    //  the visualized function surface is a circular wave. This slider controls its amplitude.
 n=30
     //  the resultion, that is: the number of squares in each direction of the
-    //  function surface (the 'tablecloth') 
+    //  function surface (the 'tablecloth')
 nRange=vSeq(0,n)
-    //  we re-use the sequence 0,1,2,...,n-1 
+    //  we re-use the sequence 0,1,2,...,n-1
 nMRange=vSeq(0,n-1)
     // we also re-use the sequence 0,1,2,3,...,n-2:
     // realize that the number of faces is (n-1)*(n-1) instead of n*n
     // for n*n locations
 scale=50/n
     //  used to ensure that the dimensions of the tablecloth in x- and z directions are
-    //  not affected by the number of squares (=n) 
+    //  not affected by the number of squares (=n)
 wavelength=slider(5.0,2.0,20)
-    //  the visualized function surface is a circular wave. This slider controls its wavelength. 
+    //  the visualized function surface is a circular wave. This slider controls its wavelength.
 k=max(1,min(n-2,round(x0*n/50)))
     // make sure that also the index values k-1 and k+1 are defined
 x0=slider(25,0,50)
-    //  we plot an iso-x and iso-y curve on top of the surface. This determines the iso-x value. 
+    //  we plot an iso-x and iso-y curve on top of the surface. This determines the iso-x value.
 l=max(1,min(n-2,round(y0*n/50)))
     // make sure that also the index values l-1 and l+1 are defined
 y0=slider(25,0,50)
-    //  we plot an iso-x and iso-y curve on top of the surface. This determines the iso-y value. 
+    //  we plot an iso-x and iso-y curve on top of the surface. This determines the iso-y value.
 xPlsLoc=locationsData[l+n*(k+1)]
 xMinLoc=locationsData[l+n*(k-1)]
 yPlsLoc=locationsData[l+n*k+1]
 yMinLoc=locationsData[l+n*k-1]
     // these are the four locations on the surface, surrounding
-    // the location pointed at by x0,y0    
+    // the location pointed at by x0,y0
 isoLoc=locationsData[l+n*k]
     // this is the location of the intersection of the iso-x and iso-y curves
     // to be called the 'iso-location'
@@ -54,12 +54,12 @@ tgLength=6
     // the length of the tangent segments
 xTgVector=tgLength*vvNormalize(xPlsLoc-xMinLoc)
 yTgVector=tgLength*vvNormalize(yPlsLoc-yMinLoc)
-    // two vectors, pointing from the iso-location 
+    // two vectors, pointing from the iso-location
     // in each of the two tangent directions
 normVector=-tgLength*vvNormalize(crossProd(xTgVector,yTgVector))
     // the normalVector
 crossProd(a,b)=[x:(a.y*b.z-a.z*b.y),y:(a.z*b.x-a.x*b.z),z:(a.x*b.y-a.y*b.x)]
-    // the definition of the cross product is not an ACCEL 
+    // the definition of the cross product is not an ACCEL
     // built-in function, so we have to define it ourselves
 vvLength(a)=sqrt(a.x*a.x+a.y*a.y+a.z*a.z)
     // ACCEL has built in normalization functions, but
@@ -93,28 +93,28 @@ locationsData=#(i,nRange,#(j,nRange,[x:scale*(i-n/2),z:g(scale*(i-n/2),scale*(j-
     //  of all of the points on the tablecloth. The z-value is the function we calculate;
     //  this is the ACCEL user defined function g(x,y), appropriately scaled.
 g(x,y)=amp*cos((sqrt(x*x+y*y)/wavelength))
-    //  the user defined function to calculate the function surface as a function of x and y 
+    //  the user defined function to calculate the function surface as a function of x and y
 lights=[l_x:-0.5,l_y:-0.5,l_z:-1]
-    //  a simple light configuration with a single directional light shining roughly in the z-direction, 
+    //  a simple light configuration with a single directional light shining roughly in the z-direction,
 gr=[background:[fcol_r:0,fcol_g:50,fcol_b:50],lights:lights,camera:camera,locations:locations,faces:faces,edges:edges]
-    //  this is the entire scene 
+    //  this is the entire scene
 locations=[data:locationsDataTg,rad:1]
-    //  the array containing all the location data 
+    //  the array containing all the location data
 faces=[data:facesData,fcol_r:400,fcol_g:400,fcol_b:400,fcol_a:1.0]
     //  the array containing all faces data. That is: the diffuse reflection color and the data,
     //  being the indices in the locationData array of all the
-    //  corner points of each of the squares in the tablecloth. 
+    //  corner points of each of the squares in the tablecloth.
 facesData=#(j,nMRange,#(i,nMRange,[loop:[i+n*j,i+n*j+1,i+n*(j+1)+1,i+n*(j+1)]],vAppend),vExtend)
     //  depending on the setting of accel, this executes a fragment of native javascript
     //  or a set of two nested quantified expressions to find the indices in the locationsData array of all
-    //  the corner points of all the square faces forming the tablecloth. 
-edge1Data=#(i,nRange,if(i<n-1,[col_r:255,col_g:0,col_b:0,b:i+k*n,e:i+k*n+1],[]),vAppend) 
+    //  the corner points of all the square faces forming the tablecloth.
+edge1Data=#(i,nRange,if(i<n-1,[col_r:255,col_g:0,col_b:0,b:i+k*n,e:i+k*n+1],[]),vAppend)
 edge2Data=#(i,nRange,if(i<n-1,[col_r:0,col_g:0,col_b:255,b:l+i*n,e:l+i*n+n],[]),vAppend)
     //  Apart from the indices in locationsData for the corners of all the squares,
     //  we also need to have the indices of the two special curves we want to show.
-    //  In the quantities edge1Data and edge2Data we also set the color and thickness properties. 
+    //  In the quantities edge1Data and edge2Data we also set the color and thickness properties.
 edges=[thickness:1,data:edgeData]
-    //  all edge information from the scene 
+    //  all edge information from the scene
 edgeData=vExtend(vExtend(edge1Data,edge2Data),tgData)
     //  the edge data (essentially the indices in the locationsData array) of the
     //  collection of faces and of the two special curves is aggregated by means

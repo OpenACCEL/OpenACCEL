@@ -152,9 +152,11 @@ suite("DependencyPass", function() {
                 definition: 'b + c',
                 source: 'a = b + c',
                 dependencies: ['b', 'c'],
+                nonhistDeps: ['b', 'c'],
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: ['j'],
+                reverseNonhistDeps: ['j'],
                 stdfuncs: []
             },
             b: {
@@ -164,9 +166,11 @@ suite("DependencyPass", function() {
                 definition: '3',
                 source: 'b = 3',
                 dependencies: [],
+                nonhistDeps: [],
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: ['a', 'f', 'g', 'h', 'i'],
+                reverseNonhistDeps: ['a', 'f', 'g', 'h', 'i'],
                 stdfuncs: []
             },
             c: {
@@ -176,9 +180,11 @@ suite("DependencyPass", function() {
                 definition: '5',
                 source: 'c = 5',
                 dependencies: [],
+                nonhistDeps: [],
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: ['a', 'g', 'h'],
+                reverseNonhistDeps: ['a', 'g', 'h'],
                 stdfuncs: []
             },
             f: {
@@ -188,9 +194,11 @@ suite("DependencyPass", function() {
                 definition: 'b - x',
                 source: 'f(x) = b - x',
                 dependencies: ['b'],
+                nonhistDeps: ['b'],
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: ['j'],
+                reverseNonhistDeps: ['j'],
                 stdfuncs: []
             },
             g: {
@@ -198,11 +206,13 @@ suite("DependencyPass", function() {
                 LHS: 'g',
                 parameters: [],
                 dependencies: ['b', 'c'],
+                nonhistDeps: ['b', 'c'],
                 definition: '[2, b, x:c]',
                 source: 'g = [2, b, x:c]',
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: [],
+                reverseNonhistDeps: [],
                 stdfuncs: []
             },
             h: {
@@ -210,11 +220,13 @@ suite("DependencyPass", function() {
                 LHS: 'h',
                 parameters: [],
                 dependencies: ['b', 'c'],
+                nonhistDeps: ['b', 'c'],
                 definition: '[b, x:[1, y:c, b], 3]',
                 source: 'h = [b, x:[1, y:c, b], 3]',
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: [],
+                reverseNonhistDeps: [],
                 stdfuncs: []
             },
             i: {
@@ -222,11 +234,13 @@ suite("DependencyPass", function() {
                 LHS: 'i',
                 parameters: [],
                 dependencies: ['b'],
+                nonhistDeps: ['b'],
                 definition: 'b * b',
                 source: 'i = b * b',
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: [],
+                reverseNonhistDeps: [],
                 stdfuncs: []
             },
             j: {
@@ -234,11 +248,13 @@ suite("DependencyPass", function() {
                 LHS: 'j',
                 parameters: [],
                 dependencies: ['f', 'a'],
+                nonhistDeps: ['f', 'a'],
                 definition: 'f(a) + sin(1)',
                 source: 'j = f(a) + sin(1)',
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: [],
+                reverseNonhistDeps: [],
                 stdfuncs: ['sin']
             },
             k: {
@@ -246,11 +262,13 @@ suite("DependencyPass", function() {
                 LHS: 'k',
                 parameters: [],
                 dependencies: [],
+                nonhistDeps: [],
                 definition: '#(i, [1,2,3], i * i, add)',
                 source: 'k = #(i, [1,2,3], i * i, add)',
                 todo: false,
                 isTimeDependent: false,
                 reverseDeps: [],
+                reverseNonhistDeps: [],
                 stdfuncs: ['add']
             }
 
@@ -273,7 +291,12 @@ suite("DependencyPass", function() {
                 quantity = dependencyPass.analyse(line, quantity, result);
             });
 
-            assert.deepEqual(result, endReport);
+            // Compare every element separately to get better error messages when the test fails
+            for (elem in result) {
+                for (elem2 in result[elem]) {
+                    assert.deepEqual(result[elem][elem2], endReport[elem][elem2]);
+                }
+            }
         });
     });
 });

@@ -59,7 +59,7 @@ define(['Model/Analyser/Passes/AnalyserPass', 'Model/Quantity', 'Model/Library']
             // variable can occur multiple times in the rhs of a definition. Check this
             // as well.
             if (quantity.parameters.indexOf(d) === -1 &&
-                quantity.dependencies.indexOf(d) === -1 &&
+                quantity.nonhistDeps.indexOf(d) === -1 &&
                 this.reservedwords.indexOf(d) === -1) {
 
                 quantity.nonhistDeps.push(d);
