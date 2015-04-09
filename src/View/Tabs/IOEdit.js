@@ -350,7 +350,9 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
 
         // Highlight line and place cursor in it
         this.updateReport(quantity.name);
-        this.editor.addLineClass(linenum, "background", "editor_line_highlight");
+        if (!this.lineWidgets.hasOwnProperty(linenum)) {
+            this.editor.addLineClass(linenum, "background", "editor_line_highlight");
+        }
     };
 
     /**
@@ -579,6 +581,9 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
     IOEdit.prototype.onCursorActivity = function(cm) {
         var newLineNum = cm.getCursor().line;
         if (this.currentLine !== newLineNum && !this.editor.somethingSelected()) {
+            // Clear highlighting of any quantities
+            $(".CodeMirror-linebackground").removeClass("editor_line_highlight");
+
             // Retrieve current cursor position to restore it later
             var cursor = this.editor.getCursor();
 
@@ -591,15 +596,13 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
                 // Update todo list and report, and restore cursor position
                 this.updateTodoList();
                 this.editor.setCursor(cursor);
-
-                var quantityname = this.editor.getLine(cursor.line).split("=")[0];
-                this.updateReport(quantityname);
             }
+
+            var quantityname = this.editor.getLine(cursor.line).split("=")[0];
+            this.updateReport(quantityname);
 
             this.currentLine = newLineNum;
         }
-
-        console.log("Removed");
     };
 
     /**
