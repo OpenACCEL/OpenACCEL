@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(Input, HTMLBuffer, Script, CodeMirror) {
+define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/DebugConsole", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(Input, HTMLBuffer, Script, React, DebugConsole, CodeMirror) {
     /**
      * @class
      * @classdesc The EditRun tab.
@@ -232,6 +232,14 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
          */
         this.fastmode = true;
 
+        /**
+         * The debugconsole of this tab. This is a ReactJS component
+         *
+         * @type {DebugConsole}
+         */
+        this.debugconsole = React.render(<DebugConsole />, document.getElementById('debugconsole_container'));
+        this.showdebug = true;
+
         this.setupCM();
 
         this.registerCallbacks();
@@ -365,6 +373,18 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "cm/lib/codemirror", "c
     EditRun.prototype.onNewScript = function(quantities) {
         this.resetEditRun();
         this.synchronizeScriptList(quantities);
+    };
+
+    EditRun.prototype.toggleDebugConsole = function() {
+        $("#debugconsole_container").toggle();
+
+        if (this.showdebug === true) {
+            $("#er_debugtoggle").text("Show");
+        } else {
+            $("#er_debugtoggle").text("Hide");
+        }
+
+        this.showdebug = !this.showdebug;
     };
 
     /**

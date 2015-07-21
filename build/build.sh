@@ -122,6 +122,7 @@ deploy() {
     cp lang/ACCEL_help.json                                                              bin/scripts/lang/ACCEL_help.json
 
     # Transform jsx files to js
+    echo "Compiling JSX files..."
     jsx -x js src/ bin/scripts/
 
     # Deploy for server: replace fileloader with server one

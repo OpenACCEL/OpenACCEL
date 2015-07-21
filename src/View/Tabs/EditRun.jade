@@ -69,4 +69,8 @@
                 .group
                     #editrun_result.divtable
 
-    div#debugconsole
+    div
+        .label
+            span Debug console
+            span#er_debugtoggle(onclick='view.tabs.editrun.toggleDebugConsole();') Hide
+        div#debugconsole_container

@@ -24,10 +24,9 @@ define(["../Controller/AbstractView",
         "../View/Tabs/Simulation",
         "../View/Tabs/Network",
         "../View/Graphics/CanvasCreator",
-        "react-addons",
-        "../View/DebugConsole"],
+        ],
         /**@lends View*/
-        function(AbstractView, Tooltip, IntroTab, EditRun, HelpDemo, Analysis, IOEdit, Optimisation, Simulation, Network, CanvasCreator, React, DebugConsole, deparam) {
+        function(AbstractView, Tooltip, IntroTab, EditRun, HelpDemo, Analysis, IOEdit, Optimisation, Simulation, Network, CanvasCreator, deparam) {
     /**
      * @class
      * @classdesc The webview is the view class for webbrowsers.
@@ -170,10 +169,6 @@ define(["../Controller/AbstractView",
      * @param  {Boolean} initial Whether this event was fired onpageload
      */
     WebView.prototype.onHashChange = function(e, initial) {
-        if (initial === true) {
-            React.render(<DebugConsole />, document.getElementById('debugconsole'));
-        }
-
         var newState = $.deparam(e.fragment, true);
 
         // Default

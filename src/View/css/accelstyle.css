@@ -375,6 +375,72 @@ body div {
 	min-height: 50px;
 }
 
+#er_debugtoggle {
+	float: right;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+#er_debugtoggle:hover {
+	text-decoration: underline;
+}
+
+#debugconsole_container {
+
+}
+
+#debugconsole {
+	width: 100%;
+	margin: auto;
+	margin-top: 10px;
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding: 0px;
+}
+
+.dc_headerrow {
+	background-color: #7E297E;
+	border-bottom: 1px solid #39134D;
+	padding: 5px;
+	text-align: left;
+}
+
+.dc_headerrow th {
+	font-weight: normal;
+	padding: 4px 4px;
+	font-size: 13px;
+}
+
+.dc_contentsrow {
+	background-color: #fdfdfd;
+	padding: 3px;
+	text-align: left;
+	color: #333;
+}
+
+.dc_contentsrow td {
+	font-weight: normal;
+	padding: 4px 4px;
+	font-size: 13px;
+}
+
+#dc_th_messages {
+	width: 80%;
+}
+
+#dc_th_watchlist {
+	width: 20%;
+}
+
+#dc_td_messages {
+	width: 80%;
+	border-right: 1px solid #555;
+}
+
+#dc_td_watchlist {
+	width: 20%;
+}
+
 .inline {
 	display: inline-block;
 	vertical-align: top;
@@ -664,7 +730,7 @@ a.toggleswitchoption_current {
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	border-top: 1px #331144 solid;
-	background: #FFFFFF;
+	background: #fdfdfd;
 	color: black;
 }
 
@@ -711,7 +777,7 @@ a.toggleswitchoption_current {
 	border-radius: 4px;
 	border: 1px solid black;
 	border-top: 1px #331144 solid;
-	background: #FFFFFF;
+	background: #fdfdfd !important;
 	vertical-align: middle;
 	margin-right: 5px;
 	height: auto !important;
