@@ -121,6 +121,9 @@ deploy() {
     cp lang/ACCEL_functions.json                                                         bin/scripts/lang/ACCEL_functions.json
     cp lang/ACCEL_help.json                                                              bin/scripts/lang/ACCEL_help.json
 
+    # Transform jsx files to js
+    jsx -x js src/ bin/scripts/
+
     # Deploy for server: replace fileloader with server one
     case "$1" in
         --server) cp src/Model/ServerFileLoader.js bin/scripts/Model/FileLoader.js; echo "Deployed for server" ;;

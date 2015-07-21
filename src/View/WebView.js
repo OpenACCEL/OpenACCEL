@@ -1,6 +1,17 @@
-require.config({
-    baseUrl: "scripts"
-});
+/* Browser vs. Node ***********************************************/
+inBrowser = typeof window !== 'undefined';
+inNode = !inBrowser;
+
+if (inNode) {
+    require = require('requirejs');
+    globalScope = process;
+} else {
+    globalScope = window;
+    require.config({
+        baseUrl: "scripts"
+    });
+}
+/*******************************************************************/
 
 define(["../Controller/AbstractView",
         "../View/Tooltip",
@@ -12,9 +23,11 @@ define(["../Controller/AbstractView",
         "../View/Tabs/Optimisation",
         "../View/Tabs/Simulation",
         "../View/Tabs/Network",
-        "../View/Graphics/CanvasCreator"],
+        "../View/Graphics/CanvasCreator",
+        "react-addons",
+        "../View/DebugConsole"],
         /**@lends View*/
-        function(AbstractView, Tooltip, IntroTab, EditRun, HelpDemo, Analysis, IOEdit, Optimisation, Simulation, Network, CanvasCreator, deparam) {
+        function(AbstractView, Tooltip, IntroTab, EditRun, HelpDemo, Analysis, IOEdit, Optimisation, Simulation, Network, CanvasCreator, React, DebugConsole, deparam) {
     /**
      * @class
      * @classdesc The webview is the view class for webbrowsers.
@@ -157,6 +170,10 @@ define(["../Controller/AbstractView",
      * @param  {Boolean} initial Whether this event was fired onpageload
      */
     WebView.prototype.onHashChange = function(e, initial) {
+        if (initial === true) {
+            React.render(<DebugConsole />, document.getElementById('debugconsole'));
+        }
+
         var newState = $.deparam(e.fragment, true);
 
         // Default
