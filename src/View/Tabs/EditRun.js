@@ -237,7 +237,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/D
          *
          * @type {DebugConsole}
          */
-        this.debugconsole = React.render(<DebugConsole />, document.getElementById('debugconsole_container'));
+        this.debugconsole = null;
         this.showdebug = true;
 
         this.setupCM();
@@ -293,6 +293,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/D
      * Event that gets called when this tab gets opened.
      */
     EditRun.prototype.onEnterTab = function(newState) {
+        if (this.debugconsole === null) {
+            this.debugconsole = React.render(<DebugConsole controller={controller} />, document.getElementById('debugconsole_container'));
+        }
+
         if (!this.errorMarker) {
             this.clearErrors();
         }

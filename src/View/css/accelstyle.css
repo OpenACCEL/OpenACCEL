@@ -445,14 +445,26 @@ body div {
 }
 
 .dc_headerrow {
-	background-color: #7E297E;
+	background-color: #8A358A;
 	border-bottom: 1px solid #39134D;
 	padding: 5px;
 	text-align: left;
 }
 
+.wl_quantity_none {
+	color: #aaa;
+}
+
 #dl_th_time {
 	width: 10%;
+}
+
+#wl_th_quantity {
+	width: 20%;
+}
+
+#wl_th_value {
+	width: 80%;
 }
 
 #wc_th {
@@ -476,7 +488,7 @@ body div {
 
 .dc_headerrow th {
 	font-weight: bold;
-	padding: 3px 3px;
+	padding: 2px 2px;
 	font-size: 12px;
 }
 
@@ -493,23 +505,30 @@ body div {
 	font-size: 13px;
 }
 
+.wl_td_name {
+	font-weight: bold !important;
+	padding-right: 4px;
+}
+
 #dc_th_messages {
-	width: 80%;
-	line-height: 20px;
+	width: 70%;
+	line-height: 18px;
 }
 
 #dc_th_watchlist {
-	width: 20%;
+	width: 30%;
+	line-height: 18px;
+	vertical-align: middle;
 }
 
 #dc_td_messages {
-	width: 75%;
+	width: 70%;
 	border-right: 1px solid #555;
 	padding: 0px;
 }
 
 #dc_td_watchlist {
-	width: 25%;
+	width: 30%;
 	padding: 0px;
 	vertical-align: top;
 }

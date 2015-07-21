@@ -448,6 +448,8 @@ define(["Model/Script",
                 this.stop();
             }
 
+            $(document).trigger("ScriptStepEvent");
+
             /*if (inBrowser && this.curMeasurement < this.numMeasurements) {
                 posttime = performance.now();
                 this.measurements[this.curMeasurement] = posttime-pretime;
