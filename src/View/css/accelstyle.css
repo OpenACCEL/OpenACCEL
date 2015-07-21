@@ -389,6 +389,28 @@ body div {
 
 }
 
+#dc_clearmessages {
+	float: right;
+	margin-right: 7px;
+	vertical-align: middle;
+}
+
+.smallbtn {
+	background-color: rgba(210, 167, 231, 0.9);
+	border: 1px solid #4A154A;
+	border-radius: 5px;
+	padding: 1px 2px;
+	font-size: 11px;
+	color: black;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.smallbtn:hover {
+	background-color: rgba(215, 203, 221, 0.9);
+	border: 1px solid black;
+}
+
 #debugconsole {
 	width: 100%;
 	margin: auto;
@@ -396,6 +418,30 @@ body div {
 	border: 1px solid black;
 	border-collapse: collapse;
 	padding: 0px;
+	color: #f7f7f7;
+}
+
+#debuglog, #watchlist {
+	width: 100%;
+	margin: auto;
+	margin-top: 0px;
+	border: none;
+	border-collapse: collapse;
+	padding: 0px;
+	color: #f7f7f7;
+}
+
+.dl_headerrow, .wl_headerrow {
+	background-color: #A151A1;
+	border-bottom: 1px solid #39134D;
+	padding: 4px;
+	text-align: left;
+}
+
+.dl_headerrow th, .wl_headerrow th {
+	font-weight: bold;
+	padding: 3px 3px;
+	font-size: 12px;
 }
 
 .dc_headerrow {
@@ -405,10 +451,33 @@ body div {
 	text-align: left;
 }
 
+#dl_th_time {
+	width: 10%;
+}
+
+#wc_th {
+	width: 100%;
+}
+
+#dl_th_message {
+	width: 90%;
+}
+
+.dl_contentsrow, .wl_contentsrow {
+	background-color: #fdfdfd;
+	padding: 2px;
+	text-align: left;
+	color: #333;
+}
+
+.dl_contentsrow td {
+	padding: 2px 2px;
+}
+
 .dc_headerrow th {
-	font-weight: normal;
-	padding: 4px 4px;
-	font-size: 13px;
+	font-weight: bold;
+	padding: 3px 3px;
+	font-size: 12px;
 }
 
 .dc_contentsrow {
@@ -426,6 +495,7 @@ body div {
 
 #dc_th_messages {
 	width: 80%;
+	line-height: 20px;
 }
 
 #dc_th_watchlist {
@@ -433,12 +503,15 @@ body div {
 }
 
 #dc_td_messages {
-	width: 80%;
+	width: 75%;
 	border-right: 1px solid #555;
+	padding: 0px;
 }
 
 #dc_td_watchlist {
-	width: 20%;
+	width: 25%;
+	padding: 0px;
+	vertical-align: top;
 }
 
 .inline {
