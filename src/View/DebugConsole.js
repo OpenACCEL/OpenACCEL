@@ -12,7 +12,7 @@ define(["react-addons", "Model/DebugMessage"], /**@lends View*/ function(React, 
             // Display initial welcome message
             var initialMessage = new DebugMessage("Welcome to OpenACCEL!", "NOTICE");
             return {
-                messages: [initialMessage]
+                messages: [initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage, initialMessage]
             }
         },
 
@@ -27,22 +27,34 @@ define(["react-addons", "Model/DebugMessage"], /**@lends View*/ function(React, 
         render: function() {
             return (
                 <table id="debuglog">
-                    <tbody>
+                <thead>
                     <tr className="dl_headerrow">
                         <th id="dl_th_time">Time</th>
                         <th id="dl_th_message">Message</th>
                     </tr>
-                    {
-                        this.state.messages.map((function(m, i) {
-                            return (
-                                <tr className="dl_contentsrow" key={Math.random()}>
-                                    <td className="dl_td_time">{m.getTime()}</td>
-                                    <td className="dl_td_message">{m.message}</td>
-                                </tr>
-                            )
-                        }).bind(this))
-                    }
-                    </tbody>
+                </thead>
+                <tbody>
+                    <tr>
+                    <td colSpan="2">
+                        <div className="scroll" style={{maxHeight: '120px'}}>
+                        <table id="dl_innertable">
+                        <tbody>
+                        {
+                            this.state.messages.map((function(m, i) {
+                                return (
+                                    <tr className="dl_contentsrow" key={Math.random()}>
+                                        <td className="dl_td_time">{m.getTime()}</td>
+                                        <td className="dl_td_message">{m.message}</td>
+                                    </tr>
+                                )
+                            }).bind(this))
+                        }
+                        </tbody>
+                        </table>
+                        </div>
+                    </td>
+                    </tr>
+                </tbody>
                 </table>
             )
         }

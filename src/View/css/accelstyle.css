@@ -431,6 +431,16 @@ body div {
 	color: #f7f7f7;
 }
 
+#dl_innertable {
+	width: 100%;
+	margin: 0px;
+	border: none;
+	border-collapse: collapse;
+	padding: 0px;
+	color: #f7f7f7;
+	text-align: left;
+}
+
 .dl_headerrow, .wl_headerrow {
 	background-color: #A151A1;
 	border-bottom: 1px solid #39134D;
@@ -455,8 +465,12 @@ body div {
 	color: #aaa;
 }
 
-#dl_th_time {
+#dl_th_time, .dl_td_time {
 	width: 65px;
+}
+
+.dl_td_time, .dl_td_message {
+	padding: 1px 3px !important;
 }
 
 #wl_th_quantity {
@@ -465,6 +479,10 @@ body div {
 
 #wl_th_value {
 	width: 80%;
+}
+
+.scroll {
+	overflow-y: auto;
 }
 
 #wc_th {
@@ -508,7 +526,7 @@ body div {
 
 .dc_contentsrow td {
 	font-weight: normal;
-	padding: 4px 4px;
+	padding: 0px;
 	font-size: 13px;
 }
 
