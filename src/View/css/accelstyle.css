@@ -456,7 +456,7 @@ body div {
 }
 
 #dl_th_time {
-	width: 10%;
+	width: 65px;
 }
 
 #wl_th_quantity {
@@ -472,7 +472,14 @@ body div {
 }
 
 #dl_th_message {
-	width: 90%;
+
+}
+
+#dc_td_resize, #dc_th_resize {
+	cursor: ew-resize;
+	padding: 1px;
+	width: 0px;
+	background-color: #555;
 }
 
 .dl_contentsrow, .wl_contentsrow {
@@ -516,19 +523,16 @@ body div {
 }
 
 #dc_th_watchlist {
-	width: 30%;
 	line-height: 18px;
 	vertical-align: middle;
 }
 
 #dc_td_messages {
-	width: 70%;
 	border-right: 1px solid #555;
 	padding: 0px;
 }
 
 #dc_td_watchlist {
-	width: 30%;
 	padding: 0px;
 	vertical-align: top;
 }
