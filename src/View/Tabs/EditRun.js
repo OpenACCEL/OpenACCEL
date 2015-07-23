@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/DebugConsole", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(Input, HTMLBuffer, Script, React, DebugConsole, CodeMirror) {
+define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/React/DebugConsole", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(Input, HTMLBuffer, Script, React, DebugConsole, CodeMirror) {
     /**
      * @class
      * @classdesc The EditRun tab.
