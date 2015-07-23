@@ -35,6 +35,15 @@ define(["moment"], /**@lends View*/ function(moment) {
          * @type {String}
          */
         this.type = type;
+
+        /**
+         * Optional custom styling of the debug message when rendered in the debug log.
+         * Will be applied to the span containing the debug message text. Use camelCased
+         * property names as keys, string values.
+         *
+         * @type {Object}
+         */
+        this.style = {};
     }
 
     /**

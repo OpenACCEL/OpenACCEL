@@ -462,7 +462,8 @@ body div {
 }
 
 .wl_quantity_none {
-	color: #aaa;
+	color: #888;
+	padding: 1px 3px !important;
 }
 
 #dl_th_time, .dl_td_time {
@@ -495,7 +496,7 @@ body div {
 
 #dc_td_resize, #dc_th_resize {
 	cursor: ew-resize;
-	padding: 1px;
+	padding: 0px;
 	width: 0px;
 	background-color: #555;
 }
@@ -532,22 +533,31 @@ body div {
 
 .wl_td_name {
 	font-weight: bold !important;
-	padding-right: 4px;
+	padding: 1px 8px 1px 3px !important;
+	width: 20%;
+	max-width: 150px;
+	word-wrap: break-all;
+}
+
+.wl_td_value {
+	word-wrap: break-all;
+	vertical-align: top;
 }
 
 #dc_th_messages {
 	width: 70%;
-	line-height: 18px;
+	line-height: 22px;
 }
 
 #dc_th_watchlist {
-	line-height: 18px;
+	line-height: 22px;
 	vertical-align: middle;
 }
 
 #dc_td_messages {
 	border-right: 1px solid #555;
 	padding: 0px;
+	vertical-align: top;
 }
 
 #dc_td_watchlist {
