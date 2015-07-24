@@ -508,6 +508,10 @@ body div {
 	color: #333;
 }
 
+.wl_contentsrow:hover img.watchdelimg {
+	display: inline-block;
+}
+
 .dl_contentsrow td {
 	padding: 2px 2px;
 }
@@ -627,6 +631,19 @@ a.toggleswitchoption {
 
 a.toggleswitchoption:hover {
 	background: linear-gradient(#662266, #993399);
+}
+
+.watchdelimg {
+	float: right;
+	vertical-align: middle;
+	margin-right: 2px;
+	display: none;
+	opacity: 0.5;
+	cursor: pointer;
+}
+
+.watchdelimg:hover {
+	opacity: 1.0;
 }
 
 a.toggleswitchoption_current {

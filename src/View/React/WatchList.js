@@ -51,6 +51,23 @@ define(["react-addons"], /**@lends View*/ function(React) {
         },
 
         /**
+         * Deletes the quantity that was clicked on from the watchlist.
+         *
+         * @param  {Event} e The event
+         */
+        deleteQuantity: function(e) {
+            var delqty = $(e.target).data("delqty");
+
+            var newQuantities = _.filter(this.state.quantities, function(q, i) {
+                return (q.name !== delqty)
+            }, this);
+
+            this.setState({quantities: newQuantities});
+
+            this.updateColumnWidths();
+        },
+
+        /**
          * Adds the given quantity to the watchlist
          */
         addQuantity: function(qty) {
@@ -93,10 +110,14 @@ define(["react-addons"], /**@lends View*/ function(React) {
                     )
                 } else {
                     return this.state.quantities.map((function(q, i) {
+                        var imgID = "watch_del_" + q.name;
                         return (
                             <tr className="wl_contentsrow" key={q.name}>
                                 <td className="wl_td_name">{q.name}:</td>
-                                <td className="wl_td_value">{q.value}</td>
+                                <td className="wl_td_value">
+                                    <span style={{verticalAlign: 'middle'}}>{JSON.stringify(q.value)}</span>
+                                    <img title="Remove" width="16" height="16" src="img/delete.png" className="watchdelimg" id={imgID} data-delqty={q.name} onClick={this.deleteQuantity} />
+                                </td>
                             </tr>
                         )
                     }).bind(this))
