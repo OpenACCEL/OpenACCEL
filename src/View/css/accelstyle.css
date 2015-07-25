@@ -375,7 +375,7 @@ body div {
 	min-height: 50px;
 }
 
-#er_debugtoggle {
+#er_debugtoggle, #er_debugtoggle_io {
 	float: right;
 	margin-right: 5px;
 	cursor: pointer;
