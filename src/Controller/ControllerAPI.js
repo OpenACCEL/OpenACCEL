@@ -23,10 +23,11 @@ define(["Model/Script",
         "Model/Exceptions/RuntimeError",
         "Model/EMO/GeneticOptimisation",
         "Controller/AbstractView",
-        "Model/Library"
+        "Model/Library",
+        "Model/DebugMessage"
     ],
     /**@lends Controller*/
-    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, Library) {
+    function(Script, Compiler, LocalBackupStore, SyntaxError, RuntimeError, GeneticOptimisation, AbstractView, Library, DebugMessage) {
         /**
          * @class
          * @classdesc The Controller is the intermediar between the Model and the View.
@@ -448,8 +449,6 @@ define(["Model/Script",
                 this.stop();
             }
 
-            $(document).trigger("ScriptStepEvent");
-
             /*if (inBrowser && this.curMeasurement < this.numMeasurements) {
                 posttime = performance.now();
                 this.measurements[this.curMeasurement] = posttime-pretime;
@@ -578,6 +577,9 @@ define(["Model/Script",
 
                 // Restore the script from the retrieved source
                 this.setScriptFromSource(src, true);
+
+                var msg = new DebugMessage("Restored script from previous session", "INFO");
+                $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
 
                 return true;
             } else {
@@ -865,6 +867,10 @@ define(["Model/Script",
         Controller.prototype.loadDemoScript = function(name) {
             var source = this.library.getDemoScript(name);
             this.setScriptFromSource(source);
+
+            var msg = new DebugMessage("Loaded demoscript " + name, "INFO");
+            $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
+
             if (this.autoExecute) {
                 this.run();
             }

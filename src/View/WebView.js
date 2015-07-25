@@ -429,13 +429,18 @@ define(["../Controller/AbstractView",
         this.x = (pos.left-3 < minX) ? minX+errorlocation.outerWidth()/2 : ((pos.left-3 > maxX) ? maxX : pos.left-3+errorlocation.outerWidth()/2);
         this.y = 16 + pos.top;
         this.text = '';
+        var errormsg = ''
         if (error.type === 'lexical') {
-            this.text = '<span style = "color: #FF1144;">Syntax Error</span> Unexpected \"' + error.found + '\" at position ' + (error.startPos+1) + '.';
+            errormsg = 'Unexpected \"' + error.found + '\" at position ' + (error.startPos+1);
         } else if (error.found === '') {
-            this.text = '<span style = "color: #FF1144;">Syntax Error</span> Expected expression or operator at position ' + error.endPos + '.';
+            errormsg = 'Expected expression or operator at position ' + error.endPos;
         } else {
-            this.text = '<span style = "color: #FF1144;">Syntax Error</span> Unexpected \"' + error.found + '\" at position ' + error.startPos + ' to ' + error.endPos + '.'; /*' in line ' + error.firstLine;*/
+            errormsg = 'Unexpected \"' + error.found + '\" at position ' + error.startPos + ' to ' + error.endPos; /*' in line ' + error.firstLine;*/
         }
+
+        $(document).trigger("ERROR_SYNTAX", [errormsg]);
+
+        this.text = '<span style = "color: #FF1144;">Syntax Error</span> ' + errormsg + '.'
     };
 
     /**
@@ -464,8 +469,10 @@ define(["../Controller/AbstractView",
 
         if (error.type === 'lexical') {
             this.text = '<span style = "color: #FF1144;">Syntax Error</span> ' + error.message;
+            $(document).trigger("ERROR_SYNTAX", [error.message]);
         } else {
             this.text = '<span style = "color: #FF1144;">Runtime Error</span> ' + error.message;
+            $(document).trigger("ERROR_RUNTIME", [error.message]);
         }
     };
 
@@ -496,6 +503,7 @@ define(["../Controller/AbstractView",
                     y: 16,
                     text: '<span style = "color: #FF1144;">Unknown error</span> Something went wrong internally during compilation.'
                 };
+                $(document).trigger("ERROR_UNKNOWN");
                 break;
         }
 

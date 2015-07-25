@@ -466,8 +466,51 @@ body div {
 	padding: 1px 3px !important;
 }
 
-#dl_th_time, .dl_td_time {
-	width: 65px;
+#dl_th_time {
+	padding-left: 2px;
+	width: 50px;
+	text-align: center;
+}
+
+#dl_th_type {
+	padding-left: 2px;
+	width: 50px;
+	text-align: center;
+}
+
+.dl_td_time {
+	padding-right: 12px !important;
+	width: 50px;
+}
+
+.dl_td_type {
+	padding-top: 1px !important;
+	padding-right: 4px !important;
+	width: 50px;
+	text-align: center;
+	vertical-align: center;
+}
+
+.dl_td_type {
+	font-family: 'Rokkitt', serif;
+	font-size: 13px;
+	color: black;
+}
+
+.dl_type_info {
+	color: #888 !important;
+}
+
+.dl_type_syntax {
+	color: red !important;
+}
+
+.dl_type_debug {
+	color: #5858FF !important;
+}
+
+.dl_type_warning {
+	color: #E1A833 !important;
 }
 
 .dl_td_time, .dl_td_message {
@@ -550,7 +593,7 @@ body div {
 
 #dc_th_messages {
 	width: 70%;
-	line-height: 22px;
+	line-height: 20px;
 }
 
 #dc_th_watchlist {
@@ -631,6 +674,11 @@ a.toggleswitchoption {
 
 a.toggleswitchoption:hover {
 	background: linear-gradient(#662266, #993399);
+}
+
+.dl_errormsg {
+	font-weight: bold !important;
+	color: red !important;
 }
 
 .watchdelimg {

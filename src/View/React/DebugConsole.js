@@ -19,14 +19,34 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
         },
 
         componentDidMount: function() {
+            $(document).on("ERROR_UNKNOWN", (function(event) {
+                var msg = new DebugMessage("An unknown internal error occured.", "ERROR_UNKNOWN");
+                this.refs.debuglog.addMessage(msg);
+            }).bind(this));
+
+            $(document).on("ERROR_RUNTIME", (function(event, message) {
+                var msg = new DebugMessage(message, "ERROR_RUNTIME");
+                this.refs.debuglog.addMessage(msg);
+            }).bind(this));
+
+            $(document).on("ERROR_SYNTAX", (function(event, message) {
+                var msg = new DebugMessage(message, "ERROR_SYNTAX");
+                this.refs.debuglog.addMessage(msg);
+            }).bind(this));
+
+            // Subscribe to debuglog message log events
             $(document).on("DEBUGMESSAGE", (function(event, message) {
                 var msg = new DebugMessage(JSON.stringify(message), "DEBUG");
                 this.refs.debuglog.addMessage(msg);
             }).bind(this));
 
+            $(document).on("DEBUGLOG_POST_MESSAGE", (function(event, message) {
+                this.refs.debuglog.addMessage(message);
+            }).bind(this));
+
             // Subscribe to controller script iteration events, in order to update
             // the values in the watchlist
-            $(document).on("ScriptStepEvent", (function() {
+            $(document).on("onNextStep", (function(event, cat2quantities) {
                 this.refs.watchlist.updateValues();
             }).bind(this));
 

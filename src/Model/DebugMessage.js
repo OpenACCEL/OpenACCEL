@@ -44,6 +44,14 @@ define(["moment"], /**@lends View*/ function(moment) {
          * @type {Object}
          */
         this.style = {};
+
+        /**
+         * Optional, custom css class to give to the span containing the error message
+         * of this debugmessage.
+         *
+         * @type {String}
+         */
+        this.cssclass = "";
     }
 
     /**
@@ -64,6 +72,38 @@ define(["moment"], /**@lends View*/ function(moment) {
         return this.timestamp.valueOf();
     };
 
+    /**
+     * Returns the type of this message in human-readable form
+     * @return {String} The type of this message
+     */
+    DebugMessage.prototype.getType = function() {
+        switch (this.type) {
+            case "ERROR_UNKNOWN":
+                return "error";
+                break;
+            case "ERROR_SYNTAX":
+                return "syntax";
+                break;
+            case "ERROR_RUNTIME":
+                return "error";
+                break;
+            case "DEBUG":
+                return "debug";
+                break;
+            case "NOTICE":
+                return "notice";
+                break;
+            case "WARNING":
+                return "warning";
+                break;
+            case "INFO":
+                return "info";
+                break;
+            default:
+                return "info";
+                break;
+        }
+    };
 
     return DebugMessage;
 });
