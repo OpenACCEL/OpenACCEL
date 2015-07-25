@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(HTMLBuffer, CodeMirror) {
+define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(HTMLBuffer, React, DebugConsole, CodeMirror) {
     /**
      * @class
      * @classdesc The IOEdit tab.
@@ -185,6 +185,14 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
             }
         };
 
+        /**
+         * The debugconsole of this tab. This is a ReactJS component
+         *
+         * @type {DebugConsole}
+         */
+        this.debugconsole = null;
+        this.showdebug = true;
+
         this.registerCallbacks();
 
         $("#ioedit_qtysort").css({'margin-right': $("#ioedit_tododiv").outerWidth()+15});
@@ -209,6 +217,10 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
      * Event that gets called when this tab gets opened.
      */
     IOEdit.prototype.onEnterTab = function(state) {
+        if (this.debugconsole === null) {
+            this.debugconsole = React.render(<DebugConsole controller={controller} prefix="ioedit" />, document.getElementById('debugconsole_container_io'));
+        }
+
         // Set sorting to linenumber as the script as it is now will be processed
         // in the inputted order and thus the linenumbers will be updated to their
         // current position as well
@@ -253,6 +265,18 @@ define(["View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "
         }
 
         return ok;
+    };
+
+    IOEdit.prototype.toggleDebugConsole = function() {
+        $("#debugconsole_container_io").toggle();
+
+        if (this.showdebug === true) {
+            $("#er_debugtoggle_io").text("Show");
+        } else {
+            $("#er_debugtoggle_io").text("Hide");
+        }
+
+        this.showdebug = !this.showdebug;
     };
 
     /**

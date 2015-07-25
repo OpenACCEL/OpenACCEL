@@ -12,6 +12,12 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
         // Whether the user is resizing the columns of the debug console table
         resizecols: false,
 
+        getDefaultProps: function() {
+            return {
+                prefix: ""      // The prefix to use for all HTML element ID's
+            }
+        },
+
         getInitialState: function() {
             return {
 
@@ -57,6 +63,7 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
             $(document).on("onNewScript", (function(event, quantities) {
                 // Update quickselect, and make sure that all quantities in
                 // the watchlist still exist
+                console.log("newscript");
                 this.updateAvailableQuantities(quantities);
                 this.refs.watchlist.validateQuantities(quantities);
             }).bind(this));
@@ -65,6 +72,7 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
             $(document).on("onModifiedQuantity", (function(event, quantities) {
                 // Update quickselect, and make sure that all quantities in
                 // the watchlist still exist
+                console.log("modquant");
                 this.updateAvailableQuantities(quantities);
                 this.refs.watchlist.validateQuantities(quantities);
             }).bind(this));
@@ -87,7 +95,7 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
                 }
             }
 
-            $("#dc_selectwatchqty").quickselect({
+            $("#dc_selectwatchqty_" + this.props.prefix).quickselect({
                 'minChars': 0,
                 'matchCase': false,
                 'matchMethod': 'startsWith',
@@ -105,7 +113,8 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
          * to the watchlist
          */
         addWatchQuantity: function() {
-            var qty = $("#dc_selectwatchqty").val();
+            var qty = $("#dc_selectwatchqty_" + this.props.prefix).val();
+            console.log(qty);
             if (this.props.controller.getScript().hasQuantity(qty)) {
                 this.refs.watchlist.addQuantity(qty);
             }
@@ -145,13 +154,17 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
          */
         resizeColumns: function(e) {
             if (this.resizecols === true) {
-                var offset = $("#dc_th_messages").offset().left;
+                var offset = $("#dc_th_messages_" + this.props.prefix).offset().left;
                 var newWidth = Math.min(930, Math.max(450, e.clientX - offset));
-                $("#dc_th_messages").css("width", newWidth);
+                $("#dc_th_messages_" + this.props.prefix).css("width", newWidth);
             }
         },
 
         render: function() {
+            //var tblid = "debugconsole_" + this.props.prefix;
+            var clearbtnid = "dc_clearmessages_" + this.props.prefix;
+            var qtyselectid = "dc_selectwatchqty_" + this.props.prefix;
+            var addqtyid = "dc_addwatchqty_" + this.props.prefix;
             return (
                 <table id="debugconsole" onMouseMove={this.resizeColumns} onMouseLeave={this.endResizeColumns} onMouseUp={this.endResizeColumns}>
                     <tbody>
@@ -166,8 +179,8 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
                         <th id="dc_th_watchlist">
                             <span style={{verticalAlign: 'middle'}}>Watchlist</span>
                             <div style={{float: 'right'}}>
-                                <input autoComplete="off" id="dc_selectwatchqty" list="dc_qtylist" style={{padding: '2px 4px', verticalAlign: 'middle'}} placeholder="Add quantity" className="textin" />
-                                <input type="button" className="smallbtn" id="dc_addwatchqty" value="+" onClick={this.addWatchQuantity} />
+                                <input id={qtyselectid} autoComplete="off" className="textin" list="dc_qtylist" style={{padding: '2px 4px', verticalAlign: 'middle'}} placeholder="Add quantity" />
+                                <input type="button" className="smallbtn" id={addqtyid} value="+" onClick={this.addWatchQuantity} />
                             </div>
                         </th>
                     </tr>

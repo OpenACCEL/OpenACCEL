@@ -489,11 +489,8 @@ body div {
 	width: 50px;
 	text-align: center;
 	vertical-align: center;
-}
-
-.dl_td_type {
-	font-family: 'Rokkitt', serif;
-	font-size: 13px;
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 12px !important;
 	color: black;
 }
 
@@ -513,7 +510,7 @@ body div {
 	color: #E1A833 !important;
 }
 
-.dl_td_time, .dl_td_message {
+.dl_td_time, .dl_td_type, .dl_td_message {
 	padding: 1px 3px !important;
 }
 
@@ -594,6 +591,7 @@ body div {
 #dc_th_messages {
 	width: 70%;
 	line-height: 20px;
+	padding-left: 5px;
 }
 
 #dc_th_watchlist {

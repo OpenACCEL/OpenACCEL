@@ -294,7 +294,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/R
      */
     EditRun.prototype.onEnterTab = function(newState) {
         if (this.debugconsole === null) {
-            this.debugconsole = React.render(<DebugConsole controller={controller} />, document.getElementById('debugconsole_container'));
+            this.debugconsole = React.render(<DebugConsole controller={controller} prefix="editrun" />, document.getElementById('debugconsole_container'));
         }
 
         if (!this.errorMarker) {
