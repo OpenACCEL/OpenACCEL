@@ -105,7 +105,7 @@ define(["Model/FileLoader",
 
                 // Only the cond and descartes functions do not have a real function object: cond is
                 // implemented as a language construct in the jison parser and descartes is renamed to plot().
-                if (func !== 'cond' && func !== 'descartes') {
+                if (func !== 'cond' && func !== 'descartes' && func !== 'debuglog') {
                     this.libraries.std[func] = eval(func);
                 }
             }

@@ -199,7 +199,9 @@ frac        (?:\.[0-9]+)
 \btrue\b                                                    { return 'TRUE';        }
 \bfalse\b                                                   { return 'FALSE';       }
 \b\w*[a-zA-Z_]\w*\b                                         %{
-                                                                if (yytext === 'cond') {
+                                                                if (yytext === 'debuglog') {
+                                                                    return 'DEBUGLOG';
+                                                                } else if (yytext === 'cond') {
                                                                     return 'COND';
                                                                 } else if (yy.stdfunctions.indexOf(yytext) > -1) {
                                                                     return 'STDFUNCTION';
@@ -428,7 +430,7 @@ quantityFuncName        :   quantityName '(' dummy (dummyAdditional)* ')'
  * Dummies can have the same name as anything but constants, and overshadow
  * the variable in an outer scope that share the same name.
  */
-dummy                   :   (STDFUNCTION | INPUTFUNCTION | COND | quantityName)
+dummy                   :   (STDFUNCTION | INPUTFUNCTION | DEBUGLOG | COND | quantityName)
                         {{
                             // Intiialize dummies array.
                             if (!yy.dummies) {
@@ -614,7 +616,7 @@ scalarVar               :   quantityName
                                 $$ = "this." + $1 + "()";
                             }
                         }}
-                        |   (STDFUNCTION | INPUTFUNCTION | COND)
+                        |   (STDFUNCTION | INPUTFUNCTION | COND | DEBUGLOG)
                         {{
                             // check if this function name is used as a parameter or dummy
                             // which is allowed. But using a function name as quantity
@@ -740,6 +742,15 @@ funcCall                :   STDFUNCTION '(' expr? (funcCallArgList)* ')'
                                 $$ = "((!(" + $3 + " instanceof Array) && " + $3 + ")?(" + $5 + "):(" + $7 + "))";
                             }
                         }}
+                        |   DEBUGLOG '(' expr ',' expr ')'
+                        {{
+                            // When the condition is an array, the result will always be false.
+                            if (yy.units) {
+                                //$$ = "((!(" + $3 + " instanceof Array) && " + $3 + ".value)?(" + $5 + "):(" + $7 + "))";
+                            } else {
+                                $$ = "(function() { if ((!(" + $5 + " instanceof Array) && " + $5 + ")) { controller.debugmessage(" + $3 + "); } return " + $3 + "}).call(this)";
+                            }
+                        }}
                         ;
 
 funcCallArgList         :   ',' expr
@@ -849,6 +860,10 @@ vectorElem              :   STRING ':' expr
                         {{
                             $$ = { index: "'" + $1 + "'", value: $3};
                         }}
+                        |   DEBUGLOG ':' expr
+                        {{
+                            $$ = { index: "'" + $1 + "'", value: $3};
+                        }}
                         |   NUMBER ':' expr
                         {{
                             $$ = { index: "'" + $1 + "'", value: $3};
@@ -871,6 +886,8 @@ vectorCall              :   scalarTerm '[' expr ']'
                         |   scalarTerm '.' INPUTFUNCTION
                             { $$ = "at(" + $1 + ", '" + $3 + "')"; }
                         |   scalarTerm '.' COND
+                            { $$ = "at(" + $1 + ", '" + $3 + "')"; }
+                        |   scalarTerm '.' DEBUGLOG
                             { $$ = "at(" + $1 + ", '" + $3 + "')"; }
                         |   scalarTerm '.' NUMBER
                             { $$ = "at(" + $1 + ", " + $3 + ")"; }

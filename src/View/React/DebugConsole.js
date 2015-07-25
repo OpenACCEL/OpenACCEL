@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["react-addons", "View/React/WatchList", "View/React/DebugLog"], /**@lends View*/ function(React, WatchList, DebugLog) {
+define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/DebugMessage"], /**@lends View*/ function(React, WatchList, DebugLog, DebugMessage) {
 
     /**
      * @class
@@ -19,6 +19,11 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog"], /**@lend
         },
 
         componentDidMount: function() {
+            $(document).on("DEBUGMESSAGE", (function(event, message) {
+                var msg = new DebugMessage(JSON.stringify(message), "DEBUG");
+                this.refs.debuglog.addMessage(msg);
+            }).bind(this));
+
             // Subscribe to controller script iteration events, in order to update
             // the values in the watchlist
             $(document).on("ScriptStepEvent", (function() {

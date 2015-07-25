@@ -16,6 +16,17 @@ define(["react-addons", "Model/DebugMessage"], /**@lends View*/ function(React, 
         },
 
         /**
+         * Adds the given message to the list of messages to be displayed
+         * in the log
+         * @param {DebugMessage} message The message to add
+         */
+        addMessage: function(message) {
+            var newMessages = this.state.messages;
+            newMessages.push(message);
+            this.setState({messages: newMessages});
+        },
+
+        /**
          * Clears the current log of all messages, and displays a "log cleared" message
          */
         clearMessages: function() {

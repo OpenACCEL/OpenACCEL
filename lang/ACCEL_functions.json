@@ -25,6 +25,7 @@
         "cursorY",
         "cursorB",
 		"debug",
+		"debuglog",
 		"descartes",
 		"divide",
 		"do",

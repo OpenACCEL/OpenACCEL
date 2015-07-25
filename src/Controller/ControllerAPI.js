@@ -539,6 +539,10 @@ define(["Model/Script",
             }
         };
 
+        Controller.prototype.debugmessage = function(message) {
+            $(document).trigger("DEBUGMESSAGE", [message]);
+        };
+
         /**
          * Destroys the current script with all it's definitions, and
          * loads a new, empty one.

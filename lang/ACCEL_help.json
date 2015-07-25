@@ -27,6 +27,15 @@
             "seeAlso": "Kees van Overveld",
             "external": ""
         },
+        "debuglog": {
+            "fName": "debuglog",
+            "cat": "special",
+            "help": "Logs the value of the given expression to the debug log, if the guard evaluates to true",
+            "example": "a=debuglog('Hello world', true)",
+            "details": "",
+            "seeAlso": "",
+            "external": ""
+        },
         "About OpenACCEL": {
             "fName": "About OpenACCEL",
             "cat": "general",
