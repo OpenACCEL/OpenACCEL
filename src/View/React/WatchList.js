@@ -21,9 +21,14 @@ define(["react-addons"], /**@lends View*/ function(React) {
                 return;
             }
 
-            var exe = this.props.controller.getScript().exe;
+            var script = this.props.controller.getScript();
             var newQuantities = this.state.quantities.map((function(q, i) {
-                return {name: q.name, value: exe.getValue(q.name)};
+                var val = '-';
+                if (script.hasQuantity(q.name)) {
+                    val = script.exe.getValue(q.name);
+                }
+
+                return {name: q.name, value: val};
             }).bind(this));
 
             this.setState({quantities: newQuantities});
@@ -110,12 +115,17 @@ define(["react-addons"], /**@lends View*/ function(React) {
                     )
                 } else {
                     return this.state.quantities.map((function(q, i) {
+                        var val = q.value;
+                        if (val !== '-') {
+                            val = JSON.stringify(val);
+                        }
                         var imgID = "watch_del_" + q.name;
+                        var nameStyle = (q.value === '-') ? {color: 'rgba(0, 0, 0, 0.5)'} : {};
                         return (
                             <tr className="wl_contentsrow" key={q.name}>
-                                <td className="wl_td_name">{q.name}:</td>
+                                <td className="wl_td_name" style={nameStyle}>{q.name}:</td>
                                 <td className="wl_td_value">
-                                    <span style={{verticalAlign: 'middle'}}>{JSON.stringify(q.value)}</span>
+                                    <span style={{verticalAlign: 'middle'}}>{val}</span>
                                     <img title="Remove" width="16" height="16" src="img/delete.png" className="watchdelimg" id={imgID} data-delqty={q.name} onClick={this.deleteQuantity} />
                                 </td>
                             </tr>

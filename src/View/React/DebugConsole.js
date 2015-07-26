@@ -63,18 +63,16 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
             $(document).on("onNewScript", (function(event, quantities) {
                 // Update quickselect, and make sure that all quantities in
                 // the watchlist still exist
-                console.log("newscript");
                 this.updateAvailableQuantities(quantities);
-                this.refs.watchlist.validateQuantities(quantities);
+                //this.refs.watchlist.validateQuantities(quantities);
             }).bind(this));
 
             // Called when a quantity has been modified or *deleted*
             $(document).on("onModifiedQuantity", (function(event, quantities) {
                 // Update quickselect, and make sure that all quantities in
                 // the watchlist still exist
-                console.log("modquant");
                 this.updateAvailableQuantities(quantities);
-                this.refs.watchlist.validateQuantities(quantities);
+                //this.refs.watchlist.validateQuantities(quantities);
             }).bind(this));
         },
 
@@ -114,7 +112,6 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
          */
         addWatchQuantity: function() {
             var qty = $("#dc_selectwatchqty_" + this.props.prefix).val();
-            console.log(qty);
             if (this.props.controller.getScript().hasQuantity(qty)) {
                 this.refs.watchlist.addQuantity(qty);
             }
