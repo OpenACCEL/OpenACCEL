@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeError) {
+define(["Model/Exceptions/RuntimeError", "Model/DebugMessage"], /**@lends Model*/ function(RuntimeError, DebugMessage) {
 
     /**
      * @class
@@ -224,6 +224,9 @@ define(["Model/Exceptions/RuntimeError"], /**@lends Model*/ function(RuntimeErro
         // this unit in the Executable so they can be retrieved later (after all units have been checked).
         var err = this.findFirstError(ans);
         if (err !== '') {
+            // Signal error to debug log
+            var msg = new DebugMessage("Unit error: " + report.name + ": " + err, "ERROR_SYNTAX");
+            $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
             this.unitErrors.push(report.name + ": " + err);
         }
 

@@ -162,11 +162,13 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
             var clearbtnid = "dc_clearmessages_" + this.props.prefix;
             var qtyselectid = "dc_selectwatchqty_" + this.props.prefix;
             var addqtyid = "dc_addwatchqty_" + this.props.prefix;
+            var thmsgid = "dc_th_messages_" + this.props.prefix;
+
             return (
                 <table id="debugconsole" onMouseMove={this.resizeColumns} onMouseLeave={this.endResizeColumns} onMouseUp={this.endResizeColumns}>
                     <tbody>
                     <tr className="dc_headerrow">
-                        <th id="dc_th_messages">
+                        <th id={thmsgid}>
                             <span style={{verticalAlign: 'middle'}}>Messages</span>
                             <input type="button" className="smallbtn" id="dc_clearmessages" value="Clear" onClick={this.clearMessages} />
                         </th>

@@ -2,7 +2,7 @@ require.config({
     baseUrl: "scripts"
 });
 
-define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(HTMLBuffer, React, DebugConsole, CodeMirror) {
+define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/DebugMessage", "cm/lib/codemirror", "cm/addon/edit/matchbrackets", "cm/mode/ACCEL/ACCEL"], /**@lends View*/ function(HTMLBuffer, React, DebugConsole, DebugMessage, CodeMirror) {
     /**
      * @class
      * @classdesc The IOEdit tab.
@@ -452,6 +452,8 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "cm/lib/co
             return true;
         } catch (e) {
             this.setLineError(lineHandle, e);
+            var msg = new DebugMessage(e.toReadable(), "ERROR_SYNTAX");
+            $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
             return false;
         }
     };
@@ -756,6 +758,9 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "cm/lib/co
                 controller.checkUnits(source);
                 $('#ioedit_checkUnitsMsg').css({'color':'rgb(31,212,60)'});
                 $('#ioedit_checkUnitsMsg').text('Units OK');
+                var msg = new DebugMessage("Units OK!", "NOTICE");
+                msg.style = {color: "#50BD2E", fontWeight: 'bold'};
+                $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
             } catch (e) {
                 // If the script wasn't simply incomplete but actual unit errors occured...
                 if (!e.incomplete) {
@@ -766,7 +771,9 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "cm/lib/co
                     // Script incomplete, hide progress message but don't indicate unit errors
                     $('#ioedit_checkUnitsMsg').hide();
                 }
-                alert(e.message);
+                // var msg = new DebugMessage(e.message, "ERROR_SYNTAX");
+                // $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
+                //alert(e.message);
             } finally {
                 var script = this.getCurrentScript({'includeCheckedUnits':true});
                 this.setEditorContents(script);
