@@ -15,7 +15,7 @@ if (inNode) {
 }
 /*******************************************************************/
 
-define(["Model/Exceptions/RuntimeError", "Model/DebugMessage"], /**@lends Model*/ function(RuntimeError, DebugMessage) {
+define(["Model/Exceptions/RuntimeError", "Model/Exceptions/UnitError", "Model/DebugMessage"], /**@lends Model*/ function(RuntimeError, UnitError, DebugMessage) {
 
     /**
      * @class
@@ -106,11 +106,11 @@ define(["Model/Exceptions/RuntimeError", "Model/DebugMessage"], /**@lends Model*
         this.units = false;
 
         /**
-         * An array of descriptions of errors that occured during unit checking.
+         * An array of errors that occured during unit checking.
          * Errors that occur during checking are stored in this array but the checking
          * will continue instead of aborting.
          *
-         * @type {Array}
+         * @type {Array<UnitError>}
          */
         this.unitErrors = [];
     }
@@ -227,7 +227,7 @@ define(["Model/Exceptions/RuntimeError", "Model/DebugMessage"], /**@lends Model*
             // Signal error to debug log
             var msg = new DebugMessage("Unit error: " + report.name + ": " + err, "ERROR_SYNTAX");
             $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
-            this.unitErrors.push(report.name + ": " + err);
+            this.unitErrors.push(new UnitError(report.name, err));
         }
 
         return ans;
@@ -447,22 +447,11 @@ define(["Model/Exceptions/RuntimeError", "Model/DebugMessage"], /**@lends Model*
     };
 
     /**
-     * Returns all errors that occured during unit checking as a single string.
-     * @return {String} A string containing all errors that occured during unit checking, or false
-     * when no errors occured.
+     * Returns all errors that occured during unit checking in an array with as keys the quantity name
+     * and as values the errors that occured
      */
     Executable.prototype.getUnitErrors = function() {
-        if (this.unitErrors.length === 0) {
-            return false;
-        }
-
-        var ans = 'The following errors occured during unit checking: \n\n';
-
-        for (var err in this.unitErrors) {
-            ans += this.unitErrors[err] + "\n";
-        }
-
-        return ans;
+        return this.unitErrors;
     };
 
     /**

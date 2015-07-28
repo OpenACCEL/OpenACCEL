@@ -753,6 +753,7 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
         }
 
         setTimeout((function() {
+            var uniterrors = [];
             try {
                 var source = $('#ioedit_scriptarea').val();
                 controller.checkUnits(source);
@@ -767,6 +768,8 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
                     $('#ioedit_checkUnitsMsg').css({'color':'red'});
                     $('#ioedit_checkUnitsMsg').text('Unit error(s)!');
                     $('#ioedit_clearerrors').css({'visibility':'visible'});
+
+                    uniterrors = e.message;
                 } else {
                     // Script incomplete, hide progress message but don't indicate unit errors
                     $('#ioedit_checkUnitsMsg').hide();
@@ -777,6 +780,12 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
             } finally {
                 var script = this.getCurrentScript({'includeCheckedUnits':true});
                 this.setEditorContents(script);
+                for (var elem in uniterrors) {
+                    var err = uniterrors[elem];
+                    var linenum = controller.script.getQuantity(err.quantity).linenum;
+                    var lh = this.editor.getLineHandle(linenum);
+                    this.setLineError(lh, err);
+                }
                 setTimeout(function() {$('#ioedit_checkUnitsMsg').fadeOut(400);}, 2500);
             }
         }).bind(this), 100);

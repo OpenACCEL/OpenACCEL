@@ -571,7 +571,7 @@ define(["Model/Analyser/Analyser",
                 // Now that we checked all units, check whether any errors occured and if so
                 // throw them
                 var errors = this.exe.getUnitErrors();
-                if (errors !== false) {
+                if (errors.length > 0) {
                     throw new RuntimeError(errors);
                 }
             }

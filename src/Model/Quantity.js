@@ -316,7 +316,7 @@ define([], /**@lends Model.Quantity */ function() {
         // Only include the unit of this quantity (if it has one) if it's a category 1 or 3 quantity
         // or when told to include checked units as well
         if (options.includeUnits) {
-            if (options.includeCheckedUnits && this.checkedUnit !== '') {
+            if (options.includeCheckedUnits && ['', 'unitError'].indexOf(this.checkedUnit) === -1) {
                 // Include the checked unit
                 def += ' ; ' + this.checkedUnit;
             } else if (this.unit !== '') {
