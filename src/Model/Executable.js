@@ -226,6 +226,7 @@ define(["Model/Exceptions/RuntimeError", "Model/Exceptions/UnitError", "Model/De
         if (err !== '') {
             // Signal error to debug log
             var msg = new DebugMessage("Unit error: " + report.name + ": " + err, "ERROR_SYNTAX");
+            msg.uniterror = true;
             $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
             this.unitErrors.push(new UnitError(report.name, err));
         }

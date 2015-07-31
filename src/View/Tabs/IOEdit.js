@@ -420,6 +420,11 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
      */
     IOEdit.prototype.checkScript = function(script) {
         if (this.usingEditor()) {
+            // Remove all old syntax error messages
+            this.debugconsole.filterMessages(function(m, i) {
+                return (["ERROR_SYNTAX"].indexOf(m.type) === -1 || m.uniterror === true);
+            });
+
             var lines = script.split("\n");
             var scriptOK=true;
 
@@ -451,9 +456,13 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
             controller.checkSyntax(lineHandle.text);
             return true;
         } catch (e) {
+            // Set line error widget
             this.setLineError(lineHandle, e);
+
+            // Post syntax error message to debuglog
             var msg = new DebugMessage(e.toReadable(), "ERROR_SYNTAX");
             $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);
+
             return false;
         }
     };
@@ -742,6 +751,11 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
      * and displays them after the quantities inside the editor
      */
     IOEdit.prototype.checkUnits = function() {
+        // Remove all old unit error messages
+        this.debugconsole.filterMessages(function(m, i) {
+            return (["ERROR_SYNTAX"].indexOf(m.type) === -1 || m.uniterror === false);
+        });
+
         $('#ioedit_checkUnitsMsg').css({'color':'white', 'visibility':'visible', 'display':'block'});
         $('#ioedit_checkUnitsMsg').text('Checking units...');
         $('#ioedit_showvalues').val('Show values');
@@ -759,6 +773,7 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
                 controller.checkUnits(source);
                 $('#ioedit_checkUnitsMsg').css({'color':'rgb(31,212,60)'});
                 $('#ioedit_checkUnitsMsg').text('Units OK');
+
                 var msg = new DebugMessage("Units OK!", "NOTICE");
                 msg.style = {color: "#50BD2E", fontWeight: 'bold'};
                 $(document).trigger("DEBUGLOG_POST_MESSAGE", [msg]);

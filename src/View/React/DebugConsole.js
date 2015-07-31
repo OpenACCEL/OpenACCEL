@@ -61,18 +61,14 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
 
             // Called when a new script has been compiled
             $(document).on("onNewScript", (function(event, quantities) {
-                // Update quickselect, and make sure that all quantities in
-                // the watchlist still exist
+                // Update quickselect
                 this.updateAvailableQuantities(quantities);
-                //this.refs.watchlist.validateQuantities(quantities);
             }).bind(this));
 
             // Called when a quantity has been modified or *deleted*
             $(document).on("onModifiedQuantity", (function(event, quantities) {
-                // Update quickselect, and make sure that all quantities in
-                // the watchlist still exist
+                // Update quickselect
                 this.updateAvailableQuantities(quantities);
-                //this.refs.watchlist.validateQuantities(quantities);
             }).bind(this));
         },
 
@@ -127,6 +123,17 @@ define(["react-addons", "View/React/WatchList", "View/React/DebugLog", "Model/De
          */
         clearMessages: function(e) {
             this.refs.debuglog.clearMessages();
+        },
+
+        /**
+         * Filters the messages in the log using the given function. The given
+         * function should return true for all elements that should stay in the log.
+         *
+         * @param {Function} filterFunc The function that should be used for filtering.
+         * Will be passed all messages along with their indices in the log array of messages.
+         */
+        filterMessages: function(filterFunc) {
+            this.refs.debuglog.filterMessages(filterFunc);
         },
 
         /**

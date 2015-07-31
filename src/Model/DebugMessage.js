@@ -52,6 +52,13 @@ define(["moment"], /**@lends View*/ function(moment) {
          * @type {String}
          */
         this.cssclass = "";
+
+        /**
+         * Whether this debugmessage is about a unit error that occured
+         *
+         * @type {Boolean}
+         */
+        this.uniterror = false;
     }
 
     /**

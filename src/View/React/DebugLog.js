@@ -37,6 +37,19 @@ define(["react-addons", "Model/DebugMessage"], /**@lends View*/ function(React, 
             this.setState({messages: [clearedMessage]});
         },
 
+        /**
+         * Filters the messages in the log using the given function. The given
+         * function should return true for all elements that should stay in the log.
+         *
+         * @param {Function} filterFunc The function that should be used for filtering.
+         * Will be passed all messages along with their indices in the log array of messages.
+         */
+        filterMessages: function(filterFunc) {
+            var newMessages = _.filter(this.state.messages, filterFunc);
+
+            this.setState({messages: newMessages});
+        },
+
         render: function() {
             return (
                 <table id="debuglog">

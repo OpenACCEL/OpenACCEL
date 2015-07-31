@@ -375,6 +375,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/R
      * @param  {Object} quantities All quantities in the new (current) script
      */
     EditRun.prototype.onNewScript = function(quantities) {
+        // Remove all old syntax error messages from log
+        if (this.debugconsole) {
+            this.debugconsole.filterMessages(function(m, i) {
+                return (["ERROR_SYNTAX"].indexOf(m.type) === -1);
+            });
+        }
+
         this.resetEditRun();
         this.synchronizeScriptList(quantities);
     };
@@ -465,6 +472,13 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/R
      * @return {Boolean} Whether the quantity was submitted
      */
     EditRun.prototype.submitQuantity = function() {
+        // Remove all old syntax error messages from log
+        if (this.debugconsole) {
+            this.debugconsole.filterMessages(function(m, i) {
+                return (["ERROR_SYNTAX"].indexOf(m.type) === -1);
+            });
+        }
+
         this.editor.save();
         var qty = $("#editrun_scriptline").val();
 
