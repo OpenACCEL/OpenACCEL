@@ -633,6 +633,9 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
                 // Update todo list and report, and restore cursor position
                 this.updateTodoList();
                 this.editor.setCursor(cursor);
+
+                // Update watchlist
+                this.debugconsole.refs.watchlist.updateValues();
             }
 
             var quantityname = this.editor.getLine(cursor.line).split("=")[0];

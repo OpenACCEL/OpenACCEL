@@ -24,7 +24,7 @@ define(["react-addons"], /**@lends View*/ function(React) {
             var script = this.props.controller.getScript();
             var newQuantities = this.state.quantities.map((function(q, i) {
                 var val = '-';
-                if (script.hasQuantity(q.name)) {
+                if (script.hasQuantity(q.name) && script.isCompiled()) {
                     val = script.exe.getValue(q.name);
                 }
 
