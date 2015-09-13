@@ -39,11 +39,11 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
         this.functions = {};
 
         /**
-         * The database of help articles, partitioned into categories.
+         * The help categories, with subcategories
          *
          * @type {Object}
          */
-        this.help = {};
+        this.helpcategories = {};
 
         /**
          * List of available demoscripts.
@@ -51,6 +51,13 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
          * @type {Array}
          */
         this.demoscripts = [];
+
+        /**
+         * List of all demo script tags.
+         *
+         * @type {Array}
+         */
+        this.scripttags = [];
 
         /**
          * The function names to escape, should they be used in the library as names of functions.
@@ -78,12 +85,11 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
     };
 
     /**
-     * Loads the ACCEL library metadata into memory and parses it.
+     * Fetches the ACCEL help categories from the server and caches them
      */
-    Library.prototype.loadHelp = function() {
+    Library.prototype.loadHelpCategories = function() {
         try {
-            //this.fileLoader.load("ACCEL_help", "libfile");
-            this.help = this.fileLoader.getLibFile("ACCEL_help").help_articles;
+            this.helpcategories = this.fileLoader.getHelpCategories();
         } catch (e) {
             // Unrecoverable error: the ACCEL library metadata could not be loaded!
             console.log(e.message);
@@ -104,30 +110,90 @@ define(["Model/FileLoader"], /**@lends Model.Library */ function(FileLoader) {
     };
 
     /**
+     * Loads the list of available demo script tags.
+     */
+    Library.prototype.loadTags = function() {
+        try {
+            //this.fileLoader.load("ACCEL_help", "libfile");
+            this.scripttags = this.fileLoader.getScriptTags();
+        } catch (e) {
+            // Unrecoverable error: the ACCEL library metadata could not be loaded!
+            console.log(e.message);
+        }
+    };
+
+    /**
      * Returns a map of all available help articles.
      *
      * @return {Object} A map of all help articles, indexed first by category
      * and then by article name. An article is thus accessed by categoryName.articleName.
      */
-    Library.prototype.getHelpArticles = function() {
-        if (Object.keys(this.help).length === 0) {
-            this.loadHelp();
+    Library.prototype.getHelpCategories = function() {
+        if (Object.keys(this.helpcategories).length === 0) {
+            this.loadHelpCategories();
         }
 
-        return this.help;
+        return this.helpcategories;
     };
 
     /**
      * Returns a list containing the names of all available demo scripts.
+     *, optionally satisfying the given condition.
      *
+     * @param {String} condition (Optional) A condition string with parameters to send to the server
+     *  along with the request.
      * @return {Array} A list with the names of all available demo scripts.
      */
-    Library.prototype.getDemoScripts = function() {
-        if (Object.keys(this.demoscripts).length === 0) {
+    Library.prototype.getDemoScripts = function(condition) {
+        if (Object.keys(this.demoscripts).length === 0 && typeof(condition) === 'undefined') {
+            // Cache list of all demos
             this.loadDemos();
+            return this.demoscripts;
+        } else if (typeof(condition) === 'undefined') {
+            // Return cached result
+            return this.demoscripts;
+        } else {
+            // Always query server for list with specific criteria
+            return this.fileLoader.getDemoScripts(condition);
+        }
+    };
+
+    /**
+     * Returns a list containing the names of all available help articles
+     *, optionally satisfying the given condition.
+     *
+     * @param {String} condition (Optional) A condition string with parameters to send to the server
+     *  along with the request.
+     * @return {Array} A list with the names of all available help articles
+     */
+    Library.prototype.getHelpArticles = function(condition) {
+        // No caching at this time
+        return this.fileLoader.getHelpArticles(condition);
+    };
+
+    /**
+     * Returns the requested help article
+     *
+     * @param {Number} articleID The ID of the article to return
+     * @return {Object} The requested article
+     */
+    Library.prototype.getHelpArticle = function(articleID) {
+        // No caching at this time
+        return this.fileLoader.getHelpArticle(articleID);
+    };
+
+    /**
+     * Returns a list containing the names of all available demo script tags.
+     *
+     * @return {Array} A list with the names of all available demo script tags.
+     */
+    Library.prototype.getScriptTags = function() {
+        if (Object.keys(this.scripttags).length === 0) {
+            // Cache list of tags
+            this.loadTags();
         }
 
-        return this.demoscripts;
+        return this.scripttags;
     };
 
     /**

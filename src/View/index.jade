@@ -26,9 +26,9 @@ html
                 h1(style = 'color: #662266;') Loading...
 
         .div#metadiv
-            span#about(onclick='view.setState({"tab": "helpdemo", "help": "About OpenACCEL"})') About
+            span#about(onclick='view.setState({"tab": "help", "help": "About OpenACCEL"})') About
             &nbsp;
-            span#versionlink(onclick='view.setState({"tab": "helpdemo", "help": "Changelog"})') v1.10
+            span#versionlink(onclick='view.setState({"tab": "help", "help": "Changelog"})') v1.10
 
         #container
             #top
@@ -40,8 +40,10 @@ html
                             a(href = '#tab=intro') Intro
                         li#editrun.navtab
                             a(href = '#tab=editrun') Edit / Run script
-                        li#helpdemo.navtab
-                            a(href = '#tab=helpdemo') Help / Demo
+                        li#help.navtab
+                            a(href = '#tab=help') Help
+                        li#scripts.navtab
+                            a(href = '#tab=scripts') Scripts
                         li#ioedit.navtab
                             a(href = '#tab=ioedit') IO / Edit
                         li#analysis.navtab
@@ -55,7 +57,8 @@ html
 
                     include Tabs/Intro.jade
                     include Tabs/EditRun.jade
-                    include Tabs/HelpDemo.jade
+                    include Tabs/Help.jade
+                    include Tabs/Scripts.jade
                     include Tabs/IOEdit.jade
                     include Tabs/Analysis.jade
                     include Tabs/Optimisation.jade

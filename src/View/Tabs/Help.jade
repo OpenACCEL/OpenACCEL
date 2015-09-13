@@ -1,0 +1,25 @@
+#help.tabcontent(style='min-height: 525px')
+    div
+        div#helpcategoriescontainer
+            .label Help categories
+            div#helpcategories
+        div(style='float:right;')
+            .inline(style='margin-right: 4px;')
+                .label &nbsp;
+                a#helplink(href='mailto:help@openaccel.nl?subject=[OpenACCEL HELP] Help')
+                    input(type = 'button', value = 'Ask for help')#helpmail.buttonin
+            .inline
+                .label Help phrase
+                input(type = 'text', onkeyup = 'view.tabs.help.searchHelp(this.value.trim())')#helpphrase.textin
+    .inline100
+        .label Subcategories
+        #helpsubcategories.report.verticalmenu
+    .inline100
+        .label Help articles
+        #helparticles.report.verticalmenu.px12
+    #helparticlecontents.inline
+        .label Help text
+        #helptext.group
+    .inline100
+        .label Related articles
+        #relatedarticles.report.verticalmenu.px12

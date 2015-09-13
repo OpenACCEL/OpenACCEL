@@ -357,7 +357,7 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
 
             $(itemselector).on('click', {list: this},
                 function(e) {
-                    e.data.list.callback.call(this.caller, $(this).text());
+                    e.data.list.callback.call(this.caller, $(this).text(), $(this).data('id'));
                 }
             );
         };
@@ -382,6 +382,27 @@ define(["View/HTMLBuffer", "View/Tooltip"], /**@lends View*/ function(HTMLBuffer
                 for (i in items) {
                     this.addItem(i, items[i]);
                 }
+            }
+
+            this.buffer.flip(this.selector);
+
+            for (i in items) {
+                this.initializeItem(i);
+            }
+        };
+
+        /**
+         * Set the items contained in the list, with IDs for each element
+         *
+         * @param {Object[]} items Objects representing the items in the list, with name and id attributes
+         */
+        this.setWithIDs = function(items) {
+            this.items = items;
+            this.buffer.empty();
+            var i;
+
+            for (i in items) {
+                this.addItem(i, items[i].name, 'data-id="' + items[i].id + '"');
             }
 
             this.buffer.flip(this.selector);

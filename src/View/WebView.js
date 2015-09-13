@@ -17,7 +17,8 @@ define(["../Controller/AbstractView",
         "../View/Tooltip",
         "../View/Tabs/IntroTab",
         "../View/Tabs/EditRun",
-        "../View/Tabs/HelpDemo",
+        "../View/Tabs/Help",
+        "../View/Tabs/Scripts",
         "../View/Tabs/Analysis",
         "../View/Tabs/IOEdit",
         "../View/Tabs/Optimisation",
@@ -26,7 +27,7 @@ define(["../Controller/AbstractView",
         "../View/Graphics/CanvasCreator",
         ],
         /**@lends View*/
-        function(AbstractView, Tooltip, IntroTab, EditRun, HelpDemo, Analysis, IOEdit, Optimisation, Simulation, Network, CanvasCreator, deparam) {
+        function(AbstractView, Tooltip, IntroTab, EditRun, Help, Scripts, Analysis, IOEdit, Optimisation, Simulation, Network, CanvasCreator, deparam) {
     /**
      * @class
      * @classdesc The webview is the view class for webbrowsers.
@@ -63,7 +64,8 @@ define(["../Controller/AbstractView",
         this.tabs = {};
         this.tabs.intro = new IntroTab();
         this.tabs.editrun = new EditRun(this.canvasCreator);
-        this.tabs.helpdemo = new HelpDemo();
+        this.tabs.help = new Help();
+        this.tabs.scripts = new Scripts();
         this.tabs.ioedit = new IOEdit();
         this.tabs.analysis = new Analysis(this.canvasCreator);
         this.tabs.optimisation = new Optimisation(this.canvasCreator);
@@ -180,7 +182,7 @@ define(["../Controller/AbstractView",
         if (newState.script || newState.userscript) {
             newState.tab = "editrun";
         } else if (newState.help) {
-            newState.tab = "helpdemo";
+            newState.tab = "help";
         }
 
         // Activate other tab when nessecary

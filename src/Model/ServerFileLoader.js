@@ -220,15 +220,17 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
     /**
      * Returns a list of all available demo script names
      *
+     * @param {String} condition (Optional) A condition string with parameters to send to the server
+     *  along with the request.
      * @return {Array} List containing the names of all demo scripts.
      */
-    FileLoader.prototype.getDemoScripts = function() {
-        demos = [];
+    FileLoader.prototype.getDemoScripts = function(condition) {
+        demos = {};
 
         // Try to read the file synchronously using jQuery's Ajax API.
         fs.ajax({
             type: "GET",
-            url: "http://www.openaccel.nl/php/listDemos.php",
+            url: "http://openaccel.nl/php/scripts/listDemos.php?" + condition,
             context: this,
             success: function(result) {
                 if (!result) {
@@ -237,10 +239,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                     return false;
                 }
 
-                result = JSON.parse(result);
-                for (elem in result) {
-                    demos.push(result[elem]['name'].split(".")[0]);
-                }
+                demos = JSON.parse(result);
             },
             error: function(err) {
                 console.log(err);
@@ -261,17 +260,178 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
     };
 
     /**
+     * Returns a list of all available help article names
+     *
+     * @param {String} condition (Optional) A condition string with parameters to send to the server
+     *  along with the request.
+     * @return {Array} List containing the names of all help articles
+     */
+    FileLoader.prototype.getHelpArticles = function(condition) {
+        articles = {};
+
+        // Try to read the file synchronously using jQuery's Ajax API.
+        fs.ajax({
+            type: "GET",
+            url: "http://openaccel.nl/php/help/getHelpArticles.php?" + condition,
+            context: this,
+            success: function(result) {
+                if (!result) {
+                    console.log("Error loading list of help articles");
+                    alert("Error loading list of help articless");
+                    return false;
+                }
+
+                articles = JSON.parse(result);
+            },
+            error: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            fail: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            async: false
+        });
+
+        return articles;
+    };
+
+    /**
+     * Fetches the requested help article from the server
+     *
+     * @param {Number} articleID The ID of the article to fetch
+     * @return {Object} The requested article
+     */
+    FileLoader.prototype.getHelpArticle = function(articleID) {
+        article = null;
+
+        // Try to read the file synchronously using jQuery's Ajax API.
+        fs.ajax({
+            type: "GET",
+            url: "http://openaccel.nl/php/help/getHelpArticle.php?id=" + articleID,
+            context: this,
+            success: function(result) {
+                if (!result) {
+                    console.log("Error loading help article");
+                    alert("Error loading help article");
+                    return false;
+                }
+
+                article = JSON.parse(result);
+            },
+            error: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            fail: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            async: false
+        });
+
+        return article;
+    };
+
+    /**
+     * Returns a list of all available help categories and their subcategories
+     *
+     * @return {Array} List containing the names and ids of all help categories and subcategories
+     */
+    FileLoader.prototype.getHelpCategories = function(condition) {
+        categories = {};
+
+        // Try to read the file synchronously using jQuery's Ajax API.
+        fs.ajax({
+            type: "GET",
+            url: "http://openaccel.nl/php/help/getHelpCategories.php",
+            context: this,
+            success: function(result) {
+                if (!result) {
+                    console.log("Error loading list of help categories");
+                    alert("Error loading list of help categories");
+                    return false;
+                }
+
+                categories = JSON.parse(result);
+            },
+            error: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            fail: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            async: false
+        });
+
+        return categories;
+    };
+
+    /**
+     * Returns a list of all available demo script tags
+     *
+     * @return {Array} List containing the names and counts of all demo script tags.
+     */
+    FileLoader.prototype.getScriptTags = function() {
+        tags = {};
+
+        // Try to read the file synchronously using jQuery's Ajax API.
+        fs.ajax({
+            type: "GET",
+            url: "http://openaccel.nl/php/scripts/listTags.php",
+            context: this,
+            success: function(result) {
+                if (!result) {
+                    console.log("Error loading list of script tags");
+                    alert("Error loading list of script tags");
+                    return false;
+                }
+
+                tags = JSON.parse(result);
+            },
+            error: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            fail: function(err) {
+                console.log(err);
+                controller.ajaxError(this.errorMessage + err.responseText);
+                this.errorMessage = "";
+                return false;
+            },
+            async: false
+        });
+
+        return tags;
+    };
+
+    /**
      * Returns a list of all available demo script names
      *
      * @return {Array} List containing the names of all demo scripts.
      */
     FileLoader.prototype.getDemoScript = function(script) {
-        demo = "";
-
         // Try to read the file synchronously using jQuery's Ajax API.
         fs.ajax({
             type: "GET",
-            url: "http://www.openaccel.nl/php/retrieveDemo.php?file=" + script,
+            url: "http://openaccel.nl/php/scripts/getDemo.php?name=" + script,
             context: this,
             success: function(result) {
                 if (!result) {
@@ -280,7 +440,7 @@ define(["module", fileModule], /**@lends Model.Compiler */ function(module, fs) 
                     return false;
                 }
 
-                this.demoscript = result;
+                this.demoscript = JSON.parse(result);
             },
             error: function(err) {
                 console.log(err);

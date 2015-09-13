@@ -1,0 +1,21 @@
+#scripts.tabcontent(style='min-height: 525px')
+    div
+        .inline
+            .label Script name
+            input(type = 'text', onkeyup = 'view.tabs.scripts.searchScripts(this.value.trim())')#scriptname.textin
+        .inline
+            .label &nbsp;
+            input(type = 'button', value = 'Search' onclick = 'view.tabs.scripts.searchScripts($("#scriptname").val())')#scriptsearch.buttonin
+        .inline(style='float: right; margin-right: 10px;')
+            .label &nbsp;
+            input(type = 'button', value = 'Submit script' onclick = 'view.tabs.scripts.submitScript()')#submitscript.buttonin
+    .inline100
+        .label Scripts
+        #demoscripts.report.verticalmenu.px12
+    #scriptinformation.inline
+        .label Script Information
+        #scriptinfo.group
+            div(style='padding-top: 5px; padding-left: 3px;') Select a script from the list to view. You can also filter by tag or do a full-text search.
+    .inline100(style='float: right;')
+        .label Tags
+        #scripttags.report.verticalmenu.px12

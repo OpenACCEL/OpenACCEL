@@ -160,7 +160,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/R
              */
             onclickStdFunc: function(name) {
                 // Open help article of the clicked-on function
-                view.setState({'tab': 'helpdemo', 'help': name});
+                view.setState({'tab': 'help', 'help': name});
             },
 
             /**
@@ -459,7 +459,7 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/R
         $(".cm-builtin").on("dblclick", function(e) {
             e.preventDefault();
 
-            view.setState({'tab': 'helpdemo', 'help': e.target.innerHTML});
+            view.setState({'tab': 'help', 'help': e.target.innerHTML});
             e.stopPropagation();
             e.cancelBubble = true;
         });
@@ -515,6 +515,9 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/R
      * Clears any displayed errors in the editor
      */
     EditRun.prototype.clearErrors = function() {
+        // Clear error messages that might be currently visible
+        $('.tooltipcontainer > .errormessage').filter(":visible").trigger('click');
+
         this.editor.removeLineClass(0, "background", "editor_line_syntaxerror");
         this.editor.removeLineClass(0, "text", "editor_text_syntaxerror");
 
@@ -557,6 +560,10 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/R
      */
     EditRun.prototype.addQuantity = function(string) {
         string = string.trim();
+        if (string === '') {
+            return;
+        }
+
         setTimeout(
             (function() {
                 // Clear error messages that might be currently visible
@@ -808,7 +815,8 @@ define(["View/Input", "View/HTMLBuffer", "Model/Script", "react-addons", "View/R
         this.synchronizeScriptList(null);
         this.synchronizeResults(null);
         this.selectScriptline(null, null);
-        $('#editrun_scriptline').text('');
+        this.editor.setValue('');
+        this.clearErrors();
     };
 
     EditRun.prototype.setExecuting = function(executing) {

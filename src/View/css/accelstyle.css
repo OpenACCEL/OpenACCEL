@@ -30,8 +30,36 @@ body div {
 	background-color: rgb(255, 128, 128);
 }
 
+.scriptsourcepreview {
+	background: #FAFAFA;
+	color: #333;
+	white-space: pre-wrap;
+	width: 850px;
+	margin: auto;
+	margin-top: 4px;
+	padding: 3px;
+	max-height: 300px;
+	overflow-y: auto;
+	font-family: monospace;
+}
+
+#loadScriptButton {
+	vertical-align: middle;
+	float: right;
+}
+
+.scriptdatespan {
+	float: right;
+}
+
 #ioedit_qtylist {
 	overflow-y: auto;
+}
+
+#scriptinformation {
+	width: 900px;
+	min-width: 900px;
+	max-width: 900px;
 }
 
 .editor_line_highlight {
@@ -264,7 +292,7 @@ body div {
 	color: HighlightText;
 }
 
-#demoscripts, #helparticles, #helpcategories {
+#demoscripts, #helparticles, #helpsubcategories {
 	max-height: 450px;
 	max-width: 145px;
 	overflow-y: auto;
@@ -272,12 +300,25 @@ body div {
 	text-overflow: ellipsis;
 }
 
-#helpcategories > a {
+#helpsubcategories > a {
 	text-transform: capitalize;
+}
+
+#helpcategoriescontainer {
+	display: inline-block;
+}
+
+#helpcategories {
+	position: relative;
+	top: 2px;
 }
 
 .help_match {
 	background-color: red;
+}
+
+.scripts_match {
+	background-color: yellow;
 }
 
 .cm-builtin {
@@ -897,12 +938,12 @@ a.toggleswitchoption_current {
 	background: #882288;
 }
 
-.help_heading {
+ .script_heading {
 	margin-bottom: 1px;
 	padding-bottom: 0px;
 }
 
-.help_text {
+.help_text, .script_text {
 	margin-top: 0px;
 	padding-top: 0px;
 	margin-bottom: 6px;
@@ -1024,6 +1065,12 @@ a.toggleswitchoption_current {
 .buttonin:active {
 	background: #331144;
 	background: linear-gradient(#331144, #662266);
+}
+
+.buttonin.activebtn {
+	background: rgb(237, 172, 237) none repeat scroll 0% 0%;
+	border-top: 0px none;
+	color: black;
 }
 
 .group {
@@ -1477,8 +1524,23 @@ a.help_current {
 	width: 700px;
 }
 
-#helptext h1 {
-	text-transform: capitalize;
+#helptext h3 {
+	/*text-transform: capitalize;*/
+	margin-bottom: 1px;
+	padding-bottom: 0px;
+}
+
+/* Help article title */
+#helptext h2 {
+	padding-left: 0px;
+	margin-top: 5px;
+}
+
+/* Help article section */
+#helptext p {
+	margin-top: 0px;
+	padding-top: 0px;
+	margin-bottom: 6px;
 }
 
 /**

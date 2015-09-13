@@ -837,12 +837,32 @@ define(["Model/Script",
         };
 
         /**
+         * Returns all available help categories and their subcategories.
+         *
+         * @return {Array} List of all help (sub)categories
+         */
+        Controller.prototype.getHelpCategories = function() {
+            return this.library.getHelpCategories();
+        };
+
+        /**
          * Returns all available help articles.
          *
-         * @return {Object} Map of all help articles, indexed
+         * @param {String} condition (Optional) The condition for which articles to display
+         * @return {Array} List of all help articles
          */
-        Controller.prototype.getHelpArticles = function() {
-            return this.library.getHelpArticles();
+        Controller.prototype.getHelpArticles = function(condition) {
+            return this.library.getHelpArticles(condition);
+        };
+
+        /**
+         * Returns the requested help article
+         *
+         * @param {Number} articleID The ID of the article to return
+         * @return {Object} The requested article
+         */
+        Controller.prototype.getHelpArticle = function(articleID) {
+            return this.library.getHelpArticle(articleID);
         };
 
         /**
@@ -856,6 +876,46 @@ define(["Model/Script",
         };
 
         /**
+         * Gets demo script tags from the model.
+         *
+         * @pre model.DemoScripts != null
+         * @return {Object} List Demo Scriptnames
+         */
+        Controller.prototype.getScriptTags = function() {
+            return this.library.getScriptTags();
+        };
+
+        /**
+         * Gets demo script with given name from the model.
+         *
+         * @pre model.DemoScripts != null
+         * @return {Object} Demo script
+         */
+        Controller.prototype.getDemoScript = function(name) {
+            return this.library.getDemoScript(name);
+        };
+
+        /**
+         * Returns all demoscripts related to the given search phrase.
+         *
+         * @pre model.DemoScripts != null
+         * @return {Object} Demo scripts matching the given phrase
+         */
+        Controller.prototype.searchDemoScripts = function(phrase) {
+            return this.library.getDemoScripts('search=' + phrase);
+        };
+
+        /**
+         * Returns all demoscripts with the given tag.
+         *
+         * @pre model.DemoScripts != null
+         * @return {Object} Demo scripts matching the given phrase
+         */
+        Controller.prototype.scriptsWithTag = function(tag) {
+            return this.library.getDemoScripts('tag=' + tag);
+        };
+
+        /**
          * Loads demo script from the model.
          *
          * @param name {String} name of demo script
@@ -865,7 +925,7 @@ define(["Model/Script",
          * @return {Object} Script
          */
         Controller.prototype.loadDemoScript = function(name) {
-            var source = this.library.getDemoScript(name);
+            var source = this.library.getDemoScript(name).source;
             this.setScriptFromSource(source);
 
             var msg = new DebugMessage("Loaded demoscript " + name, "INFO");

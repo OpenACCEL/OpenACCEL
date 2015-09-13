@@ -147,7 +147,7 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
              */
             onclickStdFunc: function(name) {
                 // Open help article of the clicked-on function
-                view.setState({'tab': 'helpdemo', 'help': name});
+                view.setState({'tab': 'help', 'help': name});
             },
 
             /**
@@ -604,7 +604,7 @@ define(["View/HTMLBuffer", "react-addons", "View/React/DebugConsole", "Model/Deb
         $(".cm-builtin","div.CodeMirror").on("dblclick", function(e) {
             e.preventDefault();
 
-            view.setState({'tab': 'helpdemo', 'help': e.target.innerHTML});
+            view.setState({'tab': 'help', 'help': e.target.innerHTML});
             e.stopPropagation();
             e.cancelBubble = true;
         });
