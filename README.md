@@ -1,7 +1,7 @@
 OpenACCEL
 =========
 
-The ACCEL-system is a light-weight, general purpose modelling environment for mathematical modelling. It combines some ideas from spreadsheets, Matlab, and traditional highschool mathematics.
+The ACCEL system is a lightweight, general-purpose modeling environment for mathematical modeling. It combines some concepts from spreadsheets, Matlab and traditional highschool mathematics. For a live, up-to-date version see [http://openaccel.nl](http://openaccel.nl). To contact the developer: edward<at>openaccel(dot)nl
 
 ## Installation ##
 [![Build Status](https://travis-ci.org/OpenACCEL/OpenACCEL.svg?branch=master)](https://travis-ci.org/OpenACCEL/OpenACCEL)
@@ -16,7 +16,7 @@ The ACCEL-system is a light-weight, general purpose modelling environment for ma
 3. Go to the OpenACCEL directory: `cd OpenACCEL`.
 4. Install all dependencies using the command `npm install`.
 5. To build and test OpenACCEL, type the following command: `npm test`.
-6. Start a local HTTP server: `npm start`.
+6. Start a local HTTP server: `npm run quickbuild-server && npm run start`.
 7. You can now use ACCEL by opening your web-browser and going to the address: [http://localhost:8080](http://localhost:8080).
 
 ## Scripts ##
@@ -26,7 +26,11 @@ The follow scripts can all be invoked using `npm run`:
 * `jade`: Generates the public .html files for the view in the `bin` folder.
 * `doc`: Generates documentation from the source into the `doc` folder.
 
-* `build`: Builds the entire project in the `bin` folder.
+* `build`: Builds the entire project in the `bin` folder. NOTE: use `quickbuild-server` from v1.1 onwards.
+
+* `quickbuild`: Builds the entire project in the `bin` folder, without also generating the documentation. NOTE: use `quickbuild-server` from v1.1 onwards.
+
+* `quickbuild-server`: Like quickbuild, but for usage on a server. From version 1.1 onwards this command should always be used to build OpenACCEL, for the time being.
 
 * `test`: Builds the system as indicated above, but also runs all test cases.
 
