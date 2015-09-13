@@ -1,7 +1,7 @@
 OpenACCEL
 =========
 
-The ACCEL system is a lightweight, general-purpose modeling environment for mathematical modeling. It combines some concepts from spreadsheets, Matlab and traditional highschool mathematics. For a live, up-to-date version see [http://openaccel.nl](http://openaccel.nl). To contact the developer: edward<at>openaccel(dot)nl
+The ACCEL system is a lightweight, general-purpose modeling environment for mathematical modeling. It combines some concepts from spreadsheets, Matlab and traditional highschool mathematics. For a live, up-to-date version see [http://openaccel.nl](http://openaccel.nl). To contact the developer: edward(at)openaccel(dot)nl
 
 ## Installation ##
 [![Build Status](https://travis-ci.org/OpenACCEL/OpenACCEL.svg?branch=master)](https://travis-ci.org/OpenACCEL/OpenACCEL)
