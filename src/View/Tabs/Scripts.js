@@ -39,12 +39,16 @@ define(["View/Input", "View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/mat
          */
         this.demoScriptList = new this.Input.SelectionList('#demoscripts', function(script) {
             $('#demoscripts > a').removeClass('help_current');
-            $('#demoscripts > a[value="' + script + '"]').addClass('help_current');
+            $('#demoscripts > a').filter(function(i) {
+                return $(this).attr("value") == script;
+            }).addClass('help_current');
             view.tabs.scripts.showScript(script);
         });
         this.tagList = new this.Input.SelectionList('#scripttags', function(tag) {
             $('#scripttags > a').removeClass('help_current');
-            $('#scripttags > a[value="' + tag + '"]').addClass('help_current');
+            $('#scripttags > a').filter(function(i) {
+                return $(this).attr("value") == tag;
+            }).addClass('help_current');
 
             if (tag == "All") {
                 view.tabs.scripts.viewScriptsForTag(tag);
@@ -221,7 +225,9 @@ define(["View/Input", "View/HTMLBuffer", "cm/lib/codemirror", "cm/addon/edit/mat
         }
 
         $('#demoscripts > a').removeClass('help_current');
-        $('#demoscripts > a[value="' + scriptName + '"]').addClass('help_current');
+        $('#demoscripts > a').filter(function(i) {
+            return $(this).attr("value") == scriptName;
+        }).addClass('help_current');
 
         // Construct normal article heading
         var title = script.name[0].toUpperCase() + script.name.slice(1);
